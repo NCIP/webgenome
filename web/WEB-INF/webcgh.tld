@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN" "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+   <tlibversion>1.0</tlibversion>
+   <jspversion>1.1</jspversion>
+   <shortname>webcgh</shortname>
+   <uri>webcgh</uri>
+   
+   <!-- Displays message associated with an exception -->
+   <tag>
+      <name>exceptionMessage</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ExceptionMessageTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Generates <option> tags for genome position units (e.g. KB) -->
+   <tag>
+      <name>unitOptions</name>
+      <tagclass>org.rti.webcgh.webui.taglib.UnitOptionsTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Name of bean that contains units value -->
+      <attribute>
+		<name>name</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Property of named bean that contains units value -->
+	  <attribute>
+		<name>property</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   
+   <!-- Generates <option> tags for chromosme ideogram sizes (e.g. S) -->
+   <tag>
+      <name>chromosomeIdeogramSizeOptions</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ChromosomeIdeogramSizeOptionsTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Name of bean that contains units value -->
+      <attribute>
+		<name>name</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Property of named bean that contains units value -->
+	  <attribute>
+		<name>property</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Displays list of empty data sets -->
+   <tag>
+      <name>emptyDataSetsNotice</name>
+      <tagclass>org.rti.webcgh.webui.taglib.EmptyDataSetsNoticeTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Displays stack trace associated with an exception -->
+   <tag>
+      <name>exceptionStackTrace</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ExceptionStackTraceTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Displays contact information and a mailto link for the system
+        administrator -->
+   <tag>
+      <name>sysadmin</name>
+      <tagclass>org.rti.webcgh.webui.taglib.SysadminTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Displays a set of checkboxes where user can select
+        types of features to display in an annotation plot -->
+   <tag>
+      <name>featureTypesSelector</name>
+      <tagclass>org.rti.webcgh.webui.taglib.FeatureTypesSelectorTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Genome navigation control used to scroll, zoom, and jump
+        to any genome region -->
+   <tag>
+      <name>genomeNavigation</name>
+      <tagclass>org.rti.webcgh.webui.taglib.GenomeNavigationTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Struts action to perform to navigate to a new genome region -->
+      <attribute>
+		<name>action</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Name of bean containing plot parameters -->
+	  <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Show SVG graphic which is an attribute in some scope -->
+   <tag>
+      <name>showSvg</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ShowSvgTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Convert bean properties to hidden HTML fields -->
+   <tag>
+      <name>beanPropsToHiddenFields</name>
+      <tagclass>org.rti.webcgh.webui.taglib.BeanPropsToHiddenFieldsTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Name of bean -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Comma separated list of property names to exclude -->
+	  <attribute>
+		<name>exclusions</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Convert bean properties into a HTTP parameter list -->
+   <tag>
+      <name>paramListFromBean</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ParamListFromBeanTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Name of bean -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Comma separated list of property names to exclude -->
+	  <attribute>
+		<name>excludedField</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Display link to plots in browser history -->
+   <tag>
+      <name>historyLink</name>
+      <tagclass>org.rti.webcgh.webui.taglib.HistoryLinkTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+      <!-- Name of bean containing plotting properties -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Name of bean containing encoded browsing history -->
+	  <attribute>
+		<name>history</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Is given plot the end of browsing history? -->
+   <tag>
+      <name>endOfHistory</name>
+      <tagclass>org.rti.webcgh.webui.taglib.EndOfHistoryTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+      <!-- Name of bean containing plotting parameters -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Name of bean containing encoded browsing history -->
+	  <attribute>
+		<name>history</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Is given plot not the end of browsing history? -->
+   <tag>
+      <name>notEndOfHistory</name>
+      <tagclass>org.rti.webcgh.webui.taglib.NotEndOfHistoryTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+      <!-- Name of bean containing plotting parameters -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Name of bean containing encoded browsing history -->
+	  <attribute>
+		<name>history</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Format a number -->
+   <tag>
+      <name>formatNumber</name>
+      <tagclass>org.rti.webcgh.webui.taglib.FormatNumberTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+      <!-- Number of significant digits -->
+      <attribute>
+		<name>sigDigits</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Show help icon linked to help -->
+   <tag>
+      <name>showHelp</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ShowHelpTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Topic name (anchor name in help.htm) -->
+      <attribute>
+		<name>topic</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- URL path to help icon -->
+	  <attribute>
+		<name>helpIconPath</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- URL path to help page -->
+	  <attribute>
+		<name>helpPagePath</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Iterate over analytic pipeline operations -->
+   <tag>
+      <name>iterateOverPipeline</name>
+      <tagclass>org.rti.webcgh.webui.taglib.IterateOverPipelineTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+      <!-- Name of bean of type AnalyticPipeline -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   <!-- Display name of an analytic operation.
+   Tag must be nested within an <iterateOverPipeline> pair
+   -->
+   <tag>
+      <name>operationName</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OperationNameTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   
+   <!-- Display category of an analytic operation.
+   Tag must be nested within an <iterateOverPipeline> pair
+   -->
+   <tag>
+      <name>operationCategory</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OperationCategoryTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Display ordinal number of an analytic operation in pipeline.
+   Tag must be nested within an <iterateOverPipeline> pair
+   -->
+   <tag>
+      <name>operationNumber</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OperationNumberTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+	<!-- Iterate over names of properties of an analytic operation.
+   Tag must be nested within an <iterateOverPipeline> pair
+   -->
+   <tag>
+      <name>iterateOverOperationProperties</name>
+      <tagclass>org.rti.webcgh.webui.taglib.IterateOverOperationPropertiesTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
+   <!-- Display name of operation property in current iteration.  Tag must
+   be nested within a <iterateOverOperationProperties> pair.
+   -->
+   <tag>
+      <name>propertyDisplayName</name>
+      <tagclass>org.rti.webcgh.webui.taglib.PropertyDisplayNameTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
+   
+   <!-- Copy name of operation property field in current iteration
+   to given bean.  Must be nested with a <iterateOverOperationProperties> pair.
+   -->
+   <tag>
+      <name>operationPropertyToBean</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OperationPropertyToBeanTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <attribute>
+		<name>id</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+   
+   <!-- Print input field for operation property in current iteration.  Must be
+   nested with a <iterateOverOperationProperties> pair.
+   -->
+   <tag>
+      <name>propertyInputField</name>
+      <tagclass>org.rti.webcgh.webui.taglib.PropertyInputFieldTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      <attribute>
+		<name>size</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+</taglib>

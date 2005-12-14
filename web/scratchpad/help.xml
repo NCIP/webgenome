@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="help.xsl"?>
+<help-doc title="webCGH Help">
+
+	<!-- ============================================================ -->
+	<!--                   Overview                                   -->
+	<!-- ============================================================ -->
+	<section title="webCGH Overview" id="overview">
+		<p>
+			webCGH is a web-based application for
+			plotting and visualizing microarray data, especially comparative
+			genome hybridization (CGH) data.  The system allows the user
+			to select microarray data sets from public as well as private
+			database areas.  The user may perform preliminary filtering,
+			smoothing, and normalization of data prior to plotting.  The
+			system supports several types of plots:
+		</p>
+		
+		<prop-list>
+			<prop name="Scatter Plots" refid="scatterPlot">
+				Plots DNA copy number measurements
+				across the genome, chromosome, or chromosomal interval.
+			</prop>
+			
+			<prop name="Annotation Plots" refid="annotationPlot">
+				Shows DNA copy number measurements
+				in relation to annotated genome feature, such as genes.
+			</prop>
+			
+			<prop name="Annotation Reports" refid="annotationReport">
+				Shows annotation
+				genome features in a tabular format.
+			</prop>
+			
+			<prop name="Ideogram Plot" refid="ideogramPlot">
+				Shows chromosomal amplifications
+				and deletions in relation to cytogenetic chromosome ideograms.
+			</prop>
+			
+			<prop name="Probe Plot" refid="probePlot">
+				Shows measured copy number for
+				selected reporter probes.
+			</prop>
+		</prop-list>
+		
+		<p>
+			In addition, webCGH enables the user to 
+			create <ref id="virtual">virtual experiments</ref> 
+			(i.e. user-defined aggregations of data) and custom 
+			<ref id="pipelines">analytic pipelines</ref>, both of which are persistent.
+		</p>
+	</section>
+	
+	
+	<!-- =============================================================== -->
+	<!--                         Plots                                   -->
+	<!-- =============================================================== -->
+	<section title="Plots" id="plots">
+		
+		<!-- ============ Plot setup ===================== -->
+		<section title="Setting up for Plotting" id="plotSetup">
+		
+			<!-- Selecting experiments -->
+			<section title="Selecting Experiments" id="selectingExperiments">
+				Clicking on the navigation bar link entitled "Data" displays
+				experiments that will be plotted.  Think of this list of experiments
+				as a <em>shopping cart</em>.  To add or remove experiments from the
+				shopping cart click the button at the bottom of the screen.  This
+				will bring the user to a screen containing checkboxes and experiments.
+				Select or deselect experiments by setting and unsetting checkboxes.
+				All experiments in private database areas, public database areas,
+				as well as the user's <ref id="virtual">virtual experiments</ref> will be displayed.
+			</section>
+			
+			<!-- Plotting parameters -->
+			<section title="Plotting Parameters" id="plottingParameters">
+			
+				Plotting parameters control how data will be presented graphically
+				in the plots.  All plotting parameters are set in one form and apply
+				to all plots.  In other words parameters are global. Additionally,
+				many of the plots are interactive.  Interacting with a plot may cause
+				certain plotting plotting parameters to be set.  For instance, in scatter
+				plots of the whole genome chromosome numbers are hot-linked; clicking on a
+				chromosome name navigates the user to a plot of the selected chromosome.
+				This has the side-effect of setting the <ref id="param-chromosome">chromosome
+				parameter</ref>.  Global plotting parameters are desirable
+				in that the user can easily switch between different
+				graphical views of the same underlying data easily.
+				
+				<!-- Genome segment -->
+				<section title="Genome Segment" id="param-genomeSeg">
+					This set of parameters constrains the genome interval that will
+					be displayed in plots.
+					<prop-list>
+						<prop name="chromosome" id="param-chromosome">Chromosome number</prop>
+						<prop name="start" id="param-startPoint">
+							Physical chromosome position of starting point of plot.
+						</prop>
+						<prop name="end" id="param-endPoint">
+							Physical chromosome position of end point in plot.
+						</prop>
+					</prop-list>
+				</section>
+		
+				<!-- Analytic Pipeline -->
+				<section title="Analytic Pipeline" id="param-analyticPipeline">
+					These parameters specify the analytic pipeline that will be performed
+					on data before it is plotted.
+					<prop-list>
+						<prop name="pipeline" id="param-pipeline">
+							Name of analytic pipeline.  For instructions on how to create a new
+							pipeline or change settings for individual pipeline operations see
+							the <ref id="pipelines">Analytic Pipelines</ref> section.
+						</prop>	
+					</prop-list>
+				</section>
+
+				<!-- Plot Dimensions -->
+				<section title="Plot Dimensions" id="plotDimensions">
+					These parameters specify the extent of the plot.
+					<prop-list>
+						<prop name="width" id="param-width">Width of plot on pixels.</prop>
+						<prop name="height" id="param-height">Height of plot in pixels.</prop>
+					</prop-list>
+				</section>
+		
+				<!-- Plot Properties -->
+				<section title="Plot Properties" id="plotProperties">
+					These parameters control which features are displayed in plots.
+					<prop-list>
+						<prop name="Minimum copy number fold change" id="param-minY">
+							This parameters has two effects:  In scatter plots it corresponds the
+							minimum value on the Y-axis.  In annotation and ideogram plots is
+							corresponds to the minimum saturation value for color coded
+							copy number measurement.  i.e. All copy number measurements that
+							are equal to or less than this value will be colored blue.
+						</prop>
+						<prop name="Maximum copy number fold change" id="param-maxY">
+							This parameters has two effects:  In scatter plots it corresponds the
+							maximum value on the Y-axis.  In annotation and ideogram plots is
+							corresponds to the maximum saturation value for color coded
+							copy number measurement.  i.e. All copy number measurements that
+							are equal to or greater than this value will be colored red.
+						</prop>
+						<prop name="Fold change threshold" id="param-threshold">
+							This is used in annotation and ideogram plots to filter out
+							color-coded copy number data between two threshold values
+							(e.g. -0.2 and 0.3).
+						</prop>
+						<prop name="Show annotated feature labels in plot" id="param-showLabels">
+							This parameters controls if the names annotated genome features
+							are displayed in annotation plots.
+						</prop>
+						<prop name="Show ideogram in plot" id="param-showIdeograms">
+							This parameter controls if chromosome ideograms are displayed in
+							plots.
+						</prop>
+						<prop name="Chromosome ideograms per row" id="param-ideogramsPerRow">
+							This specifies the number of chromosome ideograms per row in
+							ideogram plots.  Obviously it is only used when the plot consists
+							of the entire genome.
+						</prop>
+						<prop name="Chromosome ideogram size" id="param-ideogramSize">
+							This controls the relative size of chromosome ideograms in ideogram
+							plots.
+						</prop>
+						<prop name="Annotated genomic feature types" id="param-selectedFeatureTypes">
+							This control allows the user to select which types of annotated genome
+							features will be displayed in the annotation plot.
+						</prop>
+						<prop name="Reference organism" id="param-referenceOrganism">
+							This parameter has two effects: Scatter plots allow data from
+							more than one organism to be plotted simultaneously.  Reference
+							organism specifies which organism defines the physical probe
+							positions on the X-axis.  In annotation and ideogram plots reference
+							organism defines the organism from which the specified chromosome(s)
+							is derived.
+						</prop>
+						<prop name="Specific probes" id="param-probes">
+							This is used in probe plots to specify specific probes that
+							will be viewed.
+						</prop>
+					</prop-list>
+				</section>
+			</section>
+		</section>
+		
+		
+		<!-- ============= Plots ======================= -->
+		<section title="Plot Types" id="plotTypes">
+		
+			<!-- Scatter plot -->
+			<section title="Scatter Plot" id="scatterPlot">
+				Scatter plots display measured copy number against physical genome location.
+				Users can view data at arbitrary resolutions from the entire genome on down.
+				Data from multiple organisms can be plotted simultaneously.  (The
+				user must select a <a href="#param-referenceOrganism">reference organism
+				</a> if data from more than one organism it to be plotted.  Users may
+				also display CGH and gene expression data simultaneously.  The system
+				determines which data are CGH and which are gene expression data from
+				user settings within the <ref id="selectingExperiments">Data Selection</ref> form.
+			</section>
+			
+			<!-- Annotation plot -->
+			<section title="Annotation Plot" id="annotationPlot">
+			
+			</section>
+			
+			<!-- Annotation report -->
+			<section title="Annotation Report" id="annotationReport">
+			
+			</section>
+			
+			<!-- Ideogram plot -->
+			<section title="Ideogram Plot" id="ideogramPlot">
+			
+			</section>
+			
+			<!-- Probe plot -->
+			<section title="Probe Plot" id="probePlot">
+			
+			</section>
+		
+		</section>
+
+	</section>
+	
+	
+	<!-- ================================================================ -->
+	<!--                         Virtual experiments                      -->
+	<!-- ================================================================ -->
+	<section title="Virtual Experiments" id="virtual">
+		The system allows the user to aggregate individual bioassays from
+		one or more experiments to create user-defined data sets called
+		<em>virtual experiments</em>.  These groupings are stored persistently
+		as cookies in the user's browser.  Note that the browser must be enabled
+		to receive cookies in order to save virtual experiments.  Note also that
+		virtual experiments can only be retrieved from the particular computer
+		that they were created on.
+	
+		<!-- ============= Managing virtual experiments ============= -->
+		<section title="Managing Virtual Experiments" id="managingVirtual">
+			<p>
+				For overall information on virtual experiments see
+				<ref id="virtual">Virtual Experiments</ref>
+			</p>
+			<p>
+				The virtual experiment management
+				feature allows the user to delete existing virtual experiments
+				and explore the properties of virtual experiments.  When the user
+				clicks on a <em>delete</em> link the system will prompt the user
+				before actually deleting the experiment to ensure that experiments
+				are not inadvertently deleted.
+			</p>
+			
+			<p>
+				To access this feature click on the <em>Virtual Experiments</em> tab
+				and click the <em>Manage Experiments</em> link if this page is not
+				already displayed.
+			</p>
+		</section>
+		
+		
+		<!-- ============= Creating new virtual experiments ========= -->
+		<section title="Creating New Virtual Experiments" id="newVirtual">
+			To create a new virtual experiment click on the <em>Virtual Experiment</em>
+			tab and <em>New Experiment</em> sub-tab.  The system will then guide
+			the user through a wizard-like process with the following steps:
+			
+			<prop-list>
+				<prop name="Selecting Experiments" id="virtualSelectExperiments">
+					The user must first select one or more experiments from which bioassays
+					will be drawn for the new virtual experiment.
+				</prop>
+				<prop name="Selecting Bioassays" id="virtualSelectBioAssays">
+					In this screen all bioassays from experiments selected in the previous
+					screen are displayed.  The bioassays selected in this screen will
+					constitute the set of bioassays in the virtual experiment.
+				</prop>
+				<prop name="Annotating Virtual Experiment" id="virtualAnnotation">
+					In this screen the user must provide some basic annotation that will
+					be associated with the new virtual experiment, including an experiment
+					name, an organism, and a description.
+				</prop>
+				<prop name="Committing Virtual Experiment" id="virtualSummary">
+					In this screen the user reviews information entered and commits
+					the virtual experiment to persistent storage.
+				</prop>
+			</prop-list>
+		</section>	
+	</section>
+	
+	
+	<!-- ================================================================= -->
+	<!--                       Analytic Pipelines                          -->
+	<!-- ================================================================= -->
+	<section title="Analytic Pipelines" id="pipelines">
+		When a user creates a plot webGGH may first
+		invoke an <em>analytic pipeline</em> on data.  An analytic pipeline
+		is a sequence of analytical operations that may filter, normalize, or
+		compute aggregate statistics on data.  The system comes pre-loaded
+		with default pipelines.  Additionally the user may create custom
+		analytic pipelines which are persisted as cookies in their browser.  Users
+		specify which pipeline is invoked through the <ref id="plotParams">
+		plot parameters</ref> screen.  Here we describe how custom analytic pipelines
+		are managed and created.
+		
+		<!-- ================= Managing analytic pipelines ================ -->
+		<section title="Managing Analytic Pipelines" id="pipelines-manage">
+		
+		</section>
+		
+		<!-- ================= Creating new analytic pipelines ============ -->
+		<section title="Creating New Analytic Pipelines" id="pipelines-new">
+		
+		</section>
+	</section>
+	
+	
+	
+</help-doc>

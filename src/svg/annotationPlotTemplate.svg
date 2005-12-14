@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20000303 Stylable//EN"
+	"svg11-flat-20030114.dtd">
+<svg id="svgNode" xmlns="http://www.w3.org/2000/svg-20000303-stylable" onload="init(evt);">
+
+	<script id="declarations" type="text/ecmascript"/>
+
+	<script type="text/ecmascript">
+		<![CDATA[
+		
+			function init(evt) {
+				svgDoc = evt.getTarget().getOwnerDocument();
+				var rootElmt = svgDoc.getElementById("svgNode");
+				var height = parseInt(rootElmt.getAttribute("height"));
+				parent.resizeImage(height);
+			}
+			
+			// Show tooltip
+			function showToolTip(evt, toolTipText) {
+			
+				// Determine tooltip coordinates
+				var x = evt.getClientX();
+				var y = evt.getClientY();
+				var ttX = x + 5;
+				var ttY = y - 5;
+				
+				// Set text node
+				var txt = document.getElementById("toolTipText");
+				var firstChild = txt.firstChild;
+				if (firstChild != null)
+					txt.removeChild(firstChild);
+				txt.setAttribute("x", ttX);
+				txt.setAttribute("y", ttY);
+				txt.setAttribute("font-size", "10");
+				txt.appendChild(document.createTextNode(toolTipText));
+				txt.setAttribute("visibility", "visible");
+				
+				// Create bounding box
+				var txtWidth = toolTipText.length * 6;
+				var bbX = ttX - 5;
+				var bbY = ttY - 15;
+				var bbWidth = txtWidth + 10;
+				var bbHeight = 20;
+				var bb = document.getElementById("toolTipBox");
+				bb.setAttribute("x", bbX);
+				bb.setAttribute("y", bbY);
+				bb.setAttribute("width", bbWidth);
+				bb.setAttribute("height", bbHeight);
+				bb.setAttribute("visibility", "visible");
+			}
+			
+			// Hide tooltip
+			function hideToolTip() {
+				var txt = document.getElementById("toolTipText");
+				txt.setAttribute("visibility", "hidden");
+				var bb = document.getElementById("toolTipBox");
+				bb.setAttribute("visibility", "hidden");
+			}
+		]]>
+	</script>
+
+	<!-- Insertion Point -->
+	<g id="insertionPoint"/>
+	
+	<!-- Tool tip -->
+	<rect id="toolTipBox" stroke="black" stroke-width="1" fill="yellow"/>
+	<text id="toolTipText" font-size="10"/>
+
+</svg>

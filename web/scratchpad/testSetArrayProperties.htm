@@ -1,0 +1,60 @@
+<html>
+	<script language="Javascript">
+	
+	function synchronize(expName) {
+		var form = document.forms[0];
+		var elements = form.elements;
+		var value = null;
+		for (var i = 0; i < elements.length; i++) {
+			var element = elements[i];
+			var name = element.name;
+			if (name.indexOf(expName) == 0) {
+				if (name.indexOf("-") >= 0)
+					element.value = value;
+				else
+					value = element.value;
+			}
+		}
+	}
+	
+	</script>
+	<body>
+		<form>
+			<table>
+				<tr>
+					<td>
+						<select name="1" onchange="synchronize('1')">
+							<option value="null">Select for entire experiment</option>
+							<option value="array1">Array 1</option>
+							<option value="array2">Array 2</option>
+						</select>
+						Experiment 1
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<select name="1-1">
+							<option value="null">Select for bioassay</option>
+							<option value="array1">Array 1</option>
+							<option value="array2">Array 2</option>
+						</select>
+						Bioassay 1.1
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<select name="1-2">
+							<option value="null">Select for bioassay</option>
+							<option value="array1">Array 1</option>
+							<option value="array2">Array 2</option>
+						</select>
+						Bioassay 1.2
+					</td>
+				</tr>
+			</table>
+		</form>
+	</body>
+</html>

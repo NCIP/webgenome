@@ -1,0 +1,250 @@
+.documentationHeader {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #63674E;
+}
+
+.documentationBody {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: normal;
+	color: #020202;
+}
+
+.logo {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #63674E;
+}
+
+.menu {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #63674E;
+}
+
+A.menu {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: #63674E;
+	text-decoration: none;
+}
+
+A.menu:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+}
+
+A.submenu {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: #63674E;
+	text-decoration: none;
+}
+
+A.submenu:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+}
+
+A.submenu-selected {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: #63674E;
+	text-decoration: underline;
+}
+
+A.submenu-selected:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: black;
+	text-decoration: underline;
+}
+
+A.plot-submenu {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: navy;
+	text-decoration: none;
+}
+
+A.plot-submenu:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+}
+
+.plot-submenu-selected {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	font-weight: bold;
+	color: navy;
+	text-decoration: underline;
+}
+
+.required-param {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: red;
+	text-decoration: none;
+}
+
+.optional-param {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: orange;
+	text-decoration: none;
+}
+
+.ignored-param {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+	font-weight: bold;
+	color: blue;
+	text-decoration: none;
+}
+
+td.folderTab {
+	background-color: silver;
+}
+
+td.folderTab-selected {
+	background-color: #eeeedd;
+}
+
+.title {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: normal;
+	color: #63674E;
+}
+
+.category {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	font-weight: bolder;
+	color: navy;
+}
+
+.fieldName {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: black;
+}
+
+.fieldValue {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: normal;
+	color: blue;
+}
+
+p.small {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	color: #000000;
+}
+
+.tbl {
+	border: 1px solid #63674E;
+}
+
+.dataHeadTD {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 8pt; PADDING-BOTTOM: 3px; COLOR: #000000; PADDING-TOP: 3px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFCA66
+}
+
+.contentTD {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 8pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFFFFF
+}
+
+.contentTD-odd {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 8pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e7e7e7
+}
+
+.separator {
+	background-color: navy;
+	height: 2;
+}
+
+.parenthetical {
+	color: blue;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
+.disabled {
+	background-color: silver;
+	color: #666666
+}
+
+.infoMsg {
+  font-size: 12pt;
+  font-weight: bold;
+  color: #cc6600;
+}
+
+.smallInfoMsg {
+  font-size: 8pt;
+  font-weight: bold;
+  color: #cc6600;
+}
+
+.largeInfoMsg {
+  font-size: 18pt;
+  font-weight: bold;
+  color: #cc6600;
+}
+
+.paragraphHeading {
+  font-size: 14pt;
+  font-weight: bold;
+  color: #cc6600;
+}
+
+.opType {
+  font-size: 12pt;
+  font-weight: bold;
+  color: #cc6600;
+}
+
+
+.opCategory {
+  font-size: 12pt;
+  font-weight: bold;
+  color: blue;
+}
+  
+.exceptionMsg {
+  color: red;
+}
+
+.statusMsg {
+  color: red;
+  font-weight: bold;
+}
+
+.red {
+	color:red;
+	font-weight: bold;
+	font-size: 12pt;
+}

@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "struts-config_1_1.dtd">
+
+<struts-config>
+
+
+	<!-- ====================================================== -->
+	<!--                    Form Beans                          -->
+	<!-- ====================================================== -->
+	<form-beans>
+		<form-bean
+			name="defaultForm"
+			type="org.rti.webcgh.webui.MapBackedForm"/>
+		<form-bean
+			name="virtualExperimentForm"
+			type="org.rti.webcgh.webui.virtual.VirtualExperimentForm"/>
+		<form-bean
+			name="plotParamsForm"
+			type="org.rti.webcgh.webui.plot.PlotParamsForm"/>
+		<form-bean
+			name="pipelineForm"
+			type="org.rti.webcgh.webui.pipeline.PipelineForm"/>
+		<form-bean
+			name="loginForm"
+			type="org.rti.webcgh.webui.profile.LoginForm"/>
+		<form-bean
+			name="dataSelectionForm"
+			type="org.rti.webcgh.webui.DataSelectionForm"/>
+		<form-bean
+			name="skyForm"
+			type="org.rti.webcgh.webui.admin.SkyForm"/>
+		<form-bean
+			name="cytobandForm"
+			type="org.rti.webcgh.webui.admin.CytobandForm"/>
+		<form-bean
+			name="annotationForm"
+			type="org.rti.webcgh.webui.admin.AnnotationForm"/>
+		<form-bean
+			name="probeSetForm"
+			type="org.rti.webcgh.webui.admin.ProbeSetForm"/>
+	</form-beans>
+	
+	
+	<!-- =========================================================== -->
+	<!--                   Exception handlers                        -->
+	<!-- =========================================================== -->
+	<global-exceptions>
+	
+    <exception
+    	type="org.rti.webcgh.webui.SessionTimeoutException"
+    	path="session.timeout.exception.page"
+    	key="session.timeout"
+    	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
+    	scope="request"/>
+    	
+    <exception
+    	type="org.rti.webcgh.domain.analytic.DataSetInvalidationException"
+    	path="data.invalidation.page"
+    	key="data.invalidation"
+    	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
+    	scope="request"/>
+    	
+    <exception
+    	type="org.rti.webcgh.core.WebcghSecurityException"
+    	path="security.exception.page"
+    	key="security.exception"
+    	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
+    	scope="request"/>
+  
+    <exception
+    	type="org.rti.webcgh.core.WebcghSystemException"
+    	path="system.exception.page"
+    	key="system.exception"
+    	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
+    	scope="request"/>
+    	
+    <exception
+    	type="org.rti.webcgh.core.WebcghApplicationException"
+    	path="application.exception.page"
+    	key="application.exception"
+    	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
+    	scope="request"/>
+    	
+    <exception
+    	type="java.lang.Exception"
+    	path="unknown.exception.page"
+    	key="system.exception"
+    	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
+    	scope="request"/>
+		
+  	</global-exceptions>
+	
+	
+	
+	<!-- ================================================= -->
+	<!--                   Actions                         -->
+	<!-- ================================================= -->
+	<action-mappings>
+	
+		<action
+			path="/home"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="home.page"/>
+			
+		<action
+			path="/svgTest"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="svg.test.page"/>
+			
+			
+		<!-- ================================================= -->
+		<!--        User profile related actions               -->
+		<!-- ================================================= -->
+		
+		<action
+			path="/profile/loginPage"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="profile.login.page"/>
+			
+		<action
+			path="/profile/login"
+			name="loginForm"
+			scope="session"
+			validate="true"
+			input="/profile/loginPage.do">
+			<forward name="success" path="login.confirm.page"/>
+			<forward name="failure" path="/profile/loginPage.do"/>
+			<forward name="admin" path="/adminHome.do"/>
+		</action>
+			
+		<action
+			path="/profile/logout"
+			name="loginForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="/home.do"/>
+		</action>
+		
+		<!-- ================================================= -->
+		<!--       Virtual experiment related actions          -->
+		<!-- ================================================= -->
+		
+		<action
+			path="/virtual/list">
+			<forward name="success" path="virtual.list.page"/>
+		</action>
+		
+		<action
+			path="/virtual/selectExperiments">
+			<forward name="success" path="virtual.select.experiments.page"/>
+		</action>
+		
+		<action
+			path="/virtual/recordSelectedExperiments"
+			type="org.apache.struts.actions.ForwardAction"
+			name="dataSelectionForm"
+			scope="session"
+			validate="true"
+			input="/virtual/selectExperiments.do"
+			parameter="/virtual/selectBioAssays.do"/>
+		
+		<action
+			path="/virtual/selectBioAssays"
+			name="dataSelectionForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="virtual.select.bioassays.page"/>
+		</action>
+		
+		<action
+			path="/virtual/recordSelectedBioAssays"
+			type="org.apache.struts.actions.ForwardAction"
+			name="dataSelectionForm"
+			scope="session"
+			validate="true"
+			input="/virtual/selectBioAssays.do"
+			parameter="/virtual/annotation.do"/>
+				
+		<action
+			path="/virtual/annotation"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="virtual.annotation.page"/>
+			
+		<action
+			path="/virtualRecordAnnotation"
+			type="org.apache.struts.actions.ForwardAction"
+			name="virtualExperimentForm"
+			scope="session"
+			validate="true"
+			input="/virtual/annotation.do"
+			parameter="/virtual/summary.do"/>
+			
+		<action
+			path="/virtual/summary"
+			name="virtualExperimentForm"
+			scope="session"
+			validate="false"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="virtual.summary.page"/>
+		
+		<action
+			path="/virtual/save"
+			name="virtualExperimentForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="virtual.confirm.page"/>
+		</action>
+		
+		<action
+			path="/virtual/delete"
+			name="defaultForm">
+			<forward name="success" path="virtual.confirm.page"/>
+		</action>
+		
+		
+		<!-- ================================================ -->
+		<!--         Analytic pipeline related actions        -->
+		<!-- ================================================ -->
+		
+		<action
+			path="/showPipelines"
+			type="org.rti.webcgh.webui.pipeline.GetPipelinesAction"
+			name="pipelineForm"
+			scope="request"
+			validate="false">
+			<forward name="no.pipelines" path="no.pipelines.page"/>
+			<forward name="success" path="pipelines.page"/>
+		</action>
+		
+		<action
+			path="/newPipelineSetup"
+			type="org.rti.webcgh.webui.pipeline.NewPipelineSetupAction"
+			name="pipelineForm"
+			scope="request"
+			validate="false">
+			<forward name="success" path="edit.pipeline.page"/>
+		</action>
+		
+		<action
+			path="/addOperation"
+			type="org.rti.webcgh.webui.pipeline.AddOperationAction"
+			name="pipelineForm"
+			scope="request"
+			validate="false">
+			<forward name="success" path="edit.pipeline.page"/>
+		</action>
+		
+		<action
+			path="/removeOperation"
+			type="org.rti.webcgh.webui.pipeline.RemoveOperationAction"
+			name="pipelineForm"
+			scope="request"
+			validate="false">
+			<forward name="success" path="edit.pipeline.page"/>
+		</action>
+		
+		<action
+			path="/savePipeline"
+			type="org.rti.webcgh.webui.pipeline.SavePipelineAction"
+			name="pipelineForm"
+			scope="request"
+			input="edit.pipeline.page"
+			validate="true">
+			<forward name="success" path="confirm.pipelines.modification.page"/>
+			<forward name="failure" path="edit.pipeline.page"/>
+		</action>
+		
+		<action
+			path="/deletePipeline"
+			type="org.rti.webcgh.webui.pipeline.DeletePipelineAction"
+			name="pipelineForm"
+			scope="request"
+			validate="false">
+			<forward name="success" path="confirm.pipelines.modification.page"/>
+		</action>
+		
+		<action
+			path="/editPipeline"
+			type="org.rti.webcgh.webui.pipeline.EditPipelineAction"
+			name="pipelineForm"
+			scope="request"
+			validate="false">
+			<forward name="success" path="edit.pipeline.page"/>
+		</action>
+		
+		<!-- ==================================================== -->
+		<!--          Application Client                          -->
+		<!-- ==================================================== -->
+		
+		<action
+			path="/client/plot"
+			name="plotParamsForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="/plot/setup.do"/>
+		</action>
+		
+		<!-- ==================================================== -->
+		<!--          Shopping cart actions                       -->
+		<!-- ==================================================== -->
+		
+		<action
+			path="/cart/contents"
+			name="plotParamsForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="cart.contents.page"/>
+			<forward name="emptyCart" path="cart.empty.page"/>
+		</action>
+		
+		<action
+			path="/cart/removeExperiments"
+			name="dataSelectionForm"
+			scope="session"
+			validate="true">
+			<forward name="success" path="/cart/contents.do"/>
+		</action>
+		
+		<action path="/cart/selectExperiments">
+			<forward name="success" path="cart.select.experiments.page"/>
+		</action>
+		
+		<action
+			path="/cart/recordSelectedExperiments"
+			name="dataSelectionForm"
+			scope="request"
+			validate="true"
+			input="/cart/selectExperiments.do">
+			<forward name="success" path="/cart/selectExperimentTypes.do"/>
+		</action>
+				
+		<action
+			path="/cart/selectExperimentTypes">
+			<forward name="success" path="cart.select.experiment.types.page"/>
+		</action>
+
+		<action
+			path="/cart/recordSelectedExperimentTypes"
+			name="defaultForm">
+			<forward name="success" path="/cart/selectArrays.do"/>
+			<forward name="noExperimentTypes" path="/cart/selectExperimentTypes.do"/>
+			<forward name="splits" path="cart.experiment.type.splits.page"/>
+		</action>
+		
+		<action path="/cart/selectArrays">
+			<forward name="success" path="cart.select.arrays.page"/>
+		</action>
+		
+		<action
+			path="/cart/recordArrays"
+			name="defaultForm">
+			<forward name="success" path="/cart/selectAssembly.do"/>
+			<forward name="noProbeSets" path="/cart/selectArrays.do"/>
+			<forward name="splits" path="cart.organism.splits.page"/>
+		</action>
+		
+		<action
+			path="/cart/selectAssembly">
+			<forward name="success" path="cart.select.assembly.page"/>
+		</action>
+		
+		<action
+			path="/cart/mapProbes"
+			name="defaultForm">
+			<forward name="success" path="cart.probe.mapping.results.page"/>
+			<forward name="noAssembly" path="/cart/selectAssembly.do"/>
+		</action>
+		
+		<!-- ================================================ -->
+		<!--             Plot related actions                 -->
+		<!-- ================================================ -->
+			
+		<action
+			path="/plot/params"
+			name="plotParamsForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="plot.params.page"/>
+		</action>
+		
+		<action
+			path="/recordPlotParams"
+			type="org.apache.struts.actions.ForwardAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="true"
+			input="/plot/params.do"
+			parameter="confirm.change.plot.params.page"/>
+		
+		<action
+			path="/updateSelectedFeatureTypes"
+			type="org.rti.webcgh.webui.plot.FeatureTypesSetupAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="update.selected.feature.types.page"/>
+			<forward name="no.assembly" path="/plot/params.do"/>
+		</action>
+		
+		<action
+			path="/plot/setup"
+			name="plotParamsForm"
+			scope="session"
+			validate="true"
+			input="/plot/params.do">
+			<forward name="scatter" path="scatter.plot.page"/>
+			<forward name="annotation" path="annotation.plot.page"/>
+			<forward name="ideogram" path="ideogram.plot.page"/>
+			<forward name="bar" path="bar.plot.page"/>
+			<forward name="no.data" path="cart.empty.page"/>
+			<forward name="no.intervals" path="/plot/params.do"/>
+			<forward name="incompatible.assemblies" path="/plot/params.do"/>
+		</action>
+		
+		<action
+			path="/annotationReport"
+			type="org.rti.webcgh.webui.plot.AnnotationReportAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="annotation.report.page"/>
+		</action>
+		
+		<action
+			path="/plot/svg"
+			name="plotParamsForm"
+			validate="false"
+			scope="session">
+			<forward name="success" path="/WEB-INF/jsp/plot/showSvg.jsp"/>
+		</action>
+			
+		<action
+			path="/fileDownload"
+			type="org.rti.webcgh.webui.download.FileDownloadAction">
+			<forward name="success" path="annotation.report.page"/>
+		</action>
+		
+		<!-- ======================================================== -->
+		<!--           Administrator actions                          -->
+		<!-- ======================================================== -->
+		
+		<action
+			path="/adminHome"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="admin.home.page"/>
+			
+		<action
+			path="/showSky"
+			type="org.rti.webcgh.webui.admin.ShowSkySetupAction">
+			<forward name="success" path="show.sky.page"/>
+		</action>
+				
+		<action
+			path="/loadSkyForm"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="load.sky.page"/>
+			
+		<action
+			path="/loadSkyData"
+			type="org.rti.webcgh.webui.admin.LoadSkyDataAction"
+			name="skyForm"
+			validate="true"
+			input="load.sky.page"
+			scope="session">
+			<forward name="success" path="/showSky.do"/>
+		</action>
+		
+		<action
+			path="/deleteSkyData"
+			type="org.rti.webcgh.webui.admin.DeleteSkyDataAction">
+			<forward name="success" path="/showSky.do"/>
+		</action>
+			
+		<action
+			path="/showCytobands"
+			type="org.rti.webcgh.webui.admin.ShowCytobandsSetupAction">
+			<forward name="success" path="show.cytobands.page"/>
+		</action>
+			
+		<action
+			path="/loadCytobandsForm"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="load.cytobands.page"/>
+			
+		<action
+			path="/loadCytobands"
+			type="org.rti.webcgh.webui.admin.LoadCytobandsAction"
+			name="cytobandForm"
+			validate="true"
+			scope="session"
+			input="load.cytobands.page">
+			<forward name="success" path="/showCytobands.do"/>
+		</action>
+		
+		<action
+			path="/deleteCytobands"
+			type="org.rti.webcgh.webui.admin.DeleteCytobandsAction">
+			<forward name="success" path="/showCytobands.do"/>
+		</action>
+		
+		<action
+			path="/showAnnotation"
+			type="org.rti.webcgh.webui.admin.ShowAnnotationSetupAction">
+			<forward name="success" path="show.annotation.page"/>
+		</action>
+		
+		<action
+			path="/loadAnnotationForm"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="load.annotation.page"/>
+			
+		<action
+			path="/loadAnnotation"
+			type="org.rti.webcgh.webui.admin.LoadAnnotationAction"
+			name="annotationForm"
+			validate="true"
+			scope="session"
+			input="load.annotation.page">
+			<forward name="success" path="/showAnnotation.do"/>
+		</action>
+		
+		<action
+			path="/deleteAnnotation"
+			type="org.rti.webcgh.webui.admin.DeleteAnnotationAction">
+			<forward name="success" path="/showAnnotation.do"/>
+		</action>
+		
+		<action
+			path="/showProbeSets"
+			type="org.rti.webcgh.webui.admin.ShowProbeSetsSetupAction">
+			<forward name="success" path="show.probe.sets.page"/>
+		</action>
+		
+		<action
+			path="/loadProbeSetForm"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="load.probe.set.page"/>
+			
+		<action
+			path="/loadProbeSet"
+			type="org.rti.webcgh.webui.admin.LoadProbeSetAction"
+			name="probeSetForm"
+			validate="true"
+			scope="session"
+			input="load.probe.set.page">
+			<forward name="success" path="/showProbeSets.do"/>
+		</action>
+		
+		<action
+			path="/deleteProbeSet"
+			type="org.rti.webcgh.webui.admin.DeleteProbeSetAction">
+			<forward name="success" path="/showProbeSets.do"/>
+		</action>
+		
+		
+	</action-mappings>
+	
+	
+	<!-- ==================================================== -->
+	<!--            Controller                                -->
+	<!-- ==================================================== -->
+	
+	
+	<controller>
+	  <set-property property="processorClass"
+	      value="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
+	</controller>
+	
+	<!-- =========================================================== -->
+	<!--                  Plug-ins                                   -->
+	<!-- =========================================================== -->
+	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+	    <set-property property="definitions-config" 
+		                 value="/WEB-INF/tiles-config.xml" />
+	    <set-property property="moduleAware" value="true" />
+	    <set-property property="definitions-parser-validate" value="true" />
+	</plug-in>
+	
+	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+	  <set-property property="contextConfigLocation"
+	      value="/WEB-INF/applicationContext.xml"/>
+	</plug-in>
+	
+
+	
+</struts-config>
