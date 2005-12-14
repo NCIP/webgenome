@@ -1,0 +1,176 @@
+<!-- ================================================== -->
+<!--        Ant build file for webCGH                   -->
+<!-- ================================================== -->
+
+<project name="webCGH" default="help" basedir=".">
+
+	<!-- Basic configuration -->
+	<property file="system-build.properties"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="lib.dir" value="${build.dir}/lib"/>
+	<property name="src.dir" value="src"/>
+	<property name="temp.dir" value="${build.dir}/temp"/>
+	<property name="web.dir" value="web"/>
+	<property name="conf.dir" value="${src.dir}/conf"/>
+	<property name="db.src.dir" value="initdb"/>
+	<property file="src/conf/webcgh.properties"/>
+	
+	<path id="class.path">
+		<fileset dir="web/WEB-INF/lib" includes="*.*"/>
+		<pathelement location="web/svg"/>
+		<pathelement location="etc"/>
+	</path>
+	
+	<!-- Compile -->
+	<target name="compile">
+		<echo>Creating build directories</echo>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		
+		<echo>Compling sources</echo>
+		<javac
+			srcdir="${src.dir}"
+			destdir="${classes.dir}"
+			classpathref="class.path"
+			debug="true"
+			target="1.4"
+			source="1.4"
+			excludes="org/rti/webcgh/sandbox/**"
+		/>
+	</target>
+	
+	<!-- Run unit tests -->
+	<target name="unit" depends="compile">
+		<echo>Creating directory for JUnit reports</echo>
+		<property name="junit.output.dir" value="${junit.report.dir}/temp"/>
+		<mkdir dir="${junit.report.dir}"/>
+		<mkdir dir="${junit.output.dir}"/>
+		
+		<echo>Performing tests</echo>
+		<junit>
+			<formatter type="xml"/>
+			<classpath>
+				<path refid="class.path"/>
+				<pathelement location="${classes.dir}"/>
+			</classpath>
+			<batchtest fork="yes" todir="${junit.output.dir}">
+				<fileset dir="${classes.dir}"
+					includes="**/*Tester.class"
+					excludes="**/http_unit_test/*"/>
+			</batchtest>
+		</junit>
+		
+		<echo>Creating report</echo>
+		<junitreport todir="${junit.report.dir}">
+			<fileset dir="${junit.output.dir}" includes="TEST-*.xml"/>
+			<report format="frames" todir="${junit.report.dir}/html"/>
+		</junitreport>
+		
+		<echo>Cleaning up</echo>
+		<delete dir="${junit.output.dir}"/>
+		
+	</target>
+		
+	<!-- Generate Javadoc documentation -->
+	<target name="doc">
+		<echo>Creating javadoc directory</echo>
+		<mkdir dir="${javadoc.dir}"/>
+		
+		<echo>Generating documentation</echo>
+		<javadoc
+			sourcepath="${src.dir}"
+			packagenames="org.rti.*"
+			destdir="${javadoc.dir}"
+			excludepackagenames="**/*unit_test,org/rti/webcgh/sandbox,org/rti/webcgh/cron/**"
+			source="1.4"
+			Windowtitle="webGenome API"
+			Header="webGenome API"
+		/>
+	</target>
+	
+	<!-- Copy hibernate web dtd files -->
+	<target name="copyhttphibernatexmls">		
+		<echo>Copy hibernate xml that point to http hibernate.dtd</echo>		
+		<copy todir="${src.dir}/org/rti/webcgh/array/persistent/impl">
+			<fileset dir="${src.dir}/org/rti/webcgh/array/persistent/buildxml" includes="**/*.xml"/>
+		</copy>		
+	</target>
+
+	
+	<!-- Create JAR files -->
+	<target name="jar" depends="copyhttphibernatexmls, compile">
+			
+		<echo>Creating lib directory</echo>
+		<mkdir dir="${lib.dir}"/>	
+			
+		<echo>Creating JAR files</echo>
+		<jar
+			destfile="${lib.dir}/webcgh.jar"
+			basedir="${classes.dir}"/>
+	</target>
+	
+	<!-- Create WAR file -->
+	<target name="war" depends="jar">
+		<echo>Creating distribution directory</echo>
+		<mkdir dir="${dist.dir}"/>
+		
+		<echo>Creating WAR file</echo>
+		<war
+			destfile="${dist.dir}/${system.name}.war"
+			webxml="${web.dir}/WEB-INF/web.xml"
+			basedir="${web.dir}"
+			excludes="scratchpad/**">
+			<lib dir="${lib.dir}">
+				<include name="*.jar"/>
+			</lib>
+			<classes dir="${src.dir}">
+				<exclude name="**/*.java"/>			
+			</classes>
+		</war>
+	</target>
+	
+	<!-- Copy database files -->
+	<target name="db">
+		
+		<echo>Setting up databases</echo>
+		<delete dir="${db.home}"/>
+		<mkdir dir="${db.home}"/>
+		<copy todir="${db.home}/${data.file.dir}">
+			<fileset dir="${db.src.dir}/${data.file.dir}" includes="**/*.*"/>
+		</copy>
+		<copy todir="${db.home}/${cloudscape.dir}">
+			<fileset dir="${db.src.dir}/${cloudscape.dir}" includes="**/*.*"/>
+		</copy>
+		<copy todir="${db.home}/table_defs">
+			<fileset dir="${db.src.dir}/table_defs" includes="**/*.*"/>
+		</copy>
+	</target>
+	
+	<!-- Clean up -->
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${junit.report.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="${javadoc.dir}"/>
+	</target>
+
+
+	<!-- Print help message -->
+	<target name="help">
+		<echo>
+		
+Targets:
+
+	help - Print help message
+	unit - Compile and run unit tests
+	all  - Build the distribution
+	db   - Install database
+		
+		</echo>
+	</target>
+	
+	<!-- Build the distribution -->
+	<target name="all" depends="clean,war"/>
+	
+
+</project>

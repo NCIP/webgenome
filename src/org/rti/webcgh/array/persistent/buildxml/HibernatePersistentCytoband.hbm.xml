@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="org.rti.webcgh.array.persistent.impl.HibernatePersistentCytoband" table="CYTOBAND">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+
+		<property name="name"/>
+		<property name="start" column="chrom_start"/>
+		<property name="end" column="chrom_end"/>
+		<property name="stain"/>
+	
+	</class>
+
+</hibernate-mapping>

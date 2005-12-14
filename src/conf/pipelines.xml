@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pipelines>
+	<org.rti.webcgh.analytic.AnalyticPipeline name="none">
+		<operations class="java.util.ArrayList"/>
+	</org.rti.webcgh.analytic.AnalyticPipeline>
+	<org.rti.webcgh.analytic.AnalyticPipeline name="simple smoothing">
+		<operations class="java.util.ArrayList">
+			<org.rti.webcgh.analytic.SmoothOperation 
+				displayName="Simple Data Smoothing" 
+				window="5"/>
+		</operations>
+	</org.rti.webcgh.analytic.AnalyticPipeline>
+	<org.rti.webcgh.analytic.AnalyticPipeline name="average">
+		<operations class="java.util.ArrayList">
+			<org.rti.webcgh.analytic.AverageOperation 
+				displayName="Average Within Experiments"/>
+		</operations>
+	</org.rti.webcgh.analytic.AnalyticPipeline>
+</pipelines>

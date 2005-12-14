@@ -1,0 +1,62 @@
+<h1>WebGenome 2.0 Administration Manual</h1>
+
+<h2>1.  INSTALLATION</h2>
+
+<h3>1.1  System Requirements</h3>
+
+<ul>
+	<li>Java 1.4</li>
+	<li>Jakarta Tomcat 5.0 (5.0.28 recommended)</li>
+	<li>Recent version of Ant, if building system</li>
+</ul>
+
+<h3>1.2  Building System</h3>
+
+<ol>
+	<li>Unzip the distribution in a suitable directory location.</li>
+	<li>Open a command window or shell.</li>
+	<li>Change to the <em>WEBGENOME_ROOT</em> directory.</li>
+	<li>Type 'ant all' at the prompt.  This will result in the creation of a WAR file
+		<em>WEBGENOME_ROOT/dist/webGenome.war</em> as well as the generation of
+		Javadoc API documentation in the <em>WEBGEONME_ROOT/doc/api</em> directory.
+	</li>
+</ol>
+
+
+<h3>1.3  Installing System</h3>
+
+<ul>
+	<li>
+		Copy the file <em>WEBGENOME_ROOT/dist/webGenome.war</em> to <em>TOMCAT/webapps</em>.  Alternatively,
+		unzip the WAR file in a suitable locatation (denoted <em>WEBGENOME_INSTALL_DIR</em>) and use the Tomcat administration tool to create a new
+		context.  Set the document base to <em>WEBGENOME_INSTALL_DIR</em>.  It may be necessary to copy the file
+		<em>WEBGENOME_INSTALL_DIR/WEB-INF/lib/j2ee.jar</em> to <em>TOMCAT/shared/lib</em> if webGenome will
+		not start properly.
+	</li>
+	<li>Move the directory <em>WEBGENOME_ROOT/db</em> to a permanant location.  This directory contains Cloudscape and
+	Excel databases uses by the system.</li>
+</ul>
+
+<h3>1.4  Configuring System</h3>
+
+<ol>
+	<li>Open the file <em>WEBGENOME_INSTALL_DIR/WEB-INF/classes/webcgh.properties</em> with a text editor.  Set the sysadmin properties appropriately.</li>
+	<li>Set the embedded Cloudscape database and Excel "database" properties to the absolute paths to embedded database and
+	Excel files, respectively.  Recall that these directories were copied in a permanant location in section 1.3 above.</li>
+</ol>
+
+
+<h2>2.  ADMINISTRATION</h2>
+<p>
+Administration of webGenome consists primarily of periodically updating the embedded database
+with new cytoband, probe location, genomic annotation, and SKY/M-FISH&CGH data.  All data must
+be uploaded in tab-delimited text format.  The system comes
+with both web-based and command line administrative tools for performing these functions.  Command
+line tools are located in the directory <em>WEBGENOME_ROOT/bin</em>.  Currently all tools run only on
+Windows platforms.  Before invoking any of the tools you must set the WEBCGH_HOME environment variable
+to point to a directory containing the webGenome web application files (e.g. <em>TOMCAT/webapps/webGenome</em>).
+</p>
+<p>
+In order to invoke the web interfaces for these tools you must log into webGenome as 'admin.'  The admin
+password is set in the <em>webcgh.properties</em> file (see section 1.3).
+</p>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="org.rti.webcgh.array.persistent.impl.HibernatePersistentArrayMapping" table="ARRAY_MAPPING" lazy="false">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+		<many-to-one name="array" class="org.rti.webcgh.array.persistent.impl.HibernatePersistentArray" lazy="false" column="array_id"/>
+		<many-to-one name="genomeAssembly" class="org.rti.webcgh.array.persistent.impl.HibernatePersistentGenomeAssembly" lazy="false" column="genome_assembly_id"/>
+		
+		<bag name="reporterMappings" lazy="false" cascade="all">
+			<key column="array_mapping_id"/>
+			<one-to-many class="org.rti.webcgh.array.persistent.impl.HibernatePersistentReporterMapping"/>
+		</bag>
+		
+	</class>
+
+</hibernate-mapping>

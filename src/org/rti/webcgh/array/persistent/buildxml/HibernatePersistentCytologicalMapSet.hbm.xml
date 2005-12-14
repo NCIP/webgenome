@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="org.rti.webcgh.array.persistent.impl.HibernatePersistentCytologicalMapSet" table="CYTOLOGICAL_MAP_SET" lazy="false">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+		<property name="uploadDate" column="upload_date"/>
+		
+		<many-to-one name="genomeAssembly" class="org.rti.webcgh.array.persistent.impl.HibernatePersistentGenomeAssembly" lazy="false" column="genome_assembly_id"/>
+		
+		<bag name="cytologicalMaps" lazy="false" cascade="all">
+			<key column="cytological_map_set_id"/>
+			<one-to-many class="org.rti.webcgh.array.persistent.impl.HibernatePersistentCytologicalMap"/>
+		</bag>
+	
+	</class>
+
+</hibernate-mapping>
