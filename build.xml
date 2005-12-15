@@ -5,7 +5,7 @@
 <project name="webCGH" default="help" basedir=".">
 
 	<!-- Basic configuration -->
-	<property file="system-build.properties"/>
+	<property file="build.properties"/>
 	<property name="classes.dir" value="${build.dir}/classes"/>
 	<property name="lib.dir" value="${build.dir}/lib"/>
 	<property name="src.dir" value="src"/>
@@ -13,7 +13,7 @@
 	<property name="web.dir" value="web"/>
 	<property name="conf.dir" value="${src.dir}/conf"/>
 	<property name="db.src.dir" value="initdb"/>
-	<property file="src/conf/webcgh.properties"/>
+	<!--<property file="src/conf/webcgh.properties"/>-->
 	
 	<path id="class.path">
 		<fileset dir="web/WEB-INF/lib" includes="*.*"/>
@@ -96,9 +96,17 @@
 		</copy>		
 	</target>
 
+    <!-- Copy hibernate web dtd files -->
+	<target name="copy-config">		
+		<echo>Copy configuration files</echo>		
+		<copy todir="${web.dir}/WEB-INF/classes/conf" overwrite="true">
+			<fileset dir="${src.dir}/conf" includes="**/*.*"/>
+		</copy>		
+	</target>
+
 	
 	<!-- Create JAR files -->
-	<target name="jar" depends="copyhttphibernatexmls, compile">
+	<target name="jar" depends="copyhttphibernatexmls, copy-config, compile">
 			
 		<echo>Creating lib directory</echo>
 		<mkdir dir="${lib.dir}"/>	
@@ -116,7 +124,7 @@
 		
 		<echo>Creating WAR file</echo>
 		<war
-			destfile="${dist.dir}/${system.name}.war"
+			destfile="${dist.dir}/${war.name}.war"
 			webxml="${web.dir}/WEB-INF/web.xml"
 			basedir="${web.dir}"
 			excludes="scratchpad/**">
@@ -129,6 +137,36 @@
 		</war>
 	</target>
 	
+
+	  <target name="configure-props">
+         <delete dir="output/webGenome/war" quiet="true">
+             <fileset><include name="**/**"/> </fileset>
+         </delete>
+         <mkdir dir="output/webGenome/war"/>
+         <unwar src="${dist.dir}/webGenome.war" dest="output/webGenome/war"/>
+         <replaceregexp
+             file="output/webGenome/war/WEB-INF/classes/conf/jndi.properties"
+             match="JNDI-URL" replace="${webGenome.jndi.url}"/>
+		<replaceregexp
+             file="output/webGenome/war/WEB-INF/classes/conf/webcgh.properties"
+             match="DB-HOME" replace="${db.home}"/>
+         <delete dir="output/webGenome/modified/war"  quiet="true">
+            <fileset><include name="**/**"/></fileset>
+        </delete>
+        <mkdir dir="output/webGenome/modified/war"/>
+        <war destfile="output/webGenome/modified/war/webGenome.war" webxml="output/webGenome/war/WEB-INF/web.xml">
+                <fileset dir="output/webGenome/war">
+                      <include name="*.*"/>
+                </fileset>
+                <zipfileset dir="output/webGenome/war/jsp" prefix="jsp" />
+                <webinf dir="output/webGenome/war/WEB-INF"/>
+                <metainf dir="output/webGenome/war/META-INF"/>
+       </war>
+       <copy file="output/webGenome/modified/war/webGenome.war" tofile="${dist.dir}/webGenome.war"
+                overwrite="true" />
+
+     </target>
+
 	<!-- Copy database files -->
 	<target name="db">
 		
@@ -170,7 +208,7 @@ Targets:
 	</target>
 	
 	<!-- Build the distribution -->
-	<target name="all" depends="clean,war"/>
+	<target name="all" depends="clean,war,configure-props"/>
 	
 
 </project>
