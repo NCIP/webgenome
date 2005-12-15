@@ -157,8 +157,7 @@
         <war destfile="output/webGenome/modified/war/webGenome.war" webxml="output/webGenome/war/WEB-INF/web.xml">
                 <fileset dir="output/webGenome/war">
                       <include name="*.*"/>
-                </fileset>
-                <zipfileset dir="output/webGenome/war/jsp" prefix="jsp" />
+                </fileset>                
                 <webinf dir="output/webGenome/war/WEB-INF"/>
                 <metainf dir="output/webGenome/war/META-INF"/>
        </war>
@@ -173,11 +172,11 @@
 		<echo>Setting up databases</echo>
 		<delete dir="${db.home}"/>
 		<mkdir dir="${db.home}"/>
-		<copy todir="${db.home}/${data.file.dir}">
-			<fileset dir="${db.src.dir}/${data.file.dir}" includes="**/*.*"/>
+		<copy todir="${db.home}/excel_files">
+			<fileset dir="${db.src.dir}/excel_files" includes="**/*.*"/>
 		</copy>
-		<copy todir="${db.home}/${cloudscape.dir}">
-			<fileset dir="${db.src.dir}/${cloudscape.dir}" includes="**/*.*"/>
+		<copy todir="${db.home}/cloudscape_files">
+			<fileset dir="${db.src.dir}/cloudscape_files" includes="**/*.*"/>
 		</copy>
 		<copy todir="${db.home}/table_defs">
 			<fileset dir="${db.src.dir}/table_defs" includes="**/*.*"/>
