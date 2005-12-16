@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/ServiceLocator.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2005-12-16 01:58:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -138,17 +138,27 @@ public class ServiceLocator {
    */
    public Object getLocalHome(String jndiHomeName) throws Exception{
         Object localHome = null;
+		
         try {
-            if (cache.containsKey(jndiHomeName)) {
+            if (cache.containsKey(jndiHomeName)) {				
                 localHome = cache.get(jndiHomeName);
             } else {
-                localHome = initialContext.lookup(jndiHomeName);
+                localHome = initialContext.lookup(jndiHomeName);				
                 cache.put(jndiHomeName, localHome);
             }
         } catch(NamingException ne) {
-            ne.printStackTrace();
-            throw new Exception(ne.getMessage());
-        }
+				ne.printStackTrace();
+				throw new Exception(ne.getMessage());											
+        } catch(Exception e){
+			   // TODO: Figure out later the cause!!! Now added just a work around to try second
+			   // time. Very strange problem - first time it crashes and second it's o'right
+			   try{
+					 localHome = initialContext.lookup(jndiHomeName);
+				} catch(NamingException ne1) {
+					ne1.printStackTrace();
+					throw new Exception(ne1.getMessage());			
+				}
+		}
         return localHome;
     }
 
