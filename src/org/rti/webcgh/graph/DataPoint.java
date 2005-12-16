@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/DataPoint.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2005-12-16 15:16:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,10 +66,20 @@ public class DataPoint implements Groupable {
     private double value2 = Double.NaN;
     private double error = Double.NaN;
     private String label = null;
-    
+    private boolean selected = false;
         
 
-    /**
+    public boolean isSelected() {
+		return selected;
+	}
+
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+
+	/**
      * @return Returns the error.
      */
     public double getError() {

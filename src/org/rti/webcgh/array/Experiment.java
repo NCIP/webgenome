@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2005-12-16 15:16:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -624,7 +624,8 @@ public class Experiment implements Cacheable {
          * @param bioAssays List of BioAssay objects
          */
         public DefBioAssayIterator(Collection bioAssays) {
-            this.iterator = bioAssays.iterator();
+        	if (bioAssays != null)
+        		this.iterator = bioAssays.iterator();
         }
         
         
@@ -637,6 +638,8 @@ public class Experiment implements Cacheable {
          * @return Next datum
          */
         public BioAssay next() {
+        	if (this.iterator == null)
+        		return null;
             return (BioAssay)this.iterator.next();
         }
 
@@ -646,6 +649,8 @@ public class Experiment implements Cacheable {
          * @return T/F
          */
         public boolean hasNext() {
+        	if (this.iterator == null)
+        		return false;
             return this.iterator.hasNext();
         }
     }

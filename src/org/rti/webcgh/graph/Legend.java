@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Legend.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2005-12-16 15:16:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,12 +59,14 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ExperimentIterator;
 import org.rti.webcgh.drawing.Cursor;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
+import org.rti.webcgh.drawing.GraphicLine;
 import org.rti.webcgh.drawing.GraphicRect;
 import org.rti.webcgh.drawing.GraphicText;
 import org.rti.webcgh.drawing.HorizontalAlignment;
@@ -82,16 +84,60 @@ public class Legend implements PlotElement {
 	private int padding = 10;
 	private int fontSize = 12;
 	private Color textColor = Color.black;
+	private int numCols = 4;
+	private int colPadding = 30;
+	private int borderWidth = 2;
+	private Color borderColor = Color.BLACK;
 	
-	private int minX = 0;
-	private int minY = 0;
-	private int maxX = 0;
-	private int maxY = 0;
+	private int minX = -this.padding;
+	private int minY = -this.padding;
+	private int maxX = this.padding;
+	private int maxY = this.padding;
 	
 	private final DataSet dataSet;
 	private final PlotParameters plotParams;
 	
 	
+	public Color getBorderColor() {
+		return borderColor;
+	}
+
+
+	public void setBorderColor(Color borderColor) {
+		this.borderColor = borderColor;
+	}
+
+
+	public int getBorderWidth() {
+		return borderWidth;
+	}
+
+
+	public void setBorderWidth(int borderWidth) {
+		this.borderWidth = borderWidth;
+	}
+
+
+	public int getColPadding() {
+		return colPadding;
+	}
+
+
+	public void setColPadding(int colPadding) {
+		this.colPadding = colPadding;
+	}
+
+
+	public int getNumCols() {
+		return numCols;
+	}
+
+
+	public void setNumCols(int numCols) {
+		this.numCols = numCols;
+	}
+
+
 	/**
 	 * @param textColor The textColor to set.
 	 */
@@ -141,9 +187,11 @@ public class Legend implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(DrawingCanvas canvas) {
+    	DrawingCoords drawingCoords = new DrawingCoords();
     	if (dataSet != null)
     		for (ExperimentIterator it = this.dataSet.experimentIterator(); it.hasNext();)
-    			this.paint(canvas, it.next());
+    			this.paint(canvas, it.next(), drawingCoords);
+    	this.paintBorder(canvas);
     }
     
     
@@ -152,7 +200,7 @@ public class Legend implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-    	return new Point(0, 0);
+    	return new Point(this.minX, this.minY);
     }
     
     
@@ -161,7 +209,7 @@ public class Legend implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-    	return new Point(0, this.maxY);
+    	return new Point(this.minX, this.maxY);
     }
     
     
@@ -170,7 +218,7 @@ public class Legend implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-    	return new Point(this.maxX, 0);
+    	return new Point(this.maxX, this.minY);
     }
     
     
@@ -206,7 +254,7 @@ public class Legend implements PlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-    	return new Point(0, 0);
+    	return new Point(this.minX, this.minY);
     }
     
     
@@ -214,45 +262,43 @@ public class Legend implements PlotElement {
     //        Private methods
     // ===========================================
     
-    private void paint(DrawingCanvas canvas, Experiment experiment) {
-    	if (this.maxY > 0)
-    		this.maxY += this.padding;
-    	this.maxY += this.fontSize;
+    private void paint(DrawingCanvas canvas, Experiment experiment, DrawingCoords drawingCoords) {
     	
     	// Print experiment name
-    	GraphicText text = canvas.newGraphicText(experiment.getName(), 0, 
-    			this.maxY, this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED,
+    	Point point = drawingCoords.next(experiment.getName(), canvas);
+    	GraphicText text = canvas.newGraphicText(experiment.getName(), point.x, 
+    			point.y + this.fontSize, this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED,
 				this.textColor);
     	canvas.add(text);
     	
     	// Adjust maximum X-coordinate
-    	int candidateMaxX = canvas.renderedWidth(experiment.getName(), this.fontSize);
+    	int candidateMaxX = canvas.renderedWidth(experiment.getName(), this.fontSize) + point.x + this.padding;
     	if (candidateMaxX > this.maxX)
     		this.maxX = candidateMaxX;
+    	int candidateMaxY = point.y + this.fontSize + this.padding;
+    	if (candidateMaxY > this.maxY)
+    		this.maxY = candidateMaxY;
     	
     	// Print bioassays names and color blocks
-    	Collection bioAssays = experiment.getBioAssays();
-    	if (bioAssays != null)
-    		for (Iterator it = bioAssays.iterator(); it.hasNext();)
-    			this.paint(canvas, (BioAssay)it.next());
+    	for (BioAssayIterator it = experiment.bioAssayIterator(); it.hasNext();)
+    		this.paint(canvas, it.next(), drawingCoords);
     }
     
     
-    private void paint(DrawingCanvas canvas, BioAssay bioAssay) {
-    	this.maxY += this.fontSize + this.padding;
+    private void paint(DrawingCanvas canvas, BioAssay bioAssay, DrawingCoords drawingCoords) {
+    	Point point = drawingCoords.next(bioAssay.getName(), canvas);
     	
     	// Draw box
-    	int x = 0;
-    	int y = this.maxY - this.fontSize;
+    	int x = point.x;
     	int width = this.fontSize;
     	int height = this.fontSize;
     	Color color = this.plotParams.color(bioAssay);
-    	GraphicRect rect = new GraphicRect(x, y, width, height, color);
+    	GraphicRect rect = new GraphicRect(x, point.y, width, height, color);
     	canvas.add(rect);
     	
     	// Draw text
     	x += this.padding + width;
-    	GraphicText text = canvas.newGraphicText(bioAssay.getName(), x, this.maxY, 
+    	GraphicText text = canvas.newGraphicText(bioAssay.getName(), x, point.y + this.fontSize, 
     			this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED, this.textColor);
     	text.setCursor(Cursor.POINTER);
     	text.addGraphicEventResponse(GraphicEvent.mouseClickEvent, "highlight('" +
@@ -260,9 +306,59 @@ public class Legend implements PlotElement {
     	canvas.add(text);
     	
     	// Adjust max X-coordinate
-    	int candidateMaxX = x + canvas.renderedWidth(bioAssay.getName(), this.fontSize);
+    	int candidateMaxX = x + canvas.renderedWidth(bioAssay.getName(), this.fontSize) + this.padding;
     	if (candidateMaxX > this.maxX)
     		this.maxX = candidateMaxX;
+    	int candidateMaxY = point.y + this.fontSize + this.padding;
+    	if (candidateMaxY > this.maxY)
+    		this.maxY = candidateMaxY;
+    }
+    
+    
+    private void paintBorder(DrawingCanvas canvas) {
+    	canvas.add(new GraphicLine(this.minX, this.minY, this.minX, this.maxY, this.borderWidth, this.borderColor));
+    	canvas.add(new GraphicLine(this.minX, this.maxY, this.maxX, this.maxY, this.borderWidth, this.borderColor));
+    	canvas.add(new GraphicLine(this.maxX, this.maxY, this.maxX, this.minY, this.borderWidth, this.borderColor));
+    	canvas.add(new GraphicLine(this.minX, this.minY, this.maxX, this.minY, this.borderWidth, this.borderColor));
+    }
+    
+    
+    // ====================================
+    //       Inner classes
+    // ====================================
+    
+    
+    class DrawingCoords {
+    	
+    	private int x = 0;
+    	private int y = 0;
+    	private int row = 0;
+    	private int col = 0;
+    	private final int numRows;
+    	private int maxWidthInCol = 0;
+    	
+    	
+    	public DrawingCoords() {
+    		numRows = (dataSet.numExperiments() + dataSet.numBioAssays()) / numCols;
+    	}
+    	
+    	
+    	public Point next(String label, DrawingCanvas canvas) {
+    		int width = canvas.renderedWidth(label, fontSize);
+    		if (width > maxWidthInCol)
+    			maxWidthInCol = width;
+    		Point point = new Point(x, y);
+    		row++;
+    		y += fontSize + padding;
+    		if (row >= this.numRows) {
+    			col++;
+    			row = 0;
+    			x += maxWidthInCol + colPadding;
+    			y = 0;
+    			maxWidthInCol = 0;
+    		}
+    		return point;
+    	}
     }
 
 }
