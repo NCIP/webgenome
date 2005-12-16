@@ -146,7 +146,7 @@
          <unwar src="${dist.dir}/webGenome.war" dest="output/webGenome/war"/>
          <replaceregexp
              file="output/webGenome/war/WEB-INF/classes/conf/jndi.properties"
-             match="JNDI-URL" replace="${webGenome.jndi.url}"/>
+             match="JNDI-URL" replace="${java.naming.provider.url}"/>
 		<replaceregexp
              file="output/webGenome/war/WEB-INF/classes/conf/webcgh.properties"
              match="DB-HOME" replace="${db.home}"/>
