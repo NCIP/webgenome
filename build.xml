@@ -133,7 +133,7 @@
 			</lib>
 			<classes dir="${src.dir}">
 				<exclude name="**/*.java"/>			
-			</classes>
+			</classes>			
 		</war>
 	</target>
 	
@@ -150,14 +150,22 @@
 		<replaceregexp
              file="output/webGenome/war/WEB-INF/classes/conf/webcgh.properties"
              match="DB-HOME" replace="${db.home}"/>
+
+        <mkdir dir="output/webGenome/war/images"/>
+
+         <copy todir="output/webGenome/war/images" overwrite="true">
+			<fileset dir="${web.dir}/images" includes="**/*.*"/>
+		</copy>
+		
          <delete dir="output/webGenome/modified/war"  quiet="true">
             <fileset><include name="**/**"/></fileset>
         </delete>
         <mkdir dir="output/webGenome/modified/war"/>
+
         <war destfile="output/webGenome/modified/war/webGenome.war" webxml="output/webGenome/war/WEB-INF/web.xml">
-                <fileset dir="output/webGenome/war">
-                      <include name="*.*"/>
-                </fileset>                
+                <fileset dir="output/webGenome/war" includes="**/*.*">                                            				<include name="*.*"/>
+				</fileset>
+				<fileset dir="output/webGenome/war/images" includes="**/*.*"/>
                 <webinf dir="output/webGenome/war/WEB-INF"/>
                 <metainf dir="output/webGenome/war/META-INF"/>
        </war>
