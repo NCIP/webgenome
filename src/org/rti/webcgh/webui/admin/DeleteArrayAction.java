@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/DeleteProbeSetAction.java,v $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/DeleteArrayAction.java,v $
 $Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,20 +55,28 @@ package org.rti.webcgh.webui.admin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.etl.ArrayEtlManager;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * 
  */
-public class DeleteProbeSetAction extends ActionSupport {
+public class DeleteArrayAction extends Action {
+	
+	private ArrayEtlManager arrayEtlManager = null;
+	
     
-    /**
+    public void setArrayEtlManager(ArrayEtlManager arrayEtlManager) {
+		this.arrayEtlManager = arrayEtlManager;
+	}
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -85,14 +93,12 @@ public class DeleteProbeSetAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        ArrayEtlManager esiEtlManager = (ArrayEtlManager)ctx.getBean("probeEtlManager");
         if (request.getParameter("all") != null)
-            esiEtlManager.deleteAll();
+            arrayEtlManager.deleteAll();
         else {
             String idStr = request.getParameter("id");
             Long id = new Long(idStr);
-            esiEtlManager.delete(id);
+            arrayEtlManager.delete(id);
         }
         return mapping.findForward("success");
     }

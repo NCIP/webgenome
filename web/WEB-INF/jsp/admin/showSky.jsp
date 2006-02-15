@@ -8,7 +8,7 @@
 
 	function deleteData(id) {
 		if (confirm('Really delete data?'))
-			window.location = "<html:rewrite page="/deleteSkyData.do"/>?id=" + id;
+			window.location = "<html:rewrite page="/admin/deleteSkyData.do"/>?id=" + id;
 	}
 
 </script>
@@ -50,7 +50,7 @@
 
 <p>
 	<% request.setAttribute("all", "true"); %>
-	[<html:link action="/loadSkyForm">Load SKY/M-FISH&CGH Data</html:link>]&nbsp;&nbsp;
-	[<html:link action="/deleteSkyData" paramId="all" paramName="all">Delete All</html:link>]
+	[<html:link action="/admin/loadSkyForm">Load SKY/M-FISH&CGH Data</html:link>]&nbsp;&nbsp;
+	[<html:link action="/admin/deleteSkyData" paramId="all" paramName="all">Delete All</html:link>]
 </p>
 

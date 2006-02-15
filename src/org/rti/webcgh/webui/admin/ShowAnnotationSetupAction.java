@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/ShowAnnotationSetupAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,15 +65,22 @@ import org.rti.webcgh.etl.AnnotationEtlManager;
 import org.rti.webcgh.etl.AnnotationTypeAssemblyPair;
 import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * Retrieves annotation feature types
  */
-public class ShowAnnotationSetupAction extends ActionSupport {
+public class ShowAnnotationSetupAction extends Action {
+	
+	private AnnotationEtlManager annotationEtlManager = null;
+	
     
-    /**
+    public void setAnnotationEtlManager(AnnotationEtlManager etlManager) {
+		this.annotationEtlManager = etlManager;
+	}
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -89,10 +97,7 @@ public class ShowAnnotationSetupAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        AnnotationEtlManager etlManager = (AnnotationEtlManager)
-        	ctx.getBean("annotationEtlManager");
-        AnnotationTypeAssemblyPair[] pairs = etlManager.getAnnotationTypeAssemblyPairs();
+        AnnotationTypeAssemblyPair[] pairs = annotationEtlManager.getAnnotationTypeAssemblyPairs();
         Collection pairsCol = CollectionUtils.arrayToArrayList(pairs);
         request.setAttribute("annotationTypeAssemblyPairs", pairsCol);
         return mapping.findForward("success");

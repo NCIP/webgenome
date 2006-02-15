@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/AdminUploadForm.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -265,8 +265,7 @@ public class AdminUploadForm extends ActionForm {
             errors.add("startCol", new ActionError("invalid.field"));
         
         // formFile
-        String fileName = formFile.getFileName();
-        if (fileName == null || fileName.length() < 1)
+        if (formFile == null || formFile.getFileName() == null || formFile.getFileName().length() < 1)
             errors.add("formFile", new ActionError("invalid.field"));
         
         if (errors.size() > 0)

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/impl/HibernatePersistentArrayMapping.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 20:17:48 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -141,11 +141,28 @@ public class HibernatePersistentArrayMapping extends PersistentArrayMapping {
 	}
 	
 	
+	protected static HibernatePersistentArrayMapping[] loadAll(PersistentArray array) {
+		String query = "from HibernatePersistentArrayMapping mapping " +
+			"where mapping.array = ?";
+		List mappings = PERSISTOR.getHibernateTemplate().find(query, 
+				new Object[]{array});
+		HibernatePersistentArrayMapping[] mappingsArray = new HibernatePersistentArrayMapping[0];
+		mappingsArray = (HibernatePersistentArrayMapping[])mappings.toArray(mappingsArray);
+		return mappingsArray;
+	}
+	
+	
 	protected static HibernatePersistentArrayMapping[] loadAll() {
 	    List all = PERSISTOR.getHibernateTemplate().loadAll(HibernatePersistentArrayMapping.class);
 	    HibernatePersistentArrayMapping[] mappings = new HibernatePersistentArrayMapping[0];
 	    mappings = (HibernatePersistentArrayMapping[])all.toArray(mappings);
 	    return mappings;
+	}
+	
+	
+	protected static void deleteAll() {
+		List all = PERSISTOR.getHibernateTemplate().loadAll(HibernatePersistentArrayMapping.class);
+		PERSISTOR.getHibernateTemplate().deleteAll(all);
 	}
 
 }

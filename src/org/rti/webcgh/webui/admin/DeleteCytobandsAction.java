@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/DeleteCytobandsAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ package org.rti.webcgh.webui.admin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -63,16 +64,30 @@ import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentGenomeAssembly;
 import org.rti.webcgh.etl.CytobandEtlManager;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * Remove cytobands from embedded database
  */
-public class DeleteCytobandsAction extends ActionSupport {
+public class DeleteCytobandsAction extends Action {
 	
+	private CytobandEtlManager cytobandEtlManager = null;
+	private PersistentDomainObjectMgr persistentDomainObjectMgr = null;
 	
-    /**
+    public void setPersistentDomainObjectMgr(
+			PersistentDomainObjectMgr persistentDomainObjectMgr) {
+		this.persistentDomainObjectMgr = persistentDomainObjectMgr;
+	}
+
+
+	public void setCytobandEtlManager(CytobandEtlManager cytobandEtlManager) {
+		this.cytobandEtlManager = cytobandEtlManager;
+	}
+    
+    
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -89,16 +104,11 @@ public class DeleteCytobandsAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        CytobandEtlManager cytobandEtlManager = (CytobandEtlManager)
-			ctx.getBean("cytobandEtlManager");
         if (request.getParameter("all") != null)
         	cytobandEtlManager.deleteAll();
         else {
         	Long assemblyId = new Long(request.getParameter("assemblyId"));
-        	PersistentDomainObjectMgr objMgr = (PersistentDomainObjectMgr)
-        		ctx.getBean("persistentDomainObjectMgr");
-        	PersistentGenomeAssembly assembly = objMgr.getPersistentGenomeAssembly(assemblyId);
+        	PersistentGenomeAssembly assembly = persistentDomainObjectMgr.getPersistentGenomeAssembly(assemblyId);
         	cytobandEtlManager.delete(assembly);
         }
         

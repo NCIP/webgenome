@@ -67,7 +67,7 @@
 <center>
 	<embed
 		id="plotImg"
-		src="<html:rewrite page="/showAnnotationPlotSvg.do"/><%= WebUtils.paramListFromProps(pageContext.findAttribute("plotParamsForm")) %>"
+		src="<html:rewrite page="/admin/showAnnotationPlotSvg.do"/><%= WebUtils.paramListFromProps(pageContext.findAttribute("plotParamsForm")) %>"
 		width="<bean:write name="plotParamsForm" property="width"/>"
 		height="<bean:write name="plotParamsForm" property="height"/>"
 		type="image/svg-xml"

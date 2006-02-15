@@ -4,7 +4,7 @@
 
 <h3>Load Annotation</h3>
 
-<html:form action="/loadAnnotation" method="POST" enctype="multipart/form-data">
+<html:form action="/admin/loadAnnotation" method="POST" enctype="multipart/form-data">
 
 	<table>
 		<tr>

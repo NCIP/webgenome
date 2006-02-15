@@ -127,7 +127,7 @@
 			input="/profile/loginPage.do">
 			<forward name="success" path="login.confirm.page"/>
 			<forward name="failure" path="/profile/loginPage.do"/>
-			<forward name="admin" path="/adminHome.do"/>
+			<forward name="admin" path="/admin/home.do"/>
 		</action>
 			
 		<action
@@ -442,116 +442,97 @@
 		<!-- ======================================================== -->
 		
 		<action
-			path="/adminHome"
+			path="/admin/home"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.home.page"/>
 			
 		<action
-			path="/showSky"
-			type="org.rti.webcgh.webui.admin.ShowSkySetupAction">
-			<forward name="success" path="show.sky.page"/>
+			path="/admin/showSky">
+			<forward name="success" path="admin.show.sky.page"/>
 		</action>
 				
 		<action
-			path="/loadSkyForm"
+			path="/admin/loadSkyForm"
 			type="org.apache.struts.actions.ForwardAction"
-			parameter="load.sky.page"/>
+			parameter="admin.load.sky.page"/>
 			
 		<action
-			path="/loadSkyData"
-			type="org.rti.webcgh.webui.admin.LoadSkyDataAction"
+			path="/admin/loadSkyData"
 			name="skyForm"
 			validate="true"
-			input="load.sky.page"
+			input="admin.load.sky.page"
 			scope="session">
-			<forward name="success" path="/showSky.do"/>
+			<forward name="success" path="/admin/showSky.do"/>
 		</action>
 		
-		<action
-			path="/deleteSkyData"
-			type="org.rti.webcgh.webui.admin.DeleteSkyDataAction">
-			<forward name="success" path="/showSky.do"/>
+		<action path="/admin/deleteSkyData">
+			<forward name="success" path="/admin/showSky.do"/>
+		</action>
+			
+		<action path="/admin/showCytobands">
+			<forward name="success" path="admin.show.cytobands.page"/>
 		</action>
 			
 		<action
-			path="/showCytobands"
-			type="org.rti.webcgh.webui.admin.ShowCytobandsSetupAction">
-			<forward name="success" path="show.cytobands.page"/>
-		</action>
-			
-		<action
-			path="/loadCytobandsForm"
+			path="/admin/loadCytobandsForm"
 			type="org.apache.struts.actions.ForwardAction"
-			parameter="load.cytobands.page"/>
+			parameter="admin.load.cytobands.page"/>
 			
 		<action
-			path="/loadCytobands"
-			type="org.rti.webcgh.webui.admin.LoadCytobandsAction"
+			path="/admin/loadCytobands"
 			name="cytobandForm"
 			validate="true"
 			scope="session"
-			input="load.cytobands.page">
-			<forward name="success" path="/showCytobands.do"/>
+			input="admin.load.cytobands.page">
+			<forward name="success" path="/admin/showCytobands.do"/>
+		</action>
+		
+		<action path="/admin/deleteCytobands">
+			<forward name="success" path="/admin/showCytobands.do"/>
+		</action>
+		
+		<action path="/admin/showAnnotation">
+			<forward name="success" path="admin.show.annotation.page"/>
 		</action>
 		
 		<action
-			path="/deleteCytobands"
-			type="org.rti.webcgh.webui.admin.DeleteCytobandsAction">
-			<forward name="success" path="/showCytobands.do"/>
-		</action>
-		
-		<action
-			path="/showAnnotation"
-			type="org.rti.webcgh.webui.admin.ShowAnnotationSetupAction">
-			<forward name="success" path="show.annotation.page"/>
-		</action>
-		
-		<action
-			path="/loadAnnotationForm"
+			path="/admin/loadAnnotationForm"
 			type="org.apache.struts.actions.ForwardAction"
-			parameter="load.annotation.page"/>
+			parameter="admin.load.annotation.page"/>
 			
 		<action
-			path="/loadAnnotation"
-			type="org.rti.webcgh.webui.admin.LoadAnnotationAction"
+			path="/admin/loadAnnotation"
 			name="annotationForm"
 			validate="true"
 			scope="session"
-			input="load.annotation.page">
-			<forward name="success" path="/showAnnotation.do"/>
+			input="admin.load.annotation.page">
+			<forward name="success" path="/admin/showAnnotation.do"/>
+		</action>
+		
+		<action path="/admin/deleteAnnotation">
+			<forward name="success" path="/admin/showAnnotation.do"/>
+		</action>
+		
+		<action path="/admin/showArrays">
+			<forward name="success" path="admin.show.arrays.page"/>
 		</action>
 		
 		<action
-			path="/deleteAnnotation"
-			type="org.rti.webcgh.webui.admin.DeleteAnnotationAction">
-			<forward name="success" path="/showAnnotation.do"/>
-		</action>
-		
-		<action
-			path="/showProbeSets"
-			type="org.rti.webcgh.webui.admin.ShowProbeSetsSetupAction">
-			<forward name="success" path="show.probe.sets.page"/>
-		</action>
-		
-		<action
-			path="/loadProbeSetForm"
+			path="/admin/loadArrayForm"
 			type="org.apache.struts.actions.ForwardAction"
-			parameter="load.probe.set.page"/>
+			parameter="admin.load.array.page"/>
 			
 		<action
-			path="/loadProbeSet"
-			type="org.rti.webcgh.webui.admin.LoadProbeSetAction"
+			path="/admin/loadArray"
 			name="probeSetForm"
 			validate="true"
 			scope="session"
-			input="load.probe.set.page">
-			<forward name="success" path="/showProbeSets.do"/>
+			input="admin.load.array.page">
+			<forward name="success" path="/admin/showArrays.do"/>
 		</action>
 		
-		<action
-			path="/deleteProbeSet"
-			type="org.rti.webcgh.webui.admin.DeleteProbeSetAction">
-			<forward name="success" path="/showProbeSets.do"/>
+		<action path="/admin/deleteArray">
+			<forward name="success" path="/admin/showArrays.do"/>
 		</action>
 		
 		

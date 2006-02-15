@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/DeleteAnnotationAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ package org.rti.webcgh.webui.admin;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -62,16 +63,30 @@ import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentGenomeAssembly;
 import org.rti.webcgh.etl.AnnotationEtlManager;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * Deletes annotation
  */
-public class DeleteAnnotationAction extends ActionSupport {
+public class DeleteAnnotationAction extends Action {
+	
+	AnnotationEtlManager annotationEtlManager = null;
+	PersistentDomainObjectMgr persistentDomainObjectMgr = null;
     
     
-    /**
+    public void setPersistentDomainObjectMgr(PersistentDomainObjectMgr objMgr) {
+		this.persistentDomainObjectMgr = objMgr;
+	}
+
+
+
+	public void setAnnotationEtlManager(AnnotationEtlManager etlManager) {
+		this.annotationEtlManager = etlManager;
+	}
+
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -88,19 +103,14 @@ public class DeleteAnnotationAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        AnnotationEtlManager etlManager = (AnnotationEtlManager)
-        	ctx.getBean("annotationEtlManager");
         if (request.getParameter("all") != null)
-        	etlManager.deleteAll();
+        	annotationEtlManager.deleteAll();
         else {
 	        String assemblyIdStr = request.getParameter("assemblyId");
 	        String featureType = request.getParameter("featureType");
 	        Long assemblyId = new Long(assemblyIdStr);
-	        PersistentDomainObjectMgr objMgr = 
-	            (PersistentDomainObjectMgr)ctx.getBean("persistentDomainObjectMgr");
-	        PersistentGenomeAssembly assembly = objMgr.getPersistentGenomeAssembly(assemblyId);
-	        etlManager.delete(featureType, assembly);
+	        PersistentGenomeAssembly assembly = persistentDomainObjectMgr.getPersistentGenomeAssembly(assemblyId);
+	        annotationEtlManager.delete(featureType, assembly);
         }
         return mapping.findForward("success");
     }

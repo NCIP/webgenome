@@ -570,5 +570,99 @@
 			<ref bean="persistentDomainObjectMgr"/>
 		</property>
 	</bean>
+	
+	<!-- ==================================== -->
+	<!--           Admin actions              -->
+	<!-- ==================================== -->
+	
+	<bean name="/admin/showSky"
+		class="org.rti.webcgh.webui.admin.ShowSkySetupAction">
+		<property name="esiEtlManager">
+			<ref bean="esiEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/loadSkyData"
+		class="org.rti.webcgh.webui.admin.LoadSkyDataAction">
+		<property name="esiEtlManager">
+			<ref bean="esiEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/deleteSkyData"
+		class="org.rti.webcgh.webui.admin.DeleteSkyDataAction">
+		<property name="esiEtlManager">
+			<ref bean="esiEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/showCytobands"
+		class="org.rti.webcgh.webui.admin.ShowCytobandsSetupAction">
+		<property name="cytobandEtlManager">
+			<ref bean="cytobandEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/loadCytobands"
+		class="org.rti.webcgh.webui.admin.LoadCytobandsAction">
+		<property name="cytobandEtlManager">
+			<ref bean="cytobandEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/deleteCytobands"
+		class="org.rti.webcgh.webui.admin.DeleteCytobandsAction">
+		<property name="cytobandEtlManager">
+			<ref bean="cytobandEtlManager"/>
+		</property>
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/showAnnotation"
+		class="org.rti.webcgh.webui.admin.ShowAnnotationSetupAction">
+		<property name="annotationEtlManager">
+			<ref bean="annotationEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/loadAnnotation"
+		class="org.rti.webcgh.webui.admin.LoadAnnotationAction">
+		<property name="annotationEtlManager">
+			<ref bean="annotationEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/deleteAnnotation"
+		class="org.rti.webcgh.webui.admin.DeleteAnnotationAction">
+		<property name="annotationEtlManager">
+			<ref bean="annotationEtlManager"/>
+		</property>
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/showArrays"
+		class="org.rti.webcgh.webui.admin.ShowArraysSetupAction">
+		<property name="arrayEtlManager">
+			<ref bean="arrayEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/loadArray"
+		class="org.rti.webcgh.webui.admin.LoadArrayAction">
+		<property name="arrayEtlManager">
+			<ref bean="arrayEtlManager"/>
+		</property>
+	</bean>
+	
+	<bean name="/admin/deleteArray"
+		class="org.rti.webcgh.webui.admin.DeleteArrayAction">
+		<property name="arrayEtlManager">
+			<ref bean="arrayEtlManager"/>
+		</property>
+	</bean>
 		
 </beans>

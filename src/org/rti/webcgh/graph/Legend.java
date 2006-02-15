@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Legend.java,v $
-$Revision: 1.2 $
-$Date: 2005-12-16 15:16:59 $
+$Revision: 1.3 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -87,7 +87,7 @@ public class Legend implements PlotElement {
 	private int numCols = 4;
 	private int colPadding = 30;
 	private int borderWidth = 2;
-	private Color borderColor = Color.BLACK;
+	private Color borderColor = Color.black;
 	
 	private int minX = -this.padding;
 	private int minY = -this.padding;

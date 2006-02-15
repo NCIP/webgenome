@@ -6,7 +6,7 @@
 
 	function deleteCytobands(assemblyId) {
 		if (confirm('Really delete cytobands?'))
-			window.location = "<html:rewrite page="/deleteCytobands.do"/>?assemblyId=" + assemblyId;
+			window.location = "<html:rewrite page="/admin/deleteCytobands.do"/>?assemblyId=" + assemblyId;
 	}
 
 </script>
@@ -22,13 +22,13 @@
 		<td><b>Assembly</b></td>
 		<td>&nbsp;</td>
 	</tr>
-	<logic:iterate name="genomeAssemblies" id="genomeAssembly">
+	<logic:iterate name="cytologicalMapSets" id="cytologicalMapSet">
 		<tr>
-			<td><bean:write name="genomeAssembly" property="organism.genus"/></td>
-			<td><bean:write name="genomeAssembly" property="organism.species"/></td>
-			<td><bean:write name="genomeAssembly" property="name"/></td>
+			<td><bean:write name="cytologicalMapSet" property="genomeAssembly.organism.genus"/></td>
+			<td><bean:write name="cytologicalMapSet" property="genomeAssembly.organism.species"/></td>
+			<td><bean:write name="cytologicalMapSet" property="genomeAssembly.name"/></td>
 			<td>
-				<a href="#" onclick="deleteCytobands('<bean:write name="genomeAssembly" property="id"/>')">
+				<a href="#" onclick="deleteCytobands('<bean:write name="cytologicalMapSet" property="genomeAssembly.id"/>')">
 					Delete
 				</a>
 			</td>
@@ -38,9 +38,9 @@
 </table>
 
 <p>
-	[<html:link action="/loadCytobandsForm">Load Cytobands</html:link>]&nbsp&nbsp;
+	[<html:link action="/admin/loadCytobandsForm">Load Cytobands</html:link>]&nbsp&nbsp;
 	<% request.setAttribute("all", "true"); %>
-	[<html:link action="/deleteCytobands" paramId="all" paramName="all">
+	[<html:link action="/admin/deleteCytobands" paramId="all" paramName="all">
 		Delete All Cytobands
 	</html:link>]
 </p>

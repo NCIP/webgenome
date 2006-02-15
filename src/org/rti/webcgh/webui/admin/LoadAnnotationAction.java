@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/LoadAnnotationAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.io.InputStreamReader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,15 +65,22 @@ import org.apache.struts.upload.FormFile;
 import org.rti.webcgh.etl.AnnotationColumnMapping;
 import org.rti.webcgh.etl.AnnotationEtlManager;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * Loads annotation from a file
  */
-public class LoadAnnotationAction extends ActionSupport {
+public class LoadAnnotationAction extends Action {
+	
+	private AnnotationEtlManager annotationEtlManager = null;
+	
     
-    /**
+    public void setAnnotationEtlManager(AnnotationEtlManager annotationEtlManager) {
+		this.annotationEtlManager = annotationEtlManager;
+	}
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -89,9 +97,6 @@ public class LoadAnnotationAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        AnnotationEtlManager etlManager = (AnnotationEtlManager)
-        	ctx.getBean("annotationEtlManager");
         AnnotationForm aForm = (AnnotationForm)form;
         AnnotationColumnMapping colMapping = new AnnotationColumnMapping();
         colMapping.setNameCol(Integer.parseInt(aForm.getNameCol()) - 1);
@@ -108,7 +113,7 @@ public class LoadAnnotationAction extends ActionSupport {
         colMapping.setExonEndsCol(Integer.parseInt(aForm.getExonStartsCol()) - 1);
         colMapping.setExonEndsCol(Integer.parseInt(aForm.getExonEndsCol()) - 1);
         InputStreamReader reader = new InputStreamReader(formFile.getInputStream());
-        etlManager.load(reader, colMapping, aForm.getFeatureTypeName(), aForm.getGenus(), aForm.getSpecies(), 
+        annotationEtlManager.load(reader, colMapping, aForm.getFeatureTypeName(), aForm.getGenus(), aForm.getSpecies(), 
             aForm.getAssembly(), isAGene);
         return mapping.findForward("success");
     }

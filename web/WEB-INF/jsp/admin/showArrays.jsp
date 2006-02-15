@@ -13,19 +13,19 @@
 		<td>&nbsp;</td>
 	</tr>
 	
-	<logic:iterate name="genomeAssemblyProbeSetPairs" id="pair">
+	<logic:iterate name="arrayMappings" id="arrayMapping">
 		<tr>
 			<td>
-				<bean:write name="pair" property="genomeAssembly.organism.displayName"/>
+				<bean:write name="arrayMapping" property="genomeAssembly.organism.displayName"/>
 			</td>
 			<td>
-				<bean:write name="pair" property="probeSet.displayName"/>
+				<bean:write name="arrayMapping" property="array.displayName"/>
 			</td>
 			<td>
-				<bean:write name="pair" property="genomeAssembly.name"/>
+				<bean:write name="arrayMapping" property="genomeAssembly.name"/>
 			</td>
 			<td>
-				<html:link action="/deleteProbeSet" paramId="id" paramName="pair" paramProperty="probeSet.id">
+				<html:link action="/admin/deleteArray" paramId="id" paramName="arrayMapping" paramProperty="array.id">
 					Delete
 				</html:link>
 			</td>
@@ -34,7 +34,7 @@
 </table>
 
 <p>
-	[<html:link action="/loadProbeSetForm">Load Probe Set</html:link>]&nbsp;&nbsp;
+	[<html:link action="/admin/loadArrayForm">Load Probe Set</html:link>]&nbsp;&nbsp;
 	<% request.setAttribute("all", "yes"); %>
-	[<html:link action="/deleteProbeSet" paramId="all" paramName="all">Delete All</html:link>]
+	[<html:link action="/admin/deleteArray" paramId="all" paramName="all">Delete All</html:link>]
 </p>

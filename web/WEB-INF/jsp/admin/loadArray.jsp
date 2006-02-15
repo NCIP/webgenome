@@ -4,7 +4,7 @@
 
 <h3>Load Probe Set</h3>
 
-<html:form action="/loadProbeSet" method="POST" enctype="multipart/form-data">
+<html:form action="/admin/loadArray" method="POST" enctype="multipart/form-data">
 
 	<table>
 		<tr>

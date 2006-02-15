@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/ShowCytobandsSetupAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,15 +65,22 @@ import org.rti.webcgh.array.persistent.PersistentCytologicalMapSet;
 import org.rti.webcgh.etl.CytobandEtlManager;
 import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * 
  */
-public class ShowCytobandsSetupAction extends ActionSupport {
+public class ShowCytobandsSetupAction extends Action {
+	
+	CytobandEtlManager cytobandEtlManager = null;
+	
     
-    /**
+    public void setCytobandEtlManager(CytobandEtlManager cytobandEtlManager) {
+		this.cytobandEtlManager = cytobandEtlManager;
+	}
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -89,11 +97,9 @@ public class ShowCytobandsSetupAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        CytobandEtlManager cytobandEtlManager = (CytobandEtlManager)ctx.getBean("cytobandEtlManager");
         PersistentCytologicalMapSet[] mapSets = cytobandEtlManager.getAllPersistentCytologicalMapSets();
-        Collection assembliesCol = CollectionUtils.arrayToArrayList(mapSets);
-        request.setAttribute("genomeAssemblies", assembliesCol);
+        Collection cytologicalMapSets = CollectionUtils.arrayToArrayList(mapSets);
+        request.setAttribute("cytologicalMapSets", cytologicalMapSets);
         return mapping.findForward("success");
     }
 

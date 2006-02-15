@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/LoadProbeSetAction.java,v $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/admin/LoadArrayAction.java,v $
 $Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.io.Reader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -65,16 +66,22 @@ import org.apache.struts.upload.FormFile;
 import org.rti.webcgh.etl.AnnotationColumnMapping;
 import org.rti.webcgh.etl.ArrayEtlManager;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
+
 
 /**
  * Loads probe set data
  */
-public class LoadProbeSetAction extends ActionSupport {
+public class LoadArrayAction extends Action {
 
+	private ArrayEtlManager arrayEtlManager = null;
+	
     
-    /**
+    public void setArrayEtlManager(ArrayEtlManager arrayEtlManager) {
+		this.arrayEtlManager = arrayEtlManager;
+	}
+
+
+	/**
      * Performs actions
      *
      * @param mapping Routing information for downstream actions
@@ -91,9 +98,6 @@ public class LoadProbeSetAction extends ActionSupport {
         HttpServletResponse response
     ) throws Exception {
         AdminSessionUtils.ensureAdminLoggedIn(request);
-        ApplicationContext ctx = this.getWebApplicationContext();
-        ArrayEtlManager etlManager = (ArrayEtlManager)
-        	ctx.getBean("probeEtlManager");
         ProbeSetForm aForm = (ProbeSetForm)form;
         AnnotationColumnMapping colMapping = new AnnotationColumnMapping();
         colMapping.setNameCol(Integer.parseInt(aForm.getNameCol()) - 1);
@@ -102,7 +106,7 @@ public class LoadProbeSetAction extends ActionSupport {
         colMapping.setEndCol(Integer.parseInt(aForm.getEndCol()) - 1);
         FormFile formFile = aForm.getFormFile();
         Reader reader = new InputStreamReader(formFile.getInputStream());
-        etlManager.load(reader, colMapping, aForm.getArrayName(), aForm.getArrayVendor(), aForm.getAssembly(), 
+        arrayEtlManager.load(reader, colMapping, aForm.getArrayName(), aForm.getArrayVendor(), aForm.getAssembly(), 
             aForm.getGenus(), aForm.getSpecies());
         return mapping.findForward("success");
     }

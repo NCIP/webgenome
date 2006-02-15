@@ -389,36 +389,36 @@
   		<put name="content" value="/WEB-INF/jsp/admin/home.jsp"/>
   	</definition>
   	
-  	<definition name="show.sky.page" extends="admin.layout">
+  	<definition name="admin.show.sky.page" extends="admin.layout">
   		<put name="content" value="/WEB-INF/jsp/admin/showSky.jsp"/>
   	</definition>
   	
-  	<definition name="load.sky.page" extends="admin.layout">
+  	<definition name="admin.load.sky.page" extends="admin.layout">
   		<put name="content" value="/WEB-INF/jsp/admin/loadSky.jsp"/>
   	</definition>
   	
-  	<definition name="show.annotation.page" extends="admin.layout">
+  	<definition name="admin.show.annotation.page" extends="admin.layout">
   		<put name="content" value="/WEB-INF/jsp/admin/showAnnotation.jsp"/>
   	</definition>
   	
-  	<definition name="load.annotation.page" extends="admin.layout">
+  	<definition name="admin.load.annotation.page" extends="admin.layout">
   		<put name="content" value="/WEB-INF/jsp/admin/loadAnnotation.jsp"/>
   	</definition>
   	
-  	<definition name="show.cytobands.page" extends="admin.layout">
+  	<definition name="admin.show.cytobands.page" extends="admin.layout">
   		<put name="content" value="/WEB-INF/jsp/admin/showCytobands.jsp"/>
   	</definition>
   	
-  	<definition name="load.cytobands.page" extends="admin.layout">
+  	<definition name="admin.load.cytobands.page" extends="admin.layout">
   		<put name="content" value="/WEB-INF/jsp/admin/loadCytobands.jsp"/>
   	</definition>
   	
-  	<definition name="load.probe.set.page" extends="admin.layout">
-  		<put name="content" value="/WEB-INF/jsp/admin/loadProbeSet.jsp"/>
+  	<definition name="admin.load.array.page" extends="admin.layout">
+  		<put name="content" value="/WEB-INF/jsp/admin/loadArray.jsp"/>
   	</definition>
   	
-  	<definition name="show.probe.sets.page" extends="admin.layout">
-  		<put name="content" value="/WEB-INF/jsp/admin/showProbeSets.jsp"/>
+  	<definition name="admin.show.arrays.page" extends="admin.layout">
+  		<put name="content" value="/WEB-INF/jsp/admin/showArrays.jsp"/>
   	</definition>
   	
   	

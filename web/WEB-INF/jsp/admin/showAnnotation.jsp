@@ -32,7 +32,7 @@
 					paramMap.put("featureType", annotationTypeAssemblyPair.getAnnotationType());
 					request.setAttribute("paramMap", paramMap);
 				%>
-				<html:link action="/deleteAnnotation" name="paramMap">
+				<html:link action="/admin/deleteAnnotation" name="paramMap">
 					Delete
 				</html:link>
 			</td>
@@ -41,7 +41,7 @@
 </table>
 
 <p>
-	<html:link action="/loadAnnotationForm">Load Annotation Data</html:link>&nbsp;&nbsp;&nbsp;
+	<html:link action="/admin/loadAnnotationForm">Load Annotation Data</html:link>&nbsp;&nbsp;&nbsp;
 	<%
 		String all = "true";
 		request.setAttribute("all", all);

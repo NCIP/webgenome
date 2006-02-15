@@ -4,7 +4,7 @@
 
 <h3>Load Cytobands</h3>
 
-<html:form action="/loadCytobands" method="POST" enctype="multipart/form-data">
+<html:form action="/admin/loadCytobands" method="POST" enctype="multipart/form-data">
 
 	<table>
 		<tr>

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/CountingDomainObjectCache.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-15 20:54:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,7 +67,15 @@ public class CountingDomainObjectCache {
     // ====================================
     
     private long maxNumObjects = 500000;
-    private ObjIndex objIndex = new ObjIndex();
+    
+    private LinkedHashMap objIndex = new LinkedHashMap() {
+        protected boolean removeEldestEntry(Entry eldest) {
+            boolean remove = false;
+            if (this.size() >= maxNumObjects)
+                remove = true;
+            return remove;
+        }
+    };
     
     
     /**
@@ -128,30 +136,4 @@ public class CountingDomainObjectCache {
     public void remove(Cacheable cacheable) {
     	this.objIndex.remove(cacheable.getCacheKey());
     }
-    
-    
-	// ========================================
-	//       Inner classes
-	// ========================================
-	
-	/**
-	 * Object index class
-	 *
-	 */
-	class ObjIndex extends LinkedHashMap {
-	    
-	    
-	    /**
-	     * Remove eldest entry
-	     * @param eldest Entry
-	     * @return T/F
-	     */
-        protected boolean removeEldestEntry(Entry eldest) {
-            boolean remove = false;
-            if (this.size() >= maxNumObjects)
-                remove = true;
-            return remove;
-        }
-}
-
 }

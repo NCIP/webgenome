@@ -7,7 +7,7 @@
 <p>
 	<html:errors property="global"/>
 </p>
-<html:form action="loadSkyData" method="POST" enctype="multipart/form-data">
+<html:form action="/admin/loadSkyData" method="POST" enctype="multipart/form-data">
 
 	<table>
 		<tr>

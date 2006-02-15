@@ -17,10 +17,10 @@
 		
 		<!-- Menu bar -->
 		<p>
-			<html:link action="/showSky">[Sky/M-FISH&CGH]</html:link>&nbsp;&nbsp;
-			<html:link action="/showAnnotation">[Annotation]</html:link>&nbsp;&nbsp;
-			<html:link action="/showCytobands">[Cytobands]</html:link>&nbsp;&nbsp;
-			<html:link action="/showProbeSets">[Probe Sets]</html:link>&nbsp;&nbsp;
+			<html:link action="/admin/showSky">[Sky/M-FISH&CGH]</html:link>&nbsp;&nbsp;
+			<html:link action="/admin/showAnnotation">[Annotation]</html:link>&nbsp;&nbsp;
+			<html:link action="/admin/showCytobands">[Cytobands]</html:link>&nbsp;&nbsp;
+			<html:link action="/admin/showArrays">[Probe Sets]</html:link>&nbsp;&nbsp;
 			<html:link action="/profile/logout">[Logout]</html:link>
 		</p>
 		
