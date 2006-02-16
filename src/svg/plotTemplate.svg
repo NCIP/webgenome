@@ -51,6 +51,20 @@
 						}
 					}
 				}
+				
+				// Highlight text
+				nodes = svgDoc.getElementsByTagName("text");
+				for (var i = 0; i < nodes.length; i++) {
+					var node = nodes.item(i);
+					var grpName = node.getAttribute("egrp");
+					if (grpName != null) {
+						if (grpName == id) {
+							highlightedData.push(node);
+							node.setAttribute("stroke-width", "3");
+							promote(node);
+						}
+					}
+				}
 			}
 
 
@@ -61,6 +75,60 @@
 					node.setAttribute("stroke-width", "1");
 				}
 				highlightedData = new Array();
+			}
+			
+			var colors = new Array();
+			function toggleColor(id) {
+			
+				// Toggle rectangle
+				var nodes = svgDoc.getElementsByTagName("rect");
+				for (var i = 0; i < nodes.length; i++) {
+					var node = nodes.item(i);
+					var grpName = node.getAttribute("egrp");
+					if (grpName != null) {
+						if (grpName == id) {
+							var fill = node.getAttribute("fill");
+							if (fill == "white")
+								node.setAttribute("fill", colors[id]);
+							else {
+								colors[id] = fill;
+								node.setAttribute("fill", "white");
+							}
+						}
+					} 
+				}
+				
+				// Toggle text
+				var nodes = svgDoc.getElementsByTagName("text");
+				for (var i = 0; i < nodes.length; i++) {
+					var node = nodes.item(i);
+					var grpName = node.getAttribute("egrp");
+					if (grpName != null) {
+						if (grpName == id) {
+							var stroke = node.getAttribute("stroke");
+							if (stroke == "gray")
+								node.setAttribute("stroke", "black");
+							else
+								node.setAttribute("stroke", "gray");
+						}
+					} 
+				}
+				
+				// Toggle line
+				var nodes = svgDoc.getElementsByTagName("g");
+				for (var i = 0; i < nodes.length; i++) {
+					var node = nodes.item(i);
+					var grpName = node.getAttribute("egrp");
+					if (grpName != null) {
+						if (grpName == id) {
+							var viz = node.getAttribute("visibility");
+							if (viz == null || viz.length < 1 || viz == "visible")
+								node.setAttribute("visibility", "hidden");
+							else
+								node.setAttribute("visibility", "visible");
+						}
+					} 
+				}
 			}
 			
 			

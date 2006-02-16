@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgElementFactory.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-16 14:05:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,8 +57,10 @@ package org.rti.webcgh.drawing;
 import java.awt.Color;
 import java.awt.Point;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -112,6 +114,7 @@ public class SvgElementFactory {
 			element = newArcElement((GraphicArc)graphic);
 		else if (graphic instanceof GraphicCurve)
 		    element = newCurveElement((GraphicCurve)graphic);
+		addProperties(element, graphic);
 		addGraphicEventResponses(element, graphic.getGraphicEventResponses());
 		if (graphic.getToolTipText() != null)
 			addToolTip(element, graphic.getToolTipText());
@@ -405,5 +408,15 @@ public class SvgElementFactory {
 		else if (alignment == HorizontalAlignment.RIGHT_JUSTIFIED)
 				anchor = "end";
 		return anchor;
+	}
+	
+	
+	private void addProperties(Element e, GraphicPrimitive g) {
+		Properties props = g.getProperties();
+		for (Enumeration names = props.propertyNames(); names.hasMoreElements();) {
+			String name = (String)names.nextElement();
+			String value = props.getProperty(name);
+			e.setAttribute(name, value);
+		}
 	}
 }

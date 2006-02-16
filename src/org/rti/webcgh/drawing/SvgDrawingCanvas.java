@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgDrawingCanvas.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-16 14:05:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -347,6 +347,16 @@ public class SvgDrawingCanvas implements DrawingCanvas {
 	    Document doc = 
     		XmlUtils.loadDocument("svg/plotTemplate.svg", false);
 	    return new SvgDrawingCanvas(doc);
+	}
+	
+	
+	/**
+	 * Add a response to an event
+	 * @param event An event
+	 * @param response A response
+	 */
+	public void addGraphicEventResponse(GraphicEvent event, String response) {
+		this.insertionPoint.setAttribute(event.getName(), response);
 	}
 		
 	

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Legend.java,v $
-$Revision: 1.3 $
-$Date: 2006-02-15 20:54:47 $
+$Revision: 1.4 $
+$Date: 2006-02-16 14:05:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,8 +55,6 @@ package org.rti.webcgh.graph;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
@@ -294,6 +292,10 @@ public class Legend implements PlotElement {
     	int height = this.fontSize;
     	Color color = this.plotParams.color(bioAssay);
     	GraphicRect rect = new GraphicRect(x, point.y, width, height, color);
+    	String command = "toggleColor('" + bioAssay.getName() + "')";
+    	rect.setProperty(ScatterPlot.GRP_ATT_NAME, bioAssay.getName());
+    	rect.addGraphicEventResponse(GraphicEvent.mouseClickEvent, command);
+    	rect.setCursor(Cursor.POINTER);
     	canvas.add(rect);
     	
     	// Draw text
@@ -303,6 +305,7 @@ public class Legend implements PlotElement {
     	text.setCursor(Cursor.POINTER);
     	text.addGraphicEventResponse(GraphicEvent.mouseClickEvent, "highlight('" +
     			bioAssay.getName() + "')");
+    	text.setProperty(ScatterPlot.GRP_ATT_NAME, bioAssay.getName());
     	canvas.add(text);
     	
     	// Adjust max X-coordinate

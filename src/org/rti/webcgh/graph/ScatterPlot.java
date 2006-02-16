@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/ScatterPlot.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-02-16 14:05:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import java.util.Set;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicCircle;
+import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.GraphicLine;
 import org.rti.webcgh.drawing.GraphicPolyline;
 
@@ -77,7 +78,7 @@ public class ScatterPlot extends BasePlot implements Plot {
     // ================================
     
     private static final Color DEFAULT_COLOR = Color.black;
-    private static final String GRP_ATT_NAME = "egrp";
+    public static final String GRP_ATT_NAME = "egrp";
     private static final String POINTS_GRP_ATT_VALUE = "p";
     private static final String LINES_GRP_ATT_VALUE = "l";
     private static final String ERROR_BARS_GRP_ATT_VALUE = "e";
@@ -247,6 +248,8 @@ public class ScatterPlot extends BasePlot implements Plot {
 	    		DrawingCanvas linesTile = tile.newTile();
 	    		tile.add(linesTile);
 	    		linesTile.setAttribute(GRP_ATT_NAME, LINES_GRP_ATT_VALUE);
+	    		String command = "highlight('" + key + "')";
+	    		linesTile.addGraphicEventResponse(GraphicEvent.mouseClickEvent, command);
 	    		this.paintLines(lines, color, linesTile);
 	    	}
     	}
