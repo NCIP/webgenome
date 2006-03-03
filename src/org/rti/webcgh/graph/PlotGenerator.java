@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.2 $
-$Date: 2005-12-16 15:16:59 $
+$Revision: 1.3 $
+$Date: 2006-03-03 23:23:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,8 @@ import java.util.SortedSet;
 
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
+import org.rti.webcgh.array.ChromosomalAlteration;
+import org.rti.webcgh.array.ChromosomalAlterationIterator;
 import org.rti.webcgh.array.Chromosome;
 import org.rti.webcgh.array.ClassPathPropertiesFileRgbHexidecimalColorMapper;
 import org.rti.webcgh.array.CytologicalMap;
@@ -95,6 +97,7 @@ public class PlotGenerator {
 	
 	private static final double DEFAULT_MIN_Y = -0.5;
 	private static final double DEFAULT_MAX_Y = 0.5;
+	private static final Color CHROMOSOMAL_ALTERATION_COLOR = Color.black;
     
     // ========================================
     //        Attributes
@@ -473,6 +476,8 @@ public class PlotGenerator {
         double maxY = this.maxY(dataSet, plotParameters);
         for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();) {
             Experiment exp = it.next();
+            
+            // Bioassays
             for (BioAssayIterator bai = exp.bioAssayIterator(); bai.hasNext();) {
                 BioAssay bioAssay = bai.next();
                 PlotPanel baPanel = idPanel.newChildPlotPanel();
@@ -485,6 +490,40 @@ public class PlotGenerator {
 	            Caption bioAssayName = new Caption(bioAssay.getName(), Orientation.VERTICAL, false);
 	            baPanel.add(bioAssayName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
 	            idPanel.add(baPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+            }
+            
+            // MCAR
+            ChromosomalAlterationIterator cai = exp.amplificationIterator();
+            if (cai.hasNext()) {
+            	PlotPanel ampPanel = idPanel.newChildPlotPanel();
+            	GenomeFeatureMap gfmap = new GenomeFeatureMap(0, cmap.length(), pixels, 
+            			Orientation.VERTICAL);
+            	while (cai.hasNext()) {
+            		ChromosomalAlteration alt = cai.next();
+            		gfmap.plotFeature(alt.startBp(), alt.endBp(), null, null, false, 
+            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+            	}
+            	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+            	Caption colName = new Caption("MCAR", Orientation.VERTICAL, false);
+            	ampPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
+            	idPanel.add(ampPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+            }
+            
+            // MCDR
+            cai = exp.deletionIterator();
+            if (cai.hasNext()) {
+            	PlotPanel delPanel = idPanel.newChildPlotPanel();
+            	GenomeFeatureMap gfmap = new GenomeFeatureMap(0, cmap.length(), pixels, 
+            			Orientation.VERTICAL);
+            	while (cai.hasNext()) {
+            		ChromosomalAlteration alt = cai.next();
+            		gfmap.plotFeature(alt.startBp(), alt.endBp(), null, null, false, 
+            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+            	}
+            	delPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+            	Caption colName = new Caption("MCDR", Orientation.VERTICAL, false);
+            	delPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
+            	idPanel.add(delPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
             }
         }
         panel.add(idPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);

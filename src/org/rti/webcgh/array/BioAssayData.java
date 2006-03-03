@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-03 23:23:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -314,6 +314,51 @@ public class BioAssayData {
         return (ArrayDatum)this.arrayData.get(idx);
     }
     
+    
+    /**
+     * Find amplified regions (i.e. regions greater than threshold)
+     * @param threshold Threshold value
+     * @return Amplified regions
+     */
+    public ChromosomalAlteration[] amplifiedRegions(double threshold) {
+    	return alteredRegions(threshold, RelOp.GREATER_THAN);
+    }
+    
+    
+    /**
+     * Find deleted regions (i.e. regions less than threshold)
+     * @param threshold Threshold value
+     * @return Deleted regions
+     */
+    public ChromosomalAlteration[] deletedRegions(double threshold) {
+    	return alteredRegions(threshold, RelOp.LESS_THAN);
+    }
+    	
+    private ChromosomalAlteration[] alteredRegions(double threshold, RelOp relOp) {
+    	List ampList = new ArrayList();
+    	this.ensureSorted();
+    	GenomeLocation leftPoint = null;
+    	GenomeLocation rightPoint = null;
+    	for (ArrayDatumIterator it = this.arrayDatumIterator(); it.hasNext();) {
+    		ArrayDatum datum = it.next();
+    		if ((relOp == RelOp.GREATER_THAN && (double)datum.magnitude() > threshold) ||
+    			(relOp == RelOp.LESS_THAN && (double)datum.magnitude() < threshold)) {
+    			if (leftPoint == null)
+    				leftPoint = rightPoint = datum.getGenomeLocation();
+    			else
+    				rightPoint = datum.getGenomeLocation();
+    		} else if (leftPoint != null && rightPoint != null) {
+    			ampList.add(new ChromosomalAlteration(
+    					new GenomeInterval(leftPoint, rightPoint)));
+    			leftPoint = null;
+    			rightPoint = null;
+    		}
+    	}
+    	ChromosomalAlteration[] amps = new ChromosomalAlteration[0];
+    	amps = (ChromosomalAlteration[])ampList.toArray(amps);
+    	return amps;
+    }
+    
            
     
     // ===================================
@@ -584,6 +629,12 @@ public class BioAssayData {
     		this.list.add(((BioAssayData.DefArrayDatumIterator)it).list);
     	}
     	
+    }
+    
+    
+    static class RelOp {
+    	public static final RelOp GREATER_THAN = new RelOp();
+    	public static final RelOp LESS_THAN = new RelOp();
     }
 
 }

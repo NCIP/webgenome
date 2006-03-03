@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlteration.java,v $
-$Revision: 1.1 $
-$Date: 2006-03-03 15:31:47 $
+$Revision: 1.2 $
+$Date: 2006-03-03 23:23:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,6 @@ import org.rti.webcgh.graph.PlotParameters;
 public class ChromosomalAlteration {
 	
 	private final GenomeInterval genomeInterval;
-	private final String name;
 	
 	
 	// ===============================================
@@ -71,24 +70,45 @@ public class ChromosomalAlteration {
 	 * Constructor
 	 * @param genomeInterval A genome interval
 	 */
-	public ChromosomalAlteration(GenomeInterval genomeInterval, String name) {
+	public ChromosomalAlteration(GenomeInterval genomeInterval) {
 		this.genomeInterval = genomeInterval;
-		this.name = name;
 	}
 	
 	
-	// =============================================
-	//       Public methods
-	// =============================================
+	/**
+	 * Start point in base pairs
+	 * @return Start point in base pairs
+	 */
+	public long startBp() {
+		return this.genomeInterval.startBp();
+	}
 	
-    /**
-     * Grap
-     * @param plot A plot
-     * @param start Genome start point
-     * @param end Genome end point
-     */
-    public void graph(Plot plot, GenomeLocation start, GenomeLocation end) {
-    	
-    }
+	
+	/**
+	 * End point in base pairs
+	 * @return End point in base pairs
+	 */
+	public long endBp() {
+		return this.genomeInterval.endBp();
+	}
+	
+	
+	/**
+	 * Does this overlap with given alteration?
+	 * @param alt An alteration
+	 * @return T/F
+	 */
+	public boolean overlaps(ChromosomalAlteration alt) {
+		return this.genomeInterval.overlap(alt.genomeInterval);
+	}
+	
+	
+	/**
+	 * Compute intersection and assign it to this
+	 * @param alt An alterations
+	 */
+	public void intersection(ChromosomalAlteration alt) {
+		this.genomeInterval.intersection(alt.genomeInterval);
+	}
 
 }

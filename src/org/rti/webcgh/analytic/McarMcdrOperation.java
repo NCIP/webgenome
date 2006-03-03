@@ -1,7 +1,7 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlterationIterator.java,v $
-$Revision: 1.2 $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/McarMcdrOperation.java,v $
+$Revision: 1.1 $
 $Date: 2006-03-03 23:23:56 $
 
 The Web CGH Software License, Version 1.0
@@ -52,33 +52,38 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webcgh.array;
+package org.rti.webcgh.analytic;
 
-/**
- * Iterates over chromosomal alterations
- *
- */
-public interface ChromosomalAlterationIterator {
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.graph.PlotParameters;
+
+public class McarMcdrOperation implements SummaryStatisticOperation {
 	
-	
-	/**
-	 * Does iteration have any more elements?
-	 * @return T/F
-	 */
-	public boolean hasNext();
-	
-	
-	/**
-	 * Get next chromosomal alteration
-	 * @return A chromosomal alteration
-	 */
-	public ChromosomalAlteration next();
-	
-	
-	/**
-	 * Remove current element from source container
-	 *
-	 */
-	public void remove();
+	private Long id = null;
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public DataSetInvalidations validate(Experiment[] data,
+			PlotParameters params) {
+		return null;
+	}
+
+	public Experiment[] perform(Experiment[] data, PlotParameters params)
+			throws AnalyticException {
+		List newDataList = new ArrayList();
+//		for (int i = 0; i < data.length; i++) {
+//			newDataList.add(data[i].)
+//		}
+		return null;
+	}
 
 }
