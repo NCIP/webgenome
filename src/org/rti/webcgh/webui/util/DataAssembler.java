@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/DataAssembler.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-03-03 15:29:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,7 +94,7 @@ public class DataAssembler {
 
 	/**
 	 * Assembles data for statistical analysis
-	 * @param dataSets Genome array data sets
+	 * @param experiments Genome array data sets
 	 * @param pipeline An analytic pipeline
 	 * @param params Plotting parameters
 	 * @return Data set
@@ -106,27 +106,32 @@ public class DataAssembler {
 	 */
 	public Experiment[] assembleExperiments
 	(
-		Experiment[] dataSets, AnalyticPipeline pipeline,
+		Experiment[] experiments, AnalyticPipeline pipeline,
 		PlotParameters params
 	) throws WebcghDatabaseException, AnalyticException, WebcghSystemException,
 		DataSetInvalidationException, AuthenticationException {
 		if (pipeline == null)
-			return dataSets;
+			return experiments;
 		
 		// Perform basic validation on data
 		DataSetInvalidations invalidations = new DataSetInvalidations();
 		//ValidationUtil.basicValidation(dataSets);
 		
+		// Retain original experiments
+		Experiment[] origExperiments = new Experiment[experiments.length];
+		for (int i = 0; i < experiments.length; i++)
+			origExperiments[i] = experiments[i];
+		
 		// Invoke analytic pipeline
 		for (Iterator it = pipeline.getOperations().iterator(); it.hasNext() && 
 				invalidations.getInvalidations().size() < 1;) {
 			AnalyticOperation op = (AnalyticOperation)it.next();
-			DataSetInvalidations temp = op.validate(dataSets, params);
+			DataSetInvalidations temp = op.validate(experiments, params);
 			if (temp != null && temp.getInvalidations().size() > 0)
 				invalidations.addInvalidations(temp);
 			if (invalidations.getInvalidations().size() < 1) {
-				Experiment[] newDataSets = op.perform(dataSets, params);
-				dataSets = newDataSets;
+				Experiment[] newExperiments = op.perform(experiments, params);
+				experiments = newExperiments;
 			}
 		}
 		
@@ -137,6 +142,19 @@ public class DataAssembler {
 			throw e;
 		}
 		
-		return dataSets;
+		// Add raw data back
+		if (pipeline.numOperations() > 0) {
+			Experiment[] temp = experiments;
+			experiments = new Experiment[origExperiments.length + temp.length];
+			int p = 0;
+			for (int i = 0; i < origExperiments.length; i++) {
+				origExperiments[i].markAsRaw();
+				experiments[p++] = origExperiments[i];
+			}
+			for (int i = 0; i < temp.length; i++)
+				experiments[p++] = temp[i];
+		}
+		
+		return experiments;
 	}
 }

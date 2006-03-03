@@ -2,7 +2,6 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20000303 Stylable//EN"
 	"svg11-flat-20030114.dtd">
 <svg xmlns="http://www.w3.org/2000/svg-20000303-stylable">
-
 	<text id="plotTitle" x="100" y="100" stroke="red" font-size="14" text-anchor="start">
 		An error occured while generating this graphic
 	</text>

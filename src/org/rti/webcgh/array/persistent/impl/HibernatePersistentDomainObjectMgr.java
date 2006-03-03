@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/impl/HibernatePersistentDomainObjectMgr.java,v $
-$Revision: 1.2 $
-$Date: 2006-02-15 20:54:47 $
+$Revision: 1.3 $
+$Date: 2006-03-03 15:29:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,9 @@ package org.rti.webcgh.array.persistent.impl;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.array.Chromosome;
+import org.rti.webcgh.array.GenomeAssembly;
 import org.rti.webcgh.array.Organism;
 import org.rti.webcgh.array.persistent.PersistentArray;
 import org.rti.webcgh.array.persistent.PersistentArrayDatum;
@@ -83,6 +85,7 @@ import org.rti.webcgh.array.persistent.PersistentQuantitation;
 import org.rti.webcgh.array.persistent.PersistentQuantitationType;
 import org.rti.webcgh.array.persistent.PersistentReporter;
 import org.rti.webcgh.array.persistent.PersistentReporterMapping;
+import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
 
 /**
@@ -90,6 +93,7 @@ import org.rti.webcgh.core.WebcghSystemException;
  */
 public class HibernatePersistentDomainObjectMgr implements PersistentDomainObjectMgr {
     
+	private static final Logger LOGGER = Logger.getLogger(PersistentDomainObjectMgr.class);
     
     
     /**
@@ -870,25 +874,96 @@ public class HibernatePersistentDomainObjectMgr implements PersistentDomainObjec
     
     
     /**
-     * Get persistent cytological map
+     * Get persistent cytological map.  The following rules are used to obtain
+     * this map:
+     * 
+     * 1) If chromosome is persistent, get associated map, if any
+     * 2) If chromosome is not persistent, get 
+     * 
      * @param chromosome Chromosome
      * @return Persistent cytological map
      */
     public PersistentCytologicalMap getPersistentCytologicalMap(Chromosome chromosome) {
-        if (! (chromosome instanceof HibernatePersistentChromosome)) {
-            PersistentOrganism org =
-                HibernatePersistentOrganism.load(Organism.DEFAULT_GENUS, Organism.DEFAULT_SPECIES);
-            if (org == null)
-                throw new WebcghSystemException("Default organism not found in embedded database");
-            PersistentGenomeAssembly asm = HibernatePersistentGenomeAssembly.loadLatest(org);
-            if (asm == null)
-                throw new WebcghSystemException("No genome assemblies found in embedded database for " +
-                        org.toPrintableString());
-            chromosome = this.getPersistentChromosome(asm, chromosome.getNumber(), false);
-            if (chromosome == null)
-                throw new WebcghSystemException("Cannot find persistent chromosome");
-        }
-        return HibernatePersistentCytologicalMap.load(chromosome);
+    	PersistentCytologicalMap map = null;
+    	
+    	// The given chromosome may or
+    	// may not be persistent (within webGenome).  If it is not, then the method must first find a
+    	// "matching" persistent chromosome (i.e. sharing the same organism, chromosome
+    	// number, and mapped to the same genome assembly).  That is the purpose of the code
+    	// block in the following if statement
+    	if (chromosome != null || ! (chromosome instanceof PersistentChromosome)) {
+    		short chromNum = chromosome.getNumber();
+    		LOGGER.info("Persistent cytological map requested for non-persistent chromosome '" + chromNum + "'");
+    		GenomeAssembly asm = chromosome.getGenomeAssembly();
+    		
+    		// Case: Genome assembly not known.  Retrieve persistent chromosome
+    		// with the proper chromosome number from the most recent assembly
+    		// of the default organism (Homo sapiens)
+    		if (asm == null || asm == GenomeAssembly.DUMMY_GENOME_ASSEMBLY) {
+    			LOGGER.info("Genome assembly associated with chromosome null or unknown.  " +
+    					"Searching for equivalent chromosome associated with a default assembly.");
+    			PersistentOrganism org = this.getDefaultPersistentOrganism();
+    			PersistentGenomeAssembly[] assemblies = HibernatePersistentGenomeAssembly.loadAll(org);
+    			for (int i = assemblies.length - 1; i >= 0 && map == null; i--) {
+    				chromosome = HibernatePersistentChromosome.load(assemblies[i], chromNum);
+    				map = HibernatePersistentCytologicalMap.load(chromosome);
+    			}
+    			
+    		// Case: Genome assembly known, but not persistent or unspecified.  First we need to
+    		// obtain a "matching" persistent genome assembly.  This should have the
+    		// same organism and name.
+    		} else if ((! (asm instanceof PersistentGenomeAssembly)) || (asm.unspecified())) {
+    			LOGGER.info("Genome assembly associated with chromosome is not persistent.  " +
+    					"Searching for equivalent chromosome associated with an equivalent persistent assembly.");
+    			Organism org = asm.getOrganism();
+    			
+    			// Case: organism unknown.  Retrieve default organism.
+    			if (org == null || org == Organism.DUMMY_ORGANISM || org == Organism.UNKNOWN) {
+    				LOGGER.info("Organism associated with genome assembly null or not null.  " +
+    						"Searching for default organism");
+    				org = this.getDefaultPersistentOrganism();
+    			}
+    			
+    			// Case: organism known, but not persistent.  Try to retrieve persistent
+    			// organism with same genus and species name
+    			else if (! (org instanceof PersistentOrganism)){
+    				String genus = org.getGenus();
+    				String species = org.getSpecies();
+    				LOGGER.info("Organism associated with chromosome is not persistent.  " +
+    						"Searching for persistent organism with genus/species = '" + genus + "/" + species + "'");
+    				if (genus != null && species != null)
+    					org = HibernatePersistentOrganism.load(genus, species);
+    				if (org == null)
+    					throw new WebcghSystemException("Cannot find cytogenetic map for organism '" + 
+    							genus + " " + species + "'");
+    			}
+    			
+    			PersistentGenomeAssembly[] assemblies = HibernatePersistentGenomeAssembly.loadAll((PersistentOrganism)org);
+    			for (int i = assemblies.length - 1; i >= 0 && map == null; i--) {
+    				chromosome = HibernatePersistentChromosome.load(assemblies[i], chromNum);
+    				map = HibernatePersistentCytologicalMap.load(chromosome);
+    			}
+    		} else {
+    			chromosome = HibernatePersistentChromosome.load((PersistentGenomeAssembly)asm, chromNum);
+    			map = HibernatePersistentCytologicalMap.load(chromosome);
+    		}
+    	} else
+    		map = HibernatePersistentCytologicalMap.load(chromosome);
+
+    	return map;
+    }
+    
+    
+    /**
+     * Get default persistent organism
+     * @return Default organism
+     */
+    public PersistentOrganism getDefaultPersistentOrganism() {
+    	PersistentOrganism org =
+            HibernatePersistentOrganism.load(Organism.DEFAULT_GENUS, Organism.DEFAULT_SPECIES);
+        if (org == null)
+            throw new WebcghSystemException("Default organism not found in embedded database");
+        return org;
     }
     
     

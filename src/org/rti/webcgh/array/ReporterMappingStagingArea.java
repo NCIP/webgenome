@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ReporterMappingStagingArea.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-03 15:29:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -288,6 +288,8 @@ public class ReporterMappingStagingArea {
     	// Iterate over genome array data sets and map all probes
     	for (int i = 0; i < this.experiments.length; i++) {
     		Experiment experiment = this.experiments[i];
+    		GenomeAssembly assembly = this.selectAppropriateGenomeAssembly(assemblies, experiment.getOrganism());
+    		experiment.setReferenceAssembly(assembly);
     		results[i] = new ExperimentProbeMappingResults(experiment);
     		for (BioAssayIterator it = experiment.bioAssayIterator(); it.hasNext();) {
     			BioAssay bioAssay = it.next();
@@ -375,7 +377,7 @@ public class ReporterMappingStagingArea {
 		BioAssayProbeMappingResults arrayResults = new BioAssayProbeMappingResults(bioAssay);
 		
 		// Get array mapping
-		GenomeAssembly assembly = this.selectAppropriateGenomeAssembly(assemblies, bioAssay);
+		GenomeAssembly assembly = this.selectAppropriateGenomeAssembly(assemblies, bioAssay.getOrganism());
 		Array array = bioAssay.getArray();
 		ArrayMapping arrayMapping = (ArrayMapping)probeSetMappingIndex.get(array);
 		if (arrayMapping == null) {
@@ -393,6 +395,7 @@ public class ReporterMappingStagingArea {
 			ArrayDatum datum = it.next();
 			if (datum.hasLocation() && useExistingLocations) {
 				mappedReporterCount++;
+				datum.setGenomeAssembly(assembly);
 				continue;
 			}
 			if (arrayMapping == null)
@@ -416,7 +419,7 @@ public class ReporterMappingStagingArea {
 	) {
     	BioAssayProbeMappingResults results = new BioAssayProbeMappingResults(bioAssay);
     	GenomeAssembly assembly = 
-    		this.selectAppropriateGenomeAssembly(assemblies, bioAssay);
+    		this.selectAppropriateGenomeAssembly(assemblies, bioAssay.getOrganism());
     	int numReporters = 0;
     	int numMappedReporters = 0;
     	Chromosome currChromosome = null;
@@ -502,8 +505,7 @@ public class ReporterMappingStagingArea {
 //    }
     
     
-    private GenomeAssembly selectAppropriateGenomeAssembly(GenomeAssembly[] assemblies, BioAssay bioAssay) {
-	    Organism organism = bioAssay.getOrganism();
+    private GenomeAssembly selectAppropriateGenomeAssembly(GenomeAssembly[] assemblies, Organism organism) {
 		GenomeAssembly assembly = null;
 		for (int i = 0; i < assemblies.length && assembly == null; i++)
 			if (assemblies[i].getOrganism().equals(organism))

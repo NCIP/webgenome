@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AnalyticPipeline.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-03 15:29:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -263,6 +263,18 @@ public class AnalyticPipeline implements Serializable {
 	            pipe = tempPipe;
 	    }
 	    return pipe;
+	}
+	
+	
+	/**
+	 * Number of operations in pipeline
+	 * @return Number of operations in pipeline
+	 */
+	public int numOperations() {
+		int size = 0;
+		if (this.operations != null)
+			size = this.operations.size();
+		return size;
 	}
 	
 	

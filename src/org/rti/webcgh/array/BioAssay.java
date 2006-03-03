@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-03 15:29:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,8 @@ import org.rti.webcgh.service.Cacheable;
  * A bioassay
  */
 public class BioAssay implements Cacheable {
+	
+	private static final String RAW_SUFFIX = " (raw)";
     
     
     // =================================
@@ -564,6 +566,30 @@ public class BioAssay implements Cacheable {
     		ArrayDatum datum = it.next();
     		this.add(datum);
     	}
+    }
+    
+    
+    /**
+     * Mark bioassay as raw.  This will only affect how the
+     * bioassay is displayed.
+     *
+     */
+    public void markAsRaw() {
+    	String name = (this.name == null)? "" : this.name;
+    	this.name = name + RAW_SUFFIX;
+    }
+    
+    
+    /**
+     * Get name minus the raw suffix
+     * @return Name minus the raw suffix
+     */
+    public String nameMinusRawSuffix() {
+    	String name = this.name;
+    	int p = name.indexOf(RAW_SUFFIX);
+    	if (p >= 0)
+    		name = name.substring(0, p);
+    	return name;
     }
     
     // ====================================

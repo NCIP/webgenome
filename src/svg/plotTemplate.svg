@@ -7,16 +7,26 @@
 
 	<script type="text/ecmascript">
 		<![CDATA[
-			var highlightedData = new Array();
+		
+			//
+			// Global variables
+			//
+			var highlightedElements = new Array();
 			var svgDoc;
+			var showingErrorBars = true;
+			var showingLines = true;
+			var showingPoints = true;
+			var colorIndex = new Array();
 
+
+			//
 			// Initialization function
+			//
 			function init(evt) {
 			
 				// Make SVG functions visible to web page
 				parent.highlight = highlight;
 				parent.noHighlight = noHighlight;
-				parent.setVisible = setVisible;
 				parent.showErrorBars = showErrorBars;
 				parent.showPoints = showPoints;
 				parent.showLines = showLines;
@@ -31,35 +41,41 @@
 				parent.resizeImage(width, height);
 			}
 
-			// Highlight a data set
-			function highlight(id) {
+
+			// 
+			// Highlight a bioassay.  Method searches
+			// for elements where the attribute 'egrp'
+			// is defined and equal to the bioAssayName.
+			// It highlighted these elements.
+			//
+			function highlight(bioAssayName) {
 			
-				// Un-highlight currently highlighted data set
-				if (highlightedData != null)
+				// Un-highlight currently highlighted bioassay
+				if (highlightedElements != null)
 					noHighlight();
 					
-				// Highlight data set
+				// Highlight lines, points, and, error bars.
 				var nodes = svgDoc.getElementsByTagName("g");
 				for (var i = 0; i < nodes.length; i++) {
 					var node = nodes.item(i);
 					var grpName = node.getAttribute("egrp");
 					if (grpName != null) {
-						if (grpName == id) {
-							highlightedData.push(node);
+						if (grpName == bioAssayName) {
+							highlightedElements.push(node);
 							node.setAttribute("stroke-width", "3");
 							promote(node);
 						}
 					}
 				}
 				
-				// Highlight text
+				// Highlight legend text
 				nodes = svgDoc.getElementsByTagName("text");
 				for (var i = 0; i < nodes.length; i++) {
 					var node = nodes.item(i);
 					var grpName = node.getAttribute("egrp");
 					if (grpName != null) {
-						if (grpName == id) {
-							highlightedData.push(node);
+						if (grpName == bioAssayName) {
+							highlightedElements.push(node);
 							node.setAttribute("stroke-width", "3");
 							promote(node);
 						}
@@ -68,17 +84,24 @@
 			}
 
 
+			//
 			// Remove all highlighting
+			//
 			function noHighlight() {
-				for (var i = 0; i < highlightedData.length; i++) {
-					var node = highlightedData[i];
+				for (var i = 0; i < highlightedElements.length; i++) {
+					var node = highlightedElements[i];
 					node.setAttribute("stroke-width", "1");
 				}
-				highlightedData = new Array();
+				highlightedElements = new Array();
 			}
 			
-			var colors = new Array();
-			function toggleColor(id) {
+			
+			//
+			// Toggle color of legend rectangle.  Also toggle visibility of
+			// corresponding line.
+			//
+			function toggleColor(bioAssayId) {
+				var visible = true;
 			
 				// Toggle rectangle
 				var nodes = svgDoc.getElementsByTagName("rect");
@@ -86,13 +109,15 @@
 					var node = nodes.item(i);
 					var grpName = node.getAttribute("egrp");
 					if (grpName != null) {
-						if (grpName == id) {
+						if (grpName == bioAssayId) {
 							var fill = node.getAttribute("fill");
-							if (fill == "white")
-								node.setAttribute("fill", colors[id]);
-							else {
-								colors[id] = fill;
+							if (fill == "white") {
+								node.setAttribute("fill", colorIndex[bioAssayId]);
+								visible = true;
+							} else {
+								colorIndex[bioAssayId] = fill;
 								node.setAttribute("fill", "white");
+								visible = false;
 							}
 						}
 					} 
@@ -104,9 +129,9 @@
 					var node = nodes.item(i);
 					var grpName = node.getAttribute("egrp");
 					if (grpName != null) {
-						if (grpName == id) {
+						if (grpName == bioAssayId) {
 							var stroke = node.getAttribute("stroke");
-							if (stroke == "gray")
+							if (visible)
 								node.setAttribute("stroke", "black");
 							else
 								node.setAttribute("stroke", "gray");
@@ -114,73 +139,125 @@
 					} 
 				}
 				
-				// Toggle line
+				// Toggle line, points, and error bars
 				var nodes = svgDoc.getElementsByTagName("g");
 				for (var i = 0; i < nodes.length; i++) {
 					var node = nodes.item(i);
 					var grpName = node.getAttribute("egrp");
 					if (grpName != null) {
-						if (grpName == id) {
-							var viz = node.getAttribute("visibility");
-							if (viz == null || viz.length < 1 || viz == "visible")
-								node.setAttribute("visibility", "hidden");
-							else
-								node.setAttribute("visibility", "visible");
+						if (grpName == bioAssayId) {
+							node.setAttribute("visibility", visibilityAttributeValue(visible));
+							var children = node.getElementsByTagName("g");
+							if (children != null) {
+								for (var j = 0; j < children.length; j++) {
+									var child = children.item(j);
+									var grpClass = child.getAttribute("egrp");
+									var childVisible = visible && groupVisible(grpClass);
+									child.setAttribute("visibility", visibilityAttributeValue(childVisible));
+								}
+							}
 						}
 					} 
 				}
 			}
 			
 			
+			//
+			// Get visibility attribute value
+			//
+			function visibilityAttributeValue(visible) {
+				var value = (visible)? "visible" : "hidden";
+				return value;
+			}
+			
+			
+			//
+			// Is element group visible?
+			//
+			function groupVisible(grpClass) {
+				var visible = true;
+				if (grpClass == "e")
+					visible = showingErrorBars;
+				else if (grpClass == "p")
+					visible = showingPoints;
+				else if (grpClass == "l")
+					visible = showingLines;
+				return visible;
+			}
+			
+			
+			//
 			// Move data set to front of plot
+			//
 			function promote(elmt) {
 				var parentElmt = elmt.parentNode;
 				parentElmt.removeChild(elmt);
 				parentElmt.appendChild(elmt);
 			}
-
-
-			// Make a data set visible or invisible
-			function setVisible(id, visible) {
-				var data = svgDoc.getElementById(id);
-				var visibility = (visible)? "visible" : "hidden";
-				data.setAttribute("visibility", visibility);
-			}
 			
-			
-			// Show element class
+			//
+			// Show element class (i.e. error bars, lines, and points)
+			//
 			function showElementClass(prefix, visible) {
-				var visibility = (visible)? "visible" : "hidden";
 				var nodeList = svgDoc.getElementsByTagName("g");
 				for (var i = 0; i < nodeList.length; i++) {
 					var element = nodeList.item(i);
 					var grpClass = element.getAttribute("egrp");
 					if (grpClass != null) {
-						if (grpClass == prefix)
+						if (grpClass == prefix) {
+							var parentVisible = isVisible(element.parentNode);
+							var visibility = visibilityAttributeValue(visible && parentVisible);
 							element.setAttribute("visibility", visibility);
+						}
 					}
 				}
 			}
+			
+			
+			//
+			// Is element visible?
+			//
+			function isVisible(elmt) {
+				var visible = true;
+				if (elmt != null) {
+					var attr = elmt.getAttribute("visibility");
+					if (attr != null) {
+						if (attr == "hidden")
+							visible = false;
+					}
+				}
+				return visible;
+			}
 
 
+			//
 			// Show error bars
+			//
 			function showErrorBars(visible) {
+				showingErrorBars = visible;
 				showElementClass("e", visible);
 			}
 
 
+			//
 			// Show data points
+			//
 			function showPoints(visible) {
+				showingPoints = visible;
 				showElementClass("p", visible);
 			}
 			
+			//
 			// Show lines
+			//
 			function showLines(visible) {
+				showingLines = visible;
 				showElementClass("l", visible);
 			}
 
-
+			//
 			// Show tooltip
+			//
 			function showToolTip(evt, id) {
 			
 				// Determine tooltip coordinates
@@ -214,7 +291,9 @@
 				bb.setAttribute("visibility", "visible");
 			}
 			
+			//
 			// Hide tooltip
+			//
 			function hideToolTip() {
 				var txt = svgDoc.getElementById("toolTipText");
 				txt.setAttribute("visibility", "hidden");

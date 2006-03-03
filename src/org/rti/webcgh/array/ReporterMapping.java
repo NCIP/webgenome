@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ReporterMapping.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-03 15:29:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -264,6 +264,15 @@ public class ReporterMapping implements Comparable, Locatable, Cacheable {
      */
     public void expand(GenomeIntervalDto dto) {
     	this.genomeLocation.expand(dto);
+    }
+    
+    
+    /**
+     * Set genome assembly
+     * @param genomeAssembly A genome assembly
+     */
+    public void setGenomeAssembly(GenomeAssembly genomeAssembly) {
+    	this.genomeLocation.setGenomeAssembly(genomeAssembly);
     }
     
     
