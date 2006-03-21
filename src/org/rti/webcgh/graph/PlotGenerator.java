@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.4 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -497,11 +497,12 @@ public class PlotGenerator {
             if (cai.hasNext()) {
             	PlotPanel ampPanel = idPanel.newChildPlotPanel();
             	GenomeFeatureMap gfmap = new GenomeFeatureMap(0, cmap.length(), pixels, 
-            			Orientation.VERTICAL);
+            			orientation);
             	while (cai.hasNext()) {
             		ChromosomalAlteration alt = cai.next();
-            		gfmap.plotFeature(alt.startBp(), alt.endBp(), null, null, false, 
-            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+            		if (alt.onChromosome(chromosome))
+	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), null, null, false, 
+	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
             	}
             	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
             	Caption colName = new Caption("MCAR", Orientation.VERTICAL, false);

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlteration.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.3 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -109,6 +109,16 @@ public class ChromosomalAlteration {
 	 */
 	public void intersection(ChromosomalAlteration alt) {
 		this.genomeInterval.intersection(alt.genomeInterval);
+	}
+	
+	
+	/**
+	 * Is alteration on given chromosome?
+	 * @param chromosome A chromosome
+	 * @return T/F
+	 */
+	public boolean onChromosome(Chromosome chromosome) {
+		return this.genomeInterval.chromosome().equals(chromosome);
 	}
 
 }

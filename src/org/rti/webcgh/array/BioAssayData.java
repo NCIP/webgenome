@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.3 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -320,7 +320,7 @@ public class BioAssayData {
      * @param threshold Threshold value
      * @return Amplified regions
      */
-    public ChromosomalAlteration[] amplifiedRegions(double threshold) {
+    public ChromosomalAlterationSet amplifiedRegions(double threshold) {
     	return alteredRegions(threshold, RelOp.GREATER_THAN);
     }
     
@@ -330,33 +330,63 @@ public class BioAssayData {
      * @param threshold Threshold value
      * @return Deleted regions
      */
-    public ChromosomalAlteration[] deletedRegions(double threshold) {
+    public ChromosomalAlterationSet deletedRegions(double threshold) {
     	return alteredRegions(threshold, RelOp.LESS_THAN);
     }
     	
-    private ChromosomalAlteration[] alteredRegions(double threshold, RelOp relOp) {
-    	List ampList = new ArrayList();
-    	this.ensureSorted();
-    	GenomeLocation leftPoint = null;
-    	GenomeLocation rightPoint = null;
-    	for (ArrayDatumIterator it = this.arrayDatumIterator(); it.hasNext();) {
-    		ArrayDatum datum = it.next();
-    		if ((relOp == RelOp.GREATER_THAN && (double)datum.magnitude() > threshold) ||
-    			(relOp == RelOp.LESS_THAN && (double)datum.magnitude() < threshold)) {
-    			if (leftPoint == null)
-    				leftPoint = rightPoint = datum.getGenomeLocation();
-    			else
-    				rightPoint = datum.getGenomeLocation();
-    		} else if (leftPoint != null && rightPoint != null) {
-    			ampList.add(new ChromosomalAlteration(
-    					new GenomeInterval(leftPoint, rightPoint)));
-    			leftPoint = null;
-    			rightPoint = null;
-    		}
+    private ChromosomalAlterationSet alteredRegions(double threshold, RelOp relOp) {
+    	ChromosomalAlterationSet altSet = new ChromosomalAlterationSet();
+    	if (this.arrayData != null) {
+    		this.ensureSorted();
+        	int leftIdx = -1, rightIdx = -1;
+	    	for (int i = 0; i < this.arrayData.size(); i++) {
+	    		ArrayDatum datum = (ArrayDatum)this.arrayData.get(i);
+	    		if (leftIdx != -1 && (! ((ArrayDatum)this.arrayData.get(leftIdx)).sameChromosome(datum))) {
+	    			altSet.add(this.newChromosomalAlteration(leftIdx, rightIdx));
+	    			leftIdx = rightIdx = -1;
+	    		}
+	    		if ((relOp == RelOp.GREATER_THAN && (double)datum.magnitude() > threshold) ||
+	    			(relOp == RelOp.LESS_THAN && (double)datum.magnitude() < threshold)) {
+	    			if (leftIdx == -1)
+	    				leftIdx = rightIdx = i;
+	    			else
+	    				rightIdx = i;
+	    		} else if (leftIdx != -1 && rightIdx != -1) {
+	    			altSet.add(this.newChromosomalAlteration(leftIdx, rightIdx));
+	    			leftIdx = rightIdx = -1;
+	    		}
+	    	}
+	    	if (leftIdx != -1 && rightIdx != -1)
+	    		altSet.add(this.newChromosomalAlteration(leftIdx, rightIdx));
     	}
-    	ChromosomalAlteration[] amps = new ChromosomalAlteration[0];
-    	amps = (ChromosomalAlteration[])ampList.toArray(amps);
-    	return amps;
+    	return altSet;
+    }
+    
+    
+    private ChromosomalAlteration newChromosomalAlteration(int p, int q) {
+    	
+    	// Start point
+    	GenomeLocation start = null;
+    	ArrayDatum d2 = (ArrayDatum)this.arrayData.get(p);
+    	if (p > 0) {
+    		ArrayDatum d1 = (ArrayDatum)this.arrayData.get(p - 1);
+    		if (d1.sameChromosome(d2))
+    			start = GenomeLocation.midpoint(d1.getGenomeLocation(), d2.getGenomeLocation());
+    	}
+    	if (start == null)
+    		start = d2.getGenomeLocation();
+    	
+    	// End point
+    	GenomeLocation end = null;
+    	d2 = (ArrayDatum)this.arrayData.get(q);
+    	if (q < this.arrayData.size() - 1) {
+    		ArrayDatum d1 = (ArrayDatum)this.arrayData.get(q + 1);
+    		if (d1.sameChromosome(d2))
+    			end = GenomeLocation.midpoint(d1.getGenomeLocation(), d2.getGenomeLocation());
+    	}
+    	if (end == null)
+    		end = d2.getGenomeLocation();
+    	return new ChromosomalAlteration(new GenomeInterval(start, end));
     }
     
            

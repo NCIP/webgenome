@@ -200,6 +200,11 @@
 		class="org.rti.webcgh.analytic.AverageOperation"/>
 		
 	<bean
+		id="mcarMcdrOperation"
+		singleton="false"
+		class="org.rti.webcgh.analytic.McarMcdrOperation"/>
+		
+	<bean
 		id="linearRegressionNormalizationOperation"
 		singleton="false"
 		class="org.rti.webcgh.analytic.LinearRegressionNormalizationOperation"/>
@@ -246,6 +251,15 @@
 					<property name="className"><value>org.rti.webcgh.analytic.AverageOperation</value></property>
 					<property name="beanName"><value>averageOperation</value></property>
 					<property name="displayName"><value>Average within group</value></property>
+				</bean>
+				
+				<!-- MCAR/MCDR operation -->
+				<bean
+					id="mcarMcdrDisplayProperties"
+					class="org.rti.webcgh.webui.util.AnalyticOperationDisplayProperties">
+					<property name="className"><value>org.rti.webcgh.analytic.McarMcdrOperation</value></property>
+					<property name="beanName"><value>mcarMcdrOperation</value></property>
+					<property name="displayName"><value>MCAR/MCDR</value></property>
 				</bean>
 				
 				<!-- Linear regression operation -->

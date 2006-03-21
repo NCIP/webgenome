@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -590,6 +590,30 @@ public class BioAssay implements Cacheable {
     	if (p >= 0)
     		name = name.substring(0, p);
     	return name;
+    }
+    
+    
+    /**
+     * Get set of amplified chromosomal regions given threshold
+     * @param threshold Threshold
+     * @return Amplified regions
+     */
+    public ChromosomalAlterationSet amplifiedRegions(double threshold) {
+    	if (this.bioAssayData == null)
+    		return new ChromosomalAlterationSet();
+    	return this.bioAssayData.amplifiedRegions(threshold);
+    }
+    
+    
+    /**
+     * Get set of deleted chromosomal regions given threshold
+     * @param threshold Threshold
+     * @return Amplified regions
+     */
+    public ChromosomalAlterationSet deletedRegions(double threshold) {
+    	if (this.bioAssayData == null)
+    		return new ChromosomalAlterationSet();
+    	return this.bioAssayData.deletedRegions(threshold);
     }
     
     // ====================================

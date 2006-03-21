@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeLocation.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -344,5 +344,23 @@ public class GenomeLocation implements Comparable, Locatable, Cacheable {
      */
     public void setGenomeAssembly(GenomeAssembly genomeAssembly) {
     	this.chromosome.setGenomeAssembly(genomeAssembly);
+    }
+    
+    
+    // =======================================
+    //        Static methods
+    // =======================================
+    
+    /**
+     * Return midpoint of two locations
+     * @param loc1 First location
+     * @param loc2 Second location
+     * @return A genome location
+     */
+    public static GenomeLocation midpoint(GenomeLocation loc1, GenomeLocation loc2) {
+    	if (! loc1.sameChromosome(loc2))
+    		throw new IllegalArgumentException("Locations must be on same chromosome");
+    	long p = (long)Math.floor(Math.abs(((double)loc1.location + (double)loc2.location) / 2.0));
+    	return new GenomeLocation(loc1.chromosome, p);
     }
 }

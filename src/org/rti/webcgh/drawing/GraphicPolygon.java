@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicPolygon.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ package org.rti.webcgh.drawing;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.util.CollectionUtils;
@@ -118,6 +119,20 @@ public class GraphicPolygon extends GraphicPrimitive {
      */
     public void addPoint(Point point) {
         this.points.add(point);
+    }
+    
+    
+    public String toPrettyString() {
+    	StringBuffer buff = new StringBuffer("[");
+    	if (this.points != null) {
+    		int count = 0;
+    		for (Iterator it = this.points.iterator(); it.hasNext();) {
+    			Point point = (Point)it.next();
+    			buff.append("(" + point.x + ", " + point.y + ")");
+    		}
+    	}
+    	buff.append("]");
+    	return buff.toString();
     }
     
 

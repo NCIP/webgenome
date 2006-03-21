@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/McarMcdrOperation.java,v $
-$Revision: 1.1 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.2 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,9 @@ package org.rti.webcgh.analytic;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.BioAssayIterator;
+import org.rti.webcgh.array.ChromosomalAlterationSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.graph.PlotParameters;
 
@@ -74,16 +77,48 @@ public class McarMcdrOperation implements SummaryStatisticOperation {
 
 	public DataSetInvalidations validate(Experiment[] data,
 			PlotParameters params) {
-		return null;
+		DataSetInvalidations invalidations = null;
+		if (Double.isNaN(params.getLowerMaskValue()) || 
+				Double.isNaN(params.getUpperMaskValue())) {
+			invalidations = new DataSetInvalidations();
+			invalidations.addInvalidation(new DataSetInvalidation(
+					"Both minimum and maximum data mask must be set"));
+		}
+		return invalidations;
 	}
 
 	public Experiment[] perform(Experiment[] data, PlotParameters params)
 			throws AnalyticException {
-		List newDataList = new ArrayList();
-//		for (int i = 0; i < data.length; i++) {
-//			newDataList.add(data[i].)
-//		}
-		return null;
+		if (data == null)
+			return null;
+		Experiment[] newData = new Experiment[data.length + 1];
+		for (int i = 0; i < data.length; i++)
+			newData[i] = data[i];
+		Experiment newExp = new Experiment();
+		newData[data.length] = newExp;
+		newExp.setName("Minimum Altered Regions");
+		
+		if (data.length > 0) {
+			List ampSets = new ArrayList();
+			List delSets = new ArrayList();
+			for (int i = 0; i < data.length; i++) {
+				Experiment exp = data[i];
+				for (BioAssayIterator it = exp.bioAssayIterator(); it.hasNext();) {
+					BioAssay bioAssay = it.next();
+					ampSets.add(bioAssay.amplifiedRegions(params.getUpperMaskValue()));
+					delSets.add(bioAssay.deletedRegions(params.getLowerMaskValue()));
+				}
+			}
+			ChromosomalAlterationSet[] amps = new ChromosomalAlterationSet[0];
+			ChromosomalAlterationSet[] dels = new ChromosomalAlterationSet[0];
+			amps = (ChromosomalAlterationSet[])ampSets.toArray(amps);
+			dels = (ChromosomalAlterationSet[])delSets.toArray(dels);
+			ChromosomalAlterationSet ampX = ChromosomalAlterationSet.intersection(amps);
+			ChromosomalAlterationSet delX = ChromosomalAlterationSet.intersection(dels);
+			newExp.addAmplifications(ampX);
+			newExp.addDeletions(delX);
+		}
+		return newData;
 	}
 
 }

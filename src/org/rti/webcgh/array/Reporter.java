@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Reporter.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -175,6 +175,8 @@ public class Reporter implements Cacheable, Locatable {
      * @return -1 (less than), 0 (equals), +1 (greater than)
      */
     public int compareTo(Object obj) {
+    	if (obj == null)
+    		throw new IllegalArgumentException("Locatable object cannot be null");
         if (! (obj instanceof Locatable)) {
         	String msg = "Expecting a 'Locatable' object.  " +
 				"This is type '" + this.getClass().getName() + "'.  " +
@@ -194,6 +196,8 @@ public class Reporter implements Cacheable, Locatable {
      * @return Genome location
      */
     public GenomeLocation getGenomeLocation() {
+    	if (this.reporterMapping == null)
+    		return null;
     	return this.reporterMapping.getGenomeLocation();
     }
     

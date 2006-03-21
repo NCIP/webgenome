@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.4 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.5 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,8 +79,8 @@ public class Experiment implements Cacheable {
     // ====================================
     
     private Collection bioAssays = new ArrayList();
-    private List amplifications = new ArrayList();
-    private List deletions = new ArrayList();
+    private ChromosomalAlterationSet amplifications = new ChromosomalAlterationSet();
+    private ChromosomalAlterationSet deletions = new ChromosomalAlterationSet();
     private String name;
     private String description;
     private Long id = null;;
@@ -487,24 +487,6 @@ public class Experiment implements Cacheable {
     
     
     /**
-     * Get chromosomal alteration iterator
-     * @return Chromosomal alteration iterator
-     */
-    public ChromosomalAlterationIterator amplificationIterator() {
-    	return new ExperimentChromosomalAlterationIterator(this.amplifications.iterator());
-    }
-    
-    
-    /**
-     * Get chromosomal alteration iterator
-     * @return Chromosomal alteration iterator
-     */
-    public ChromosomalAlterationIterator deletionIterator() {
-    	return new ExperimentChromosomalAlterationIterator(this.deletions.iterator());
-    }
-    
-    
-    /**
      * Number of bioassays
      * @return Number of bioassays
      */
@@ -596,11 +578,29 @@ public class Experiment implements Cacheable {
     
     
     /**
+     * Add amplifications
+     * @param chromosomalAlterationSet A chromosomal alteration set
+     */
+    public void addAmplifications(ChromosomalAlterationSet chromosomalAlterationSet) {
+    	this.amplifications.add(chromosomalAlterationSet);
+    }
+    
+    
+    /**
      * Add an amplification
      * @param chromosomalAlteration A chromosomal alteration
      */
     public void addDeletion(ChromosomalAlteration chromosomalAlteration) {
     	this.deletions.add(chromosomalAlteration);
+    }
+    
+    
+    /**
+     * Add an amplification
+     * @param chromosomalAlterationSet A chromosomal alteration set
+     */
+    public void addDeletions(ChromosomalAlterationSet chromosomalAlterationSet) {
+    	this.deletions.add(chromosomalAlterationSet);
     }
     
 
@@ -642,6 +642,24 @@ public class Experiment implements Cacheable {
     			BioAssay ba = it.next();
     			ba.markAsRaw();
     		}
+    }
+    
+    
+    /**
+     * Get iterator for amplified regions
+     * @return Iterator
+     */
+    public ChromosomalAlterationIterator amplificationIterator() {
+    	return this.amplifications.chromosomalAlterationIterator();
+    }
+    
+    
+    /**
+     * Get iterator for deleted regions
+     * @return Iterator
+     */
+    public ChromosomalAlterationIterator deletionIterator() {
+    	return this.deletions.chromosomalAlterationIterator();
     }
 
 

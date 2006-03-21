@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatum.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-03-21 15:48:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -444,6 +444,7 @@ public class ArrayDatum implements Comparable, Locatable, Cacheable {
     //         Static methods
     // ========================================
     
+    
     /**
      * Compute mean of equivalent data
      * @param data Array data
@@ -500,5 +501,26 @@ public class ArrayDatum implements Comparable, Locatable, Cacheable {
      */
     public static Object cacheKey(Reporter reporter, Quantitation quantitation) {
         return "%ad%" + reporter.getCacheKey() + quantitation.getCacheKey();
+    }
+    
+    
+    /**
+     * Create a new ArrayDatum instance that is unaffiliated to a genome assembly or
+     * organism.  This method should normally be used only for testing.  If the
+     * generated data are plotted, there is no guarantee that the plots will be
+     * correct if they can even be generated without an exception.
+     * @param value Value of datum (e.g. expression value)
+     * @param chromNum Chromosome number
+     * @param chromPos Chromosome position
+     * @return An array datum
+     */
+    public static ArrayDatum newUnaffiliatedArrayDatum(float value, short chromNum, long chromPos) {
+    	Reporter reporter = new Reporter();
+    	Chromosome chromosome = new Chromosome(GenomeAssembly.DUMMY_GENOME_ASSEMBLY, chromNum);
+    	GenomeLocation location = new GenomeLocation(chromosome, chromPos);
+    	ReporterMapping rm = new ReporterMapping(reporter, location);
+    	reporter.setReporterMapping(rm);
+    	Quantitation q = new Quantitation(value, QuantitationType.UNKNOWN);
+    	return new ArrayDatum(reporter, q);
     }
 }
