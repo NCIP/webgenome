@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/RangeFilterOperation.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -153,13 +153,13 @@ public class RangeFilterOperation implements DataFilterOperation {
 		for (int i = 0; i < data.length; i++) {
 		    Experiment experiment = data[i];
 		    Experiment newData = new Experiment();
-		    experiment.transferMetaData(newData);
+		    newData.bulkSetMetadata(experiment);
 			try {
 			    for (BioAssayIterator bai = experiment.bioAssayIterator(); bai.hasNext();) {
 			        BioAssay bioAssay = bai.next();
 			        BioAssay newBioAssay = new BioAssay();
 			        newData.add(newBioAssay);
-			        bioAssay.transferMetaData(newBioAssay);
+			        newBioAssay.bulkSetMetadata(bioAssay);
 					for (ArrayDatumIterator it = bioAssay.arrayDatumIterator(); it.hasNext();){
 					    ArrayDatum datum = it.next();
 					    if (! datum.inQuantitationRange(this.lowerThresh, this.upperThresh))

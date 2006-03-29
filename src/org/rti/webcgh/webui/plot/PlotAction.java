@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -127,6 +129,7 @@ public class PlotAction extends Action {
 		HttpSession session = request.getSession();
         
         try {
+        	
             // Get plotting parameters
         	PlotParamsForm pform = (PlotParamsForm)form;
         	PlotParameters plotParameters = pform.getPlotParameters();

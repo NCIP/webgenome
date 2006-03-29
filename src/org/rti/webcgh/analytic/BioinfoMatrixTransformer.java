@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/BioinfoMatrixTransformer.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -135,15 +135,15 @@ public class BioinfoMatrixTransformer {
 			double[] col = normalizedValues.getColumn(0);
 			int p = 0;
 			for (int i = 0; i < originalData.length; i++) {
-				Experiment oldGads = originalData[i];
-				Experiment newGads = new Experiment();
-				oldGads.transferMetaData(newGads);
-				outData[i] = newGads;
-				for (BioAssayIterator bai = oldGads.bioAssayIterator(); bai.hasNext();) {
+				Experiment oldExp = originalData[i];
+				Experiment newExp = new Experiment();
+				newExp.bulkSetMetadata(oldExp);
+				outData[i] = newExp;
+				for (BioAssayIterator bai = oldExp.bioAssayIterator(); bai.hasNext();) {
 				    BioAssay oldAssay = bai.next();
 				    BioAssay newAssay = new BioAssay();
-				    oldAssay.transferMetaData(newAssay);
-				    newGads.add(newAssay);
+				    newAssay.bulkSetMetadata(oldAssay);
+				    newExp.add(newAssay);
 					for (ArrayDatumIterator adi = oldAssay.arrayDatumIterator(); adi.hasNext();) {
 						ArrayDatum datum = adi.next();
 						ArrayDatum newDatum = new ArrayDatum(datum);

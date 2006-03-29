@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/DataSet.java,v $
-$Revision: 1.2 $
-$Date: 2005-12-16 15:16:59 $
+$Revision: 1.3 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -201,6 +201,23 @@ public class DataSet {
      */
     public int numExperiments() {
     	return this.experiments.size();
+    }
+    
+    
+    /**
+     * Bulk set properties based on given data set
+     * @param dataSet A data set
+     * @param deepCopy Perform deep copy of properties?
+     */
+    public void bulkSet(DataSet dataSet, boolean deepCopy) {
+    	if (deepCopy) {
+    		this.experiments = new ArrayList();
+    		for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();) {
+    			Experiment clone = new Experiment();
+    			clone.bulkSet(it.next(), true);
+    		}
+    	} else
+    		this.experiments = dataSet.experiments;
     }
 	
 	

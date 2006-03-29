@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BinnedData.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -191,6 +191,27 @@ public class BinnedData {
     	if (numInt != null)
     		num = numInt.intValue();
     	return num;
+    }
+    
+    
+    /**
+     * Bulk set properties
+     * @param data Source of properties
+     * @param deepCopy Perform deep copy of properties?
+     */
+    public void bulkSet(BinnedData data, boolean deepCopy) {
+    	this.quantitationType = data.quantitationType;
+    	if (deepCopy) {
+    		this.chromosomeBins = new ArrayList();
+    		for (ChromosomeBinIterator it = data.chromosomeBinIterator(); it.hasNext();) {
+    			ChromosomeBin bin = new ChromosomeBin();
+    			bin.bulkSet(it.next());
+    			this.add(bin);
+    		}
+    	} else {
+    		this.chromosomeBins = data.chromosomeBins;
+    		this.numBinsPerChromosome = data.numBinsPerChromosome;
+    	}
     }
     
     

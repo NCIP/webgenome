@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.4 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.5 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -195,8 +195,10 @@ public class PlotGenerator {
         if (plotParameters.getPlotType() == PlotType.SCATTER_PLOT)
             this.createScatterPlot(dataSet, genomeIntervals, quantitationType, 
             		plotParameters, plotPanel, tile);
-        else if (plotParameters.getPlotType() == PlotType.IDEOGRAM_PLOT)
+        else if (plotParameters.getPlotType() == PlotType.IDEOGRAM_PLOT) {
             this.createIdeogramPlot(dataSet, genomeIntervals, plotParameters, plotPanel, tile);
+            plotPanel.addExtraPadding(4, Location.RIGHT_OF);
+        }
         int width = plotPanel.width() + this.padding * 2;
         int height = plotPanel.height() + this.padding * 2;
         GraphicRect background = new GraphicRect(0, 0, width, height, this.matteColor);
@@ -500,9 +502,11 @@ public class PlotGenerator {
             			orientation);
             	while (cai.hasNext()) {
             		ChromosomalAlteration alt = cai.next();
-            		if (alt.onChromosome(chromosome))
-	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), null, null, false, 
+            		if (alt.onChromosome(chromosome)) {
+            			String mouseover = alt.startBp()/1000000 + "MB-" + alt.endBp()/1000000 + "MB";
+	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), mouseover, null, false, 
 	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+            		}
             	}
             	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
             	Caption colName = new Caption("MCAR", Orientation.VERTICAL, false);
@@ -518,8 +522,11 @@ public class PlotGenerator {
             			Orientation.VERTICAL);
             	while (cai.hasNext()) {
             		ChromosomalAlteration alt = cai.next();
-            		gfmap.plotFeature(alt.startBp(), alt.endBp(), null, null, false, 
-            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+            		if (alt.onChromosome(chromosome)) {
+            			String mouseover = alt.startBp()/1000000 + "MB-" + alt.endBp()/1000000 + "MB";
+	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), mouseover, null, false, 
+	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+            		}
             	}
             	delPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
             	Caption colName = new Caption("MCDR", Orientation.VERTICAL, false);

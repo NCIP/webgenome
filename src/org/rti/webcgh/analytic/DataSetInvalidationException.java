@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/DataSetInvalidationException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 package org.rti.webcgh.analytic;
+
+import java.util.Iterator;
 
 import org.rti.webcgh.core.WebcghApplicationException;
 

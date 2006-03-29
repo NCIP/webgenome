@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/ColorCodePlot.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.3 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,8 @@ package org.rti.webcgh.graph;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -77,6 +79,7 @@ public class ColorCodePlot implements Plot {
     private final int length;
     private final Orientation orientation;
     private final double scale;
+    private final static NumberFormat FORMAT = new DecimalFormat("###.###");
     
     private int maxX = 0;
     private int maxY = 0;
@@ -152,7 +155,7 @@ public class ColorCodePlot implements Plot {
      */
     public void graphPoint(DataPoint dataPoint, Object pointGroupKey) {
         this.dataPoints.add(dataPoint);
-        int max = this.pixel(dataPoint);
+        int max = this.pixel(dataPoint.getValue1());
         if (this.orientation == Orientation.HORIZONTAL) {
         	if (max > this.maxX)
         		this.maxX = max;
@@ -160,7 +163,6 @@ public class ColorCodePlot implements Plot {
         	if (max > this.maxY)
         		this.maxY = max;
         }
-        	
     }
     
     
@@ -212,34 +214,41 @@ public class ColorCodePlot implements Plot {
     	Collections.sort(sorted);
     	for (Iterator it = sorted.iterator(); it.hasNext();) {
     		DataPointIndex dpi = (DataPointIndex)it.next();
-            int p = 0, q = 0, r = 0;
-            DataPoint dp = dpi.dataPoint;
-            if (! this.masked(dp)) {
-	            q = this.pixel(dp);
-	            if (dpi.index > 0) {
-	                dp = (DataPoint)this.dataPoints.get(dpi.index - 1);
-	                p = (this.pixel(dp) + q) / 2;
-	            } else
-	                p = q;
-	            if (dpi.index < this.dataPoints.size() - 1) {
-	                dp = (DataPoint)this.dataPoints.get(dpi.index + 1);
-	                r = (this.pixel(dp) + q) / 2;
-	            } else
-	            	r = q;
-	            Color color = this.colorFactory.getColor(dp.getValue2());
+            DataPoint centerDp = dpi.dataPoint;
+            DataPoint startDp = null;
+            DataPoint endDp = null;
+            if (! this.masked(centerDp)) {
+            	if (dpi.index > 0)
+            		startDp = (DataPoint)this.dataPoints.get(dpi.index - 1);
+            	else
+            		startDp = centerDp;
+            	if (dpi.index < this.dataPoints.size() - 1)
+            		endDp = (DataPoint)this.dataPoints.get(dpi.index + 1);
+            	else
+            		endDp = centerDp;
+            	long startBp = ((long)(startDp.getValue1() + centerDp.getValue1())) / 2;
+            	long endBp = ((long)(centerDp.getValue1() + endDp.getValue1())) / 2;
+            	int p = this.pixel((double)startBp);
+            	int q = this.pixel((double)endBp);
+            	double value = centerDp.getValue2();
+	            Color color = this.colorFactory.getColor(value);
 	            int x = 0, y = 0, width = 0, height = 0;
 	            if (this.orientation == Orientation.HORIZONTAL) {
 	                x = p;
-	                width = r - p;
+	                width = q - p;
 	                y = 0;
 	                height = this.thickness;
 	            } else if (this.orientation == Orientation.VERTICAL) {
 	                x = 0;
 	                width = this.thickness;
 	                y = p;
-	                height = r - p;
+	                height = q - p;
 	            }
 	            GraphicRect rect = new GraphicRect(x, y, width, height, color);
+	            long startMb = startBp / 1000000;
+	            long endMb = endBp / 1000000;
+	            String mouseOver = FORMAT.format(value) + " [" + startMb + "MB-" + endMb + "MB]";
+	            rect.setToolTipText(mouseOver);
 	            canvas.add(rect);
             }
         }
@@ -324,8 +333,8 @@ public class ColorCodePlot implements Plot {
     }
     
     
-    private int pixel(DataPoint dp) {
-        return (int)(this.scale * dp.getValue1());
+    private int pixel(double bp) {
+        return (int)(this.scale * bp);
     }
     
     

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ReporterMappingStagingArea.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -599,7 +599,7 @@ public class ReporterMappingStagingArea {
         		String key = (String)it.next();
         		Collection grouping = (Collection)orgGroupings.get(key);
         		Experiment newExperiment = new Experiment();
-        		experiment.transferMetaData(newExperiment);
+        		newExperiment.bulkSetMetadata(experiment);
         		for (Iterator bioAssayIt = grouping.iterator(); bioAssayIt.hasNext();)
         		    newExperiment.add((BioAssay)bioAssayIt.next());
         		splits.add(newExperiment);

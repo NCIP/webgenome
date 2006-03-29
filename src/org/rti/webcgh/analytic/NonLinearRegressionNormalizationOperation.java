@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/NonLinearRegressionNormalizationOperation.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -131,11 +131,11 @@ public class NonLinearRegressionNormalizationOperation implements
 			    Experiment experiment = data[i];
 			    Experiment newExperiment = new Experiment();
 			    newData[i] = newExperiment;
-			    experiment.transferMetaData(newExperiment);
+			    newExperiment.bulkSetMetadata(experiment);
 			    for (BioAssayIterator it = experiment.bioAssayIterator(); it.hasNext();) {
 			        BioAssay bioAssay = it.next();
 			        BioAssay newBioAssay = new BioAssay();
-			        bioAssay.transferMetaData(newBioAssay);
+			        newBioAssay.bulkSetMetadata(bioAssay);
 			        DoubleList values = ArrayDataValuesUtil.extractValues(bioAssay);
 			        DoubleList normValues = NonLinearRegression.nlrNormalizeSingleColor(values, this.percentage);
 			        ArrayDataValuesUtil.setValues(newBioAssay, bioAssay, normValues);

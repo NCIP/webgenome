@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Legend.java,v $
-$Revision: 1.4 $
-$Date: 2006-02-16 14:05:43 $
+$Revision: 1.5 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -187,8 +187,11 @@ public class Legend implements PlotElement {
     public void paint(DrawingCanvas canvas) {
     	DrawingCoords drawingCoords = new DrawingCoords();
     	if (dataSet != null)
-    		for (ExperimentIterator it = this.dataSet.experimentIterator(); it.hasNext();)
-    			this.paint(canvas, it.next(), drawingCoords);
+    		for (ExperimentIterator it = this.dataSet.experimentIterator(); it.hasNext();) {
+    			Experiment exp = it.next();
+    			if (exp.numBioAssays() > 0)
+    				this.paint(canvas, exp, drawingCoords);
+    		}
     	this.paintBorder(canvas);
     }
     

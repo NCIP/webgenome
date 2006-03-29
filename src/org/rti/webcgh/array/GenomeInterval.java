@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeInterval.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.3 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,17 +68,20 @@ public class GenomeInterval {
     /**
      * Starting point
      */
-    public GenomeLocation start;
+    public GenomeLocation start = null;
     
     /**
      * Ending point
      */
-    public GenomeLocation end;
+    public GenomeLocation end = null;
     
     
     // ==================================
     //      Constructors
     // ==================================
+    
+    
+    public GenomeInterval(){}
     
     /**
      * Constructor
@@ -90,16 +93,6 @@ public class GenomeInterval {
             throw new IllegalArgumentException("Genome interval cannot span different chromosomes");
         this.start = start;
         this.end = end;
-    }
-    
-    
-    /**
-     * Constructor
-     * @param interval A genome interval
-     */
-    public GenomeInterval(GenomeInterval interval) {
-        this.start = interval.start;
-        this.end = interval.end;
     }
     
     
@@ -199,5 +192,15 @@ public class GenomeInterval {
      */
     public boolean overlap(GenomeInterval ival) {
     	return this.start.leftOf(ival.end) && this.end.rightOf(ival.start);
+    }
+    
+    
+    /**
+     * Bulk set properties
+     * @param ival Source of properties
+     */
+    public void bulkSet(GenomeInterval ival) {
+    	this.start = ival.start;
+    	this.end = ival.end;
     }
 }

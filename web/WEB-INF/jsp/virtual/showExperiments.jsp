@@ -17,7 +17,7 @@
 <p><br></p>
 
 <center>
-<logic:notPresent name="arrayExperimentMetaData">
+<logic:notPresent name="experiments">
 	<p><br></p>
 	<p><br></p>
 		<h3>No virtual experiments are defined</h3>

@@ -316,7 +316,7 @@ public class PlotParameters {
      * @return A color
      */
     public Color color(BioAssay bioAssay) {
-    	String key = bioAssay.nameMinusRawSuffix();
+    	String key = bioAssay.getName();
         Color color = (Color)this.colorIndex.get(bioAssay);
         if (color == null) {
             color = this.colorChooser.nextColor();

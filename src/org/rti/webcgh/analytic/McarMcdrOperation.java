@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/McarMcdrOperation.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.3 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,7 +82,7 @@ public class McarMcdrOperation implements SummaryStatisticOperation {
 				Double.isNaN(params.getUpperMaskValue())) {
 			invalidations = new DataSetInvalidations();
 			invalidations.addInvalidation(new DataSetInvalidation(
-					"Both minimum and maximum data mask must be set"));
+					"MCAR/MCDR operation requires both minimum and maximum data mask to be set"));
 		}
 		return invalidations;
 	}

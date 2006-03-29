@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatum.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.4 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -146,7 +146,7 @@ public class ArrayDatum implements Comparable, Locatable, Cacheable {
     
     
     /**
-     * Constructor performs a shallow copy of all properties exception
+     * Constructor performs a shallow copy of all properties exceptio
      * quantitation.
      * @param datum A datum
      */

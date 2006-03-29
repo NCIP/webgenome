@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.5 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.6 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,6 +72,8 @@ import org.rti.webcgh.service.Cacheable;
  * 
  */
 public class Experiment implements Cacheable {
+	
+	private static final String RAW_SUFFIX = "(raw)";
     
     
     // ====================================
@@ -145,7 +147,10 @@ public class Experiment implements Cacheable {
 	 * @return Returns the name.
 	 */
 	public String getName() {
-		return name;
+		String s = (this.name == null)? "no name" : this.name;
+		if (this.raw)
+			s += " " + RAW_SUFFIX;
+		return s;
 	}
 		
 	
@@ -311,20 +316,6 @@ public class Experiment implements Cacheable {
     }
     
     
-    /**
-     * Constructor
-     * @param exp An experiment
-     */
-    public Experiment(Experiment exp) {
-        this.databaseName = exp.databaseName;
-        this.description = exp.description;
-        this.name = exp.name;
-        this.organism = exp.organism;
-        this.virtual = exp.virtual;
-        for (Iterator it = exp.bioAssays.iterator(); it.hasNext();)
-            this.bioAssays.add(new BioAssay((BioAssay)it.next()));
-    }
-    
     public Experiment(String name, String databaseName) {
         super();
         this.name = name;
@@ -366,10 +357,7 @@ public class Experiment implements Cacheable {
      * @param plotParameters Plotting parameters
      */
     public void graph(Plot plot, GenomeLocation start, GenomeLocation end, PlotParameters plotParameters) {
-    	int count = 0;
     	for (Iterator it = this.bioAssays.iterator(); it.hasNext();) {
-    		if (++count == 29)
-    			count++;
     		BioAssay bioAssay = (BioAssay)it.next();
         	Color color = plotParameters.color(bioAssay);
             bioAssay.graph(plot, start, end, color);
@@ -460,20 +448,6 @@ public class Experiment implements Cacheable {
     	newExp.organism = this.organism;
     	newExp.name = this.name;
     	return newExp;
-    }
-    
-    
-    /**
-     * Transfer overall metadata to given experiment.  Does not transfer
-     * ID or bioassays.
-     * @param exp An experiment
-     */
-    public void transferMetaData(Experiment exp) {
-        exp.databaseName = this.databaseName;
-        exp.description = this.description;
-        exp.name = this.name;
-        exp.organism = this.organism;
-        exp.virtual = this.virtual;
     }
     
     
@@ -634,14 +608,14 @@ public class Experiment implements Cacheable {
      *
      */
     public void markAsRaw() {
-       	String name = (this.name == null)? "" : this.name;
-    	this.name = name + " (raw)";
-    	this.raw = true;
-    	if (this.bioAssays != null)
-    		for (BioAssayIterator it = this.bioAssayIterator(); it.hasNext();) {
-    			BioAssay ba = it.next();
-    			ba.markAsRaw();
-    		}
+    	if (! this.raw) {
+	    	this.raw = true;
+	    	if (this.bioAssays != null)
+	    		for (BioAssayIterator it = this.bioAssayIterator(); it.hasNext();) {
+	    			BioAssay ba = it.next();
+	    			ba.markAsRaw();
+	    		}
+    	}
     }
     
     
@@ -651,6 +625,65 @@ public class Experiment implements Cacheable {
      */
     public ChromosomalAlterationIterator amplificationIterator() {
     	return this.amplifications.chromosomalAlterationIterator();
+    }
+    
+        
+    public void bulkSet(Experiment exp, boolean deepCopy) {
+    	this.bulkSetMetadata(exp);
+    	if (deepCopy)
+    		this.deepCopyContainers(exp);
+    	else
+    		this.shallowCopyContainers(exp);
+    }
+    
+    
+    public void bulkSetMetadata(Experiment exp) {
+    	
+    	// Note: raw property not copied.  The act of copying makes
+    	// target object not raw by definition
+    	this.clientId = exp.clientId;
+    	this.databaseName = exp.databaseName;
+    	this.description = exp.description;
+    	this.name = exp.name;
+    	this.organism = exp.organism;
+    	this.referenceAssembly = exp.referenceAssembly;
+    	this.userName = exp.userName;
+    	this.virtual = exp.virtual;
+    }
+    
+    
+    private void deepCopyContainers(Experiment exp) {
+    	
+    	// Amplifications
+    	this.amplifications = null;
+    	if (exp.amplifications != null) {
+    		this.amplifications = new ChromosomalAlterationSet();
+    		this.amplifications.bulkSet(exp.amplifications, true);
+    	}
+    	
+    	// Deletions
+    	this.deletions = null;
+    	if (exp.deletions != null) {
+    		this.deletions = new ChromosomalAlterationSet();
+    		this.deletions.bulkSet(exp.deletions, true);
+    	}
+    	
+    	// Bioassays
+    	this.bioAssays = new ArrayList();
+    	this.bioAssayIndex = new HashMap();
+    	for (BioAssayIterator it = exp.bioAssayIterator(); it.hasNext();) {
+    		BioAssay bioAssay = new BioAssay();
+    		bioAssay.bulkSet(it.next(), true);
+    		this.add(bioAssay);
+    	}
+    }
+    
+    
+    private void shallowCopyContainers(Experiment exp) {
+    	this.bioAssayIndex = exp.bioAssayIndex;
+    	this.bioAssays = exp.bioAssays;
+    	this.deletions = exp.deletions;
+    	this.amplifications = exp.amplifications;
     }
     
     

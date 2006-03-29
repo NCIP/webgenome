@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/impl/HibernatePersistentExperiment.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 20:17:48 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -136,11 +136,13 @@ public class HibernatePersistentExperiment extends PersistentExperiment {
      *
      */
     public void delete() {
-        for (BioAssayIterator it = this.bioAssayIterator(); it.hasNext();) {
-            BioAssay bioAssay = it.next();
-            if (bioAssay instanceof HibernatePersistentBioAssay)
-                ((HibernatePersistentBioAssay)bioAssay).delete();
-        }
+    	if (! this.isVirtual()) {
+	        for (BioAssayIterator it = this.bioAssayIterator(); it.hasNext();) {
+	            BioAssay bioAssay = it.next();
+	            if (bioAssay instanceof HibernatePersistentBioAssay)
+	                ((HibernatePersistentBioAssay)bioAssay).delete();
+	        }
+    	}
         PERSISTOR.getHibernateTemplate().delete(this);
     }
     

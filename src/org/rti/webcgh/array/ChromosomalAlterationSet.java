@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlterationSet.java,v $
-$Revision: 1.1 $
-$Date: 2006-03-03 23:23:56 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import org.rti.webcgh.util.CollectionUtils;
  */
 public class ChromosomalAlterationSet {
 	
-	private final List alterations = new ArrayList();
+	private List alterations = new ArrayList();
 	
 	
 	// =========================
@@ -74,6 +74,7 @@ public class ChromosomalAlterationSet {
 	// =========================
 	
 	public ChromosomalAlterationSet() {}
+	
 	
 	
 	// ===============================
@@ -125,6 +126,20 @@ public class ChromosomalAlterationSet {
 				it.remove();
 			}
 		};
+	}
+	
+	
+	public void bulkSet(ChromosomalAlterationSet caSet, boolean deepCopy) {
+		if (deepCopy) {
+			this.alterations = new ArrayList();
+			for (ChromosomalAlterationIterator it = caSet.chromosomalAlterationIterator(); it.hasNext();) {
+				ChromosomalAlteration alt = it.next();
+				ChromosomalAlteration clone = new ChromosomalAlteration();
+				clone.bulkSet(alt);
+				this.add(clone);
+			}
+		} else
+			this.alterations = caSet.alterations;
 	}
 	
 	

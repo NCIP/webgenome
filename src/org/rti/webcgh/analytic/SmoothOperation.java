@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/SmoothOperation.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -162,12 +162,12 @@ public class SmoothOperation implements NormalizationOperation {
 	        Experiment exp = data[i];
 	        Experiment newExp = new Experiment();
 	        newData[i] = newExp;
-	        exp.transferMetaData(newExp);
+	        newExp.bulkSetMetadata(exp);
 	        for (BioAssayIterator it = exp.bioAssayIterator(); it.hasNext();) {
 	            BioAssay assay = it.next();
 	            BioAssay newAssay = new BioAssay();
 	            newExp.add(newAssay);
-	            assay.transferMetaData(newAssay);
+	            newAssay.bulkSetMetadata(assay);
 	            int n = assay.numArrayDatum();
 	            for (int j = 0; j < n; j++) {
 	            	ArrayDatum newDatum = new ArrayDatum(assay.getArrayDatum(j));

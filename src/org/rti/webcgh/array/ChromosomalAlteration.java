@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlteration.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.4 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,12 +59,14 @@ import org.rti.webcgh.graph.PlotParameters;
 
 public class ChromosomalAlteration {
 	
-	private final GenomeInterval genomeInterval;
+	private GenomeInterval genomeInterval = null;
 	
 	
 	// ===============================================
 	//         Constructors
 	// ===============================================
+	
+	public ChromosomalAlteration(){}
 	
 	/**
 	 * Constructor
@@ -119,6 +121,15 @@ public class ChromosomalAlteration {
 	 */
 	public boolean onChromosome(Chromosome chromosome) {
 		return this.genomeInterval.chromosome().equals(chromosome);
+	}
+	
+	
+	/**
+	 * Bulk set properties
+	 * @param alt Source of properties
+	 */
+	public void bulkSet(ChromosomalAlteration alt) {
+		this.genomeInterval = alt.genomeInterval;
 	}
 
 }

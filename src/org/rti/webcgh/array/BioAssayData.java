@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.4 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -143,9 +143,13 @@ public class BioAssayData {
      * Constructor
      * @param data Bioassay data
      */
-    public BioAssayData(BioAssayData data) {
-        for (Iterator it = data.arrayData.iterator(); it.hasNext();)
-            this.add((ArrayDatum)it.next());
+    public void bulkSet(BioAssayData data, boolean deepCopy) {
+        for (Iterator it = data.arrayData.iterator(); it.hasNext();) {
+        	if (deepCopy)
+        		this.add(new ArrayDatum((ArrayDatum)it.next()));
+        	else
+        		this.add((ArrayDatum)it.next());
+        }
         this.sorted = false;
     }
     

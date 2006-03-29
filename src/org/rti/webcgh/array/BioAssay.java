@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.4 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,8 +85,17 @@ public class BioAssay implements Cacheable {
     protected Long binnedDataId = null;
     protected Array array = null;
     protected BioAssayType bioAssayType = null;
+    protected boolean raw = false;
     
     
+	/**
+	 * @return Returns the raw.
+	 */
+	public boolean isRaw() {
+		return raw;
+	}
+
+
 	/**
 	 * @return Returns the bioAssayType.
 	 */
@@ -195,7 +204,10 @@ public class BioAssay implements Cacheable {
 	 * @return Returns the name.
 	 */
 	public String getName() {
-		return name;
+		String s = (this.name == null)? "no name" : this.name;
+		if (this.raw)
+			s += " " + RAW_SUFFIX;
+		return s;
 	}
 	
 	
@@ -310,18 +322,6 @@ public class BioAssay implements Cacheable {
     }
     
     
-    /**
-     * Constructor
-     * @param assay A bioassay
-     */
-    public BioAssay(BioAssay assay) {
-        this.databaseName = assay.databaseName;
-        this.description = assay.description;
-        this.name = assay.name;
-        this.organism = assay.organism;
-        this.bioAssayData = new BioAssayData(assay.bioAssayData);
-    }
-    
     
     // ================================
     //     Cacheable interface
@@ -351,7 +351,7 @@ public class BioAssay implements Cacheable {
     public void graph(Plot plot, GenomeLocation start, GenomeLocation end, 
     		Color color) {
         if (this.bioAssayData != null)
-            this.bioAssayData.graph(plot, start, end, this.name, color);
+            this.bioAssayData.graph(plot, start, end, this.getName(), color);
     }
     
 
@@ -417,19 +417,6 @@ public class BioAssay implements Cacheable {
         if (this.bioAssayData == null)
             this.bioAssayData = new BioAssayData();
         this.bioAssayData.add(datum);
-    }
-    
-    
-    /**
-     * Transfer metadata to given bioassay.  Does
-     * not transfer ID or bioassay data.
-     * @param assay A bioassay
-     */
-    public void transferMetaData(BioAssay assay) {
-        assay.databaseName = this.databaseName;
-        assay.description = this.description;
-        assay.name = this.name;
-        assay.organism = this.organism;
     }
     
     
@@ -575,21 +562,7 @@ public class BioAssay implements Cacheable {
      *
      */
     public void markAsRaw() {
-    	String name = (this.name == null)? "" : this.name;
-    	this.name = name + RAW_SUFFIX;
-    }
-    
-    
-    /**
-     * Get name minus the raw suffix
-     * @return Name minus the raw suffix
-     */
-    public String nameMinusRawSuffix() {
-    	String name = this.name;
-    	int p = name.indexOf(RAW_SUFFIX);
-    	if (p >= 0)
-    		name = name.substring(0, p);
-    	return name;
+    	this.raw = true;
     }
     
     
@@ -616,6 +589,52 @@ public class BioAssay implements Cacheable {
     	return this.bioAssayData.deletedRegions(threshold);
     }
     
+    
+    public void bulkSet(BioAssay bioAssay, boolean deepCopy) {
+    	this.bulkSetMetadata(bioAssay);
+    	if (deepCopy)
+    		this.deepCopyCollections(bioAssay);
+    	else
+    		this.shallowCopyCollections(bioAssay);
+    }
+    
+    
+    public void bulkSetMetadata(BioAssay bioAssay) {
+    	
+    	// Note: raw property not copied.  The act of copying makes
+    	// target object not raw by definition
+    	this.array = bioAssay.array;
+    	this.binnedDataId = bioAssay.binnedDataId;
+    	this.bioAssayDataId = bioAssay.bioAssayDataId;
+    	this.bioAssayType = bioAssay.bioAssayType;
+    	this.databaseName = bioAssay.databaseName;
+    	this.description = bioAssay.description;
+    	this.name = bioAssay.name;
+    	this.organism = bioAssay.organism;
+    }
+    
+    private void deepCopyCollections(BioAssay bioAssay) {
+    	
+    	// Binned data
+    	this.binnedData = null;
+    	if (bioAssay.binnedData != null) {
+    		this.binnedData = new BinnedData();
+    		this.binnedData.bulkSet(bioAssay.binnedData, true);
+    	}
+    	
+    	// Bioassay data
+    	this.bioAssayData = null;
+    	if (bioAssay.bioAssayData != null) {
+    		this.bioAssayData = new BioAssayData();
+    		this.bioAssayData.bulkSet(bioAssay.bioAssayData, true);
+    	}
+    }
+    
+    private void shallowCopyCollections(BioAssay bioAssay) {
+    	this.binnedData = bioAssay.binnedData;
+    	this.bioAssayData = bioAssay.bioAssayData;
+    }
+    
     // ====================================
     //      Static methods
     // ====================================
@@ -628,8 +647,11 @@ public class BioAssay implements Cacheable {
     public static BioAssay mean(BioAssay[] bioAssays) {
     	if (bioAssays.length < 1)
     		return null;
-    	if (bioAssays.length == 1)
-    		return new BioAssay(bioAssays[0]);
+    	if (bioAssays.length == 1) {
+    		BioAssay bioAssay = new BioAssay();
+    		bioAssay.bulkSet(bioAssays[0], true);
+    		return bioAssay;
+    	}
     	BioAssay newBioAssay = new BioAssay();
     	newBioAssay.organism = bioAssays[0].organism;
     	BioAssayData[] data = new BioAssayData[bioAssays.length];

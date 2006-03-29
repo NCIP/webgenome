@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomeBin.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -153,5 +153,17 @@ public class ChromosomeBin {
         this.bin = bin;
         this.value = value;
         this.chromosomeNum = chromosomeNum;
+    }
+    
+    
+    // =============================
+    //   Public methods
+    // =============================
+    
+    
+    public void bulkSet(ChromosomeBin cbin) {
+    	this.bin = cbin.bin;
+    	this.chromosomeNum = cbin.chromosomeNum;
+    	this.value = cbin.value;
     }
 }

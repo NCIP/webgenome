@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/DataAssembler.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,8 @@ import org.rti.webcgh.analytic.AnalyticPipeline;
 import org.rti.webcgh.analytic.DataSetInvalidationException;
 import org.rti.webcgh.analytic.DataSetInvalidations;
 import org.rti.webcgh.analytic.ValidationUtil;
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graph.PlotParameters;
@@ -118,9 +120,10 @@ public class DataAssembler {
 		//ValidationUtil.basicValidation(dataSets);
 		
 		// Retain original experiments
-		Experiment[] origExperiments = new Experiment[experiments.length];
-		for (int i = 0; i < experiments.length; i++)
-			origExperiments[i] = experiments[i];
+		Experiment[] origExperiments = experiments;
+		
+		// Make shallow copies of originals and mark as raw
+		experiments = this.copyAndMarkAsRaw(origExperiments);
 		
 		// Invoke analytic pipeline
 		for (Iterator it = pipeline.getOperations().iterator(); it.hasNext() && 
@@ -137,24 +140,60 @@ public class DataAssembler {
 		
 		// If any data sets invalide, throw exception
 		if (invalidations.getInvalidations().size() > 0) {
-			DataSetInvalidationException e = new DataSetInvalidationException("Invalid data set");
+			DataSetInvalidationException e = new DataSetInvalidationException(invalidations.getMessages());
 			e.setInvalidations(invalidations);
 			throw e;
 		}
 		
-		// Add raw data back
-		if (pipeline.numOperations() > 0) {
-			Experiment[] temp = experiments;
-			experiments = new Experiment[origExperiments.length + temp.length];
-			int p = 0;
-			for (int i = 0; i < origExperiments.length; i++) {
-				origExperiments[i].markAsRaw();
-				experiments[p++] = origExperiments[i];
-			}
-			for (int i = 0; i < temp.length; i++)
-				experiments[p++] = temp[i];
+		// Add raw data back if not in experiment list
+		if (! this.containsRaws(experiments) && pipeline.numOperations() > 0) {
+			Experiment[] raws = this.copyAndMarkAsRaw(origExperiments);
+			experiments = this.concatenate(raws, experiments);
 		}
 		
 		return experiments;
+	}
+	
+	
+	private Experiment[] copyAndMarkAsRaw(Experiment[] experiments) {
+		if (experiments == null)
+			return null;
+		Experiment[] copies = new Experiment[experiments.length];
+		for (int i = 0; i < experiments.length; i++) {
+			Experiment oldExp = experiments[i];
+			Experiment newExp = new Experiment();
+			copies[i] = newExp;
+			newExp.bulkSetMetadata(oldExp);
+			for (BioAssayIterator it = oldExp.bioAssayIterator(); it.hasNext();) {
+				BioAssay oldBioAssay = it.next();
+				BioAssay newBioAssay = new BioAssay();
+				newBioAssay.bulkSet(oldBioAssay, false);
+				newExp.add(newBioAssay);
+			}
+			newExp.markAsRaw();
+		}
+		return copies;
+	}
+	
+	
+	private Experiment[] concatenate(Experiment[] a1, Experiment[] a2) {
+		assert a1 != null && a2 != null;
+		Experiment[] experiments = new Experiment[a1.length + a2.length];
+		int count = 0;
+		for (int i = 0; i < a1.length; i++)
+			experiments[count++] = a1[i];
+		for (int i = 0; i < a2.length; i++)
+			experiments[count++] = a2[i];
+		return experiments;
+	}
+	
+	
+	private boolean containsRaws(Experiment[] experiments) {
+		boolean contains = false;
+		if (experiments != null) {
+			for (int i = 0; i < experiments.length && ! contains; i++)
+				contains = experiments[i].isRaw();
+		}
+		return contains;
 	}
 }

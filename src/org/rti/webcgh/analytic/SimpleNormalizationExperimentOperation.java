@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/SimpleNormalizationExperimentOperation.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-03-29 22:26:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,7 +82,7 @@ public class SimpleNormalizationExperimentOperation extends SimpleNormalizationO
 		for (int i = 0; i < data.length; i++) {
 		    Experiment experiment = data[i];
 			Experiment clone = new Experiment();
-			experiment.transferMetaData(clone);
+			clone.bulkSetMetadata(experiment);
 			newArray[i] = clone;
 			try {
 				// Arrays to keep track of biological array specific information   
@@ -116,7 +116,7 @@ public class SimpleNormalizationExperimentOperation extends SimpleNormalizationO
 				while (st.hasNext() && ar.hasNext()){
 					BioAssay bioAssay = ar.next();
 					BioAssay newBioAssay = new BioAssay();
-					bioAssay.transferMetaData(newBioAssay);
+					newBioAssay.bulkSetMetadata(bioAssay);
 					clone.add(newBioAssay);
 					double stat = ((Double)st.next()).doubleValue();
 					for (ArrayDatumIterator adi = bioAssay.arrayDatumIterator(); adi.hasNext();){
