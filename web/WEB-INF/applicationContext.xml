@@ -21,12 +21,19 @@
 	<!-- ====================================================== -->
 	<!--                 Embedded database                      -->
 	<!-- ====================================================== -->
-	
+	<!--
 	<bean
 		id="dataSource"
 		class="org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource">
 		<property name="databaseName"><value>${db.home}/${cloudscape.dir}/${db.name}</value></property>
 		<property name="user"><value>${db.user.name}</value></property>
+		<property name="password"><value>${db.password}</value></property>
+	</bean>
+	-->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>${db.url}</value></property>
+		<property name="username"><value>${db.user.name}</value></property>
 		<property name="password"><value>${db.password}</value></property>
 	</bean>
 	

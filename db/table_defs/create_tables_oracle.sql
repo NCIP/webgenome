@@ -1,8 +1,13 @@
+## Conversion from Cloudscape to Oracle
+## 1. BIGINT -> NUMBER(38)
+##    SMALLINT -> NUMBER(5)
+## 2. number -> num  (Table:chromosome)
+
 --
 -- Organism
 --
 CREATE TABLE organism (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	genus VARCHAR(48),
 	species VARCHAR(48),
 	PRIMARY KEY (id)
@@ -14,9 +19,9 @@ INSERT INTO organism(id, genus, species) VALUES (2, 'Mus', 'musculus');
 -- GenomeAssembly
 --
 CREATE TABLE genome_assembly (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
-	organism_id BIGINT,
+	organism_id NUMBER(38),
 	PRIMARY KEY(id),
 	FOREIGN KEY (organism_id) REFERENCES organism(id)
 );
@@ -27,10 +32,10 @@ INSERT INTO genome_assembly (id, name, organism_id) VALUES (2, 'Unspecified', 2)
 -- Chromosome
 --
 CREATE TABLE chromosome (
-	id BIGINT NOT NULL,
-	num SMALLINT NOT NULL,
-	length BIGINT,
-	genome_assembly_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	num NUMBER(5) NOT NULL,
+	length NUMBER(38),
+	genome_assembly_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (genome_assembly_id) REFERENCES genome_assembly(id)
 );
@@ -39,9 +44,9 @@ CREATE TABLE chromosome (
 -- GenomeLocation
 --
 CREATE TABLE genome_location (
-	id BIGINT NOT NULL,
-	location BIGINT,
-	chromosome_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	location NUMBER(38),
+	chromosome_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (chromosome_id) REFERENCES chromosome(id)
 );
@@ -50,7 +55,7 @@ CREATE TABLE genome_location (
 -- QuantitationType
 --
 CREATE TABLE quantitation_type (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
 	PRIMARY KEY (id)
 );
@@ -59,10 +64,10 @@ CREATE TABLE quantitation_type (
 -- Array
 --
 CREATE TABLE array (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	vendor VARCHAR(48),
 	name VARCHAR(48),
-	organism_id BIGINT,
+	organism_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (organism_id) REFERENCES organism(id)
 );
@@ -73,9 +78,9 @@ INSERT INTO array (id, vendor, name, organism_id) VALUES (2, '', 'Unspecified', 
 -- ArrayMapping
 --
 CREATE TABLE array_mapping (
-	id BIGINT NOT NULL,
-	array_id BIGINT,
-	genome_assembly_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	array_id NUMBER(38),
+	genome_assembly_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (array_id) REFERENCES array(id),
 	FOREIGN KEY (genome_assembly_id) REFERENCES genome_assembly(id)
@@ -87,9 +92,9 @@ INSERT INTO array_mapping (id, array_id, genome_assembly_id) VALUES (2, 2, 2);
 -- Reporter
 --
 CREATE TABLE reporter (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
-	array_id BIGINT,
+	array_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (array_id) REFERENCES array(id)
 );
@@ -98,10 +103,10 @@ CREATE TABLE reporter (
 -- ReporterMapping
 --
 CREATE TABLE reporter_mapping (
-	id BIGINT NOT NULL,
-	genome_location_id BIGINT,
-	reporter_id BIGINT,
-	array_mapping_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	genome_location_id NUMBER(38),
+	reporter_id NUMBER(38),
+	array_mapping_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (genome_location_id) REFERENCES genome_location(id),
 	FOREIGN KEY (reporter_id) REFERENCES reporter(id),
@@ -112,9 +117,9 @@ CREATE TABLE reporter_mapping (
 -- Quantitation
 --
 CREATE TABLE quantitation (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	value FLOAT,
-	quantitation_type_id BIGINT,
+	quantitation_type_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (quantitation_type_id) REFERENCES quantitation_type (id)
 );
@@ -123,7 +128,7 @@ CREATE TABLE quantitation (
 -- Experiment
 --
 CREATE TABLE experiment (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
 	description VARCHAR(1024),
 	virtual CHAR(1),
@@ -136,7 +141,7 @@ CREATE TABLE experiment (
 -- BioAssayData
 --
 CREATE TABLE bio_assay_data (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	PRIMARY KEY (id)
 );
 
@@ -145,8 +150,8 @@ CREATE TABLE bio_assay_data (
 -- BinnedData
 --
 CREATE TABLE binned_data (
-	id BIGINT NOT NULL,
-	quantitation_type_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	quantitation_type_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (quantitation_type_id) REFERENCES quantitation_type(id)
 );
@@ -155,11 +160,11 @@ CREATE TABLE binned_data (
 -- ChromosomeBin
 --
 CREATE TABLE chromosome_bin (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	bin INT,
 	value FLOAT,
 	chromosome_num INT,
-	binned_data_id BIGINT,
+	binned_data_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (binned_data_id) REFERENCES binned_data(id)
 );
@@ -168,12 +173,12 @@ CREATE TABLE chromosome_bin (
 -- BioAssay
 --
 CREATE TABLE bio_assay (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
 	description VARCHAR(1024),
-	experiment_id BIGINT,
+	experiment_id NUMBER(38),
 	bio_assay_data_id VARCHAR(256),
-	binned_data_id BIGINT,
+	binned_data_id NUMBER(38),
 	database_name VARCHAR(48),
 	PRIMARY KEY (id),
 	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
@@ -184,10 +189,10 @@ CREATE TABLE bio_assay (
 -- ArrayDatum
 --
 CREATE TABLE array_datum (
-	id BIGINT NOT NULL,
-	reporter_id BIGINT,
-	quantitation_id BIGINT,
-	bio_assay_data_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	reporter_id NUMBER(38),
+	quantitation_id NUMBER(38),
+	bio_assay_data_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (reporter_id) REFERENCES reporter(id),
 	FOREIGN KEY (quantitation_id) REFERENCES quantitation(id),
@@ -198,9 +203,9 @@ CREATE TABLE array_datum (
 -- CytologicalMapSet
 --
 CREATE TABLE cytological_map_set (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	upload_date DATE,
-	genome_assembly_id BIGINT,
+	genome_assembly_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (genome_assembly_id) REFERENCES genome_assembly(id)
 );
@@ -209,11 +214,11 @@ CREATE TABLE cytological_map_set (
 -- CytologicalMap
 --
 CREATE TABLE cytological_map (
-	id BIGINT NOT NULL,
-	chromosome_id BIGINT,
-	centromere_start BIGINT,
-	centromere_end BIGINT,
-	cytological_map_set_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	chromosome_id NUMBER(38),
+	centromere_start NUMBER(38),
+	centromere_end NUMBER(38),
+	cytological_map_set_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (chromosome_id) REFERENCES chromosome(id),
 	FOREIGN KEY (cytological_map_set_id) REFERENCES cytological_map_set(id)
@@ -223,7 +228,7 @@ CREATE TABLE cytological_map (
 -- GenomeFeatureType
 --
 CREATE TABLE genome_feature_type (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
 	represents_gene CHAR(1),
 	PRIMARY KEY (id)
@@ -233,10 +238,10 @@ CREATE TABLE genome_feature_type (
 -- GenomeFeatureDataSet
 --
 CREATE TABLE genome_feature_data_set (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	upload_date DATE,
-	genome_feature_type_id BIGINT,
-	genome_assembly_id BIGINT,
+	genome_feature_type_id NUMBER(38),
+	genome_assembly_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (genome_feature_type_id) REFERENCES genome_feature_type (id),
 	FOREIGN KEY (genome_assembly_id) REFERENCES genome_assembly(id)
@@ -247,12 +252,12 @@ CREATE TABLE genome_feature_data_set (
 -- GenomeFeature
 --
 CREATE TABLE genome_feature (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(128),
-	chromosome_id BIGINT,
-	chrom_start BIGINT,
-	chrom_end BIGINT,
-	genome_feature_data_set_id BIGINT,
+	chromosome_id NUMBER(38),
+	chrom_start NUMBER(38),
+	chrom_end NUMBER(38),
+	genome_feature_data_set_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (chromosome_id) REFERENCES chromosome(id),
 	FOREIGN KEY (genome_feature_data_set_id) REFERENCES genome_feature_data_set(id)
@@ -262,23 +267,24 @@ CREATE TABLE genome_feature (
 -- Exon
 --
 CREATE TABLE exon (
-	id BIGINT NOT NULL,
-	chrom_start BIGINT,
-	chrom_end BIGINT,
-	genome_feature_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	chrom_start NUMBER(38),
+	chrom_end NUMBER(38),
+	genome_feature_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (genome_feature_id) REFERENCES genome_feature(id)
 );
+
 --
 -- Cytoband
 --
 CREATE TABLE cytoband (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
-	chrom_start BIGINT,
-	chrom_end BIGINT,
+	chrom_start NUMBER(38),
+	chrom_end NUMBER(38),
 	stain VARCHAR(16),
-	cytological_map_id BIGINT,
+	cytological_map_id NUMBER(38),
 	PRIMARY KEY (id),
 	FOREIGN KEY (cytological_map_id) REFERENCES cytological_map(id)
 );
@@ -287,7 +293,7 @@ CREATE TABLE cytoband (
 -- Pipeline
 --
 CREATE TABLE pipeline (
-	id BIGINT NOT NULL,
+	id NUMBER(38) NOT NULL,
 	name VARCHAR(128),
 	user_name VARCHAR(48),
 	PRIMARY KEY (id)
@@ -297,8 +303,8 @@ CREATE TABLE pipeline (
 -- PipelineStep
 --
 CREATE TABLE pipeline_step (
-	id BIGINT NOT NULL,
-	pipeline_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	pipeline_id NUMBER(38),
 	step_num INT,
 	class_name VARCHAR(256),
 	PRIMARY KEY (id),
@@ -309,11 +315,11 @@ CREATE TABLE pipeline_step (
 -- PipelineStepParameter
 --
 CREATE TABLE pipeline_step_parameter (
-	id BIGINT NOT NULL,
-	pipeline_step_id BIGINT,
+	id NUMBER(38) NOT NULL,
+	pipeline_step_id NUMBER(38),
 	param_name VARCHAR(128),
 	value VARCHAR(256),
 	PRIMARY KEY (id),
-	FOREIGN KEY (pipeline_step_id) REFERENCES pipeline_step (id)
+	FOREIGN KEY (pipeline_step_id) REFERENCES pipeline_step(id)
 );
 	
