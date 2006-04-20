@@ -1,7 +1,21 @@
+BODY
+{
+    FONT-SIZE: 11px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+P
+{
+    FONT-SIZE: 11px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+
+
 .documentationHeader {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-weight: bold;
-	color: #63674E;
+	color: #336699;
 }
 
 .documentationBody {
@@ -15,27 +29,27 @@
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: bold;
-	color: #63674E;
+	color: #336699;
 }
 
 .menu {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 11px;
 	font-weight: bold;
-	color: #63674E;
+	color: #6e5387;
 }
 
 A.menu {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 9pt;
 	font-weight: bold;
-	color: #63674E;
+	color: #6e5387;
 	text-decoration: none;
 }
 
 A.menu:hover {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 9pt;
 	font-weight: bold;
 	color: black;
 	text-decoration: none;
@@ -43,15 +57,15 @@ A.menu:hover {
 
 A.submenu {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
-	color: #63674E;
+	color: #6e5387;
 	text-decoration: none;
 }
 
 A.submenu:hover {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
 	color: black;
 	text-decoration: none;
@@ -59,15 +73,15 @@ A.submenu:hover {
 
 A.submenu-selected {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
-	color: #63674E;
+	color: #6e5387;
 	text-decoration: underline;
 }
 
 A.submenu-selected:hover {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
 	color: black;
 	text-decoration: underline;
@@ -75,7 +89,7 @@ A.submenu-selected:hover {
 
 A.plot-submenu {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
 	color: navy;
 	text-decoration: none;
@@ -83,7 +97,7 @@ A.plot-submenu {
 
 A.plot-submenu:hover {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
 	color: black;
 	text-decoration: none;
@@ -91,7 +105,7 @@ A.plot-submenu:hover {
 
 .plot-submenu-selected {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 8pt;
+	font-size: 12pt;
 	font-weight: bold;
 	color: navy;
 	text-decoration: underline;
@@ -168,15 +182,15 @@ p.small {
 }
 
 .dataHeadTD {
-	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 8pt; PADDING-BOTTOM: 3px; COLOR: #000000; PADDING-TOP: 3px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFCA66
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 10pt; PADDING-BOTTOM: 3px; COLOR: #000000; PADDING-TOP: 3px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e9dCFF
 }
 
 .contentTD {
-	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 8pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFFFFF
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 10pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFFFFF
 }
 
 .contentTD-odd {
-	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 8pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e7e7e7
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 10pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e7e7e7
 }
 
 .separator {
@@ -200,31 +214,31 @@ p.small {
 .infoMsg {
   font-size: 12pt;
   font-weight: bold;
-  color: #cc6600;
+  color: #8855dd;
 }
 
 .smallInfoMsg {
-  font-size: 8pt;
+  font-size: 9pt;
   font-weight: bold;
-  color: #cc6600;
+  color: #8855dd;
 }
 
 .largeInfoMsg {
   font-size: 18pt;
   font-weight: bold;
-  color: #cc6600;
+  color: #8855dd;
 }
 
 .paragraphHeading {
   font-size: 14pt;
   font-weight: bold;
-  color: #cc6600;
+  color: #8855dd;
 }
 
 .opType {
   font-size: 12pt;
   font-weight: bold;
-  color: #cc6600;
+  color: #8855dd;
 }
 
 
