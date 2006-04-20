@@ -32,163 +32,149 @@
 	</head>
 
 	<body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-	
+	<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+
 		<!-- Header -->
-		<table width="100%" height="54" border="0" cellpadding="0" cellspacing="0" background="<html:rewrite page="/images/title-bg.gif"/>">
-  			<tr>
-    			<td>
-    				<html:img page="/images/title.gif" width="185" height="54" />
-    			</td>
-  			</tr>
-		</table>
+		<tr><td height="84">
+			<table width="100%" height="84" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<td width="834" height="84"><html:img width="834" height="84" page="/images/title.jpg"/></td><td background="<html:rewrite page="/images/title-tile.jpg"/>">&nbsp;</td>
+			</tr>
+			</table>
+		</td></tr>
+
 		
 		<!-- Help and Login -->
-		<table width="95%" height="10" border="0" cellpadding="0" 
-			cellspacing="0">
-			<tr class="menu">
-				<td align="right">
-					<logic:present name="<%= AttributeManager.USER_PROFILE %>">
+		<tr><td height="27">
+			<table width="100%" height="27" cellpadding="0" cellspacing="0" border="0">
+			<tr>
+				<logic:present name="<%= AttributeManager.USER_PROFILE %>">
+					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" height="27">
 						<span class="smallInfoMsg">
 							<bean:write name="<%= AttributeManager.USER_PROFILE %>" property="name"/>
 							logged in
 						</span>
-						&nbsp;&nbsp;&nbsp;
+					</td>
+					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="35"><html:img page="/images/titlebar-split.jpg" width="35" height="27"/></td>
+					<td valign="top" align="center" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="50">
 						<html:link action="/profile/logout" styleClass="menu">
 							Logout
 						</html:link>
-					</logic:present>
-					<logic:notPresent name="<%= AttributeManager.USER_PROFILE %>">
+					</td>
+				</logic:present>
+				<logic:notPresent name="<%= AttributeManager.USER_PROFILE %>">
+					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" height="27">
 						<html:link action="/profile/loginPage" styleClass="menu">
 							Login
 						</html:link>
-					</logic:notPresent>
-					<!--
-					&nbsp;&nbsp;&nbsp;
+					</td>
+				</logic:notPresent>
+
+				<!--
+				<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="35"><html:img page="/images/titlebar-split.jpg" width="35" height="27"/></td>
+				<td valign="top" align="left" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="100">
 					<html:link styleClass="menu" href="http://caarraydb.nci.nih.gov">
 						Submit Data
 					</html:link>
-					-->
-					&nbsp;&nbsp;&nbsp;
+				</td>
+				-->
+
+				<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="35"><html:img page="/images/titlebar-split.jpg" width="35" height="27"/></td>
+				<td valign="top" align="left" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="50">
 					<a href="#" class="menu" 
 						onclick="window.open('<html:rewrite page="/html/help.htm"/>#<tiles:getAsString name="helpTopic"/>', '_blank', 'width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no');">
 						Help
 					</a>
 				</td>
 			</tr>
-		</table>
+			</table>
+		</tr></td>
+
 		
-		<table width="100%" height="2" border="0" cellpadding="0" 
-			cellspacing="0" bgcolor="#eeeedd"">
-			<tr><td></td></tr>
-		</table>
-		
-		<p></p>
 		
 		<!-- Menu -->
-		<table height="20" border="0" cellpadding="0" cellspacing="0" bgcolor="white" align="center">
-  			<tr height="100%"> 
-    			<td align="center">
-    			
-    				<table align="middle" valign="bottom" border="0" cellpadding="0" cellspacing="0" height="100%">
-    					<tr>
-  
-    						<!-- Overview -->
-    						<td align="center" valign="middle" width="100"
-    							<logic:equal name="selectedMenuItem" value="overview">
-    								class="folderTab-selected"
-    							</logic:equal>
-    							<logic:notEqual name="selectedMenuItem" value="overview">
-    								class="folderTab"
-    							</logic:notEqual>
-    						>
-      							<html:link styleClass="menu" 
-      								action="/home">Overview</html:link>
-      						</td>
-      						
-      						<td width="25"></td>
-      						      						
-      						<!-- Plot Data -->
-    						<td align="center" valign="middle" width="100"
-    							<logic:equal name="selectedMenuItem" value="plot">
-    								class="folderTab-selected"
-    							</logic:equal>
-    							<logic:notEqual name="selectedMenuItem" value="plot">
-    								class="folderTab"
-    							</logic:notEqual>
-    						>
-      							<html:link styleClass="menu" 
-      								action="/cart/contents">Plot Data</html:link>
-      						</td>
-      						
-      						<logic:present name="<%= AttributeManager.USER_PROFILE %>">
-	      						<td width="25"></td>
-	      						
-	      						<!-- Virtual Experiments -->
-	    						<td align="center" valign="middle" width="150"
-	    							<logic:equal name="selectedMenuItem" value="virtual">
-	    								class="folderTab-selected"
-	    							</logic:equal>
-	    							<logic:notEqual name="selectedMenuItem" value="virtual">
-	    								class="folderTab"
-	    							</logic:notEqual>
-	    						>
-	      							<html:link styleClass="menu" 
-	      								action="/virtual/list">
-	      								Virtual Experiments
-	      							</html:link>
-	      						</td>
-      						</logic:present>
-      						
-      						<td width="25"></td>
-      						
-      						<!-- Analytic Pipelines -->
-    						<td align="center" valign="middle" width="150"
-    							<logic:equal name="selectedMenuItem" value="pipelines">
-    								class="folderTab-selected"
-    							</logic:equal>
-    							<logic:notEqual name="selectedMenuItem" value="pipelines">
-    								class="folderTab"
-    							</logic:notEqual>
-    						>
-      							<html:link styleClass="menu" 
-      								action="/showPipelines">
-      								Analytic Pipelines
-      							</html:link>
-      						</td>
-						</tr>
-					</table>
-      			</td>
-  			</tr>
-		</table>
-		
-		<!-- Sub-menu -->
-		<table width="750" border="0" cellpadding="0" cellspacing="0" 
-			align="center" height="30">
+<tr><td height="100%">
+	<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+	<tr>
+		<td valign="top" background="<html:rewrite page="/images/leftbar-tile.jpg"/>" width="36"><html:img page="/images/leftbar.jpg" width="36" height="688"/></td>
+		<td valign="top">
+			<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
 			<tr>
-				<td class="folderTab-selected" >
-					<tiles:get name="submenu"/>
+				<td height="58" background="<html:rewrite page="/images/menu1-tile.jpg"/>"><table cellpadding="0" cellspacing="0" border="0"><tr>
+
+				<!-- Overview -->
+					<td><html:link styleClass="menu" action="/home">
+						<logic:equal name="selectedMenuItem" value="overview">
+							<html:img border="0" page="/images/menu-overview-on.jpg"/>
+						</logic:equal>
+						<logic:notEqual name="selectedMenuItem" value="overview">
+							<html:img border="0" page="/images/menu-overview-off.jpg"/>
+						</logic:notEqual>
+					</html:link></td>
+
+				<!-- Plot Data -->
+					<td><html:link styleClass="menu" action="/cart/contents">
+						<logic:equal name="selectedMenuItem" value="plot">
+							<html:img border="0" page="/images/menu-plotdata-on.jpg"/>
+						</logic:equal>
+						<logic:notEqual name="selectedMenuItem" value="plot">
+							<html:img border="0" page="/images/menu-plotdata-off.jpg"/>
+						</logic:notEqual>
+					</html:link></td>
+
+				<!-- Virtual Experiments -->
+					<td><logic:present name="<%= AttributeManager.USER_PROFILE %>">
+						<html:link styleClass="menu" action="/virtual/list">
+							<logic:equal name="selectedMenuItem" value="virtual">
+								<html:img border="0" page="/images/menu-virtualexperiments-on.jpg"/>
+							</logic:equal>
+							<logic:notEqual name="selectedMenuItem" value="virtual">
+								<html:img border="0" page="/images/menu-virtualexperiments-off.jpg"/>
+							</logic:notEqual>
+						</html:link>
+					</logic:present></td>
+
+				<!-- Analytic Pipelines -->
+					<td><html:link styleClass="menu" action="/showPipelines">
+						<logic:equal name="selectedMenuItem" value="pipelines">
+							<html:img border="0" page="/images/menu-analyticpipelines-on.jpg"/>
+						</logic:equal>
+						<logic:notEqual name="selectedMenuItem" value="pipelines">
+							<html:img border="0" page="/images/menu-analyticpipelines-off.jpg"/>
+						</logic:notEqual>
+					</html:link></td>
+
+				</tr></table></td>
+			</tr>
+			<tr>
+				<td height="36" valign="center" align="center" background="<html:rewrite page="/images/menu2-tile.jpg"/>">
+					<font face="arial"><b>
+	<!-- Sub-menu -->			<tiles:get name="submenu"/>
+					</b></font>
 				</td>
 			</tr>
-		</table>
-		
-		<table width="100%" height="10"><tr><td></td></tr></table>
-		
-		<center>
-			<tiles:get name="navigationMap"/>
-		</center>
-		
-		<!-- Content area -->
-		<table border="0" cellpadding="0" cellspacing="0" width="100%">
-			<tr height="100%">
-				<td width="20" height="100%"></td>
-				
-				<td height="100%" valign="top">
-
-					<!-- Page content -->
-					<tiles:get name="content"/>
+			<tr>
+				<td height="21" background="<html:rewrite page="/images/menushadow-tile.jpg"/>"><html:img page="/images/spacer.gif" width="1" height="1"/></td>
+			</tr>
+			<tr>
+				<td valign="top" align="center">
+	<!-- Navigation map -->		<tiles:get name="navigationMap"/>
+	<!-- Page content -->		<tiles:get name="content"/>
 				</td>
 			</tr>
-		</table>
+			<tr>
+				<td height="20" valign="bottom" align="center">
+				<small><i>Copyright &copy; RTI International, 2005-2006</i></small>
+				</td>
+			</tr>
+			</table>
+		</td>
+		<td valign="top" background="<html:rewrite page="/images/rightbar-tile.jpg"/>" width="36"><html:img page="/images/rightbar.jpg" width="36" height="688"/></td>
+	</tr>
+	</table>
+</tr></td>
 
-	</body>
+</td></tr></table>
+
+</body>
 </html>
