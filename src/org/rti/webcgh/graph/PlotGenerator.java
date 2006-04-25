@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.5 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.6 $
+$Date: 2006-04-25 15:08:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -187,11 +187,17 @@ public class PlotGenerator {
 			DrawingCanvas canvas) {
     	if (quantitationType == null)
     		quantitationType = QuantitationType.UNKNOWN;
+    	
+    	// Create a panel to add graph widgits to
     	DrawingCanvas tile = canvas.newTile();
         PlotPanel plotPanel = new PlotPanel(tile);
+        
+        // Instantiate intervals of the genome that will be graphed
         GenomeInterval[] genomeIntervals = 
         	this.extractGenomeIntervals(plotParameters.getGenomeIntervalDtos(), 
         			dataSet, plotParameters.getXUnits());
+        
+        // Draw graph on panel
         if (plotParameters.getPlotType() == PlotType.SCATTER_PLOT)
             this.createScatterPlot(dataSet, genomeIntervals, quantitationType, 
             		plotParameters, plotPanel, tile);
@@ -199,13 +205,19 @@ public class PlotGenerator {
             this.createIdeogramPlot(dataSet, genomeIntervals, plotParameters, plotPanel, tile);
             plotPanel.addExtraPadding(4, Location.RIGHT_OF);
         }
+        
+        // Add background and matte to drawing canvas and associate event listeners with these
         int width = plotPanel.width() + this.padding * 2;
         int height = plotPanel.height() + this.padding * 2;
         GraphicRect background = new GraphicRect(0, 0, width, height, this.matteColor);
         background.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
         background.addGraphicEventResponse(GraphicEvent.mouseClickEvent, "noHighlight()");
         canvas.add(background);
+        
+        // Add plot panel to drawing canvas so that it is on top of background
         canvas.add(tile, -plotPanel.topLeftPoint().x + this.padding, -plotPanel.topLeftPoint().y + this.padding);
+        
+        // Set size dimensions on drawing canvas
         canvas.setWidth(width);
         canvas.setHeight(height);
     }
@@ -314,29 +326,68 @@ public class PlotGenerator {
     }
     
     
+    /**
+     * Creates a plot of data against chromosome ideograms (i.e., graphic
+     * representations of chromosomes.  Reporter values are represented
+     * as color-coded rectangles.
+     * @param dataSet Data set to plot
+     * @param genomeIntervals Set of genome intervals
+     * @param plotParameters Plotting parameters
+     * @param panel Plotting panel on which graphing widgits will be added
+     * @param canvas Underlying drawing canvas
+     */
     private void createIdeogramPlot(DataSet dataSet, 
     		GenomeInterval[] genomeIntervals,
             PlotParameters plotParameters, PlotPanel panel, DrawingCanvas canvas) {
+    	
+    	// Compress together genome intervals from same chromosome
     	genomeIntervals = this.compress(genomeIntervals);
+    	
+    	// Find minimum and maximum experimental values in the portion of
+    	// the genome specified by the user
         double minY = this.minY(dataSet, plotParameters);
         double maxY = this.maxY(dataSet, plotParameters);
+        
+        // Retrieve relative size of chromosome ideograms
         ChromosomeIdeogramSize size = plotParameters.getChromosomeIdeogramSize();
+        
+        // Determine the number of columns of ideograms
         int cols = (genomeIntervals.length < plotParameters.getPlotsPerRow()) ?
                 genomeIntervals.length : plotParameters.getPlotsPerRow();
+        
+        // Instantiate new plotting panel for first row of ideograms
         PlotPanel row = panel.newChildPlotPanel();
+        
+        // Iterate over compressed genome intervals.  Create one ideogram
+        // with data tracks for each.
         for (int i = 0; i < genomeIntervals.length; i++) {
             GenomeInterval interval = genomeIntervals[i];
+            
+            // Determine whether to start new row of ideograms
             if (i % cols == 0 && i > 0) {
                 PlotPanel axisPanel = panel.newChildPlotPanel();
+                
+                // Add row of ideograms
                 panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
+                
+                // Add color coding key that related experimental levels to colors
                 panel.add(new HeatMapColorFactory(minY, maxY, this.numColorCodeBins),
                         HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+                
+                // Instantiate new panel for next row of ideograms
                 row = panel.newChildPlotPanel();
             }
+            
+            // Add some extra padding to the right side of plot so that mouseover
+            // text does not fall off graphic
             if (i < cols - 1)
                 panel.addExtraPadding(4, Location.RIGHT_OF);
+            
+            // Add new ideogram to row
             this.addIdeogram(row, interval, dataSet, size, Orientation.VERTICAL, plotParameters);
         }
+        
+        // Add final row of ideograms
         if (genomeIntervals.length % cols >= 0) {
             panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
             panel.add(new HeatMapColorFactory(minY, maxY, this.numColorCodeBins),
@@ -449,44 +500,85 @@ public class PlotGenerator {
     }
     
     
-    
+    /**
+     * Add an ideogram to a plotting panel
+     * @param panel A plotting panel
+     * @param interval A genome interval
+     * @param dataSet A data set
+     * @param size Relative size of ideogram
+     * @param orientation Orientation of plot
+     * @param plotParameters Plotting parameters
+     */
     private void addIdeogram(PlotPanel panel, GenomeInterval interval, DataSet dataSet,
             ChromosomeIdeogramSize size, Orientation orientation, PlotParameters plotParameters) {
+    	
+    	// Extract chromosome that will be graphed
         Chromosome chromosome = interval.chromosome();
+        
+        // Create new plotting panel for ideogram and data tracks
         PlotPanel idPanel = panel.newChildPlotPanel();
+        
+        // Retrieve cytological map from persistent storage.  The map provides
+        // the endpoints of chromosome features
         CytologicalMap cmap = this.persistentDomainObjectMgr.getPersistentCytologicalMap(chromosome);
         if (cmap == null)
             throw new WebcghSystemException("Cannot find cytological map in embedded database");
+        
+        // Calculate the number of pixels of the ideogram
         int pixels = size.pixels(cmap.length());
+        
+        // Convert cytological map into a genome feature map, which can be graphed
         GenomeFeatureMap map = new GenomeFeatureMap((long)0, cmap.length(), pixels, orientation);
+        
+        // Warp the ideogram at the centromere, so that ideogram has an
+        // hourglass shape
         Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(cmap.getCentromereStart()), 
                 map.bpToPixel(cmap.getCentromereEnd()));
         map.setWarper(warper);
+        
+        // Add outline (i.e., frame) to ideogram
         map.addFrame(Location.ABOVE, this.ideogramFrameThickness, this.ideogramFrameColor);
         map.addFrame(Location.BELOW, this.ideogramFrameThickness, this.ideogramFrameColor);
+        
+        // Graph ideogram
         cmap.graph(map, new ClassPathPropertiesFileRgbHexidecimalColorMapper("conf/color-mappings.properties"));
         idPanel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        
+        // Add top and bottom rounded end caps to ideogram
         ChromosomeEndCap topCap = new ChromosomeEndCap(map.getFeatureHeight(), this.ideogramFrameColor, Direction.UP);
         ChromosomeEndCap botCap = new ChromosomeEndCap(map.getFeatureHeight(), this.ideogramFrameColor, Direction.DOWN);
         idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
         idPanel.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        
+        // Add caption to ideogram
         Caption caption = new Caption("CHR " + chromosome.getNumber(), Orientation.HORIZONTAL, false);
         idPanel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
         
-        //int plotLength = (int)((double)interval.endBp() / (double)cmap.length() * (double)pixels);
+        // Find minimum and maximum experimental values over genome interval
+        // specified by user
         double minY = this.minY(dataSet, plotParameters);
         double maxY = this.maxY(dataSet, plotParameters);
+        
+        // Iterate over bioassays and minimum common amplified and deleted
+        // regions (MCAR, MCDR) creating a data track for each one
         for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();) {
             Experiment exp = it.next();
             
-            // Bioassays
+            // Graph bioassays
             for (BioAssayIterator bai = exp.bioAssayIterator(); bai.hasNext();) {
                 BioAssay bioAssay = bai.next();
+                
+                // Create new color coded plot for bioassay
                 PlotPanel baPanel = idPanel.newChildPlotPanel();
 	            ColorCodePlot plot = new ColorCodePlot(minY, maxY, this.numColorCodeBins, pixels, 
 	            		Orientation.VERTICAL, cmap.length());
+	            
+	            // Retrieve mask values.  All experimental values between
+	            // mask values will not show up in graph.
 	            plot.setMinMaskValue(plotParameters.getLowerMaskValue());
 	            plot.setMaxMaskValue(plotParameters.getUpperMaskValue());
+	            
+	            // Create graph
 	            bioAssay.graph(plot, interval.start, interval.end, null);
 	            baPanel.add(plot, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
 	            Caption bioAssayName = new Caption(bioAssay.getName(), Orientation.VERTICAL, false);
@@ -494,7 +586,7 @@ public class PlotGenerator {
 	            idPanel.add(baPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
             }
             
-            // MCAR
+            // Graph MCAR
             ChromosomalAlterationIterator cai = exp.amplificationIterator();
             if (cai.hasNext()) {
             	PlotPanel ampPanel = idPanel.newChildPlotPanel();
@@ -514,7 +606,7 @@ public class PlotGenerator {
             	idPanel.add(ampPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
             }
             
-            // MCDR
+            // Graph MCDR
             cai = exp.deletionIterator();
             if (cai.hasNext()) {
             	PlotPanel delPanel = idPanel.newChildPlotPanel();
@@ -538,6 +630,11 @@ public class PlotGenerator {
     }
     
     
+    /**
+     * Union together all genome intervals from same chromosome
+     * @param intervals Genome intervals
+     * @return Compressed set of genome intervals
+     */
     private GenomeInterval[] compress(GenomeInterval[] intervals) {
     	List iList = new ArrayList();
     	Map chromIndex = new HashMap();
