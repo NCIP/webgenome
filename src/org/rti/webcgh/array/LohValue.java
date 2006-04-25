@@ -1,7 +1,7 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdLohDataStream.java,v $
-$Revision: 1.2 $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/LohValue.java,v $
+$Revision: 1.1 $
 $Date: 2006-04-25 15:46:28 $
 
 The Web CGH Software License, Version 1.0
@@ -52,9 +52,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webcgh.io;
+package org.rti.webcgh.array;
 
-public class SmdLohDataStream {
+/**
+ * Loss of Heterozygosity value
+ *
+ */
+public enum LohValue {
 
-	
+	POSITIVE, NEGATIVE
 }
