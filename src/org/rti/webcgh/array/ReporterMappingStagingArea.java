@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ReporterMappingStagingArea.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.4 $
+$Date: 2006-04-25 13:32:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -136,9 +136,14 @@ public class ReporterMappingStagingArea {
         this.experiments = this.getExperiments(userProfile, dbNames, experimentNames);
         for (int i = 0; i < experiments.length; i++) {
             Experiment experiment = this.experiments[i];
-            Object key = experiment.getCacheKey();
-            this.dataMap.put(key, experiment);
+            this.initialize(experiment);
         }
+    }
+    
+    
+    public void initialize(Experiment experiment) {
+    	Object key = experiment.getCacheKey();
+        this.dataMap.put(key, experiment);
     }
     
     

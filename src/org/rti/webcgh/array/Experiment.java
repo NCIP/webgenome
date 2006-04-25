@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.6 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.7 $
+$Date: 2006-04-25 13:32:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -408,6 +408,16 @@ public class Experiment implements Cacheable {
     public void add(BioAssay bioAssay) {
     	this.bioAssays.add(bioAssay);
     	this.bioAssayIndex.put(bioAssay.getName(), bioAssay);
+    }
+    
+    
+    /**
+     * Add bioassays
+     * @param bioAssays Bioassays
+     */
+    public void add(BioAssay[] bioAssays) {
+    	for (int i = 0; i < bioAssays.length; i++)
+    		this.add(bioAssays[i]);
     }
     
     
