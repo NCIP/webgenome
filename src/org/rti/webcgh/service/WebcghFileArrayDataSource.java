@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/WebcghFileArrayDataSource.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-04-25 16:28:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,11 +70,20 @@ import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeAssembly;
 import org.rti.webcgh.array.Organism;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.io.ArrayDatumFileReader;
 
 
 
 /**
- * Implementation of ArrayExperimentDao using files
+ * Implementation of ArrayExperimentDao using files.  All data files
+ * are expected to be in the same directory specified by the
+ * 'dataDir' property.  Each experiment should have a corresponding
+ * properties file.  All properties file are interpred by this class
+ * as representing experiment properties.  Experiment property files
+ * specify basic properties (e.g., experiment name) plus give a list
+ * of bioassays.  Each bioassay should be contained in a different
+ * file within the data directory. Different reader classes are
+ * defined for different bioassay file formats.
  */
 public class WebcghFileArrayDataSource implements WebCghArrayDataSource {
 	
@@ -83,9 +92,16 @@ public class WebcghFileArrayDataSource implements WebCghArrayDataSource {
     //    Attributes with accessors and mutators
     // ===============================================
     
+	// Directory containing data
 	private String dataDir = null;
+	
+	// "Database" name (will be displayed in UI)
 	private String dbName = null;
+	
+	// Data file reader
 	private ArrayDatumFileReader arrayDatumFileReader = null;
+	
+	// Factory for creating domain objects (using caching)
 	private DomainObjectFactory domainObjectFactory = new DomainObjectFactory();
 	
 
@@ -155,15 +171,22 @@ public class WebcghFileArrayDataSource implements WebCghArrayDataSource {
 		Collection metaCol = new ArrayList();
 		Experiment[] experiments = new Experiment[0];
 		try {
+			
+			// Make sure data directory exists
 			File dir = new File(dataDir);
 			if (! dir.exists() || ! dir.isDirectory())
 			    throw new WebcghSystemException("Data directory '" + dir.getAbsolutePath() + 
 			        "' is not a valid directory");
+			
+			// Search directory for properties files, each of which
+			// should correspond to an experiment
 			String[] fnames = dir.list();
 			if (fnames != null) {
 				for (int i = 0; i < fnames.length; i++) {
 					String fname = fnames[i];
 					if (fname.indexOf(".properties") >= 0)
+						
+						// Load experiment
 						metaCol.add(load(dataDir + "/" + fname));
 				}
 			} 
@@ -209,15 +232,24 @@ public class WebcghFileArrayDataSource implements WebCghArrayDataSource {
 	 */
 	public BioAssayData getBioAssayData(String id, UserProfile userProfile)
 		throws WebcghDatabaseException, AuthenticationException {
+		
+		// Instantiate bioassay
 		BioAssayData bioAssayData = new BioAssayData();
+		
 		try {
+			
+			// Open bioassay data file
 			String fname = dataDir + "/" + id;
 			this.arrayDatumFileReader.open(new File(fname), GenomeAssembly.DUMMY_GENOME_ASSEMBLY);
+			
+			// Read individual datum objects from file
 			ArrayDatum datum = this.arrayDatumFileReader.nextDatum();
 			while (datum != null) {
 				bioAssayData.add(datum);
 				datum = this.arrayDatumFileReader.nextDatum();
 			}
+			
+			// Clean up
 			this.arrayDatumFileReader.close();
 		} catch (Exception e) {
 			throw new WebcghDatabaseException("Error retrieving array data", e);
@@ -240,18 +272,22 @@ public class WebcghFileArrayDataSource implements WebCghArrayDataSource {
 	// ======================================
 	
 	/**
-	 * Load array experiment from a file
-	 * @param fname Name of file
-	 * @return Array experiment meta data
+	 * Load array experiment from a file(s)
+	 * @param fname Name of properties file giving experiment properties
+	 * @return An experiment
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
 	private Experiment load(String fname)
 		throws IOException, FileNotFoundException {
 		Experiment experiment = null;
+		
+		// Make sure given experiment properties file exists
 		File inFile = new File(fname);
 		if (! inFile.exists())
 			return null;
+		
+		// Read in properties from file
 		InputStream in = new FileInputStream(inFile);
 		Properties expProps = new Properties();
 		expProps.load(in);
@@ -261,16 +297,20 @@ public class WebcghFileArrayDataSource implements WebCghArrayDataSource {
 		String description = expProps.getProperty("description");
 		String genus = expProps.getProperty("genus");
 		String species = expProps.getProperty("species");
+		
+		// Instantiate experiment
 		Organism organism = this.domainObjectFactory.getOrganism(genus, species);
 		experiment = new Experiment(expName, description, this.dbName);
 		experiment.setOrganism(organism);
+		
+		// Add bioassays
 		String arrays = expProps.getProperty("genomeArrayDataNames");
 		StringTokenizer tok = new StringTokenizer(arrays);
 		while (tok.hasMoreTokens()) {
 			String bioAssayName = tok.nextToken();
 			experiment.add(new BioAssay(bioAssayName, "", bioAssayName, this.dbName));
 		}
-		String type = expProps.getProperty("type");
+
 		return experiment;
 	}
 

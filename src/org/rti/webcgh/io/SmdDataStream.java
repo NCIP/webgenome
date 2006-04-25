@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdDataStream.java,v $
-$Revision: 1.1 $
-$Date: 2006-04-25 13:32:51 $
+$Revision: 1.2 $
+$Date: 2006-04-25 16:28:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,95 +54,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.core.WebcghSystemException;
 
-
-/**
- * Convert stream of SMD data into data objects.
- * The following describes the SMD data file format:
- * 
- * (1) Data are delimited text (e.g., comma-separated values)
- * (2) Each column, with the exception of special columns,
- *     corresponds to a separate bioassay (i.e., physical array).
- * (3) Each row, with the exception of the first (i.e., column headings),
- *     corresponds to a reporter (i.e., probe).
- * (4) The following are special columns:
- *         i.  The first column contains reporter names
- *         ii. OPTIONAL: The file may contain columns with
- *             headings named 'CHROMOSOME' and 'POSITION.'
- *             These contain the chromosome number and physical
- *             position (i.e., base pair), respectively,
- *             of the corresponding reporter.
- *             The column names may be lower case or upper case.
- * (5) The heading (i.e., first row) of each column gives the identifier
- *     of the corresponding bioassay.
- * (6) Values in bioassay columns give the measurements of the corresponding
- *     reporters.
- *     
- * Example:
- * 
- * NAME		CHROMOSOME		POSITION		BIOASSAY1		BIOASSAY2
- * RP-1		1				15000			0.3				-0.1
- * RP-2		1				34000			-0.2			0.5
- *
- */
-public class SmdDataStream {
-	
-	private static final String CHROMOSOME = "CHROMOSOME";
-	private static final String POSITION = "POSITION";
-		
-	
-	// ==============================
-	//        Constructors
-	// ==============================
-	
-	public SmdDataStream() {}
-	
-	// ==============================
-	//         Public methods
-	// ==============================
+public interface SmdDataStream {
 	
 	/**
-	 * Get next experiment from stream
+	 * Load experiment from stream
 	 */
-	public Experiment loadExperiment(InputStream in) throws SmdFormatException {
-		Experiment exp = new Experiment();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		try {
-			
-			// Read headings and create bioassays
-			String line = reader.readLine();
-			if (line == null)
-				throw new SmdFormatException("File is empty");
-			BioAssay[] bioAssays = this.createBioAssays(line);
-			exp.add(bioAssays);
-			boolean havePositions = this.havePositions(line);
-			
-		} catch (IOException e) {
-			throw new WebcghSystemException("Error reading data stream", e);
-		}
-		return exp;
-	}
-	
-	
-	// ===============================
-	//         Private methods
-	// ===============================
-	
-	private BioAssay[] createBioAssays(String line) {
-		return null;
-	}
-	
-	
-	private boolean havePositions(String line) {
-		String uc = line.toUpperCase();
-		return uc.indexOf(CHROMOSOME) >= 0 && uc.indexOf(POSITION) >= 0;
-	}
+	public Experiment loadExperiment(InputStream in) throws SmdFormatException;
+
 }

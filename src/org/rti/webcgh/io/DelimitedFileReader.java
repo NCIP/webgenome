@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/DelimitedFileReader.java,v $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/DelimitedFileReader.java,v $
 $Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Date: 2006-04-25 16:28:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.util;
+package org.rti.webcgh.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;

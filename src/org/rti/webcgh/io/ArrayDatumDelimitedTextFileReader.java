@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/ArrayDatumDelimitedFileReader.java,v $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/ArrayDatumDelimitedTextFileReader.java,v $
 $Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Date: 2006-04-25 16:28:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.service;
+package org.rti.webcgh.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,23 +67,46 @@ import org.rti.webcgh.array.Quantitation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.Reporter;
 import org.rti.webcgh.array.ReporterMapping;
-import org.rti.webcgh.util.DelimitedFileReader;
+import org.rti.webcgh.service.DomainObjectFactory;
 
 /**
- * Reads array data from delimited files
+ * Reads array data from delimited text files files
  */
-public class ArrayDatumDelimitedFileReader implements ArrayDatumFileReader {
+public class ArrayDatumDelimitedTextFileReader implements ArrayDatumFileReader {
+	
+	// =====================================
+	//   Column headings expected in file
+	// =====================================
+	
+	// Reporter name
+	private static final String REPORTER_NAME_COL_HEADING = "Clone";
+	
+	// Chromosome number
+	private static final String CHROMOSOME_COL_HEADING = "Chromosome";
+	
+	// Quantitation (currently always log2 ratio)
+	private static final String QUANTITATION_COL_HEADING = "Log2Ratio";
 	
 	
 	// ==============================
 	//     Attributes
 	// ==============================
 	
+	// Delimiting character
 	private char delimiter = ',';
+	
+	// Mapping of column headings to column numbers
 	private Map colMap = null;
+	
+	// Delimite file reader
 	private DelimitedFileReader delimitedFileReader = null;
+	
+	// Factory for creating and caching domain objects
 	private DomainObjectFactory domainObjectFactory = new DomainObjectFactory();
+	
+	// Genome assembly associated with data
 	private GenomeAssembly genomeAssembly = null;
+	
 	
 	/**
 	 * @return Returns the delimiter.
@@ -118,7 +141,7 @@ public class ArrayDatumDelimitedFileReader implements ArrayDatumFileReader {
 	/**
 	 * Constructor
 	 */
-	public ArrayDatumDelimitedFileReader() {}
+	public ArrayDatumDelimitedTextFileReader() {}
 	
 	
 	// ===========================================
@@ -186,24 +209,32 @@ public class ArrayDatumDelimitedFileReader implements ArrayDatumFileReader {
 	
 	/**
 	 * Instantiate a datum object
-	 * @param row Spreadsheet row
+	 * @param row Row in data table
 	 * @return A datum object
 	 */
 	private ArrayDatum newArrayDatum(String[] row) {
 		ArrayDatum datum = null;
 		try {
-			String probeName = getStringProperty(row, "Clone");
-			double chromDbl = getNumericProperty(row, "Chromosome");
-			double ratio = getNumericProperty(row, "Log2Rat");
-			String cytPos = getStringProperty(row, "FISH");
+			
+			// Get properties of array datum
+			String reporterName = getStringProperty(row, REPORTER_NAME_COL_HEADING);
+			double chromDbl = getNumericProperty(row, CHROMOSOME_COL_HEADING);
+			double quantitationDbl = getNumericProperty(row, QUANTITATION_COL_HEADING);
 			double physPosDbl = 
 				getNumericProperty(row, "KB_POSITION") * 1000.0;
-			if ((probeName != null) && 
+			
+			// If all properties okay, instantiate array datum object
+			if ((reporterName != null) && 
 				(! Double.isNaN(chromDbl)) &&
-				(! Double.isNaN(ratio)) &&
-				(cytPos != null) &&
+				(! Double.isNaN(quantitationDbl)) &&
 				(! Double.isNaN(physPosDbl))) {
-				Reporter reporter = this.domainObjectFactory.getReporter(probeName);
+				
+				// Instantiate reporter.  (Reporter may be cached if seen
+				// before.)
+				Reporter reporter = this.domainObjectFactory.getReporter(reporterName);
+				
+				// If this is first time seeing reporter (i.e., not cached), we
+				// need to add some mapping properties
 				if (! reporter.isMapped(this.genomeAssembly)) {
 					Chromosome chromosome = this.domainObjectFactory.getChromosome(
 							this.genomeAssembly, (short)chromDbl);
@@ -213,8 +244,10 @@ public class ArrayDatumDelimitedFileReader implements ArrayDatumFileReader {
 						new ReporterMapping(reporter, genomeLocation);
 					reporter.setReporterMapping(reporterMapping);
 				}
+				
+				// For now, quantitation will always be log2 ratio
 				Quantitation quantitation = 
-					new Quantitation((float)ratio, QuantitationType.LOG_2_RATIO);
+					new Quantitation((float)quantitationDbl, QuantitationType.LOG_2_RATIO);
 				datum = new ArrayDatum(reporter, quantitation);
 			}
 		} catch (Exception e) {}

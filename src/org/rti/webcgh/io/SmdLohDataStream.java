@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdLohDataStream.java,v $
-$Revision: 1.2 $
-$Date: 2006-04-25 15:46:28 $
+$Revision: 1.3 $
+$Date: 2006-04-25 16:28:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.io;
 
-public class SmdLohDataStream {
+import java.io.InputStream;
 
-	
+import org.rti.webcgh.array.Experiment;
+
+public class SmdLohDataStream implements SmdDataStream {
+
+	/**
+	 * Load experiment from stream
+	 */
+	public Experiment loadExperiment(InputStream in) throws SmdFormatException {
+		return null;
+	}
 }
