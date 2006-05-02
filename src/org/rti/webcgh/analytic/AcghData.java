@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/AcghData.java,v $
-$Revision: 1.2 $
-$Date: 2006-04-19 15:27:44 $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghData.java,v $
+$Revision: 1.1 $
+$Date: 2006-05-02 21:39:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webcgh.array;
+package org.rti.webcgh.analytic;
 
 import java.io.FileReader;
 import com.Ostermiller.util.ExcelCSVParser;
@@ -71,7 +71,7 @@ public class AcghData {
 	private int size;                 // number of clones/number of rows
 	
 	public AcghData() {
-		loadDataFromFiles();
+//		loadDataFromFiles();
 	}
 	
 	private void loadDataFromFiles() {
@@ -147,8 +147,36 @@ public class AcghData {
 	public int getSize() {
 	    return size;
 	}
+	
+	
+	
 	public void setSmoothedRatios(double[] smooth) {
 	    smoothedRatios = smooth;
 	}
+
+	public void setChromosomes(int[] chromosomes) {
+		this.chromosomes = chromosomes;
+	}
+
+	public void setClones(String[] clones) {
+		this.clones = clones;
+	}
+
+	public void setLog2Ratios(double[] log2Ratios) {
+		this.log2Ratios = log2Ratios;
+	}
+
+	public void setPositions(int[] positions) {
+		this.positions = positions;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public void setTargets(String[] targets) {
+		this.targets = targets;
+	}
+	
 	
 }

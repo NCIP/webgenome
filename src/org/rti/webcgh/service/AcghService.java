@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/AcghService.java,v $
-$Revision: 1.1 $
-$Date: 2006-04-13 15:28:04 $
+$Revision: 1.2 $
+$Date: 2006-05-02 21:39:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service;
 
-import org.rti.webcgh.array.AcghData;
+import org.rti.webcgh.analytic.AcghData;
 
 public class AcghService {
 	
