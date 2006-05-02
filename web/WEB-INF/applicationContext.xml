@@ -110,7 +110,7 @@
 		<property name="dataDir"><value>${db.home}/${data.file.dir}</value></property>
 		<property name="dbName"><value>Excel</value></property>
 		<property name="arrayDatumFileReader">
-			<bean class="org.rti.webcgh.service.ArrayDatumDelimitedFileReader"/>
+			<bean class="org.rti.webcgh.io.ArrayDatumDelimitedTextFileReader"/>
 		</property>
 	</bean>
 	
