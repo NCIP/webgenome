@@ -56,18 +56,18 @@
 						</span>
 					</td>
 					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="35"><html:img page="/images/titlebar-split.jpg" width="35" height="27"/></td>
-					<td valign="top" align="center" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="50">
-						<html:link action="/profile/logout" styleClass="menu">
+					<td valign="top" align="center" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="50"
+						><html:link action="/profile/logout" styleClass="menu">
 							Logout
-						</html:link>
-					</td>
+						</html:link></td
+					>
 				</logic:present>
 				<logic:notPresent name="<%= AttributeManager.USER_PROFILE %>">
-					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" height="27">
-						<html:link action="/profile/loginPage" styleClass="menu">
+					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" height="27"
+						><html:link action="/profile/loginPage" styleClass="menu">
 							Login
-						</html:link>
-					</td>
+						</html:link></td
+					>
 				</logic:notPresent>
 
 				<!--
@@ -103,46 +103,44 @@
 				<td height="58" background="<html:rewrite page="/images/menu1-tile.jpg"/>"><table cellpadding="0" cellspacing="0" border="0"><tr>
 
 				<!-- Overview -->
-					<td><html:link styleClass="menu" action="/home">
+					<td><html:link styleClass="menu" action="/home"><img border="0"
 						<logic:equal name="selectedMenuItem" value="overview">
-							<html:img border="0" page="/images/menu-overview-on.jpg"/>
+							src="<html:rewrite page="/images/menu-overview-on.jpg"/>"
 						</logic:equal>
 						<logic:notEqual name="selectedMenuItem" value="overview">
-							<html:img border="0" page="/images/menu-overview-off.jpg"/>
+							src="<html:rewrite page="/images/menu-overview-off.jpg"/>"
 						</logic:notEqual>
-					</html:link></td>
+					></html:link></td>
 
 				<!-- Plot Data -->
-					<td><html:link styleClass="menu" action="/cart/contents">
+					<td><html:link styleClass="menu" action="/cart/contents"><img border="0"
 						<logic:equal name="selectedMenuItem" value="plot">
-							<html:img border="0" page="/images/menu-plotdata-on.jpg"/>
+							src="<html:rewrite page="/images/menu-plotdata-on.jpg"/>"
 						</logic:equal>
 						<logic:notEqual name="selectedMenuItem" value="plot">
-							<html:img border="0" page="/images/menu-plotdata-off.jpg"/>
+							src="<html:rewrite page="/images/menu-plotdata-off.jpg"/>"
 						</logic:notEqual>
-					</html:link></td>
+					></html:link></td>
 
 				<!-- Virtual Experiments -->
-					<td><logic:present name="<%= AttributeManager.USER_PROFILE %>">
-						<html:link styleClass="menu" action="/virtual/list">
+					<td><logic:present name="<%= AttributeManager.USER_PROFILE %>"><html:link styleClass="menu" action="/virtual/list"><img border="0"
 							<logic:equal name="selectedMenuItem" value="virtual">
-								<html:img border="0" page="/images/menu-virtualexperiments-on.jpg"/>
+								src="<html:rewrite page="/images/menu-virtualexperiments-on.jpg"/>"
 							</logic:equal>
 							<logic:notEqual name="selectedMenuItem" value="virtual">
-								<html:img border="0" page="/images/menu-virtualexperiments-off.jpg"/>
+								src="<html:rewrite page="/images/menu-virtualexperiments-off.jpg"/>"
 							</logic:notEqual>
-						</html:link>
-					</logic:present></td>
+					></html:link></logic:present></td>
 
 				<!-- Analytic Pipelines -->
-					<td><html:link styleClass="menu" action="/showPipelines">
+					<td><html:link styleClass="menu" action="/showPipelines"><img border="0"
 						<logic:equal name="selectedMenuItem" value="pipelines">
-							<html:img border="0" page="/images/menu-analyticpipelines-on.jpg"/>
+							src="<html:rewrite page="/images/menu-analyticpipelines-on.jpg"/>"
 						</logic:equal>
 						<logic:notEqual name="selectedMenuItem" value="pipelines">
-							<html:img border="0" page="/images/menu-analyticpipelines-off.jpg"/>
+							src="<html:rewrite page="/images/menu-analyticpipelines-off.jpg"/>"
 						</logic:notEqual>
-					</html:link></td>
+					></html:link></td>
 
 				</tr></table></td>
 			</tr>
