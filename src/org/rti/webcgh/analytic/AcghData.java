@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghData.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-02 21:39:30 $
+$Revision: 1.2 $
+$Date: 2006-05-03 23:47:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -78,8 +78,8 @@ public class AcghData {
 		try {
 		    //read csv files
 		    System.out.print("Reading data files...");
-		    ExcelCSVParser ecp1 = new ExcelCSVParser(new FileReader("C:/test/data/T_GPR_R_aCGH_cloneinfo_NoDups.csv"));
-		    ExcelCSVParser ecp2 = new ExcelCSVParser(new FileReader("C:/test/data/T_GPR_R_aCGH_log2ratios_NoDups.csv"));
+		    ExcelCSVParser ecp1 = new ExcelCSVParser(new FileReader("unit_test-data/T_GPR_R_aCGH_cloneinfo_NoDups.csv"));
+		    ExcelCSVParser ecp2 = new ExcelCSVParser(new FileReader("unit_test-data/T_GPR_R_aCGH_log2ratios_NoDups.csv"));
 		    System.out.println("OK");
 		    
 		    // create matrix table from files
@@ -105,25 +105,12 @@ public class AcghData {
 				    {System.out.println("two files are not perfect match at "+i+"th clone.");}
 				log2Ratios[i] = Double.parseDouble(log2ratiosFile[i+1][1].trim());
 			}
-			/*
-			System.out.println(log2Ratios[0]);
-			System.out.println(clones[0]);
-			System.out.println(targets[0]);
-			System.out.println(chromosomes[0]);
-			System.out.println(positions[0]);
-			
-			System.out.println(log2Ratios[log2Ratios.length-1]);
-			System.out.println(clones[clones.length-1]);
-			System.out.println(targets[targets.length-1]);
-			System.out.println(chromosomes[chromosomes.length-1]);
-			System.out.println(positions[positions.length-1]);
-			*/
-			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 
 	
 	public double[] getLog2Ratios() {
