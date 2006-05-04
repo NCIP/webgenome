@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdLohDataStream.java,v $
-$Revision: 1.3 $
-$Date: 2006-04-25 16:28:26 $
+$Revision: 1.4 $
+$Date: 2006-05-04 18:29:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,13 +57,28 @@ package org.rti.webcgh.io;
 import java.io.InputStream;
 
 import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.array.QuantitationType;
+import org.rti.webcgh.array.GenomeAssembly;
 
 public class SmdLohDataStream implements SmdDataStream {
 
-	/**
-	 * Load experiment from stream
-	 */
-	public Experiment loadExperiment(InputStream in) throws SmdFormatException {
-		return null;
-	}
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly ) throws SmdFormatException {
+
+        // TODO
+        
+        return null ;
+    }
+
 }
