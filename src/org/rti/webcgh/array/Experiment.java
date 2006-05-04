@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.7 $
-$Date: 2006-04-25 13:32:51 $
+$Revision: 1.8 $
+$Date: 2006-05-04 15:16:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.analytic.AnalyticPipeline;
 import org.rti.webcgh.graph.Plot;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.service.Cacheable;
@@ -94,9 +95,21 @@ public class Experiment implements Cacheable {
     private String clientId = null;
     private boolean raw = false;
     private GenomeAssembly referenceAssembly = null;
+    private AnalyticPipeline analyticPipeline = null;
     
     
-    public GenomeAssembly getReferenceAssembly() {
+    
+    public AnalyticPipeline getAnalyticPipeline() {
+		return analyticPipeline;
+	}
+
+
+	public void setAnalyticPipeline(AnalyticPipeline analyticPipeline) {
+		this.analyticPipeline = analyticPipeline;
+	}
+
+
+	public GenomeAssembly getReferenceAssembly() {
 		return referenceAssembly;
 	}
 

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.3 $
+$Date: 2006-05-04 15:16:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -133,6 +133,9 @@ public class PlotAction extends Action {
             // Get plotting parameters
         	PlotParamsForm pform = (PlotParamsForm)form;
         	PlotParameters plotParameters = pform.getPlotParameters();
+        	
+        	// TODO: Change below block to simply retrieve all experiments
+        	// from shopping cart
         	
 			//Recover data set which was assembled by the PlotSetupAction
 			Experiment[] experiments =

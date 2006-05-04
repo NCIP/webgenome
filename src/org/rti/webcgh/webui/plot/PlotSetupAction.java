@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotSetupAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-04 15:16:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -162,6 +162,8 @@ public class PlotSetupAction extends Action {
 //		    }
 //		}
 		
+		// TODO: probably do not need to actually retrieve experiments
+		
 		// Recover experiments from cart
 		DataAssembler assembler = new DataAssembler(request);
 		AnalyticPipeline anPipeline = WebUtils.getPipeline(pform.getPipelineName(),
@@ -174,31 +176,40 @@ public class PlotSetupAction extends Action {
 			return mapping.findForward("no.data");
 		}
 		
+		// TODO: Revisit this code after new pipelining protocol implemented
+		
 		// If data from application client, update
-		PlotParameters plotParameters = pform.getPlotParameters();
-		GenomeIntervalDto[] dtos = plotParameters.getGenomeIntervalDtos();
-		if (request.getAttribute("invocation.from.client") == null) {
-			if (experiments != null && experiments.length > 0) {
-				if (experiments[0].getClientId() != null) {
-				    if (dtos == null || dtos.length < 1) {
-				        ActionErrors errors = new ActionErrors();
-				        errors.add("genomeIntervals", new ActionError("invalid.field"));
-				        this.saveErrors(request, errors);
-				        return mapping.findForward("no.intervals");
-				    }
-				    GenomeIntervalDto[] cachedDtos = AttributeManager.getGenomeIntervalDtos(request);
-				    if (!(cachedDtos != null && GenomeIntervalDto.equal(dtos, cachedDtos))) {
-				    	experiments = clientDataService.refresh(experiments, dtos);
-				    	cart.purgeClientData();
-				    	cart.add(experiments);
-				    }
-				}
-			}
-		}
-	    AttributeManager.setGenomeIntervalDtos(request, dtos);
+//		PlotParameters plotParameters = pform.getPlotParameters();
+//		GenomeIntervalDto[] dtos = plotParameters.getGenomeIntervalDtos();
+//		if (request.getAttribute("invocation.from.client") == null) {
+//			if (experiments != null && experiments.length > 0) {
+//				if (experiments[0].getClientId() != null) {
+//				    if (dtos == null || dtos.length < 1) {
+//				        ActionErrors errors = new ActionErrors();
+//				        errors.add("genomeIntervals", new ActionError("invalid.field"));
+//				        this.saveErrors(request, errors);
+//				        return mapping.findForward("no.intervals");
+//				    }
+//				    GenomeIntervalDto[] cachedDtos = AttributeManager.getGenomeIntervalDtos(request);
+//				    if (!(cachedDtos != null && GenomeIntervalDto.equal(dtos, cachedDtos))) {
+//				    	experiments = clientDataService.refresh(experiments, dtos);
+//				    	cart.purgeClientData();
+//				    	cart.add(experiments);
+//				    }
+//				}
+//			}
+//		}
+//		AttributeManager.setGenomeIntervalDtos(request, dtos);
+		
+		// TODO: Don't need this block
+		
+		// Perform statistical operations
 		experiments = 
 			assembler.assembleExperiments(experiments, anPipeline, params);
 		session.setAttribute(Attribute.DATA_SET, experiments);
+		
+		// TODO: Change this block so that we ask the shopping cart
+		// if any experiments contain experiment means (averages)
 		
 		// Determine if pipeline produces experimental means
 		String resultsInMeans = "no";

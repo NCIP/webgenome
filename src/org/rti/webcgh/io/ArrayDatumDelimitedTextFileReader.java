@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/ArrayDatumDelimitedTextFileReader.java,v $
-$Revision: 1.1 $
-$Date: 2006-04-25 16:28:26 $
+$Revision: 1.2 $
+$Date: 2006-05-04 15:16:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,7 +85,7 @@ public class ArrayDatumDelimitedTextFileReader implements ArrayDatumFileReader {
 	private static final String CHROMOSOME_COL_HEADING = "Chromosome";
 	
 	// Quantitation (currently always log2 ratio)
-	private static final String QUANTITATION_COL_HEADING = "Log2Ratio";
+	private static final String QUANTITATION_COL_HEADING = "Log2Rat";
 	
 	
 	// ==============================
