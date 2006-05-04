@@ -21,15 +21,15 @@
 	<!-- ====================================================== -->
 	<!--                 Embedded database                      -->
 	<!-- ====================================================== -->
-	<!--
-	<bean
+	
+	<!--<bean
 		id="dataSource"
 		class="org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource">
 		<property name="databaseName"><value>${db.home}/${cloudscape.dir}/${db.name}</value></property>
 		<property name="user"><value>${db.user.name}</value></property>
 		<property name="password"><value>${db.password}</value></property>
-	</bean>
-	-->
+	</bean>-->
+	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
 		<property name="url"><value>${db.url}</value></property>
@@ -48,7 +48,7 @@
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/array/persistent/impl</value></constructor-arg>
+        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/array/persistent/buildxml</value></constructor-arg>
         		</bean>
 	      	</list>
     	</property>
