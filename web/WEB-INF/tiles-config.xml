@@ -310,6 +310,20 @@
 	  	<put name="content"   value="/WEB-INF/jsp/plot/plotParams.jsp" />
 	  	<put name="helpTopic" value="plotParams" />
   	</definition>
+
+  	<definition name="scatter.plot.params.page" extends="plotting.layout" >
+	  	<put name="title"  value="webGenome: Scatter Plot Parameters" />
+	  	<put name="selectedSubMenuItem" value="parameters" />
+	  	<put name="content"   value="/WEB-INF/jsp/plot/scatterPlotParams.jsp" />
+	  	<put name="helpTopic" value="plotParams" />
+  	</definition>
+  	
+  	<definition name="ideogram.plot.params.page" extends="plotting.layout" >
+	  	<put name="title"  value="webGenome: Ideogram Plot Parameters" />
+	  	<put name="selectedSubMenuItem" value="parameters" />
+	  	<put name="content"   value="/WEB-INF/jsp/plot/ideogramPlotParams.jsp" />
+	  	<put name="helpTopic" value="plotParams" />
+  	</definition>
   	
   	<definition name="confirm.change.plot.params.page" extends="plotting.layout" >
 	  	<put name="title"  value="webGenome: Plot Parameters" />

@@ -32,7 +32,7 @@ hmm.merged(aCGH_obj) <- mergeHmmStates(aCGH_obj, model.use=1, minDiff=0.25)
 
 sd.samples(aCGH_obj) <-computeSD.Samples(aCGH_obj)
 
-genomic.events(aCGH_obj) <-find.genomic.events(aCGH_obj)
+#genomic.events(aCGH_obj) <-find.genomic.events(aCGH_obj)
 
 
 # pdf("C:/test/Example_GenePix_HMM_States.pdf")
@@ -55,5 +55,5 @@ df <- data.frame(hmm(aCGH_obj)[[1]][1])
 
 result <- cbind(chromosome=df[1], kb=df[2], state=df[3], smoothed=df[4], observed=df[8])
 #capture.output(df, file = "C:/test/dataframe.txt", append = FALSE)
-#capture.output(result, file = "C:/test/result.txt", append = FALSE)
+capture.output(result, file = "C:/test/result.txt", append = FALSE)
 

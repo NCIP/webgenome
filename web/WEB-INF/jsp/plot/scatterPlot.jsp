@@ -15,7 +15,22 @@
 	}
 </script>
 
+<script language="JavaScript">
+<!--
+function newWindow(file,window) {
+    msgWindow=open(file,window,'resizable=yes,width=800,height=500,status=1,scrollbars=1');
+    if (msgWindow.opener == null) msgWindow.opener = self;
+}
+//-->
+</script>
+
 <center>
+
+	<a href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=scatter"/>','scatterParams')">Change scatter-plot specific parameters</a>
+	<br/>
+	<br/>
+
+
 			
 	Show:
 	

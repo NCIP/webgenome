@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-02 21:39:30 $
+$Revision: 1.2 $
+$Date: 2006-05-11 18:19:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,24 +77,24 @@ public class AcghDataTransformer {
 	 */
 	public Experiment transform(AcghData acghData, Experiment origExperiment) {
 		
-		double[] log2Ratios;      // log2 ratios of copy number changes
-				// rows correspond to the clones and columns to the samples
-		String[] clones;          // clone name
-		String[] targets;         // unique ID, e.g. Well ID
-		int[] chromosomes;        // chromosome number
-		        // X chromosome = 23 in human and 20 in mouse,
-		        // Y chromosome = 24 in human and 21 in mouse
-		int[] positions;          // kb position on the chromosome
+//		double[] log2Ratios;      // log2 ratios of copy number changes
+//				// rows correspond to the clones and columns to the samples
+//		String[] clones;          // clone name
+//		String[] targets;         // unique ID, e.g. Well ID
+//		int[] chromosomes;        // chromosome number
+//		        // X chromosome = 23 in human and 20 in mouse,
+//		        // Y chromosome = 24 in human and 21 in mouse
+//		int[] positions;          // kb position on the chromosome
 		double[] smoothedRatios;  // smoothed value of log2 ratio
-		int size;                 // number of clones/number of rows
-		
-		log2Ratios = acghData.getLog2Ratios();
-		clones = acghData.getClones();
-		targets = acghData.getTargets();
-		chromosomes = acghData.getChromosomes();
-		positions = acghData.getPositions();
+//		int size;                 // number of clones/number of rows
+//		
+//		log2Ratios = acghData.getLog2Ratios();
+//		clones = acghData.getClones();
+//		targets = acghData.getTargets();
+//		chromosomes = acghData.getChromosomes();
+//		positions = acghData.getPositions();
 		smoothedRatios = acghData.getSmoothedRatios();
-		size = acghData.getSize();
+//		size = acghData.getSize();
 		
 		// TODO: run the aCGH command here to get the smoothing results
 		
@@ -145,11 +145,12 @@ public class AcghDataTransformer {
 		size = 0;
 		
 		// iterate over ArrayDatum objects
-		ArrayDatumIterator arrayDatumIter = experiment.arrayDatumIterator();
+		ArrayDatumIterator arrayDatumIter = experiment.bioAssayIterator().next().arrayDatumIterator();
 		
 		// find how many rows of data we will send to aCGH
 		for ( ; arrayDatumIter.hasNext() ; ) {
 			size++;
+			arrayDatumIter.next();
 		}
 		
 		// initialize arrays
@@ -163,7 +164,7 @@ public class AcghDataTransformer {
 		positions = new int[size];
 		
 		
-		arrayDatumIter = experiment.arrayDatumIterator();
+		arrayDatumIter = experiment.bioAssayIterator().next().arrayDatumIterator();
 		for ( int i = 0; arrayDatumIter.hasNext() ; i++ ) {
 			ArrayDatum arrayDatum = arrayDatumIter.next(); 
 

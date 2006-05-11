@@ -241,6 +241,8 @@
 		singleton="false"
 		class="org.rti.webcgh.analytic.SmoothOperation"/>
 		
+	<!-- TODO: Add bean for acghOperation -->
+		
 	<!-- ================================================================ -->
 	<!--        UI display properties for analytic operations             -->
 	<!-- ================================================================ -->
@@ -259,6 +261,8 @@
 					<property name="beanName"><value>averageOperation</value></property>
 					<property name="displayName"><value>Average within group</value></property>
 				</bean>
+				
+				<!-- TODO: add new entry for acghOperation following above as example -->
 				
 				<!-- MCAR/MCDR operation -->
 				<bean

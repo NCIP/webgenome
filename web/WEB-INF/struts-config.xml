@@ -388,6 +388,17 @@
 			validate="true"
 			input="/plot/params.do"
 			parameter="confirm.change.plot.params.page"/>
+
+		<action
+			path="/configPlotParams"
+			type="org.rti.webcgh.webui.plot.PlotParamsConfigAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="false"
+			parameter="confirm.change.plot.params.page">
+			<forward name="scatterPlotConfig" path="scatter.plot.params.page"/>
+			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
+		</action>
 		
 		<action
 			path="/updateSelectedFeatureTypes"

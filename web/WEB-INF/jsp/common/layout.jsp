@@ -26,6 +26,8 @@
 					"width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no"
 				)
 			}
+			
+			window.self.name("mainwindow");
 				
 		</script>
 		

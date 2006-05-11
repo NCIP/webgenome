@@ -14,6 +14,21 @@
 	}
 </script>
 
+<script language="JavaScript">
+<!--
+function newWindow(file,window) {
+    msgWindow=open(file,window,'resizable=yes,width=800,height=500,status=1,scrollbars=1');
+    if (msgWindow.opener == null) msgWindow.opener = self;
+}
+//-->
+</script>
+
+<center>
+	<a href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=ideogram"/>','ideogramParams')">Change ideogram-plot specific parameters</a>
+	<br/>
+	<br/>
+</center>
+
 <table border="0" cellpadding="0" cellspacing="0" align="center">
 	<tr>
 		<td>
