@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="org.rti.webcgh.array.persistent.impl.HibernatePersistentGenomeAssembly" table="GENOME_ASSEMBLY" lazy="false">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+		<property name="name"/>
+		
+		<many-to-one name="organism" class="org.rti.webcgh.array.persistent.impl.HibernatePersistentOrganism" lazy="false" column="organism_id"/>
+	
+	</class>
+
+</hibernate-mapping>
