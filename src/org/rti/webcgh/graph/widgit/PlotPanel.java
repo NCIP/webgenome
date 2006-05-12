@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotPanel.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-29 22:26:30 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widgit;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -59,6 +59,7 @@ import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.PlotElement;
 
 /**
  * Panel for containing plot elements

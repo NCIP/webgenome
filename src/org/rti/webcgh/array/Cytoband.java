@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Cytoband.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.3 $
+$Date: 2006-05-12 15:18:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
-import org.rti.webcgh.graph.GenomeFeatureMap;
+import org.rti.webcgh.graph.widgit.GenomeFeatureMap;
 
 /**
  * A band within a cytogenetic map

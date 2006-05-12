@@ -58,10 +58,10 @@ import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicLine;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.PlotPanel;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.widgit.Background;
+import org.rti.webcgh.graph.widgit.PlotPanel;
 
 
 /**
