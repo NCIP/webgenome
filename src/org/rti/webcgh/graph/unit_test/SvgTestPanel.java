@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotTesterUtils.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 19:06:50 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,88 +50,117 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
+
 package org.rti.webcgh.graph.unit_test;
 
-import java.awt.Color;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.unit_test.UnitTestUtils;
+import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.rti.webcgh.graph.widgit.PlotPanel;
+import org.rti.webcgh.util.IOUtils;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Document;
 
 /**
- * Utilities for testing plotting methods
+ * Instances of this class are created to help with the testing
+ * of plotting components including individual widgits and entire
+ * plots.  The class creates a drawing canvas that enables
+ * the plot components to create an SVG document.  It also provides
+ * a method for writing the SVG document to a file.
+ *
  */
-public class PlotTesterUtils {
-    
-    
+public class SvgTestPanel extends PlotPanel {
+	
+	private static final String CLASSPATH_RELATIVE_PATH_TO_SVG_TEMPLATE =
+		"/svg/plotTemplate.svg";
+	
+	// =====================================
+	//      Attributes
+	// =====================================
+	
+	private File svgDirectory = new File("C:\temp");
+	private Document doc = null;
+	
 	/**
-	 * Load "shell" document (i.e. empty XML document)
-	 * @return XML document
-	 * @throws WebcghSystemException
+	 * Get directory that output SVG files are written to
+	 * @return A directory
 	 */
-	public static Document newTestDocument() throws WebcghSystemException {
-		return XmlUtils.loadDocument("svg/plotTemplate.svg", false);
+	public File getSvgDirectory() {
+		return svgDirectory;
+	}
+
+
+	/**
+	 * Set directory that output SVG files are written to
+	 * @param svgDirectory A directory
+	 */
+	public void setSvgDirectory(File svgDirectory) {
+		this.svgDirectory = svgDirectory;
+	}
+
+
+
+	// ====================================
+	//      Constructors
+	// ====================================
+	
+	/**
+	 * Constructor
+	 * @param canvas A drawing canvas
+	 * @param doc A document
+	 */
+	private SvgTestPanel(DrawingCanvas canvas, Document doc) {
+		super(canvas);
+		this.doc = doc;
 	}
 	
 	
-	/**
-	 * Write document to file
-	 * @param doc A document
-	 * @param docName Document file name
-	 * @throws WebcghSystemException
-	 */
-	public static void writeDocument(Document doc, String docName) 
-		throws WebcghSystemException {
-			
-		// Get test directory name
-		String testDirName = UnitTestUtils.getProperty("svg.dir");
-		if (testDirName == null)
-			throw new WebcghSystemException("Cannot find test directory " +
-				"in system properties file.  Property name is 'test.dir'");
+	// ===================================
+	//    Static methods
+	// ===================================
 		
-		// Get test directory handle
-		File testDir = new File(testDirName);
-		if (testDir.exists() && ! testDir.isDirectory())
-			throw new WebcghSystemException("File exists" +
-				" with same name as test directory");
-				
-		// Create test directory if necessary
-		if (! testDir.exists())
-			if (! testDir.mkdir())
-				throw new WebcghSystemException("Error creating " +
-					"test directory '" + testDirName + "'");
-				
-		// Output document to test directory
-		String testFileName = testDir.getAbsolutePath() + "/" + docName;
+	/**
+	 * Factory method for creating a new SvgTestPanel object
+	 */
+	public static SvgTestPanel newSvgTestPanel() {
+		
+		// Load SVG plotting template document
+		Document doc = 
+			XmlUtils.loadDocument(CLASSPATH_RELATIVE_PATH_TO_SVG_TEMPLATE, false);
+		if (doc == null)
+			throw new WebcghSystemException("Unable to load SVG template document");
+		
+		// Instantiate drawing canvas
+		DrawingCanvas drawingCanvas = new SvgDrawingCanvas(doc);
+		
+		// Return new panel
+		return new SvgTestPanel(drawingCanvas, doc);
+	}
+	
+	
+	// =====================================
+	//       Other public methods
+	// =====================================
+	
+	/**
+	 * Create SVG file with 
+	 */
+	public void toSvgFile(String fileName) {
+		File outFile = 
+			new File(this.svgDirectory.getAbsolutePath() + "/" + fileName);
+		FileWriter writer = null;
 		try {
-			FileOutputStream out = new FileOutputStream(testFileName);
-			XmlUtils.forwardDocument(doc, out);
-		} catch (FileNotFoundException e) {
-			throw new WebcghSystemException("Error creating output file");
+			writer = new FileWriter(outFile);
+			XmlUtils.forwardDocument(this.doc, new FileWriter(outFile));
+		} catch (IOException e) {
+			throw new WebcghSystemException("Error creating SVG file", e);
+		} finally {
+			IOUtils.close(writer);
 		}
 	}
-	
-	
-	/**
-	 * Add framw around drawing area
-	 * @param canvas A canvas
-	 * @param width Width
-	 * @param height Height
-	 */
-	public static void addFrame(DrawingCanvas canvas, int width, int height) {
-	    int lineWidth = 2;
-	    Color color = Color.black;
-	    canvas.add(new GraphicLine(0, 0, width, 0, lineWidth, color));
-	    canvas.add(new GraphicLine(0, 0, 0, height, lineWidth, color));
-	    canvas.add(new GraphicLine(0, height, width, height, lineWidth, color));
-	    canvas.add(new GraphicLine(width, height, width, 0, lineWidth, color));
-	}
-    
-
 }

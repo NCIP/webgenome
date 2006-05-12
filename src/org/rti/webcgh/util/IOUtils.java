@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/IOUtils.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-12 19:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
+
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
  * I/O utility methods
@@ -115,5 +118,21 @@ public class IOUtils {
 			nextChar = in.read();
 		}
 		return buff.toString();
+	}
+	
+	
+	/**
+	 * Null tolerant method for closing a writer.  Also catches
+	 * checked exceptions and rethrows as unchecked.
+	 * @param writer
+	 */
+	public static void close(Writer writer) {
+		if (writer != null) {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				throw new WebcghSystemException("Error closing writer", e);
+			}
+		}
 	}
 }
