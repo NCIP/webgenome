@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Legend.java,v $
-$Revision: 1.5 $
-$Date: 2006-03-29 22:26:30 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widgit;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -68,6 +68,9 @@ import org.rti.webcgh.drawing.GraphicLine;
 import org.rti.webcgh.drawing.GraphicRect;
 import org.rti.webcgh.drawing.GraphicText;
 import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.graph.PlotElement;
+import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.graph.ScatterPlot;
 
 /**
  * Plot legend

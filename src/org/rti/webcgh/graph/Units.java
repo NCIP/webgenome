@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Units.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-12 15:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,9 @@ package org.rti.webcgh.graph;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.rti.webcgh.graph.util.BPFormatter;
+import org.rti.webcgh.graph.util.NumberFormatter;
 
 /**
  * Chromosome BP units

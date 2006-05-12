@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/AxisTicMarkTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,32 +50,36 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.widgit.unit_test;
 
-import java.awt.Point;
-import java.net.URL;
+import java.awt.Color;
 
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.graph.AxisTicMark;
-
-
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.PlotPanel;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widgit.Axis;
+import org.rti.webcgh.graph.widgit.Background;
 
 /**
  * 
  */
-public class AxisTicMarkTester extends BasePlottingTester {
+public class AxisTester extends BasePlottingTester {
+    
+    private DrawingCanvas tile = null;
     
     
     /**
      * 
-     *
      */
-    public void testHorizLeft() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-horiz-left.svg");
+    public void setUp() {
+        super.setUp();
+        this.tile = this.drawingCanvas.newTile();
+        this.drawingCanvas.add(tile, 250, 250);
     }
     
     
@@ -83,11 +87,10 @@ public class AxisTicMarkTester extends BasePlottingTester {
      * 
      *
      */
-    public void testHorizRight() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.RIGHT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-horiz-right.svg");
+    public void testHorizAbove() {
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.ABOVE);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-horiz-above.svg");
     }
     
     
@@ -95,11 +98,10 @@ public class AxisTicMarkTester extends BasePlottingTester {
      * 
      *
      */
-    public void testVertAbove() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
-           Location.ABOVE);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-vert-above.svg");
+    public void testHorizBelow() {
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-horiz-below.svg");
     }
     
     
@@ -107,24 +109,10 @@ public class AxisTicMarkTester extends BasePlottingTester {
      * 
      *
      */
-    public void testVertBelow() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
-           Location.BELOW);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-vert-below.svg");
-    }
-    
-    
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testURL() throws Exception {
-       URL url = new URL("http://www.google.com");
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", url, Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-url.svg");
+    public void testVertLeft() {
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-vert-left.svg");
     }
     
     
@@ -132,11 +120,29 @@ public class AxisTicMarkTester extends BasePlottingTester {
      * 
      *
      */
-    public void testNoLabel() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, false);
-       PlotTesterUtils.writeDocument(this.document, "tic-no-label.svg");
+    public void testVertRight() {
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.RIGHT_OF);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-vert-right.svg");
+    }
+    
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeftBottomRight() {
+        Axis axisL = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+        Axis axisR = new Axis(10, 50, 400, Orientation.VERTICAL, Location.RIGHT_OF);
+        Background background = new Background(400, 400, Color.yellow);
+        PlotPanel panel = new PlotPanel(this.tile);
+        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        panel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        PlotTesterUtils.writeDocument(this.document, "axis-left-bottom-right.svg");
     }
 
 }

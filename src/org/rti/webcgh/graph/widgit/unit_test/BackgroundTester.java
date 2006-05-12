@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/ChromosomeEndCapTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,82 +50,29 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.widgit.unit_test;
 
 import java.awt.Color;
 
-import org.rti.webcgh.drawing.Direction;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.graph.ChromosomeEndCap;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widgit.Background;
+
 
 /**
  * 
  */
-public class ChromosomeEndCapTester extends BasePlottingTester {
-    
-    
-    private DrawingCanvas tile = null;
-    
-    
-    /**
-     * 
-     */
-    public void setUp() {
-        super.setUp();
-        int x = 200;
-        int y = 200;
-        tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, x, y);
-        int length = 100;
-        this.drawingCanvas.add(new GraphicLine(x - length / 2, y, x + length / 2, 
-                y, 2, Color.black));
-        this.drawingCanvas.add(new GraphicLine(x, y - length / 2, x, 
-                y + length / 2, 2, Color.black));
-    }
+public class BackgroundTester extends BasePlottingTester {
     
     
     /**
      * 
      *
      */
-    public void testUp() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.UP);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-up.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testDown() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.DOWN);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-down.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testLeft() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.LEFT);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-left.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testRight() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.RIGHT);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-right.svg");
+    public void test1() {
+        Background bg1 = new Background(400, 300, Color.red);
+        bg1.paint(this.drawingCanvas);
+        PlotTesterUtils.writeDocument(this.document, "background.svg");
     }
 
 }

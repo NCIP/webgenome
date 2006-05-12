@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/AxisTicMark.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widgit;
 
 import java.awt.Color;
 import java.awt.Point;

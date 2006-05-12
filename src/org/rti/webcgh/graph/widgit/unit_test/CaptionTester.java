@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/CaptionTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.widgit.unit_test;
 
 import java.awt.Color;
 
@@ -58,7 +58,9 @@ import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicLine;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.graph.Caption;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widgit.Caption;
 
 /**
  * Tester for Caption

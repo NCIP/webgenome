@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Warper.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,21 +50,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
-
-import java.awt.Point;
+package org.rti.webcgh.graph.util;
 
 /**
- * Helps warp images by transforming coordinates
+ * Formats numbers for display
  */
-public interface Warper {
+public interface NumberFormatter {
     
     
     /**
-     * Transform a polyline defined by given points
-     * @param points Points defining a polyline
-     * @return New polyline
+     * Format given number
+     * @param number A number
+     * @return Formatted number
      */
-    public Point[] transform(final Point[] points);
+    public String format(double number);
+    
+    
+    /**
+     * Format given number
+     * @param number A number
+     * @return Formatted number
+     */
+    public String format(long number);
 
 }

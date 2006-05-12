@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/BPFormatter.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,86 +50,84 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+package org.rti.webcgh.graph.widgit.unit_test;
 
-package org.rti.webcgh.graph;
+import java.awt.Color;
 
+import org.rti.webcgh.drawing.Direction;
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widgit.ChromosomeEndCap;
 
 /**
- * Formatter for base pair units
+ * 
  */
-public class BPFormatter implements NumberFormatter {
-	
-	
-    // =================================
-    //    Attributes
-    // =================================
+public class ChromosomeEndCapTester extends BasePlottingTester {
     
-    private final RealNumberFormatter numberFormatter = new RealNumberFormatter(12, 4);
-	private final int dividend;
-	
-	
-	// ===============================
-	//      Constructors
-	// ===============================
-	
-	/**
-	 * Constructor
-	 * @param dividend Number that base pairs are divided by
-	 * during formatting
-	 */
-	public BPFormatter(int dividend) {
-		this(dividend, 12, 4);
-	}
-	
-	
-	/**
-	 * Constructor
-	 * @param dividend Number that base pairs are divided by
-	 * during formatting
-	 * @param digitsToLeftOfDot Digits to left of decimal point
-     * @param digitsToRightOfDot Digits to right of decimal point
-	 */
-	public BPFormatter(int dividend, int digitsToLeftOfDot, int digitsToRightOfDot) {
-	    this.dividend = dividend;
-	    this.setSignificantDigits(digitsToLeftOfDot, digitsToRightOfDot);
-	}
-	
-	
-	// ============================================
-	//      Methods in NumberFormatter interface
-	// ============================================
-	
+    
+    private DrawingCanvas tile = null;
+    
+    
     /**
-     * Format given number
-     * @param number A number
-     * @return Formatted number
+     * 
      */
-    public String format(double number) {
-        return this.numberFormatter.format(number / this.dividend);
+    public void setUp() {
+        super.setUp();
+        int x = 200;
+        int y = 200;
+        tile = this.drawingCanvas.newTile();
+        this.drawingCanvas.add(tile, x, y);
+        int length = 100;
+        this.drawingCanvas.add(new GraphicLine(x - length / 2, y, x + length / 2, 
+                y, 2, Color.black));
+        this.drawingCanvas.add(new GraphicLine(x, y - length / 2, x, 
+                y + length / 2, 2, Color.black));
     }
     
     
     /**
-     * Format given number
-     * @param number A number
-     * @return Formatted number
+     * 
+     *
      */
-    public String format(long number) {
-        return this.numberFormatter.format(number / this.dividend);
+    public void testUp() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.UP);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-up.svg");
     }
-	
-	
-	// ==================================================
-	//         Public methods
-	// ==================================================
-	
+    
+    
     /**
-     * Set significant digits
-     * @param digitsToLeftOfDot Digits to left of decimal point
-     * @param digitsToRightOfDot Digits to right of decimal point
+     * 
+     *
      */
-	public void setSignificantDigits(int digitsToLeftOfDot, int digitsToRightOfDot) {
-	    this.numberFormatter.setSignificantDigits(digitsToLeftOfDot, digitsToRightOfDot);
-	}
+    public void testDown() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.DOWN);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-down.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeft() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.LEFT);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-left.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRight() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.RIGHT);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-right.svg");
+    }
 
 }

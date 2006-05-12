@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.6 $
-$Date: 2006-04-25 15:08:46 $
+$Revision: 1.7 $
+$Date: 2006-05-12 15:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -84,6 +84,14 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.util.CentromereWarper;
+import org.rti.webcgh.graph.util.Warper;
+import org.rti.webcgh.graph.widgit.Axis;
+import org.rti.webcgh.graph.widgit.Background;
+import org.rti.webcgh.graph.widgit.Caption;
+import org.rti.webcgh.graph.widgit.ChromosomeEndCap;
+import org.rti.webcgh.graph.widgit.Grid;
+import org.rti.webcgh.graph.widgit.Legend;
 
 /**
  * Generates plots

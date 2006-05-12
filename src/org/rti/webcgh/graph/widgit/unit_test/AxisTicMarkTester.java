@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Background.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,122 +50,95 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widgit.unit_test;
 
-import java.awt.Color;
 import java.awt.Point;
+import java.net.URL;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.drawing.Location;
+import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widgit.AxisTicMark;
+
+
 
 /**
  * 
  */
-public class Background implements PlotElement {
-    
-    
-    // ==============================
-    //     Attributes
-    // ==============================
-    
-    private final int width;
-    private final int height;
-    private final GraphicRect rect;
-    
-    
-    // ==============================
-    //    Constructors
-    // ==============================
-    
-    /**
-     * Constructor
-     * @param width Width in pixels
-     * @param height Height in pixels
-     * @param color Color
-     */
-    public Background(int width, int height, Color color) {
-        this.width = width;
-        this.height = height;
-        this.rect = new GraphicRect(0, 0, width, height, color);
-        rect.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
-    }
-    
-    
-    // =======================================
-    //    Methods in PlotElement interface
-    // =======================================
+public class AxisTicMarkTester extends BasePlottingTester {
     
     
     /**
-     * Paint element
-     * @param canvas A canvas
+     * 
+     *
      */
-    public void paint(DrawingCanvas canvas) {
-        canvas.add(this.rect);
+    public void testHorizLeft() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
+           Location.LEFT_OF);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-horiz-left.svg");
     }
     
     
     /**
-     * Point at top left used to align with other plot elements
-     * @return A point
+     * 
+     *
      */
-    public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+    public void testHorizRight() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
+           Location.RIGHT_OF);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-horiz-right.svg");
     }
     
     
     /**
-     * Point at bottom left used to align with other plot elements
-     * @return A point
+     * 
+     *
      */
-    public Point bottomLeftAlignmentPoint() {
-        return new Point(0, height);
+    public void testVertAbove() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
+           Location.ABOVE);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-vert-above.svg");
     }
     
     
     /**
-     * Point at top right used to align with other plot elements
-     * @return A point
+     * 
+     *
      */
-    public Point topRightAlignmentPoint() {
-        return new Point(width, 0);
+    public void testVertBelow() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
+           Location.BELOW);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-vert-below.svg");
     }
     
     
     /**
-     * Point at bottom right used to align with other plot elements
-     * @return A point
+     * 
+     * @throws Exception
      */
-    public Point bottomRightAlignmentPoint() {
-        return new Point(width, height);
+    public void testURL() throws Exception {
+       URL url = new URL("http://www.google.com");
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", url, Orientation.HORIZONTAL, 
+           Location.LEFT_OF);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-url.svg");
     }
     
     
     /**
-     * Width in pixels
-     * @return Width in pixels
+     * 
+     *
      */
-    public int width() {
-        return this.width;
-    }
-    
-    
-    /**
-     * Height in pixels
-     * @return Height in pixels
-     */
-    public int height() {
-        return this.height;
-    }
-    
-    
-    /**
-     * Return point at top left of element
-     * @return A point
-     */
-    public Point topLeftPoint() {
-        return new Point(0, 0);
+    public void testNoLabel() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
+           Location.LEFT_OF);
+       tic.paint(this.drawingCanvas, false);
+       PlotTesterUtils.writeDocument(this.document, "tic-no-label.svg");
     }
 
 }

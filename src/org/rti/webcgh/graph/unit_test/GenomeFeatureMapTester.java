@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/GenomeFeatureMapTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.3 $
+$Date: 2006-05-12 15:06:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,11 +61,11 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.Caption;
-import org.rti.webcgh.graph.CentromereWarper;
 import org.rti.webcgh.graph.GenomeFeatureMap;
 import org.rti.webcgh.graph.PlotPanel;
-import org.rti.webcgh.graph.Warper;
+import org.rti.webcgh.graph.util.CentromereWarper;
+import org.rti.webcgh.graph.util.Warper;
+import org.rti.webcgh.graph.widgit.Caption;
 
 
 /**

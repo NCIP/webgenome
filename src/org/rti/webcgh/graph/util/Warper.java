@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/BackgroundTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,27 +50,21 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.util;
 
-import java.awt.Color;
-
-import org.rti.webcgh.graph.Background;
-
+import java.awt.Point;
 
 /**
- * 
+ * Helps warp images by transforming coordinates
  */
-public class BackgroundTester extends BasePlottingTester {
+public interface Warper {
     
     
     /**
-     * 
-     *
+     * Transform a polyline defined by given points
+     * @param points Points defining a polyline
+     * @return New polyline
      */
-    public void test1() {
-        Background bg1 = new Background(400, 300, Color.red);
-        bg1.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "background.svg");
-    }
+    public Point[] transform(final Point[] points);
 
 }

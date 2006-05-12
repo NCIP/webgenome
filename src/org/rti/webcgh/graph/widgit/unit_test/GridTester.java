@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/NumberFormatter.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,27 +50,70 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widgit.unit_test;
+
+import java.awt.Color;
+
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.Location;
+import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.PlotPanel;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widgit.Axis;
+import org.rti.webcgh.graph.widgit.Background;
+import org.rti.webcgh.graph.widgit.Grid;
 
 /**
- * Formats numbers for display
+ * 
  */
-public interface NumberFormatter {
+public class GridTester extends BasePlottingTester {
+    
+    
+    private DrawingCanvas tile = null;
     
     
     /**
-     * Format given number
-     * @param number A number
-     * @return Formatted number
+     * 
      */
-    public String format(double number);
+    public void setUp() {
+        super.setUp();
+        this.tile = this.drawingCanvas.newTile();
+        this.drawingCanvas.add(tile, 250, 250);
+    }
     
     
     /**
-     * Format given number
-     * @param number A number
-     * @return Formatted number
+     * 
+     *
      */
-    public String format(long number);
+    public void testHorizontal() {
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
+        Background background = new Background(400, 400, Color.yellow);
+        PlotPanel panel = new PlotPanel(this.tile);
+        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        PlotTesterUtils.writeDocument(this.document, "grid-horiz.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testVertical() {
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
+        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
+        Background background = new Background(400, 400, Color.yellow);
+        PlotPanel panel = new PlotPanel(this.tile);
+        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        PlotTesterUtils.writeDocument(this.document, "grid-vert.svg");
+    }
 
 }

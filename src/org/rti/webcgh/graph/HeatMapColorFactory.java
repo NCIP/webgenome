@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/HeatMapColorFactory.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-12 15:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicRect;
 import org.rti.webcgh.drawing.GraphicText;
 import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.graph.util.RealNumberFormatter;
 
 /**
  * Generates heat map colors

@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/AxisTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,97 +50,123 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.widgit;
 
 import java.awt.Color;
+import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.Axis;
-import org.rti.webcgh.graph.Background;
-import org.rti.webcgh.graph.PlotPanel;
+import org.rti.webcgh.drawing.GraphicEvent;
+import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.graph.PlotElement;
 
 /**
  * 
  */
-public class AxisTester extends BasePlottingTester {
+public class Background implements PlotElement {
     
-    private DrawingCanvas tile = null;
+    
+    // ==============================
+    //     Attributes
+    // ==============================
+    
+    private final int width;
+    private final int height;
+    private final GraphicRect rect;
+    
+    
+    // ==============================
+    //    Constructors
+    // ==============================
+    
+    /**
+     * Constructor
+     * @param width Width in pixels
+     * @param height Height in pixels
+     * @param color Color
+     */
+    public Background(int width, int height, Color color) {
+        this.width = width;
+        this.height = height;
+        this.rect = new GraphicRect(0, 0, width, height, color);
+        rect.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
+    }
+    
+    
+    // =======================================
+    //    Methods in PlotElement interface
+    // =======================================
     
     
     /**
-     * 
+     * Paint element
+     * @param canvas A canvas
      */
-    public void setUp() {
-        super.setUp();
-        this.tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, 250, 250);
+    public void paint(DrawingCanvas canvas) {
+        canvas.add(this.rect);
     }
     
     
     /**
-     * 
-     *
+     * Point at top left used to align with other plot elements
+     * @return A point
      */
-    public void testHorizAbove() {
-        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.ABOVE);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-horiz-above.svg");
+    public Point topLeftAlignmentPoint() {
+        return new Point(0, 0);
     }
     
     
     /**
-     * 
-     *
+     * Point at bottom left used to align with other plot elements
+     * @return A point
      */
-    public void testHorizBelow() {
-        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-horiz-below.svg");
+    public Point bottomLeftAlignmentPoint() {
+        return new Point(0, height);
     }
     
     
     /**
-     * 
-     *
+     * Point at top right used to align with other plot elements
+     * @return A point
      */
-    public void testVertLeft() {
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-vert-left.svg");
+    public Point topRightAlignmentPoint() {
+        return new Point(width, 0);
     }
     
     
     /**
-     * 
-     *
+     * Point at bottom right used to align with other plot elements
+     * @return A point
      */
-    public void testVertRight() {
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.RIGHT_OF);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-vert-right.svg");
+    public Point bottomRightAlignmentPoint() {
+        return new Point(width, height);
     }
     
     
+    /**
+     * Width in pixels
+     * @return Width in pixels
+     */
+    public int width() {
+        return this.width;
+    }
+    
     
     /**
-     * 
-     *
+     * Height in pixels
+     * @return Height in pixels
      */
-    public void testLeftBottomRight() {
-        Axis axisL = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
-        Axis axisR = new Axis(10, 50, 400, Orientation.VERTICAL, Location.RIGHT_OF);
-        Background background = new Background(400, 400, Color.yellow);
-        PlotPanel panel = new PlotPanel(this.tile);
-        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        panel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "axis-left-bottom-right.svg");
+    public int height() {
+        return this.height;
+    }
+    
+    
+    /**
+     * Return point at top left of element
+     * @return A point
+     */
+    public Point topLeftPoint() {
+        return new Point(0, 0);
     }
 
 }
