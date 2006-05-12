@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/unit_test/SvgDrawingCanvasTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 17:16:23 $
+$Revision: 1.3 $
+$Date: 2006-05-12 17:17:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,7 +70,6 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.rti.webcgh.drawing.SvgElementFactory;
 import org.rti.webcgh.drawing.SvgGraphicText;
-import org.rti.webcgh.plot.unit_test.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
