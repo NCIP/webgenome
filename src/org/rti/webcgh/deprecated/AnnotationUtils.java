@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/RenderedPlotElementExtent.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,116 +51,87 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot;
+package org.rti.webcgh.deprecated;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.util.XmlUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
- * Captures the 2-D space a rendered plot element occupies
+ * General utility methods for downloading data dump from UCSC
  */
-public class RenderedPlotElementExtent {
-	
-	private int x = 0;
-	private int y = 0;
-	private int width = 0;
-	private int height = 0;
-	
-	
-	/**
-	 * Constructor
-	 *
-	 */
-	public RenderedPlotElementExtent() {}
-	
-	
-	/**
-	 * Constructor
-	 * @param x X-coordinate
-	 * @param y Y-coordinate
-	 * @param width Width
-	 * @param height Height
-	 */
-	public RenderedPlotElementExtent
-	(
-		int x, int y, int width, int height
-	) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-	
-	
-	/**
-	 * Set all properties
-	 * @param x X-coordinate
-	 * @param y Y-cordinate
-	 * @param width Width
-	 * @param height Height
-	 */
-	public void setExtent
-	(
-		int x, int y, int width, int height
-	) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-	
+public class AnnotationUtils {
+
+	private static final String DOWNLOAD_CONFIG_FILE = "download-config.xml";
+	private static Document configDoc = null;
 
 	/**
-	 * @return Height in pixels
+	 * Get document containing annotation configuration information
+	 * @return XML document
+	 * @throws WebcghSystemException
 	 */
-	public int getHeight() {
-		return height;
+	public static Document getDownloadConfigDocument()
+		throws WebcghSystemException {
+		if (configDoc == null)
+			configDoc = XmlUtils.loadDocument(DOWNLOAD_CONFIG_FILE, false);
+		return configDoc;
 	}
 
 	/**
-	 * @return Width in pixels
+	 * @return a list of download files
+	 * @throws WebcghSystemException
 	 */
-	public int getWidth() {
-		return width;
+	public static List getDownloadFileList() throws WebcghSystemException {
+		List fileList = new ArrayList();
+		getDownloadConfigDocument();
+		if (configDoc == null)
+			throw new WebcghSystemException("Could not open download configuration file");
+		NodeList nlist = configDoc.getElementsByTagName("download-file");
+		for (int i = 0; i < nlist.getLength(); i++) {
+			Element ele = (Element) nlist.item(i);
+			fileList.add(ele.getAttribute("sql"));
+			fileList.add(ele.getAttribute("data"));
+		}
+		return fileList;
+
+	}
+	
+	/**
+	 * Get a list of file names to be downloaded
+	 * @return List A list of file names
+	 * @throws WebcghSystemException
+	 */
+	public static List getNames() throws WebcghSystemException {
+		List nameList = new ArrayList();
+		getDownloadConfigDocument();
+		if (configDoc == null)
+			throw new WebcghSystemException("Could not open download configuration file");
+		NodeList nlist = configDoc.getElementsByTagName("download-file");
+		for (int i = 0; i < nlist.getLength(); i++) {
+			Element ele = (Element) nlist.item(i);
+			nameList.add(ele.getAttribute("name"));	
+		}
+		return nameList;
 	}
 
 	/**
-	 * @return X-coordinate of "top left" corner
+	 * @param args
 	 */
-	public int getX() {
-		return x;
-	}
+	public static void main(String[] args) {
+		try {
+			List list = getNames();
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i));
+			}
+		} catch (WebcghSystemException e) {
+			e.printStackTrace();
+		}
 
-	/**
-	 * @return Y-coorinate of "top left" corner
-	 */
-	public int getY() {
-		return y;
-	}
-
-	/**
-	 * @param i Height in pixels
-	 */
-	public void setHeight(int i) {
-		height = i;
-	}
-
-	/**
-	 * @param i Width in pixels
-	 */
-	public void setWidth(int i) {
-		width = i;
-	}
-
-	/**
-	 * @param i X-coordinate of "top left" corner
-	 */
-	public void setX(int i) {
-		x = i;
-	}
-
-	/**
-	 * @param i Y-coordinate of "top left" corner
-	 */
-	public void setY(int i) {
-		y = i;
 	}
 
 }

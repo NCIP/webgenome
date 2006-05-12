@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot;
+package org.rti.webcgh.deprecated;
 
 /**
  * Physical map units

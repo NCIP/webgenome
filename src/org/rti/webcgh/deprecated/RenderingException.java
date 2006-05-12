@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/common/Line.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,115 +51,46 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot.common;
+package org.rti.webcgh.deprecated;
 
-import java.awt.Point;
-import java.awt.geom.Line2D;
-
+import org.rti.webcgh.core.WebcghApplicationException;
 
 /**
- * Adds extended functionality to <code>Line2D</code>
+ * Exception thrown when system is unable to render a plot with
+ * given parameters.
  */
-public class Line extends Line2D.Double {
+public class RenderingException extends WebcghApplicationException {
+
+	/**
+	 *  Constructor
+	 */
+	public RenderingException() {
+		super();
+	}
 
 	/**
 	 * Constructor
+	 * @param msg Message
 	 */
-	public Line() {
-		super();
+	public RenderingException(String msg) {
+		super(msg);
 	}
-	
-	
+
 	/**
 	 * Constructor
-	 * @param x1 X-coordinate of first endpoint
-	 * @param y1 Y-coordinate of first endpoint
-	 * @param x2 X-coordinate of second endpoint
-	 * @param y2 Y-coordinate of second endpoint
+	 * @param origThrowable Original exception
 	 */
-	public Line(double x1, double y1, double x2, double y2) {
-		this.setLine(x1, y1, x2, y2);
+	public RenderingException(Throwable origThrowable) {
+		super(origThrowable);
 	}
-	
-	
+
 	/**
 	 * Constructor
-	 * @param p1 First endpoint
-	 * @param p2 Second endpoint
+	 * @param msg Message
+	 * @param origThrowable Original exception
 	 */
-	public Line(Point p1, Point p2) {
-		this.setLine((int)p1.getX(), (int)p1.getY(), (int)p2.getX(),
-			(int)p2.getY());
+	public RenderingException(String msg, Throwable origThrowable) {
+		super(msg, origThrowable);
 	}
-	
-	
-	/**
-	 * Slope of line
-	 * @return Slope
-	 */
-	public double slope() {
-		return
-			(this.getY2() - this.getY1()) /
-			(this.getX2() - this.getX1());
-	}
-	
-	
-	/**
-	 * Is line horizontal?
-	 * @return T/F
-	 */
-	public boolean isHorizontal() {
-		return this.getY1() == this.getY2();
-	}
-	
-	
-	/**
-	 * Is line vertical?
-	 * @return T/F
-	 */
-	public boolean isVertical() {
-		return this.getX1() == this.getX2();
-	}
-	
-	
-	/**
-	 * Return intercept point.  This <code>Line</code> must be
-	 * horizontal or vertical
-	 * @param line A line
-	 * @return Intercepting point.  If this <code>Line</code>
-	 * is not horizontal or vertical, null is returned
-	 */
-	public Point intercept(Line line) {
-		Point p = null;
-		if (this.isHorizontal()) {
-			int x = (int)(line.getX1() +
-				(this.getY1() - line.getY1()) / line.slope());
-			int y = (int)this.getY1();
-			p = new Point(x, y);
-		} else if (this.isVertical()) {
-			int x = (int)this.getX1();
-			int y = (int)(line.getY1() + 
-				line.slope() * (this.getX1() - line.getX1()));
-			p = new Point(x, y);
-		}
-		return p;
-	}
-	
-	
-	/**
-	 * Set first endpoint
-	 * @param p1 Endpoint
-	 */
-	public void setP1(Point p1) {
-		this.setLine(p1.getX(), p1.getY(), this.getX2(), this.getY2());
-	}
-	
-	
-	/**
-	 * Set second endpoint
-	 * @param p2 Endpoint
-	 */
-	public void setP2(Point p2) {
-		this.setLine(this.getX1(), this.getY1(), p2.getX(), p2.getY());
-	}
+
 }

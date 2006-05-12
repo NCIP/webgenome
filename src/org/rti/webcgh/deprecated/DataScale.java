@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/cron/util/AnnotationUtils.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,87 +51,132 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.cron.util;
 
-import java.util.ArrayList;
-import java.util.List;
+package org.rti.webcgh.deprecated;
 
-import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.util.XmlUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+
 
 /**
- * General utility methods for downloading data dump from UCSC
+ * Graphical color coded data scale showing the intensity of expression.
  */
-public class AnnotationUtils {
-
-	private static final String DOWNLOAD_CONFIG_FILE = "download-config.xml";
-	private static Document configDoc = null;
-
-	/**
-	 * Get document containing annotation configuration information
-	 * @return XML document
-	 * @throws WebcghSystemException
-	 */
-	public static Document getDownloadConfigDocument()
-		throws WebcghSystemException {
-		if (configDoc == null)
-			configDoc = XmlUtils.loadDocument(DOWNLOAD_CONFIG_FILE, false);
-		return configDoc;
-	}
-
-	/**
-	 * @return a list of download files
-	 * @throws WebcghSystemException
-	 */
-	public static List getDownloadFileList() throws WebcghSystemException {
-		List fileList = new ArrayList();
-		getDownloadConfigDocument();
-		if (configDoc == null)
-			throw new WebcghSystemException("Could not open download configuration file");
-		NodeList nlist = configDoc.getElementsByTagName("download-file");
-		for (int i = 0; i < nlist.getLength(); i++) {
-			Element ele = (Element) nlist.item(i);
-			fileList.add(ele.getAttribute("sql"));
-			fileList.add(ele.getAttribute("data"));
-		}
-		return fileList;
-
-	}
+public class DataScale {
+	
+	private String label = "Fold change color code";
+	private double minSat = -1.5;
+	private double maxSat = 1.5;
+	private int numBins = 17;
+	
+	
 	
 	/**
-	 * Get a list of file names to be downloaded
-	 * @return List A list of file names
-	 * @throws WebcghSystemException
+	 * Constructor
+	 * @param minSat Minimum saturation value
+	 * @param maxSat Maximum saturation value
+	 *
 	 */
-	public static List getNames() throws WebcghSystemException {
-		List nameList = new ArrayList();
-		getDownloadConfigDocument();
-		if (configDoc == null)
-			throw new WebcghSystemException("Could not open download configuration file");
-		NodeList nlist = configDoc.getElementsByTagName("download-file");
-		for (int i = 0; i < nlist.getLength(); i++) {
-			Element ele = (Element) nlist.item(i);
-			nameList.add(ele.getAttribute("name"));	
-		}
-		return nameList;
+	public DataScale(double minSat, double maxSat) {
+		this.minSat = minSat;
+		this.maxSat = maxSat;
+	}
+	
+	
+	/**
+	 * Constructor
+	 * @param minSat Minimum saturation value
+	 * @param maxSat Maximum saturation value
+	 * @param numBins Number of colored bins
+	 *
+	 */
+	public DataScale(double minSat, double maxSat, int numBins) {
+		this(minSat, maxSat);
+		this.numBins = numBins;
+	}
+	
+	
+	protected double binRange() {
+		return (maxSat - minSat) / numBins;
+	}
+	
+	
+	/**
+	 * Which bin does value map to?
+	 * @param value A value
+	 * @return A bin number
+	 */
+	public int binNum(double value) {
+		int num = 0;
+		double delta = value - minSat;
+		num = (int)Math.floor(delta / binRange());
+		if (num < 0)
+			num = 0;
+		if (num > numBins - 1)
+			num = numBins - 1;
+		return num;
+	}
+	
+	
+	/**
+	 * Setter for property minSat
+	 * @param minSat Minimum saturation value
+	 */
+	public void setMinSat(double minSat) {
+		this.minSat = minSat;
+	}
+	
+	
+	/**
+	 * Getter for property minSat
+	 * @return Minimum saturation value
+	 */
+	public double getMinSat() {
+		return minSat;
+	}
+	
+	
+	/**
+	 * Setter for property maxSat
+	 * @param maxSat Maximum saturation value
+	 */
+	public void setMaxSat(double maxSat) {
+		this.maxSat = maxSat;
+	}
+	
+	
+	/**
+	 * Getter for property maxSat
+	 * @return Maximum saturation value
+	 */
+	public double getMaxSat() {
+		return maxSat;
+	}
+	
+	
+	/**
+	 * @return Label for scale
+	 */
+	public String getLabel() {
+		return label;
 	}
 
 	/**
-	 * @param args
+	 * @return Number of colored bins
 	 */
-	public static void main(String[] args) {
-		try {
-			List list = getNames();
-			for (int i = 0; i < list.size(); i++) {
-				System.out.println(list.get(i));
-			}
-		} catch (WebcghSystemException e) {
-			e.printStackTrace();
-		}
+	public int getNumBins() {
+		return numBins;
+	}
 
+	/**
+	 * @param string Label for scale
+	 */
+	public void setLabel(String string) {
+		label = string;
+	}
+
+	/**
+	 * @param i Number of colored bins
+	 */
+	public void setNumBins(int i) {
+		numBins = i;
 	}
 
 }

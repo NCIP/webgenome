@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/PlotCreationException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,47 +51,46 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+package org.rti.webcgh.deprecated;
 
-package org.rti.webcgh.plot;
+import java.awt.Color;
 
-import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.w3c.dom.Document;
+
+import junit.framework.TestCase;
 
 /**
- * Exceptions thrown during plot creation
+ * Tester for <code>ColorChooser</code>
  */
-public class PlotCreationException extends WebcghSystemException {
+public class ColorChooserTester extends TestCase {
 	
-
+	
 	/**
-	 * Constructor
+	 * 
+	 * @throws Exception
 	 */
-	public PlotCreationException() {
-		super();
-	}
-
-	/**
-	 * Constructor
-	 * @param msg A message
-	 */
-	public PlotCreationException(String msg) {
-		super(msg);
-	}
-
-	/**
-	 * Constructor
-	 * @param origThrowable An exception
-	 */
-	public PlotCreationException(Throwable origThrowable) {
-		super(origThrowable);
-	}
-
-	/**
-	 * Constructor
-	 * @param msg A message
-	 * @param origThrowable An exception
-	 */
-	public PlotCreationException(String msg, Throwable origThrowable) {
-		super(msg, origThrowable);
+	public void test1() throws Exception {
+		Document doc = RendererTesterUtils.newTestDocument();
+		DrawingCanvas canvas = new SvgDrawingCanvas(doc);
+		int edge = 10;
+		int row = 0;
+		int col = edge;
+		int numRows = 5;
+		ColorChooser cc = new ColorChooser();
+		for (int i = 0; i < numRows; i++) {
+			row += edge * 2;
+			col = edge;
+			for (int j = 0; j < 7; j++) {
+				Color color = cc.nextColor();
+				GraphicRect rect = new GraphicRect(col, row, edge, edge, color);
+				canvas.add(rect);
+				col += edge * 2;
+			}
+		}
+		RendererTesterUtils.writeDocument(doc, "color-chooser.svg");
 	}
 
 }

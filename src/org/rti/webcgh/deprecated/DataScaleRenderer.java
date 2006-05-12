@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/common/renderer/DataScaleRenderer.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 15:18:37 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot.common.renderer;
+package org.rti.webcgh.deprecated;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
@@ -62,7 +62,6 @@ import org.rti.webcgh.drawing.GraphicRect;
 import org.rti.webcgh.drawing.GraphicText;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
-import org.rti.webcgh.plot.common.DataScale;
 
 /**
  * Renders data scale

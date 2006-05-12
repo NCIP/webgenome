@@ -58,7 +58,7 @@ import java.util.Map;
 
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.plot.ColorChooser;
+import org.rti.webcgh.deprecated.ColorChooser;
 
 /**
  * Parameters for a plot

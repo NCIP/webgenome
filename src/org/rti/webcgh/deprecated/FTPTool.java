@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/cron/util/FTPTool.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.cron.util;
+package org.rti.webcgh.deprecated;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +60,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.cron.util.AnnotationUtils;
+import org.rti.webcgh.deprecated.AnnotationUtils;
 import org.rti.webcgh.util.SystemUtils;
 
 import com.enterprisedt.net.ftp.FTPClient;

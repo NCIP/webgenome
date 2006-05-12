@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/common/DataScale.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,132 +51,116 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
-package org.rti.webcgh.plot.common;
-
-
+package org.rti.webcgh.deprecated;
 
 /**
- * Graphical color coded data scale showing the intensity of expression.
+ * Captures the 2-D space a rendered plot element occupies
  */
-public class DataScale {
+public class RenderedPlotElementExtent {
 	
-	private String label = "Fold change color code";
-	private double minSat = -1.5;
-	private double maxSat = 1.5;
-	private int numBins = 17;
-	
-	
-	
-	/**
-	 * Constructor
-	 * @param minSat Minimum saturation value
-	 * @param maxSat Maximum saturation value
-	 *
-	 */
-	public DataScale(double minSat, double maxSat) {
-		this.minSat = minSat;
-		this.maxSat = maxSat;
-	}
+	private int x = 0;
+	private int y = 0;
+	private int width = 0;
+	private int height = 0;
 	
 	
 	/**
 	 * Constructor
-	 * @param minSat Minimum saturation value
-	 * @param maxSat Maximum saturation value
-	 * @param numBins Number of colored bins
 	 *
 	 */
-	public DataScale(double minSat, double maxSat, int numBins) {
-		this(minSat, maxSat);
-		this.numBins = numBins;
-	}
+	public RenderedPlotElementExtent() {}
 	
 	
-	protected double binRange() {
-		return (maxSat - minSat) / numBins;
+	/**
+	 * Constructor
+	 * @param x X-coordinate
+	 * @param y Y-coordinate
+	 * @param width Width
+	 * @param height Height
+	 */
+	public RenderedPlotElementExtent
+	(
+		int x, int y, int width, int height
+	) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 	
 	
 	/**
-	 * Which bin does value map to?
-	 * @param value A value
-	 * @return A bin number
+	 * Set all properties
+	 * @param x X-coordinate
+	 * @param y Y-cordinate
+	 * @param width Width
+	 * @param height Height
 	 */
-	public int binNum(double value) {
-		int num = 0;
-		double delta = value - minSat;
-		num = (int)Math.floor(delta / binRange());
-		if (num < 0)
-			num = 0;
-		if (num > numBins - 1)
-			num = numBins - 1;
-		return num;
+	public void setExtent
+	(
+		int x, int y, int width, int height
+	) {
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
 	}
 	
-	
+
 	/**
-	 * Setter for property minSat
-	 * @param minSat Minimum saturation value
+	 * @return Height in pixels
 	 */
-	public void setMinSat(double minSat) {
-		this.minSat = minSat;
-	}
-	
-	
-	/**
-	 * Getter for property minSat
-	 * @return Minimum saturation value
-	 */
-	public double getMinSat() {
-		return minSat;
-	}
-	
-	
-	/**
-	 * Setter for property maxSat
-	 * @param maxSat Maximum saturation value
-	 */
-	public void setMaxSat(double maxSat) {
-		this.maxSat = maxSat;
-	}
-	
-	
-	/**
-	 * Getter for property maxSat
-	 * @return Maximum saturation value
-	 */
-	public double getMaxSat() {
-		return maxSat;
-	}
-	
-	
-	/**
-	 * @return Label for scale
-	 */
-	public String getLabel() {
-		return label;
+	public int getHeight() {
+		return height;
 	}
 
 	/**
-	 * @return Number of colored bins
+	 * @return Width in pixels
 	 */
-	public int getNumBins() {
-		return numBins;
+	public int getWidth() {
+		return width;
 	}
 
 	/**
-	 * @param string Label for scale
+	 * @return X-coordinate of "top left" corner
 	 */
-	public void setLabel(String string) {
-		label = string;
+	public int getX() {
+		return x;
 	}
 
 	/**
-	 * @param i Number of colored bins
+	 * @return Y-coorinate of "top left" corner
 	 */
-	public void setNumBins(int i) {
-		numBins = i;
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * @param i Height in pixels
+	 */
+	public void setHeight(int i) {
+		height = i;
+	}
+
+	/**
+	 * @param i Width in pixels
+	 */
+	public void setWidth(int i) {
+		width = i;
+	}
+
+	/**
+	 * @param i X-coordinate of "top left" corner
+	 */
+	public void setX(int i) {
+		x = i;
+	}
+
+	/**
+	 * @param i Y-coordinate of "top left" corner
+	 */
+	public void setY(int i) {
+		y = i;
 	}
 
 }

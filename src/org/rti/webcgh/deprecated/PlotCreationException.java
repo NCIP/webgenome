@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/cron/util/JCopy.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -52,50 +52,46 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webcgh.cron.util;
+package org.rti.webcgh.deprecated;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
- * This class copies a file from one location to another location
+ * Exceptions thrown during plot creation
  */
-public class JCopy {
+public class PlotCreationException extends WebcghSystemException {
+	
 
 	/**
-	 * Copy the source file to target location
-	 * @param in Source file
-	 * @param out Target File
-	 * @throws Exception
+	 * Constructor
 	 */
-	public void copyFile(File in, File out) throws Exception {
-		FileInputStream fis = new FileInputStream(in);
-		FileOutputStream fos = new FileOutputStream(out);
-		byte[] buf = new byte[1024];
-		int i = 0;
-		while ((i = fis.read(buf)) != -1) {
-			fos.write(buf, 0, i);
-		}
-		fis.close();
-		fos.close();
-		System.out.println("File " + in.getName() + " copied.");
+	public PlotCreationException() {
+		super();
 	}
 
 	/**
-	 * Main method to test class functions
-	 * @param args
+	 * Constructor
+	 * @param msg A message
 	 */
-	public static void main(String args[]) {
-		try {
-			JCopy j = new JCopy();
-			String localPath = System.getProperty("user.dir");
-			String input = localPath + "/etc/";
-			String output = localPath + "/web/WEB-INF/classes/";
-			String fileName = "knownGene.txt";
-			j.copyFile(new File(input + fileName), new File(output + fileName));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public PlotCreationException(String msg) {
+		super(msg);
 	}
+
+	/**
+	 * Constructor
+	 * @param origThrowable An exception
+	 */
+	public PlotCreationException(Throwable origThrowable) {
+		super(origThrowable);
+	}
+
+	/**
+	 * Constructor
+	 * @param msg A message
+	 * @param origThrowable An exception
+	 */
+	public PlotCreationException(String msg, Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
+
 }

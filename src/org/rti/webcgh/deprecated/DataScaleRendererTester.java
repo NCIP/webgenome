@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/RenderingException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,46 +51,63 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot;
+package org.rti.webcgh.deprecated;
 
-import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.w3c.dom.Document;
+
+import junit.framework.TestCase;
 
 /**
- * Exception thrown when system is unable to render a plot with
- * given parameters.
+ *  Tester for DataScaleRenderer
  */
-public class RenderingException extends WebcghApplicationException {
-
+public class DataScaleRendererTester extends TestCase {
+	
+	private Document doc = null;
+	private DrawingCanvas canvas = null;
+	private DataScaleRenderer r = null;
+	
+	
 	/**
-	 *  Constructor
+	 * @throws Exception
 	 */
-	public RenderingException() {
-		super();
+	public void setUp() throws Exception {
+		doc = RendererTesterUtils.newTestDocument();
+		DrawingCanvas parent = new SvgDrawingCanvas(doc);
+		canvas = parent.newTile();
+		parent.add(canvas, 200, 0);
+		r = new DataScaleRenderer();
 	}
-
+	
+	
 	/**
-	 * Constructor
-	 * @param msg Message
+	 * @throws Exception
 	 */
-	public RenderingException(String msg) {
-		super(msg);
+	public void testSymmetrical() throws Exception {
+		DataScale scale = new DataScale(-5.0, 5.0);
+		r.render(canvas, scale);
+		RendererTesterUtils.writeDocument(doc, "data-scale-symm.svg");
 	}
-
+	
+	
 	/**
-	 * Constructor
-	 * @param origThrowable Original exception
+	 * @throws Exception
 	 */
-	public RenderingException(Throwable origThrowable) {
-		super(origThrowable);
+	public void testShortLeft() throws Exception {
+		DataScale scale = new DataScale(-0.1, 5.0);
+		r.render(canvas, scale);
+		RendererTesterUtils.writeDocument(doc, "data-scale-short-left.svg");
 	}
-
+	
+	
 	/**
-	 * Constructor
-	 * @param msg Message
-	 * @param origThrowable Original exception
+	 * @throws Exception
 	 */
-	public RenderingException(String msg, Throwable origThrowable) {
-		super(msg, origThrowable);
+	public void testShortRight() throws Exception {
+		DataScale scale = new DataScale(-5.0, 0.1);
+		r.render(canvas, scale);
+		RendererTesterUtils.writeDocument(doc, "data-scale-short-right.svg");
 	}
 
 }

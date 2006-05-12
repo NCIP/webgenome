@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/cron/main/IndexFileGenerator.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.cron.main;
+package org.rti.webcgh.deprecated;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,10 +60,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.cron.util.AnnotationUtils;
-import org.rti.webcgh.cron.util.FTPTool;
-import org.rti.webcgh.cron.util.GUnzipper;
-import org.rti.webcgh.cron.util.JCopy;
 //import org.rti.webcgh.dao.impl.util.FeatureIndex;
 import org.rti.webcgh.util.SystemUtils;
 

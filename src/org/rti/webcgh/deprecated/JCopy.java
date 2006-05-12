@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/plot/unit_test/ColorChooserTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,47 +51,51 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot.unit_test;
 
-import java.awt.Color;
+package org.rti.webcgh.deprecated;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicRect;
-import org.rti.webcgh.drawing.SvgDrawingCanvas;
-import org.rti.webcgh.plot.ColorChooser;
-import org.w3c.dom.Document;
-
-import junit.framework.TestCase;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
- * Tester for <code>ColorChooser</code>
+ * This class copies a file from one location to another location
  */
-public class ColorChooserTester extends TestCase {
-	
-	
+public class JCopy {
+
 	/**
-	 * 
+	 * Copy the source file to target location
+	 * @param in Source file
+	 * @param out Target File
 	 * @throws Exception
 	 */
-	public void test1() throws Exception {
-		Document doc = RendererTesterUtils.newTestDocument();
-		DrawingCanvas canvas = new SvgDrawingCanvas(doc);
-		int edge = 10;
-		int row = 0;
-		int col = edge;
-		int numRows = 5;
-		ColorChooser cc = new ColorChooser();
-		for (int i = 0; i < numRows; i++) {
-			row += edge * 2;
-			col = edge;
-			for (int j = 0; j < 7; j++) {
-				Color color = cc.nextColor();
-				GraphicRect rect = new GraphicRect(col, row, edge, edge, color);
-				canvas.add(rect);
-				col += edge * 2;
-			}
+	public void copyFile(File in, File out) throws Exception {
+		FileInputStream fis = new FileInputStream(in);
+		FileOutputStream fos = new FileOutputStream(out);
+		byte[] buf = new byte[1024];
+		int i = 0;
+		while ((i = fis.read(buf)) != -1) {
+			fos.write(buf, 0, i);
 		}
-		RendererTesterUtils.writeDocument(doc, "color-chooser.svg");
+		fis.close();
+		fos.close();
+		System.out.println("File " + in.getName() + " copied.");
 	}
 
+	/**
+	 * Main method to test class functions
+	 * @param args
+	 */
+	public static void main(String args[]) {
+		try {
+			JCopy j = new JCopy();
+			String localPath = System.getProperty("user.dir");
+			String input = localPath + "/etc/";
+			String output = localPath + "/web/WEB-INF/classes/";
+			String fileName = "knownGene.txt";
+			j.copyFile(new File(input + fileName), new File(output + fileName));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
