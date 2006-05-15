@@ -56,7 +56,7 @@ import java.awt.Color;
 import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.PlotElement;
@@ -200,11 +200,11 @@ public class Axis implements PlotElement {
     public void paint(DrawingCanvas canvas) {
         
         // Paint main axis line
-        GraphicLine line = null;
+        Line line = null;
         if (this.orientation == Orientation.HORIZONTAL)
-            line = new GraphicLine(0, 0, this.length, 0, this.lineThickness, this.color);
+            line = new Line(0, 0, this.length, 0, this.lineThickness, this.color);
         else if (this.orientation == Orientation.VERTICAL)
-            line = new GraphicLine(0, 0, 0, this.length, this.lineThickness, this.color);
+            line = new Line(0, 0, 0, this.length, this.lineThickness, this.color);
         canvas.add(line);
         
         // Set up for generating tic marks

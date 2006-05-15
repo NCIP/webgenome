@@ -56,7 +56,7 @@ import java.awt.Color;
 
 import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.widgit.ChromosomeEndCap;
@@ -80,9 +80,9 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
         tile = this.drawingCanvas.newTile();
         this.drawingCanvas.add(tile, x, y);
         int length = 100;
-        this.drawingCanvas.add(new GraphicLine(x - length / 2, y, x + length / 2, 
+        this.drawingCanvas.add(new Line(x - length / 2, y, x + length / 2, 
                 y, 2, Color.black));
-        this.drawingCanvas.add(new GraphicLine(x, y - length / 2, x, 
+        this.drawingCanvas.add(new Line(x, y - length / 2, x, 
                 y + length / 2, 2, Color.black));
     }
     

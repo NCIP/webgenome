@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/ScatterPlot.java,v $
-$Revision: 1.2 $
-$Date: 2006-02-16 14:05:43 $
+$Revision: 1.3 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,10 +62,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicCircle;
+import org.rti.webcgh.drawing.Circle;
 import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.drawing.GraphicPolyline;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.Polyline;
 
 /**
  * 
@@ -377,11 +377,11 @@ public class ScatterPlot extends BasePlot implements Plot {
      * @param drawingCanvas A drawing canvas
      */
     private void paintLines(DataPoint[] dataPoints, Color color, DrawingCanvas drawingCanvas) {
-        GraphicPolyline polyline = new GraphicPolyline(this.lineWidth, this.maxNumPointsInLine, color);
+        Polyline polyline = new Polyline(this.lineWidth, this.maxNumPointsInLine, color);
         for (int i = 1; i < dataPoints.length; i++) {
             if (i % this.maxNumPointsInLine == 0) {
                 drawingCanvas.add(polyline, false);
-                polyline = new GraphicPolyline(this.lineWidth, this.maxNumPointsInLine, color);
+                polyline = new Polyline(this.lineWidth, this.maxNumPointsInLine, color);
             }
             DataPoint point1 = dataPoints[i - 1];
             DataPoint point2 = dataPoints[i];
@@ -401,7 +401,7 @@ public class ScatterPlot extends BasePlot implements Plot {
             if (runsOff) {
                 if (! polyline.empty()) {
                     drawingCanvas.add(polyline, false);
-                    polyline = new GraphicPolyline(this.lineWidth, this.maxNumPointsInLine, color);
+                    polyline = new Polyline(this.lineWidth, this.maxNumPointsInLine, color);
                 }
             }
         }
@@ -410,7 +410,7 @@ public class ScatterPlot extends BasePlot implements Plot {
     }
     
     private void drawPoint(int x, int y, Color color, String label, DrawingCanvas drawingCanvas) {
-        GraphicCircle circle = new GraphicCircle(x, y, this.pointRadius, color);
+        Circle circle = new Circle(x, y, this.pointRadius, color);
         circle.setToolTipText(label);
         drawingCanvas.add(circle, false);
     }
@@ -426,15 +426,15 @@ public class ScatterPlot extends BasePlot implements Plot {
         int x2 = x1 + this.errorBarHatchLength;
         
         // Vertical line
-        GraphicLine line = new GraphicLine(x, y1, x, y2, this.lineWidth, color);
+        Line line = new Line(x, y1, x, y2, this.lineWidth, color);
         drawingCanvas.add(line, false);
         
         // Top horizontal line
-        line = new GraphicLine(x1, y1, x2, y1, this.lineWidth, color);
+        line = new Line(x1, y1, x2, y1, this.lineWidth, color);
         drawingCanvas.add(line, false);
         
         // Bottom horizontal line
-        line = new GraphicLine(x1, y2, x2, y2, this.lineWidth, color);
+        line = new Line(x1, y2, x2, y2, this.lineWidth, color);
         drawingCanvas.add(line, false);
     }
     

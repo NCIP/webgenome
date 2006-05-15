@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/unit_test/PolylineTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 17:16:23 $
+$Revision: 1.3 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,7 @@ package org.rti.webcgh.drawing.unit_test;
 import java.awt.Point;
 
 import org.rti.webcgh.deprecated.Line;
-import org.rti.webcgh.drawing.GraphicPolyline;
+import org.rti.webcgh.drawing.Polyline;
 
 import junit.framework.TestCase;
 
@@ -88,7 +88,7 @@ public class PolylineTester extends TestCase {
 	 *
 	 */
 	public void testAddPoint() {
-		GraphicPolyline poly = new GraphicPolyline();
+		Polyline poly = new Polyline();
 		poly.add(p1);
 		poly.add(p2);
 		poly.add(p3);
@@ -104,11 +104,11 @@ public class PolylineTester extends TestCase {
 		Line l1 = new Line(p1, p2);
 		Line l2 = new Line(p2, p3);
 		Line l3 = new Line(p3, p4);
-		GraphicPolyline poly1 = new GraphicPolyline();
+		Polyline poly1 = new Polyline();
 		poly1.add(l1);
 		poly1.add(l2);
 		assertTrue(poly1.getPoints().size() == 3);
-		GraphicPolyline poly2 = new GraphicPolyline();
+		Polyline poly2 = new Polyline();
 		poly2.add(l1);
 		poly2.add(l3);
 		assertTrue(poly2.getPoints().size() == 4);

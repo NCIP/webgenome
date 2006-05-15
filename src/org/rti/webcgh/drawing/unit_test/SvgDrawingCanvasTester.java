@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/unit_test/SvgDrawingCanvasTester.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-12 17:17:29 $
+$Revision: 1.4 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,11 +61,11 @@ import junit.framework.TestCase;
 
 import org.rti.webcgh.deprecated.RendererTesterUtils;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicCircle;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.drawing.GraphicPolyline;
-import org.rti.webcgh.drawing.GraphicRect;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Circle;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.Polyline;
+import org.rti.webcgh.drawing.Rectangle;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.rti.webcgh.drawing.SvgElementFactory;
@@ -82,11 +82,11 @@ public class SvgDrawingCanvasTester extends TestCase {
 	protected Document doc = null;
 	protected DrawingCanvas canvas = null;
 	protected SvgElementFactory factory = null;
-	protected GraphicCircle circle = null;
-	protected GraphicLine line = null;
-	protected GraphicPolyline poly = null;
-	protected GraphicRect rect = null;
-	protected GraphicText text = null;
+	protected Circle circle = null;
+	protected Line line = null;
+	protected Polyline poly = null;
+	protected Rectangle rect = null;
+	protected Text text = null;
 	
 	
 	/**
@@ -97,10 +97,10 @@ public class SvgDrawingCanvasTester extends TestCase {
 		factory = new SvgElementFactory(doc);
 		Element e = RendererTesterUtils.getInsertionPoint(doc);
 		canvas = new SvgDrawingCanvas(doc);
-		circle = new GraphicCircle(50, 50, 10, Color.green);
-		line = new GraphicLine(10, 10, 50, 50, 5, Color.red);
-		poly = new GraphicPolyline(1, 10, Color.blue);
-		rect = new GraphicRect(70, 70, 50, 15, Color.black);
+		circle = new Circle(50, 50, 10, Color.green);
+		line = new Line(10, 10, 50, 50, 5, Color.red);
+		poly = new Polyline(1, 10, Color.blue);
+		rect = new Rectangle(70, 70, 50, 15, Color.black);
 		text = new SvgGraphicText("Hello", 100, 100, 12, HorizontalAlignment.CENTERED, Color.cyan);
 		poly.add(new Point(10, 10));
 		poly.add(new Point(10, 100));

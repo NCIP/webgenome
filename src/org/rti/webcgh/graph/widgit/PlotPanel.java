@@ -80,7 +80,7 @@ public class PlotPanel implements PlotElement {
     private Point bottomRightAlignmentPoint = new Point(0, 0);
     private int padding = 10;
     private Color color = new Color(235, 235, 235);
-    private DrawingCanvas drawingCanvas = null;
+    protected DrawingCanvas drawingCanvas = null;
     private int numElements = 0;
     private int margins = 0;
     

@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicLine.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -57,76 +57,75 @@ package org.rti.webcgh.drawing;
 import java.awt.Color;
 
 /**
- * Represents a line
+ * Rectangle
  */
-public class GraphicLine extends GraphicPrimitive {
+public class Rectangle extends GraphicPrimitive {
 	
 	
-	private int x1 = 0;
-	private int y1 = 0;
-	private int x2 = 0;
-	private int y2 = 0;
-	private int width = 2;
+	private int x = 0;
+	private int y = 0;
+	private int width = 0;
+	private int height = 0;
+	private boolean filled = true;
 	
 	
 	/**
 	 * Constructor
 	 *
 	 */
-	public GraphicLine() {}
+	public Rectangle() {}
 	
 	
 	/**
 	 * Constructor
-	 * @param x1 X-coordinate of first end
-	 * @param y1 Y-coordinate of first end
-	 * @param x2 X-coordinate of second end
-	 * @param y2 X-coordinate of second end
-	 * @param width Width of line
-	 * @param color Color of line
+	 * @param x X-coordinate
+	 * @param y Y-coordinate
+	 * @param width Width
+	 * @param height Height
+	 * @param color Color
 	 */
-	public GraphicLine(int x1, int y1, int x2, int y2, int width, Color color) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+	public Rectangle(int x, int y, int width, int height, Color color) {
+		this.x = x;
+		this.y = y;
 		this.width = width;
+		this.height = height;
 		this.color = color;
+	}
+	
+
+	/**
+	 * @return Height of rectangle
+	 */
+	public int getHeight() {
+		return height;
 	}
 
 	/**
-	 * @return Width
+	 * @return Width of rectangle
 	 */
 	public int getWidth() {
 		return width;
 	}
 
 	/**
-	 * @return X-coordinate of first endpoint
+	 * @return X-coordinate of top left point
 	 */
-	public int getX1() {
-		return x1;
+	public int getX() {
+		return x;
 	}
 
 	/**
-	 * @return X-coordinate of second endpoint
+	 * @return Y-coordinate of bottom left point
 	 */
-	public int getX2() {
-		return x2;
+	public int getY() {
+		return y;
 	}
 
 	/**
-	 * @return Y-coordinate of first endpoint
+	 * @param i Height
 	 */
-	public int getY1() {
-		return y1;
-	}
-
-	/**
-	 * @return Y-coordinate of second endpoint
-	 */
-	public int getY2() {
-		return y2;
+	public void setHeight(int i) {
+		height = i;
 	}
 
 	/**
@@ -137,31 +136,31 @@ public class GraphicLine extends GraphicPrimitive {
 	}
 
 	/**
-	 * @param i X-coordinate of first endpoint
+	 * @param i X-coordinate of top left point
 	 */
-	public void setX1(int i) {
-		x1 = i;
+	public void setX(int i) {
+		x = i;
 	}
 
 	/**
-	 * @param i X-coordinate of second endpoint
+	 * @param i Y-coordinate of top left point
 	 */
-	public void setX2(int i) {
-		x2 = i;
+	public void setY(int i) {
+		y = i;
 	}
 
 	/**
-	 * @param i Y-coordinate of first endpoint
+	 * @return Is rect filled in?
 	 */
-	public void setY1(int i) {
-		y1 = i;
+	public boolean isFilled() {
+		return filled;
 	}
 
 	/**
-	 * @param i Y-coordinate of second endpoint
+	 * @param b Is rect filled in?
 	 */
-	public void setY2(int i) {
-		y2 = i;
+	public void setFilled(boolean b) {
+		filled = b;
 	}
 
 }

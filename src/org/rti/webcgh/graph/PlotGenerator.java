@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.8 $
-$Date: 2006-05-12 15:18:37 $
+$Revision: 1.9 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,7 +79,7 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
@@ -220,7 +220,7 @@ public class PlotGenerator {
         // Add background and matte to drawing canvas and associate event listeners with these
         int width = plotPanel.width() + this.padding * 2;
         int height = plotPanel.height() + this.padding * 2;
-        GraphicRect background = new GraphicRect(0, 0, width, height, this.matteColor);
+        Rectangle background = new Rectangle(0, 0, width, height, this.matteColor);
         background.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
         background.addGraphicEventResponse(GraphicEvent.mouseClickEvent, "noHighlight()");
         canvas.add(background);

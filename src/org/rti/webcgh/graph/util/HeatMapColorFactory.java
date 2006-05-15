@@ -56,8 +56,8 @@ import java.awt.Color;
 import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicRect;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Rectangle;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.graph.PlotElement;
 
@@ -187,7 +187,7 @@ public class HeatMapColorFactory implements PlotElement {
         for (int i = 0; i <= this.maxBinIndex; i++) {
             int x = binWidth * i;
             int y = 0;
-            GraphicRect rect = new GraphicRect(x, y, binWidth, this.scaleHeight, this.binColors[i]);
+            Rectangle rect = new Rectangle(x, y, binWidth, this.scaleHeight, this.binColors[i]);
             canvas.add(rect);
         }
         
@@ -364,7 +364,7 @@ public class HeatMapColorFactory implements PlotElement {
         int x = this.pixel(value);
         String txt = this.formatter.format(value);
         int width = canvas.renderedWidth(txt, this.fontSize);
-        GraphicText graphic = canvas.newGraphicText(txt, x, y, this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
+        Text graphic = canvas.newGraphicText(txt, x, y, this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
         canvas.add(graphic);
         int candidateMin = x - width / 2;
         if (candidateMin < this.minX)

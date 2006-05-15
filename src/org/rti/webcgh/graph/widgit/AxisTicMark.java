@@ -60,8 +60,8 @@ import java.net.URL;
 
 import org.rti.webcgh.drawing.Cursor;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Hyperlink;
 import org.rti.webcgh.drawing.Location;
@@ -309,14 +309,14 @@ public class AxisTicMark implements Serializable {
 	
 	
 	private void drawLine(DrawingCanvas canvas) {
-	    GraphicLine line = new GraphicLine(this.lineX1, this.lineY1, this.lineX2, this.lineY2,
+	    Line line = new Line(this.lineX1, this.lineY1, this.lineX2, this.lineY2,
 	        this.lineThickness, this.color);
 	    canvas.add(line);
 	}
 	
 	
 	private void drawText(DrawingCanvas canvas) {
-	    GraphicText text = canvas.newGraphicText(this.label, this.textX, this.textY,
+	    Text text = canvas.newGraphicText(this.label, this.textX, this.textY,
 	        this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED, this.color);
 	    if (this.link != null) {
 	        text.setHyperlink(new Hyperlink(this.link));

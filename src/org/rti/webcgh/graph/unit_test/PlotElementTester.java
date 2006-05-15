@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotElementTester.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-12 15:18:37 $
+$Revision: 1.4 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ package org.rti.webcgh.graph.unit_test;
 import java.awt.Color;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
@@ -90,7 +90,7 @@ public class PlotElementTester extends BasePlottingTester {
         //panel.add(xPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
         panel.add(yPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
         this.drawingCanvas.add(tile, -panel.topLeftPoint().x, -panel.topLeftPoint().y);
-        this.drawingCanvas.add(new GraphicLine(0, panel.height(), panel.width(), 
+        this.drawingCanvas.add(new Line(0, panel.height(), panel.width(), 
         		panel.height(), 2, Color.red));
         PlotTesterUtils.writeDocument(this.document, "two-axes.svg");
     }

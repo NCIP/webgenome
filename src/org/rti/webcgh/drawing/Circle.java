@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicCircle.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,7 @@ import java.awt.Color;
 /**
  * A circle
  */
-public class GraphicCircle extends GraphicPrimitive {
+public class Circle extends GraphicPrimitive {
 	
 	
 	private int x = 0;
@@ -74,7 +74,7 @@ public class GraphicCircle extends GraphicPrimitive {
 	 * @param radius Radius
 	 * @param color Color
 	 */
-	public GraphicCircle(int x, int y, int radius, Color color) {
+	public Circle(int x, int y, int radius, Color color) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;

@@ -54,180 +54,34 @@ package org.rti.webcgh.graph.widgit.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widgit.Caption;
 
 /**
  * Tester for Caption
  */
-public class CaptionTester extends BasePlottingTester {
-    
-    
-    private String captionText = "Log2 Ratio";
-    private DrawingCanvas tile = null;
-    
-    
-    /**
-     * 
-     */
-    public void setUp() {
-        super.setUp();
-        this.tile = this.drawingCanvas.newTile();
-        int x = 0;
-        int y = 0;
-        int lineLength = 100;
-        this.drawingCanvas.add(this.tile, 300, 300);
-        tile.add(new GraphicLine(x - lineLength / 2, y, x + lineLength / 2, y, 1, Color.black));
-        tile.add(new GraphicLine(x, y - lineLength / 2, x, y + lineLength / 2, 1, Color.black));
-    }
-    
+public class CaptionTester extends TestCase {
+        
     
     /**
      * 
      *
      */
-    public void testHorizLeftOneLine() {
-        Caption caption = new Caption(this.captionText, Orientation.HORIZONTAL, false);
-        caption.setTextAlignment(HorizontalAlignment.LEFT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-horiz-left-one-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testHorizCenterOneLine() {
-        Caption caption = new Caption(this.captionText, Orientation.HORIZONTAL, false);
+    public void test1() {
+    	SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        Caption caption = new Caption("Center horizontal caption", Orientation.HORIZONTAL, true);
         caption.setTextAlignment(HorizontalAlignment.CENTERED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-horiz-center-one-line.svg");
+        panel.add(caption, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.setDrawBorder(true);
+        panel.toSvgFile("caption-horiz-left-one-line.svg");
     }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testHorizRightOneLine() {
-        Caption caption = new Caption(this.captionText, Orientation.HORIZONTAL, false);
-        caption.setTextAlignment(HorizontalAlignment.RIGHT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-horiz-right-one-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertLeftOneLine() {
-        Caption caption = new Caption(this.captionText, Orientation.VERTICAL, false);
-        caption.setTextAlignment(HorizontalAlignment.LEFT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-vert-left-one-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertCenterOneLine() {
-        Caption caption = new Caption(this.captionText, Orientation.VERTICAL, false);
-        caption.setTextAlignment(HorizontalAlignment.CENTERED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-vert-center-one-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertRightOneLine() {
-        Caption caption = new Caption(this.captionText, Orientation.VERTICAL, false);
-        caption.setTextAlignment(HorizontalAlignment.RIGHT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-vert-right-one-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testHorizLeftMultiLine() {
-        Caption caption = new Caption(this.captionText, Orientation.HORIZONTAL, true);
-        caption.setTextAlignment(HorizontalAlignment.LEFT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-horiz-left-multi-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testHorizCenterMultiLine() {
-        Caption caption = new Caption(this.captionText, Orientation.HORIZONTAL, true);
-        caption.setTextAlignment(HorizontalAlignment.CENTERED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-horiz-center-multi-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testHorizRightMultiLine() {
-        Caption caption = new Caption(this.captionText, Orientation.HORIZONTAL, true);
-        caption.setTextAlignment(HorizontalAlignment.RIGHT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-horiz-right-multi-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertLeftMultiLine() {
-        Caption caption = new Caption(this.captionText, Orientation.VERTICAL, true);
-        caption.setTextAlignment(HorizontalAlignment.LEFT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-vert-left-multi-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertCenterMultiLine() {
-        Caption caption = new Caption(this.captionText, Orientation.VERTICAL, true);
-        caption.setTextAlignment(HorizontalAlignment.CENTERED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-vert-center-multi-line.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertRightMultiLine() {
-        Caption caption = new Caption(this.captionText, Orientation.VERTICAL, true);
-        caption.setTextAlignment(HorizontalAlignment.RIGHT_JUSTIFIED);
-        caption.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "caption-vert-right-multi-line.svg");
-    }
-
 }

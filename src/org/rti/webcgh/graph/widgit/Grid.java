@@ -59,7 +59,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.PlotElement;
 
@@ -153,19 +153,19 @@ public class Grid implements PlotElement {
                 y1 = 0;
                 y2 = this.height;
             }
-            GraphicLine line = new GraphicLine(x1, y1, x2, y2, this.gridMarkThickness, this.color);
+            Line line = new Line(x1, y1, x2, y2, this.gridMarkThickness, this.color);
             canvas.add(line);
         }
         
         // Add zero point
         if (this.zeroPointSet) {
-        	GraphicLine line = null;
+        	Line line = null;
         	if (this.orientation == Orientation.HORIZONTAL) {
         		int y = this.height - this.zeroPointLocation;
-        		line = new GraphicLine(0, y, this.width, y, this.gridMarkThickness, 
+        		line = new Line(0, y, this.width, y, this.gridMarkThickness, 
         				this.zeroMarkColor);
         	} else if (this.orientation == Orientation.VERTICAL) {
-        		line = new GraphicLine(this.zeroPointLocation, 0, this.zeroPointLocation,
+        		line = new Line(this.zeroPointLocation, 0, this.zeroPointLocation,
         				this.height, this.gridMarkThickness, this.zeroMarkColor);
         	}
         	canvas.add(line);

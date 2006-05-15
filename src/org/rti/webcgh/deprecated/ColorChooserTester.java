@@ -56,7 +56,7 @@ package org.rti.webcgh.deprecated;
 import java.awt.Color;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.w3c.dom.Document;
 
@@ -85,7 +85,7 @@ public class ColorChooserTester extends TestCase {
 			col = edge;
 			for (int j = 0; j < 7; j++) {
 				Color color = cc.nextColor();
-				GraphicRect rect = new GraphicRect(col, row, edge, edge, color);
+				Rectangle rect = new Rectangle(col, row, edge, edge, color);
 				canvas.add(rect);
 				col += edge * 2;
 			}

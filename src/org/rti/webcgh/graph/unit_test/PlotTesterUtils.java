@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotTesterUtils.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 19:06:50 $
+$Revision: 1.3 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,7 @@ import java.io.FileOutputStream;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.unit_test.UnitTestUtils;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -127,10 +127,10 @@ public class PlotTesterUtils {
 	public static void addFrame(DrawingCanvas canvas, int width, int height) {
 	    int lineWidth = 2;
 	    Color color = Color.black;
-	    canvas.add(new GraphicLine(0, 0, width, 0, lineWidth, color));
-	    canvas.add(new GraphicLine(0, 0, 0, height, lineWidth, color));
-	    canvas.add(new GraphicLine(0, height, width, height, lineWidth, color));
-	    canvas.add(new GraphicLine(width, height, width, 0, lineWidth, color));
+	    canvas.add(new Line(0, 0, width, 0, lineWidth, color));
+	    canvas.add(new Line(0, 0, 0, height, lineWidth, color));
+	    canvas.add(new Line(0, height, width, height, lineWidth, color));
+	    canvas.add(new Line(width, height, width, 0, lineWidth, color));
 	}
     
 

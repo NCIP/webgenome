@@ -58,8 +58,8 @@ import java.text.DecimalFormat;
 import java.util.Locale;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicRect;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Rectangle;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
 
@@ -117,7 +117,7 @@ public class DataScaleRenderer {
 		int x = - (canvas.renderedWidth(label, fontSize) + padding);
 		int y = scaleHeight / 2 + fontSize / 2;
 		if (label != null) {
-			GraphicText text = canvas.newGraphicText(label, x, y, 
+			Text text = canvas.newGraphicText(label, x, y, 
 			   fontSize, HorizontalAlignment.LEFT_JUSTIFIED, labelColor);
 			canvas.add(text);
 		}
@@ -137,7 +137,7 @@ public class DataScaleRenderer {
 			int x = scaleX + binWidth * i;
 			double value = minSat + binRange * (double)i;
 			Color color = fac.getColor(value);
-			GraphicRect rect = new GraphicRect(x, scaleY, binWidth, 
+			Rectangle rect = new Rectangle(x, scaleY, binWidth, 
 			   scaleHeight, color);
 			canvas.add(rect);
 		}

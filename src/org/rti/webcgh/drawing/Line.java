@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicPolygon.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-21 15:48:55 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,90 +50,118 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
+
 package org.rti.webcgh.drawing;
 
 import java.awt.Color;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.rti.webcgh.util.CollectionUtils;
 
 /**
- * A polygon
+ * Represents a line
  */
-public class GraphicPolygon extends GraphicPrimitive {
-    
-    
-    // ==============================
-    //      Attributes
-    // ==============================
-    
-    private List points = new ArrayList();
-    
-    
-    /**
-     * Set points
-     * @return Points
-     */
-    public Point[] getPoints() {
-    	Point[] newPoints = new Point[0];
-    	newPoints = (Point[])this.points.toArray(newPoints);
-        return newPoints;
-    }
-    
-    
-    /**
-     * Get points
-     * @param points Points
-     */
-    public void setPoints(Point[] points) {
-        this.points = CollectionUtils.arrayToArrayList(points);
-    }
-    
-    
-    // ==================================
-    //      Constructors
-    // ==================================
-    
-    /**
-     * Constructor
-     * @param points Points
-     * @param color Color
-     */
-    public GraphicPolygon(Point[] points, Color color) {
-        this.setPoints(points);
-        this.color = color;
-    }
-    
-    
-    
-    // =================================================
-    //        Public methods
-    // =================================================
-    
-    /**
-     * Add a point
-     * @param point A point
-     */
-    public void addPoint(Point point) {
-        this.points.add(point);
-    }
-    
-    
-    public String toPrettyString() {
-    	StringBuffer buff = new StringBuffer("[");
-    	if (this.points != null) {
-    		int count = 0;
-    		for (Iterator it = this.points.iterator(); it.hasNext();) {
-    			Point point = (Point)it.next();
-    			buff.append("(" + point.x + ", " + point.y + ")");
-    		}
-    	}
-    	buff.append("]");
-    	return buff.toString();
-    }
-    
+public class Line extends GraphicPrimitive {
+	
+	
+	private int x1 = 0;
+	private int y1 = 0;
+	private int x2 = 0;
+	private int y2 = 0;
+	private int width = 2;
+	
+	
+	/**
+	 * Constructor
+	 *
+	 */
+	public Line() {}
+	
+	
+	/**
+	 * Constructor
+	 * @param x1 X-coordinate of first end
+	 * @param y1 Y-coordinate of first end
+	 * @param x2 X-coordinate of second end
+	 * @param y2 X-coordinate of second end
+	 * @param width Width of line
+	 * @param color Color of line
+	 */
+	public Line(int x1, int y1, int x2, int y2, int width, Color color) {
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+		this.width = width;
+		this.color = color;
+	}
+
+	/**
+	 * @return Width
+	 */
+	public int getWidth() {
+		return width;
+	}
+
+	/**
+	 * @return X-coordinate of first endpoint
+	 */
+	public int getX1() {
+		return x1;
+	}
+
+	/**
+	 * @return X-coordinate of second endpoint
+	 */
+	public int getX2() {
+		return x2;
+	}
+
+	/**
+	 * @return Y-coordinate of first endpoint
+	 */
+	public int getY1() {
+		return y1;
+	}
+
+	/**
+	 * @return Y-coordinate of second endpoint
+	 */
+	public int getY2() {
+		return y2;
+	}
+
+	/**
+	 * @param i Width
+	 */
+	public void setWidth(int i) {
+		width = i;
+	}
+
+	/**
+	 * @param i X-coordinate of first endpoint
+	 */
+	public void setX1(int i) {
+		x1 = i;
+	}
+
+	/**
+	 * @param i X-coordinate of second endpoint
+	 */
+	public void setX2(int i) {
+		x2 = i;
+	}
+
+	/**
+	 * @param i Y-coordinate of first endpoint
+	 */
+	public void setY1(int i) {
+		y1 = i;
+	}
+
+	/**
+	 * @param i Y-coordinate of second endpoint
+	 */
+	public void setY2(int i) {
+		y2 = i;
+	}
 
 }

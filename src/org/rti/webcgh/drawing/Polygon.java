@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicRect.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,117 +50,90 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-
 package org.rti.webcgh.drawing;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.rti.webcgh.util.CollectionUtils;
 
 /**
- * Rectangle
+ * A polygon
  */
-public class GraphicRect extends GraphicPrimitive {
-	
-	
-	private int x = 0;
-	private int y = 0;
-	private int width = 0;
-	private int height = 0;
-	private boolean filled = true;
-	
-	
-	/**
-	 * Constructor
-	 *
-	 */
-	public GraphicRect() {}
-	
-	
-	/**
-	 * Constructor
-	 * @param x X-coordinate
-	 * @param y Y-coordinate
-	 * @param width Width
-	 * @param height Height
-	 * @param color Color
-	 */
-	public GraphicRect(int x, int y, int width, int height, Color color) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color;
-	}
-	
-
-	/**
-	 * @return Height of rectangle
-	 */
-	public int getHeight() {
-		return height;
-	}
-
-	/**
-	 * @return Width of rectangle
-	 */
-	public int getWidth() {
-		return width;
-	}
-
-	/**
-	 * @return X-coordinate of top left point
-	 */
-	public int getX() {
-		return x;
-	}
-
-	/**
-	 * @return Y-coordinate of bottom left point
-	 */
-	public int getY() {
-		return y;
-	}
-
-	/**
-	 * @param i Height
-	 */
-	public void setHeight(int i) {
-		height = i;
-	}
-
-	/**
-	 * @param i Width
-	 */
-	public void setWidth(int i) {
-		width = i;
-	}
-
-	/**
-	 * @param i X-coordinate of top left point
-	 */
-	public void setX(int i) {
-		x = i;
-	}
-
-	/**
-	 * @param i Y-coordinate of top left point
-	 */
-	public void setY(int i) {
-		y = i;
-	}
-
-	/**
-	 * @return Is rect filled in?
-	 */
-	public boolean isFilled() {
-		return filled;
-	}
-
-	/**
-	 * @param b Is rect filled in?
-	 */
-	public void setFilled(boolean b) {
-		filled = b;
-	}
+public class Polygon extends GraphicPrimitive {
+    
+    
+    // ==============================
+    //      Attributes
+    // ==============================
+    
+    private List points = new ArrayList();
+    
+    
+    /**
+     * Set points
+     * @return Points
+     */
+    public Point[] getPoints() {
+    	Point[] newPoints = new Point[0];
+    	newPoints = (Point[])this.points.toArray(newPoints);
+        return newPoints;
+    }
+    
+    
+    /**
+     * Get points
+     * @param points Points
+     */
+    public void setPoints(Point[] points) {
+        this.points = CollectionUtils.arrayToArrayList(points);
+    }
+    
+    
+    // ==================================
+    //      Constructors
+    // ==================================
+    
+    /**
+     * Constructor
+     * @param points Points
+     * @param color Color
+     */
+    public Polygon(Point[] points, Color color) {
+        this.setPoints(points);
+        this.color = color;
+    }
+    
+    
+    
+    // =================================================
+    //        Public methods
+    // =================================================
+    
+    /**
+     * Add a point
+     * @param point A point
+     */
+    public void addPoint(Point point) {
+        this.points.add(point);
+    }
+    
+    
+    public String toPrettyString() {
+    	StringBuffer buff = new StringBuffer("[");
+    	if (this.points != null) {
+    		int count = 0;
+    		for (Iterator it = this.points.iterator(); it.hasNext();) {
+    			Point point = (Point)it.next();
+    			buff.append("(" + point.x + ", " + point.y + ")");
+    		}
+    	}
+    	buff.append("]");
+    	return buff.toString();
+    }
+    
 
 }

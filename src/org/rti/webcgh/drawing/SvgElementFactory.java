@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgElementFactory.java,v $
-$Revision: 1.2 $
-$Date: 2006-02-16 14:05:43 $
+$Revision: 1.3 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -98,22 +98,22 @@ public class SvgElementFactory {
 	 */
 	public Element newElement(GraphicPrimitive graphic) {
 		Element element = null;
-		if (graphic instanceof GraphicCircle)
-			element = newCircleElement((GraphicCircle)graphic);
-		else if (graphic instanceof GraphicLine)
-			element = newLineElement((GraphicLine)graphic);
-		else if (graphic instanceof GraphicRect)
-			element = newRectElement((GraphicRect)graphic);
-		else if (graphic instanceof GraphicPolygon)
-		    element = newPolygonElement((GraphicPolygon)graphic);
-		else if (graphic instanceof GraphicPolyline)
-			element = newPolylineElement((GraphicPolyline)graphic);
-		else if (graphic instanceof GraphicText)
+		if (graphic instanceof Circle)
+			element = newCircleElement((Circle)graphic);
+		else if (graphic instanceof Line)
+			element = newLineElement((Line)graphic);
+		else if (graphic instanceof Rectangle)
+			element = newRectElement((Rectangle)graphic);
+		else if (graphic instanceof Polygon)
+		    element = newPolygonElement((Polygon)graphic);
+		else if (graphic instanceof Polyline)
+			element = newPolylineElement((Polyline)graphic);
+		else if (graphic instanceof Text)
 			element = newTextElement((SvgGraphicText)graphic);
-		else if (graphic instanceof GraphicArc)
-			element = newArcElement((GraphicArc)graphic);
-		else if (graphic instanceof GraphicCurve)
-		    element = newCurveElement((GraphicCurve)graphic);
+		else if (graphic instanceof Arc)
+			element = newArcElement((Arc)graphic);
+		else if (graphic instanceof Curve)
+		    element = newCurveElement((Curve)graphic);
 		addProperties(element, graphic);
 		addGraphicEventResponses(element, graphic.getGraphicEventResponses());
 		if (graphic.getToolTipText() != null)
@@ -163,7 +163,7 @@ public class SvgElementFactory {
 	 * @param rect Graphic rectangle
 	 * @return XML element
 	 */
-	private Element newRectElement(GraphicRect rect){
+	private Element newRectElement(Rectangle rect){
 		Element el = document.createElement("rect");
 		el.setAttribute("x", String.valueOf(rect.getX()));
 		el.setAttribute("y", String.valueOf(rect.getY()));
@@ -175,7 +175,7 @@ public class SvgElementFactory {
 	}
 	
 	
-	private Element newPolygonElement(GraphicPolygon polygon) {
+	private Element newPolygonElement(Polygon polygon) {
 	    Element el = document.createElement("polygon");
 	    el.setAttribute("fill", rgb(polygon.getColor()));
 	    el.setAttribute("stroke", "none");
@@ -197,7 +197,7 @@ public class SvgElementFactory {
 	 * @param line Graphic line
 	 * @return Line element
 	 */
-	private Element newLineElement(GraphicLine line){
+	private Element newLineElement(Line line){
 		Element e = document.createElement("line");
 		e.setAttribute("x1", String.valueOf(line.getX1()));
 		e.setAttribute("y1", String.valueOf(line.getY1()));
@@ -235,7 +235,7 @@ public class SvgElementFactory {
 	}
 	
 	
-	private Element newArcElement(GraphicArc arc) {
+	private Element newArcElement(Arc arc) {
 		Element el = document.createElement("path");
 		int largeArc = arc.isLargeArc()? 1 : 0;
 		int sweep = (arc.getOpeningDir() == Direction.UP)? 0 : 1;
@@ -251,7 +251,7 @@ public class SvgElementFactory {
 	}
 	
 	
-	private Element newCurveElement(GraphicCurve curve) {
+	private Element newCurveElement(Curve curve) {
 	    Point controlPt1 = new Point(curve.getX1(), curve.getY1());
 	    Point controlPt2 = new Point(curve.getX2(), curve.getY2());
 	    int delta = (int)((double)curve.getHeight() * BEZIER_APPROXIMATION);
@@ -334,7 +334,7 @@ public class SvgElementFactory {
 	 */
 	private Element newCircleElement
 	(
-		GraphicCircle circle
+		Circle circle
 	) {
 		Element c = document.createElement("circle");
 		c.setAttribute("cx", String.valueOf(circle.getX()));
@@ -352,7 +352,7 @@ public class SvgElementFactory {
 	 * @param poly Graphic polyline
 	 * @return SVG polyline element
 	 */
-	private Element newPolylineElement(GraphicPolyline poly){
+	private Element newPolylineElement(Polyline poly){
 		Element p = document.createElement("polyline");
 		p.setAttribute("stroke", rgb(poly.getColor()));
 		p.setAttribute("stroke-width", String.valueOf(poly.getWidth()));

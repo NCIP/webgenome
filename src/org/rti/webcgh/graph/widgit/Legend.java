@@ -64,9 +64,9 @@ import org.rti.webcgh.array.ExperimentIterator;
 import org.rti.webcgh.drawing.Cursor;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.drawing.GraphicRect;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.Rectangle;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.graph.PlotElement;
 import org.rti.webcgh.graph.PlotParameters;
@@ -270,7 +270,7 @@ public class Legend implements PlotElement {
     	
     	// Print experiment name
     	Point point = drawingCoords.next(experiment.getName(), canvas);
-    	GraphicText text = canvas.newGraphicText(experiment.getName(), point.x, 
+    	Text text = canvas.newGraphicText(experiment.getName(), point.x, 
     			point.y + this.fontSize, this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED,
 				this.textColor);
     	canvas.add(text);
@@ -297,7 +297,7 @@ public class Legend implements PlotElement {
     	int width = this.fontSize;
     	int height = this.fontSize;
     	Color color = this.plotParams.color(bioAssay);
-    	GraphicRect rect = new GraphicRect(x, point.y, width, height, color);
+    	Rectangle rect = new Rectangle(x, point.y, width, height, color);
     	String command = "toggleColor('" + bioAssay.getName() + "')";
     	rect.setProperty(ScatterPlot.GRP_ATT_NAME, bioAssay.getName());
     	rect.addGraphicEventResponse(GraphicEvent.mouseClickEvent, command);
@@ -306,7 +306,7 @@ public class Legend implements PlotElement {
     	
     	// Draw text
     	x += this.padding + width;
-    	GraphicText text = canvas.newGraphicText(bioAssay.getName(), x, point.y + this.fontSize, 
+    	Text text = canvas.newGraphicText(bioAssay.getName(), x, point.y + this.fontSize, 
     			this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED, this.textColor);
     	text.setCursor(Cursor.POINTER);
     	text.addGraphicEventResponse(GraphicEvent.mouseClickEvent, "highlight('" +
@@ -325,10 +325,10 @@ public class Legend implements PlotElement {
     
     
     private void paintBorder(DrawingCanvas canvas) {
-    	canvas.add(new GraphicLine(this.minX, this.minY, this.minX, this.maxY, this.borderWidth, this.borderColor));
-    	canvas.add(new GraphicLine(this.minX, this.maxY, this.maxX, this.maxY, this.borderWidth, this.borderColor));
-    	canvas.add(new GraphicLine(this.maxX, this.maxY, this.maxX, this.minY, this.borderWidth, this.borderColor));
-    	canvas.add(new GraphicLine(this.minX, this.minY, this.maxX, this.minY, this.borderWidth, this.borderColor));
+    	canvas.add(new Line(this.minX, this.minY, this.minX, this.maxY, this.borderWidth, this.borderColor));
+    	canvas.add(new Line(this.minX, this.maxY, this.maxX, this.maxY, this.borderWidth, this.borderColor));
+    	canvas.add(new Line(this.maxX, this.maxY, this.maxX, this.minY, this.borderWidth, this.borderColor));
+    	canvas.add(new Line(this.minX, this.minY, this.maxX, this.minY, this.borderWidth, this.borderColor));
     }
     
     

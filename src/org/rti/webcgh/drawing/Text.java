@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicCurve.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,117 +50,149 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
+
 package org.rti.webcgh.drawing;
 
 import java.awt.Color;
 
 /**
- * 
+ * Graphically rendered text
  */
-public class GraphicCurve extends GraphicPrimitive {
-    
-    
-    // ========================================
-    //       Attributes
-    // ========================================
-    
-    private final int x1;
-    private final int y1;
-    private final int x2;
-    private final int y2;
-    private final int height;
-    private final Orientation orientation;
-    
-    private int lineWidth = 2;
-    
-    
-    /**
-     * @return Returns the orientation.
-     */
-    public Orientation getOrientation() {
-        return orientation;
-    }
-    
-    
-    /**
-     * @return Returns the lineWidth.
-     */
-    public int getLineWidth() {
-        return lineWidth;
-    }
-    
-    
-    /**
-     * @param lineWidth The lineWidth to set.
-     */
-    public void setLineWidth(int lineWidth) {
-        this.lineWidth = lineWidth;
-    }
-    
-    
-    /**
-     * @return Returns the height.
-     */
-    public int getHeight() {
-        return height;
-    }
-    
-    
-    /**
-     * @return Returns the x1.
-     */
-    public int getX1() {
-        return x1;
-    }
-    
-    
-    /**
-     * @return Returns the x2.
-     */
-    public int getX2() {
-        return x2;
-    }
-    
-    
-    /**
-     * @return Returns the y1.
-     */
-    public int getY1() {
-        return y1;
-    }
-    
-    
-    /**
-     * @return Returns the y2.
-     */
-    public int getY2() {
-        return y2;
-    }
-    
-    
-    // =====================================
-    //        Constructors
-    // =====================================
-    
-    
-    /**
-     * Constructor
-     * @param x1 X-coordinate of first end point
-     * @param y1 Y-coordinate of first end point
-     * @param x2 X-coordinate of second end point
-     * @param y2 Y-coordinate of second end point
-     * @param height Height (can be negative)
-     * @param orientation Orientation
-     * @param color Color
-     */
-    public GraphicCurve(int x1, int y1, int x2, int y2, int height, Orientation orientation, Color color) {
-        this.x1 = x1;
-        this.y1 = y1;
-        this.x2 = x2;
-        this.y2 = y2;
-        this.height = height;
-        this.orientation = orientation;
-        this.color = color;
-    }
+public abstract class Text extends GraphicPrimitive {
+	
+	protected String value = "";
+	protected int fontSize = 10;
+	private HorizontalAlignment alignment = HorizontalAlignment.CENTERED;
+	private int x = 0;
+	private int y = 0;
+	private int rotation = 0;
+	
+	
+	/**
+	 * Constructor
+	 *
+	 */
+	public Text() {}
+	
+	
+	/**
+	 * Constructor
+	 * @param value Text value
+	 */
+	public Text(String value) {
+		this.value = value;
+	}
+	
+	
+	/**
+	 * Constructor
+	 * @param value Text value
+	 * @param x X-coordinate
+	 * @param y Y-coordinate
+	 * @param fontSize Font size
+	 * @param alignment Alignment relative to (x,y) coordinate
+	 * @param color Color
+	 */
+	public Text(String value, int x, int y, int fontSize, HorizontalAlignment alignment, Color color) {
+		this(value);
+		this.x = x;
+		this.y = y;
+		this.fontSize = fontSize;
+		this.alignment = alignment;
+		this.color = color;
+	}
+	
+	
+	/**
+	 * Rendered width of text
+	 * @return Rendered width of text
+	 */
+	public abstract int renderedWidth();
+	
+	
+	/**
+	 * @return Font size
+	 */
+	public int getFontSize() {
+		return fontSize;
+	}
+
+	/**
+	 * @return Text value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+	/**
+	 * @param i Font size
+	 */
+	public void setFontSize(int i) {
+		fontSize = i;
+	}
+
+	/**
+	 * @param string Text value
+	 */
+	public void setValue(String string) {
+		value = string;
+	}
+
+	/**
+	 * @return Alignment of text to X and Y coordinates (i.e. START, MIDDLE, END)
+	 */
+	public HorizontalAlignment getAlignment() {
+		return alignment;
+	}
+
+	/**
+	 * @param i Alignment of text to X and Y coordinates (i.e. START, MIDDLE, END)
+	 */
+	public void setAlignment(HorizontalAlignment i) {
+		alignment = i;
+	}
+
+	/**
+	 * @return X-coordinate
+	 */
+	public int getX() {
+		return x;
+	}
+
+	/**
+	 * @return Y-coordinate
+	 */
+	public int getY() {
+		return y;
+	}
+
+	/**
+	 * @param i X-coordinate
+	 */
+	public void setX(int i) {
+		x = i;
+	}
+
+	/**
+	 * @param i Y-coordinate
+	 */
+	public void setY(int i) {
+		y = i;
+	}
+
+	/**
+	 * @return Degrees of rotation
+	 */
+	public int getRotation() {
+		return rotation;
+	}
+
+	/**
+	 * @param i Degrees of rotation
+	 */
+	public void setRotation(int i) {
+		rotation = i;
+	}
 
 }

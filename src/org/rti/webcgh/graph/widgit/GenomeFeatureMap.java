@@ -60,11 +60,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
-import org.rti.webcgh.drawing.GraphicPolygon;
-import org.rti.webcgh.drawing.GraphicPolyline;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.Polygon;
+import org.rti.webcgh.drawing.Polyline;
 import org.rti.webcgh.drawing.GraphicPrimitive;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
@@ -214,7 +214,7 @@ public class GenomeFeatureMap implements PlotElement {
 	 */
 	public void plotFeature(long start, long end, String name, URL url, 
 		boolean drawLabel, Color color) {
-		GraphicPolygon poly = this.newPolygon(start, end, color);
+		Polygon poly = this.newPolygon(start, end, color);
 		poly.setToolTipText(name);
 		this.graphicPrimitives.add(poly);
 		if (drawLabel) {
@@ -250,14 +250,14 @@ public class GenomeFeatureMap implements PlotElement {
 				min = starts[i];
 			if (ends[i] > max)
 				max = ends[i];
-			GraphicPolygon poly = this.newPolygon(starts[i], ends[i], color);
+			Polygon poly = this.newPolygon(starts[i], ends[i], color);
 			this.graphicPrimitives.add(poly);
 		}
 		int minX = this.bpToPixel(min);
 		int maxX = this.bpToPixel(max);
 		
 		// Draw connecting lines
-		this.graphicPrimitives.add(new GraphicLine(minX, this.middleY, maxX, 
+		this.graphicPrimitives.add(new Line(minX, this.middleY, maxX, 
 			this.middleY, this.lineThickness, color));
 		
 		// Draw text
@@ -306,7 +306,7 @@ public class GenomeFeatureMap implements PlotElement {
 			points = warper.transform(points);
 		
 		// Add line
-		GraphicPolyline poly = new GraphicPolyline(lineThickness, color);
+		Polyline poly = new Polyline(lineThickness, color);
 		for (int i = 0; i < points.length; i++)
 			poly.add(points[i]);
 		this.graphicPrimitives.add(poly);
@@ -347,7 +347,7 @@ public class GenomeFeatureMap implements PlotElement {
     		this.minY = -(this.padding + this.fontSize);
     	for (Iterator it = this.labels.iterator(); it.hasNext();) {
     		Label label = (Label)it.next();
-    		GraphicText text = canvas.newGraphicText(label.textValue, label.x, y, 
+    		Text text = canvas.newGraphicText(label.textValue, label.x, y, 
     		    this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
     		if (label.url != null)
     			text.setUrl(label.url);
@@ -438,7 +438,7 @@ public class GenomeFeatureMap implements PlotElement {
     // ==================================
     
     
-    private GraphicPolygon newPolygon(long start, long end, Color color) {
+    private Polygon newPolygon(long start, long end, Color color) {
     	assert start <= end;
     	
     	// Instantiate points
@@ -454,28 +454,28 @@ public class GenomeFeatureMap implements PlotElement {
     	if (this.warper != null)
     		points = this.warper.transform(points);
     	
-    	return new GraphicPolygon(points, color);
+    	return new Polygon(points, color);
     }
     
     
     private void transposeGraphicPrimitives() {
         for (Iterator it = this.graphicPrimitives.iterator(); it.hasNext();) {
         	GraphicPrimitive primitive = (GraphicPrimitive)it.next();
-        	if (primitive instanceof GraphicLine) {
-        		GraphicLine line = (GraphicLine)primitive;
+        	if (primitive instanceof Line) {
+        		Line line = (Line)primitive;
         		this.transpose(line);
-        	} else if (primitive instanceof GraphicPolygon) {
-        		GraphicPolygon poly = (GraphicPolygon)primitive;
+        	} else if (primitive instanceof Polygon) {
+        		Polygon poly = (Polygon)primitive;
         		this.transpose(poly);
-        	} else if (primitive instanceof GraphicPolyline) {
-        		GraphicPolyline poly = (GraphicPolyline)primitive;
+        	} else if (primitive instanceof Polyline) {
+        		Polyline poly = (Polyline)primitive;
         		this.transpose(poly);
         	}
         }
     }
     
     
-    private void transpose(GraphicLine line) {
+    private void transpose(Line line) {
     	int x0 = 0, y0 = 0;
     	
     	// First end point
@@ -491,13 +491,13 @@ public class GenomeFeatureMap implements PlotElement {
     	line.setY2(x0);
     }
     
-    private void transpose(GraphicPolygon line) {
+    private void transpose(Polygon line) {
     	Point[] points = line.getPoints();
     	for (int i = 0; i < points.length; i++)
     		this.transpose(points[i]);
     }
     
-    private void transpose(GraphicPolyline line) {
+    private void transpose(Polyline line) {
     	List points = line.getPoints();
     	for (Iterator it = points.iterator(); it.hasNext();) {
     		Point point = (Point)it.next();
@@ -523,7 +523,7 @@ public class GenomeFeatureMap implements PlotElement {
     }
     
     
-    private DrawingCanvas transposeText(DrawingCanvas canvas, GraphicText text) {
+    private DrawingCanvas transposeText(DrawingCanvas canvas, Text text) {
     	DrawingCanvas tile = canvas.newTile();
     	int newX = -this.padding;
     	int newY = this.width - 

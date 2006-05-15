@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicPolyline.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 17:16:23 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webcgh.deprecated.Line;
 /**
  * A polyline (i.e. open polygon)
  */
-public class GraphicPolyline extends GraphicPrimitive {
+public class Polyline extends GraphicPrimitive {
 	
 	private final List points = new ArrayList();
 	private final int maxSize;
@@ -76,7 +76,7 @@ public class GraphicPolyline extends GraphicPrimitive {
 	 * Constructor
 	 *
 	 */
-	public GraphicPolyline() {
+	public Polyline() {
 		maxSize = Integer.MAX_VALUE;
 	}
 	
@@ -87,7 +87,7 @@ public class GraphicPolyline extends GraphicPrimitive {
 	 * @param width Width of line
 	 * @param color Color of line
 	 */
-	public GraphicPolyline(int width, Color color) {
+	public Polyline(int width, Color color) {
 		this();
 		this.width = width;
 		this.color = color;	
@@ -102,7 +102,7 @@ public class GraphicPolyline extends GraphicPrimitive {
 	 * @param color Line color
 	 * @param fillColor Fill color (if polyline closed)
 	 */
-	public GraphicPolyline(int width, Color color, Color fillColor) {
+	public Polyline(int width, Color color, Color fillColor) {
 		this(width, color);
 		this.fillColor = fillColor;
 	}
@@ -115,7 +115,7 @@ public class GraphicPolyline extends GraphicPrimitive {
 	 * @param maxSize Max number of points
 	 * @param color Color
 	 */
-	public GraphicPolyline(int width, int maxSize, Color color) {
+	public Polyline(int width, int maxSize, Color color) {
 		this.width = width;
 		this.maxSize = maxSize;
 		this.color = color;
@@ -131,7 +131,7 @@ public class GraphicPolyline extends GraphicPrimitive {
 	 * @param color Color of line
 	 * @param fillColor Fill color (if line is closed)
 	 */
-	public GraphicPolyline(int width, int maxSize, Color color, Color fillColor) {
+	public Polyline(int width, int maxSize, Color color, Color fillColor) {
 		this(width, maxSize, color);
 		this.fillColor = fillColor;	
 	}

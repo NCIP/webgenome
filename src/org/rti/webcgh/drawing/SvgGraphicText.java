@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgGraphicText.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import java.awt.Color;
  * Implementation of GraphicText interface for
  * an SVG canvas
  */
-public class SvgGraphicText extends GraphicText {
+public class SvgGraphicText extends Text {
 	
 	
 

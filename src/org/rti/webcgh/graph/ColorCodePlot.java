@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/ColorCodePlot.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-12 15:18:37 $
+$Revision: 1.5 $
+$Date: 2006-05-15 20:31:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
 
@@ -245,7 +245,7 @@ public class ColorCodePlot implements Plot {
 	                y = p;
 	                height = q - p;
 	            }
-	            GraphicRect rect = new GraphicRect(x, y, width, height, color);
+	            Rectangle rect = new Rectangle(x, y, width, height, color);
 	            long startMb = startBp / 1000000;
 	            long endMb = endBp / 1000000;
 	            String mouseOver = FORMAT.format(value) + " [" + startMb + "MB-" + endMb + "MB]";

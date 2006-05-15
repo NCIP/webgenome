@@ -58,7 +58,7 @@ import java.awt.Point;
 
 import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicCurve;
+import org.rti.webcgh.drawing.Curve;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.PlotElement;
 
@@ -123,15 +123,15 @@ public class ChromosomeEndCap implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(DrawingCanvas canvas) {
-        GraphicCurve curve = null;        
+        Curve curve = null;        
         if (this.direction == Direction.UP)
-            curve = new GraphicCurve(0, 0, this.width, 0, -this.height / 2, Orientation.VERTICAL, this.lineColor);
+            curve = new Curve(0, 0, this.width, 0, -this.height / 2, Orientation.VERTICAL, this.lineColor);
         else if (this.direction == Direction.DOWN)
-            curve = new GraphicCurve(0, 0, this.width, 0, this.height / 2, Orientation.VERTICAL, this.lineColor);
+            curve = new Curve(0, 0, this.width, 0, this.height / 2, Orientation.VERTICAL, this.lineColor);
         else if (this.direction == Direction.LEFT)
-            curve = new GraphicCurve(this.height, 0, this.height, this.width, -this.height, Orientation.HORIZONTAL, this.lineColor);
+            curve = new Curve(this.height, 0, this.height, this.width, -this.height, Orientation.HORIZONTAL, this.lineColor);
         else if (this.direction == Direction.RIGHT)
-            curve = new GraphicCurve(0, 0, 0, this.width, this.height, Orientation.HORIZONTAL, this.lineColor);
+            curve = new Curve(0, 0, 0, this.width, this.height, Orientation.HORIZONTAL, this.lineColor);
         canvas.add(curve);
     }
     

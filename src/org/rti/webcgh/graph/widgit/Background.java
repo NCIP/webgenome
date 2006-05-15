@@ -57,7 +57,7 @@ import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.GraphicRect;
+import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.graph.PlotElement;
 
 /**
@@ -72,7 +72,7 @@ public class Background implements PlotElement {
     
     private final int width;
     private final int height;
-    private final GraphicRect rect;
+    private final Rectangle rect;
     
     
     // ==============================
@@ -88,7 +88,7 @@ public class Background implements PlotElement {
     public Background(int width, int height, Color color) {
         this.width = width;
         this.height = height;
-        this.rect = new GraphicRect(0, 0, width, height, color);
+        this.rect = new Rectangle(0, 0, width, height, color);
         rect.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
     }
     

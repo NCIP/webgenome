@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/GraphicArc.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,7 @@ import java.awt.Color;
 /**
  * An arc
  */
-public class GraphicArc extends GraphicPrimitive {
+public class Arc extends GraphicPrimitive {
 	
 	private int x1 = 0;
 	private int y1 = 0;
@@ -87,7 +87,7 @@ public class GraphicArc extends GraphicPrimitive {
 	 * @param lineWidth Width of line
 	 * @param color Color of line
 	 */
-	public GraphicArc
+	public Arc
 	(
 		int x1, int y1, int x2, int y2, int xRadius, int yRadius, int rotation,
 		Direction openingDir, boolean largeArc, int lineWidth, Color color

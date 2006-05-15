@@ -55,7 +55,7 @@ package org.rti.webcgh.graph.widgit.unit_test;
 import java.awt.Color;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicLine;
+import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
@@ -81,8 +81,8 @@ public class PlotPanelTester extends BasePlottingTester {
         int width = 800;
         int height = 800;
         PlotTesterUtils.addFrame(this.drawingCanvas, width, height);
-        this.drawingCanvas.add(new GraphicLine(width / 2, 0, width / 2, height, 2, Color.black));
-        this.drawingCanvas.add(new GraphicLine(0, height / 2, width, height / 2, 2, Color.black));
+        this.drawingCanvas.add(new Line(width / 2, 0, width / 2, height, 2, Color.black));
+        this.drawingCanvas.add(new Line(0, height / 2, width, height / 2, 2, Color.black));
         DrawingCanvas tile1 = this.drawingCanvas.newTile();
         this.drawingCanvas.add(tile1, width / 2, height / 2);
         Background bigBg = new Background(200, 200, Color.red);

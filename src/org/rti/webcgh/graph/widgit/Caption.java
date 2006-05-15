@@ -62,7 +62,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicText;
+import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.PlotElement;
@@ -376,7 +376,7 @@ public class Caption implements PlotElement {
     
     
     private void paintLine(String line, int x, int y, DrawingCanvas drawingCanvas) {
-        GraphicText text = drawingCanvas.newGraphicText(line, x, y, this.fontSize, this.textAlignment, this.color);
+        Text text = drawingCanvas.newGraphicText(line, x, y, this.fontSize, this.textAlignment, this.color);
         if (this.orientation == Orientation.VERTICAL)
             text.setRotation(270);
         if (this.url != null)
