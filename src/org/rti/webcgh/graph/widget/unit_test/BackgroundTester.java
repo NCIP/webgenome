@@ -54,7 +54,6 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
-import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.widget.Background;
 

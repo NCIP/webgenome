@@ -61,7 +61,6 @@ import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Caption;
@@ -73,15 +72,13 @@ public class CaptionTester extends TestCase {
         
     
     /**
-     * 
-     *
+     * Draw a single caption
      */
-    public void test1() {
+    public void testSingleCaption() {
     	SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
         Caption caption = new Caption("Center horizontal caption", Orientation.HORIZONTAL, true);
         caption.setTextAlignment(HorizontalAlignment.CENTERED);
         panel.add(caption, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.setDrawBorder(true);
         panel.toSvgFile("caption-horiz-left-one-line.svg");
     }
 }

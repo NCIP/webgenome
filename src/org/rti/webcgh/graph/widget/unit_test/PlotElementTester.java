@@ -52,93 +52,48 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.graph.widget.unit_test;
 
-import java.awt.Point;
-import java.net.URL;
+import java.awt.Color;
 
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.widget.AxisTicMark;
-
-
+import org.rti.webcgh.graph.widget.Axis;
+import org.rti.webcgh.graph.widget.Caption;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
 /**
- * 
+ * Tests combinations of plot elements
  */
-public class AxisTicMarkTester extends BasePlottingTester {
+public class PlotElementTester extends BasePlottingTester {
     
     
     /**
      * 
      *
      */
-    public void testHorizLeft() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-horiz-left.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testHorizRight() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.RIGHT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-horiz-right.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertAbove() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
-           Location.ABOVE);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-vert-above.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertBelow() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
-           Location.BELOW);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-vert-below.svg");
-    }
-    
-    
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testURL() throws Exception {
-       URL url = new URL("http://www.google.com");
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", url, Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-url.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testNoLabel() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, false);
-       PlotTesterUtils.writeDocument(this.document, "tic-no-label.svg");
+    public void testTwoAxis() {
+        DrawingCanvas tile = this.drawingCanvas.newTile();
+        //Axis xAxis = new Axis(0, 300000000, 400, Orientation.HORIZONTAL, Location.BELOW);
+        Axis yAxis = new Axis(-0.91, 1.5, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        Caption xCaption = new Caption("Chromosome 1", Orientation.HORIZONTAL, false);
+        Caption yCaption = new Caption("Log2 Ratio", Orientation.HORIZONTAL, true);
+        PlotPanel panel = new PlotPanel(tile);
+        //PlotPanel xPanel = panel.newChildPlotPanel();
+        PlotPanel yPanel = panel.newChildPlotPanel();
+        //xPanel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        yPanel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+       // xPanel.add(xCaption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+        yPanel.add(yCaption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+        //panel.add(xPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.add(yPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        this.drawingCanvas.add(tile, -panel.topLeftPoint().x, -panel.topLeftPoint().y);
+        this.drawingCanvas.add(new Line(0, panel.height(), panel.width(), 
+        		panel.height(), 2, Color.red));
+        PlotTesterUtils.writeDocument(this.document, "two-axes.svg");
     }
 
 }

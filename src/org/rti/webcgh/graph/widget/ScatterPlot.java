@@ -168,7 +168,7 @@ public class ScatterPlot implements DataPlotter {
      * @param dataPoint A data point
      * @return T/F
      */
-    public boolean inPlot(DataPoint dataPoint) {
+    public boolean inPlotRange(DataPoint dataPoint) {
         return
         	this.plotBoundaries.withinBoundaries(dataPoint);
     }

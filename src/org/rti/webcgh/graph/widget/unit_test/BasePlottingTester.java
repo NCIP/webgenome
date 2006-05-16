@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/BasePlottingTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.array.ArrayDatum;
@@ -66,6 +66,7 @@ import org.rti.webcgh.array.Reporter;
 import org.rti.webcgh.array.ReporterMapping;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.w3c.dom.Document;
 
 import junit.framework.TestCase;

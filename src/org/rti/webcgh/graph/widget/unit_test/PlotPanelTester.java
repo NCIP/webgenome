@@ -53,13 +53,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
+import java.awt.Point;
+
+import junit.framework.TestCase;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.PlotPanel;
 
@@ -67,26 +70,19 @@ import org.rti.webcgh.graph.widget.PlotPanel;
 /**
  * 
  */
-public class PlotPanelTester extends BasePlottingTester {
+public class PlotPanelTester extends TestCase {
     
     
-    private PlotPanel panel = null;
+    private SvgTestPanel panel =null;
     
     
     /**
      * 
      */
     public void setUp() {
-        super.setUp();
-        int width = 800;
-        int height = 800;
-        PlotTesterUtils.addFrame(this.drawingCanvas, width, height);
-        this.drawingCanvas.add(new Line(width / 2, 0, width / 2, height, 2, Color.black));
-        this.drawingCanvas.add(new Line(0, height / 2, width, height / 2, 2, Color.black));
-        DrawingCanvas tile1 = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile1, width / 2, height / 2);
         Background bigBg = new Background(200, 200, Color.red);
-        this.panel = new PlotPanel(tile1);
+        this.panel = SvgTestPanel.newSvgTestPanel();
+        this.panel.setOrigin(new Point(10, 10));
         panel.add(bigBg, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
     }
     
@@ -99,7 +95,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testLeftAbove() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_OF, VerticalAlignment.ABOVE);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-above.svg");
+        this.panel.toSvgFile("panel-left-above.svg");
     }
     
     
@@ -110,7 +106,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testLeftTopJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_OF, VerticalAlignment.TOP_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-top.svg");
+        this.panel.toSvgFile("panel-left-top.svg");
     }
     
     
@@ -121,7 +117,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testLeftCenter() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-middle.svg");
+        this.panel.toSvgFile("panel-left-middle.svg");
     }
     
     
@@ -132,7 +128,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testLeftBottomJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-bottom.svg");
+        this.panel.toSvgFile("panel-left-bottom.svg");
     }
     
     
@@ -143,7 +139,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testLeftBelow() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_OF, VerticalAlignment.BELOW);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-below.svg");
+        this.panel.toSvgFile("panel-left-below.svg");
     }
     
     
@@ -154,7 +150,17 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testAboveLeftJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.ABOVE);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-justified-above.svg");
+        this.panel.toSvgFile("panel-left-justified-above.svg");
+    }
+    
+    /**
+     * 
+     *
+     */
+    public void testTopJustifiedLeftJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.toSvgFile("panel-left-justified-top-justified.svg");
     }
     
     
@@ -165,7 +171,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testAboveCenter() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
-        PlotTesterUtils.writeDocument(this.document, "panel-middle-above.svg");
+        this.panel.toSvgFile("panel-middle-above.svg");
     }
     
     
@@ -176,7 +182,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testAboveRightJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-justified-above.svg");
+        this.panel.toSvgFile("panel-right-justified-above.svg");
     }
     
     
@@ -187,7 +193,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testBelowLeftJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
-        PlotTesterUtils.writeDocument(this.document, "panel-left-justified-below.svg");
+        this.panel.toSvgFile("panel-left-justified-below.svg");
     }
     
     
@@ -198,7 +204,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testBelowCenter() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
-        PlotTesterUtils.writeDocument(this.document, "panel-middle-below.svg");
+        this.panel.toSvgFile("panel-middle-below.svg");
     }
     
     
@@ -209,7 +215,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testBelowRightJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BELOW);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-justified-below.svg");
+        this.panel.toSvgFile("panel-right-justified-below.svg");
     }
     
     
@@ -220,7 +226,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testRightAbove() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_OF, VerticalAlignment.ABOVE);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-above.svg");
+        this.panel.toSvgFile("panel-right-above.svg");
     }
     
     
@@ -231,7 +237,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testRightTopJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-top.svg");
+        this.panel.toSvgFile("panel-right-top.svg");
     }
     
     
@@ -242,7 +248,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testRightCenter() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-center.svg");
+        this.panel.toSvgFile("panel-right-center.svg");
     }
     
     
@@ -253,7 +259,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testRightBottomJustified() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-bottom.svg");
+        this.panel.toSvgFile("panel-right-bottom.svg");
     }
     
     
@@ -264,7 +270,7 @@ public class PlotPanelTester extends BasePlottingTester {
     public void testRightBelow() {
         this.panel.add(new Background(30, 30, Color.blue), 
             HorizontalAlignment.RIGHT_OF, VerticalAlignment.BELOW);
-        PlotTesterUtils.writeDocument(this.document, "panel-right-below.svg");
+        this.panel.toSvgFile("panel-right-below.svg");
     }
     
     
@@ -298,7 +304,7 @@ public class PlotPanelTester extends BasePlottingTester {
 	        this.panel.add(new Background(30, 30, Color.blue), 
 	                HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
         
-        PlotTesterUtils.writeDocument(this.document, "panel-inside.svg");
+        this.panel.toSvgFile("panel-inside.svg");
     }
     
     
@@ -307,10 +313,10 @@ public class PlotPanelTester extends BasePlottingTester {
      *
      */
     public void testAddPanel() {
-	    PlotPanel panel2 = new PlotPanel(this.drawingCanvas.newTile());
+	    PlotPanel panel2 = this.panel.newChildPlotPanel();
 	    panel2.add(new Background(100, 100, Color.blue), 
 	        HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
 	    this.panel.add(panel2, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-        PlotTesterUtils.writeDocument(this.document, "panel-add-panel.svg");
+        this.panel.toSvgFile("panel-add-panel.svg");
     }
 }

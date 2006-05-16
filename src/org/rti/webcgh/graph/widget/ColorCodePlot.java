@@ -193,7 +193,7 @@ public class ColorCodePlot implements DataPlotter {
      * @param dataPoint A data point
      * @return T/F
      */
-    public boolean inPlot(DataPoint dataPoint) {
+    public boolean inPlotRange(DataPoint dataPoint) {
         return true;
     }
     

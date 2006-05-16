@@ -76,9 +76,9 @@ public interface DataPlotter extends PlotElement {
     /**
      * Graph a line between given data points
      * @param dataPoints Data points
-     * @param key Key identifying group of lines specified by given data points
+     * @param pointGroupKey Key identifying group of lines specified by given data points
      */
-    public void graphLines(DataPoint[] dataPoints, Object key);
+    public void graphLines(DataPoint[] dataPoints, Object pointGroupKey);
     
     
     /**
@@ -94,6 +94,6 @@ public interface DataPlotter extends PlotElement {
      * @param dataPoint A data point
      * @return T/F
      */
-    public boolean inPlot(DataPoint dataPoint);
+    public boolean inPlotRange(DataPoint dataPoint);
       
 }

@@ -59,7 +59,6 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
@@ -79,7 +78,7 @@ public class AxisTester extends BasePlottingTester {
     public void setUp() {
         super.setUp();
         this.tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, 250, 250);
+        this.drawingCanvas.add(tile, 50, 50);
     }
     
     

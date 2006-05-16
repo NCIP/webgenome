@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/ScatterPlotTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-16 12:49:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
@@ -58,6 +58,7 @@ import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.PlotBoundaries;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.widget.ScatterPlot;
 
 /**
