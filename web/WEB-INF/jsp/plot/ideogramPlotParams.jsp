@@ -17,6 +17,8 @@
 
 <html:form action="/configPlotParams">
 
+	<html:hidden property="plotType" value="ideogram"/>
+
 <script language="JavaScript">
 <!--
 function load(file,target) {
