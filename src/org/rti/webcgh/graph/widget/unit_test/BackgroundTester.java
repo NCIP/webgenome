@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotElement.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,71 +50,29 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widget.unit_test;
 
-import java.awt.Point;
+import java.awt.Color;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widget.Background;
+
 
 /**
- * A graphical element in a plot
+ * 
  */
-public interface PlotElement {
+public class BackgroundTester extends BasePlottingTester {
     
     
     /**
-     * Paint element
-     * @param canvas A canvas
+     * 
+     *
      */
-    public void paint(DrawingCanvas canvas);
-    
-    
-    /**
-     * Point at top left used to align with other plot elements
-     * @return A point
-     */
-    public Point topLeftAlignmentPoint();
-    
-    
-    /**
-     * Point at bottom left used to align with other plot elements
-     * @return A point
-     */
-    public Point bottomLeftAlignmentPoint();
-    
-    
-    /**
-     * Point at top right used to align with other plot elements
-     * @return A point
-     */
-    public Point topRightAlignmentPoint();
-    
-    
-    /**
-     * Point at bottom right used to align with other plot elements
-     * @return A point
-     */
-    public Point bottomRightAlignmentPoint();
-    
-    
-    /**
-     * Width in pixels
-     * @return Width in pixels
-     */
-    public int width();
-    
-    
-    /**
-     * Height in pixels
-     * @return Height in pixels
-     */
-    public int height();
-    
-    
-    /**
-     * Return point at top left of element
-     * @return A point
-     */
-    public Point topLeftPoint();
+    public void test1() {
+        Background bg1 = new Background(400, 300, Color.red);
+        bg1.paint(this.drawingCanvas);
+        PlotTesterUtils.writeDocument(this.document, "background.svg");
+    }
 
 }

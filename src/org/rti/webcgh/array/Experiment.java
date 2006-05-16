@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.8 $
-$Date: 2006-05-04 15:16:47 $
+$Revision: 1.9 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,8 +65,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.rti.webcgh.analytic.AnalyticPipeline;
-import org.rti.webcgh.graph.Plot;
 import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.graph.widget.DataPlotter;
 import org.rti.webcgh.service.Cacheable;
 
 /**
@@ -369,7 +369,7 @@ public class Experiment implements Cacheable {
      * @param end Genome end point
      * @param plotParameters Plotting parameters
      */
-    public void graph(Plot plot, GenomeLocation start, GenomeLocation end, PlotParameters plotParameters) {
+    public void graph(DataPlotter plot, GenomeLocation start, GenomeLocation end, PlotParameters plotParameters) {
     	for (Iterator it = this.bioAssays.iterator(); it.hasNext();) {
     		BioAssay bioAssay = (BioAssay)it.next();
         	Color color = plotParameters.color(bioAssay);

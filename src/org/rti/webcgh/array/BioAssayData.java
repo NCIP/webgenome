@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.4 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.5 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.Plot;
+import org.rti.webcgh.graph.widget.DataPlotter;
 
 /**
  * Bio-assay data
@@ -181,7 +181,7 @@ public class BioAssayData {
      * @throws IllegalArgumentException if <code>start</code> and
      * <code>end</code> are from different chromosomes
      */
-    public void graph(Plot plot, GenomeLocation start, GenomeLocation end, Object key, Color color) {
+    public void graph(DataPlotter plot, GenomeLocation start, GenomeLocation end, Object key, Color color) {
         if (! start.sameChromosome(end))
             throw new IllegalArgumentException("Genome locations 'start' and 'end' cannot be from different chromosomes");
         this.ensureSorted();
@@ -454,7 +454,7 @@ public class BioAssayData {
     }
 
 
-    protected void graphPoints(Plot plot, int p, int q, Object key) {
+    protected void graphPoints(DataPlotter plot, int p, int q, Object key) {
         int numReporters = this.arrayData.size();
         for (int i = p; i <= q && i < numReporters; i++) {
             ArrayDatum datum = this.getArrayDatum(i);
@@ -463,7 +463,7 @@ public class BioAssayData {
     }
     
     
-    protected void graphConnectingLines(Plot plot, GenomeLocation start, GenomeLocation end,
+    protected void graphConnectingLines(DataPlotter plot, GenomeLocation start, GenomeLocation end,
         int p, int q, Object key) {
         if (p <= this.arrayData.size()) {
 	        List dataPoints = new ArrayList();

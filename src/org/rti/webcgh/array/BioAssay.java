@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.4 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.5 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.rti.webcgh.graph.Plot;
+import org.rti.webcgh.graph.widget.DataPlotter;
 import org.rti.webcgh.service.Cacheable;
 
 
@@ -348,7 +348,7 @@ public class BioAssay implements Cacheable {
      * @param end Ending point of plot
      * @param color Color
      */
-    public void graph(Plot plot, GenomeLocation start, GenomeLocation end, 
+    public void graph(DataPlotter plot, GenomeLocation start, GenomeLocation end, 
     		Color color) {
         if (this.bioAssayData != null)
             this.bioAssayData.graph(plot, start, end, this.getName(), color);

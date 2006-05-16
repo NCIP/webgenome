@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/ColorCodePlot.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-15 20:31:52 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widget;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -64,12 +64,13 @@ import java.util.List;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
 
 /**
  * 
  */
-public class ColorCodePlot implements Plot {
+public class ColorCodePlot implements DataPlotter {
     
     
     // ======================================
@@ -144,7 +145,7 @@ public class ColorCodePlot implements Plot {
     
     
     // =============================================
-    //        Plot interface
+    //        DataPlotter interface
     // =============================================
     
     

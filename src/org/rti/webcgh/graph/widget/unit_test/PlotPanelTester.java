@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
@@ -60,8 +60,8 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.widgit.Background;
-import org.rti.webcgh.graph.widgit.PlotPanel;
+import org.rti.webcgh.graph.widget.Background;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
 
 /**

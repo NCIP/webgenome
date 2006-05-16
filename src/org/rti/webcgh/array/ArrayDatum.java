@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatum.java,v $
-$Revision: 1.4 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.5 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.Plot;
+import org.rti.webcgh.graph.widget.DataPlotter;
 import org.rti.webcgh.service.Cacheable;
 
 /**
@@ -166,7 +166,7 @@ public class ArrayDatum implements Comparable, Locatable, Cacheable {
      * @param plot A plot
      * @param key Key of group of graphical objects to which data point will be added
      */
-    public void graph(Plot plot, Object key) {
+    public void graph(DataPlotter plot, Object key) {
         DataPoint dataPoint = new DataPoint();
         this.initializeDataPoint(dataPoint);
         if (plot.inPlot(dataPoint))

@@ -50,38 +50,34 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
-import java.awt.Color;
+import java.awt.Point;
+import java.net.URL;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.widgit.Axis;
-import org.rti.webcgh.graph.widgit.Background;
-import org.rti.webcgh.graph.widgit.Grid;
-import org.rti.webcgh.graph.widgit.PlotPanel;
+import org.rti.webcgh.graph.widget.AxisTicMark;
+
+
 
 /**
  * 
  */
-public class GridTester extends BasePlottingTester {
-    
-    
-    private DrawingCanvas tile = null;
+public class AxisTicMarkTester extends BasePlottingTester {
     
     
     /**
      * 
+     *
      */
-    public void setUp() {
-        super.setUp();
-        this.tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, 250, 250);
+    public void testHorizLeft() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
+           Location.LEFT_OF);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-horiz-left.svg");
     }
     
     
@@ -89,15 +85,11 @@ public class GridTester extends BasePlottingTester {
      * 
      *
      */
-    public void testHorizontal() {
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
-        Background background = new Background(400, 400, Color.yellow);
-        PlotPanel panel = new PlotPanel(this.tile);
-        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "grid-horiz.svg");
+    public void testHorizRight() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
+           Location.RIGHT_OF);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-horiz-right.svg");
     }
     
     
@@ -105,15 +97,48 @@ public class GridTester extends BasePlottingTester {
      * 
      *
      */
-    public void testVertical() {
-        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
-        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
-        Background background = new Background(400, 400, Color.yellow);
-        PlotPanel panel = new PlotPanel(this.tile);
-        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "grid-vert.svg");
+    public void testVertAbove() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
+           Location.ABOVE);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-vert-above.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testVertBelow() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
+           Location.BELOW);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-vert-below.svg");
+    }
+    
+    
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testURL() throws Exception {
+       URL url = new URL("http://www.google.com");
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", url, Orientation.HORIZONTAL, 
+           Location.LEFT_OF);
+       tic.paint(this.drawingCanvas, true);
+       PlotTesterUtils.writeDocument(this.document, "tic-url.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testNoLabel() {
+       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
+           Location.LEFT_OF);
+       tic.paint(this.drawingCanvas, false);
+       PlotTesterUtils.writeDocument(this.document, "tic-no-label.svg");
     }
 
 }

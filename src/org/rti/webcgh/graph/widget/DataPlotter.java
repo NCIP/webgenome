@@ -50,95 +50,50 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget;
 
-import java.awt.Point;
-import java.net.URL;
+import java.awt.Color;
 
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.graph.unit_test.BasePlottingTester;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.widgit.AxisTicMark;
+import org.rti.webcgh.graph.DataPoint;
 
 
 
 /**
- * 
+ * A plot
  */
-public class AxisTicMarkTester extends BasePlottingTester {
+public interface DataPlotter extends PlotElement {
     
     
     /**
-     * 
-     *
+     * Graph a data point
+     * @param dataPoint A data point
+     * @param pointGroupKey Key identifying a group of data points to which
+     * given data point should be associated
      */
-    public void testHorizLeft() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-horiz-left.svg");
-    }
+    public void graphPoint(DataPoint dataPoint, Object pointGroupKey);
     
     
     /**
-     * 
-     *
+     * Graph a line between given data points
+     * @param dataPoints Data points
+     * @param key Key identifying group of lines specified by given data points
      */
-    public void testHorizRight() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.RIGHT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-horiz-right.svg");
-    }
+    public void graphLines(DataPoint[] dataPoints, Object key);
     
     
     /**
-     * 
-     *
+     * Set color of group of pints
+     * @param pointGroupKey Key identifying group of points
+     * @param color Color
      */
-    public void testVertAbove() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
-           Location.ABOVE);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-vert-above.svg");
-    }
+    public void setGroupColor(Object pointGroupKey, Color color);
     
     
     /**
-     * 
-     *
+     * Is data point in plot?
+     * @param dataPoint A data point
+     * @return T/F
      */
-    public void testVertBelow() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.VERTICAL, 
-           Location.BELOW);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-vert-below.svg");
-    }
-    
-    
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testURL() throws Exception {
-       URL url = new URL("http://www.google.com");
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", url, Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, true);
-       PlotTesterUtils.writeDocument(this.document, "tic-url.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testNoLabel() {
-       AxisTicMark tic = new AxisTicMark(new Point(100, 100), "Tic", Orientation.HORIZONTAL, 
-           Location.LEFT_OF);
-       tic.paint(this.drawingCanvas, false);
-       PlotTesterUtils.writeDocument(this.document, "tic-no-label.svg");
-    }
-
+    public boolean inPlot(DataPoint dataPoint);
+      
 }

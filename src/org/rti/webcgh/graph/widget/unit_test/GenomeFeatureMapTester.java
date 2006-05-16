@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 import java.net.URL;
@@ -65,9 +65,9 @@ import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.util.CentromereWarper;
 import org.rti.webcgh.graph.util.Warper;
-import org.rti.webcgh.graph.widgit.Caption;
-import org.rti.webcgh.graph.widgit.GenomeFeatureMap;
-import org.rti.webcgh.graph.widgit.PlotPanel;
+import org.rti.webcgh.graph.widget.Caption;
+import org.rti.webcgh.graph.widget.GenomeFeatureMap;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
 
 /**

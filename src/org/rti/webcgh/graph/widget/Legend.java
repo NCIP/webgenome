@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph.widgit;
+package org.rti.webcgh.graph.widget;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -68,9 +68,7 @@ import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.graph.PlotElement;
 import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.graph.ScatterPlot;
 
 /**
  * Plot legend

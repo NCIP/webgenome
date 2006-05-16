@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit;
+package org.rti.webcgh.graph.widget;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -68,7 +68,6 @@ import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.graph.PlotElement;
 import org.rti.webcgh.graph.util.Warper;
 
 /**

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/CytologicalMap.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-12 15:18:37 $
+$Revision: 1.4 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.List;
 
 import org.rti.webcgh.graph.util.CentromereWarper;
 import org.rti.webcgh.graph.util.Warper;
-import org.rti.webcgh.graph.widgit.GenomeFeatureMap;
+import org.rti.webcgh.graph.widget.GenomeFeatureMap;
 
 /**
  * Map of cytobands

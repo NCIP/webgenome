@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/BasePlot.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,57 +50,71 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widget;
 
 import java.awt.Point;
 
+import org.rti.webcgh.drawing.DrawingCanvas;
 
 /**
- * Abstract class containing implementations for several methods in Plot.
+ * A graphical element in a plot
  */
-public abstract class BasePlot implements Plot {
+public interface PlotElement {
     
-    protected final PlotBoundaries plotBoundaries;
-    
-    
-    // ===========================
-    //    Constructors
-    // ===========================
     
     /**
-     * Constructor
-     * @param plotBoundaries Boundaries of plot
+     * Paint element
+     * @param canvas A canvas
      */
-    public BasePlot(PlotBoundaries plotBoundaries) {
-        this.plotBoundaries = plotBoundaries;
-    }
+    public void paint(DrawingCanvas canvas);
     
-    
-    // ========================================
-    //   Methods in Plot interface
-    // ========================================
     
     /**
-     * Is data point in plot?
-     * @param dataPoint A data point
-     * @return T/F
+     * Point at top left used to align with other plot elements
+     * @return A point
      */
-    public boolean inPlot(DataPoint dataPoint) {
-        return
-        	this.plotBoundaries.withinBoundaries(dataPoint);
-    }
+    public Point topLeftAlignmentPoint();
     
     
-    // =====================================
-    //    Methods in PlotElement interface
-    // =====================================
+    /**
+     * Point at bottom left used to align with other plot elements
+     * @return A point
+     */
+    public Point bottomLeftAlignmentPoint();
+    
+    
+    /**
+     * Point at top right used to align with other plot elements
+     * @return A point
+     */
+    public Point topRightAlignmentPoint();
+    
+    
+    /**
+     * Point at bottom right used to align with other plot elements
+     * @return A point
+     */
+    public Point bottomRightAlignmentPoint();
+    
+    
+    /**
+     * Width in pixels
+     * @return Width in pixels
+     */
+    public int width();
+    
+    
+    /**
+     * Height in pixels
+     * @return Height in pixels
+     */
+    public int height();
+    
     
     /**
      * Return point at top left of element
      * @return A point
      */
-    public Point topLeftPoint() {
-        return new Point(0, 0);
-    }
+    public Point topLeftPoint();
+
 }

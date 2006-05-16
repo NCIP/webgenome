@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotElementTester.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-15 20:31:52 $
+$Revision: 1.5 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,9 +60,9 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widgit.Axis;
-import org.rti.webcgh.graph.widgit.Caption;
-import org.rti.webcgh.graph.widgit.PlotPanel;
+import org.rti.webcgh.graph.widget.Axis;
+import org.rti.webcgh.graph.widget.Caption;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
 /**
  * Tests combinations of plot elements

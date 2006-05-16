@@ -50,29 +50,38 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.widgit.Background;
-
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
+import org.rti.webcgh.graph.widget.Caption;
 
 /**
- * 
+ * Tester for Caption
  */
-public class BackgroundTester extends BasePlottingTester {
-    
+public class CaptionTester extends TestCase {
+        
     
     /**
      * 
      *
      */
     public void test1() {
-        Background bg1 = new Background(400, 300, Color.red);
-        bg1.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "background.svg");
+    	SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        Caption caption = new Caption("Center horizontal caption", Orientation.HORIZONTAL, true);
+        caption.setTextAlignment(HorizontalAlignment.CENTERED);
+        panel.add(caption, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.setDrawBorder(true);
+        panel.toSvgFile("caption-horiz-left-one-line.svg");
     }
-
 }

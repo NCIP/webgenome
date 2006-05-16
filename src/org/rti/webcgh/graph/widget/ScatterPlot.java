@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/ScatterPlot.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-15 20:31:52 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widget;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -66,11 +66,13 @@ import org.rti.webcgh.drawing.Circle;
 import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Polyline;
+import org.rti.webcgh.graph.DataPoint;
+import org.rti.webcgh.graph.PlotBoundaries;
 
 /**
  * 
  */
-public class ScatterPlot extends BasePlot implements Plot {
+public class ScatterPlot implements DataPlotter {
     
     
     // ================================
@@ -97,6 +99,7 @@ public class ScatterPlot extends BasePlot implements Plot {
     private final Map pointsIndex = new HashMap();
     private final Map linesIndex = new HashMap();
     private final Map groupColorIndex = new HashMap();
+    private final PlotBoundaries plotBoundaries;
     
     
     /**
@@ -150,15 +153,25 @@ public class ScatterPlot extends BasePlot implements Plot {
      * @param height Height in pixels
      */
     public ScatterPlot(PlotBoundaries plotBoundaries, int width, int height) {
-        super(plotBoundaries);
+        this.plotBoundaries = plotBoundaries;
         this.width = width;
         this.height = height;
     }
     
     
     // =======================================
-    //   Methods in Plot interface
+    //   Methods in DataPlotter interface
     // =======================================
+    
+    /**
+     * Is data point in plot?
+     * @param dataPoint A data point
+     * @return T/F
+     */
+    public boolean inPlot(DataPoint dataPoint) {
+        return
+        	this.plotBoundaries.withinBoundaries(dataPoint);
+    }
     
     /**
      * Graph a data point
@@ -205,6 +218,14 @@ public class ScatterPlot extends BasePlot implements Plot {
     // =======================================
     //      Methods in PlotElement interface
     // =======================================
+    
+    /**
+     * Return point at top left of element
+     * @return A point
+     */
+    public Point topLeftPoint() {
+        return new Point(0, 0);
+    }
     
     /**
      * Paint element

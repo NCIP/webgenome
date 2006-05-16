@@ -50,38 +50,70 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
-import junit.framework.TestCase;
-
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.graph.widgit.Caption;
+import org.rti.webcgh.graph.widget.Axis;
+import org.rti.webcgh.graph.widget.Background;
+import org.rti.webcgh.graph.widget.Grid;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
 /**
- * Tester for Caption
+ * 
  */
-public class CaptionTester extends TestCase {
-        
+public class GridTester extends BasePlottingTester {
+    
+    
+    private DrawingCanvas tile = null;
+    
+    
+    /**
+     * 
+     */
+    public void setUp() {
+        super.setUp();
+        this.tile = this.drawingCanvas.newTile();
+        this.drawingCanvas.add(tile, 250, 250);
+    }
+    
     
     /**
      * 
      *
      */
-    public void test1() {
-    	SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        Caption caption = new Caption("Center horizontal caption", Orientation.HORIZONTAL, true);
-        caption.setTextAlignment(HorizontalAlignment.CENTERED);
-        panel.add(caption, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.setDrawBorder(true);
-        panel.toSvgFile("caption-horiz-left-one-line.svg");
+    public void testHorizontal() {
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
+        Background background = new Background(400, 400, Color.yellow);
+        PlotPanel panel = new PlotPanel(this.tile);
+        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        PlotTesterUtils.writeDocument(this.document, "grid-horiz.svg");
     }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testVertical() {
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
+        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
+        Background background = new Background(400, 400, Color.yellow);
+        PlotPanel panel = new PlotPanel(this.tile);
+        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        PlotTesterUtils.writeDocument(this.document, "grid-vert.svg");
+    }
+
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotBoundaries.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 15:06:23 $
+$Revision: 1.3 $
+$Date: 2006-05-16 12:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widgit.Axis;
+import org.rti.webcgh.graph.widget.Axis;
 
 /**
  * Defines region over x- and y-axes that contains plot.

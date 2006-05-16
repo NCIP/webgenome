@@ -50,22 +50,25 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widgit.unit_test;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
-import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.Location;
+import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.BasePlottingTester;
 import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
-import org.rti.webcgh.graph.widgit.ChromosomeEndCap;
+import org.rti.webcgh.graph.widget.Axis;
+import org.rti.webcgh.graph.widget.Background;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
 /**
  * 
  */
-public class ChromosomeEndCapTester extends BasePlottingTester {
-    
+public class AxisTester extends BasePlottingTester {
     
     private DrawingCanvas tile = null;
     
@@ -75,15 +78,8 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      */
     public void setUp() {
         super.setUp();
-        int x = 200;
-        int y = 200;
-        tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, x, y);
-        int length = 100;
-        this.drawingCanvas.add(new Line(x - length / 2, y, x + length / 2, 
-                y, 2, Color.black));
-        this.drawingCanvas.add(new Line(x, y - length / 2, x, 
-                y + length / 2, 2, Color.black));
+        this.tile = this.drawingCanvas.newTile();
+        this.drawingCanvas.add(tile, 250, 250);
     }
     
     
@@ -91,10 +87,10 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      * 
      *
      */
-    public void testUp() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.UP);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-up.svg");
+    public void testHorizAbove() {
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.ABOVE);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-horiz-above.svg");
     }
     
     
@@ -102,10 +98,10 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      * 
      *
      */
-    public void testDown() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.DOWN);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-down.svg");
+    public void testHorizBelow() {
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-horiz-below.svg");
     }
     
     
@@ -113,10 +109,10 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      * 
      *
      */
-    public void testLeft() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.LEFT);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-left.svg");
+    public void testVertLeft() {
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-vert-left.svg");
     }
     
     
@@ -124,10 +120,29 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      * 
      *
      */
-    public void testRight() {
-        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.RIGHT);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-right.svg");
+    public void testVertRight() {
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.RIGHT_OF);
+        axis.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "axis-vert-right.svg");
+    }
+    
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeftBottomRight() {
+        Axis axisL = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+        Axis axisR = new Axis(10, 50, 400, Orientation.VERTICAL, Location.RIGHT_OF);
+        Background background = new Background(400, 400, Color.yellow);
+        PlotPanel panel = new PlotPanel(this.tile);
+        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        panel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        PlotTesterUtils.writeDocument(this.document, "axis-left-bottom-right.svg");
     }
 
 }

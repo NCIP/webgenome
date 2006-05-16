@@ -64,7 +64,7 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
-import org.rti.webcgh.graph.widgit.PlotPanel;
+import org.rti.webcgh.graph.widget.PlotPanel;
 import org.rti.webcgh.util.IOUtils;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Document;

@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Plot.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,48 +50,84 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
+package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
-
+import org.rti.webcgh.drawing.Direction;
+import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.graph.unit_test.BasePlottingTester;
+import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.widget.ChromosomeEndCap;
 
 /**
- * A plot
+ * 
  */
-public interface Plot extends PlotElement {
+public class ChromosomeEndCapTester extends BasePlottingTester {
+    
+    
+    private DrawingCanvas tile = null;
     
     
     /**
-     * Graph a data point
-     * @param dataPoint A data point
-     * @param pointGroupKey Key identifying a group of data points to which
-     * given data point should be associated
+     * 
      */
-    public void graphPoint(DataPoint dataPoint, Object pointGroupKey);
+    public void setUp() {
+        super.setUp();
+        int x = 200;
+        int y = 200;
+        tile = this.drawingCanvas.newTile();
+        this.drawingCanvas.add(tile, x, y);
+        int length = 100;
+        this.drawingCanvas.add(new Line(x - length / 2, y, x + length / 2, 
+                y, 2, Color.black));
+        this.drawingCanvas.add(new Line(x, y - length / 2, x, 
+                y + length / 2, 2, Color.black));
+    }
     
     
     /**
-     * Graph a line between given data points
-     * @param dataPoints Data points
-     * @param key Key identifying group of lines specified by given data points
+     * 
+     *
      */
-    public void graphLines(DataPoint[] dataPoints, Object key);
+    public void testUp() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.UP);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-up.svg");
+    }
     
     
     /**
-     * Set color of group of pints
-     * @param pointGroupKey Key identifying group of points
-     * @param color Color
+     * 
+     *
      */
-    public void setGroupColor(Object pointGroupKey, Color color);
+    public void testDown() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.DOWN);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-down.svg");
+    }
     
     
     /**
-     * Is data point in plot?
-     * @param dataPoint A data point
-     * @return T/F
+     * 
+     *
      */
-    public boolean inPlot(DataPoint dataPoint);
-      
+    public void testLeft() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.LEFT);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-left.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRight() {
+        ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.RIGHT);
+        cap.paint(this.tile);
+        PlotTesterUtils.writeDocument(this.document, "cap-right.svg");
+    }
+
 }
