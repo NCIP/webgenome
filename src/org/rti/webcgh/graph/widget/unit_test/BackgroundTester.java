@@ -54,14 +54,18 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import junit.framework.TestCase;
+
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Background;
 
 
 /**
  * 
  */
-public class BackgroundTester extends BasePlottingTester {
+public class BackgroundTester extends TestCase {
     
     
     /**
@@ -70,8 +74,9 @@ public class BackgroundTester extends BasePlottingTester {
      */
     public void test1() {
         Background bg1 = new Background(400, 300, Color.red);
-        bg1.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "background.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.add(panel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile( "background.svg");
     }
 
 }

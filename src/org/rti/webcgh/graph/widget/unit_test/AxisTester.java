@@ -54,12 +54,14 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.PlotPanel;
@@ -67,18 +69,16 @@ import org.rti.webcgh.graph.widget.PlotPanel;
 /**
  * 
  */
-public class AxisTester extends BasePlottingTester {
+public class AxisTester extends TestCase {
     
-    private DrawingCanvas tile = null;
+    private SvgTestPanel panel = null;
     
     
     /**
      * 
      */
     public void setUp() {
-        super.setUp();
-        this.tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, 50, 50);
+    	this.panel = SvgTestPanel.newSvgTestPanel();
     }
     
     
@@ -88,8 +88,8 @@ public class AxisTester extends BasePlottingTester {
      */
     public void testHorizAbove() {
         Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.ABOVE);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-horiz-above.svg");
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("axis-horiz-above.svg");
     }
     
     
@@ -99,8 +99,8 @@ public class AxisTester extends BasePlottingTester {
      */
     public void testHorizBelow() {
         Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-horiz-below.svg");
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("axis-horiz-below.svg");
     }
     
     
@@ -110,8 +110,8 @@ public class AxisTester extends BasePlottingTester {
      */
     public void testVertLeft() {
         Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-vert-left.svg");
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("axis-vert-left.svg");
     }
     
     
@@ -121,8 +121,8 @@ public class AxisTester extends BasePlottingTester {
      */
     public void testVertRight() {
         Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.RIGHT_OF);
-        axis.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "axis-vert-right.svg");
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("axis-vert-right.svg");
     }
     
     
@@ -136,12 +136,13 @@ public class AxisTester extends BasePlottingTester {
         Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
         Axis axisR = new Axis(10, 50, 400, Orientation.VERTICAL, Location.RIGHT_OF);
         Background background = new Background(400, 400, Color.yellow);
-        PlotPanel panel = new PlotPanel(this.tile);
-        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        panel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "axis-left-bottom-right.svg");
+        PlotPanel childPanel = this.panel.newChildPlotPanel();
+        childPanel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        childPanel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        childPanel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        childPanel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("axis-left-bottom-right.svg");
     }
 
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.10 $
-$Date: 2006-05-16 12:49:02 $
+$Revision: 1.11 $
+$Date: 2006-05-17 19:11:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -312,7 +312,7 @@ public class PlotGenerator {
         PlotPanel row = panel.newChildPlotPanel();
         for (int i = 0; i < genomeIntervals.length; i++) {
         	int width = (int)((double)genomeIntervals[i].span() * widthScale);
-        	Grid grid = yAxis.newGrid(width, plotParameters.getHeight(), this.gridColor, canvas);
+        	Grid grid = yAxis.newGrid(width, plotParameters.getHeight(), this.gridColor, row);
             PlotPanel scatterPlotPanel = this.createScatterPlot(dataSet, genomeIntervals[i], 
                     width, plotParameters, panel, minY, maxY, grid);
             if (i % cols == 0 && i > 0) {

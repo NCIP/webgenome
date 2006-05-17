@@ -54,35 +54,30 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
 import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
+import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Line;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.ChromosomeEndCap;
 
 /**
  * 
  */
-public class ChromosomeEndCapTester extends BasePlottingTester {
+public class ChromosomeEndCapTester extends TestCase {
     
     
-    private DrawingCanvas tile = null;
+    private SvgTestPanel panel = null;
     
     
     /**
      * 
      */
     public void setUp() {
-        super.setUp();
-        int x = 200;
-        int y = 200;
-        tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, x, y);
-        int length = 100;
-        this.drawingCanvas.add(new Line(x - length / 2, y, x + length / 2, 
-                y, 2, Color.black));
-        this.drawingCanvas.add(new Line(x, y - length / 2, x, 
-                y + length / 2, 2, Color.black));
+        this.panel = SvgTestPanel.newSvgTestPanel();
     }
     
     
@@ -92,8 +87,8 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      */
     public void testUp() {
         ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.UP);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-up.svg");
+        panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("cap-up.svg");
     }
     
     
@@ -103,8 +98,8 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      */
     public void testDown() {
         ChromosomeEndCap cap = new ChromosomeEndCap(50, Color.red, Direction.DOWN);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-down.svg");
+        panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("cap-down.svg");
     }
     
     
@@ -114,8 +109,8 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      */
     public void testLeft() {
         ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.LEFT);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-left.svg");
+        panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("cap-left.svg");
     }
     
     
@@ -125,8 +120,8 @@ public class ChromosomeEndCapTester extends BasePlottingTester {
      */
     public void testRight() {
         ChromosomeEndCap cap = new ChromosomeEndCap(30, Color.red, Direction.RIGHT);
-        cap.paint(this.tile);
-        PlotTesterUtils.writeDocument(this.document, "cap-right.svg");
+        panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("cap-right.svg");
     }
 
 }

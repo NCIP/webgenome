@@ -61,7 +61,6 @@ import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.PlotPanel;
@@ -73,7 +72,7 @@ import org.rti.webcgh.graph.widget.PlotPanel;
 public class PlotPanelTester extends TestCase {
     
     
-    private SvgTestPanel panel =null;
+    private SvgTestPanel panel = null;
     
     
     /**

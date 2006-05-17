@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-16 18:01:53 $
+$Revision: 1.3 $
+$Date: 2006-05-17 19:11:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,24 +60,12 @@ import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.graph.PlotGenerator;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.graph.PlotType;
-import org.rti.webcgh.graph.widget.unit_test.BasePlottingTester;
 
 /**
  * Tester for PlotGenerator
  */
-public class PlotGeneratorTester extends BasePlottingTester {
-    
-    
-    private DrawingCanvas tile = null;
-    
-    
-    /**
-     * 
-     */
-    public void setUp() {
-        super.setUp();
-        this.tile = this.drawingCanvas.newTile();
-    }
+public class PlotGeneratorTester {
+
 	
 	/**
 	 * 
@@ -85,11 +73,12 @@ public class PlotGeneratorTester extends BasePlottingTester {
 	 */
 	public void testScatterPlot() {
 		PlotGenerator pg = new PlotGenerator();
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
 //		pg.createPlot(new Experiment[] {this.experiment}, 
 //				new GenomeInterval[] {this.genomeInterval1, this.genomeInterval2}, 
 //				new QuantitationType("Log2 Ratio"), 
 //				new PlotParameters(PlotType.SCATTER_PLOT), this.drawingCanvas);
-		PlotTesterUtils.writeDocument(this.document, "plot-generator-scatter.svg");
+		panel.toSvgFile("plot-generator-scatter.svg");
 	}
 
 }

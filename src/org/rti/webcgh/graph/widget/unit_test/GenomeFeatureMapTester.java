@@ -56,12 +56,14 @@ package org.rti.webcgh.graph.widget.unit_test;
 import java.awt.Color;
 import java.net.URL;
 
+import junit.framework.TestCase;
+
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.util.CentromereWarper;
 import org.rti.webcgh.graph.util.Warper;
 import org.rti.webcgh.graph.widget.Caption;
@@ -72,17 +74,15 @@ import org.rti.webcgh.graph.widget.PlotPanel;
 /**
  * Tester for GenomeFeatureMap
  */
-public class GenomeFeatureMapTester extends BasePlottingTester {
+public class GenomeFeatureMapTester extends TestCase {
 	
-	private DrawingCanvas tile = null;
+	private SvgTestPanel panel = null;
 	
 	/**
 	 * 
 	 */
 	public void setUp() {
-		super.setUp();
-		this.tile = this.drawingCanvas.newTile();
-		this.drawingCanvas.add(tile, 100, 100);
+		this.panel = SvgTestPanel.newSvgTestPanel();
 	}
 	
 	
@@ -98,113 +98,114 @@ public class GenomeFeatureMapTester extends BasePlottingTester {
 			null, true, Color.red);
 		map.addFrame(Location.ABOVE, 2, Color.black);
 		map.addFrame(Location.BELOW, 2, Color.black);
-		map.paint(this.tile);
-		PlotTesterUtils.writeDocument(this.document, "feat-map-basic-horiz.svg");
+		panel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("feat-map-basic-horiz.svg");
 	}
 	
 	
 	public void testIdeogramPlot() throws Exception {
-		PlotPanel panel = new PlotPanel(this.tile);
+		PlotPanel childPanel = this.panel.newChildPlotPanel();
 		GenomeFeatureMap map1 = new GenomeFeatureMap(0, 200, 400, Orientation.VERTICAL);
 		map1.plotFeature(0, 200, "Feature 1", null, false, Color.blue);
 		GenomeFeatureMap map2 = new GenomeFeatureMap(0, 200, 400, Orientation.VERTICAL);
 		map2.plotFeature(0, 200, "Feature 2", null, false, Color.blue);
 		Caption c1 = new Caption("Feature 1", Orientation.VERTICAL, false);
 		Caption c2 = new Caption("Feature 2", Orientation.VERTICAL, false);
-		PlotPanel p1 = panel.newChildPlotPanel();
-		PlotPanel p2 = panel.newChildPlotPanel();
+		PlotPanel p1 = childPanel.newChildPlotPanel();
+		PlotPanel p2 = childPanel.newChildPlotPanel();
 		p1.add(map1, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
 		p1.add(c1, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-		panel.add(p1, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+		childPanel.add(p1, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
 		p2.add(map2, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
 		p2.add(c2, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-		panel.add(p2, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
-		PlotTesterUtils.writeDocument(this.document, "feat-map-ideogram.svg");
+		childPanel.add(p2, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+		panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("feat-map-ideogram.svg");
 	}
 	
 	
-//	/**
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public void testBasicVert() throws Exception {
-//		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.VERTICAL);
-//		map.plotFeature(110, 120, "Feat 1", new URL("http://www.google.com"), true, 
-//			Color.green);
-//		map.plotFeatures(new long[] {150, 165, 180}, new long[] {151, 172, 190}, "Feat 2",
-//			null, true, Color.red);
-//		map.addFrame(Location.ABOVE, 2, Color.black);
-//		map.addFrame(Location.BELOW, 2, Color.black);
-//		map.paint(this.tile);
-//		PlotTesterUtils.writeDocument(this.document, "feat-map-basic-vert.svg");
-//	}
-//	
-//	
-//	/**
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public void testChromosomeHoriz() throws Exception {
-//		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.HORIZONTAL);
-//		Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(110), 
-//			map.bpToPixel(150));
-//		map.setWarper(warper);
-//		
-////		map.plotFeature(100, 140, "Feat 1", new URL("http://www.google.com"), false, 
-////				Color.gray);
-////		map.plotFeature(140, 200, "Feat 1", new URL("http://www.google.com"), false, 
-////				Color.red);
-//		
-//		map.plotFeature(100, 120, "Feat 1", new URL("http://www.google.com"), false, 
-//			Color.gray);
-//		map.plotFeature(120, 125, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.red);
-//		map.plotFeature(125, 166, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.green);
-//		map.plotFeature(166, 172, "Feat 1", new URL("http://www.google.com"), false, 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testBasicVert() throws Exception {
+		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.VERTICAL);
+		map.plotFeature(110, 120, "Feat 1", new URL("http://www.google.com"), true, 
+			Color.green);
+		map.plotFeatures(new long[] {150, 165, 180}, new long[] {151, 172, 190}, "Feat 2",
+			null, true, Color.red);
+		map.addFrame(Location.ABOVE, 2, Color.black);
+		map.addFrame(Location.BELOW, 2, Color.black);
+		panel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("feat-map-basic-vert.svg");
+	}
+	
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testChromosomeHoriz() throws Exception {
+		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.HORIZONTAL);
+		Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(110), 
+			map.bpToPixel(150));
+		map.setWarper(warper);
+		
+//		map.plotFeature(100, 140, "Feat 1", new URL("http://www.google.com"), false, 
 //				Color.gray);
-//		map.plotFeature(172, 191, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.darkGray);
-//		map.plotFeature(191, 200, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.blue);
-//		map.addFrame(Location.ABOVE, 2, Color.black);
-//		map.addFrame(Location.BELOW, 2, Color.black);
-//		map.paint(this.tile);
-//		PlotTesterUtils.writeDocument(this.document, "feat-map-chrom-horiz.svg");
-//	}
-//	
-//	
-//	/**
-//	 * 
-//	 * @throws Exception
-//	 */
-//	public void testChromosomeVert() throws Exception {
-//		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.VERTICAL);
-//		Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(110), 
-//			map.bpToPixel(150));
-//		map.setWarper(warper);
-//		
-////		map.plotFeature(100, 140, "Feat 1", new URL("http://www.google.com"), false, 
-////				Color.gray);
-////		map.plotFeature(140, 200, "Feat 1", new URL("http://www.google.com"), false, 
-////				Color.red);
-//		
-//		map.plotFeature(100, 120, "Feat 1", new URL("http://www.google.com"), false, 
-//			Color.gray);
-//		map.plotFeature(120, 125, "Feat 1", new URL("http://www.google.com"), false, 
+//		map.plotFeature(140, 200, "Feat 1", new URL("http://www.google.com"), false, 
 //				Color.red);
-//		map.plotFeature(125, 166, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.green);
-//		map.plotFeature(166, 172, "Feat 1", new URL("http://www.google.com"), false, 
+		
+		map.plotFeature(100, 120, "Feat 1", new URL("http://www.google.com"), false, 
+			Color.gray);
+		map.plotFeature(120, 125, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.red);
+		map.plotFeature(125, 166, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.green);
+		map.plotFeature(166, 172, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.gray);
+		map.plotFeature(172, 191, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.darkGray);
+		map.plotFeature(191, 200, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.blue);
+		map.addFrame(Location.ABOVE, 2, Color.black);
+		map.addFrame(Location.BELOW, 2, Color.black);
+		panel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("feat-map-chrom-horiz.svg");
+	}
+	
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	public void testChromosomeVert() throws Exception {
+		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.VERTICAL);
+		Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(110), 
+			map.bpToPixel(150));
+		map.setWarper(warper);
+		
+//		map.plotFeature(100, 140, "Feat 1", new URL("http://www.google.com"), false, 
 //				Color.gray);
-//		map.plotFeature(172, 191, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.darkGray);
-//		map.plotFeature(191, 200, "Feat 1", new URL("http://www.google.com"), false, 
-//				Color.blue);
-//		map.addFrame(Location.ABOVE, 2, Color.black);
-//		map.addFrame(Location.BELOW, 2, Color.black);
-//		map.paint(this.tile);
-//		PlotTesterUtils.writeDocument(this.document, "feat-map-chrom-vert.svg");
-//	}
+//		map.plotFeature(140, 200, "Feat 1", new URL("http://www.google.com"), false, 
+//				Color.red);
+		
+		map.plotFeature(100, 120, "Feat 1", new URL("http://www.google.com"), false, 
+			Color.gray);
+		map.plotFeature(120, 125, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.red);
+		map.plotFeature(125, 166, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.green);
+		map.plotFeature(166, 172, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.gray);
+		map.plotFeature(172, 191, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.darkGray);
+		map.plotFeature(191, 200, "Feat 1", new URL("http://www.google.com"), false, 
+				Color.blue);
+		map.addFrame(Location.ABOVE, 2, Color.black);
+		map.addFrame(Location.BELOW, 2, Color.black);
+		panel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.toSvgFile("feat-map-chrom-vert.svg");
+	}
 
 }

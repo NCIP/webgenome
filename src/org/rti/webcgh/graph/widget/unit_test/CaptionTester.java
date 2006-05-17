@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
+import java.awt.Point;
 
 import junit.framework.TestCase;
 
@@ -61,7 +62,6 @@ import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Caption;
 
@@ -79,6 +79,7 @@ public class CaptionTester extends TestCase {
         Caption caption = new Caption("Center horizontal caption", Orientation.HORIZONTAL, true);
         caption.setTextAlignment(HorizontalAlignment.CENTERED);
         panel.add(caption, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        panel.setOrigin(new Point(20, 20));
         panel.toSvgFile("caption-horiz-left-one-line.svg");
     }
 }

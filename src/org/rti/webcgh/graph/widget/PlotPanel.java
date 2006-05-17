@@ -257,6 +257,17 @@ public class PlotPanel implements PlotElement {
         }
     }
     
+    
+    /**
+     * Find rendered width of given text on this panel
+     * @param text Text
+     * @param fontSize Font size
+     * @return Width of rendered text in pixels
+     */
+    public int renderedWidth(String text, int fontSize) {
+    	return this.drawingCanvas.renderedWidth(text, fontSize);
+    }
+    
             
     
     // =======================================

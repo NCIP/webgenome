@@ -54,12 +54,14 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.Grid;
@@ -68,19 +70,17 @@ import org.rti.webcgh.graph.widget.PlotPanel;
 /**
  * 
  */
-public class GridTester extends BasePlottingTester {
+public class GridTester extends TestCase {
     
     
-    private DrawingCanvas tile = null;
+    private SvgTestPanel panel = null;
     
     
     /**
      * 
      */
     public void setUp() {
-        super.setUp();
-        this.tile = this.drawingCanvas.newTile();
-        this.drawingCanvas.add(tile, 250, 250);
+        this.panel = SvgTestPanel.newSvgTestPanel();
     }
     
     
@@ -90,13 +90,14 @@ public class GridTester extends BasePlottingTester {
      */
     public void testHorizontal() {
         Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
+        Grid grid = axis.newGrid(400, 400, Color.white, this.panel);
         Background background = new Background(400, 400, Color.yellow);
-        PlotPanel panel = new PlotPanel(this.tile);
-        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "grid-horiz.svg");
+        PlotPanel childPanel = this.panel.newChildPlotPanel();
+        childPanel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        childPanel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        childPanel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        this.panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.toSvgFile("grid-horiz.svg");
     }
     
     
@@ -106,13 +107,14 @@ public class GridTester extends BasePlottingTester {
      */
     public void testVertical() {
         Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
-        Grid grid = axis.newGrid(400, 400, Color.white, this.tile);
+        Grid grid = axis.newGrid(400, 400, Color.white, this.panel);
         Background background = new Background(400, 400, Color.yellow);
-        PlotPanel panel = new PlotPanel(this.tile);
-        panel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        PlotTesterUtils.writeDocument(this.document, "grid-vert.svg");
+        PlotPanel childPanel = this.panel.newChildPlotPanel();
+        childPanel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+        childPanel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        childPanel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        this.panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.toSvgFile("grid-vert.svg");
     }
 
 }

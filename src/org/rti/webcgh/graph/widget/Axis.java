@@ -213,8 +213,8 @@ public class Axis implements PlotElement {
         canvas.add(line);
         
         // Set up for generating tic marks
-	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(canvas, this.length, this.minValue, 
-	            this.maxValue, this.fontSize);
+	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(new RenderedWidthCalculator(canvas), 
+	    		this.length, this.minValue, this.maxValue, this.fontSize);
         double majorTicInterval = this.computeTicInterval(this.minValue, this.maxValue, maxNumMajorTics);
         double minorTicInterval = majorTicInterval / numMinorTicsBetweenMajorTics;
         double startingMajorTic = this.computeStartTic(this.minValue, majorTicInterval);
@@ -328,13 +328,13 @@ public class Axis implements PlotElement {
      * @param width Width of grid in pixels
      * @param height Height of grid in pixels
      * @param color Color
-     * @param canvas A drawing canvas
+     * @param panel A plot panel
      * @return New grid
      */
-    public Grid newGrid(int width, int height, Color color, DrawingCanvas canvas) {
+    public Grid newGrid(int width, int height, Color color, PlotPanel panel) {
         Grid grid = new Grid(width, height, Orientation.opposite(this.orientation), color);
-	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(canvas, this.length, this.minValue, 
-	            this.maxValue, this.fontSize);
+	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(new RenderedWidthCalculator(panel), 
+	    		this.length, this.minValue, this.maxValue, this.fontSize);
         double majorTicInterval = this.computeTicInterval(this.minValue, this.maxValue, maxNumMajorTics);
         double startingMajorTic = this.computeStartTic(this.minValue, majorTicInterval);
         for (double x = startingMajorTic; x <= this.maxValue; x += majorTicInterval) {
@@ -406,7 +406,7 @@ public class Axis implements PlotElement {
 	 * Heuristically determine how many tic marks 
 	 * over given range could fit
 	 * on one text line of given width.
-	 * @param canvas A canvas
+	 * @param panel A plotpanel
 	 * @param width Width of target text line
 	 * @param min Minimum value in range
 	 * @param max Maximum value in range
@@ -415,14 +415,14 @@ public class Axis implements PlotElement {
 	 */
 	private int maxNumTicsThatFitOnOneLine
 	(
-		DrawingCanvas canvas, int width, double min, double max, 
+		RenderedWidthCalculator widthCalculator, int width, double min, double max, 
 		int fontSize
 	) {
 	    StringBuffer template = new StringBuffer(this.numberFormatter.format(max));
-        int maxWidth = canvas.renderedWidth(template.toString(), fontSize);
+        int maxWidth = widthCalculator.renderedWidth(template.toString());
 	    for (int i = 0; i < this.multipliers.length; i++) {
 	        template = new StringBuffer(this.numberFormatter.format(max / this.multipliers[i]));
-	        int candidateMaxWidth = canvas.renderedWidth(template.toString(), fontSize);
+	        int candidateMaxWidth = widthCalculator.renderedWidth(template.toString());
 	        if (candidateMaxWidth > maxWidth)
 	            maxWidth = candidateMaxWidth;
 	    }
@@ -467,6 +467,29 @@ public class Axis implements PlotElement {
 	        this.minY = ticMark.minY();
 	    if (ticMark.maxY() > this.maxY)
 	        this.maxY = ticMark.maxY();
+	}
+	
+	class RenderedWidthCalculator {
+		
+		PlotPanel panel = null;
+		DrawingCanvas canvas = null;
+		
+		public RenderedWidthCalculator(PlotPanel panel) {
+			this.panel = panel;
+		}
+		
+		public RenderedWidthCalculator(DrawingCanvas canvas) {
+			this.canvas = canvas;
+		}
+		
+		public int renderedWidth(String text) {
+			int width = 0;
+			if (this.panel != null)
+				width = this.panel.renderedWidth(text, fontSize);
+			else if (this.canvas != null)
+				width = this.canvas.renderedWidth(text, fontSize);
+			return width;
+		}
 	}
 	
 	/**
