@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/AcghService.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-11 18:19:57 $
+$Revision: 1.5 $
+$Date: 2006-05-17 17:28:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -303,6 +303,11 @@ public class AcghService {
 		    }
 		    rcmdIn.close();
 
+		    int maxChrom = 1;
+		    int[] Chromosomes = data.getChromosomes();
+		    for(int i = 0 ; i < Chromosomes.length ; i++) {
+		      if (Chromosomes[i] > maxChrom) {maxChrom = Chromosomes[i];} 
+		    }
             String cmd;
             String incomplete_cmd = "";
             boolean isCompleteCmd = true;
@@ -335,6 +340,13 @@ public class AcghService {
 					    System.out.print("Trying R command: \"" + cmd + "\"...");
 					   
 					    c.voidEval(cmd);
+					    
+					    // find the genomic events with max chrom number 
+					    if (cmd.startsWith("sd.samples")) {
+					    	cmd = "genomic.events(aCGH_obj) <-find.genomic.events(aCGH_obj, maxChrom="+maxChrom+")";
+					    	System.out.print("Trying R command: \"" + cmd + "\"...");
+					    	c.voidEval(cmd);
+					    }
 					    
 					    // retrieve smoothed values from R
 					    if (cmd.startsWith("result <-")) {
