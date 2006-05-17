@@ -54,13 +54,15 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.PlotPanel;
@@ -68,7 +70,7 @@ import org.rti.webcgh.graph.widget.PlotPanel;
 /**
  * Tests combinations of plot elements
  */
-public class PlotElementTester extends BasePlottingTester {
+public class PlotElementTester extends TestCase {
     
     
     /**
@@ -76,12 +78,12 @@ public class PlotElementTester extends BasePlottingTester {
      *
      */
     public void testTwoAxis() {
-        DrawingCanvas tile = this.drawingCanvas.newTile();
+        SvgTestPanel svgPanel = SvgTestPanel.newSvgTestPanel();
         //Axis xAxis = new Axis(0, 300000000, 400, Orientation.HORIZONTAL, Location.BELOW);
         Axis yAxis = new Axis(-0.91, 1.5, 400, Orientation.VERTICAL, Location.LEFT_OF);
         Caption xCaption = new Caption("Chromosome 1", Orientation.HORIZONTAL, false);
         Caption yCaption = new Caption("Log2 Ratio", Orientation.HORIZONTAL, true);
-        PlotPanel panel = new PlotPanel(tile);
+        PlotPanel panel = svgPanel.newChildPlotPanel();
         //PlotPanel xPanel = panel.newChildPlotPanel();
         PlotPanel yPanel = panel.newChildPlotPanel();
         //xPanel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
@@ -90,10 +92,8 @@ public class PlotElementTester extends BasePlottingTester {
         yPanel.add(yCaption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
         //panel.add(xPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
         panel.add(yPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        this.drawingCanvas.add(tile, -panel.topLeftPoint().x, -panel.topLeftPoint().y);
-        this.drawingCanvas.add(new Line(0, panel.height(), panel.width(), 
-        		panel.height(), 2, Color.red));
-        PlotTesterUtils.writeDocument(this.document, "two-axes.svg");
+        svgPanel.add(panel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        svgPanel.toSvgFile("two-axes.svg");
     }
 
 }

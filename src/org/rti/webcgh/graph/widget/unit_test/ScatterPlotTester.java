@@ -54,45 +54,132 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
+import junit.framework.TestCase;
+
+import org.rti.webcgh.array.ArrayDatum;
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.BioAssayData;
+import org.rti.webcgh.array.Chromosome;
+import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.array.GenomeInterval;
 import org.rti.webcgh.array.GenomeLocation;
+import org.rti.webcgh.array.Quantitation;
+import org.rti.webcgh.array.QuantitationType;
+import org.rti.webcgh.array.Reporter;
+import org.rti.webcgh.array.ReporterMapping;
+import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.PlotBoundaries;
-import org.rti.webcgh.graph.unit_test.PlotTesterUtils;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.ScatterPlot;
+import org.w3c.dom.Document;
 
 /**
  * 
  */
-public class ScatterPlotTester extends BasePlottingTester {
+public class ScatterPlotTester extends TestCase {
     
     
 
     ScatterPlot plot = null;
+    private Experiment experiment = null;
+    private BioAssayData bioAssayData = null;
+    private Document document = null;
+    private Chromosome chrom1 = new Chromosome(null, (short)1, (long)300000000);
+    private Chromosome chrom2 = new Chromosome(null, (short)2, (long)250000000);
+    private Chromosome chrom3 = new Chromosome(null, (short)3, (long)200000000);
+    private GenomeInterval genomeInterval1 = null;
+    private GenomeInterval genomeInterval2 = null;
+    
+    public ScatterPlotTester() {
+        this.bioAssayData = new BioAssayData();
+        QuantitationType qType = new QuantitationType("RAW");
+        
+        // Chromosome 1
+        Reporter r1 = new Reporter("1");
+        Reporter r2 = new Reporter("2");
+        Reporter r3 = new Reporter("3");
+        Reporter r4 = new Reporter("4");
+        Reporter r5 = new Reporter("5");
+        Reporter r6 = new Reporter("6");
+        r1.setReporterMapping(new ReporterMapping(r1, new GenomeLocation(chrom1, 50000000)));
+        r2.setReporterMapping(new ReporterMapping(r2, new GenomeLocation(chrom1, 75000000)));
+        r3.setReporterMapping(new ReporterMapping(r3, new GenomeLocation(chrom1, 80000000)));
+        r4.setReporterMapping(new ReporterMapping(r4, new GenomeLocation(chrom1, 150000000)));
+        r5.setReporterMapping(new ReporterMapping(r5, new GenomeLocation(chrom1, 175000000)));
+        r6.setReporterMapping(new ReporterMapping(r6, new GenomeLocation(chrom1, 225000000)));
+        this.bioAssayData.add(new ArrayDatum(r1, new Quantitation((float)0.5, (float)0.5, qType)));
+        this.bioAssayData.add(new ArrayDatum(r2, new Quantitation((float)-0.5, (float)0.1, qType)));
+        this.bioAssayData.add(new ArrayDatum(r3, new Quantitation((float)0.3, (float)0.2, qType)));
+        this.bioAssayData.add(new ArrayDatum(r4, new Quantitation((float)0.25, (float)0.01, qType)));
+        this.bioAssayData.add(new ArrayDatum(r5, new Quantitation((float)-0.05, (float)0.1, qType)));
+        this.bioAssayData.add(new ArrayDatum(r6, new Quantitation((float)0.95, (float)0.2, qType)));
+        
+        // Chromosome 2
+        Reporter r7 = new Reporter("7");
+        Reporter r8 = new Reporter("8");
+        Reporter r9 = new Reporter("9");
+        Reporter r10 = new Reporter("10");
+        Reporter r11 = new Reporter("11");
+        r7.setReporterMapping(new ReporterMapping(r7, new GenomeLocation(chrom2, 20000000)));
+        r8.setReporterMapping(new ReporterMapping(r8, new GenomeLocation(chrom2, 35500000)));
+        r9.setReporterMapping(new ReporterMapping(r9, new GenomeLocation(chrom2, 100500000)));
+        r10.setReporterMapping(new ReporterMapping(r10, new GenomeLocation(chrom2, 150000000)));
+        r11.setReporterMapping(new ReporterMapping(r11, new GenomeLocation(chrom2, 175000000)));
+        this.bioAssayData.add(new ArrayDatum(r7, new Quantitation((float)0.01, (float)0.2, qType)));
+        this.bioAssayData.add(new ArrayDatum(r8, new Quantitation((float)0.20, (float)0.4, qType)));
+        this.bioAssayData.add(new ArrayDatum(r9, new Quantitation((float)1.1, (float)0.01, qType)));
+        this.bioAssayData.add(new ArrayDatum(r10, new Quantitation((float)0.95, (float)0.3, qType)));
+        this.bioAssayData.add(new ArrayDatum(r11, new Quantitation((float)-0.1, (float)0.7, qType)));
+        
+        // Chromosome 3
+        Reporter r12 = new Reporter("12");
+        Reporter r13 = new Reporter("13");
+        Reporter r14 = new Reporter("14");
+        Reporter r15 = new Reporter("15");
+        r12.setReporterMapping(new ReporterMapping(r12, new GenomeLocation(chrom3, 10000000)));
+        r13.setReporterMapping(new ReporterMapping(r13, new GenomeLocation(chrom3, 80000000)));
+        r14.setReporterMapping(new ReporterMapping(r14, new GenomeLocation(chrom3, 120000000)));
+        r15.setReporterMapping(new ReporterMapping(r15, new GenomeLocation(chrom3, 160000000)));
+        this.bioAssayData.add(new ArrayDatum(r12, new Quantitation((float)-0.3, (float)0.3, qType)));
+        this.bioAssayData.add(new ArrayDatum(r13, new Quantitation((float)-0.2, (float)0.4, qType)));
+        this.bioAssayData.add(new ArrayDatum(r14, new Quantitation((float)-0.8, (float)0.1, qType)));
+        this.bioAssayData.add(new ArrayDatum(r15, new Quantitation((float)1.0, (float)0.3, qType)));
+        
+        // Experiments
+        BioAssay bioAssay = new BioAssay("bioAssay1", "A bioassay", "1", "db");
+        bioAssay.setBioAssayData(this.bioAssayData);
+        this.experiment = new Experiment("experiment1", "An experiment", 
+        		"DB", false);
+        this.experiment.add(bioAssay);
+        
+        // Genome intervals
+        this.genomeInterval1 = new GenomeInterval(new GenomeLocation(chrom1, 0), 
+        		new GenomeLocation(chrom1, 300000000));
+        this.genomeInterval2 = new GenomeInterval(new GenomeLocation(chrom2, 0), 
+        		new GenomeLocation(chrom2, 200000000));
+    }
     
     
     /**
      * 
      */
     public void setUp() {
-        super.setUp();
         int width = 300;
         int height = 300;
-        this.document = PlotTesterUtils.newTestDocument();
-        this.drawingCanvas = new SvgDrawingCanvas(document);
         DataPoint bottomLeftPoint = new DataPoint(0.0, -0.6);
         DataPoint topRightPoint = new DataPoint(300000000, 1.0);
         this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
                 width, height);
-        PlotTesterUtils.addFrame(this.drawingCanvas, width, height);
     }
     
     /**
      */
     public void testAll1() {
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 0), new GenomeLocation(chrom1, 300000000), "plot", Color.black);
-        this.plot.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "scatter-all-1.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.toSvgFile("scatter-all-1.svg");
     }
     
     /**
@@ -105,8 +192,8 @@ public class ScatterPlotTester extends BasePlottingTester {
         this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
             width, height);
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 10000000), new GenomeLocation(chrom1, 30000000), "plot", Color.black);
-        this.plot.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "scatter-left-first-1.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.toSvgFile("scatter-left-first-1.svg");
     }
     
     /**
@@ -119,8 +206,8 @@ public class ScatterPlotTester extends BasePlottingTester {
         this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
             width, height);
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 250000000), new GenomeLocation(chrom1, 270000000), "plot", Color.black);
-        this.plot.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "scatter-right-first-1.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.toSvgFile("scatter-right-first-1.svg");
     }
     
     /**
@@ -133,24 +220,24 @@ public class ScatterPlotTester extends BasePlottingTester {
         this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
             width, height);
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 10000000), new GenomeLocation(chrom1, 15000000), "plot", Color.black);
-        this.plot.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "scatter-left-first-2.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.toSvgFile("scatter-left-first-2.svg");
     }
     
     /**
      */
     public void testRightLastProbe2() {
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 200000000), new GenomeLocation(chrom1, 210000000), "plot", Color.black);
-        this.plot.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "scatter-right-last-2.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.toSvgFile("scatter-right-last-2.svg");
     }
     
     /**
      */
     public void testRightLastProbe3() {
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 170000000), new GenomeLocation(chrom1, 180000000), "plot", Color.black);
-        this.plot.paint(this.drawingCanvas);
-        PlotTesterUtils.writeDocument(this.document, "scatter-right-last-3.svg");
+        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.toSvgFile("scatter-right-last-3.svg");
     }
 
 }
