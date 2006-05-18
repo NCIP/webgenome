@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-18 20:01:31 $
+$Revision: 1.4 $
+$Date: 2006-05-18 21:26:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,43 +57,67 @@ import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.service.AcghService;
 
+/**
+ * The analytic operation for aCGH data smoothing
+ */
 public class AcghOperation implements NormalizationOperation {
 	
 	private AcghDataTransformer acghDataTransformer = new AcghDataTransformer();
 	private AcghService acghService = null;
 	
-	
+	/**
+	 * Getter method for acghService
+	 * @return 
+	 */
 	public AcghService getAcghService() {
 		return acghService;
 	}
 
+	/**
+	 * Setter method for acghService
+	 * @param acghService
+	 */
 	public void setAcghService(AcghService acghService) {
 		this.acghService = acghService;
 	}
 
+	/**
+	 * Setter method for id
+	 */
 	public void setId(Long id) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Getter method for id
+	 */
 	public Long getId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Validates input data for the operation
+	 */
 	public DataSetInvalidations validate(Experiment[] data,
 			PlotParameters params) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Executes this analytic pipeline operation on the input data and returns the results
+	 * @param data The Experiment objects supplied as the input from the pipline
+	 * @param params Parameters used for plotting
+	 * @return The resultant Experiment objects after the analytic operation is performed
+	 */
 	public Experiment[] perform(Experiment[] data, PlotParameters params)
 			throws AnalyticException {
 		
 		Experiment[] resultData = new Experiment[0];
 		
 		try {
-			// TODO: Add business logic here
 			
 			for (int i = 0; i < data.length; i++) {
 				Experiment exp = data[i];
@@ -108,7 +132,7 @@ public class AcghOperation implements NormalizationOperation {
 		} catch (Exception e) {
 			throw new AnalyticException("Error performing aCGH operation", e);
 		}
-		// TODO Auto-generated method stub
+		
 		return resultData;
 	}
 

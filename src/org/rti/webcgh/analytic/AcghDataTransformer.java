@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-11 18:19:57 $
+$Revision: 1.3 $
+$Date: 2006-05-18 21:26:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,6 +68,9 @@ import org.rti.webcgh.array.Experiment;
 
 import sun.security.krb5.internal.ac;
 
+/**
+ * Performs the mapping between the Experiment object and the data for aCGH
+ */
 public class AcghDataTransformer {
 	
 	/**
@@ -76,27 +79,10 @@ public class AcghDataTransformer {
 	 * @return
 	 */
 	public Experiment transform(AcghData acghData, Experiment origExperiment) {
-		
-//		double[] log2Ratios;      // log2 ratios of copy number changes
-//				// rows correspond to the clones and columns to the samples
-//		String[] clones;          // clone name
-//		String[] targets;         // unique ID, e.g. Well ID
-//		int[] chromosomes;        // chromosome number
-//		        // X chromosome = 23 in human and 20 in mouse,
-//		        // Y chromosome = 24 in human and 21 in mouse
-//		int[] positions;          // kb position on the chromosome
+
 		double[] smoothedRatios;  // smoothed value of log2 ratio
-//		int size;                 // number of clones/number of rows
-//		
-//		log2Ratios = acghData.getLog2Ratios();
-//		clones = acghData.getClones();
-//		targets = acghData.getTargets();
-//		chromosomes = acghData.getChromosomes();
-//		positions = acghData.getPositions();
+
 		smoothedRatios = acghData.getSmoothedRatios();
-//		size = acghData.getSize();
-		
-		// TODO: run the aCGH command here to get the smoothing results
 		
 		Experiment newExperiment = new Experiment();
 		newExperiment.bulkSet(origExperiment, true);
@@ -156,8 +142,6 @@ public class AcghDataTransformer {
 		// initialize arrays
 
 		log2Ratios = new double[size];
-//		clones = clonesList.toArray(new String[0]);
-//		targets = targetsList.toArray(new String[0]);
 		clones = new String[size];
 		targets = new String[size];
 		chromosomes = new int[size];
@@ -170,7 +154,8 @@ public class AcghDataTransformer {
 
 			log2Ratios[i] = (double) arrayDatum.getQuantitation().getValue();
 			clones[i] = arrayDatum.getReporter().getName();
-			targets[i] = arrayDatum.getReporter().getId().toString();
+//			targets[i] = arrayDatum.getReporter().getId().toString();
+			targets[i] = arrayDatum.getReporter().getName();
 			chromosomes[i] = (int) arrayDatum.chromosome().getNumber();
 			positions[i] = (int) arrayDatum.getGenomeLocation().getLocation();
 			
