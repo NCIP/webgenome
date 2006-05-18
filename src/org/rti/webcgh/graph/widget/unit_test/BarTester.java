@@ -50,37 +50,71 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
 package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
-import java.awt.Point;
+
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.DataPoint;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
+import org.rti.webcgh.graph.widget.Bar;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Line;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.graph.widget.Caption;
 
 /**
- * Tester for Caption
+ * Tester for <code>Bar</code>
+ *
  */
-public class CaptionTester extends TestCase {
-        
-    
-    /**
-     * Draw a single caption
-     */
-    public void testSingleCaption() {
-    	SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        Caption caption = new Caption("Center horizontal caption", Orientation.HORIZONTAL, true);
-        panel.add(caption, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.setDrawBorder(true);
-        panel.setDrawCrossHairs(true);
-        panel.setOrigin(new Point(20, 20));
-        panel.toSvgFile("caption-horiz-left-one-line.svg");
-    }
+public class BarTester extends TestCase {
+	
+	/**
+	 *
+	 */
+	public void testUpNoError() {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		DataPoint dp = new DataPoint(0.0, 3.0, "");
+		Bar bar = new Bar(dp, Color.BLACK, 50.0);
+		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("bar-up-no-error.svg");
+	}
+	
+	
+	/**
+	 *
+	 */
+	public void testDownNoError() {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		DataPoint dp = new DataPoint(0.0, -3.0, "");
+		Bar bar = new Bar(dp, Color.BLUE, 50.0);
+		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("bar-down-no-error.svg");
+	}
+	
+	
+	/**
+	 *
+	 */
+	public void testUpWithError() {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		DataPoint dp = new DataPoint(0.0, 3.0, 1.0, "");
+		Bar bar = new Bar(dp, Color.BLACK, 50.0);
+		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("bar-up-with-error.svg");
+	}
+	
+	
+	/**
+	 *
+	 */
+	public void testDownWithError() {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		DataPoint dp = new DataPoint(0.0, -3.0, 1.0, "");
+		Bar bar = new Bar(dp, Color.BLUE, 50.0);
+		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("bar-down-with-error.svg");
+	}
+
 }
