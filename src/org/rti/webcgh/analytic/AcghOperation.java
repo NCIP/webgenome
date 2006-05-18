@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-18 19:22:53 $
+$Revision: 1.3 $
+$Date: 2006-05-18 20:01:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,16 @@ import org.rti.webcgh.service.AcghService;
 public class AcghOperation implements NormalizationOperation {
 	
 	private AcghDataTransformer acghDataTransformer = new AcghDataTransformer();
-	private AcghService acghService = new AcghService();
+	private AcghService acghService = null;
+	
+	
+	public AcghService getAcghService() {
+		return acghService;
+	}
+
+	public void setAcghService(AcghService acghService) {
+		this.acghService = acghService;
+	}
 
 	public void setId(Long id) {
 		// TODO Auto-generated method stub

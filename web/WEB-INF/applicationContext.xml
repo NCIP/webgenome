@@ -202,6 +202,12 @@
 	<!-- ================================================================== -->
 	
 	<bean
+		id="acghService"
+		class="org.rti.webcgh.service.AcghService">
+		<property name="rserveUrl"><value>${rserve.url}</value></property>
+	</bean>
+	
+	<bean
 		id="averageOperation"
 		singleton="false"
 		class="org.rti.webcgh.analytic.AverageOperation"/>
@@ -244,7 +250,9 @@
 	<bean
 		id="acghOperation"
 		singleton="false"
-		class="org.rti.webcgh.analytic.AcghOperation"/>
+		class="org.rti.webcgh.analytic.AcghOperation">
+		<property name="acghService"><ref bean="acghService"/></property>
+	</bean>
 		
 	<!-- ================================================================ -->
 	<!--        UI display properties for analytic operations             -->
