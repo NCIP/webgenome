@@ -133,6 +133,11 @@
 		</property>
 	</bean>
 	
+
+	<bean 
+		id="smdDataStream"
+		class="org.rti.webcgh.io.SmdFpDataStream">
+	</bean>
 	
 	<!-- ====================================================== -->
 	<!--           Plotting beans                               -->
@@ -515,6 +520,17 @@
 			<ref bean="persistentDomainObjectMgr"/>
 		</property>
 	</bean>
+
+	<bean name="/cart/uploadExperiment"
+		class="org.rti.webcgh.webui.cart.UploadExperimentDispatchAction">
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+		<property name="smdDataStream">
+			<ref bean="smdDataStream"/>
+		</property>				
+	</bean>
+		
 	
 	<!-- =========================================== -->
 	<!--         Plotting actions                    -->

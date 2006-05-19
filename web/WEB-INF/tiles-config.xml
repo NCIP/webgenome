@@ -225,8 +225,15 @@
 	  	<put name="content" value="/WEB-INF/jsp/cart/emptyCart.jsp" />
 	  	<put name="helpTopic" value="plotSelectCgh" />
   	</definition>
+
+  	<definition name="cart.view.upload.page" extends="data.view.layout" >
+	  	<put name="title" value="webGenome: Shopping Cart" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/uploadExperiment.jsp" />
+	  	<put name="helpTopic" value="plotSelectCgh" />
+  	</definition>
   	
   	
+	
   	<!-- ============= Data selection pages ==================== -->
   	
   	<definition name="data.selection.layout" extends="plot.layout">

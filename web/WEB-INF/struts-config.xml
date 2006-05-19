@@ -40,6 +40,10 @@
 		<form-bean
 			name="probeSetForm"
 			type="org.rti.webcgh.webui.admin.ProbeSetForm"/>
+		<form-bean
+			name="uploadExperimentForm"
+			type="org.apache.struts.action.ActionForm.UploadExperimentForm"/>
+						
 	</form-beans>
 	
 	
@@ -320,6 +324,15 @@
 		
 		<action path="/cart/selectExperiments">
 			<forward name="success" path="cart.select.experiments.page"/>
+		</action>
+
+		<action
+			path="/cart/uploadExperiment"
+			name="uploadExperimentForm"
+			scope="session"
+			parameter="methodToCall"
+			validate="true">
+			<forward name="viewUpload" path="cart.view.upload.page"/>
 		</action>
 		
 		<action

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeAssembly.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-05-19 22:30:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -167,7 +167,14 @@ public class GenomeAssembly implements Serializable, Cacheable {
     	this.id = id;
     }
     
-    
+    /**
+     * Constructor
+     * @param id
+     */
+    public GenomeAssembly(Long id){
+    	this.id = id;
+    }
+ 
     // ================================
     //     Cacheable interface
     // ================================
@@ -245,5 +252,16 @@ public class GenomeAssembly implements Serializable, Cacheable {
     public static String[] printableHeadings() {
         return CollectionUtils.concatenate(Organism.printableHeadings(), new String[] {"ASSEMBLY"});
     }
+    
+    /**
+     * @return true if object is equal to the one passed as parameter
+     */
+    public boolean equals(Object other) {
+    	if ( !(other instanceof GenomeAssembly) ) return false;
+        if ( (this.getId() == ((GenomeAssembly)other).getId() ) ) return true;
+        
+        return false;
+    }
+
 
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/PersistentDomainObjectMgr.java,v $
-$Revision: 1.2 $
-$Date: 2006-02-15 20:54:47 $
+$Revision: 1.3 $
+$Date: 2006-05-19 22:30:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array.persistent;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import org.rti.webcgh.array.Chromosome;
 
@@ -158,6 +160,12 @@ public interface PersistentDomainObjectMgr {
      */
     public PersistentQuantitationType getPersistentQuantitationType(String name, 
     		boolean create);
+    
+    /**
+     * Retrieve all PersistentQuantitaionType objects.
+     * @return
+     */
+    public Collection<PersistentQuantitationType> getAllPersistentQuantitationTypes();
     
     
     /**
@@ -596,5 +604,13 @@ public interface PersistentDomainObjectMgr {
      * @return Persistent chromosome
      */
     public PersistentChromosome getDefaultPersistentChromosome(short number);
+    
+    /**
+     * Returns a Map where the key is PersistentOrganism and the value is a Collection
+     * of all related PersistentGenomeAssembly.
+     * 
+     * @return
+     */
+    public Map<PersistentOrganism, Collection<PersistentGenomeAssembly>> getOrganismAssemblyMap();
     
 }

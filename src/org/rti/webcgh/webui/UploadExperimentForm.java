@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/PersistentGenomeAssembly.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-19 22:30:46 $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/UploadExperimentForm.java,v $
+$Revision: 1.1 $
+$Date: 2006-05-19 22:30:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,48 +50,86 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.array.persistent;
 
-import org.rti.webcgh.array.GenomeAssembly;
+package org.rti.webcgh.webui;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.upload.FormFile;
 
-/**
- * 
- */
-public abstract class PersistentGenomeAssembly extends GenomeAssembly {
-    
-    
-    // ===============================
-    //     Constructors
-    // ===============================
-    
+public class UploadExperimentForm extends ActionForm {
+  private String organismId;
+  private String assemblyId;
+  private String quantitationTypeId;
+  private String otherOrganism;
+  private String genomeAssemblyId;   
+  private String otherGenomeAssembly; 
+  private String otherQuantitationType;  
+  private String methodToCall;
+  private FormFile experimentFile;
+  
+  
+public String getMethodToCall() {
+	return methodToCall;
+}
 
-    /**
-     * Constructor
-     */
-    protected PersistentGenomeAssembly() {
-        super();
-    }
-    
-    
-    
-    
-    /**
-     * Constructor
-     * @param name Name
-     * @param organism Organism
-     */
-    protected PersistentGenomeAssembly(String name, PersistentOrganism organism) {
-        super(name, organism);
-    }
-    
-    
-    // =======================================
-    //      Abstract methods
-    // =======================================
-    
-    /**
-     * Delete
-     */
-    public abstract void delete();
+public void setMethodToCall(String methodToCall) {
+	this.methodToCall = methodToCall;
+}
+
+public String getAssemblyId() {
+	return assemblyId;
+}
+
+public Long getAssemblyIdLong() {
+	return new Long(assemblyId);
+}
+
+public void setAssemblyId(String assemblyId) {
+	this.assemblyId = assemblyId;
+}
+public String getGenomeAssemblyId() {
+	return genomeAssemblyId;
+}
+public void setGenomeAssemblyId(String genomeAssemblyId) {
+	this.genomeAssemblyId = genomeAssemblyId;
+}
+public String getOrganismId() {
+	return organismId;
+}
+public void setOrganismId(String organismId) {
+	this.organismId = organismId;
+}
+public String getOtherGenomeAssembly() {
+	return otherGenomeAssembly;
+}
+public void setOtherGenomeAssembly(String otherGenomeAssembly) {
+	this.otherGenomeAssembly = otherGenomeAssembly;
+}
+public String getOtherOrganism() {
+	return otherOrganism;
+}
+public void setOtherOrganism(String otherOrganism) {
+	this.otherOrganism = otherOrganism;
+}
+public String getOtherQuantitationType() {
+	return otherQuantitationType;
+}
+public void setOtherQuantitationType(String otherQuantitationType) {
+	this.otherQuantitationType = otherQuantitationType;
+}
+public String getQuantitationTypeId() {
+	return quantitationTypeId;
+}
+public void setQuantitationTypeId(String quantitationTypeId) {
+	this.quantitationTypeId = quantitationTypeId;
+}
+
+public FormFile getExperimentFile() {
+	return experimentFile;
+}
+
+public void setExperimentFile(FormFile experimentFile) {
+	this.experimentFile = experimentFile;
+}
+
 }

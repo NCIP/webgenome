@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/PersistentGenomeAssembly.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-19 22:30:46 $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/common/RequestParamsEnum.java,v $
+$Revision: 1.1 $
+$Date: 2006-05-19 22:30:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,48 +50,10 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.array.persistent;
 
-import org.rti.webcgh.array.GenomeAssembly;
+package org.rti.webcgh.webui.common;
 
-
-/**
- * 
- */
-public abstract class PersistentGenomeAssembly extends GenomeAssembly {
-    
-    
-    // ===============================
-    //     Constructors
-    // ===============================
-    
-
-    /**
-     * Constructor
-     */
-    protected PersistentGenomeAssembly() {
-        super();
-    }
-    
-    
-    
-    
-    /**
-     * Constructor
-     * @param name Name
-     * @param organism Organism
-     */
-    protected PersistentGenomeAssembly(String name, PersistentOrganism organism) {
-        super(name, organism);
-    }
-    
-    
-    // =======================================
-    //      Abstract methods
-    // =======================================
-    
-    /**
-     * Delete
-     */
-    public abstract void delete();
+public enum RequestParamsEnum {
+   assemblies;
 }
+ 

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/impl/HibernatePersistentDomainObjectMgr.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.4 $
+$Date: 2006-05-19 22:30:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array.persistent.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.array.Chromosome;
@@ -983,4 +988,44 @@ public class HibernatePersistentDomainObjectMgr implements PersistentDomainObjec
                     org.toPrintableString());
         return this.getPersistentChromosome(asm, number, false);
     }
+    
+    /**
+     * Returns a Map where the key is PersistentOrganism and the value is a Collection
+     * of all related PersistentGenomeAssembly.
+     * 
+     * @return
+     */
+    public Map<PersistentOrganism, Collection<PersistentGenomeAssembly>> getOrganismAssemblyMap(){
+    	PersistentOrganism[] allOrganisms = HibernatePersistentOrganism.loadAll();
+    	Map<PersistentOrganism, Collection<PersistentGenomeAssembly>> orgGaMap = new Hashtable();
+    	
+    	// for every organism get genome assembly
+    	for (int i = 0; i < allOrganisms.length; i++){
+    		PersistentGenomeAssembly[] gaAry =HibernatePersistentGenomeAssembly.loadAll(allOrganisms[i]);
+    		Collection<PersistentGenomeAssembly> gaColl = new ArrayList<PersistentGenomeAssembly>();
+    		for (int j = 0; j < gaAry.length; j++){
+    			gaColl.add(gaAry[j]);
+    		}
+    		orgGaMap.put(allOrganisms[i], gaColl);
+    	}	
+    	return orgGaMap;
+    }
+    
+    /**
+     * Retrieve all PersistentQuantitaionType objects.
+     * @return
+     */
+    public Collection<PersistentQuantitationType> getAllPersistentQuantitationTypes(){
+    	Collection<PersistentQuantitationType> qTypesColl  = new ArrayList();
+    	
+    	HibernatePersistentQuantitationType[] qtAry =  HibernatePersistentQuantitationType.loadAll();
+    	for (int i = 0; i < qtAry.length; i++){
+    		qTypesColl.add(qtAry[i]);
+    	}
+    	
+    	return qTypesColl;
+    }
+    
+    
+
 }

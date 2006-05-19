@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/impl/HibernatePersistentQuantitationType.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 20:17:48 $
+$Revision: 1.2 $
+$Date: 2006-05-19 22:30:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array.persistent.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.rti.webcgh.array.persistent.PersistentQuantitationType;
@@ -129,4 +130,14 @@ public class HibernatePersistentQuantitationType extends PersistentQuantitationT
             type = (HibernatePersistentQuantitationType)types.get(0);
         return type;
     }
+    
+    
+
+    protected static HibernatePersistentQuantitationType[] loadAll() {
+        List qtList = PERSISTOR.getHibernateTemplate().loadAll(HibernatePersistentQuantitationType.class);
+        HibernatePersistentQuantitationType[] qts = new HibernatePersistentQuantitationType[0];
+        qts = (HibernatePersistentQuantitationType[])qtList.toArray(qts);
+        return qts;
+    }
+    
 }
