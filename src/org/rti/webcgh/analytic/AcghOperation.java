@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-18 21:26:19 $
+$Revision: 1.5 $
+$Date: 2006-05-19 19:17:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -99,6 +99,9 @@ public class AcghOperation implements NormalizationOperation {
 
 	/**
 	 * Validates input data for the operation
+	 * @param data The data given as an array of Experiment objects
+	 * @param params Plotting parameters
+	 * @return Return any exceptions due to data invalidity
 	 */
 	public DataSetInvalidations validate(Experiment[] data,
 			PlotParameters params) {
