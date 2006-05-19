@@ -100,18 +100,20 @@ public class Axis implements PlotElement {
     private int fontSize = 12;
     private int lineThickness = 3;
     private int padding = 5;
+    private boolean alignmentPointsOnZero = false;
     private NumberFormatter numberFormatter = new RealNumberFormatter(12, 4);
     
     private int minX = 0;
     private int maxX = 0;
     private int minY = 0;
     private int maxY = 0;
+    private int zeroX = 0;
+    private int zeroY = 0;
     private final double range;
     private final float[] multipliers = {(float)5.0, (float)2.0, (float)1.0};
-    
-    
-    
-    /**
+
+
+	/**
      * @param numberFormatter The numberFormatter to set.
      */
     public void setNumberFormatter(NumberFormatter numberFormatter) {
@@ -181,16 +183,40 @@ public class Axis implements PlotElement {
      */
     public Axis(double minValue, double maxValue, int length, Orientation orientation,
         Location positionTextRelativeToHatches) {
+        this(minValue, maxValue, length, orientation, positionTextRelativeToHatches, false);
+    }
+    
+    
+    /**
+     * @param minValue Minimum value
+     * @param maxValue Maximum value
+     * @param length Length in pixels
+     * @param orientation Orientation
+     * @param positionTextRelativeToHatches Position of hatch mark labels
+     * @param alignmentOnZero Should alignment points be on the zero hatch mark?
+     * relative to hatch marks
+     */
+    public Axis(double minValue, double maxValue, int length, Orientation orientation,
+        Location positionTextRelativeToHatches, boolean alignmentOnZero) {
+    	if (alignmentOnZero && (minValue > 0 || maxValue < 0))
+    		throw new IllegalArgumentException("Cannot align axis on zero if it does not cross zero");
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.length = length;
         this.range = maxValue - minValue;
         this.orientation = orientation;
         this.positionTextRelativeToHatches = positionTextRelativeToHatches;
-        if (orientation == Orientation.HORIZONTAL)
+        double scale = (double)length / (maxValue - minValue);
+        this.alignmentPointsOnZero = alignmentOnZero;
+        if (orientation == Orientation.HORIZONTAL) {
             this.maxX = length;
-        else if (orientation == Orientation.VERTICAL)
+            if (alignmentOnZero)
+            	this.zeroX = (int)((- minValue) * scale);
+        } else if (orientation == Orientation.VERTICAL) {
             this.maxY = length;
+            if (alignmentOnZero)
+            	this.zeroY = length - (int)((- minValue) * scale);
+        }
     }
     
     
@@ -246,7 +272,14 @@ public class Axis implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+    	int x = 0, y = 0;
+    	if (this.alignmentPointsOnZero) {
+    		if (this.orientation == Orientation.HORIZONTAL)
+    			x = this.zeroX;
+    		else if (this.orientation == Orientation.VERTICAL)
+    			y = this.zeroY;
+    	}
+        return new Point(x, y);
     }
     
     
@@ -255,12 +288,17 @@ public class Axis implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        Point point = null;
-        if (this.orientation == Orientation.HORIZONTAL)
-            point = new Point(0, 0);
-        else if (this.orientation == Orientation.VERTICAL)
-            point = new Point(0, this.length);
-        return point;
+    	int x = 0, y = 0;
+    	if (this.orientation == Orientation.HORIZONTAL) {
+    		if (this.alignmentPointsOnZero)
+    			x = this.zeroX;
+    	} else if (this.orientation == Orientation.VERTICAL) {
+    		if (this.alignmentPointsOnZero)
+    			y = this.zeroY;
+    		else
+    			y = this.length;
+    	}
+    	return new Point(x, y);
     }
     
     
@@ -269,12 +307,17 @@ public class Axis implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        Point point = null;
-        if (this.orientation == Orientation.HORIZONTAL)
-            point = new Point(this.length, 0);
-        else if (this.orientation == Orientation.VERTICAL)
-            point = new Point(0, 0);
-        return point;
+    	int x = 0, y = 0;
+    	if (this.orientation == Orientation.HORIZONTAL) {
+    		if (this.alignmentPointsOnZero)
+    			x = this.zeroX;
+    		else
+    			x = this.length;
+    	} else if (this.orientation == Orientation.VERTICAL) {
+    		if (this.alignmentPointsOnZero)
+    			y = this.zeroY;
+    	}
+    	return new Point(x, y);
     }
     
     
@@ -283,12 +326,15 @@ public class Axis implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        Point point = null;
-        if (this.orientation == Orientation.HORIZONTAL)
-            point = new Point(0, 0);
-        else if (this.orientation == Orientation.VERTICAL)
-            point = new Point(0, this.length);
-        return point;
+    	int x = 0, y = 0;
+    	if (this.orientation == Orientation.HORIZONTAL) {
+    		if (this.alignmentPointsOnZero)
+    			x = this.zeroX;
+    	} else if (this.orientation == Orientation.VERTICAL) {
+    		if (this.alignmentPointsOnZero)
+    			y = this.zeroY;
+    	}
+    	return new Point(x, y);
     }
     
     

@@ -144,5 +144,16 @@ public class AxisTester extends TestCase {
         panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
         panel.toSvgFile("axis-left-bottom-right.svg");
     }
+    
+    public void testZeroAlign() {
+    	Axis axisV = new Axis(-5, 10, 400, Orientation.VERTICAL, 
+    			Location.LEFT_OF, true);
+    	Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+    	this.panel.add(axisV, HorizontalAlignment.CENTERED, 
+    			VerticalAlignment.CENTERED);
+    	this.panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, 
+    			VerticalAlignment.BOTTOM_JUSTIFIED);
+    	panel.toSvgFile("axis-zero-align.svg");
+    }
 
 }
