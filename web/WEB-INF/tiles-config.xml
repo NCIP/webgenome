@@ -396,6 +396,15 @@
 	  	<put name="helpTopic" value="probePlot" />
   	</definition>
   	
+  	<!-- ================= Plot save page ================== -->
+  	
+    <definition name="plot.saveAs.page" extends="plot.layout" >
+        <put name="title"  value="webGenome: Save Plot As" />
+        <put name="selectedSubMenuItem" value="bar" />  	
+        <put name="content" value="/WEB-INF/jsp/plot/saveAs.jsp" />
+        <put name="helpTopic" value="plotSaveAs" />
+  	</definition>
+  	
   	<!-- ========================================================== -->
   	<!--           Administration                                   -->
   	<!-- ========================================================== -->
