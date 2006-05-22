@@ -62,11 +62,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
 
 import java.io.StringReader;
-import java.util.regex.*;
 
 import org.rti.webcgh.webui.plot.SaveAsForm ;
 import org.apache.batik.transcoder.image.*;
-import org.apache.batik.transcoder.keys.LengthKey;
 import org.apache.batik.transcoder.*;
 
 import org.apache.batik.apps.rasterizer.DestinationType;
