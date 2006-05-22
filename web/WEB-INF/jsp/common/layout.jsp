@@ -27,7 +27,7 @@
 				)
 			}
 			
-			window.self.name("mainwindow");
+			window.self.name = "mainwindow";
 				
 		</script>
 		
