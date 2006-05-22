@@ -4,7 +4,6 @@
 <%@taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh"%>
 
 <%@ page import="org.rti.webcgh.webui.util.WebUtils" %>
-
 <%@ page errorPage="/WEB-INF/jsp/exception/jspException.jsp" %>
 
 <script language="JavaScript">
@@ -30,8 +29,6 @@ function newWindow(file,window) {
 	<br/>
 	<br/>
 
-
-			
 	Show:
 	
 	&nbsp;&nbsp;&nbsp;
@@ -63,6 +60,13 @@ function newWindow(file,window) {
 	pluginspage="http://www.adobe.com/svg/viewer/install/">
 
 <br>
+
+<script language="JavaScript" src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>" type="text/javascript"></script>
+<%-- THIS FORM MUST EXIST TO ALLOW THE PLOT TO BE SAVED AS A GRAPHIC --%>
+<html:form action="/plot/saveAs" target="plotSaveAs">
+	<html:hidden property="svgDOM" value=""/>
+</html:form>
+
     	
 <table border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -83,9 +87,13 @@ function newWindow(file,window) {
 				Maximum Y &nbsp;
 				<html:text property="maxY" size="4" maxlength="20"/>&nbsp;&nbsp;
 				<html:submit value="Go"/>
-   			</html:form>
+   			</html:form><div style="margin-top:0px;padding-top:0px;">
+   			<script language="JavaScript">
+   			renderSaveAsLink();
+   			</script>
+   			</div>
    		</td>
 	</tr>
-</table>
+</table></br>
 
 </center>

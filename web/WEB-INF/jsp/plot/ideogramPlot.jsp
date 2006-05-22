@@ -60,6 +60,12 @@ function newWindow(file,window) {
 		pluginspage="http://www.adobe.com/svg/viewer/install">
 </center>
 
+<script language="JavaScript" src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>" type="text/javascript"></script>
+<%-- THIS FORM MUST EXIST TO ALLOW THE PLOT TO BE SAVED AS A GRAPHIC --%>
+<html:form action="/plot/saveAs" target="plotSaveAs">
+	<html:hidden property="svgDOM" value=""/>
+</html:form>
+
 <br>
 
 <table border="0" cellpadding="0" cellspacing="0" align="center">
@@ -78,7 +84,11 @@ function newWindow(file,window) {
    						<webcgh:unitOptions name="plotParamsForm" property="units"/>
    				</html:select>
 				&nbsp;&nbsp;<html:submit value="Go"/>
-   			</html:form>
+   			</html:form></br>
+   			<script language="JavaScript">
+   			renderSaveAsLink();
+   			</script>
    		</td>
 	</tr>
 </table>
+</br>
