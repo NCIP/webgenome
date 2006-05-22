@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/ShowSvgTag.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-22 19:52:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -87,6 +87,7 @@ public class ShowSvgTag extends TagSupport {
 			throw new JspException("Converting SVG to XML", e);
 		}
 
-		return SKIP_BODY;
+		//return SKIP_BODY;
+		return EVAL_BODY_INCLUDE ;
 	}
 }
