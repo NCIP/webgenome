@@ -20,6 +20,9 @@
 			name="plotParamsForm"
 			type="org.rti.webcgh.webui.plot.PlotParamsForm"/>
 		<form-bean
+			name="plotSaveAsForm"
+			type="org.rti.webcgh.webui.plot.SaveAsForm"/>
+		<form-bean
 			name="pipelineForm"
 			type="org.rti.webcgh.webui.pipeline.PipelineForm"/>
 		<form-bean
@@ -453,6 +456,14 @@
 			validate="false"
 			scope="session">
 			<forward name="success" path="/WEB-INF/jsp/plot/showSvg.jsp"/>
+		</action>
+		
+		<action
+			path="/plot/saveAs"
+			name="plotSaveAsForm"
+			scope="session"
+			validate="false">
+			<forward name="success" path="plot.saveAs.page"/>
 		</action>
 			
 		<action
