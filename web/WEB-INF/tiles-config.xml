@@ -170,14 +170,14 @@
 	  	<put name="helpTopic" value="pipelines" />
   	</definition>
   	
-   	<definition name="edit.pipeline.page" extends="pipelines.layout">
+   	<definition name="pipeline.edit.page" extends="pipelines.layout">
   		<put name="title" value="webGenome: New Analytic Pipeline"/>
   		<put name="selectedSubMenuItem" value="new" />
 	  	<put name="content" value="/WEB-INF/jsp/pipelines/editPipeline.jsp" />
 	  	<put name="helpTopic" value="pipelines-new" />
   	</definition>
   	
-  	<definition name="confirm.pipelines.modification.page" extends="pipelines.layout">
+  	<definition name="pipeline.confirm.modification.page" extends="pipelines.layout">
   		<put name="title" value="webGenome: Pipelines Modified"/>
 	  	<put name="content" value="/WEB-INF/jsp/pipelines/confirmModification.jsp" />
 	  	<put name="helpTopic" value="pipelines" />

@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/pipeline/GetPipelinesAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-22 22:15:13 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,65 +51,46 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
+package org.rti.webcgh.graph;
 
-package org.rti.webcgh.webui.pipeline;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.rti.webcgh.array.ArrayDatum;
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.BioAssayIterator;
+import org.rti.webcgh.array.DataSet;
+import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.array.ExperimentIterator;
+import org.rti.webcgh.graph.widget.PlotPanel;
 
-import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionForm;
-
-import org.rti.webcgh.analytic.AnalyticPipeline;
-import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
-import org.rti.webcgh.array.persistent.PersistentPipeline;
-import org.rti.webcgh.service.UserProfile;
-import org.rti.webcgh.webui.util.AttributeManager;
 
 /**
- * Gets list of virtual experiment metadata for presentation
+ * Class to generate bar graphs.
  */
-public class GetPipelinesAction extends Action {
+public class BarGraphGenerator {
 	
-	private PersistentDomainObjectMgr persistentDomainObjectMgr = null;
-	
-
-	public void setPersistentDomainObjectMgr(PersistentDomainObjectMgr objMgr) {
-		this.persistentDomainObjectMgr = objMgr;
-	}
-
-	/**
-	 * Performs action of getting list of virtual experiment metadata for 
-	 * presentation
-	 *
-	 * @param mapping Routing information for downstream actions
-	 * @param form Data from calling form
-	 * @param request Servlet request object
-	 * @param response Servlet response object
-	 * @return Identification of downstream action as configured in the
-	 * struts-config.xml file
-	 * @throws Exception
-	 */
-	public ActionForward execute
-	(
-		ActionMapping mapping, ActionForm form, HttpServletRequest request,
-		HttpServletResponse response
-	) throws Exception {
-		UserProfile profile = AttributeManager.getUserProfile(request);
-		Collection pipeCol = AnalyticPipeline.loadDefaultPipelines();
-		if (profile != null) {
-			PersistentPipeline[] pipes = this.persistentDomainObjectMgr.getAllPersistentPipelines(profile.getName());
-			for (int i = 0; i < pipes.length; i++)
-			    pipeCol.add(pipes[i].toAnalyticPipeline());
+	public void generateBarGraph(PlotPanel panel, DataSet dataSet, 
+			List<String> reporterNames, double scale) {
+		BarGroupGenerator barGroupGenerator = new BarGroupGenerator();
+		for (String reporterName : reporterNames) {
+			List<DataPoint> dataPoints = new ArrayList<DataPoint>();
+			for (ExperimentIterator ei = dataSet.experimentIterator(); ei.hasNext();) {
+				Experiment exp = ei.next();
+				for (BioAssayIterator bai = exp.bioAssayIterator(); bai.hasNext();) {
+					BioAssay bioAssay = bai.next();
+					ArrayDatum datum = 
+						bioAssay.getArrayDatumByReporterName(reporterName);
+					if (datum != null) {
+						DataPoint dp = new DataPoint();
+						datum.initializeDataPoint(dp);
+						dp.setLabel(bioAssay.getName());
+						dataPoints.add(dp);
+					}
+				}
+			}
+			barGroupGenerator.addBarGroup(panel, dataPoints, reporterName, scale);
 		}
-		if (pipeCol.size() < 1)
-			return mapping.findForward("no.pipelines");
-		request.setAttribute("analyticPipelines", pipeCol);
-		return mapping.findForward("success");
 	}
+
 }

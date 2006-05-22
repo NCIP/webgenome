@@ -5,7 +5,7 @@
 <script language="JavaScript">
 
 	function ok() {
-		window.location = "<html:rewrite page="/showPipelines.do"/>";
+		window.location = "<html:rewrite page="/pipeline/show.do"/>";
 	}
 	
 </script>

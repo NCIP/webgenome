@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-16 12:49:02 $
+$Revision: 1.6 $
+$Date: 2006-05-22 22:15:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -340,6 +340,18 @@ public class BioAssay implements Cacheable {
     // ===============================
     //    Public methods
     // ===============================
+	
+    /**
+     * Return array datum with given reporter name
+     * @param reporterName Name of reporter
+     * @return An array datum
+     */
+    public ArrayDatum getArrayDatumByReporterName(String reporterName) {
+    	ArrayDatum datum = null;
+    	if (this.bioAssayData != null)
+    		return this.bioAssayData.getArrayDatumByReporterName(reporterName);
+    	return datum;
+    }
     
     /**
      * Graph bio assay

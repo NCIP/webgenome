@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/pipeline/EditPipelineAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-22 22:15:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
@@ -76,15 +77,27 @@ import org.rti.webcgh.webui.util.AnalyticOperationDisplayProperties;
 import org.rti.webcgh.webui.util.AnalyticOperationUIHelper;
 import org.rti.webcgh.webui.util.Attribute;
 import org.rti.webcgh.webui.util.AttributeManager;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
 
 
 /**
  * Gets list of virtual experiment metadata for presentation
  */
-public class EditPipelineAction extends ActionSupport {
+public class EditPipelineAction extends Action {
 	
+	private PersistentDomainObjectMgr persistentDomainObjectMgr = null;
+	private AnalyticOperationUIHelper analyticOperationUIHelper = null;
+
+
+	public void setAnalyticOperationUIHelper(
+			AnalyticOperationUIHelper analyticOperationUIHelper) {
+		this.analyticOperationUIHelper = analyticOperationUIHelper;
+	}
+
+
+	public void setPersistentDomainObjectMgr(
+			PersistentDomainObjectMgr persistentDomainObjectMgr) {
+		this.persistentDomainObjectMgr = persistentDomainObjectMgr;
+	}
 
 
 	/**
@@ -109,12 +122,9 @@ public class EditPipelineAction extends ActionSupport {
 	    
 	    // Attach pipeline to session
 		String pipelineName = request.getParameter("pipelineName");
-		ApplicationContext ctx = this.getWebApplicationContext();
-		PersistentDomainObjectMgr objMgr = (PersistentDomainObjectMgr)
-			ctx.getBean("persistentDomainObjectMgr");
 		AnalyticPipeline pipeline = null;
 		if (profile != null) {
-			PersistentPipeline pipe = objMgr.getPersistentPipeline(pipelineName, profile.getName());
+			PersistentPipeline pipe = persistentDomainObjectMgr.getPersistentPipeline(pipelineName, profile.getName());
 			if (pipe != null)
 			    pipeline = pipe.toAnalyticPipeline();
 		}
@@ -125,17 +135,15 @@ public class EditPipelineAction extends ActionSupport {
 		session.setAttribute(Attribute.NEW_PIPELINE, pipeline);
 		
 		// Attach UI helper to session
-		AnalyticOperationUIHelper uiHelper = (AnalyticOperationUIHelper)
-			ctx.getBean("analyticOperationUIHelper");
-		session.setAttribute("analyticOperationUIHelper", uiHelper);
+		session.setAttribute("analyticOperationUIHelper", analyticOperationUIHelper);
 		
 		// Attach analytic operation options to session
 		AnalyticOperationDisplayProperties[] dataFilterOperations = 
-		    uiHelper.getAnalyticOperationDisplayProperties(DataFilterOperation.class);
+		    analyticOperationUIHelper.getAnalyticOperationDisplayProperties(DataFilterOperation.class);
 		AnalyticOperationDisplayProperties[] normalizationOperations = 
-		    uiHelper.getAnalyticOperationDisplayProperties(NormalizationOperation.class);
+		    analyticOperationUIHelper.getAnalyticOperationDisplayProperties(NormalizationOperation.class);
 		AnalyticOperationDisplayProperties[] summaryStatisticOperations = 
-		    uiHelper.getAnalyticOperationDisplayProperties(SummaryStatisticOperation.class);
+		    analyticOperationUIHelper.getAnalyticOperationDisplayProperties(SummaryStatisticOperation.class);
 		session.setAttribute("dataFilterOperations", CollectionUtils.arrayToArrayList(dataFilterOperations));
 		session.setAttribute("normalizationOperations", CollectionUtils.arrayToArrayList(normalizationOperations));
 		session.setAttribute("summaryStatisticOperations", CollectionUtils.arrayToArrayList(summaryStatisticOperations));

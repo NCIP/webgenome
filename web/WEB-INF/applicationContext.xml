@@ -727,5 +727,51 @@
 			<ref bean="arrayEtlManager"/>
 		</property>
 	</bean>
+	
+	<!-- ================================================ -->
+	<!--         Pipeline actions                         -->
+	<!-- ================================================ -->
+	
+	<bean name="/pipeline/delete"
+		class="org.rti.webcgh.webui.pipeline.DeletePipelineAction">
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
+	
+	<bean name="/pipeline/show"
+		class="org.rti.webcgh.webui.pipeline.GetPipelinesAction">
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
+	
+	<bean name="/pipeline/new"
+		class="org.rti.webcgh.webui.pipeline.NewPipelineSetupAction">
+		<property name="analyticOperationUIHelper">
+			<ref bean="analyticOperationUIHelper"/>
+		</property>
+	</bean>
+	
+	<bean name="/pipeline/save"
+		class="org.rti.webcgh.webui.pipeline.SavePipelineAction">
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
+	
+	<bean name="/pipeline/removeOperation"
+		class="org.rti.webcgh.webui.pipeline.RemoveOperationAction">
+	</bean>
+	
+	<bean name="/pipeline/edit"
+		class="org.rti.webcgh.webui.pipeline.EditPipelineAction">
+		<property name="analyticOperationUIHelper">
+			<ref bean="analyticOperationUIHelper"/>
+		</property>
+				<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
 		
 </beans>

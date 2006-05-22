@@ -12,7 +12,7 @@
 	}
 
 	function cancel() {
-		window.location = "<html:rewrite page="/showPipelines.do"/>";
+		window.location = "<html:rewrite page="/pipeline/show.do"/>";
 	}
 	
 	function addOp(opCategory) {
@@ -24,13 +24,13 @@
 		else if (opCategory == 'summaryStatistic')
 			selectElement = document.pipelineForm.summaryStatisticOp.value;
 		var url = 
-			"<html:rewrite page="/addOperation.do"/>?opCategory=" + 
+			"<html:rewrite page="/pipeline/addOperation.do"/>?opCategory=" + 
 			opCategory + "&" + allParams();
 		window.location = url;
 	}
 	
 	function removeOp(index) {
-		var url = "<html:rewrite page="/removeOperation.do"/>?index=" + 
+		var url = "<html:rewrite page="/pipeline/removeOperation.do"/>?index=" + 
 			index + "&" + allParams();
 		window.location = url;
 	}
@@ -53,7 +53,7 @@
 	<html:errors property="global"/><br>
 </p>
 
-<html:form action="/savePipeline">
+<html:form action="/pipeline/save">
 
 	<table border="0" cellpadding="20" align="center" class="tbl">
 		<tr>

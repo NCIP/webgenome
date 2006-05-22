@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/pipeline/DeletePipelineAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-22 22:15:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ package org.rti.webcgh.webui.pipeline;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
@@ -66,8 +67,6 @@ import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentPipeline;
 import org.rti.webcgh.service.UserProfile;
 import org.rti.webcgh.webui.util.AttributeManager;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
 
 import javax.servlet.http.HttpSession;
 
@@ -75,8 +74,14 @@ import javax.servlet.http.HttpSession;
 /**
  * Setup action for creating a new anlaytic pipeline
  */
-public class DeletePipelineAction extends ActionSupport {
+public class DeletePipelineAction extends Action {
 	
+	private PersistentDomainObjectMgr persistentDomainObjectMgr = null;
+	
+
+	public void setPersistentDomainObjectMgr(PersistentDomainObjectMgr objMgr) {
+		this.persistentDomainObjectMgr = objMgr;
+	}
 
 
 	/**
@@ -99,10 +104,7 @@ public class DeletePipelineAction extends ActionSupport {
 		HttpSession session = request.getSession();
 		String pipelineName = request.getParameter("pipelineName");
 		UserProfile profile = AttributeManager.getUserProfile(request);
-		ApplicationContext ctx = this.getWebApplicationContext();
-		PersistentDomainObjectMgr objMgr = (PersistentDomainObjectMgr)
-			ctx.getBean("persistentDomainObjectMgr");
-		PersistentPipeline pipeline = objMgr.getPersistentPipeline(pipelineName, profile.getName());
+		PersistentPipeline pipeline = this.persistentDomainObjectMgr.getPersistentPipeline(pipelineName, profile.getName());
 		pipeline.delete();
 		return mapping.findForward("success");
 	}

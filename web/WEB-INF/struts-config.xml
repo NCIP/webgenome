@@ -227,8 +227,7 @@
 		<!-- ================================================ -->
 		
 		<action
-			path="/showPipelines"
-			type="org.rti.webcgh.webui.pipeline.GetPipelinesAction"
+			path="/pipeline/show"
 			name="pipelineForm"
 			scope="request"
 			validate="false">
@@ -237,59 +236,55 @@
 		</action>
 		
 		<action
-			path="/newPipelineSetup"
-			type="org.rti.webcgh.webui.pipeline.NewPipelineSetupAction"
+			path="/pipeline/new"
 			name="pipelineForm"
 			scope="request"
 			validate="false">
-			<forward name="success" path="edit.pipeline.page"/>
+			<forward name="success" path="pipeline.edit.page"/>
 		</action>
 		
 		<action
-			path="/addOperation"
+			path="/pipeline/addOperation"
 			type="org.rti.webcgh.webui.pipeline.AddOperationAction"
 			name="pipelineForm"
 			scope="request"
 			validate="false">
-			<forward name="success" path="edit.pipeline.page"/>
+			<forward name="success" path="pipeline.edit.page"/>
 		</action>
 		
 		<action
-			path="/removeOperation"
+			path="/pipeline/removeOperation"
 			type="org.rti.webcgh.webui.pipeline.RemoveOperationAction"
 			name="pipelineForm"
 			scope="request"
 			validate="false">
-			<forward name="success" path="edit.pipeline.page"/>
+			<forward name="success" path="pipeline.edit.page"/>
 		</action>
 		
 		<action
-			path="/savePipeline"
-			type="org.rti.webcgh.webui.pipeline.SavePipelineAction"
+			path="/pipeline/save"
 			name="pipelineForm"
 			scope="request"
-			input="edit.pipeline.page"
+			input="pipeline.edit.page"
 			validate="true">
-			<forward name="success" path="confirm.pipelines.modification.page"/>
-			<forward name="failure" path="edit.pipeline.page"/>
+			<forward name="success" path="pipeline.confirm.modification.page"/>
+			<forward name="failure" path="pipeline.edit.page"/>
 		</action>
 		
 		<action
-			path="/deletePipeline"
-			type="org.rti.webcgh.webui.pipeline.DeletePipelineAction"
+			path="/pipeline/delete"
 			name="pipelineForm"
 			scope="request"
 			validate="false">
-			<forward name="success" path="confirm.pipelines.modification.page"/>
+			<forward name="success" path="pipeline.confirm.modification.page"/>
 		</action>
 		
 		<action
-			path="/editPipeline"
-			type="org.rti.webcgh.webui.pipeline.EditPipelineAction"
+			path="/pipeline/edit"
 			name="pipelineForm"
 			scope="request"
 			validate="false">
-			<forward name="success" path="edit.pipeline.page"/>
+			<forward name="success" path="pipeline.edit.page"/>
 		</action>
 		
 		<!-- ==================================================== -->

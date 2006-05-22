@@ -1,8 +1,8 @@
  /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/pipeline/SavePipelineAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-22 22:15:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ package org.rti.webcgh.webui.pipeline;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
@@ -69,8 +70,6 @@ import org.rti.webcgh.webui.util.Attribute;
 import org.rti.webcgh.webui.util.AttributeManager;
 import org.rti.webcgh.analytic.AnalyticPipeline;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.struts.ActionSupport;
 
 import javax.servlet.http.HttpSession;
 
@@ -78,8 +77,17 @@ import javax.servlet.http.HttpSession;
 /**
  * Setup action for creating a new anlaytic pipeline
  */
-public class SavePipelineAction extends ActionSupport {
+public class SavePipelineAction extends Action {
 	
+
+	private PersistentDomainObjectMgr persistentDomainObjectMgr = null;
+	
+
+	public void setPersistentDomainObjectMgr(
+			PersistentDomainObjectMgr persistentDomainObjectMgr) {
+		this.persistentDomainObjectMgr = persistentDomainObjectMgr;
+	}
+
 
 
 	/**
@@ -112,10 +120,7 @@ public class SavePipelineAction extends ActionSupport {
 			return mapping.findForward("failure");
 		}
 		
-		ApplicationContext ctx = this.getWebApplicationContext();
-		PersistentDomainObjectMgr objMgr = (PersistentDomainObjectMgr)
-			ctx.getBean("persistentDomainObjectMgr");
-		pipeline.toPersistentPipeline(objMgr, profile);
+		pipeline.toPersistentPipeline(persistentDomainObjectMgr, profile);
 		return mapping.findForward("success");
 	}
 }

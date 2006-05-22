@@ -8,7 +8,7 @@
 
 	function deletePipeline(pName) {
 		if (confirm('Really delete pipeline?'))
-			window.location = "<html:rewrite page="/deletePipeline.do"/>?pipelineName=" + pName;
+			window.location = "<html:rewrite page="/pipeline/delete.do"/>?pipelineName=" + pName;
 	}
 
 </script>
@@ -30,13 +30,13 @@
 			<td><bean:write name="pipeline" property="name"/></td>
 			<td>
 				<logic:equal name="pipeline" property="readOnly" value="false">
-					<html:link action="/editPipeline" paramId="pipelineName"
+					<html:link action="/pipeline/edit" paramId="pipelineName"
 						paramName="pipeline" paramProperty="name">
 						View / Edit
 					</html:link>
 				</logic:equal>
 				<logic:equal name="pipeline" property="readOnly" value="true">
-					<html:link action="/editPipeline" paramId="pipelineName"
+					<html:link action="/pipeline/edit" paramId="pipelineName"
 						paramName="pipeline" paramProperty="name">
 						View
 					</html:link>

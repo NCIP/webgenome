@@ -135,7 +135,7 @@
 					></html:link></logic:present></td>
 
 				<!-- Analytic Pipelines -->
-					<td><html:link styleClass="menu" action="/showPipelines"><img border="0"
+					<td><html:link styleClass="menu" action="/pipeline/show"><img border="0"
 						<logic:equal name="selectedMenuItem" value="pipelines">
 							src="<html:rewrite page="/images/menu-analyticpipelines-on.jpg"/>"
 						</logic:equal>

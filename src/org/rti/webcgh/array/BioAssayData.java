@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-16 12:49:02 $
+$Revision: 1.6 $
+$Date: 2006-05-22 22:15:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -83,7 +83,10 @@ public class BioAssayData {
     protected double maxValue = Float.NaN;
     protected Set quantitationTypes = new HashSet();
     
-    protected Map arrayMap = new HashMap();
+    protected Map<Reporter, ArrayDatum> arrayDatumIndexByReporter = 
+    	new HashMap<Reporter, ArrayDatum>();
+    protected Map<String, ArrayDatum> arrayDatumIndexByReporterName = 
+    	new HashMap<String, ArrayDatum>();
     
     
     /**
@@ -115,13 +118,13 @@ public class BioAssayData {
      */
     public void setArrayData(List arrayData) {
         this.arrayData = arrayData;
-        this.arrayMap = new HashMap();
+        this.arrayDatumIndexByReporter = new HashMap();
         this.quantitationTypes = new HashSet();
         if (arrayData != null)
 	        for (Iterator it = this.arrayData.iterator(); it.hasNext();) {
 	            ArrayDatum datum = (ArrayDatum)it.next();
 	            this.adjustMinAndMax(datum);
-	            this.arrayMap.put(datum.getReporter(), datum);
+	            this.arrayDatumIndexByReporter.put(datum.getReporter(), datum);
 	            this.quantitationTypes.add(datum.quantitationType());
 	        }
         this.sorted = false;
@@ -158,6 +161,16 @@ public class BioAssayData {
     //      Public methods
     // ===============================
     
+    
+    /**
+     * Return array datum with given reporter name
+     * @param reporterName Name of reporter
+     * @return An array datum
+     */
+    public ArrayDatum getArrayDatumByReporterName(String reporterName) {
+    	return this.arrayDatumIndexByReporterName.get(reporterName);
+    }
+    
     /**
      * Add a datum
      * @param arrayDatum Array datum
@@ -166,7 +179,8 @@ public class BioAssayData {
          this.arrayData.add(arrayDatum);
          this.adjustMinAndMax(arrayDatum);
          this.sorted = false;
-         this.arrayMap.put(arrayDatum.getReporter(), arrayDatum);
+         this.arrayDatumIndexByReporter.put(arrayDatum.getReporter(), arrayDatum);
+         this.arrayDatumIndexByReporterName.put(arrayDatum.getReporter().getName(), arrayDatum);
          this.quantitationTypes.add(arrayDatum.quantitationType());
     }
     
@@ -401,7 +415,7 @@ public class BioAssayData {
     
 
     protected ArrayDatum equivalentDatum(ArrayDatum datum) {
-    	return (ArrayDatum)this.arrayMap.get(datum.getReporter());
+    	return (ArrayDatum)this.arrayDatumIndexByReporter.get(datum.getReporter());
     }
     
     protected void ensureSorted() {

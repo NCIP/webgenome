@@ -12,11 +12,11 @@
 			<!-- Manage pipelines -->
 			<td>
 				<logic:equal name="selectedSubMenuItem" value="manage">
-					<html:link action="/showPipelines" styleClass="submenu-selected">
+					<html:link action="/pipeline/show" styleClass="submenu-selected">
 					Manage Pipelines</html:link>
 				</logic:equal>	
 				<logic:notEqual name="selectedSubMenuItem" value="manage">
-					<html:link action="/showPipelines" styleClass="submenu">
+					<html:link action="/pipeline/show" styleClass="submenu">
 					Manage Pipelines</html:link>
 				</logic:notEqual>
 			</td>
@@ -28,11 +28,11 @@
 				<!-- New pipeline -->
 				<td>
 					<logic:equal name="selectedSubMenuItem" value="new">
-						<html:link action="/newPipelineSetup" styleClass="submenu-selected">
+						<html:link action="/pipeline/new" styleClass="submenu-selected">
 						New Pipeline</html:link>
 					</logic:equal>	
 					<logic:notEqual name="selectedSubMenuItem" value="new">
-						<html:link action="/newPipelineSetup" styleClass="submenu">
+						<html:link action="/pipeline/new" styleClass="submenu">
 						New Pipeline</html:link>
 					</logic:notEqual>
 				</td>
