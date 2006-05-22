@@ -563,6 +563,10 @@
 		</property>
 	</bean>
 	
+	<bean name="/plot/saveAs"
+		class="org.rti.webcgh.webui.plot.SaveAsAction">
+	</bean>
+	
 	<!-- =========================================== -->
 	<!--         User profile actions                -->
 	<!-- =========================================== -->
