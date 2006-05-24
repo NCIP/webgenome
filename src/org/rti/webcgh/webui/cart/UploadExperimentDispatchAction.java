@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/UploadExperimentDispatchAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-24 14:08:36 $
+$Revision: 1.3 $
+$Date: 2006-05-24 14:14:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -231,12 +231,8 @@ public class UploadExperimentDispatchAction extends CommonLookupDispatchAction {
 	public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		UploadExperimentForm uef = (UploadExperimentForm)form;
 		
-		
+		// read experiment from uploaded file
 		Experiment exp = smdDataStream.loadExperiment( uef.getExperimentFile().getInputStream(), new QuantitationType(uef.getQuantitationType()), GenomeAssembly.DUMMY_GENOME_ASSEMBLY , uef.getExperimentFile().getFileName());
-		
-		// just to test if it's not gonna brake the code 
-		//exp.setDatabaseName("SMD");
-		//exp.setName("VVV");
 		
 		// get attribute beans
         UserProfile profile = AttributeManager.getUserProfile(request);

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/common/ForwardEnum.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-19 22:30:47 $
+$Revision: 1.2 $
+$Date: 2006-05-24 14:08:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,5 +54,5 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.common;
 
 public enum ForwardEnum {
-  viewUpload, upload;
+  viewUpload, success;
 }

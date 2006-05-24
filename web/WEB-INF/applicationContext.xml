@@ -48,7 +48,7 @@
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/array/persistent/buildxml</value></constructor-arg>
+        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/array/persistent/devxml</value></constructor-arg>
         		</bean>
 	      	</list>
     	</property>
@@ -528,7 +528,10 @@
 		</property>
 		<property name="smdDataStream">
 			<ref bean="smdDataStream"/>
-		</property>				
+		</property>		
+		<property name="reporterMappingStagingArea">
+			<ref bean="reporterMappingStagingArea"/>
+		</property>					
 	</bean>
 		
 	

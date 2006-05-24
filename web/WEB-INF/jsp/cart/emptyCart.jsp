@@ -16,4 +16,9 @@
 		<input type="button" onclick="window.location='<html:rewrite page="/cart/selectExperiments.do"/>'" 
 			value="Select Experiments">
 	</p>
+	
+	<p>
+		<input type="button" onclick="window.location='<html:rewrite page="/cart/uploadExperiment.do?methodToCall=view"/>'" 
+			value="Upload Experiments">
+	</p>
 </center>
