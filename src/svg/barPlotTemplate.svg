@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20000303 Stylable//EN"
 	"svg11-flat-20030114.dtd">
-<svg id="svgNode" xmlns="http://www.w3.org/2000/svg-20000303-stylable" onload="init(evt);">
+<svg id="svgNode" xmlns="http://www.w3.org/2000/svg" onload="init(evt);">
 
 	<script type="text/ecmascript">
 		<![CDATA[
@@ -66,7 +66,7 @@
 	<g id="insertionPoint"/>
 	
 	<!-- Tool tip -->
-	<rect id="toolTipBox" stroke="black" stroke-width="1" fill="yellow"/>
+	<rect height="1" width="1" id="toolTipBox" stroke="black" stroke-width="1" fill="yellow"/>
 	<text id="toolTipText" font-size="10"/>
 
 </svg>
