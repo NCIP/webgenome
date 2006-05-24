@@ -100,11 +100,20 @@ function copyPlotImg ( ) {
     document.forms['plotSaveAsForm'].elements['svgDOM'].value = getSVG ( SVGDoc ) ;
 }
 
+function saveAsWindow() {
+    window.open('','plotSaveAs','resizable=yes,width=800,height=500,status=1,scrollbars=1');
+}
+
+function submitToSaveAs () {
+    copyPlotImg();  // copy the plot img svg document
+    saveAsWindow(); // make a new window with suitable popup parameters
+    document.plotSaveAsForm.submit();
+}
+
 function renderSaveAsLink() {
     
     document.write (
-      "<%-- Copy the SVG, then submit save as form --%>\n" +
-      "<a href=\"javascript:copyPlotImg();document.plotSaveAsForm.submit()\">Save Plot</a>\n" +
+      "<a href=\"javascript:submitToSaveAs();\">Save Plot</a>\n" +
       "<span style=\"font-size: 65%; color: gray;\">(pop-up: can take some time to appear for large plots)</span>\n" ) ;
 
 }
