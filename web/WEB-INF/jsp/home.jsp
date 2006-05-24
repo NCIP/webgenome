@@ -16,7 +16,7 @@ The tool enables users to:
 </p>
 
 <ul>
-	<li class="documentationBody">Retreive array experiments from a database</li>
+	<li class="documentationBody">Retrieve array experiments from a database</li>
 	<li class="documentationBody">Create and manage <it>virtual experiments</it></li>
 	<li class="documentationBody">Create and manage <it>analytic pipelines</it></li>
 	<li class="documentationBody">Create scatter plots</li>
