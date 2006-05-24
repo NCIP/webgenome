@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/UploadExperimentForm.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-19 22:30:47 $
+$Revision: 1.2 $
+$Date: 2006-05-24 14:08:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,8 +58,8 @@ import org.apache.struts.upload.FormFile;
 
 public class UploadExperimentForm extends ActionForm {
   private String organismId;
-  private String assemblyId;
-  private String quantitationTypeId;
+ 
+  private String quantitationType;
   private String otherOrganism;
   private String genomeAssemblyId;   
   private String otherGenomeAssembly; 
@@ -76,29 +76,29 @@ public void setMethodToCall(String methodToCall) {
 	this.methodToCall = methodToCall;
 }
 
-public String getAssemblyId() {
-	return assemblyId;
-}
 
-public Long getAssemblyIdLong() {
-	return new Long(assemblyId);
-}
-
-public void setAssemblyId(String assemblyId) {
-	this.assemblyId = assemblyId;
-}
 public String getGenomeAssemblyId() {
 	return genomeAssemblyId;
 }
 public void setGenomeAssemblyId(String genomeAssemblyId) {
 	this.genomeAssemblyId = genomeAssemblyId;
 }
+
+public Long getGenomeAssemblyIdAsLong(){
+  return new Long(this.genomeAssemblyId);	
+}
+
 public String getOrganismId() {
 	return organismId;
 }
 public void setOrganismId(String organismId) {
 	this.organismId = organismId;
 }
+
+public Long getOrganismIdAsLong() {
+	return new Long(organismId);
+}
+
 public String getOtherGenomeAssembly() {
 	return otherGenomeAssembly;
 }
@@ -117,11 +117,11 @@ public String getOtherQuantitationType() {
 public void setOtherQuantitationType(String otherQuantitationType) {
 	this.otherQuantitationType = otherQuantitationType;
 }
-public String getQuantitationTypeId() {
-	return quantitationTypeId;
+public String getQuantitationType() {
+	return quantitationType;
 }
 public void setQuantitationTypeId(String quantitationTypeId) {
-	this.quantitationTypeId = quantitationTypeId;
+	this.quantitationType = quantitationTypeId;
 }
 
 public FormFile getExperimentFile() {

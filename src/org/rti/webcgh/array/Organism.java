@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Organism.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-05-24 14:08:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -188,6 +188,14 @@ public class Organism implements Serializable, Cacheable {
     	this.id = id;
     }
     
+    /**
+     * Constructor
+     * @param id The id   
+     */
+    public Organism(Long id) {    	
+    	this.id = id;
+    }
+    
     
     // ================================
     //     Cacheable interface
@@ -215,9 +223,14 @@ public class Organism implements Serializable, Cacheable {
     	if (! (obj instanceof Organism))
     		return false;
     	Organism org = (Organism) obj;
-    	return
-			StringUtils.equal(org.getGenus(), this.genus) &&
-			StringUtils.equal(org.getSpecies(), this.species);
+    	
+    	if (this.id != null && this.id == org.getId()){    		
+    			return true;
+    	}else{	    	
+    		return
+				StringUtils.equal(org.getGenus(), this.genus) &&
+				StringUtils.equal(org.getSpecies(), this.species);
+    	}	
     }
     
     

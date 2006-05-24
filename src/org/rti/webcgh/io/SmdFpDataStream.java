@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-04 18:31:14 $
+$Revision: 1.3 $
+$Date: 2006-05-24 14:08:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -99,6 +99,10 @@ public class SmdFpDataStream implements SmdDataStream {
     private static final String CHROMOSOME_COL_HEADING = "CHROMOSOME"; // optional, see Step 4.ii notes above
     private static final String POSITION_COL_HEADING   = "POSITION";   // optional, see Step 4.ii notes above
     // other columns could have any name
+    
+    private static final String DB_NAME = "File Upload"; // db name we need to be consistant with the rest of the system
+    
+    
 
     // Parser for extracting field values from a delimited line of text
     private DelimitedLineParser dlp ;
@@ -173,7 +177,10 @@ public class SmdFpDataStream implements SmdDataStream {
                 }
             }
             exp.add ( bioAssays ) ;
-
+            
+            // Init database to be complient with other data sources
+            exp.setDatabaseName(DB_NAME);
+            
         } catch (IOException e) {
             throw new WebcghSystemException("Error reading data stream", e) ;
         } finally {
@@ -190,6 +197,24 @@ public class SmdFpDataStream implements SmdDataStream {
         return exp;
     }
 
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @param experimentName - the name of the experiment
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly, String experimentName) throws SmdFormatException {
+    	Experiment exp = loadExperiment(in, qt, genomeAssembly);
+    	exp.setName(experimentName);
+    	return exp;
+    }
 
     // ===============================
     //         Private methods
