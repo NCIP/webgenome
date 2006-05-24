@@ -112,11 +112,7 @@ public class SaveAsForm extends ActionForm {
         heights.add ( new LabelValueBean (  "256",  "256" ) ) ;
         heights.add ( new LabelValueBean (  "512",  "512" ) ) ;
         heights.add ( new LabelValueBean (  "768",  "768" ) ) ;
-        heights.add ( new LabelValueBean ( "1024", "1024" ) ) ;
-        heights.add ( new LabelValueBean ( "1280", "1280" ) ) ;
-        heights.add ( new LabelValueBean ( "1536", "1536" ) ) ;
-        heights.add ( new LabelValueBean ( "1792", "1792" ) ) ;
-        heights.add ( new LabelValueBean ( "2048", "2048" ) ) ;
+        heights.add ( new LabelValueBean ( "1024", "1024" ) ) ; // anything more than 1024 crashes my tomcat!
 
         widths.add ( new LabelValueBean ( "leave asis", ASIS_STRING ) ) ;
         widths.add ( new LabelValueBean ( "set relative to height", RELATIVE_STRING ) ) ;
