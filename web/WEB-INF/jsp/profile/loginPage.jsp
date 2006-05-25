@@ -3,15 +3,14 @@
 <%@ page errorPage="/WEB-INF/jsp/exception/jspException.jsp" %>
 
 <p><br></p>
-<p><br></p>
 
 <center>
 	<p>
-		<html:errors property="global"/>
+		<span class="infoMsg">webGenome Login</span>
 	</p>
-	
+
 	<html:form action="/profile/login" focus="name">
-		<table border="0" cellpadding="10">
+		<table border="0" cellpadding="10" class="tblLite">
 			<tr>
 				<td>
 					User name
@@ -31,6 +30,10 @@
 				</td>
 			</tr>
 		</table>
+
+		<p>
+			<html:errors property="global"/>
+		</p>
 		
 		<p>
 			<html:submit value="Login"/>
