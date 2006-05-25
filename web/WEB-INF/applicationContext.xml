@@ -48,7 +48,7 @@
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/array/persistent/devxml</value></constructor-arg>
+        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/array/persistent/${hibernate.xml.sourcedir}</value></constructor-arg>
         		</bean>
 	      	</list>
     	</property>
