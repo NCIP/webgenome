@@ -98,10 +98,11 @@ function copyPlotImg ( ) {
 	var plotImg = document.getElementById("plotImg");
     SVGDoc = plotImg.getSVGDocument();
     document.forms['plotSaveAsForm'].elements['svgDOM'].value = getSVG ( SVGDoc ) ;
+    SVGDoc = "" ;
 }
 
 function saveAsWindow() {
-    saveAsWindow = window.open('','plotSaveAs','resizable=yes,width=800,height=500,status=1,scrollbars=1');
+    window.open('','plotSaveAs','resizable=yes,width=800,height=500,status=1,scrollbars=1');
 }
 
 function submitToSaveAs () {
@@ -111,13 +112,14 @@ function submitToSaveAs () {
     // need this silly timer to get the wait icon shown
     // for some reason, if we go straight into the rest of the submit operation, i.e.
     // progress onto copyPlotImg() etc. the wait icon doesn't shown in IE
-    setTimeout ( "startSubmit()", 500 ) ;
+    setTimeout ( "startSubmit()", 400 ) ;
 }
 
 function startSubmit() {
     copyPlotImg();  // copy the plot img svg document
     saveAsWindow(); // make a new window with suitable popup parameters
     document.plotSaveAsForm.submit();
+    document.forms['plotSaveAsForm'].elements['svgDOM'].value = "" ;
     var waitIconDiv = document.getElementById ( "waitIcon" ) ;
     waitIconDiv.style.visibility = "hidden" ;
 }
