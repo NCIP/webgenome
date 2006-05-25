@@ -51,27 +51,33 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph.widget.unit_test;
+package org.rti.webcgh.graph.unit_test;
 
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.graph.widget.VerticalLine;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rti.webcgh.graph.BarGroupGenerator;
+import org.rti.webcgh.graph.DataPoint;
 
 import junit.framework.TestCase;
 
 
 /**
- * Tester for <code>VerticalLine</code>
+ * Tester for <code>BarGroupGenerator</code>
  *
  */
-public class VerticalLineTester extends TestCase {
+public class BarGroupGeneratorTester extends TestCase {
+	
 	
 	public void test1() {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-		VerticalLine line = new VerticalLine(200);
-		panel.add(line, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-		panel.toSvgFile("vertical-line.svg");
+		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
+		dataPoints.add(new DataPoint(0.0, 5.0, 0.8, "bioassay 1"));
+		dataPoints.add(new DataPoint(0.0, -2.0, 1.0, "bioassay 2"));
+		dataPoints.add(new DataPoint(0.0, 3.0, "bioassay 3"));
+		BarGroupGenerator generator = new BarGroupGenerator();
+		generator.addBarGroup(panel, dataPoints, "Bar Graph", 50.0);
+		panel.toSvgFile("bar-group-generator.svg");
 	}
 
 }

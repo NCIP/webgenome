@@ -72,7 +72,7 @@ import org.rti.webcgh.graph.util.RealNumberFormatter;
 /**
  * A plot axis
  */
-public class Axis implements PlotElement {
+public class Axis implements ScalePlotElement {
     
     
     // ===================================
@@ -100,7 +100,6 @@ public class Axis implements PlotElement {
     private int fontSize = 12;
     private int lineThickness = 3;
     private int padding = 5;
-    private boolean alignmentPointsOnZero = false;
     private NumberFormatter numberFormatter = new RealNumberFormatter(12, 4);
     
     private int minX = 0;
@@ -109,6 +108,7 @@ public class Axis implements PlotElement {
     private int maxY = 0;
     private int zeroX = 0;
     private int zeroY = 0;
+    private final boolean spansZero;
     private final double range;
     private final float[] multipliers = {(float)5.0, (float)2.0, (float)1.0};
 
@@ -207,14 +207,14 @@ public class Axis implements PlotElement {
         this.orientation = orientation;
         this.positionTextRelativeToHatches = positionTextRelativeToHatches;
         double scale = (double)length / (maxValue - minValue);
-        this.alignmentPointsOnZero = alignmentOnZero;
+        this.spansZero = maxValue >= 0 && minValue <= 0;
         if (orientation == Orientation.HORIZONTAL) {
             this.maxX = length;
-            if (alignmentOnZero)
+            if (this.spansZero)
             	this.zeroX = (int)((- minValue) * scale);
         } else if (orientation == Orientation.VERTICAL) {
             this.maxY = length;
-            if (alignmentOnZero)
+            if (this.spansZero)
             	this.zeroY = length - (int)((- minValue) * scale);
         }
     }
@@ -272,14 +272,7 @@ public class Axis implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-    	int x = 0, y = 0;
-    	if (this.alignmentPointsOnZero) {
-    		if (this.orientation == Orientation.HORIZONTAL)
-    			x = this.zeroX;
-    		else if (this.orientation == Orientation.VERTICAL)
-    			y = this.zeroY;
-    	}
-        return new Point(x, y);
+        return new Point(0, 0);
     }
     
     
@@ -289,15 +282,8 @@ public class Axis implements PlotElement {
      */
     public Point bottomLeftAlignmentPoint() {
     	int x = 0, y = 0;
-    	if (this.orientation == Orientation.HORIZONTAL) {
-    		if (this.alignmentPointsOnZero)
-    			x = this.zeroX;
-    	} else if (this.orientation == Orientation.VERTICAL) {
-    		if (this.alignmentPointsOnZero)
-    			y = this.zeroY;
-    		else
+    	if (this.orientation == Orientation.VERTICAL)
     			y = this.length;
-    	}
     	return new Point(x, y);
     }
     
@@ -308,15 +294,8 @@ public class Axis implements PlotElement {
      */
     public Point topRightAlignmentPoint() {
     	int x = 0, y = 0;
-    	if (this.orientation == Orientation.HORIZONTAL) {
-    		if (this.alignmentPointsOnZero)
-    			x = this.zeroX;
-    		else
+    	if (this.orientation == Orientation.HORIZONTAL)
     			x = this.length;
-    	} else if (this.orientation == Orientation.VERTICAL) {
-    		if (this.alignmentPointsOnZero)
-    			y = this.zeroY;
-    	}
     	return new Point(x, y);
     }
     
@@ -326,15 +305,7 @@ public class Axis implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-    	int x = 0, y = 0;
-    	if (this.orientation == Orientation.HORIZONTAL) {
-    		if (this.alignmentPointsOnZero)
-    			x = this.zeroX;
-    	} else if (this.orientation == Orientation.VERTICAL) {
-    		if (this.alignmentPointsOnZero)
-    			y = this.zeroY;
-    	}
-    	return new Point(x, y);
+    	return new Point(0, 0);
     }
     
     
@@ -397,6 +368,7 @@ public class Axis implements PlotElement {
     // =======================================
     //      Private methods
     // =======================================
+    
     
     
 	/**
@@ -536,6 +508,25 @@ public class Axis implements PlotElement {
 				width = this.canvas.renderedWidth(text, fontSize);
 			return width;
 		}
+	}
+	
+	
+	// ========================================
+	//       ScalePlotElement
+	// ========================================
+	
+	/**
+	 * Return point in pixels corresponding to the zero point
+	 * in the native units of measurement represented by
+	 * element.
+	 * @return A point or <code>null</code> if the element
+	 * does not contain a zero point
+	 */
+	public Point zeroPoint() {
+		Point p = null;
+		if (this.spansZero)
+			p = new Point(this.zeroX, this.zeroY);
+		return p;
 	}
 	
 	/**

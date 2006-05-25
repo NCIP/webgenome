@@ -235,9 +235,9 @@ public class BarGroupGenerator {
 		Bar bar = new Bar(dataPoint, this.barColor, scale);
 		Caption label = new Caption(dataPoint.getLabel(), Orientation.VERTICAL, false);
 		label.setFontSize(this.barFontSize);
-		child.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+		child.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.TOP_JUSTIFIED);
 		child.add(label, HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
-		panel.add(child, HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
+		panel.add(child, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
 	}
 
 }

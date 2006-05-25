@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/DomainObjectFactory.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-19 22:30:47 $
+$Revision: 1.3 $
+$Date: 2006-05-25 19:41:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,6 +69,7 @@ import org.rti.webcgh.array.Quantitation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.Reporter;
 import org.rti.webcgh.array.ReporterMapping;
+import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDatumDTO;
 import org.rti.webgenome.client.ExperimentDTO;
@@ -142,7 +143,7 @@ public class DomainObjectFactory {
 	}
     
 
-    public Experiment getExperiment(ExperimentDTO dto, String experimentName) {
+    public Experiment getExperiment(ExperimentDTO dto, String experimentName) throws WebcghApplicationException {
         Experiment experiment = new Experiment(experimentName, CLIENT_DB_NAME);
         BioAssayDTO[] bioAssayDTOs = dto.getBioAssays();
         experiment.setOrganism(Organism.UNKNOWN);
@@ -165,7 +166,7 @@ public class DomainObjectFactory {
                 QuantitationType type = this.getQuantitationType(baddto.getQuantitationType());
                 Quantitation quantitation = new Quantitation(baddto.getValue().floatValue(), type); 
                 ArrayDatum arrayDatum = new ArrayDatum(reporter, quantitation);
-                bioAssay.add(arrayDatum);
+				bioAssay.add(arrayDatum);
             }
         }
         return experiment;

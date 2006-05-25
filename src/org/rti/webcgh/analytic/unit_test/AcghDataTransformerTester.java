@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/unit_test/AcghDataTransformerTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-11 18:19:57 $
+$Revision: 1.3 $
+$Date: 2006-05-25 19:41:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,7 +76,7 @@ public class AcghDataTransformerTester extends TestCase {
 	protected AcghDataTransformer acghDataTransformer = null;
 	protected AcghService acghService = null;
 	
-	protected void setUp() {
+	protected void setUp() throws Exception {
 		// instantiate attributes of tester class
 		this.arrayDatumFactory = new ArrayDatumFactory("GenomeAseembly name", QuantitationType.LOG_2_RATIO, "Xenopus", "laevis");
 		this.acghDataTransformer = new AcghDataTransformer();
@@ -107,7 +107,7 @@ public class AcghDataTransformerTester extends TestCase {
 		// add ArrayDatum objects to BioAssay object
 		for (int i = 0; i < reporterNames.length; i++) {
 			// create ArrayDatum object
-			ArrayDatum newArrayDatum = this.arrayDatumFactory.newArrayDatum(reporterNames[i], chromosomeNumbers[i], locations[i], genomeAssemblyNames[i], quantValues[i]);
+			ArrayDatum newArrayDatum = this.arrayDatumFactory.newArrayDatum(reporterNames[i], chromosomeNumbers[i], locations[i], quantValues[i]);
 			newArrayDatum.getReporter().setId(reporterIds[i]);
 			
 			// add to BioAssay object

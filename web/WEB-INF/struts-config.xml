@@ -254,7 +254,6 @@
 		
 		<action
 			path="/pipeline/removeOperation"
-			type="org.rti.webcgh.webui.pipeline.RemoveOperationAction"
 			name="pipelineForm"
 			scope="request"
 			validate="false">

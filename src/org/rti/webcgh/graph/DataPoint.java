@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/DataPoint.java,v $
-$Revision: 1.2 $
-$Date: 2005-12-16 15:16:59 $
+$Revision: 1.3 $
+$Date: 2006-05-25 19:41:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -244,6 +244,21 @@ public class DataPoint implements Groupable {
         newDataPoint.value1 = this.value1 - dataPoint.value1;
         newDataPoint.value2 = this.value2 - dataPoint.value2;
         return newDataPoint;
+    }
+    
+    
+    /**
+     * Get value2 plus error
+     * @return Value 2 plus error
+     */
+    public double value2PlusError() {
+    	double error = 0.0;
+    	if (! Double.isNaN(this.error)) {
+    		error = this.error;
+    		if (this.value2 < 0.0)
+    			error = -error;
+    	}
+    	return this.value2 + error;
     }
     
     

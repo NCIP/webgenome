@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/ArrayDataValuesUtil.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-25 19:41:30 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,61 +50,52 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.analytic;
 
-import org.apache.commons.collections.primitives.ArrayDoubleList;
-import org.apache.commons.collections.primitives.DoubleIterator;
-import org.apache.commons.collections.primitives.DoubleList;
+package org.rti.webcgh.array.unit_test;
+
 import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.ArrayDatumIterator;
-import org.rti.webcgh.array.BioAssay;
-import org.rti.webcgh.core.WebcghApplicationException;
-import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.array.ArrayDatumFactory;
+import org.rti.webcgh.array.BioAssayData;
+import org.rti.webcgh.array.QuantitationType;
 
+import junit.framework.TestCase;
 
 /**
- * Utility for getting and setting array data values en masse
+ * Tester for <code>BioAssayData</code>
  */
-public class ArrayDataValuesUtil {
-    
-    /**
-     * Extract values
-     * @param gad Genome array data
-     * @return Extracted values
-     */
-    public static DoubleList extractValues(BioAssay gad) {
-        DoubleList list = new ArrayDoubleList();
-        for (ArrayDatumIterator it = gad.arrayDatumIterator(); it.hasNext();) {
-            ArrayDatum datum = it.next();
-            list.add(datum.magnitude());
-        }
-        return list;
-    }
-    
-    
-    /**
-     * Bulk set of values
-     * @param newBioAssay Genome array data for which to set values
-     * @param templateBioAssay Template bioassay
-     * @param values Values
-     */
-    public static void setValues(BioAssay newBioAssay, BioAssay templateBioAssay,
-            DoubleList values) {
-        ArrayDatumIterator adIt = templateBioAssay.arrayDatumIterator();
-        DoubleIterator dIt = values.iterator();
-        while (adIt.hasNext() && dIt.hasNext()) {
-            ArrayDatum datum = adIt.next();
-            ArrayDatum newDatum = new ArrayDatum(datum);
-            double value = dIt.next();
-            newDatum.setMagnitude((float)value);
-            
-            // Wrap checked exception as unchecked,
-			// as it would not be expected to occur
-            try {
-				newBioAssay.add(newDatum);
-			} catch (WebcghApplicationException e) {
-				throw new WebcghSystemException(e);
-			}
-        }
-    }
+public class BioAssayDataTester extends TestCase {
+	
+	private static final ArrayDatumFactory fac = new ArrayDatumFactory("hg18", 
+			QuantitationType.LOG_2_RATIO, "Homo", "sapiens");
+
+	public void testAddWithReplicates() throws Exception {
+		BioAssayData bad = new BioAssayData();
+		bad.add(fac.newArrayDatum("r1", (short)1, (long)100, (float)3.0));
+		bad.add(fac.newArrayDatum("r2", (short)1, (long)200, (float)0.1));
+		
+		// Replicates
+		bad.add(fac.newArrayDatum("r1", (short)1, (long)100, (float)4.0));
+		bad.add(fac.newArrayDatum("r1", (short)1, (long)100, (float)5.0));
+		
+		// Checks
+		assertEquals(bad.numArrayDatum(), 2);
+		ArrayDatum d = bad.getArrayDatumByReporterName("r1");
+		assertEquals(d.magnitude(), (float)4.0);
+	}
+	
+	
+	public void testAddWithoutReplicates() throws Exception {
+		BioAssayData bad = new BioAssayData();
+		bad.add(fac.newArrayDatum("r1", (short)1, (long)100, (float)3.0));
+		bad.add(fac.newArrayDatum("r2", (short)1, (long)200, (float)0.1));
+		
+		// Replicates
+		bad.add(fac.newArrayDatum("r3", (short)1, (long)100, (float)4.0));
+		bad.add(fac.newArrayDatum("r4", (short)1, (long)100, (float)5.0));
+		
+		// Checks
+		assertEquals(bad.numArrayDatum(), 4);
+		ArrayDatum d = bad.getArrayDatumByReporterName("r1");
+		assertEquals(d.magnitude(), (float)3.0);
+	}
 }

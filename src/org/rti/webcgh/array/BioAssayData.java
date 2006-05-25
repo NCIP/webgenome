@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-22 22:15:13 $
+$Revision: 1.7 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
+import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.widget.DataPlotter;
 
@@ -71,6 +74,8 @@ import org.rti.webcgh.graph.widget.DataPlotter;
  * Bio-assay data
  */
 public class BioAssayData {
+	
+	private static final Logger LOGGER = Logger.getLogger(BioAssayData.class);
     
     // ====================================
     //        Attributes
@@ -83,13 +88,49 @@ public class BioAssayData {
     protected double maxValue = Float.NaN;
     protected Set quantitationTypes = new HashSet();
     
+    // If array data contain multiple observations from
+    // any probes, this property determines whether
+    // a mean value for these observations is calculated
+    // and individual observations are discarded
+    // or whether each individual observation is retained.
+    protected boolean takeMeanOfReplicates = true;
+    
     protected Map<Reporter, ArrayDatum> arrayDatumIndexByReporter = 
     	new HashMap<Reporter, ArrayDatum>();
     protected Map<String, ArrayDatum> arrayDatumIndexByReporterName = 
     	new HashMap<String, ArrayDatum>();
     
+    // Lists of replicate array datum objects indexed by reporter name
+    protected Map<String, List> replicates = new HashMap<String, List>();
+    
     
     /**
+     * If array data contain multiple observations from
+     * any probes, this property determines whether
+     * a mean value for these observations is calculated
+     * and individual observations are discarded
+     * or whether each individual observation is retained.
+     * @return T/F
+     */
+    public boolean isTakeMeanOfReplicates() {
+		return takeMeanOfReplicates;
+	}
+
+
+    /**
+     * If array data contain multiple observations from
+     * any probes, this property determines whether
+     * a mean value for these observations is calculated
+     * and individual observations are discarded
+     * or whether each individual observation is retained.
+     * @param takeMeanOfReplicates T/F
+     */
+	public void setTakeMeanOfReplicates(boolean takeMeanOfReplicates) {
+		this.takeMeanOfReplicates = takeMeanOfReplicates;
+	}
+
+
+	/**
      * @return Returns the id.
      */
     public Long getId() {
@@ -123,9 +164,16 @@ public class BioAssayData {
         if (arrayData != null)
 	        for (Iterator it = this.arrayData.iterator(); it.hasNext();) {
 	            ArrayDatum datum = (ArrayDatum)it.next();
-	            this.adjustMinAndMax(datum);
-	            this.arrayDatumIndexByReporter.put(datum.getReporter(), datum);
-	            this.quantitationTypes.add(datum.quantitationType());
+	            
+	            // This set method will only be used by the ORM framework.
+	            // Hence, we will wrap the WebcghApplicationException, which
+	            // is thrown typically when a user inputs bad data or parameters
+	            // from a form, as a system exception.
+	            try {
+					this.add(datum);
+				} catch (WebcghApplicationException e) {
+					throw new WebcghSystemException("Error setting arrayData property", e);
+				}
 	        }
         this.sorted = false;
     }
@@ -147,13 +195,23 @@ public class BioAssayData {
      * @param data Bioassay data
      */
     public void bulkSet(BioAssayData data, boolean deepCopy) {
-        for (Iterator it = data.arrayData.iterator(); it.hasNext();) {
-        	if (deepCopy)
-        		this.add(new ArrayDatum((ArrayDatum)it.next()));
-        	else
-        		this.add((ArrayDatum)it.next());
-        }
-        this.sorted = false;
+    	
+    	// Wrap checked exception in an unchecked exception.
+    	// The checked exceptions should have already been
+    	// thrown during data loading, hence in reality it
+    	// will be impossible for the checked exception to be
+    	// thrown in this method.
+        try {
+			for (Iterator it = data.arrayData.iterator(); it.hasNext();) {
+				if (deepCopy)
+					this.add(new ArrayDatum((ArrayDatum)it.next()));
+				else
+					this.add((ArrayDatum)it.next());
+			}
+			this.sorted = false;
+		} catch (WebcghApplicationException e) {
+			throw new WebcghSystemException("Error copying data", e);
+		}
     }
     
     
@@ -175,13 +233,59 @@ public class BioAssayData {
      * Add a datum
      * @param arrayDatum Array datum
      */
-    public void add(ArrayDatum arrayDatum) {
-         this.arrayData.add(arrayDatum);
-         this.adjustMinAndMax(arrayDatum);
-         this.sorted = false;
-         this.arrayDatumIndexByReporter.put(arrayDatum.getReporter(), arrayDatum);
-         this.arrayDatumIndexByReporterName.put(arrayDatum.getReporter().getName(), arrayDatum);
-         this.quantitationTypes.add(arrayDatum.quantitationType());
+    public void add(ArrayDatum arrayDatum) throws WebcghApplicationException {
+    	
+    	// If taking mean of replcates, respond if datum is a replicate
+    	Reporter reporter = arrayDatum.getReporter();
+    	String reporterName = reporter.getName();
+    	if (reporterName == null || reporterName.length() < 1)
+    		throw new WebcghApplicationException("All reporters must have a name");
+    	if (this.takeMeanOfReplicates &&
+    			this.arrayDatumIndexByReporterName.containsKey(reporterName)) {
+    		LOGGER.info("Replicate reporter encountered: " + reporterName);
+    		
+    		// Remove old value
+			ArrayDatum originalReplicate = this.arrayDatumIndexByReporterName.get(reporterName);
+			this.removeDatum(originalReplicate);
+    		
+    		// If this is the first replicate encountered for reporter, do
+    		// some setup
+    		if (! this.replicates.containsKey(reporterName)) {
+    			List<ArrayDatum> repList = new ArrayList<ArrayDatum>();
+    			this.replicates.put(reporterName, repList);
+    			repList.add(originalReplicate);
+    		}
+    		
+    		// Get list of replicates and mean value
+    		List<ArrayDatum> repList = this.replicates.get(reporterName);
+    		
+    		// Add new datum to replicate list
+    		repList.add(arrayDatum);
+    		
+    		// Calculate mean
+    		ArrayDatum[] datumArray = new ArrayDatum[0];
+    		datumArray = (ArrayDatum[]) repList.toArray(datumArray);
+    		arrayDatum = ArrayDatum.meanOfEquivalents(datumArray);
+    	}
+    	
+    	this.addDatum(arrayDatum);
+    }
+    
+    
+    private void addDatum(ArrayDatum arrayDatum) {
+        this.arrayData.add(arrayDatum);
+        this.adjustMinAndMax(arrayDatum);
+        this.sorted = false;
+        this.arrayDatumIndexByReporter.put(arrayDatum.getReporter(), arrayDatum);
+        this.arrayDatumIndexByReporterName.put(arrayDatum.getReporter().getName(), arrayDatum);
+        this.quantitationTypes.add(arrayDatum.quantitationType());
+    }
+    
+    
+    private void removeDatum(ArrayDatum datum) {
+    	this.arrayData.remove(datum);
+    	this.arrayDatumIndexByReporter.remove(datum.getReporter());
+    	this.arrayDatumIndexByReporterName.remove(datum.getReporter().getName());
     }
     
     
@@ -314,7 +418,16 @@ public class BioAssayData {
     				ArrayDatum[] datumArr = new ArrayDatum[0];
     				datumArr = (ArrayDatum[])datumList.toArray(datumArr);
     				ArrayDatum newDatum = ArrayDatum.meanOfEquivalents(datumArr);
-    				newData.add(newDatum);
+    				
+    				// Wrap checked exception up in unchecked.  The checked
+    				// exception would have been caught during data loading.
+    				// Hence, it should be impossible to actually have
+    				// the exception thrown here.
+    				try {
+						newData.add(newDatum);
+					} catch (WebcghApplicationException e) {
+						throw new WebcghSystemException(e);
+					}
     			}
     		}
     	}

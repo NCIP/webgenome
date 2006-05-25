@@ -61,11 +61,11 @@ import org.rti.webcgh.drawing.Line;
 
 
 /**
- * Widget that simply draws a vertical line across the
+ * Widget that simply draws a horizontal line across the
  * screen.  An example usage is to create a baseline
  * for bar plots.
  */
-public class VerticalLine implements PlotElement {
+public class HorizontalLine implements PlotElement {
 	
 	// ====================================
 	//         Attributes
@@ -122,7 +122,7 @@ public class VerticalLine implements PlotElement {
 	 * @param width Vertical width of line across the screen
 	 * in pixels
 	 */
-	public VerticalLine(int width) {
+	public HorizontalLine(int width) {
 		this.width = width;
 	}
 
@@ -137,7 +137,7 @@ public class VerticalLine implements PlotElement {
 	 * @param canvas A drawing canvas
 	 */
 	public void paint(DrawingCanvas canvas) {
-		canvas.add(new Line(0, 0, this.width, 0, this.lineThickness, 
+		canvas.add(new Line(0, this.lineThickness, this.width, this.lineThickness, this.lineThickness, 
 				this.color));
 	}
 

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/BioinfoMatrixTransformer.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.3 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,8 @@ import org.rti.webcgh.array.ArrayDatumIterator;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.core.WebcghSystemException;
 
 
 /**
@@ -148,7 +150,14 @@ public class BioinfoMatrixTransformer {
 						ArrayDatum datum = adi.next();
 						ArrayDatum newDatum = new ArrayDatum(datum);
 						newDatum.setMagnitude((float)col[p++]);
-						newAssay.add(newDatum);
+						
+						// Wrap checked exception as unchecked,
+						// as it would not be expected to occur
+						try {
+							newAssay.add(newDatum);
+						} catch (WebcghApplicationException e) {
+							throw new WebcghSystemException(e);
+						}
 					}
 				}
 			}

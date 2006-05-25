@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatum.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-16 18:01:53 $
+$Revision: 1.7 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -160,6 +160,21 @@ public class ArrayDatum implements Comparable, Locatable, Cacheable {
     // ================================
     //      Public methods
     // ================================
+    
+    
+    /**
+     * Bulk set properties
+     * @param datum A datum object
+     * @param deepCopy Perform deep copy?
+     */
+    public void bulkSet(ArrayDatum datum, boolean deepCopy) {
+    	this.reporter = datum.reporter;
+    	if (deepCopy)
+    		this.quantitation = new Quantitation(datum.quantitation);
+    	else
+    		this.quantitation = datum.quantitation;
+    }
+    
     
     /**
      * Graph datum

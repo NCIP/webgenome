@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webgenome/client/unit_test/WebgenomeClientTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,7 +103,7 @@ public class WebgenomeClientTester extends TestCase {
     protected ReporterDTO reporterdto3 = null;
     protected ReporterDTO reporterdto4 = null;
     
-    protected void setUp() {
+    protected void setUp() throws Exception {
         
         // Set up reporter DTOs to be used by the bioassay DTOs
         this.reporterdto1 = new DefReporterDTOImpl("reporter1", "11", new Long(870000));

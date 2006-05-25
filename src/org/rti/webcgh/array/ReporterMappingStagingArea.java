@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ReporterMappingStagingArea.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-24 14:08:36 $
+$Revision: 1.6 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.apache.log4j.Logger;
 import org.rti.webcgh.array.persistent.PersistentArray;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentGenomeAssembly;
+import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.service.AuthenticationException;
 import org.rti.webcgh.service.WebcghArrayDataSourceSet;
@@ -460,7 +461,14 @@ public class ReporterMappingStagingArea {
     	    }
     	    Quantitation quant = new Quantitation(bin.getValue(), bioAssay.binnedQuantitationType());
     	    ArrayDatum datum = new ArrayDatum(reporter, quant);
-    		bioAssay.add(datum);
+    	    
+    	    // Wrap checked exception as unchecked,
+			// as it would not be expected to occur
+    		try {
+				bioAssay.add(datum);
+			} catch (WebcghApplicationException e) {
+				throw new WebcghSystemException(e);
+			}
 			numReporters++;
 			numMappedReporters++;
     	}

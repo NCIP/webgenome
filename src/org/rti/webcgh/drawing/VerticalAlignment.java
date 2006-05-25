@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/VerticalAlignment.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-25 19:41:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -86,6 +86,12 @@ public class VerticalAlignment {
      * Below
      */
     public static final VerticalAlignment BELOW = new VerticalAlignment();
+    
+    
+	/**
+	 * On x-cordinates representing 0 in some units of measurement
+	 */
+	public static final VerticalAlignment ON_ZERO = new VerticalAlignment();
     
     
     // ==================================

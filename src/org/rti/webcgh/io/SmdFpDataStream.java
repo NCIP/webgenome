@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-24 14:08:36 $
+$Revision: 1.4 $
+$Date: 2006-05-25 19:41:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.rti.webcgh.array.*;
+import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.service.DomainObjectFactory;
 
@@ -173,7 +174,11 @@ public class SmdFpDataStream implements SmdDataStream {
                         reporter.setReporterMapping(reporterMapping) ;
                     }
 
-                    populateBioAssays ( bioAssays, bioAssayFields, qt, reporter ) ;
+                    try {
+						populateBioAssays ( bioAssays, bioAssayFields, qt, reporter ) ;
+					} catch (WebcghApplicationException e) {
+						throw new SmdFormatException(e);
+					}
                 }
             }
             exp.add ( bioAssays ) ;
@@ -259,7 +264,7 @@ public class SmdFpDataStream implements SmdDataStream {
     private void populateBioAssays ( BioAssay[] bioAssays,
                                      String[] bioAssayFields,
                                      QuantitationType qt,
-                                     Reporter reporter ) {
+                                     Reporter reporter ) throws WebcghApplicationException {
 
         for ( int i = 0 ; i < bioAssayFields.length ; i++ ) {
             try {

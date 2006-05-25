@@ -92,7 +92,7 @@ public class ScatterPlotTester extends TestCase {
     private GenomeInterval genomeInterval1 = null;
     private GenomeInterval genomeInterval2 = null;
     
-    public ScatterPlotTester() {
+    public ScatterPlotTester() throws Exception {
         this.bioAssayData = new BioAssayData();
         QuantitationType qType = new QuantitationType("RAW");
         

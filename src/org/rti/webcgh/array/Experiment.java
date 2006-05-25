@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.9 $
-$Date: 2006-05-16 12:49:02 $
+$Revision: 1.10 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.rti.webcgh.analytic.AnalyticPipeline;
+import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.graph.widget.DataPlotter;
 import org.rti.webcgh.service.Cacheable;
@@ -559,8 +561,15 @@ public class Experiment implements Cacheable {
     		BioAssay target = this.getBioAssay(bioAssay.getName());
     		if (target == null)
     			this.add(bioAssay);
-    		else
-    			target.add(bioAssay);
+			else
+				
+				// Wrap checked exception as unchecked,
+				// as it would not be expected to occur
+				try {
+					target.add(bioAssay);
+				} catch (WebcghApplicationException e) {
+					throw new WebcghSystemException(e);
+				}
     	}
     }
     

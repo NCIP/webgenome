@@ -62,6 +62,13 @@ import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ExperimentIterator;
+import org.rti.webcgh.array.QuantitationType;
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.Location;
+import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.widget.Axis;
+import org.rti.webcgh.graph.widget.HorizontalLine;
 import org.rti.webcgh.graph.widget.PlotPanel;
 
 
@@ -70,10 +77,24 @@ import org.rti.webcgh.graph.widget.PlotPanel;
  */
 public class BarGraphGenerator {
 	
+	private static final int EXTRA_PADDING = 4;
+	
+	/**
+	 * Generate bar graph
+	 * @param panel Plot panel to add plot elements to
+	 * @param dataSet A data set
+	 * @param reporterNames Names of reporters from which to retrieve
+	 * data to plot
+	 * @param scale Plotting scale in pixels per plot unit
+	 */
 	public void generateBarGraph(PlotPanel panel, DataSet dataSet, 
 			List<String> reporterNames, double scale) {
 		BarGroupGenerator barGroupGenerator = new BarGroupGenerator();
+		int count = 0;
+		double min = 0.0, max = 0.0;
+		QuantitationType quantType = null;
 		for (String reporterName : reporterNames) {
+			PlotPanel childPanel = panel.newChildPlotPanel();
 			List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 			for (ExperimentIterator ei = dataSet.experimentIterator(); ei.hasNext();) {
 				Experiment exp = ei.next();
@@ -86,11 +107,24 @@ public class BarGraphGenerator {
 						datum.initializeDataPoint(dp);
 						dp.setLabel(bioAssay.getName());
 						dataPoints.add(dp);
+						double value = dp.value2PlusError();
+						if (value < min)
+							min = value;
+						if (value > max)
+							max = value;
 					}
 				}
 			}
-			barGroupGenerator.addBarGroup(panel, dataPoints, reporterName, scale);
+			barGroupGenerator.addBarGroup(childPanel, dataPoints, reporterName, scale);
+			if (count++ > 0)
+				panel.addExtraPadding(EXTRA_PADDING, Location.RIGHT_OF);
+			panel.add(childPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
 		}
+		int length = (int)((max - min) * scale);
+		Axis axis = new Axis(min, max, length, Orientation.VERTICAL, Location.LEFT_OF, true);
+		panel.add(axis, HorizontalAlignment.LEFT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
+		HorizontalLine line = new HorizontalLine(panel.width());
+		panel.add(line, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
 	}
 
 }

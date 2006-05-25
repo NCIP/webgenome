@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatumFactory.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-02 21:39:30 $
+$Revision: 1.2 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -86,12 +86,11 @@ public class ArrayDatumFactory {
 	 * @param reporterName Reporter name
 	 * @param chromNum Choromsome number
 	 * @param location Location on chromosome
-	 * @param genomeAssemblyName GenomeAssembly name
 	 * @param quantValue Quantitation number
-	 * @return
+	 * @return A new array datum
 	 */
 	public ArrayDatum newArrayDatum(String reporterName, short chromNum, 
-			long location, String genomeAssemblyName, float quantValue)  {
+			long location, float quantValue)  {
 		
 		// get Chromosome from cache if it exists; else, instantiate new one	
 		Chromosome chromosome = null;
@@ -119,6 +118,24 @@ public class ArrayDatumFactory {
 		Quantitation quantitation = new Quantitation(quantValue, quantType);
 		ArrayDatum arrayDatum = new ArrayDatum(reporter, quantitation);
 		
+		return arrayDatum;
+		
+	}
+	
+	
+	/**
+	 * Generates a new ArrayDatum object from the given parameters
+	 * @param reporterName Reporter name
+	 * @param chromNum Choromsome number
+	 * @param location Location on chromosome
+	 * @param quantValue Quantitation number
+	 * @param error Error value
+	 * @return A new array datum
+	 */
+	public ArrayDatum newArrayDatum(String reporterName, short chromNum, 
+			long location, float quantValue, float error)  {
+		ArrayDatum arrayDatum = this.newArrayDatum(reporterName, chromNum, location, quantValue);
+		arrayDatum.getQuantitation().setError(error);
 		return arrayDatum;
 		
 	}

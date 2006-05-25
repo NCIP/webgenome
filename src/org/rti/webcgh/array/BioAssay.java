@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-22 22:15:13 $
+$Revision: 1.7 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.graph.widget.DataPlotter;
 import org.rti.webcgh.service.Cacheable;
 
@@ -425,7 +426,7 @@ public class BioAssay implements Cacheable {
      * Add an array datum
      * @param datum Array datum
      */
-    public void add(ArrayDatum datum) {
+    public void add(ArrayDatum datum) throws WebcghApplicationException {
         if (this.bioAssayData == null)
             this.bioAssayData = new BioAssayData();
         this.bioAssayData.add(datum);
@@ -560,7 +561,7 @@ public class BioAssay implements Cacheable {
      * Add data from given bioassay
      * @param bioAssay A bioassay
      */
-    public void add(BioAssay bioAssay) {
+    public void add(BioAssay bioAssay) throws WebcghApplicationException {
     	for (ArrayDatumIterator it = bioAssay.arrayDatumIterator(); it.hasNext();) {
     		ArrayDatum datum = it.next();
     		this.add(datum);

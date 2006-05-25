@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/persistent/impl/unit_test/HibernatePersistentDomainObjectMgrTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-05-25 19:41:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -477,7 +477,7 @@ public class HibernatePersistentDomainObjectMgrTester extends TestCase {
     /**
      * 
      */
-    public void testBioAssayData() {
+    public void testBioAssayData() throws Exception {
     	PersistentQuantitationType type = OBJ_MGR.getPersistentQuantitationType("ratio", true);
 	    PersistentQuantitation q1 = OBJ_MGR.newPersistentQuantitation((float)1.0, type);
 	    PersistentQuantitation q2 = OBJ_MGR.newPersistentQuantitation((float)2.0, type);

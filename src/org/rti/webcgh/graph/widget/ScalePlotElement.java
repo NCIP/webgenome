@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/ArrayDataValuesUtil.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-25 19:41:30 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,61 +50,24 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.analytic;
 
-import org.apache.commons.collections.primitives.ArrayDoubleList;
-import org.apache.commons.collections.primitives.DoubleIterator;
-import org.apache.commons.collections.primitives.DoubleList;
-import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.ArrayDatumIterator;
-import org.rti.webcgh.array.BioAssay;
-import org.rti.webcgh.core.WebcghApplicationException;
-import org.rti.webcgh.core.WebcghSystemException;
+package org.rti.webcgh.graph.widget;
 
+import java.awt.Point;
 
 /**
- * Utility for getting and setting array data values en masse
+ * A plot element that represents some scale of measurement
+ * along one or two axes.
  */
-public class ArrayDataValuesUtil {
-    
-    /**
-     * Extract values
-     * @param gad Genome array data
-     * @return Extracted values
-     */
-    public static DoubleList extractValues(BioAssay gad) {
-        DoubleList list = new ArrayDoubleList();
-        for (ArrayDatumIterator it = gad.arrayDatumIterator(); it.hasNext();) {
-            ArrayDatum datum = it.next();
-            list.add(datum.magnitude());
-        }
-        return list;
-    }
-    
-    
-    /**
-     * Bulk set of values
-     * @param newBioAssay Genome array data for which to set values
-     * @param templateBioAssay Template bioassay
-     * @param values Values
-     */
-    public static void setValues(BioAssay newBioAssay, BioAssay templateBioAssay,
-            DoubleList values) {
-        ArrayDatumIterator adIt = templateBioAssay.arrayDatumIterator();
-        DoubleIterator dIt = values.iterator();
-        while (adIt.hasNext() && dIt.hasNext()) {
-            ArrayDatum datum = adIt.next();
-            ArrayDatum newDatum = new ArrayDatum(datum);
-            double value = dIt.next();
-            newDatum.setMagnitude((float)value);
-            
-            // Wrap checked exception as unchecked,
-			// as it would not be expected to occur
-            try {
-				newBioAssay.add(newDatum);
-			} catch (WebcghApplicationException e) {
-				throw new WebcghSystemException(e);
-			}
-        }
-    }
+public interface ScalePlotElement extends PlotElement {
+	
+	/**
+	 * Return point in pixels corresponding to the zero point
+	 * in the native units of measurement represented by
+	 * element.
+	 * @return A point or <code>null</code> if the element
+	 * does not contain a zero point
+	 */
+	public Point zeroPoint();
+
 }

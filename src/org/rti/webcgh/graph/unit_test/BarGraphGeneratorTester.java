@@ -51,34 +51,57 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph.widget.unit_test;
+package org.rti.webcgh.graph.unit_test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.rti.webcgh.graph.BarGroupGenerator;
-import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.unit_test.SvgTestPanel;
+import org.rti.webcgh.array.ArrayDatumFactory;
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.DataSet;
+import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.array.QuantitationType;
+import org.rti.webcgh.graph.BarGraphGenerator;
 
 import junit.framework.TestCase;
 
-
 /**
- * Tester for <code>BarGroupGenerator</code>
- *
+ * Tester for <code>BarGraph</code>
  */
-public class BarGroupGeneratorTester extends TestCase {
+public class BarGraphGeneratorTester extends TestCase {
 	
 	
-	public void test1() {
+	public void test1() throws Exception {
+		ArrayDatumFactory fact = new ArrayDatumFactory("hg17", 
+				QuantitationType.LOG_2_RATIO, "Homo", "sapiens");
+		
+		// Construct data set
+		DataSet dataSet = new DataSet();
+		Experiment exp = new Experiment();
+		dataSet.add(exp);
+		BioAssay ba1 = new BioAssay("bioassay 1");
+		exp.add(ba1);
+		ba1.add(fact.newArrayDatum("reporter 1", (short)1, (long)100, (float)0.5, (float)0.1));
+		ba1.add(fact.newArrayDatum("reporter 2", (short)1, (long)100, (float)0.3, (float)0.2));
+		ba1.add(fact.newArrayDatum("reporter 3", (short)1, (long)100, (float)-0.6, (float)0.3));
+		BioAssay ba2 = new BioAssay("bioassay 2");
+		exp.add(ba2);
+		ba2.add(fact.newArrayDatum("reporter 1", (short)1, (long)100, (float)-0.2, (float)0.1));
+		ba2.add(fact.newArrayDatum("reporter 3", (short)1, (long)100, (float)-0.1, (float)0.1));
+		BioAssay ba3 = new BioAssay("bioassay 3");
+		exp.add(ba3);
+		ba3.add(fact.newArrayDatum("reporter 1", (short)1, (long)100, (float)2.0, (float)0.5));
+		ba3.add(fact.newArrayDatum("reporter 2", (short)1, (long)100, (float)1.0, (float)0.3));
+		
+		// Plot
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
-		dataPoints.add(new DataPoint(0.0, 5.0, 0.8, "bioassay 1"));
-		dataPoints.add(new DataPoint(0.0, -2.0, 1.0, "bioassay 2"));
-		dataPoints.add(new DataPoint(0.0, 3.0, "bioassay 3"));
-		BarGroupGenerator generator = new BarGroupGenerator();
-		generator.addBarGroup(panel, dataPoints, "Bar Graph", 50.0);
-		panel.toSvgFile("bar-group-generator.svg");
+		BarGraphGenerator gen = new BarGraphGenerator();
+		List<String> reporterNames = new ArrayList<String>();
+		reporterNames.add("reporter 1");
+		reporterNames.add("reporter 2");
+		reporterNames.add("reporter 3");
+		gen.generateBarGraph(panel, dataSet, reporterNames, 100.0);
+		panel.toSvgFile("bar-graph.svg");
 	}
 
 }
