@@ -4,16 +4,7 @@
  * Use this common script anywhere that you have page which has SVG that needs
  * to be accompanied by a "Save As Graphic" function/button.
  * 
- * Usage Example (see scatterPlot.jsp for a working example), but here's a snippet of what you'd
- * need to do to orchestrate plot saves to graphic files (jpg, png):
- * 
- * <script language="JavaScript"
- *         src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>"
- *         type="text/javascript"></script>
- * <html:form action="/plot/saveAs" target="plotSaveAs">
- *     <html:hidden property="svgDOM" value=""/>
- * </html:form>
- * 
+ * Usage Example - see scatterPlot.jsp for a working example
  * 
  * Author: Dean Jackman
  * 
@@ -102,7 +93,7 @@ function copyPlotImg ( ) {
 }
 
 function saveAsWindow() {
-    window.open('','plotSaveAs','resizable=yes,width=800,height=500,status=1,scrollbars=1');
+    window.open('','plotSaveAs','resizable=yes,width=600,height=400,status=1,scrollbars=1');
 }
 
 function submitToSaveAs () {
