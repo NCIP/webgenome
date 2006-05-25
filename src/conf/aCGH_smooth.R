@@ -19,11 +19,11 @@ log2_ratios=cbind(log2_ratios, log2_ratios)
 aCGH_obj <- create.aCGH(log2_ratios, clones_info)
 
 # Screens chromosome number > 24 along with some QC measures. 
-aCGH_obj_imp <- aCGH.process(aCGH_obj, chrom.remove.threshold = 25, prop.missing=0.25, 
+aCGH_obj_imp <- aCGH.process(aCGH_obj, chrom.remove.threshold = 23, prop.missing=0.25, 
                              sample.quality.threshold=0.4, unmapScreen = TRUE, dupRemove = FALSE)
 
 # Impute missing intensities using LOWESS method. 
-log2.ratios.imputed(aCGH_obj) <- impute.lowess(aCGH_obj_imp, maxChrom=24) 
+#log2.ratios.imputed(aCGH_obj) <- impute.lowess(aCGH_obj_imp, maxChrom=24) 
 ## Imputed data exist
 
 hmm(aCGH_obj) <-find.hmm.states(aCGH_obj_imp, aic=TRUE, delta=1.5)
