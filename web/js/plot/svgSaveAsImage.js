@@ -24,9 +24,6 @@ var TEXT_NODE = 3;
 var CDATA_SECTION_NODE = 4;
 var accumulator; // holds the serialized XML
 
-var saveAsWindow  ;
-var timerId = "" ;
-
 /*
  * Serializes the Element to a String, including serializing child
  * elements and nodes.
