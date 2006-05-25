@@ -95,8 +95,8 @@ function newWindow(file,window) {
    			<script language="JavaScript">
    			renderSaveAsLink( );
    			</script>
-   			<%-- END: SAVE AS LINK --%>
    			</div>
+   			<%-- END: SAVE AS LINK --%>
    		</td>
 	</tr>
 </table></br>
