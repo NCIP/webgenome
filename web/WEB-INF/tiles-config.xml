@@ -440,7 +440,7 @@
     <definition name="plot.saveAs.page" extends="plot.layout.popup" >
         <put name="title"  value="webGenome: Save Plot As - Popup" />
         <put name="selectedSubMenuItem" value="bar" />
-        <put name="content" value="/WEB-INF/jsp/plot/saveAs.jsp" />
+        <put name="content" value="/WEB-INF/jsp/plot/saveAsPopup.jsp" />
         <put name="helpTopic" value="plotSaveAs" />
   	</definition>
 
