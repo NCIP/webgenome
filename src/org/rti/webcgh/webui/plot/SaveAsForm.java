@@ -125,10 +125,6 @@ public class SaveAsForm extends ActionForm {
         widths.add ( new LabelValueBean (  "512",  "512" ) ) ;
         widths.add ( new LabelValueBean (  "768",  "768" ) ) ;
         widths.add ( new LabelValueBean ( "1024", "1024" ) ) ;
-        widths.add ( new LabelValueBean ( "1280", "1280" ) ) ;
-        widths.add ( new LabelValueBean ( "1536", "1536" ) ) ;
-        widths.add ( new LabelValueBean ( "1792", "1792" ) ) ;
-        widths.add ( new LabelValueBean ( "2048", "2048" ) ) ;
         
         qualities.add ( new LabelValueBean (  "10%", "0.10" ) ) ;
         qualities.add ( new LabelValueBean (  "20%", "0.20" ) ) ;
