@@ -90,7 +90,7 @@
 				</td>
 			</tr>
 			</table>
-		</tr></td>
+		</td></tr>
 
 		
 		
@@ -172,7 +172,7 @@
 		<td valign="top" background="<html:rewrite page="/images/rightbar-tile.jpg"/>" width="36"><html:img page="/images/rightbar.jpg" width="36" height="688"/></td>
 	</tr>
 	</table>
-</tr></td>
+</td></tr>
 
 </td></tr></table>
 
