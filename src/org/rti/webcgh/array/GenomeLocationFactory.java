@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-25 23:04:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,48 +51,21 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph.unit_test;
+package org.rti.webcgh.array;
 
-import junit.framework.TestCase;
-
-import org.rti.webcgh.array.ArrayDatumFactory;
-import org.rti.webcgh.array.BioAssay;
-import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.array.GenomeInterval;
-import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.graph.PlotGenerator;
-import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.graph.PlotType;
 
 /**
- * Tester for PlotGenerator
+ * Class uses for testing.  Conveniently creates
+ * <code>GenomeLocation</code> objects
  */
-public class PlotGeneratorTester extends TestCase {
-
+public class GenomeLocationFactory {
 	
-	/**
-	 * 
-	 *
-	 */
-	public void testScatterPlot() throws Exception {
-		PlotGenerator pg = new PlotGenerator();
-		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-		Experiment exp = new Experiment();
-		exp.setName("Experiment");
-		BioAssay ba1 = new BioAssay("Bioassay 1");
-		ArrayDatumFactory fac = new ArrayDatumFactory();
-		ba1.add(fac.newArrayDatum("r1", (short)1, (long)1000, (float)0.5));
-		ba1.add(fac.newArrayDatum("r2", (short)1, (long)2000, (float)0.3));
-		ba1.add(fac.newArrayDatum("r3", (short)1, (long)3000, (float)-0.5));
-		ba1.add(fac.newArrayDatum("r4", (short)1, (long)4000, (float)0.1));
-		ba1.add(fac.newArrayDatum("r5", (short)1, (long)5000, (float)-0.2));
-		
-//		pg.createPlot(new Experiment[] {this.experiment}, 
-//				new GenomeInterval[] {this.genomeInterval1, this.genomeInterval2}, 
-//				new QuantitationType("Log2 Ratio"), 
-//				new PlotParameters(PlotType.SCATTER_PLOT), this.drawingCanvas);
-		panel.toSvgFile("plot-generator-scatter.svg");
-	}
+	private GenomeAssembly genomeAssembly = null;
+	
+	
+//	public GenomeLocation newGenomeLocation(short chromNum, long location) {
+//		
+//		
+//	}
 
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsSetupAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-25 23:04:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,6 +70,7 @@ import org.apache.struts.action.ActionForm;
 import org.rti.webcgh.analytic.AnalyticPipeline;
 import org.rti.webcgh.array.GenomeAssembly;
 import org.rti.webcgh.array.Pipeline;
+import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.service.UserProfile;
@@ -131,7 +132,7 @@ public class PlotParamsSetupAction extends Action {
 		
 		// Get list of available quantitation types and set form quantitation type
 		ShoppingCart cart = AttributeManager.getShoppingCart(request);
-		Set qTypes = cart.quantitationTypes();
+		Set<QuantitationType> qTypes = cart.quantitationTypes();
 		request.setAttribute("quantitationTypes", qTypes);
 		
 		return mapping.findForward("success");

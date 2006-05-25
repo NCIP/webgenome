@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.graph.unit_test;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,13 +72,15 @@ public class BarGroupGeneratorTester extends TestCase {
 	
 	public void test1() {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setOrigin(new Point(20, 20));
 		List<DataPoint> dataPoints = new ArrayList<DataPoint>();
 		dataPoints.add(new DataPoint(0.0, 5.0, 0.8, "bioassay 1"));
 		dataPoints.add(new DataPoint(0.0, -2.0, 1.0, "bioassay 2"));
 		dataPoints.add(new DataPoint(0.0, 3.0, "bioassay 3"));
 		BarGroupGenerator generator = new BarGroupGenerator();
-		generator.addBarGroup(panel, dataPoints, "Bar Graph", 50.0);
+		generator.addBarGroup(panel, dataPoints, "Bar Graph", 30.0);
+		panel.setDrawBorder(true);
+		panel.setDrawCrossHairs(true);
 		panel.toSvgFile("bar-group-generator.svg");
 	}
-
 }

@@ -101,6 +101,8 @@ public class BarGraphGeneratorTester extends TestCase {
 		reporterNames.add("reporter 2");
 		reporterNames.add("reporter 3");
 		gen.generateBarGraph(panel, dataSet, reporterNames, 100.0);
+		panel.setDrawBorder(true);
+		panel.setDrawCrossHairs(true);
 		panel.toSvgFile("bar-graph.svg");
 	}
 

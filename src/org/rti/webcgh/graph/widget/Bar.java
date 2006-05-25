@@ -84,7 +84,7 @@ import org.rti.webcgh.graph.DataPoint;
  *                    error
  *  </pre>
  */
-public class Bar implements PlotElement {
+public class Bar implements ScalePlotElement {
 	
 	enum Direction {UP, DOWN};
 	
@@ -209,7 +209,7 @@ public class Bar implements PlotElement {
 	 * @return A point
 	 */
 	public Point topLeftAlignmentPoint() {
-		return new Point(0, 0);
+		return new Point(0, this.minY);
 	}
 
 	/**
@@ -217,7 +217,7 @@ public class Bar implements PlotElement {
 	 * @return A point
 	 */
 	public Point bottomLeftAlignmentPoint() {
-		return new Point(0, 0);
+		return new Point(0, this.maxY);
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class Bar implements PlotElement {
 	 * @return A point
 	 */
 	public Point topRightAlignmentPoint() {
-		return new Point(this.barWidth, 0);
+		return new Point(this.barWidth, this.minY);
 	}
 
 	/**
@@ -233,7 +233,7 @@ public class Bar implements PlotElement {
 	 * @return A point
 	 */
 	public Point bottomRightAlignmentPoint() {
-		return new Point(this.barWidth, 0);
+		return new Point(this.barWidth, this.maxY);
 	}
 
 	/**
@@ -258,6 +258,22 @@ public class Bar implements PlotElement {
 	 */
 	public Point topLeftPoint() {
 		return new Point(0, this.minY);
+	}
+	
+	
+	// ================================
+	//    ScalePlotElement interface
+	// ================================
+	
+	/**
+	 * Return point in pixels corresponding to the zero point
+	 * in the native units of measurement represented by
+	 * element.
+	 * @return A point or <code>null</code> if the element
+	 * does not contain a zero point
+	 */
+	public Point zeroPoint() {
+		return new Point(0, 0);
 	}
 	
 	

@@ -118,13 +118,13 @@ public class BarGraphGenerator {
 			barGroupGenerator.addBarGroup(childPanel, dataPoints, reporterName, scale);
 			if (count++ > 0)
 				panel.addExtraPadding(EXTRA_PADDING, Location.RIGHT_OF);
-			panel.add(childPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+			panel.add(childPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
 		}
 		int length = (int)((max - min) * scale);
 		Axis axis = new Axis(min, max, length, Orientation.VERTICAL, Location.LEFT_OF, true);
-		panel.add(axis, HorizontalAlignment.LEFT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
+		panel.add(axis, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
 		HorizontalLine line = new HorizontalLine(panel.width());
-		panel.add(line, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+		panel.add(line, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.ON_ZERO);
 	}
 
 }

@@ -307,10 +307,10 @@ public class PlotPanel implements ScalePlotElement {
     	else if (hAlign == HorizontalAlignment.RIGHT_OF)
     	    coord = this.maxX + this.padding;
     	else if (hAlign == HorizontalAlignment.ON_ZERO) {
-    		if (! (element instanceof ScalePlotElement))
-    			throw new IllegalArgumentException("Can only align on zero " +
-    					"point if element implements ScalePlotElement");
-    		coord = this.zeroPoint.x - ((ScalePlotElement)element).zeroPoint().x;
+    		int alignmentX = (element instanceof ScalePlotElement)?
+    				((ScalePlotElement)element).zeroPoint().x :
+    					(element.width() + element.topLeftAlignmentPoint().x) / 2; 
+    		coord = this.zeroPoint.x - alignmentX;
     	}
     	return coord;
     }
@@ -332,10 +332,10 @@ public class PlotPanel implements ScalePlotElement {
         else if (vAlign == VerticalAlignment.TOP_JUSTIFIED)
             coord = this.topLeftAlignmentPoint.y - element.topLeftAlignmentPoint().y;
         else if (vAlign == VerticalAlignment.ON_ZERO) {
-        	if (! (element instanceof ScalePlotElement))
-        		throw new IllegalArgumentException("Can only align on zero " +
-				"point if element implements ScalePlotElement");
-        	coord = this.zeroPoint.y - ((ScalePlotElement)element).zeroPoint().y;
+        	int alignY = (element instanceof ScalePlotElement)?
+        			((ScalePlotElement)element).zeroPoint().y :
+        				(element.height() + element.bottomLeftAlignmentPoint().y) / 2;
+        	coord = this.zeroPoint.y - alignY;
         }
     	return coord;
     }
@@ -378,8 +378,10 @@ public class PlotPanel implements ScalePlotElement {
     	else if (hAlign == HorizontalAlignment.RIGHT_OF)
     		elementMinX = this.maxX + this.padding;
     	else if (hAlign == HorizontalAlignment.ON_ZERO) {
-    		ScalePlotElement spe = (ScalePlotElement)element;
-    		elementMinX = this.zeroPoint.x - spe.zeroPoint().x - spe.topLeftPoint().x;
+    		int alignX = (element instanceof ScalePlotElement)?
+    				((ScalePlotElement)element).zeroPoint().x :
+    					(element.topLeftPoint().x + element.width()) / 2;
+    		elementMinX = this.zeroPoint.x - alignX - element.topLeftPoint().x;
     	}
     	int elementMaxX = elementMinX + element.width();
     	if (elementMinX < this.minX)
@@ -428,8 +430,10 @@ public class PlotPanel implements ScalePlotElement {
     	else if (vAlign == VerticalAlignment.BELOW)
     		elementMinY = this.maxY + this.padding;
     	else if (vAlign == VerticalAlignment.ON_ZERO) {
-    		ScalePlotElement spe = (ScalePlotElement)element;
-    		elementMinY = this.zeroPoint.y - spe.zeroPoint().y - spe.topLeftPoint().y;
+    		int alignY = (element instanceof ScalePlotElement)?
+    				((ScalePlotElement)element).zeroPoint().y :
+    					(element.topLeftPoint().x + element.height()) / 2;
+    		elementMinY = this.zeroPoint.y - (alignY - element.topLeftPoint().y);
     	}
     	int elementMaxY = elementMinY + element.height();
     	if (elementMinY < this.minY)
@@ -443,11 +447,20 @@ public class PlotPanel implements ScalePlotElement {
     		element.topLeftAlignmentPoint().y - element.topLeftPoint().y;
     		this.topRightAlignmentPoint.y = this.minY + 
     		element.topRightAlignmentPoint().y - element.topLeftPoint().y;
+    		if (element instanceof ScalePlotElement) {
+    			ScalePlotElement spe = (ScalePlotElement)element;
+    			this.zeroPoint.y = this.minY + spe.zeroPoint().y - spe.topLeftPoint().y;
+    		}
     	} else if (vAlign == VerticalAlignment.BELOW) {
     		this.bottomLeftAlignmentPoint.y = this.maxY -
     		element.topLeftPoint().y + element.height() - element.bottomLeftAlignmentPoint().y;
     		this.bottomRightAlignmentPoint.y = this.maxY -
     		element.topLeftPoint().y + element.height() - element.bottomRightAlignmentPoint().y;
+    		if (element instanceof ScalePlotElement) {
+    			ScalePlotElement spe = (ScalePlotElement)element;
+    			this.zeroPoint.y = this.maxY - spe.topLeftPoint().y + 
+    				spe.height() - spe.zeroPoint().y;
+    		}
     	}
     }
 }

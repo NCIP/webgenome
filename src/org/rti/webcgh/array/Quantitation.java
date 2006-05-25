@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Quantitation.java,v $
-$Revision: 1.2 $
-$Date: 2006-04-25 15:46:28 $
+$Revision: 1.3 $
+$Date: 2006-05-25 23:04:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -330,6 +330,7 @@ public class Quantitation implements Cacheable {
     		return quants[0];
     	
     	Quantitation meanVal = new Quantitation();
+    	meanVal.quantitationType = quants[0].quantitationType;
     	
     	// Set mean
     	float sum = (float)0.0;

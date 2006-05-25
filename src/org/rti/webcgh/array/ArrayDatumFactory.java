@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatumFactory.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.3 $
+$Date: 2006-05-25 23:04:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,15 @@ public class ArrayDatumFactory {
 	private GenomeAssembly genomeAssembly;
 	private Map<String, Reporter> reporterCache = new HashMap<String, Reporter>();
 	private Map<Short, Chromosome> chromosomeCache = new HashMap<Short, Chromosome>();
+	
+	
+	/**
+	 * Constructor
+	 *
+	 */
+	public ArrayDatumFactory() {
+		this("hg18", QuantitationType.LOG_2_RATIO, "Homo", "sapiens");
+	}
 	
 	/**
 	 * 
