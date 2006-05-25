@@ -289,6 +289,7 @@
 				bb.setAttribute("width", bbWidth);
 				bb.setAttribute("height", bbHeight);
 				bb.setAttribute("visibility", "visible");
+                bb.setAttribute("stroke", "black");
 			}
 			
 			//
@@ -299,6 +300,7 @@
 				txt.setAttribute("visibility", "hidden");
 				var bb = svgDoc.getElementById("toolTipBox");
 				bb.setAttribute("visibility", "hidden");
+                bb.setAttribute("stroke", "yellow");
 			}
 
 		]]>
@@ -308,7 +310,7 @@
 	<g id="insertionPoint"/>
 	
 	<!-- Tool tip -->
-	<rect height="1" width="1" id="toolTipBox" stroke="black" stroke-width="1" fill="yellow"/>
+	<rect height="1" width="1" id="toolTipBox" stroke="yellow" stroke-width="1" fill="yellow"/>
 	<text id="toolTipText" font-size="10"/>
 	
 </svg>

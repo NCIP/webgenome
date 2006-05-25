@@ -47,6 +47,7 @@
 				bb.setAttribute("width", bbWidth);
 				bb.setAttribute("height", bbHeight);
 				bb.setAttribute("visibility", "visible");
+                bb.setAttribute("stroke", "black" );
 			}
 			
 			// Hide tooltip
@@ -55,6 +56,7 @@
 				txt.setAttribute("visibility", "hidden");
 				var bb = document.getElementById("toolTipBox");
 				bb.setAttribute("visibility", "hidden");
+                bb.setAttribute("stroke", "yellow" );
 			}
 		]]>
 	</script>
@@ -63,7 +65,7 @@
 	<g id="insertionPoint"/>
 	
 	<!-- Tool tip -->
-	<rect width="1" height="1" id="toolTipBox" stroke="black" stroke-width="1" fill="yellow"/>
+	<rect width="1" height="1" id="toolTipBox" stroke="yellow" stroke-width="1" fill="yellow"/>
 	<text id="toolTipText" font-size="10"/>
 
 </svg>
