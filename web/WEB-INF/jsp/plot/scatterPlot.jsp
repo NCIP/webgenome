@@ -61,11 +61,13 @@ function newWindow(file,window) {
 
 <br>
 
-<script language="JavaScript" src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>" type="text/javascript"></script>
+<%-- BEGIN: BLOCK NEEDED FOR SAVE AS FUNCTION --%>
+<script language="JavaScript1.2" src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>" type="text/javascript"></script>
 <%-- THIS FORM MUST EXIST TO ALLOW THE PLOT TO BE SAVED AS A GRAPHIC --%>
 <html:form action="/plot/saveAs" target="plotSaveAs">
 	<html:hidden property="svgDOM" value=""/>
 </html:form>
+<%-- END: BLOCK NEEDED FOR SAVE AS FUNCTION --%>
 
     	
 <table border="0" cellpadding="0" cellspacing="0">
@@ -87,10 +89,13 @@ function newWindow(file,window) {
 				Maximum Y &nbsp;
 				<html:text property="maxY" size="4" maxlength="20"/>&nbsp;&nbsp;
 				<html:submit value="Go"/>
-   			</html:form><div style="margin-top:0px;padding-top:0px;">
+   			</html:form>
+   			<%-- BEGIN: SAVE AS LINK --%>
+   			<div style="margin-top:0px;padding-top:0px;">
    			<script language="JavaScript">
-   			renderSaveAsLink();
+   			renderSaveAsLink( );
    			</script>
+   			<%-- END: SAVE AS LINK --%>
    			</div>
    		</td>
 	</tr>
