@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsConfigAction.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-11 18:19:58 $
+$Revision: 1.2 $
+$Date: 2006-05-25 20:28:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
@@ -104,6 +106,9 @@ public class PlotParamsConfigAction extends Action {
         this.persistentDomainObjectMgr = persistentDomainObjectMgr;
     }
     
+    
+    private static Logger LOGGER = Logger.getLogger(PlotParamsConfigAction.class.getName());
+    
 	/**
 	 * Performs action of retrieving plotting parameters
  	 * for presentation
@@ -121,6 +126,7 @@ public class PlotParamsConfigAction extends Action {
 		ActionMapping mapping, ActionForm form, HttpServletRequest request,
 		HttpServletResponse response
 	) throws Exception {
+		LOGGER.info("Starting action 'Starting PlotParamsConfigAction'");
 		
 		PlotParamsForm pform = (PlotParamsForm)form;
 		
@@ -130,31 +136,66 @@ public class PlotParamsConfigAction extends Action {
 			pform.setPlotType(DEF_PLOT_TYPE);
 		}
 		
-//		
-//		String configDone = request.getParameter("configDone");
-//		if (configDone != null || configDone.equals("OK")) {
-//			return this.saveUpdatedParams()
-//		}
-		
 		
 		// Get list of available quantitation types and set form quantitation type
 		ShoppingCart cart = AttributeManager.getShoppingCart(request);
 		Set qTypes = cart.quantitationTypes();
-		request.setAttribute("quantitationTypes", qTypes);
+		// set as attribute in session
+		request.getSession().setAttribute("quantitationTypes", qTypes);
 		
 		
 		
-//		return mapping.findForward("success");
+		// determine if the user has configured parameters yet or not
+		boolean configurationIsDone = false;
+		String paramsConfigured = pform.getParamsConfigured();
+		if (paramsConfigured != null && paramsConfigured.equals("true")) {
+			configurationIsDone = true;
+		}
 		
+		
+		String calledFromPlotParams = request.getParameter("calledFromPlotParams");
+		
+		// if the user has supplied parameters that validate, forward to the
+		// page that will execute the plot.  if not, send user to appropriate
+		// plot parameter config page
 		ActionForward forward = null;
 		
-		if ("scatter".equals(plotType))
-			forward = mapping.findForward("scatterPlotConfig");
+		/*if (configurationIsDone) {
+			
+			// the user has successfully configured parameters, so reset
+			// the form-bean attribute to be ready for the next time
+			pform.setParamsConfigured("");
+			
+			forward = mapping.findForward("readyToPlot");
+		}
+		else if ("scatter".equals(plotType))
+			forward = mapping.findForward("scatterPlotConfig");			
 		else if ("ideogram".equals(plotType))
 			forward = mapping.findForward("ideogramPlotConfig");
 		else
 			forward = mapping.findForward("scatterPlotConfig");
+		*/
+		
+		
+		if (calledFromPlotParams != null) {
+			
+			// the user has successfully configured parameters, so reset
+			// the form-bean attribute to be ready for the next time
+			pform.setParamsConfigured("");
+			
+			forward = mapping.findForward("readyToPlot");
+		}
+		else if ("scatter".equals(plotType))
+			forward = mapping.findForward("scatterPlotConfig");			
+		else if ("ideogram".equals(plotType))
+			forward = mapping.findForward("ideogramPlotConfig");
+		else
+			forward = mapping.findForward("scatterPlotConfig");
+
+		
+		LOGGER.info("Completed action 'PlotParamsConfigAction'");
 		
 		return forward;
 	}
+    
 }

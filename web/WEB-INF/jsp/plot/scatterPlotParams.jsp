@@ -10,14 +10,16 @@
 
 <p><br></p>
 
+
 <center>
 	<html:errors property="global"/>
 </center>
 
-
-<html:form action="/configPlotParams">
-
-	<html:hidden property="plotType" value="scatter"/>
+<html:form action="/configScatterPlotParams">
+    <%System.out.println("******************INSIDE JSPPPPPPPPPP**********");%>
+	<html:hidden property="plotType" value="scatter"/>	
+	<html:hidden property="paramsConfigured" value="true"/>
+	<input type="hidden" name="calledFromPlotParams" value="true"/>
 
 <script language="JavaScript">
 <!--
@@ -40,7 +42,7 @@ function closeAndForwardToPlot() {
 
 
 <p align="center">
-	<html:submit value="OK" onclick="javascript:closeAndForwardToPlot();" />
+	<html:submit value="OK"/>
 </p>
 
 <input type="hidden" name="update" value="yes">
@@ -66,6 +68,8 @@ function closeAndForwardToPlot() {
 	<!--           Genome Segment            -->
 	<!-- =================================== -->
 	
+	 
+	 
 	<!-- Genome interval -->
 	<tr class="contentTD">
 		<td rowspan="1">Genome Segment</td>
@@ -85,6 +89,7 @@ function closeAndForwardToPlot() {
 		</td>
 		<td align="center"><span class="optional-param">O</span></td>
 	</tr>
+	
 	
 	
 	<!-- =================================== -->
@@ -110,6 +115,9 @@ function closeAndForwardToPlot() {
 		<td align="center"><span class="required-param">R</span></td>
 	</tr>
 
+	<%
+		session.removeAttribute("quantitationTypes");
+	%>
 	
 	<!-- =========================================== -->
 	<!--       Plot dimensions                       -->
@@ -244,5 +252,5 @@ function closeAndForwardToPlot() {
 <p align="center">
 	<html:submit value="OK" onclick="javascript:closeAndForwardToPlot();" />
 </p>
- 
+
 </html:form>

@@ -405,12 +405,47 @@
 			type="org.rti.webcgh.webui.plot.PlotParamsConfigAction"
 			name="plotParamsForm"
 			scope="session"
-			validate="true"
-			input="/configPlotParams.do"
-			parameter="confirm.change.plot.params.page">
+			validate="false">
 			<forward name="scatterPlotConfig" path="scatter.plot.params.page"/>
 			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
+			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
 		</action>
+
+		<action
+			path="/configScatterPlotParams"
+			type="org.rti.webcgh.webui.plot.PlotParamsConfigAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="true"
+			input="scatter.plot.params.page">
+			<forward name="scatterPlotConfig" path="scatter.plot.params.page"/>
+			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
+			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
+		</action>
+
+		<action
+			path="/configIdeogramPlotParams"
+			type="org.rti.webcgh.webui.plot.PlotParamsConfigAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="true"
+			input="ideogram.plot.params.page">
+			<forward name="scatterPlotConfig" path="scatter.plot.params.page"/>
+			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
+			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
+		</action>
+		
+		<action
+			path="/recordConfigPlotParams"
+			type="org.rti.webcgh.webui.plot.PlotParamsConfigRecordAction"
+			name="plotParamsForm"
+			scope="session"
+			validate="true"
+			input="/configPlotParams.do">
+			<forward name="scatterPlotReadyToPlot" path="confirm.configure.scatter.plot.params.page"/>
+			<forward name="ideogramPlotReadyToPlot" path="confirm.configure.ideogram.plot.params.page"/>
+		</action>
+		
 		
 		<action
 			path="/updateSelectedFeatureTypes"

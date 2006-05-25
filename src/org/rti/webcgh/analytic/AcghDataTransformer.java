@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-18 21:26:19 $
+$Revision: 1.4 $
+$Date: 2006-05-25 20:28:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,12 +59,15 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.batik.gvt.text.ArabicTextHandler;
+import org.apache.log4j.Logger;
 import org.rti.webcgh.array.ArrayDatum;
 import org.rti.webcgh.array.ArrayDatumIterator;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Chromosome;
 import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.webui.plot.PlotParamsConfigRecordAction;
 
 import sun.security.krb5.internal.ac;
 
@@ -72,6 +75,8 @@ import sun.security.krb5.internal.ac;
  * Performs the mapping between the Experiment object and the data for aCGH
  */
 public class AcghDataTransformer {
+	
+	private static Logger LOGGER = Logger.getLogger(AcghDataTransformer.class.getName());
 	
 	/**
 	 * Transforms data for aCGH into an Experiment object
@@ -84,14 +89,18 @@ public class AcghDataTransformer {
 
 		smoothedRatios = acghData.getSmoothedRatios();
 		
+		// make a deep copy of the original Experiment object to the new Experiment object
 		Experiment newExperiment = new Experiment();
 		newExperiment.bulkSet(origExperiment, true);
 		
-		ArrayDatumIterator arrayDatumIter = newExperiment.arrayDatumIterator();
+		// iterate over ArrayDatum objects and insert each smoothed ratio value sequentially
+		ArrayDatumIterator arrayDatumIter = newExperiment.bioAssayIterator().next().arrayDatumIterator();
 		int i = 0;
 		for ( ; arrayDatumIter.hasNext() ; ) {
 			ArrayDatum arrayDatum = arrayDatumIter.next();
+			LOGGER.debug("original ArrayDatum quantitation value = " + arrayDatum.getQuantitation().getValue());
 			arrayDatum.setMagnitude((float) smoothedRatios[i]);
+			LOGGER.debug("smoothed ArrayDatum quantiation value = " + arrayDatum.getQuantitation().getValue());
 			i++;
 		}
 		

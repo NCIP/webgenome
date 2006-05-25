@@ -358,6 +358,20 @@
 	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 
+  	<definition name="confirm.configure.scatter.plot.params.page" extends="plotting.layout" >
+	  	<put name="title"  value="webGenome: Plot Parameters Validation Check" />
+	  	<put name="selectedSubMenuItem" value="parameters" />
+	  	<put name="content"   value="/WEB-INF/jsp/plot/confirmConfigureScatterPlotParams.jsp" />
+	  	<put name="helpTopic" value="plotParams" />
+  	</definition>
+
+  	<definition name="confirm.configure.ideogram.plot.params.page" extends="plotting.layout" >
+	  	<put name="title"  value="webGenome: Plot Parameters Validation Check" />
+	  	<put name="selectedSubMenuItem" value="parameters" />
+	  	<put name="content"   value="/WEB-INF/jsp/plot/confirmConfigureIdeogramPlotParams.jsp" />
+	  	<put name="helpTopic" value="plotParams" />
+  	</definition>
+
   	<definition name="confirm.change.plot.params.page" extends="plotting.layout" >
 	  	<put name="title"  value="webGenome: Plot Parameters" />
 	  	<put name="selectedSubMenuItem" value="parameters" />

@@ -18,6 +18,10 @@
 <html:form action="/configPlotParams">
 
 	<html:hidden property="plotType" value="ideogram"/>
+	<%
+	   System.out.println("********INSIDE IDEOGRAMPLOT********");
+	%>
+	<html:hidden property="paramsConfigured" value="true"/>
 
 <script language="JavaScript">
 <!--
