@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-25 23:29:57 $
+$Revision: 1.6 $
+$Date: 2006-05-25 23:47:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,7 +69,6 @@ import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Chromosome;
 import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.webui.plot.PlotParamsConfigRecordAction;
 
 import sun.security.krb5.internal.ac;
 

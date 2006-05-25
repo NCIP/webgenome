@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsConfigAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-25 20:28:36 $
+$Revision: 1.3 $
+$Date: 2006-05-25 23:47:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -130,11 +130,13 @@ public class PlotParamsConfigAction extends Action {
 		
 		PlotParamsForm pform = (PlotParamsForm)form;
 		
-		String plotType = request.getParameter("plotType");
-		if (plotType == null || plotType.length() < 1) {
-			plotType = DEF_PLOT_TYPE;
-			pform.setPlotType(DEF_PLOT_TYPE);
-		}
+		String plotType = pform.getPlotType();
+		
+//		String plotType = request.getParameter("plotType");
+//		if (plotType == null || plotType.length() < 1) {
+//			plotType = DEF_PLOT_TYPE;
+//			pform.setPlotType(DEF_PLOT_TYPE);
+//		}
 		
 		
 		// Get list of available quantitation types and set form quantitation type

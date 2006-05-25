@@ -15,13 +15,15 @@
 </center>
 
 
-<html:form action="/configPlotParams">
+<html:form action="/configIdeogramPlotParams">
 
 	<html:hidden property="plotType" value="ideogram"/>
 	<%
 	   System.out.println("********INSIDE IDEOGRAMPLOT********");
 	%>
 	<html:hidden property="paramsConfigured" value="true"/>
+	
+	<input type="hidden" name="calledFromPlotParams" value="true"/>
 
 <script language="JavaScript">
 <!--
