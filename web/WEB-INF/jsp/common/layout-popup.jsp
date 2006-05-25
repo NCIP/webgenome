@@ -44,28 +44,8 @@
 
 		
 		<!-- Help and Login -->
-		<tr><td height="27">
-			<table width="100%" height="27" cellpadding="0" cellspacing="0" border="0">
-			<tr>
-				<logic:present name="<%= AttributeManager.USER_PROFILE %>">
-					<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" height="27">
-						<span class="smallInfoMsg">
-							<bean:write name="<%= AttributeManager.USER_PROFILE %>" property="name"/>
-							logged in
-						</span>
-					</td>
-				</logic:present>
-
-				<td valign="top" align="right" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="35"><html:img page="/images/titlebar-split.jpg" width="35" height="27"/></td>
-				<td valign="top" align="left" background="<html:rewrite page="/images/titlebar-tile.jpg"/>" width="50">
-					<a href="#" class="menu" 
-						onclick="window.open('<html:rewrite page="/html/help.htm"/>#<tiles:getAsString name="helpTopic"/>', '_blank', 'width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no');">
-						Help
-					</a>
-				</td>
-			</tr>
-			</table>
-		</td></tr>
+		<tr><td height="14" background="<html:rewrite page="/images/titlebar-tile.jpg"/>"><html:img page="/images/spacer.gif" height="14"/></td>
+		</tr>
 
 		
 		
