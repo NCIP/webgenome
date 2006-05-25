@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-25 20:28:36 $
+$Revision: 1.5 $
+$Date: 2006-05-25 23:29:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,8 +56,10 @@ package org.rti.webcgh.analytic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
 
 import org.apache.batik.gvt.text.ArabicTextHandler;
 import org.apache.log4j.Logger;
@@ -84,7 +86,7 @@ public class AcghDataTransformer {
 	 * @return
 	 */
 	public Experiment transform(AcghData acghData, Experiment origExperiment) {
-
+		//System.out.println("transform(AcghData acghData, Experiment origExperiment)");
 		double[] smoothedRatios;  // smoothed value of log2 ratio
 
 		smoothedRatios = acghData.getSmoothedRatios();
@@ -92,11 +94,12 @@ public class AcghDataTransformer {
 		// make a deep copy of the original Experiment object to the new Experiment object
 		Experiment newExperiment = new Experiment();
 		newExperiment.bulkSet(origExperiment, true);
-		
+
 		// iterate over ArrayDatum objects and insert each smoothed ratio value sequentially
 		ArrayDatumIterator arrayDatumIter = newExperiment.bioAssayIterator().next().arrayDatumIterator();
+
 		int i = 0;
-		for ( ; arrayDatumIter.hasNext() ; ) {
+		for ( ; (arrayDatumIter.hasNext() && i<smoothedRatios.length) ; ) {
 			ArrayDatum arrayDatum = arrayDatumIter.next();
 			LOGGER.debug("original ArrayDatum quantitation value = " + arrayDatum.getQuantitation().getValue());
 			arrayDatum.setMagnitude((float) smoothedRatios[i]);
@@ -137,12 +140,11 @@ public class AcghDataTransformer {
 		int size;                 // number of clones/number of rows
 		
 
-		size = 0;
-		
 		// iterate over ArrayDatum objects
 		ArrayDatumIterator arrayDatumIter = experiment.bioAssayIterator().next().arrayDatumIterator();
 		
 		// find how many rows of data we will send to aCGH
+		size = 0;
 		for ( ; arrayDatumIter.hasNext() ; ) {
 			size++;
 			arrayDatumIter.next();
@@ -179,5 +181,134 @@ public class AcghDataTransformer {
 
 		return acghData;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//under construction
+	/**
+	 * Transforms data for aCGH into an Experiment object
+	 * @param acghData
+	 * @return
+	 */
+	public BioAssay transform(AcghData acghData, BioAssay origBioAssay) {
+		//System.out.println("transform(AcghData acghData, Experiment origExperiment)");
+		double[] smoothedRatios;  // smoothed value of log2 ratio
+
+		smoothedRatios = acghData.getSmoothedRatios();
+		
+		//System.out.println("smoothedRatios.length="+smoothedRatios.length);
+		
+		// make a deep copy of the original Experiment object to the new Experiment object
+		BioAssay newBioAssay = new BioAssay();
+		newBioAssay.bulkSet(origBioAssay, true);
+		
+		// iterate over ArrayDatum objects and insert each smoothed ratio value sequentially
+		ArrayDatumIterator arrayDatumIter = newBioAssay.arrayDatumIterator();
+
+		int i = 0;
+		for ( ; (arrayDatumIter.hasNext() && i<smoothedRatios.length) ; ) {
+			//System.out.println("for loop, i="+i);
+			ArrayDatum arrayDatum = arrayDatumIter.next();
+			//System.out.println("before:"+arrayDatum.getQuantitation().getValue());
+			LOGGER.debug("original ArrayDatum quantitation value = " + arrayDatum.getQuantitation().getValue());
+			arrayDatum.setMagnitude((float) smoothedRatios[i]);
+			//System.out.println("after:"+arrayDatum.getQuantitation().getValue());
+			LOGGER.debug("smoothed ArrayDatum quantiation value = " + arrayDatum.getQuantitation().getValue());
+			i++;
+		}
+		
+		return newBioAssay;		
+	}
+	
+	
+	
+	/**
+	 * Transforms data from an Experiment object into the form needed for aCGH
+	 * @param experiment
+	 * @return
+	 */
+	public AcghData transform(BioAssay assay) {
+		AcghData acghData = new AcghData();
+		
+		// see if the Experiment object has any chromosomes.  if not, return empty object
+		Set chromosomeSet = assay.chromosomes();
+		int numChromosomes = chromosomeSet.size();
+		if (numChromosomes <= 0)
+			return acghData;
+		
+		// if Experiment object has any chromosomes, save data for aCGH in arrays
+		
+		double[] log2Ratios;      // log2 ratios of copy number changes
+        		// rows correspond to the clones and columns to the samples
+		String[] clones;          // clone name
+		String[] targets;         // unique ID, e.g. Well ID
+		int[] chromosomes;        // chromosome number
+		        // X chromosome = 23 in human and 20 in mouse,
+		        // Y chromosome = 24 in human and 21 in mouse
+		int[] positions;          // kb position on the chromosome
+		double[] smoothedRatios;  // smoothed value of log2 ratio
+		int size;                 // number of clones/number of rows
+		
+
+		// iterate over ArrayDatum objects
+		ArrayDatumIterator arrayDatumIter = assay.arrayDatumIterator();
+		
+		// find how many rows of data we will send to aCGH
+		size = 0;
+		for ( ; arrayDatumIter.hasNext() ; ) {
+			size++;
+			arrayDatumIter.next();
+		}
+		
+		// initialize arrays
+
+		log2Ratios = new double[size];
+		clones = new String[size];
+		targets = new String[size];
+		chromosomes = new int[size];
+		positions = new int[size];
+		
+		
+		arrayDatumIter = assay.arrayDatumIterator();
+		for ( int i = 0; arrayDatumIter.hasNext() ; i++ ) {
+			ArrayDatum arrayDatum = arrayDatumIter.next(); 
+
+			log2Ratios[i] = (double) arrayDatum.getQuantitation().getValue();
+			clones[i] = arrayDatum.getReporter().getName();
+//			targets[i] = arrayDatum.getReporter().getId().toString();
+			targets[i] = arrayDatum.getReporter().getName();
+			chromosomes[i] = (int) arrayDatum.chromosome().getNumber();
+			positions[i] = (int) arrayDatum.getGenomeLocation().getLocation();
+			
+		}
+		
+		acghData.setLog2Ratios(log2Ratios);
+		acghData.setClones(clones);
+		acghData.setTargets(targets);
+		acghData.setChromosomes(chromosomes);
+		acghData.setPositions(positions);
+		acghData.setSize(size);
+
+		return acghData;
+	}
+
+	//under construction
 
 }

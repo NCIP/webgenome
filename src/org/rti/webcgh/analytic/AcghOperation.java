@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-25 15:05:50 $
+$Revision: 1.7 $
+$Date: 2006-05-25 23:29:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analytic;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.service.AcghService;
@@ -117,19 +121,43 @@ public class AcghOperation implements NormalizationOperation {
 	 */
 	public Experiment[] perform(Experiment[] data, PlotParameters params)
 			throws AnalyticException {
-		
+
 		Experiment[] resultData = new Experiment[data.length];
 		
 		try {
 			
 			for (int i = 0; i < data.length; i++) {
+
 				Experiment exp = data[i];
 				
+				BioAssay assay;
+				List<BioAssay> origAssays = new ArrayList<BioAssay>();
+				List<BioAssay> resultAssays = new ArrayList<BioAssay>();
+				
+				origAssays = (List<BioAssay>) exp.getBioAssays();
+
+				for (int j = 0; j < origAssays.size(); j++) {
+
+					assay = origAssays.get(j);
+					AcghData acghData = this.acghDataTransformer.transform(assay);
+					this.acghService.run(acghData);
+					resultAssays.add(this.acghDataTransformer.transform(acghData, assay));
+				}
+				
+				for (int k = 0; k < resultAssays.size(); k++) {
+					origAssays.add(resultAssays.get(k));
+				}
+				
+				exp.setBioAssays(origAssays);
+				resultData[i] = exp;
+				
+				/*
 				AcghData acghData = this.acghDataTransformer.transform(exp);
 				this.acghService.run(acghData);
 				
 				Experiment resultExp = this.acghDataTransformer.transform(acghData, exp);
 				resultData[i] = resultExp;
+				*/
 			}
 			
 		} catch (Exception e) {

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/AcghService.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-18 20:01:31 $
+$Revision: 1.7 $
+$Date: 2006-05-25 23:30:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.rosuda.JRclient.REXP;
@@ -147,12 +149,14 @@ public class AcghService {
 				   
 				    c.voidEval(cmd);
 				    
+				    /*
 				    // find the genomic events with max chrom number 
 				    if (cmd.startsWith("sd.samples")) {
 				    	cmd = "genomic.events(aCGH_obj) <-find.genomic.events(aCGH_obj, maxChrom="+maxChrom+")";
 				    	System.out.print("Trying R command: \"" + cmd + "\"...");
 				    	c.voidEval(cmd);
 				    }
+				    */
 				    
 				    // retrieve smoothed values from R
 				    if (cmd.startsWith("result <-")) {
@@ -188,6 +192,69 @@ public class AcghService {
 			// load aCGH library
 			c.eval("library(aCGH)");
 			
+			/*// < under construction
+			HashMap hCleanIntensity = new HashMap();
+			HashMap hCleanChromosome = new HashMap();
+			HashMap hCleanPosition = new HashMap();
+			String hClone; // key
+			double hLog2;
+			
+			// initiation step
+			hCleanIntensity.put(data.getClones()[0], new Double(data.getLog2Ratios()[0]));
+			hCleanChromosome.put(data.getClones()[0], new Integer(data.getChromosomes()[0]));
+			hCleanPosition.put(data.getClones()[0], new Integer(data.getPositions()[0]));
+			
+			// recursive step
+			for(int i = 1 ; i < data.getSize() ; i++) {
+				hClone = data.getClones()[i];
+				if (hCleanIntensity.containsKey(hClone)) {
+					hLog2 = ((Double)hCleanIntensity.get(hClone)).doubleValue();
+					hLog2 = (hLog2 + data.getLog2Ratios()[i])/2;
+					hCleanIntensity.remove(hClone);
+					hCleanIntensity.put(hClone, new Double(hLog2));
+				}
+				else {
+					hCleanIntensity.put(hClone, new Double(data.getLog2Ratios()[i]));
+					hCleanChromosome.put(hClone, new Integer(data.getChromosomes()[i]));
+					hCleanPosition.put(hClone, new Integer(data.getPositions()[i]));
+				}
+			}
+			
+			// prepare data before running R commands from file
+			int[] narray = new int[hCleanIntensity.size()];
+			String[] clonearray = new String[hCleanIntensity.size()];
+			int[] chrarray = new int[hCleanIntensity.size()];
+			int[] posarray = new int[hCleanIntensity.size()];
+			double[] log2array = new double[hCleanIntensity.size()];
+			Iterator keys = (hCleanIntensity.keySet()).iterator();
+			int m = 0;
+			String clonekey;
+			while (keys.hasNext()) {
+				clonekey = (String)keys.next();
+				narray[m] = m+1;
+				clonearray[m] = clonekey;
+				chrarray[m] = ((Integer)hCleanChromosome.get(clonekey)).intValue();
+				posarray[m] = ((Integer)hCleanPosition.get(clonekey)).intValue();
+				log2array[m] = ((Double)hCleanIntensity.get(clonekey)).doubleValue();
+				m++;
+			}
+			
+			data.setClones(clonearray);
+			data.setTargets(clonearray);
+			data.setChromosomes(chrarray);
+			data.setPositions(posarray);
+			data.setLog2Ratios(log2array);
+			data.setSize(clonearray.length);
+			
+			c.assign("clonesInfo_n",new REXP(REXP.XT_ARRAY_INT,narray));
+			c.assign("clonesInfo_Clone", new REXP(REXP.XT_ARRAY_STR,clonearray));
+			c.assign("clonesInfo_Target", new REXP(REXP.XT_ARRAY_STR,clonearray));
+			c.assign("clonesInfo_Chrom", new REXP(REXP.XT_ARRAY_INT,chrarray));
+			c.assign("clonesInfo_kb", new REXP(REXP.XT_ARRAY_INT,posarray));
+			c.assign("log2ratios_log2TR", new REXP(REXP.XT_ARRAY_DOUBLE,log2array));
+			
+			//   under construction >*/
+			
 			// prepare data before running R commands from file
 			int[] narray = new int[data.getSize()];
 			for(int i = 0 ; i < data.getSize() ; i++) {narray[i] = i+1;}
@@ -197,6 +264,7 @@ public class AcghService {
 			c.assign("clonesInfo_Chrom", new REXP(REXP.XT_ARRAY_INT,data.getChromosomes()));
 			c.assign("clonesInfo_kb", new REXP(REXP.XT_ARRAY_INT,data.getPositions()));
 			c.assign("log2ratios_log2TR", new REXP(REXP.XT_ARRAY_DOUBLE,data.getLog2Ratios()));
+			
 			
 			c.eval("clones_info <-data.frame(n=clonesInfo_n, Clone=clonesInfo_Clone, Target=clonesInfo_Target, Chrom=clonesInfo_Chrom, kb=clonesInfo_kb)");
 			c.eval("log2_ratios <-data.frame(ID=clonesInfo_Clone, log2TR=log2ratios_log2TR)");
