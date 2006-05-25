@@ -55,13 +55,13 @@
 
 <html:form action="/pipeline/save">
 
-	<table border="0" cellpadding="20" align="center" class="tbl">
+	<table border="0" cellpadding="20" align="center" class="tblLite">
 		<tr>
 			<td align="center">
 			
 				<!-- Pipeline name -->
 				<p>
-					<span class="fieldName">Pipeline Name</span>
+					<span class="fieldName">Pipeline Name</span><span class="fieldValue">
 					<html:errors property="name"/>
 					<logic:equal name="<%= Attribute.NEW_PIPELINE %>" 
 						property="readOnly" value="false">
@@ -70,7 +70,7 @@
 					<logic:equal name="<%= Attribute.NEW_PIPELINE %>" 
 						property="readOnly" value="true">
 						<b><bean:write name="<%= Attribute.NEW_PIPELINE %>" property="name"/></b>
-					</logic:equal>
+					</logic:equal></span>
 				</p>
 				
 				<% 	int counter = -1; %>
@@ -84,15 +84,15 @@
 							</p>
 							
 							<!-- Table header -->
-							<table border="1" cellpadding="5">
+							<table border="1" cellpadding="5" class="data">
 								<tr>
-									<td class="fieldName" align="center">Step</td>
-									<td class="fieldName" align="center">Type</td>
-									<td class="fieldName" align="center">Operation</td>
-									<td class="fieldName" align="center">Parameters</td>
+									<th class="fieldName" align="center">Step</td>
+									<th class="fieldName" align="center">Type</td>
+									<th class="fieldName" align="center">Operation</td>
+									<th class="fieldName" align="center">Parameters</td>
 									<logic:equal name="<%= Attribute.NEW_PIPELINE %>"
 										property="readOnly" value="false">
-										<td class="fieldName" align="center">&nbsp</td>
+										<th class="fieldName" align="center">&nbsp</td>
 									</logic:equal>
 								</tr>
 				
@@ -107,7 +107,7 @@
 										
 										<!-- Basic information about operation -->
 										<td>
-											<table border="0">
+											<table border="0" class="dataInner">
 												<tr>
 												
 													<!-- Help icon -->

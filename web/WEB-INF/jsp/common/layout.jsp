@@ -159,7 +159,7 @@
 			<tr>
 				<td valign="top" align="center">
 	<!-- Navigation map -->		<tiles:get name="navigationMap"/>
-	<!-- Page content -->		<tiles:get name="content"/>
+	<!-- Page content -->		<div class="contentItem"><tiles:get name="content"/><br></div>
 				</td>
 			</tr>
 			<tr>

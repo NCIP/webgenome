@@ -14,6 +14,7 @@
 </script>
 
 <p><br></p>
+Use table below to manage analytic pipelines:
 <p><br></p>
 
 <% 
@@ -27,8 +28,8 @@
 	</tr>
 	<logic:iterate name="analyticPipelines" id="pipeline">
 		<tr class="<%= styles[idx++ % 2] %>">
-			<td><bean:write name="pipeline" property="name"/></td>
-			<td>
+			<td width="60%"><bean:write name="pipeline" property="name"/></td>
+			<td width="20%">
 				<logic:equal name="pipeline" property="readOnly" value="false">
 					<html:link action="/pipeline/edit" paramId="pipelineName"
 						paramName="pipeline" paramProperty="name">
@@ -43,7 +44,7 @@
 				</logic:equal>
 				
 			</td>
-			<td>
+			<td width="20%">
 				<logic:equal name="pipeline" property="readOnly" value="false">
 					<a href="#" onclick="deletePipeline('<bean:write name="pipeline" property="name"/>')">
 						Delete

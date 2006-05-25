@@ -5,11 +5,7 @@
 <%@ page errorPage="/WEB-INF/jsp/exception/jspException.jsp" %>
 
 
-<p><br></p>
-
-<p>
-	&nbsp;&nbsp;&nbsp;
-	
+<div class="navigationItem">	
 	<table border="0" cellpadding="4" cellspacing="0">
 		<tr>
 			<td width="20"></td>
@@ -66,4 +62,5 @@
 			</td>
 		</tr>
 	</table>
-</p>
+</div>
+<br>

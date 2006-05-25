@@ -7,7 +7,7 @@
 
 <center>
 	<p>
-		<b>Data shopping cart is empty.  Press button below to shop for data.</b>
+		<span class="infoMsg">Data shopping cart is empty.  Press button below to shop for data.</span>
 	</p>
 	
 	<p><br></p>

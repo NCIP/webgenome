@@ -18,9 +18,7 @@
 
 <center>
 <logic:notPresent name="experiments">
-	<p><br></p>
-	<p><br></p>
-		<h3>No virtual experiments are defined</h3>
+		<span class="infoMsg">No virtual experiments are defined</span><br>&nbsp;
 </logic:notPresent>
 
 <!-- Print group names with delete buttons -->

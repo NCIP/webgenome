@@ -159,14 +159,14 @@ td.folderTab-selected {
 
 .fieldName {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: bold;
 	color: black;
 }
 
 .fieldValue {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	font-size: 14px;
 	font-weight: normal;
 	color: blue;
 }
@@ -180,17 +180,45 @@ p.small {
 .tbl {
 	border: 1px solid #63674E;
 }
+.tbl TH {
+	PADDING-RIGHT: 10px;
+	PADDING-LEFT: 10px;
+	PADDING-BOTTOM: 3px;
+	PADDING-TOP: 3px;
+}
+.tbl TD {
+	PADDING-RIGHT: 10px;
+	PADDING-LEFT: 10px;
+	PADDING-BOTTOM: 5px;
+	PADDING-TOP: 5px;
+}
+
+.tblLite {
+	border: 1px solid #e3e7cE;
+}
+.tblLite TH {
+	PADDING-RIGHT: 10px;
+	PADDING-LEFT: 10px;
+	PADDING-BOTTOM: 3px;
+	PADDING-TOP: 3px;
+}
+.tblLite TD {
+	PADDING-RIGHT: 10px;
+	PADDING-LEFT: 10px;
+	PADDING-BOTTOM: 5px;
+	PADDING-TOP: 5px;
+}
 
 .dataHeadTD {
-	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 10pt; PADDING-BOTTOM: 3px; COLOR: #000000; PADDING-TOP: 3px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e9dCFF
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 11pt; PADDING-BOTTOM: 3px; COLOR: #000000; PADDING-TOP: 3px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e9dCFF
 }
 
 .contentTD {
-	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 10pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFFFFF
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 11pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #FFFFFF
 }
 
 .contentTD-odd {
-	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 10pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e7e7e7
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: 11pt; PADDING-BOTTOM: 5px; COLOR: #000000; PADDING-TOP: 5px; FONT-STYLE: normal; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; TEXT-DECORATION: none; BACKGROUND-COLOR: #e7e7e7
 }
 
 .separator {
@@ -261,4 +289,69 @@ p.small {
 	color:red;
 	font-weight: bold;
 	font-size: 12pt;
+}
+
+
+.contentItem
+{
+    background-image: url(images/item-bg.gif);
+    background-repeat: no-repeat;
+    border-style: solid;
+    border-width: 1px;
+    border-color: c0c1d6;
+    padding: 20;
+}
+
+.navigationItem
+{
+    BACKGROUND-COLOR: #fafafa;
+    border-style: solid;
+    border-width: 1px;
+    border-color: c0c1d6;
+    padding: 3;
+}
+
+
+
+table.data {
+	border-width: 0px 0px 0px 0px;
+	border-spacing: 3px 3px;
+	border-style: none none none none;
+	border-color: #cccccc #cccccc #cccccc #cccccc;
+	border-collapse: separate;
+}
+table.data th {
+	border-width: 1px 1px 1px 1px;
+	padding: 5px 5px 5px 5px;
+	border-style: solid solid solid solid;
+	border-color: #999999 #999999 #999999 #999999;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+table.data td {
+	border-width: 1px 1px 1px 1px;
+	padding: 5px 5px 5px 5px;
+	border-style: solid solid solid solid;
+	border-color: #cccccc #cccccc #cccccc #cccccc;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+table.dataInner {
+	border-width: 0px 0px 0px 0px;
+	border-spacing: 3px 3px;
+	border-style: none none none none;
+	border-collapse: separate;
+}
+table.dataInner th {
+	border-width: 1px 1px 1px 1px;
+	padding: 5px 5px 5px 5px;
+	border-style: none none none none;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+table.dataInner td {
+	border-width: 1px 1px 1px 1px;
+	padding: 5px 5px 5px 5px;
+	border-style: none none none none;
+	-moz-border-radius: 0px 0px 0px 0px;
 }
