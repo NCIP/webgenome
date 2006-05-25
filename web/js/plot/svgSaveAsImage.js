@@ -24,6 +24,9 @@ var TEXT_NODE = 3;
 var CDATA_SECTION_NODE = 4;
 var accumulator; // holds the serialized XML
 
+var saveAsWindow  ;
+var timerId = "" ;
+
 /*
  * Serializes the Element to a String, including serializing child
  * elements and nodes.
@@ -101,19 +104,42 @@ function copyPlotImg ( ) {
 }
 
 function saveAsWindow() {
-    window.open('','plotSaveAs','resizable=yes,width=800,height=500,status=1,scrollbars=1');
+    saveAsWindow = window.open('','plotSaveAs','resizable=yes,width=800,height=500,status=1,scrollbars=1');
 }
 
 function submitToSaveAs () {
+    // setup a timer and show a please wait animated gif
+    var waitIconDiv = document.getElementById ( "waitIcon" ) ;
+    waitIconDiv.style.visibility = "visible" ;
+    // need this silly timer to get the wait icon shown
+    // for some reason, if we go straight into the rest of the submit operation, i.e.
+    // progress onto copyPlotImg() etc. the wait icon doesn't shown in IE
+    setTimeout ( "startSubmit()", 500 ) ;
+}
+
+function startSubmit() {
     copyPlotImg();  // copy the plot img svg document
     saveAsWindow(); // make a new window with suitable popup parameters
     document.plotSaveAsForm.submit();
+    var waitIconDiv = document.getElementById ( "waitIcon" ) ;
+    waitIconDiv.style.visibility = "hidden" ;
 }
 
-function renderSaveAsLink() {
+function renderSaveAsLink( ) {
     
     document.write (
-      "<a href=\"javascript:submitToSaveAs();\">Save Plot</a>\n" +
-      "<span style=\"font-size: 65%; color: gray;\">(pop-up: can take some time to appear for large plots)</span>\n" ) ;
+      "<table>" +
+          "<tr>" +
+              "<td valign=\"middle\">" +
+                  "<a href=\"javascript:submitToSaveAs();\">Save Plot</a>" +
+              "</td>" +
+              "<td valign=\"middle\">" +
+                  "<div id=\"waitIcon\" style=\"display:inline;visibility:hidden;\">" +
+                  "<img src=\"../images/watch.gif\" border=\"0\" alt=\"Please Wait\">" +
+                  "&nbsp;(loading ... please wait)" +
+                  "</div>" +
+              "</td>" +
+          "</tr>" +
+      "</table" ) ;
 
 }
