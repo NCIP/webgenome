@@ -251,7 +251,7 @@ function closeAndForwardToPlot() {
 
 	
 <p align="center">
-	<html:submit value="OK" onclick="javascript:closeAndForwardToPlot();" />
+	<html:submit value="OK"/>
 </p>
 
 </html:form>

@@ -43,7 +43,7 @@ function closeAndForwardToPlot() {
 //--></script>
 
 <p align="center">
-	<html:submit value="OK" onclick="javascript:closeAndForwardToPlot();" />
+	<html:submit value="OK"/>
 </p>
 
 <input type="hidden" name="update" value="yes">
@@ -230,7 +230,7 @@ function closeAndForwardToPlot() {
 
 	
 <p align="center">
-	<html:submit value="OK" onclick="javascript:closeAndForwardToPlot();" />
+	<html:submit value="OK"/>
 </p>
  
 </html:form>
