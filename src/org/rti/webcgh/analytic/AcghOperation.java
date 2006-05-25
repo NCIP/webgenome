@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-19 19:17:52 $
+$Revision: 1.6 $
+$Date: 2006-05-25 15:05:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -118,7 +118,7 @@ public class AcghOperation implements NormalizationOperation {
 	public Experiment[] perform(Experiment[] data, PlotParameters params)
 			throws AnalyticException {
 		
-		Experiment[] resultData = new Experiment[0];
+		Experiment[] resultData = new Experiment[data.length];
 		
 		try {
 			
