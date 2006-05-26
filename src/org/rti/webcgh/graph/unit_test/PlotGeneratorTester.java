@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-26 07:18:20 $
+$Revision: 1.6 $
+$Date: 2006-05-26 08:46:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.graph.unit_test;
 
+import java.awt.Point;
+
 import junit.framework.TestCase;
 
 import org.rti.webcgh.array.ArrayDatumFactory;
@@ -81,6 +83,8 @@ public class PlotGeneratorTester extends TestCase {
 	public void testScatterPlot() throws Exception {
 		PlotGenerator pg = new PlotGenerator();
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
+		panel.setDrawCrossHairs(true);
 		Experiment exp = new Experiment();
 		exp.setName("Experiment");
 		BioAssay ba1 = new BioAssay("Bioassay 1");

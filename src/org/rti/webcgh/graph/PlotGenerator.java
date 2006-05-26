@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.12 $
-$Date: 2006-05-26 07:18:21 $
+$Revision: 1.13 $
+$Date: 2006-05-26 08:46:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -332,12 +332,13 @@ public class PlotGenerator {
                 panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
                 row = panel.newChildPlotPanel();
             }
-            row.add(scatterPlotPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
+            boolean referencePlot = (i % cols == 0)? true : false;
+            row.add(scatterPlotPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED, referencePlot);
         }
         if (genomeIntervals.length % cols >= 0) {
             PlotPanel axisPanel = panel.newChildPlotPanel();
             this.addYAxis(axisPanel, yAxis, quantitationType);
-            row.add(axisPanel, HorizontalAlignment.LEFT_JUSTIFIED, 
+            row.add(axisPanel, HorizontalAlignment.LEFT_JUSTIFIED,
             		VerticalAlignment.BOTTOM_JUSTIFIED);
             panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
         }
@@ -421,7 +422,7 @@ public class PlotGenerator {
     private void addYAxis(PlotPanel panel, Axis yAxis, 
             QuantitationType quantitationType) {
         panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED, 
-        		VerticalAlignment.TOP_JUSTIFIED);
+        		VerticalAlignment.BOTTOM_JUSTIFIED, true);
         Caption caption = new Caption(quantitationType.getName(), 
         		Orientation.HORIZONTAL, true);
         panel.add(caption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
@@ -487,7 +488,7 @@ public class PlotGenerator {
     	// Add x-axis
     	Axis xAxis = plotBoundaries.newXAxis(width, VerticalAlignment.BOTTOM_JUSTIFIED);
     	xAxis.setNumberFormatter(plotParameters.getXUnits().numberFormatter());
-    	panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+    	panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED, true);
     	
     	// Add chromosome ideogram
     	if (plotParameters.isShowIdeogram())

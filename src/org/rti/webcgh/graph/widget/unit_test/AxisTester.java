@@ -64,6 +64,7 @@ import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
+import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.PlotPanel;
 
 /**
@@ -82,78 +83,97 @@ public class AxisTester extends TestCase {
     }
     
     
-    /**
-     * 
-     *
-     */
-    public void testHorizAbove() {
-        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.ABOVE);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.toSvgFile("axis-horiz-above.svg");
-    }
+//    /**
+//     * 
+//     *
+//     */
+//    public void testHorizAbove() {
+//        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.ABOVE);
+//        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        panel.toSvgFile("axis-horiz-above.svg");
+//    }
+//    
+//    
+//    /**
+//     * 
+//     *
+//     */
+//    public void testHorizBelow() {
+//        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
+//        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        panel.toSvgFile("axis-horiz-below.svg");
+//    }
+//    
+//    
+//    /**
+//     * 
+//     *
+//     */
+//    public void testVertLeft() {
+//        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+//        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        panel.toSvgFile("axis-vert-left.svg");
+//    }
+//    
+//    
+//    /**
+//     * 
+//     *
+//     */
+//    public void testVertRight() {
+//        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.RIGHT_OF);
+//        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        panel.toSvgFile("axis-vert-right.svg");
+//    }
+//    
+//    
+//    
+//    /**
+//     * 
+//     *
+//     */
+//    public void testLeftBottomRight() {
+//        Axis axisL = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+//        Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+//        Axis axisR = new Axis(10, 50, 400, Orientation.VERTICAL, Location.RIGHT_OF);
+//        Background background = new Background(400, 400, Color.yellow);
+//        PlotPanel childPanel = this.panel.newChildPlotPanel();
+//        childPanel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+//        childPanel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+//        childPanel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+//        childPanel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+//        panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        panel.toSvgFile("axis-left-bottom-right.svg");
+//    }
+//    
+//    public void testZeroAlign() {
+//    	Axis axisV = new Axis(-5, 10, 400, Orientation.VERTICAL, 
+//    			Location.LEFT_OF);
+//    	Axis axisB = new Axis(-20, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+//    	this.panel.add(axisV, HorizontalAlignment.ON_ZERO, 
+//    			VerticalAlignment.ON_ZERO);
+//    	this.panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, 
+//    			VerticalAlignment.ON_ZERO);
+//    	panel.toSvgFile("axis-zero-align.svg");
+//    }
     
     
-    /**
-     * 
-     *
-     */
-    public void testHorizBelow() {
-        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.toSvgFile("axis-horiz-below.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertLeft() {
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.toSvgFile("axis-vert-left.svg");
-    }
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testVertRight() {
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.RIGHT_OF);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.toSvgFile("axis-vert-right.svg");
-    }
-    
-    
-    
-    /**
-     * 
-     *
-     */
-    public void testLeftBottomRight() {
-        Axis axisL = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
-        Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
-        Axis axisR = new Axis(10, 50, 400, Orientation.VERTICAL, Location.RIGHT_OF);
-        Background background = new Background(400, 400, Color.yellow);
-        PlotPanel childPanel = this.panel.newChildPlotPanel();
-        childPanel.add(background, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-        childPanel.add(axisL, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        childPanel.add(axisR, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        childPanel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(childPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        panel.toSvgFile("axis-left-bottom-right.svg");
-    }
-    
-    public void testZeroAlign() {
+    public void testScatterPlotLike() {
+    	this.panel.setDrawBorder(true);
     	Axis axisV = new Axis(-5, 10, 400, Orientation.VERTICAL, 
     			Location.LEFT_OF);
-    	Axis axisB = new Axis(-20, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
-    	this.panel.add(axisV, HorizontalAlignment.ON_ZERO, 
-    			VerticalAlignment.ON_ZERO);
-    	this.panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, 
-    			VerticalAlignment.ON_ZERO);
-    	panel.toSvgFile("axis-zero-align.svg");
+    	Axis axisH = new Axis(-20, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+    	Caption capt = new Caption("Caption", Orientation.HORIZONTAL, false);
+    	PlotPanel hPanel = this.panel.newChildPlotPanel();
+    	PlotPanel vPanel = this.panel.newChildPlotPanel();
+    	hPanel.add(axisH, HorizontalAlignment.LEFT_JUSTIFIED, 
+    			VerticalAlignment.BOTTOM_JUSTIFIED);
+    	vPanel.add(axisV, HorizontalAlignment.LEFT_JUSTIFIED, 
+    			VerticalAlignment.BOTTOM_JUSTIFIED, true);
+    	vPanel.add(capt, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+    	this.panel.add(hPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+    	this.panel.add(vPanel, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+    	panel.toSvgFile("axis-scatterplot-like.svg");
     }
 
 }
