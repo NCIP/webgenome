@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/regression/NonLinearRegressionTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-05-26 17:13:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,7 +121,7 @@ public class NonLinearRegressionTester extends TestCase {
 		try {
 	        String outDir = "\\\\rtifile02\\webcgh\\Matt\\output";
 	        BufferedWriter out = new BufferedWriter(new FileWriter(outDir + "\\" + outname + ".csv"));
-	        String A = null;
+//	        String A = null;
 	        out.write("M,A,PredictedValue\n");
 	        for (int i = 0; i < results.size(); i++){	        		        	
 	        	out.write(String.valueOf(i1.get(i)) + "," +   

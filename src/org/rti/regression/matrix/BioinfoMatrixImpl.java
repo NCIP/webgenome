@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/regression/matrix/BioinfoMatrixImpl.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-05-26 17:12:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -196,7 +196,7 @@ public class BioinfoMatrixImpl
 	 @exception  IllegalArgumentException Matrix row dimensions must agree and insert point must be valid.
 	 */	
 	 public BioinfoMatrix extractColumns (int colGetStart, int colGetEnd) {
-	   int n = this.getColumnDimension();
+//	   int n = this.getColumnDimension();
 	   int m = this.getRowDimension();
    	
 		  // Verify A and B have the same number of rows and end points ok
@@ -257,7 +257,7 @@ public class BioinfoMatrixImpl
 	 @exception  IllegalArgumentException Matrix column must be one column wide (createList exception criteria)
 	 */	
 	public BioinfoMatrix createDummyX () {
-		int n = this.getColumnDimension();
+//		int n = this.getColumnDimension();
 	   	int m = this.getRowDimension();
 		List al = this.createList();		
 		
