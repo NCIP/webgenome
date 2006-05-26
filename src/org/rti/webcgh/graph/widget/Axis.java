@@ -108,6 +108,8 @@ public class Axis implements ScalePlotElement {
     private int maxY = 0;
     private int zeroX = 0;
     private int zeroY = 0;
+    private int deltaX = 0;
+    private int deltaY = 0;
     private final boolean spansZero;
     private final double range;
     private final float[] multipliers = {(float)5.0, (float)2.0, (float)1.0};
@@ -220,6 +222,8 @@ public class Axis implements ScalePlotElement {
     	this.maxY += deltaY;
     	this.zeroX += deltaX;
     	this.zeroY += deltaY;
+    	this.deltaX += deltaX;
+    	this.deltaY += deltaY;
     }
     
     /**
@@ -270,7 +274,7 @@ public class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+        return new Point(this.deltaX, this.deltaY);
     }
     
     
@@ -279,9 +283,9 @@ public class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-    	int x = 0, y = 0;
+    	int x = deltaX, y = this.deltaY;
     	if (this.orientation == Orientation.VERTICAL)
-    			y = this.length;
+    			y = this.deltaY + this.length;
     	return new Point(x, y);
     }
     
@@ -291,9 +295,9 @@ public class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-    	int x = 0, y = 0;
+    	int x = deltaX, y = deltaY;
     	if (this.orientation == Orientation.HORIZONTAL)
-    			x = this.length;
+    			x = this.deltaX + this.length;
     	return new Point(x, y);
     }
     
@@ -303,7 +307,7 @@ public class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-    	return new Point(0, 0);
+    	return new Point(this.deltaX, this.deltaY);
     }
     
     
@@ -330,7 +334,7 @@ public class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(minX, minY);
+        return new Point(this.minX, this.minY);
     }
     
     

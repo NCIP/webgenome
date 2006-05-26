@@ -280,8 +280,8 @@ public class PlotPanel implements ScalePlotElement {
      */
     public void add(PlotElement element, HorizontalAlignment hAlign,
         VerticalAlignment vAlign, boolean makeReferenceElement) {
-    	if (element instanceof PlotPanel)
-    		System.out.println("Before: maxX = " + this.maxX());
+    	if (element instanceof Axis)
+    		System.out.println("Before: minX = " + this.minX());
         DrawingCanvas tile = this.drawingCanvas.newTile();
         element.paint(tile);
         int x = computeInsertionXCoord(element, hAlign);
@@ -307,15 +307,15 @@ public class PlotPanel implements ScalePlotElement {
         	if (element.topLeftPoint().y + element.height() > this.maxY())
         		this.bottomElement = element;
         }
-        if (element instanceof PlotPanel)
-    		System.out.println("After: maxX = " + this.maxX());
+        if (element instanceof Axis)
+    		System.out.println("After: minX = " + this.minX());
     }
     
     
     private int minX() {
     	int min = 0;
     	if (this.leftElement != null)
-    		min = this.leftElement.topLeftAlignmentPoint().x;
+    		min = this.leftElement.topLeftPoint().x;
     	return min;
     }
     
@@ -323,7 +323,7 @@ public class PlotPanel implements ScalePlotElement {
     private int maxX() {
     	int max = 0;
     	if (this.rightElement != null)
-    		max = this.rightElement.topLeftAlignmentPoint().x + this.rightElement.width();
+    		max = this.rightElement.topLeftPoint().x + this.rightElement.width();
     	return max;
     }
     
@@ -331,7 +331,7 @@ public class PlotPanel implements ScalePlotElement {
     private int minY() {
     	int min = 0;
     	if (this.topElement != null)
-    		min = this.topElement.topLeftAlignmentPoint().y;
+    		min = this.topElement.topLeftPoint().y;
     	return min;
     }
     
@@ -339,7 +339,7 @@ public class PlotPanel implements ScalePlotElement {
     private int maxY() {
     	int max = 0;
     	if (this.bottomElement != null)
-    		max = this.bottomElement.topLeftAlignmentPoint().y + this.bottomElement.height();
+    		max = this.bottomElement.topLeftPoint().y + this.bottomElement.height();
     	return max;
     }
     
