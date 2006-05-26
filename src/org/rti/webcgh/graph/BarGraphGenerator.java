@@ -121,7 +121,7 @@ public class BarGraphGenerator {
 			panel.add(childPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
 		}
 		int length = (int)((max - min) * scale);
-		Axis axis = new Axis(min, max, length, Orientation.VERTICAL, Location.LEFT_OF, true);
+		Axis axis = new Axis(min, max, length, Orientation.VERTICAL, Location.LEFT_OF);
 		panel.add(axis, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
 		HorizontalLine line = new HorizontalLine(panel.width());
 		panel.add(line, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.ON_ZERO);

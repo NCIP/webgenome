@@ -374,7 +374,7 @@ public class GenomeFeatureMap implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-    	return new Point(0, this.minY);
+    	return new Point(this.minX, this.minY);
     }
     
     
@@ -383,7 +383,7 @@ public class GenomeFeatureMap implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-    	return new Point(0, this.maxY);
+    	return new Point(this.minX, this.maxY);
     }
     
     
@@ -392,7 +392,7 @@ public class GenomeFeatureMap implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-    	return new Point(this.width(), this.minY);
+    	return new Point(this.minX + this.width(), this.minY);
     }
     
     
@@ -401,7 +401,7 @@ public class GenomeFeatureMap implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-    	return new Point(this.width(), this.maxY);
+    	return new Point(this.minX + this.width(), this.maxY);
     }
     
     
@@ -431,6 +431,18 @@ public class GenomeFeatureMap implements PlotElement {
     	return new Point(this.minX, this.minY);
     }
     
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.maxX += deltaX;
+    	this.maxY += deltaY;
+    	this.minX += deltaX;
+    	this.minY += deltaY;
+    }
     
     // ==================================
     //     Private methods

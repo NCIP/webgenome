@@ -92,14 +92,16 @@ public class Bar implements ScalePlotElement {
 	//       Attributes
 	// ================================
 	
-	private final int minBarY;
-	private final int maxBarY;
+	private int minBarY;
+	private int maxBarY;
 	private final int errorBarHeight;
 	private final boolean drawErrorBar;
-	private final int minY;
-	private final int maxY;
+	private int minY = 0;
+	private int maxY = 0;
+	private int minX = 0;
 	private final Color color;
 	private final Direction direction;
+	private Point zeroPoint = new Point(0, 0);
 	
 	private int barWidth = 15;
 	private int errorBarWidth = 2;
@@ -209,7 +211,7 @@ public class Bar implements ScalePlotElement {
 	 * @return A point
 	 */
 	public Point topLeftAlignmentPoint() {
-		return new Point(0, this.minY);
+		return new Point(this.minX, this.minY);
 	}
 
 	/**
@@ -217,7 +219,7 @@ public class Bar implements ScalePlotElement {
 	 * @return A point
 	 */
 	public Point bottomLeftAlignmentPoint() {
-		return new Point(0, this.maxY);
+		return new Point(this.minX, this.maxY);
 	}
 
 	/**
@@ -225,7 +227,7 @@ public class Bar implements ScalePlotElement {
 	 * @return A point
 	 */
 	public Point topRightAlignmentPoint() {
-		return new Point(this.barWidth, this.minY);
+		return new Point(this.minX + this.barWidth, this.minY);
 	}
 
 	/**
@@ -233,7 +235,7 @@ public class Bar implements ScalePlotElement {
 	 * @return A point
 	 */
 	public Point bottomRightAlignmentPoint() {
-		return new Point(this.barWidth, this.maxY);
+		return new Point(this.minX + this.barWidth, this.maxY);
 	}
 
 	/**
@@ -257,8 +259,24 @@ public class Bar implements ScalePlotElement {
 	 * @return A point
 	 */
 	public Point topLeftPoint() {
-		return new Point(0, this.minY);
+		return new Point(this.minX, this.minY);
 	}
+	
+	
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.minX += deltaX;
+    	this.minY += deltaY;
+    	this.minBarY += deltaY;
+    	this.maxBarY += deltaY;
+    	this.maxY += deltaY;
+    	this.zeroPoint.x += deltaX;
+    	this.zeroPoint.y += deltaY;
+    }
 	
 	
 	// ================================
@@ -266,14 +284,14 @@ public class Bar implements ScalePlotElement {
 	// ================================
 	
 	/**
-	 * Return point in pixels corresponding to the zero point
-	 * in the native units of measurement represented by
-	 * element.
-	 * @return A point or <code>null</code> if the element
-	 * does not contain a zero point
+	 * Return point in pixels corresponding to a reference point.
+	 * For this class, the reference point is the left-most point
+	 * centered vertically on the Y-coordinate corresponding
+	 * to the value zero. 
+	 * @return A point
 	 */
 	public Point zeroPoint() {
-		return new Point(0, 0);
+		return this.zeroPoint;
 	}
 	
 	

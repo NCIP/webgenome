@@ -116,5 +116,12 @@ public interface PlotElement {
      * @return A point
      */
     public Point topLeftPoint();
-
+    
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY);
 }

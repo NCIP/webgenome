@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.7 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.8 $
+$Date: 2006-05-26 07:18:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -93,7 +93,7 @@ public class BioAssayData {
     // a mean value for these observations is calculated
     // and individual observations are discarded
     // or whether each individual observation is retained.
-    protected boolean takeMeanOfReplicates = true;
+    protected boolean takeMeanOfReplicates = false;
     
     protected Map<Reporter, ArrayDatum> arrayDatumIndexByReporter = 
     	new HashMap<Reporter, ArrayDatum>();

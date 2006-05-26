@@ -274,6 +274,19 @@ public class Caption implements PlotElement {
     }
     
     
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.minX += deltaX;
+    	this.maxX += deltaX;
+    	this.maxY += deltaY;
+    	this.minY += deltaY;
+    }
+    
+    
     // ==========================================================
     //         Private methods
     // ==========================================================

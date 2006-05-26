@@ -147,12 +147,12 @@ public class AxisTester extends TestCase {
     
     public void testZeroAlign() {
     	Axis axisV = new Axis(-5, 10, 400, Orientation.VERTICAL, 
-    			Location.LEFT_OF, true);
-    	Axis axisB = new Axis(0, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
-    	this.panel.add(axisV, HorizontalAlignment.CENTERED, 
-    			VerticalAlignment.CENTERED);
+    			Location.LEFT_OF);
+    	Axis axisB = new Axis(-20, 5, 400, Orientation.HORIZONTAL, Location.BELOW);
+    	this.panel.add(axisV, HorizontalAlignment.ON_ZERO, 
+    			VerticalAlignment.ON_ZERO);
     	this.panel.add(axisB, HorizontalAlignment.LEFT_JUSTIFIED, 
-    			VerticalAlignment.BOTTOM_JUSTIFIED);
+    			VerticalAlignment.ON_ZERO);
     	panel.toSvgFile("axis-zero-align.svg");
     }
 

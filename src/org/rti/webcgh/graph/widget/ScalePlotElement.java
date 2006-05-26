@@ -56,15 +56,17 @@ package org.rti.webcgh.graph.widget;
 import java.awt.Point;
 
 /**
- * A plot element that represents some scale of measurement
- * along one or two axes.
+ * A plot element with a scale in some units of measurement
+ * in 1 or 2 dimensions.
+ * @author dhall
+ *
  */
 public interface ScalePlotElement extends PlotElement {
 	
+	
 	/**
-	 * Return point in pixels corresponding to the zero point
-	 * in the native units of measurement represented by
-	 * element.
+	 * Return point in pixels corresponding to a zero point
+	 * in the native units of measurement
 	 * @return A point or <code>null</code> if the element
 	 * does not contain a zero point
 	 */

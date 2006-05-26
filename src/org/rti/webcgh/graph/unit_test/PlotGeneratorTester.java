@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-25 23:04:01 $
+$Revision: 1.5 $
+$Date: 2006-05-26 07:18:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,8 +57,11 @@ import junit.framework.TestCase;
 
 import org.rti.webcgh.array.ArrayDatumFactory;
 import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeInterval;
+import org.rti.webcgh.array.GenomeIntervalDto;
+import org.rti.webcgh.array.GenomeLocationFactory;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.graph.PlotGenerator;
@@ -81,17 +84,20 @@ public class PlotGeneratorTester extends TestCase {
 		Experiment exp = new Experiment();
 		exp.setName("Experiment");
 		BioAssay ba1 = new BioAssay("Bioassay 1");
+		exp.add(ba1);
 		ArrayDatumFactory fac = new ArrayDatumFactory();
 		ba1.add(fac.newArrayDatum("r1", (short)1, (long)1000, (float)0.5));
 		ba1.add(fac.newArrayDatum("r2", (short)1, (long)2000, (float)0.3));
 		ba1.add(fac.newArrayDatum("r3", (short)1, (long)3000, (float)-0.5));
 		ba1.add(fac.newArrayDatum("r4", (short)1, (long)4000, (float)0.1));
 		ba1.add(fac.newArrayDatum("r5", (short)1, (long)5000, (float)-0.2));
-		
-//		pg.createPlot(new Experiment[] {this.experiment}, 
-//				new GenomeInterval[] {this.genomeInterval1, this.genomeInterval2}, 
-//				new QuantitationType("Log2 Ratio"), 
-//				new PlotParameters(PlotType.SCATTER_PLOT), this.drawingCanvas);
+		GenomeLocationFactory glf = new GenomeLocationFactory();
+		PlotParameters params = new PlotParameters();
+		params.setGenomeIntervalDtos(new GenomeIntervalDto[] {new GenomeIntervalDto(1, 0, 6000)});
+		params.setPlotType(PlotType.SCATTER_PLOT);
+		DataSet ds = new DataSet();
+		ds.add(exp);
+		pg.createPlot(ds, params, QuantitationType.LOG_2_RATIO, panel.getDrawingCanvas());
 		panel.toSvgFile("plot-generator-scatter.svg");
 	}
 

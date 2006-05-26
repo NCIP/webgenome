@@ -212,7 +212,7 @@ public class HeatMapColorFactory implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
     }
     
     
@@ -221,7 +221,7 @@ public class HeatMapColorFactory implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return new Point(0, this.scaleHeight);
+        return new Point(this.minX, this.minY + this.scaleHeight);
     }
     
     
@@ -230,7 +230,7 @@ public class HeatMapColorFactory implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return new Point(this.scaleWidth, 0);
+        return new Point(this.minX + this.scaleWidth, this.minY);
     }
     
     
@@ -239,7 +239,7 @@ public class HeatMapColorFactory implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        return new Point(this.scaleWidth, this.scaleHeight);
+        return new Point(this.minX + this.scaleWidth, this.minY + this.scaleHeight);
     }
     
     
@@ -266,7 +266,20 @@ public class HeatMapColorFactory implements PlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
+    }
+    
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.maxX += deltaX;
+    	this.maxY += deltaY;
+    	this.minX += deltaX;
+    	this.minY += deltaY;
     }
     
     

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.11 $
-$Date: 2006-05-17 19:11:20 $
+$Revision: 1.12 $
+$Date: 2006-05-26 07:18:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,6 +70,7 @@ import org.rti.webcgh.array.CytologicalMap;
 import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ExperimentIterator;
+import org.rti.webcgh.array.GenomeAssembly;
 import org.rti.webcgh.array.GenomeInterval;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.array.GenomeLocation;
@@ -278,8 +279,16 @@ public class PlotGenerator {
     			if (tempChrom.synonymous((short)dto.getChromosome()))
     				chrom = tempChrom;
     		}
-    		if (chrom == null)
-    		    chrom = this.persistentDomainObjectMgr.getDefaultPersistentChromosome((short)dto.getChromosome());
+    		if (chrom == null) {
+    			
+    			// ------------------------->
+    			// TODO: Remove this code.  It was put in as a quick fix for a demo
+    			if (this.persistentDomainObjectMgr == null)
+    				chrom = new Chromosome(GenomeAssembly.DUMMY_GENOME_ASSEMBLY, (short)dto.getChromosome());
+    			// <------------------------
+    			else
+    				chrom = this.persistentDomainObjectMgr.getDefaultPersistentChromosome((short)dto.getChromosome());
+    		}
     		if (chrom != null) {
     			GenomeLocation start = new GenomeLocation(chrom, (long)dto.getStart());
     			GenomeLocation end = new GenomeLocation(chrom, (long)dto.getEnd());

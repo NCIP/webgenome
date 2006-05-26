@@ -318,6 +318,15 @@ public class SvgTestPanel extends PlotPanel {
 		}
 	}
 	
+	
+	/**
+	 * Get drawing canvas associated with this panel
+	 * @return A drawing canvas
+	 */
+	public DrawingCanvas getDrawingCanvas() {
+		return this.baseCanvas;
+	}
+	
 	// ==========================================
 	//        Private methods
 	// ==========================================

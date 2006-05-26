@@ -83,6 +83,9 @@ public class Grid implements PlotElement {
     private int gridMarkThickness = 3;
     private Color zeroMarkColor = Color.black;
     
+    private int minX = 0;
+    private int minY = 0;
+    
     
     /**
      * @param gridMarkThickness The gridMarkThickness to set.
@@ -177,7 +180,7 @@ public class Grid implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
     }
     
     
@@ -186,7 +189,7 @@ public class Grid implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return new Point(0, this.height);
+        return new Point(this.minX, this.minY + this.height);
     }
     
     
@@ -195,7 +198,7 @@ public class Grid implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return new Point(this.width, 0);
+        return new Point(this.minX + this.width, this.minY);
     }
     
     
@@ -204,7 +207,7 @@ public class Grid implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        return new Point(this.width, this.height);
+        return new Point(this.minX + this.width, this.minY + this.height);
     }
     
     
@@ -231,9 +234,23 @@ public class Grid implements PlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
     }
     
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.minX += deltaX;
+    	this.minY += deltaY;
+    	if (this.orientation == Orientation.HORIZONTAL)
+    		this.zeroPointLocation += deltaX;
+    	else if (this.orientation == Orientation.VERTICAL)
+    		this.zeroPointLocation += deltaY;
+    }
     
     // ==============================
     //     Public methods

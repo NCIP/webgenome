@@ -173,33 +173,16 @@ public class Axis implements ScalePlotElement {
     //     Constructors
     // ======================================
     
+    
     /**
      * @param minValue Minimum value
      * @param maxValue Maximum value
      * @param length Length in pixels
      * @param orientation Orientation
      * @param positionTextRelativeToHatches Position of hatch mark labels
-     * relative to hatch marks
      */
     public Axis(double minValue, double maxValue, int length, Orientation orientation,
         Location positionTextRelativeToHatches) {
-        this(minValue, maxValue, length, orientation, positionTextRelativeToHatches, false);
-    }
-    
-    
-    /**
-     * @param minValue Minimum value
-     * @param maxValue Maximum value
-     * @param length Length in pixels
-     * @param orientation Orientation
-     * @param positionTextRelativeToHatches Position of hatch mark labels
-     * @param alignmentOnZero Should alignment points be on the zero hatch mark?
-     * relative to hatch marks
-     */
-    public Axis(double minValue, double maxValue, int length, Orientation orientation,
-        Location positionTextRelativeToHatches, boolean alignmentOnZero) {
-    	if (alignmentOnZero && (minValue > 0 || maxValue < 0))
-    		throw new IllegalArgumentException("Cannot align axis on zero if it does not cross zero");
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.length = length;
@@ -223,6 +206,21 @@ public class Axis implements ScalePlotElement {
     // ===========================================
     //    Implementation of PlotElement interface
     // ===========================================
+    
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.minX += deltaX;
+    	this.minY += deltaY;
+    	this.maxX += deltaX;
+    	this.maxY += deltaY;
+    	this.zeroX += deltaX;
+    	this.zeroY += deltaY;
+    }
     
     /**
      * Paint element
@@ -526,8 +524,11 @@ public class Axis implements ScalePlotElement {
 		Point p = null;
 		if (this.spansZero)
 			p = new Point(this.zeroX, this.zeroY);
+		else
+			p = new Point(0, 0);
 		return p;
 	}
+	
 	
 	/**
 	 * Tic mark on a plot axis

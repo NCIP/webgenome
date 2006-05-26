@@ -100,6 +100,8 @@ public class ScatterPlot implements DataPlotter {
     private final Map linesIndex = new HashMap();
     private final Map groupColorIndex = new HashMap();
     private final PlotBoundaries plotBoundaries;
+    private int x = 0;
+    private int y = 0;
     
     
     /**
@@ -224,7 +226,7 @@ public class ScatterPlot implements DataPlotter {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(0, 0);
+        return new Point(this.x, this.y);
     }
     
     /**
@@ -281,7 +283,7 @@ public class ScatterPlot implements DataPlotter {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+        return new Point(this.x, this.y);
     }
     
     
@@ -290,7 +292,7 @@ public class ScatterPlot implements DataPlotter {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return new Point(0, this.height);
+        return new Point(this.x, this.y + this.height);
     }
     
     
@@ -299,7 +301,7 @@ public class ScatterPlot implements DataPlotter {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return new Point(this.width, 0);
+        return new Point(this.x + this.width, this.y);
     }
     
     
@@ -308,7 +310,7 @@ public class ScatterPlot implements DataPlotter {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        return new Point(this.width, this.height);
+        return new Point(this.x + this.width, this.y + this.height);
     }
     
     
@@ -330,6 +332,16 @@ public class ScatterPlot implements DataPlotter {
     }
     
     
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.x += deltaX;
+    	this.y += deltaY;
+    }
+
     // ======================================
     //     Private methods
     // ======================================

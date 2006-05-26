@@ -56,86 +56,53 @@ package org.rti.webcgh.graph.widget;
 import java.awt.Color;
 import java.awt.Point;
 
-import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Curve;
-import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.GraphicEvent;
+import org.rti.webcgh.drawing.Rectangle;
 
 
 /**
- * Chromosome end cap
+ * Empty space used for padding in plots
+ *
  */
-public class ChromosomeEndCap implements PlotElement {
+public class EmptySpace implements PlotElement {
+	
+    // ==============================
+    //     Attributes
+    // ==============================
     
-	// =====================================
-	//     Attributes
-	// =====================================
-	
-	private final int width;
-	private final Color lineColor;
-	private final Direction direction;
-	
-	private int lineWidth = 1;
-	private int height = 20;
-	
-	private int minX = 0;
-	private int minY = 0;
-	
-
-    /**
-     * @param lineWidth The lineWidth to set.
-     */
-    public void setLineWidth(int lineWidth) {
-        this.lineWidth = lineWidth;
-    }
+    private final int width;
+    private final int height;
+    private int minX = 0;
+    private int minY = 0;
     
+    
+    // ==============================
+    //    Constructors
+    // ==============================
     
     /**
-     * @param height The height to set.
+     * Constructor
+     * @param width Width in pixels
+     * @param height Height in pixels
+     * @param color Color
      */
-    public void setHeight(int height) {
+    public EmptySpace(int width, int height) {
+        this.width = width;
         this.height = height;
     }
     
     
-	// ==================================
-	//     Constructors
-	// ==================================
-	
-	/**
-	 * Constructor
-	 * @param width Width of cap
-	 * @param lineColor Color of line
-	 * @param direction Direction cap points
-	 */
-	public ChromosomeEndCap(int width, Color lineColor,
-			Direction direction) {
-		this.width = width;
-		this.lineColor = lineColor;
-		this.direction = direction;
-	}
-	
-	
-	// ============================================
-	//   Implementation of plot element interface
-	// ============================================
-	
+    // =======================================
+    //    Methods in PlotElement interface
+    // =======================================
+    
+    
     /**
      * Paint element
      * @param canvas A canvas
      */
-    public void paint(DrawingCanvas canvas) {
-        Curve curve = null;        
-        if (this.direction == Direction.UP)
-            curve = new Curve(0, 0, this.width, 0, -this.height / 2, Orientation.VERTICAL, this.lineColor);
-        else if (this.direction == Direction.DOWN)
-            curve = new Curve(0, 0, this.width, 0, this.height / 2, Orientation.VERTICAL, this.lineColor);
-        else if (this.direction == Direction.LEFT)
-            curve = new Curve(this.height, 0, this.height, this.width, -this.height, Orientation.HORIZONTAL, this.lineColor);
-        else if (this.direction == Direction.RIGHT)
-            curve = new Curve(0, 0, 0, this.width, this.height, Orientation.HORIZONTAL, this.lineColor);
-        canvas.add(curve);
-    }
+    public void paint(DrawingCanvas canvas) {}
     
     
     /**
@@ -143,7 +110,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-    	return new Point(this.minX, this.minY);
+        return new Point(this.minX, this.minY);
     }
     
     
@@ -152,7 +119,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-    	return new Point(this.minX, this.minY);
+        return new Point(this.minX, this.minY + this.height);
     }
     
     
@@ -161,7 +128,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-    	return new Point(this.minX + this.width, this.minY);
+        return new Point(this.minX + this.width, this.minY);
     }
     
     
@@ -170,7 +137,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-    	return new Point(this.minX + this.width, this.minY);
+        return new Point(this.minX + this.width, this.minY + this.height);
     }
     
     
@@ -179,7 +146,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return Width in pixels
      */
     public int width() {
-    	return this.width;
+        return this.width;
     }
     
     
@@ -188,7 +155,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return Height in pixels
      */
     public int height() {
-    	return this.height;
+        return this.height;
     }
     
     
@@ -197,9 +164,7 @@ public class ChromosomeEndCap implements PlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        if (this.direction == Direction.UP)
-            return new Point(this.minX, this.minY - this.height);
-    	return new Point(this.minX, this.minY);
+        return new Point(this.minX, this.minY);
     }
     
     

@@ -260,6 +260,18 @@ public class Legend implements PlotElement {
     }
     
     
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.maxX += deltaX;
+    	this.maxY += deltaY;
+    	this.minX += deltaX;
+    	this.minY += deltaY;
+    }
+
     // ===========================================
     //        Private methods
     // ===========================================

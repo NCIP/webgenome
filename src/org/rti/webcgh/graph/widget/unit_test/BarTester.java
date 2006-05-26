@@ -75,6 +75,7 @@ public class BarTester extends TestCase {
 	 */
 	public void testUpNoError() {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
 		DataPoint dp = new DataPoint(0.0, 3.0, "");
 		Bar bar = new Bar(dp, Color.BLACK, 50.0);
 		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
@@ -87,6 +88,7 @@ public class BarTester extends TestCase {
 	 */
 	public void testDownNoError() {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
 		DataPoint dp = new DataPoint(0.0, -3.0, "");
 		Bar bar = new Bar(dp, Color.BLUE, 50.0);
 		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
@@ -99,6 +101,7 @@ public class BarTester extends TestCase {
 	 */
 	public void testUpWithError() {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
 		DataPoint dp = new DataPoint(0.0, 3.0, 1.0, "");
 		Bar bar = new Bar(dp, Color.BLACK, 50.0);
 		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
@@ -111,10 +114,10 @@ public class BarTester extends TestCase {
 	 */
 	public void testDownWithError() {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
 		DataPoint dp = new DataPoint(0.0, -3.0, 1.0, "");
 		Bar bar = new Bar(dp, Color.BLUE, 50.0);
 		panel.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
 		panel.toSvgFile("bar-down-with-error.svg");
 	}
-
 }

@@ -85,6 +85,8 @@ public class ColorCodePlot implements DataPlotter {
     
     private int maxX = 0;
     private int maxY = 0;
+    private int minX = 0;
+    private int minY = 0;
     private List dataPoints = new ArrayList();
     
     private int thickness = 15;
@@ -262,7 +264,7 @@ public class ColorCodePlot implements DataPlotter {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
     }
     
     
@@ -271,7 +273,7 @@ public class ColorCodePlot implements DataPlotter {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return new Point(0, this.maxY);
+        return new Point(this.minX, this.maxY);
     }
     
     
@@ -280,7 +282,7 @@ public class ColorCodePlot implements DataPlotter {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return new Point(0, this.maxX);
+        return new Point(this.minX, this.maxX);
     }
     
     
@@ -298,7 +300,7 @@ public class ColorCodePlot implements DataPlotter {
      * @return Width in pixels
      */
     public int width() {
-        return this.maxX;
+        return this.maxX - this.minX;
     }
     
     
@@ -307,7 +309,7 @@ public class ColorCodePlot implements DataPlotter {
      * @return Height in pixels
      */
     public int height() {
-        return this.maxY;
+        return this.maxY - this.minY;
     }
     
     
@@ -316,7 +318,20 @@ public class ColorCodePlot implements DataPlotter {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
+    }
+    
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.minX += deltaX;
+    	this.maxX += deltaX;
+    	this.minX += deltaY;
+    	this.maxY += deltaY;
     }
     
     

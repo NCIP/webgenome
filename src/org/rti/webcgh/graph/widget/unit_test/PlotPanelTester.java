@@ -87,269 +87,269 @@ public class PlotPanelTester extends TestCase {
     
 
     
-//    /**
-//     * 
-//     *
-//     */
-//    public void testLeftAbove() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_OF, VerticalAlignment.ABOVE);
-//        this.panel.toSvgFile("panel-left-above.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testLeftTopJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_OF, VerticalAlignment.TOP_JUSTIFIED);
-//        this.panel.toSvgFile("panel-left-top.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testLeftCenter() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-//        this.panel.toSvgFile("panel-left-middle.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testLeftBottomJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
-//        this.panel.toSvgFile("panel-left-bottom.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testLeftBelow() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_OF, VerticalAlignment.BELOW);
-//        this.panel.toSvgFile("panel-left-below.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testAboveLeftJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.ABOVE);
-//        this.panel.toSvgFile("panel-left-justified-above.svg");
-//    }
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testTopJustifiedLeftJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-//        this.panel.toSvgFile("panel-left-justified-top-justified.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testAboveCenter() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
-//        this.panel.toSvgFile("panel-middle-above.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testAboveRightJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-//        this.panel.toSvgFile("panel-right-justified-above.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testBelowLeftJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
-//        this.panel.toSvgFile("panel-left-justified-below.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testBelowCenter() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
-//        this.panel.toSvgFile("panel-middle-below.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testBelowRightJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BELOW);
-//        this.panel.toSvgFile("panel-right-justified-below.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testRightAbove() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_OF, VerticalAlignment.ABOVE);
-//        this.panel.toSvgFile("panel-right-above.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testRightTopJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
-//        this.panel.toSvgFile("panel-right-top.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testRightCenter() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
-//        this.panel.toSvgFile("panel-right-center.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testRightBottomJustified() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
-//        this.panel.toSvgFile("panel-right-bottom.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testRightBelow() {
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//            HorizontalAlignment.RIGHT_OF, VerticalAlignment.BELOW);
-//        this.panel.toSvgFile("panel-right-below.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testInside() {
-//        
-//        // Left
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//              HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//                HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.CENTERED);
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//                HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-//        
-//        // Center
-//        this.panel.add(new Background(30, 30, Color.blue), 
-//                HorizontalAlignment.CENTERED, VerticalAlignment.TOP_JUSTIFIED);
-//	      this.panel.add(new Background(30, 30, Color.blue), 
-//	              HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-//	      this.panel.add(new Background(30, 30, Color.blue), 
-//	              HorizontalAlignment.CENTERED, VerticalAlignment.BOTTOM_JUSTIFIED);
-//          
-//        // Right
-//	      this.panel.add(new Background(30, 30, Color.blue), 
-//	              HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-//	        this.panel.add(new Background(30, 30, Color.blue), 
-//	                HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.CENTERED);
-//	        this.panel.add(new Background(30, 30, Color.blue), 
-//	                HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-//        
-//        this.panel.toSvgFile("panel-inside.svg");
-//    }
-//    
-//    
-//    /**
-//     * 
-//     *
-//     */
-//    public void testAddPanel() {
-//	    PlotPanel panel2 = this.panel.newChildPlotPanel();
-//	    panel2.add(new Background(100, 100, Color.blue), 
-//	        HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-//	    this.panel.add(panel2, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-//        this.panel.toSvgFile("panel-add-panel.svg");
-//    }
-//    
-//    public void test3PanelsLeftOfLeftJustified() {
-//    	this.panel.add(new Background(100, 100, Color.BLUE), 
-//    			HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-//    	this.panel.add(new Background(50, 50, Color.GREEN), 
-//    			HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.CENTERED);
-//    	this.panel.toSvgFile("panel-leftof-leftjustified.svg");
-//    }
-//    
-//    public void test3PanelsLeftOfLeftOf() {
-//    	this.panel.add(new Background(100, 100, Color.BLUE), 
-//    			HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-//    	this.panel.add(new Background(50, 50, Color.GREEN), 
-//    			HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-//    	this.panel.toSvgFile("panel-leftof-leftof.svg");
-//    }
-//    
-//    public void test3PanelsRightOfRightJustified() {
-//    	this.panel.add(new Background(100, 100, Color.BLUE), 
-//    			HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
-//    	this.panel.add(new Background(50, 50, Color.GREEN), 
-//    			HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.CENTERED);
-//    	this.panel.toSvgFile("panel-righttof-rightjustified.svg");
-//    }
-//    
-//    public void test3PanelsRightOfRightOf() {
-//    	this.panel.add(new Background(100, 100, Color.BLUE), 
-//    			HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
-//    	this.panel.add(new Background(50, 50, Color.GREEN), 
-//    			HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
-//    	this.panel.toSvgFile("panel-righttof-rightof.svg");
-//    }
+    /**
+     * 
+     *
+     */
+    public void testLeftAbove() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_OF, VerticalAlignment.ABOVE);
+        this.panel.toSvgFile("panel-left-above.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeftTopJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_OF, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.toSvgFile("panel-left-top.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeftCenter() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+        this.panel.toSvgFile("panel-left-middle.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeftBottomJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
+        this.panel.toSvgFile("panel-left-bottom.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testLeftBelow() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_OF, VerticalAlignment.BELOW);
+        this.panel.toSvgFile("panel-left-below.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testAboveLeftJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.ABOVE);
+        this.panel.toSvgFile("panel-left-justified-above.svg");
+    }
+    
+    /**
+     * 
+     *
+     */
+    public void testTopJustifiedLeftJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.toSvgFile("panel-left-justified-top-justified.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testAboveCenter() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
+        this.panel.toSvgFile("panel-middle-above.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testAboveRightJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
+        this.panel.toSvgFile("panel-right-justified-above.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testBelowLeftJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
+        this.panel.toSvgFile("panel-left-justified-below.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testBelowCenter() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+        this.panel.toSvgFile("panel-middle-below.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testBelowRightJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BELOW);
+        this.panel.toSvgFile("panel-right-justified-below.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRightAbove() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_OF, VerticalAlignment.ABOVE);
+        this.panel.toSvgFile("panel-right-above.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRightTopJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.toSvgFile("panel-right-top.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRightCenter() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
+        this.panel.toSvgFile("panel-right-center.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRightBottomJustified() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED);
+        this.panel.toSvgFile("panel-right-bottom.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testRightBelow() {
+        this.panel.add(new Background(30, 30, Color.blue), 
+            HorizontalAlignment.RIGHT_OF, VerticalAlignment.BELOW);
+        this.panel.toSvgFile("panel-right-below.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testInside() {
+        
+        // Left
+        this.panel.add(new Background(30, 30, Color.blue), 
+              HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+        this.panel.add(new Background(30, 30, Color.blue), 
+                HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.CENTERED);
+        this.panel.add(new Background(30, 30, Color.blue), 
+                HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        
+        // Center
+        this.panel.add(new Background(30, 30, Color.blue), 
+                HorizontalAlignment.CENTERED, VerticalAlignment.TOP_JUSTIFIED);
+	      this.panel.add(new Background(30, 30, Color.blue), 
+	              HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+	      this.panel.add(new Background(30, 30, Color.blue), 
+	              HorizontalAlignment.CENTERED, VerticalAlignment.BOTTOM_JUSTIFIED);
+          
+        // Right
+	      this.panel.add(new Background(30, 30, Color.blue), 
+	              HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+	        this.panel.add(new Background(30, 30, Color.blue), 
+	                HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.CENTERED);
+	        this.panel.add(new Background(30, 30, Color.blue), 
+	                HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+        
+        this.panel.toSvgFile("panel-inside.svg");
+    }
+    
+    
+    /**
+     * 
+     *
+     */
+    public void testAddPanel() {
+	    PlotPanel panel2 = this.panel.newChildPlotPanel();
+	    panel2.add(new Background(100, 100, Color.blue), 
+	        HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+	    this.panel.add(panel2, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+        this.panel.toSvgFile("panel-add-panel.svg");
+    }
+    
+    public void test3PanelsLeftOfLeftJustified() {
+    	this.panel.add(new Background(100, 100, Color.BLUE), 
+    			HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+    	this.panel.add(new Background(50, 50, Color.GREEN), 
+    			HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.CENTERED);
+    	this.panel.toSvgFile("panel-leftof-leftjustified.svg");
+    }
+    
+    public void test3PanelsLeftOfLeftOf() {
+    	this.panel.add(new Background(100, 100, Color.BLUE), 
+    			HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+    	this.panel.add(new Background(50, 50, Color.GREEN), 
+    			HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+    	this.panel.toSvgFile("panel-leftof-leftof.svg");
+    }
+    
+    public void test3PanelsRightOfRightJustified() {
+    	this.panel.add(new Background(100, 100, Color.BLUE), 
+    			HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
+    	this.panel.add(new Background(50, 50, Color.GREEN), 
+    			HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.CENTERED);
+    	this.panel.toSvgFile("panel-righttof-rightjustified.svg");
+    }
+    
+    public void test3PanelsRightOfRightOf() {
+    	this.panel.add(new Background(100, 100, Color.BLUE), 
+    			HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
+    	this.panel.add(new Background(50, 50, Color.GREEN), 
+    			HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
+    	this.panel.toSvgFile("panel-righttof-rightof.svg");
+    }
     
     public void test3PanelsAboveTopJustified() {
     	this.panel.add(new Background(100, 100, Color.BLUE), 

@@ -71,7 +71,9 @@ public class Background implements PlotElement {
     
     private final int width;
     private final int height;
-    private final Rectangle rect;
+    private int minX = 0;
+    private int minY = 0;
+    private final Color color;
     
     
     // ==============================
@@ -87,8 +89,7 @@ public class Background implements PlotElement {
     public Background(int width, int height, Color color) {
         this.width = width;
         this.height = height;
-        this.rect = new Rectangle(0, 0, width, height, color);
-        rect.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
+        this.color = color;
     }
     
     
@@ -96,13 +97,25 @@ public class Background implements PlotElement {
     //    Methods in PlotElement interface
     // =======================================
     
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.minX += deltaX;
+    	this.minY += deltaY;
+    }
+    
     
     /**
      * Paint element
      * @param canvas A canvas
      */
     public void paint(DrawingCanvas canvas) {
-        canvas.add(this.rect);
+        Rectangle rect = new Rectangle(this.minX, this.minY, width, height, this.color);
+        rect.addGraphicEventResponse(GraphicEvent.mouseMoveEvent, "hideToolTip()");
+        canvas.add(rect);
     }
     
     
@@ -111,7 +124,7 @@ public class Background implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
     }
     
     
@@ -120,7 +133,7 @@ public class Background implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return new Point(0, height);
+        return new Point(this.minX, this.minY + height);
     }
     
     
@@ -129,7 +142,7 @@ public class Background implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return new Point(width, 0);
+        return new Point(this.minX + width, this.minY);
     }
     
     
@@ -138,7 +151,7 @@ public class Background implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        return new Point(width, height);
+        return new Point(this.minX + width, this.minY + height);
     }
     
     
@@ -165,7 +178,6 @@ public class Background implements PlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(0, 0);
+        return new Point(this.minX, this.minY);
     }
-
 }

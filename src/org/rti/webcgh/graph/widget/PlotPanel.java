@@ -69,19 +69,16 @@ public class PlotPanel implements ScalePlotElement {
     // ===================================
     //        Attributes
     // ===================================
-    private int minX = 0;
-    private int maxX = 0;
-    private int minY = 0;
-    private int maxY = 0;
-    private Point topLeftAlignmentPoint = new Point(0, 0);
-    private Point bottomLeftAlignmentPoint = new Point(0, 0);
-    private Point topRightAlignmentPoint = new Point(0, 0);
-    private Point bottomRightAlignmentPoint = new Point(0, 0);
-    private Point zeroPoint = new Point(0, 0);
+	
+	private PlotElement topElement = null;
+	private PlotElement bottomElement = null;
+	private PlotElement leftElement = null;
+	private PlotElement rightElement = null;
+	private PlotElement referenceElement = null;
+	private Point zeroPoint = new Point(0, 0);
     private int padding = 10;
     private Color color = new Color(235, 235, 235);
     protected DrawingCanvas drawingCanvas = null;
-    private int numElements = 0;
     private int margins = 0;
     
     
@@ -140,7 +137,7 @@ public class PlotPanel implements ScalePlotElement {
      * @return Width of panel
      */
     public int width() {
-        return maxX - minX;
+        return this.maxX() - this.minX();
     }
     
     
@@ -149,7 +146,7 @@ public class PlotPanel implements ScalePlotElement {
      * @return Height of panel
      */
     public int height() {
-        return maxY - minY;
+        return this.maxY() - this.minY();
     }
 
     
@@ -158,7 +155,14 @@ public class PlotPanel implements ScalePlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return this.topLeftAlignmentPoint;
+        if (this.referenceElement != null)
+        	return this.referenceElement.topLeftAlignmentPoint();
+        int x = 0, y = 0;
+        if (this.topElement != null)
+        	y = this.topElement.topLeftAlignmentPoint().y;
+        if (this.leftElement != null)
+        	x = this.leftElement.topLeftAlignmentPoint().x;
+        return new Point(x, y);
     }
     
     
@@ -167,7 +171,14 @@ public class PlotPanel implements ScalePlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return this.bottomLeftAlignmentPoint;
+        if (this.referenceElement != null)
+        	return this.referenceElement.bottomLeftAlignmentPoint();
+        int x = 0, y = 0;
+        if (this.bottomElement != null)
+        	y = this.bottomElement.bottomLeftAlignmentPoint().y;
+        if (this.leftElement != null)
+        	x = this.leftElement.topLeftAlignmentPoint().x;
+        return new Point(x, y);
     }
     
     
@@ -176,7 +187,14 @@ public class PlotPanel implements ScalePlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return this.topRightAlignmentPoint;
+        if (this.referenceElement != null)
+        	return this.referenceElement.topRightAlignmentPoint();
+        int x = 0, y = 0;
+        if (this.topElement != null)
+        	y = this.topElement.topRightAlignmentPoint().y;
+        if (this.rightElement != null)
+        	x = this.rightElement.topRightAlignmentPoint().x;
+        return new Point(x, y);
     }
     
     
@@ -185,7 +203,14 @@ public class PlotPanel implements ScalePlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        return this.bottomRightAlignmentPoint;
+        if (this.referenceElement != null)
+        	return this.referenceElement.bottomRightAlignmentPoint();
+        int x = 0, y = 0;
+        if (this.bottomElement != null)
+        	y = this.bottomElement.bottomRightAlignmentPoint().y;
+        if (this.rightElement != null)
+        	x = this.rightElement.bottomRightAlignmentPoint().x;
+        return new Point(x, y);
     }
     
     
@@ -194,7 +219,31 @@ public class PlotPanel implements ScalePlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        return new Point(this.minX, this.minY);
+    	return new Point(this.minX(), this.minY());
+    }
+    
+    
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	if (this.bottomElement != null) {
+    		this.bottomElement.move(deltaX, deltaY);
+    		if (this.rightElement != this.bottomElement)
+    			this.rightElement.move(deltaX, deltaY);
+    		if (this.topElement != this.bottomElement && this.topElement != this.rightElement)
+    			this.topElement.move(deltaX, deltaY);
+    		if (this.leftElement != this.bottomElement && this.leftElement != this.rightElement && this.leftElement != this.topElement)
+    			this.leftElement.move(deltaX, deltaY);
+    		this.zeroPoint.x += deltaX;
+    		this.zeroPoint.y += deltaY;
+    		if (this.referenceElement != null && this.referenceElement != this.bottomElement && 
+    				this.referenceElement != this.rightElement && this.referenceElement != this.topElement
+    				&& this.referenceElement != this.leftElement)
+    			this.referenceElement.move(deltaX, deltaY);
+    	}
     }
     
     
@@ -226,16 +275,89 @@ public class PlotPanel implements ScalePlotElement {
      * @param vAlign Vertical alignment of element relative to
      * aggregate of elements already added
      * element already added or off to one side?
+     * @param makeReferenceElement Make this element the reference
+     * for justifying subsequently added elements?
      */
     public void add(PlotElement element, HorizontalAlignment hAlign,
-        VerticalAlignment vAlign) {
+        VerticalAlignment vAlign, boolean makeReferenceElement) {
+    	if (element instanceof PlotPanel)
+    		System.out.println("Before: maxX = " + this.maxX());
         DrawingCanvas tile = this.drawingCanvas.newTile();
         element.paint(tile);
         int x = computeInsertionXCoord(element, hAlign);
         int y = computeInsertionYCoord(element, vAlign);
         this.drawingCanvas.add(tile, x, y);
-        this.numElements++;
-        this.adjustBoundaries(element, hAlign, vAlign);
+        
+        // Move element's points to parent's coordinate system
+        int deltaX = x;
+        int deltaY = y;
+        element.move(deltaX, deltaY);
+        
+        if (makeReferenceElement)
+        	this.referenceElement = element;
+        if (this.topElement == null)
+        	this.topElement = this.bottomElement = this.leftElement = this.rightElement = element;
+        else {
+        	if (element.topLeftPoint().x < this.minX())
+        		this.leftElement = element;
+        	if (element.topLeftPoint().x + element.width() > this.maxX())
+        		this.rightElement = element;
+        	if (element.topLeftPoint().y < this.minY())
+        		this.topElement = element;
+        	if (element.topLeftPoint().y + element.height() > this.maxY())
+        		this.bottomElement = element;
+        }
+        if (element instanceof PlotPanel)
+    		System.out.println("After: maxX = " + this.maxX());
+    }
+    
+    
+    private int minX() {
+    	int min = 0;
+    	if (this.leftElement != null)
+    		min = this.leftElement.topLeftAlignmentPoint().x;
+    	return min;
+    }
+    
+    
+    private int maxX() {
+    	int max = 0;
+    	if (this.rightElement != null)
+    		max = this.rightElement.topLeftAlignmentPoint().x + this.rightElement.width();
+    	return max;
+    }
+    
+    
+    private int minY() {
+    	int min = 0;
+    	if (this.topElement != null)
+    		min = this.topElement.topLeftAlignmentPoint().y;
+    	return min;
+    }
+    
+    
+    private int maxY() {
+    	int max = 0;
+    	if (this.bottomElement != null)
+    		max = this.bottomElement.topLeftAlignmentPoint().y + this.bottomElement.height();
+    	return max;
+    }
+    
+    
+    /**
+     * Add an element
+     * @param element An element
+     * @param hAlign Horizontal alignment of element relative to
+     * aggregate of elements already added
+     * @param vAlign Vertical alignment of element relative to
+     * aggregate of elements already added
+     * element already added or off to one side?
+     * @param makeReferenceElement Make this element the reference
+     * for justifying subsequently added elements?
+     */
+    public void add(PlotElement element, HorizontalAlignment hAlign,
+        VerticalAlignment vAlign) {
+    	this.add(element, hAlign, vAlign, false);
     }
     
     
@@ -255,23 +377,23 @@ public class PlotPanel implements ScalePlotElement {
      */
     public void addExtraPadding(int numPaddingUnits, Location location) {
         int delta = this.padding * numPaddingUnits;
-        if (location == Location.ABOVE) {
-            this.minY -= delta;
-            this.topLeftAlignmentPoint.y -= delta;
-            this.topRightAlignmentPoint.y -= delta;
-        } else if (location == Location.BELOW) {
-            this.maxY += delta;
-            this.bottomLeftAlignmentPoint.y += delta;
-            this.bottomRightAlignmentPoint.y += delta;
-        } else if (location == Location.LEFT_OF) {
-            this.minX -= delta;
-            this.topLeftAlignmentPoint.x -= delta;
-            this.bottomLeftAlignmentPoint.x -= delta;
-        } else if (location == Location.RIGHT_OF) {
-            this.maxX += delta;
-            this.topRightAlignmentPoint.x += delta;
-            this.bottomRightAlignmentPoint.x += delta;
+        int width = 0, height = 0;
+        if (location == Location.ABOVE || location == Location.BELOW) {
+        	width = this.width();
+        	height = delta;
+        } else if (location == Location.LEFT_OF || location == Location.RIGHT_OF) {
+        	width = delta;
+        	height = this.height();
         }
+        EmptySpace es = new EmptySpace(width, height);
+        if (location == Location.ABOVE)
+        	this.add(es, HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
+        else if (location == Location.BELOW)
+        	this.add(es, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+        if (location == Location.LEFT_OF)
+        	this.add(es, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+        if (location == Location.RIGHT_OF)
+        	this.add(es, HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
     }
     
     
@@ -293,19 +415,19 @@ public class PlotPanel implements ScalePlotElement {
     
     private int computeInsertionXCoord(PlotElement element, 
     	HorizontalAlignment hAlign) {
-    	if (this.numElements < 1)
+    	if (this.topElement == null)
     		return 0;
     	int coord = 0;
     	if (hAlign == HorizontalAlignment.LEFT_JUSTIFIED)
-    	    coord = this.bottomLeftAlignmentPoint.x - element.bottomLeftAlignmentPoint().x;
+    	    coord = this.bottomLeftAlignmentPoint().x - element.bottomLeftAlignmentPoint().x;
     	else if (hAlign == HorizontalAlignment.LEFT_OF)
-    	    coord = this.minX - this.padding - element.width();
+    	    coord = this.minX() - this.padding - element.width();
     	else if (hAlign == HorizontalAlignment.CENTERED)
-    	    coord = (this.maxX + this.minX) / 2 - element.width() / 2;
+    	    coord = (this.maxX() + this.minX()) / 2 - element.width() / 2;
     	else if (hAlign == HorizontalAlignment.RIGHT_JUSTIFIED)
-    	    coord = this.bottomRightAlignmentPoint.x - element.bottomRightAlignmentPoint().x;
+    	    coord = this.bottomRightAlignmentPoint().x - element.bottomRightAlignmentPoint().x;
     	else if (hAlign == HorizontalAlignment.RIGHT_OF)
-    	    coord = this.maxX + this.padding;
+    	    coord = this.maxX() + this.padding;
     	else if (hAlign == HorizontalAlignment.ON_ZERO) {
     		int alignmentX = (element instanceof ScalePlotElement)?
     				((ScalePlotElement)element).zeroPoint().x :
@@ -318,19 +440,19 @@ public class PlotPanel implements ScalePlotElement {
     
     private int computeInsertionYCoord(PlotElement element, 
     	VerticalAlignment vAlign) {
-    	if (this.numElements < 1)
+    	if (this.topElement == null)
     		return 0;
         int coord = 0;
         if (vAlign == VerticalAlignment.ABOVE)
-            coord = this.minY - this.padding - element.height() - element.topLeftPoint().y;
+            coord = this.minY() - this.padding - element.height() - element.topLeftPoint().y;
         else if (vAlign == VerticalAlignment.BELOW)
-            coord = this.maxY + this.padding - element.topLeftPoint().y;
+            coord = this.maxY() + this.padding - element.topLeftPoint().y;
         else if (vAlign == VerticalAlignment.BOTTOM_JUSTIFIED)
-            coord = this.bottomLeftAlignmentPoint.y - element.bottomLeftAlignmentPoint().y;
+            coord = this.bottomLeftAlignmentPoint().y - element.bottomLeftAlignmentPoint().y;
         else if (vAlign == VerticalAlignment.CENTERED)
-            coord = (this.maxY + this.minY) / 2 - element.height() / 2;
+            coord = (this.maxY() + this.minY()) / 2 - element.height() / 2;
         else if (vAlign == VerticalAlignment.TOP_JUSTIFIED)
-            coord = this.topLeftAlignmentPoint.y - element.topLeftAlignmentPoint().y;
+            coord = this.topLeftAlignmentPoint().y - element.topLeftAlignmentPoint().y;
         else if (vAlign == VerticalAlignment.ON_ZERO) {
         	int alignY = (element instanceof ScalePlotElement)?
         			((ScalePlotElement)element).zeroPoint().y :
@@ -338,129 +460,5 @@ public class PlotPanel implements ScalePlotElement {
         	coord = this.zeroPoint.y - alignY;
         }
     	return coord;
-    }
-    
-    
-    private void adjustBoundaries(PlotElement element,
-    		HorizontalAlignment hAlign, VerticalAlignment vAlign) {
-        if (this.numElements == 1) {
-            this.bottomLeftAlignmentPoint = element.bottomLeftAlignmentPoint();
-            this.bottomRightAlignmentPoint = element.bottomRightAlignmentPoint();
-            this.topLeftAlignmentPoint = element.topLeftAlignmentPoint();
-            this.topRightAlignmentPoint = element.topRightAlignmentPoint();
-            if (element instanceof ScalePlotElement)
-            	this.zeroPoint = ((ScalePlotElement)element).zeroPoint();
-            this.minX = element.topLeftPoint().x;
-            this.minY = element.topLeftPoint().y;
-            this.maxX = this.minX + element.width();
-            this.maxY = this.minY + element.height();
-        } else {
-	        this.adjustXBoundaries(element, hAlign);
-	        this.adjustYBoundaries(element, vAlign);
-        }
-    }
-    
-
-    private void adjustXBoundaries(PlotElement element, HorizontalAlignment hAlign) {
-    	
-    	// Min and max
-    	int elementMinX = 0;
-    	if (hAlign == HorizontalAlignment.LEFT_OF)
-    		elementMinX = this.minX - this.padding - element.width();
-    	else if (hAlign == HorizontalAlignment.LEFT_JUSTIFIED)
-    		elementMinX = this.topLeftAlignmentPoint.x - 
-			(element.topLeftAlignmentPoint().x - element.topLeftPoint().x);
-    	else if (hAlign == HorizontalAlignment.CENTERED)
-    		elementMinX = (this.minX + this.maxX) / 2 - element.width() / 2;
-    	else if (hAlign == HorizontalAlignment.RIGHT_JUSTIFIED)
-    		elementMinX = this.topRightAlignmentPoint.x -
-			(element.topRightAlignmentPoint().x - element.topLeftPoint().x);
-    	else if (hAlign == HorizontalAlignment.RIGHT_OF)
-    		elementMinX = this.maxX + this.padding;
-    	else if (hAlign == HorizontalAlignment.ON_ZERO) {
-    		int alignX = (element instanceof ScalePlotElement)?
-    				((ScalePlotElement)element).zeroPoint().x :
-    					(element.topLeftPoint().x + element.width()) / 2;
-    		elementMinX = this.zeroPoint.x - alignX - element.topLeftPoint().x;
-    	}
-    	int elementMaxX = elementMinX + element.width();
-    	if (elementMinX < this.minX)
-    		this.minX = elementMinX;
-    	if (elementMaxX > this.maxX)
-    		this.maxX = elementMaxX;
-    	
-    	// Alignment points
-    	if (hAlign == HorizontalAlignment.LEFT_OF) {
-    		this.bottomLeftAlignmentPoint.x = this.minX + 
-    		element.bottomLeftAlignmentPoint().x - element.topLeftPoint().x;
-    		this.topLeftAlignmentPoint.x = this.minX + 
-    		element.topLeftAlignmentPoint().x - element.topLeftPoint().x;
-    		if (element instanceof ScalePlotElement) {
-    			ScalePlotElement spe = (ScalePlotElement)element;
-    			this.zeroPoint.x = this.minX + spe.zeroPoint().x - spe.topLeftPoint().x;
-    		}
-    	} else if (hAlign == HorizontalAlignment.RIGHT_OF) {
-    		this.topRightAlignmentPoint.x = this.maxX - element.topLeftPoint().x + 
-    		element.width() - element.topRightAlignmentPoint().x;
-    		this.bottomRightAlignmentPoint.x = this.maxX - element.topLeftPoint().x + 
-    		element.width() - element.bottomRightAlignmentPoint().x;
-    		if (element instanceof ScalePlotElement) {
-    			ScalePlotElement spe = (ScalePlotElement)element;
-    			this.zeroPoint.x = this.maxX - spe.topLeftPoint().x + 
-    				spe.width() - spe.zeroPoint().x;
-    		}
-    	}
-    }
-    
-    
-    private void adjustYBoundaries(PlotElement element, VerticalAlignment vAlign) {
-    	
-    	// Min and max
-    	int elementMinY = 0;
-    	if (vAlign == VerticalAlignment.ABOVE)
-    		elementMinY = this.minY - this.padding - element.height();
-    	else if (vAlign == VerticalAlignment.TOP_JUSTIFIED)
-    		elementMinY = this.topLeftAlignmentPoint.y -
-			(element.topLeftAlignmentPoint().y - element.topLeftPoint().y);
-    	else if (vAlign == VerticalAlignment.CENTERED)
-    		elementMinY = (this.maxY + this.minY) / 2 - element.height() / 2;
-    	else if (vAlign == VerticalAlignment.BOTTOM_JUSTIFIED)
-    		elementMinY = this.bottomLeftAlignmentPoint.y -
-			(element.bottomLeftAlignmentPoint().y - element.topLeftPoint().y);
-    	else if (vAlign == VerticalAlignment.BELOW)
-    		elementMinY = this.maxY + this.padding;
-    	else if (vAlign == VerticalAlignment.ON_ZERO) {
-    		int alignY = (element instanceof ScalePlotElement)?
-    				((ScalePlotElement)element).zeroPoint().y :
-    					(element.topLeftPoint().x + element.height()) / 2;
-    		elementMinY = this.zeroPoint.y - (alignY - element.topLeftPoint().y);
-    	}
-    	int elementMaxY = elementMinY + element.height();
-    	if (elementMinY < this.minY)
-    		this.minY = elementMinY;
-    	if (elementMaxY > this.maxY)
-    		this.maxY = elementMaxY;
-    	
-    	// Alignment points
-    	if (vAlign == VerticalAlignment.ABOVE) {
-    		this.topLeftAlignmentPoint.y = this.minY + 
-    		element.topLeftAlignmentPoint().y - element.topLeftPoint().y;
-    		this.topRightAlignmentPoint.y = this.minY + 
-    		element.topRightAlignmentPoint().y - element.topLeftPoint().y;
-    		if (element instanceof ScalePlotElement) {
-    			ScalePlotElement spe = (ScalePlotElement)element;
-    			this.zeroPoint.y = this.minY + spe.zeroPoint().y - spe.topLeftPoint().y;
-    		}
-    	} else if (vAlign == VerticalAlignment.BELOW) {
-    		this.bottomLeftAlignmentPoint.y = this.maxY -
-    		element.topLeftPoint().y + element.height() - element.bottomLeftAlignmentPoint().y;
-    		this.bottomRightAlignmentPoint.y = this.maxY -
-    		element.topLeftPoint().y + element.height() - element.bottomRightAlignmentPoint().y;
-    		if (element instanceof ScalePlotElement) {
-    			ScalePlotElement spe = (ScalePlotElement)element;
-    			this.zeroPoint.y = this.maxY - spe.topLeftPoint().y + 
-    				spe.height() - spe.zeroPoint().y;
-    		}
-    	}
     }
 }

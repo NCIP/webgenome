@@ -53,6 +53,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.array;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Class uses for testing.  Conveniently creates
@@ -61,11 +64,41 @@ package org.rti.webcgh.array;
 public class GenomeLocationFactory {
 	
 	private GenomeAssembly genomeAssembly = null;
+	private Map<Short, Chromosome> chromIndex = new HashMap<Short, Chromosome>();
+	
+	/**
+	 * Constructor
+	 *
+	 */
+	public GenomeLocationFactory() {
+		this("hg18", "Homo", "sapiens");
+	}
+	
+	/**
+	 * Constructor
+	 * @param assemblyName Genome assembly name
+	 * @param genus Genus
+	 * @param species Species
+	 */
+	public GenomeLocationFactory(String assemblyName, String genus, String species) {
+		Organism org = new Organism(genus, species);
+		this.genomeAssembly = new GenomeAssembly(assemblyName, org);
+	}
 	
 	
-//	public GenomeLocation newGenomeLocation(short chromNum, long location) {
-//		
-//		
-//	}
+	/**
+	 * Create new genome location
+	 * @param chromNum Chromosome number
+	 * @param location Location on chromosome in KB
+	 * @return A genome location
+	 */
+	public GenomeLocation newGenomeLocation(short chromNum, long location) {
+		Chromosome chrom = this.chromIndex.get(chromNum);
+		if (chrom == null) {
+			chrom = new Chromosome(this.genomeAssembly, chromNum);
+			this.chromIndex.put(chromNum, chrom);
+		}
+		return new GenomeLocation(chrom, location);
+	}
 
 }

@@ -80,6 +80,9 @@ public class HorizontalLine implements PlotElement {
 	// Color of line
 	private Color color = Color.BLACK;
 	
+	private int x = 0;
+	private int y = 0;
+	
 
 	/**
 	 * @return Color of line
@@ -137,7 +140,7 @@ public class HorizontalLine implements PlotElement {
 	 * @param canvas A drawing canvas
 	 */
 	public void paint(DrawingCanvas canvas) {
-		canvas.add(new Line(0, this.lineThickness, this.width, this.lineThickness, this.lineThickness, 
+		canvas.add(new Line(this.x, this.y + this.lineThickness,  this.x + this.width, this.y + this.lineThickness, this.lineThickness, 
 				this.color));
 	}
 
@@ -146,7 +149,7 @@ public class HorizontalLine implements PlotElement {
 	 * @return A point
 	 */
 	public Point topLeftAlignmentPoint() {
-		return new Point(0, 0);
+		return new Point(this.x, this.y);
 	}
 
 	
@@ -155,7 +158,7 @@ public class HorizontalLine implements PlotElement {
 	 * @return A point
 	 */
 	public Point bottomLeftAlignmentPoint() {
-		return new Point(0, this.lineThickness);
+		return new Point(this.x, this.y + this.lineThickness);
 	}
 
 	
@@ -164,7 +167,7 @@ public class HorizontalLine implements PlotElement {
 	 * @return A point
 	 */
 	public Point topRightAlignmentPoint() {
-		return new Point(this.width, 0);
+		return new Point(this.x + this.width, this.y);
 	}
 
 	
@@ -173,7 +176,7 @@ public class HorizontalLine implements PlotElement {
 	 * @return A point
 	 */
 	public Point bottomRightAlignmentPoint() {
-		return new Point(this.width, this.lineThickness);
+		return new Point(this.x + this.width, this.y + this.lineThickness);
 	}
 
 	/**
@@ -198,7 +201,17 @@ public class HorizontalLine implements PlotElement {
 	 * @return A point
 	 */
 	public Point topLeftPoint() {
-		return new Point(0, 0);
+		return new Point(this.x, this.y);
 	}
-
+	
+	
+    /**
+     * Move element
+     * @param deltaX Number of pixels horizontally
+     * @param deltaY Number of pixels vertically
+     */
+    public void move(int deltaX, int deltaY) {
+    	this.x += deltaX;
+    	this.y += deltaY;
+    }
 }
