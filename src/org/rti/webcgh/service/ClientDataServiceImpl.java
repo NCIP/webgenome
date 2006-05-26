@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/ClientDataServiceImpl.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-26 17:26:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,26 +53,19 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import javax.ejb.CreateException;
-import javax.naming.NamingException;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.core.WebcghApplicationException;
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.BioAssayMgr;
 import org.rti.webgenome.client.BioAssayMgrHome;

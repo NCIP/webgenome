@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/client/util/ClientQueryParser.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-05-26 17:16:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,17 +54,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.client.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.servlet.http.*;
 
-import org.rti.webcgh.array.Chromosome;
-import org.rti.webcgh.array.GenomeAssembly;
-import org.rti.webcgh.array.GenomeInterval;
-import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.core.InvalidClientQueryParametersException;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.QuantitationTypes;

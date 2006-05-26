@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/UploadExperimentDispatchAction.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-24 14:14:22 $
+$Revision: 1.4 $
+$Date: 2006-05-26 17:15:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,17 +70,14 @@ import org.apache.struts.util.LabelValueBean;
 
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeAssembly;
-import org.rti.webcgh.array.Organism;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.ReporterMappingStagingArea;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentGenomeAssembly;
 import org.rti.webcgh.array.persistent.PersistentOrganism;
-import org.rti.webcgh.array.persistent.PersistentQuantitationType;
 import org.rti.webcgh.io.SmdDataStream;
 import org.rti.webcgh.service.UserProfile;
-import org.rti.webcgh.service.WebcghArrayDataSourceSet;
 import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.UploadExperimentForm;
 import org.rti.webcgh.webui.common.CommonLookupDispatchAction;

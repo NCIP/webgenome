@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/unit_test/SmdFpDataStreamTester.java,v $
-$Revision: 1.1 $
-$Date: 2006-05-04 18:33:02 $
+$Revision: 1.2 $
+$Date: 2006-05-26 17:25:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,8 +55,6 @@ package org.rti.webcgh.io.unit_test;
 import junit.framework.TestCase;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.rti.webcgh.io.SmdFpDataStream;

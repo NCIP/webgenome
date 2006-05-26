@@ -57,8 +57,6 @@ import java.awt.Point;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlteration.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-16 12:49:02 $
+$Revision: 1.6 $
+$Date: 2006-05-26 17:22:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,9 +53,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 package org.rti.webcgh.array;
-
-import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.graph.widget.DataPlotter;
 
 public class ChromosomalAlteration {
 	

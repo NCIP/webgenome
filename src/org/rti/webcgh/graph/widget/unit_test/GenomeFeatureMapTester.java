@@ -58,7 +58,6 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;

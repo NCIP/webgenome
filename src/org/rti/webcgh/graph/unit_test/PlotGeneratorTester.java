@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-26 08:46:26 $
+$Revision: 1.7 $
+$Date: 2006-05-26 17:24:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,19 +53,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.graph.unit_test;
 
-import java.awt.Point;
-
 import junit.framework.TestCase;
 
 import org.rti.webcgh.array.ArrayDatumFactory;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.array.GenomeInterval;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.array.GenomeLocationFactory;
 import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.graph.PlotGenerator;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.graph.PlotType;

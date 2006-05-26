@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-25 23:47:39 $
+$Revision: 1.7 $
+$Date: 2006-05-26 17:13:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,23 +54,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analytic;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 
-import org.apache.batik.gvt.text.ArabicTextHandler;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.array.ArrayDatum;
 import org.rti.webcgh.array.ArrayDatumIterator;
 import org.rti.webcgh.array.BioAssay;
-import org.rti.webcgh.array.BioAssayIterator;
-import org.rti.webcgh.array.Chromosome;
 import org.rti.webcgh.array.Experiment;
 
-import sun.security.krb5.internal.ac;
 
 /**
  * Performs the mapping between the Experiment object and the data for aCGH
@@ -135,7 +127,7 @@ public class AcghDataTransformer {
 		        // X chromosome = 23 in human and 20 in mouse,
 		        // Y chromosome = 24 in human and 21 in mouse
 		int[] positions;          // kb position on the chromosome
-		double[] smoothedRatios;  // smoothed value of log2 ratio
+//		double[] smoothedRatios;  // smoothed value of log2 ratio
 		int size;                 // number of clones/number of rows
 		
 
@@ -262,7 +254,7 @@ public class AcghDataTransformer {
 		        // X chromosome = 23 in human and 20 in mouse,
 		        // Y chromosome = 24 in human and 21 in mouse
 		int[] positions;          // kb position on the chromosome
-		double[] smoothedRatios;  // smoothed value of log2 ratio
+//		double[] smoothedRatios;  // smoothed value of log2 ratio
 		int size;                 // number of clones/number of rows
 		
 

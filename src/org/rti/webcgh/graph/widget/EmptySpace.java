@@ -53,12 +53,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.graph.widget;
 
-import java.awt.Color;
 import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.Rectangle;
 
 
 /**

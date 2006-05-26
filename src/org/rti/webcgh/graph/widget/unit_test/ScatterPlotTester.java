@@ -67,8 +67,6 @@ import org.rti.webcgh.array.Quantitation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.Reporter;
 import org.rti.webcgh.array.ReporterMapping;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.PlotBoundaries;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/AcghService.java,v $
-$Revision: 1.8 $
-$Date: 2006-05-26 02:25:52 $
+$Revision: 1.9 $
+$Date: 2006-05-26 17:25:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.rosuda.JRclient.REXP;

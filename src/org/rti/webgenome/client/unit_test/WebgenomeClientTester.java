@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webgenome/client/unit_test/WebgenomeClientTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.3 $
+$Date: 2006-05-26 17:27:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,9 +56,6 @@ package org.rti.webgenome.client.unit_test;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-
-import gov.nih.nci.mageom.domain.BioAssayData.BioAssayDatum;
 
 import org.rti.webcgh.array.ArrayDatum;
 import org.rti.webcgh.array.ArrayDatumIterator;

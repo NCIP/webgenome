@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.10 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.11 $
+$Date: 2006-05-26 17:22:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;

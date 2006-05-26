@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/unit_test/AcghDataTransformerTester.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-25 19:41:31 $
+$Revision: 1.4 $
+$Date: 2006-05-26 17:20:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,9 +53,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 package org.rti.webcgh.analytic.unit_test;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 import org.rti.webcgh.analytic.AcghData;
 import org.rti.webcgh.analytic.AcghDataTransformer;

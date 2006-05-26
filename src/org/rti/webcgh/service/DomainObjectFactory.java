@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/DomainObjectFactory.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-25 19:41:31 $
+$Revision: 1.4 $
+$Date: 2006-05-26 17:26:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,9 +52,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 package org.rti.webcgh.service;
-
-import java.util.Collection;
-import java.util.Map;
 
 import org.rti.webcgh.array.Array;
 import org.rti.webcgh.array.ArrayDatum;

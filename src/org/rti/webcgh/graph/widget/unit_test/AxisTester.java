@@ -52,18 +52,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.graph.widget.unit_test;
 
-import java.awt.Color;
-
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Axis;
-import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.PlotPanel;
 

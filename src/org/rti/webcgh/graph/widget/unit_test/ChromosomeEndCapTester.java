@@ -57,9 +57,7 @@ import java.awt.Color;
 import junit.framework.TestCase;
 
 import org.rti.webcgh.drawing.Direction;
-import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.ChromosomeEndCap;

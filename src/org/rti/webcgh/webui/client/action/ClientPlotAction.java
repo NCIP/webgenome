@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/client/action/ClientPlotAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 17:16:23 $
+$Revision: 1.3 $
+$Date: 2006-05-26 17:16:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,6 @@ import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.deprecated.Units;
 import org.rti.webcgh.service.ClientDataService;
-import org.rti.webcgh.service.ClientDataServiceImpl;
 import org.rti.webcgh.webui.client.util.ClientQueryParser;
 import org.rti.webcgh.webui.plot.PlotParamsForm;
 import org.rti.webcgh.webui.util.AttributeManager;

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsConfigAction.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-25 23:47:39 $
+$Revision: 1.4 $
+$Date: 2006-05-26 17:17:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,26 +59,15 @@ package org.rti.webcgh.webui.plot;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.struts.action.Action;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
-import org.apache.struts.actions.DispatchAction;
-
-import org.rti.webcgh.analytic.AnalyticPipeline;
-import org.rti.webcgh.array.GenomeAssembly;
-import org.rti.webcgh.array.Pipeline;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
-import org.rti.webcgh.service.UserProfile;
-import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.util.AttributeManager;
 
 
