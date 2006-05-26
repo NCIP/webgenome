@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/AcghService.java,v $
-$Revision: 1.7 $
-$Date: 2006-05-25 23:30:09 $
+$Revision: 1.8 $
+$Date: 2006-05-26 02:25:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -269,8 +269,8 @@ public class AcghService {
 			c.eval("clones_info <-data.frame(n=clonesInfo_n, Clone=clonesInfo_Clone, Target=clonesInfo_Target, Chrom=clonesInfo_Chrom, kb=clonesInfo_kb)");
 			c.eval("log2_ratios <-data.frame(ID=clonesInfo_Clone, log2TR=log2ratios_log2TR)");
 			
-			c.eval("capture.output(log2_ratios, file = \"C:/test/log2_ratiosx.txt\", append = FALSE)");
-			c.eval("capture.output(clones_info, file = \"C:/test/clones_infox.txt\", append = FALSE)");
+			//c.eval("capture.output(log2_ratios, file = \"C:/test/log2_ratiosx.txt\", append = FALSE)");
+			//c.eval("capture.output(clones_info, file = \"C:/test/clones_infox.txt\", append = FALSE)");
 		} catch (RSrvException e) {
 			throw new WebcghSystemException("Error setting up RServe for aCGH run", e);
 		}

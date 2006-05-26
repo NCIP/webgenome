@@ -55,5 +55,5 @@ df <- data.frame(hmm(aCGH_obj)[[1]][1])
 
 result <- cbind(chromosome=df[1], kb=df[2], state=df[3], smoothed=df[4], observed=df[8])
 #capture.output(df, file = "C:/test/dataframe.txt", append = FALSE)
-capture.output(result, file = "C:/test/result.txt", append = FALSE)
+#capture.output(result, file = "C:/test/result.txt", append = FALSE)
 
