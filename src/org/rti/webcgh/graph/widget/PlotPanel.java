@@ -280,8 +280,6 @@ public class PlotPanel implements ScalePlotElement {
      */
     public void add(PlotElement element, HorizontalAlignment hAlign,
         VerticalAlignment vAlign, boolean makeReferenceElement) {
-    	if (element instanceof Axis)
-    		System.out.println("Before: minX = " + this.minX());
         DrawingCanvas tile = this.drawingCanvas.newTile();
         element.paint(tile);
         int x = computeInsertionXCoord(element, hAlign);
@@ -307,8 +305,6 @@ public class PlotPanel implements ScalePlotElement {
         	if (element.topLeftPoint().y + element.height() > this.maxY())
         		this.bottomElement = element;
         }
-        if (element instanceof Axis)
-    		System.out.println("After: minX = " + this.minX());
     }
     
     

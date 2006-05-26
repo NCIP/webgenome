@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsForm.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-25 20:28:36 $
+$Revision: 1.3 $
+$Date: 2006-05-26 09:13:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -87,7 +87,7 @@ public class PlotParamsForm extends ActionForm {
     
     private String width = "800";  // Width of plot
     private String height = "300"; // Height of plot
-    private String genomeIntervals = null;
+    private String genomeIntervals = "1";
     private String units = Units.KB.getName();
 	private String minY = null;
 	private String maxY = null;
@@ -97,8 +97,8 @@ public class PlotParamsForm extends ActionForm {
 	private String pipelineName = "none";
 	private String plotsPerRow = "5";
 	private String chromIdeogramSize = ChromosomeIdeogramSize.MEDIUM.getName();
-	private String lowerFoldChangeThresh = "";
-	private String upperFoldChangeThresh = "";
+	private String lowerFoldChangeThresh = "-0.1";
+	private String upperFoldChangeThresh = "0.1";
 	private String showIdeogram = "";
 	private String selectedProbes = "";
 	private String assemblyId = "none";

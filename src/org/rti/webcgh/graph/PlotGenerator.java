@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.13 $
-$Date: 2006-05-26 08:46:27 $
+$Revision: 1.14 $
+$Date: 2006-05-26 09:13:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -603,7 +603,7 @@ public class PlotGenerator {
 	            
 	            // Create graph
 	            bioAssay.graph(plot, interval.start, interval.end, null);
-	            baPanel.add(plot, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+	            baPanel.add(plot, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
 	            Caption bioAssayName = new Caption(bioAssay.getName(), Orientation.VERTICAL, false);
 	            baPanel.add(bioAssayName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
 	            idPanel.add(baPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
@@ -623,7 +623,7 @@ public class PlotGenerator {
 	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
             		}
             	}
-            	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+            	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
             	Caption colName = new Caption("MCAR", Orientation.VERTICAL, false);
             	ampPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
             	idPanel.add(ampPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
@@ -643,7 +643,7 @@ public class PlotGenerator {
 	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
             		}
             	}
-            	delPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+            	delPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
             	Caption colName = new Caption("MCDR", Orientation.VERTICAL, false);
             	delPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
             	idPanel.add(delPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
