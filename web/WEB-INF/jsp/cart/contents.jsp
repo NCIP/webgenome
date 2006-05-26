@@ -15,6 +15,11 @@ int styleIdx = 1;
 <center>
 
 	<p>
+		[<html:link action="/cart/selectExperiments" styleClass="actionLink">Load Experiments from Database</html:link>]&nbsp;&nbsp;
+		[<html:link action="/cart/uploadExperiment?methodToCall=view" styleClass="actionLink">Upload File</html:link>]
+	</p>
+
+	<p>
 		<logic:present name="genomeAssemblies">
 			<span class="fieldName">Genome Assemblies:</span>
 			<logic:iterate id="genomeAssembly" name="genomeAssemblies">
@@ -75,4 +80,9 @@ int styleIdx = 1;
 	    	<html:submit value="Remove"/>
 	    </p>
 	</html:form>
+	
+	<p>
+		[<html:link action="/cart/selectExperiments" styleClass="actionLink">Load Experiments from Database</html:link>]&nbsp;&nbsp;
+		[<html:link action="/cart/uploadExperiment?methodToCall=view" styleClass="actionLink">Upload File</html:link>]
+	</p>
 </center>

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-25 19:41:31 $
+$Revision: 1.5 $
+$Date: 2006-05-26 10:14:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -292,7 +292,10 @@ public class SmdFpDataStream implements SmdDataStream {
                                                     GenomeAssembly genomeAssembly,
                                                     Reporter reporter ) {
         double chromosome = dlp.getNumericProperty( line, CHROMOSOME_COL_HEADING ) ;
-        double position =   dlp.getNumericProperty( line, POSITION_COL_HEADING ) ;
+        
+    	// TODO: Make position units (i.e. BP, KB, MB) configurable.  For now,
+    	// we will assume that units are KB (i.e., 1000 base pairs)
+        double position =   dlp.getNumericProperty( line, POSITION_COL_HEADING ) * 1000 ;
 
         Chromosome chromosomeObj = domainObjectFactory.getChromosome (
                 genomeAssembly, (short) chromosome ) ;

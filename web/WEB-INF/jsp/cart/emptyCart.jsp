@@ -13,12 +13,8 @@
 	<p><br></p>
 	
 	<p>
-		<input type="button" onclick="window.location='<html:rewrite page="/cart/selectExperiments.do"/>'" 
-			value="Select Experiments">
+		[<html:link action="/cart/selectExperiments" styleClass="actionLink">Load Experiments from Database</html:link>]&nbsp;&nbsp;
+		[<html:link action="/cart/uploadExperiment?methodToCall=view" styleClass="actionLink">Upload File</html:link>]
 	</p>
 	
-	<p>
-		<input type="button" onclick="window.location='<html:rewrite page="/cart/uploadExperiment.do?methodToCall=view"/>'" 
-			value="Upload Experiments">
-	</p>
 </center>

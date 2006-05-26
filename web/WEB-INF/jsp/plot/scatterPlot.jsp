@@ -23,11 +23,25 @@ function newWindow(file,window) {
 //-->
 </script>
 
+<%-- BEGIN: BLOCK NEEDED FOR SAVE AS FUNCTION --%>
+<script language="JavaScript1.2" src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>" type="text/javascript"></script>
+<%-- THIS FORM MUST EXIST TO ALLOW THE PLOT TO BE SAVED AS A GRAPHIC --%>
+<html:form action="/plot/saveAs" target="plotSaveAs">
+	<html:hidden property="svgDOM" value=""/>
+</html:form>
+<%-- END: BLOCK NEEDED FOR SAVE AS FUNCTION --%>
+
 <center>
 
-	<a href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=scatter"/>','scatterParams')">Change scatter-plot specific parameters</a>
-	<br/>
-	<br/>
+	<!-- Links -->
+	<%-- BEGIN: SAVE AS LINK --%>
+   	[<div style="margin-top:0px;padding-top:0px;">
+   	<script language="JavaScript">
+   	renderSaveAsLink( );
+   	</script>
+   	</div>]&nbsp;&nbsp;
+   	<%-- END: SAVE AS LINK --%>
+	[<a class="actionLink" href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=scatter"/>','scatterParams')">Plot Parameters</a>]&nbsp;&nbsp;
 
 	Show:
 	
@@ -60,45 +74,5 @@ function newWindow(file,window) {
 	pluginspage="http://www.adobe.com/svg/viewer/install/">
 
 <br>
-
-<%-- BEGIN: BLOCK NEEDED FOR SAVE AS FUNCTION --%>
-<script language="JavaScript1.2" src="<html:rewrite page="/js/plot/svgSaveAsImage.js"/>" type="text/javascript"></script>
-<%-- THIS FORM MUST EXIST TO ALLOW THE PLOT TO BE SAVED AS A GRAPHIC --%>
-<html:form action="/plot/saveAs" target="plotSaveAs">
-	<html:hidden property="svgDOM" value=""/>
-</html:form>
-<%-- END: BLOCK NEEDED FOR SAVE AS FUNCTION --%>
-
-    	
-<table border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td>
-			<html:form action="/plot/setup">
-				<webcgh:beanPropsToHiddenFields name="plotParamsForm"
-					exclusions="genomeIntervals,units,minY,maxY"/>
-				<html:img styleClass="pointer" 
-					page="/images/helpicon.gif" align="absmiddle" 
-					onclick="help('param-genomeIntervals')"/>
-				Genome Interval &nbsp;&nbsp;
-				<html:text property="genomeIntervals"/>
-				<html:select property="units">
-					<webcgh:unitOptions name="plotParamsForm" property="units"/>
-				</html:select>&nbsp;&nbsp;&nbsp;
-				Minimum Y &nbsp;
-				<html:text property="minY" size="4" maxlength="20"/>&nbsp;&nbsp;&nbsp;
-				Maximum Y &nbsp;
-				<html:text property="maxY" size="4" maxlength="20"/>&nbsp;&nbsp;
-				<html:submit value="Go"/>
-   			</html:form>
-   			<%-- BEGIN: SAVE AS LINK --%>
-   			<div style="margin-top:0px;padding-top:0px;">
-   			<script language="JavaScript">
-   			renderSaveAsLink( );
-   			</script>
-   			</div>
-   			<%-- END: SAVE AS LINK --%>
-   		</td>
-	</tr>
-</table></br>
 
 </center>

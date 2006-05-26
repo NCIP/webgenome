@@ -130,6 +130,6 @@ function renderSaveAsLink( ) {
                   "</div>" +
               "</td>" +
           "</tr>" +
-      "</table" ) ;
+      "</table>" ) ;
 
 }

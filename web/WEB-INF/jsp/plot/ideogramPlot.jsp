@@ -24,31 +24,10 @@ function newWindow(file,window) {
 </script>
 
 <center>
-	<a href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=ideogram"/>','ideogramParams')">Change ideogram-plot specific parameters</a>
+	<a href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=ideogram"/>','ideogramParams')">Plot Parameters</a>
 	<br/>
 	<br/>
 </center>
-
-<table border="0" cellpadding="0" cellspacing="0" align="center">
-	<tr>
-		<td>
-			<html:form action="/plot/setup">
-				<webcgh:beanPropsToHiddenFields name="plotParamsForm"
-					exclusions="genomeIntervals,units,plotType"/>
-				<html:hidden property="plotType" value="ideogram"/>
-				<html:img styleClass="pointer" 
-					page="/images/helpicon.gif" align="absmiddle" 
-					onclick="help('param-genomeIntervals')"/>
-				Genome Interval &nbsp;&nbsp;
-				<html:text property="genomeIntervals"/>
-				<html:select name="plotParamsForm" property="units">
-   						<webcgh:unitOptions name="plotParamsForm" property="units"/>
-   				</html:select>
-				&nbsp;&nbsp;<html:submit value="Go"/>
-   			</html:form>
-   		</td>
-	</tr>
-</table>
 
 <center>
 	<embed
@@ -70,31 +49,11 @@ function newWindow(file,window) {
 
 <br>
 
-<table border="0" cellpadding="0" cellspacing="0" align="center">
-	<tr>
-		<td>
-			<html:form action="/plot/setup">
-				<webcgh:beanPropsToHiddenFields name="plotParamsForm"
-					exclusions="genomeIntervals,units,plotType"/>
-				<html:hidden property="plotType" value="ideogram"/>
-				<html:img styleClass="pointer" 
-					page="/images/helpicon.gif" align="absmiddle" 
-					onclick="help('param-genomeIntervals')"/>
-				Genome Interval &nbsp;&nbsp;
-				<html:text property="genomeIntervals"/>
-				<html:select name="plotParamsForm" property="units">
-   						<webcgh:unitOptions name="plotParamsForm" property="units"/>
-   				</html:select>
-				&nbsp;&nbsp;<html:submit value="Go"/>
-   			</html:form>
+
    			<%-- BEGIN: SAVE AS LINK --%>
    			<div style="margin-top:0px;padding-top:0px;">
    			<script language="JavaScript">
    			renderSaveAsLink( );
    			</script>
    			</div>
-   			<%-- END: SAVE AS LINK --%>
-   		</td>
-	</tr>
-</table>
 </br>

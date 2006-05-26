@@ -355,3 +355,9 @@ table.dataInner td {
 	border-style: none none none none;
 	-moz-border-radius: 0px 0px 0px 0px;
 }
+
+.actionLink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: normal;
+}
