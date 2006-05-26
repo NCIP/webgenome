@@ -464,6 +464,7 @@
 			validate="true"
 			input="/plot/params.do">
 			<forward name="scatter" path="scatter.plot.page"/>
+			<forward name="frequency" path="frequency.plot.page"/>
 			<forward name="annotation" path="annotation.plot.page"/>
 			<forward name="ideogram" path="ideogram.plot.page"/>
 			<forward name="bar" path="bar.plot.page"/>

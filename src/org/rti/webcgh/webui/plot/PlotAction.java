@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotAction.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-04 15:16:47 $
+$Revision: 1.4 $
+$Date: 2006-05-26 14:42:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,8 +71,10 @@ import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.rti.webcgh.graph.FrequencyGraphGenerator;
 import org.rti.webcgh.graph.PlotGenerator;
 import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.graph.PlotType;
 import org.rti.webcgh.webui.util.Attribute;
 import org.rti.webcgh.webui.util.AttributeManager;
 import org.rti.webcgh.webui.util.SvgUtils;
@@ -90,8 +92,20 @@ public class PlotAction extends Action {
     
     private PersistentDomainObjectMgr persistentDomainObjectMgr = null;
     private PlotGenerator plotGenerator = null;
+    private FrequencyGraphGenerator frequencyGraphGenerator = null;
     
-    /**
+    public FrequencyGraphGenerator getFrequencyGraphGenerator() {
+		return frequencyGraphGenerator;
+	}
+
+
+	public void setFrequencyGraphGenerator(
+			FrequencyGraphGenerator frequencyGraphGenerator) {
+		this.frequencyGraphGenerator = frequencyGraphGenerator;
+	}
+
+
+	/**
      * @param plotGenerator The plotGenerator to set.
      */
     public void setPlotGenerator(PlotGenerator plotGenerator) {
@@ -156,6 +170,8 @@ public class PlotAction extends Action {
 			
 			// Create plot
 			SvgDrawingCanvas canvas = SvgDrawingCanvas.newPlottingCanvas();
+			if (plotParameters.getPlotType() == PlotType.FREQUENCY_PLOT)
+				this.frequencyGraphGenerator.createPlot(dataSet, plotParameters, qType, canvas);
 			this.plotGenerator.createPlot(dataSet, plotParameters, qType, canvas);
 			
 			// Attach plot

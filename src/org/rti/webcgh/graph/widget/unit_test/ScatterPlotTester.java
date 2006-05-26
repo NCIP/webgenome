@@ -179,65 +179,66 @@ public class ScatterPlotTester extends TestCase {
     public void testAll1() {
         this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 0), new GenomeLocation(chrom1, 300000000), "plot", Color.black);
         SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+        panel.setDrawBorder(true);
         panel.toSvgFile("scatter-all-1.svg");
     }
     
-    /**
-     */
-    public void testLeftFirstProbe1() {
-        int width = 300;
-        int height = 300;
-        DataPoint bottomLeftPoint = new DataPoint(10000000, -0.6);
-        DataPoint topRightPoint = new DataPoint(30000000, 1.0);
-        this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
-            width, height);
-        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 10000000), new GenomeLocation(chrom1, 30000000), "plot", Color.black);
-        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        panel.toSvgFile("scatter-left-first-1.svg");
-    }
-    
-    /**
-     */
-    public void testRightLastProbe1() {
-        int width = 300;
-        int height = 300;
-        DataPoint bottomLeftPoint = new DataPoint(250000000, -0.6);
-        DataPoint topRightPoint = new DataPoint(270000000, 1.0);
-        this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
-            width, height);
-        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 250000000), new GenomeLocation(chrom1, 270000000), "plot", Color.black);
-        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        panel.toSvgFile("scatter-right-first-1.svg");
-    }
-    
-    /**
-     */
-    public void testLeftFirstProbe2() {
-        int width = 300;
-        int height = 300;
-        DataPoint bottomLeftPoint = new DataPoint(10000000, -0.6);
-        DataPoint topRightPoint = new DataPoint(15000000, 1.0);
-        this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
-            width, height);
-        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 10000000), new GenomeLocation(chrom1, 15000000), "plot", Color.black);
-        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        panel.toSvgFile("scatter-left-first-2.svg");
-    }
-    
-    /**
-     */
-    public void testRightLastProbe2() {
-        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 200000000), new GenomeLocation(chrom1, 210000000), "plot", Color.black);
-        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        panel.toSvgFile("scatter-right-last-2.svg");
-    }
-    
-    /**
-     */
-    public void testRightLastProbe3() {
-        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 170000000), new GenomeLocation(chrom1, 180000000), "plot", Color.black);
-        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-        panel.toSvgFile("scatter-right-last-3.svg");
-    }
+//    /**
+//     */
+//    public void testLeftFirstProbe1() {
+//        int width = 300;
+//        int height = 300;
+//        DataPoint bottomLeftPoint = new DataPoint(10000000, -0.6);
+//        DataPoint topRightPoint = new DataPoint(30000000, 1.0);
+//        this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
+//            width, height);
+//        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 10000000), new GenomeLocation(chrom1, 30000000), "plot", Color.black);
+//        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//        panel.toSvgFile("scatter-left-first-1.svg");
+//    }
+//    
+//    /**
+//     */
+//    public void testRightLastProbe1() {
+//        int width = 300;
+//        int height = 300;
+//        DataPoint bottomLeftPoint = new DataPoint(250000000, -0.6);
+//        DataPoint topRightPoint = new DataPoint(270000000, 1.0);
+//        this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
+//            width, height);
+//        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 250000000), new GenomeLocation(chrom1, 270000000), "plot", Color.black);
+//        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//        panel.toSvgFile("scatter-right-first-1.svg");
+//    }
+//    
+//    /**
+//     */
+//    public void testLeftFirstProbe2() {
+//        int width = 300;
+//        int height = 300;
+//        DataPoint bottomLeftPoint = new DataPoint(10000000, -0.6);
+//        DataPoint topRightPoint = new DataPoint(15000000, 1.0);
+//        this.plot = new ScatterPlot(new PlotBoundaries(bottomLeftPoint, topRightPoint), 
+//            width, height);
+//        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 10000000), new GenomeLocation(chrom1, 15000000), "plot", Color.black);
+//        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//        panel.toSvgFile("scatter-left-first-2.svg");
+//    }
+//    
+//    /**
+//     */
+//    public void testRightLastProbe2() {
+//        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 200000000), new GenomeLocation(chrom1, 210000000), "plot", Color.black);
+//        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//        panel.toSvgFile("scatter-right-last-2.svg");
+//    }
+//    
+//    /**
+//     */
+//    public void testRightLastProbe3() {
+//        this.bioAssayData.graph(plot, new GenomeLocation(chrom1, 170000000), new GenomeLocation(chrom1, 180000000), "plot", Color.black);
+//        SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//        panel.toSvgFile("scatter-right-last-3.svg");
+//    }
 
 }

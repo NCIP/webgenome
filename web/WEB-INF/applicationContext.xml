@@ -151,6 +151,14 @@
 		</property>
 	</bean>
 	
+	<bean
+		id="frequencyGraphGenerator"
+		class="org.rti.webcgh.graph.FrequencyGraphGenerator">
+		<property name="persistentDomainObjectMgr">
+			<ref bean="persistentDomainObjectMgr"/>
+		</property>
+	</bean>
+	
 	
 	<!-- =============================================================== -->
 	<!--                       ETL beans                                 -->
@@ -563,6 +571,9 @@
 		</property>
 		<property name="plotGenerator">
 			<ref bean="plotGenerator"/>
+		</property>
+		<property name="frequencyGraphGenerator">
+			<ref bean="frequencyGraphGenerator"/>
 		</property>
 	</bean>
 	

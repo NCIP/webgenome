@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotSetupAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-04 15:16:47 $
+$Revision: 1.3 $
+$Date: 2006-05-26 14:42:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -227,6 +227,8 @@ public class PlotSetupAction extends Action {
 			forward = mapping.findForward("ideogram");
 		else if ("bar".equals(plotType))
 			forward = mapping.findForward("bar");
+		else if ("frequency".equals(plotType))
+			forward = mapping.findForward("frequency");
 		
 		logger.info("Completed action 'PlotSetupAction'");
 		return forward;

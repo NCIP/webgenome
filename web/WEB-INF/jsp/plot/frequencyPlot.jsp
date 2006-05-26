@@ -35,13 +35,13 @@ function newWindow(file,window) {
 
 	<!-- Links -->
 	<%-- BEGIN: SAVE AS LINK --%>
-   	<div style="margin-top:0px;padding-top:0px;">
+   	[<div style="margin-top:0px;padding-top:0px;">
    	<script language="JavaScript">
    	renderSaveAsLink( );
    	</script>
-   	</div>&nbsp;&nbsp;
+   	</div>]&nbsp;&nbsp;
    	<%-- END: SAVE AS LINK --%>
-	<a class="actionLink" href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=scatter"/>','scatterParams')">Plot Parameters</a>&nbsp;&nbsp;
+	[<a class="actionLink" href="javascript:newWindow('<html:rewrite page="/configPlotParams.do?plotType=scatter"/>','scatterParams')">Plot Parameters</a>]&nbsp;&nbsp;
 
 	Show:
 	

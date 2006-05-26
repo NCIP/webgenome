@@ -24,11 +24,11 @@
 		<td>
 			<logic:equal name="selectedSubMenuItem" value="parameters">
 				<html:link action="/plot/params" styleClass="submenu-selected">
-				Plot Parameters</html:link>
+				Analytic Parameters</html:link>
 			</logic:equal>	
 			<logic:notEqual name="selectedSubMenuItem" value="parameters">
 				<html:link action="/plot/params" styleClass="submenu">
-				Plot Parameters</html:link>
+				Analytic Parameters</html:link>
 			</logic:notEqual>
 		</td>
 				
@@ -89,6 +89,21 @@
 			<logic:notEqual name="selectedSubMenuItem" value="ideogram">
 				<html:link page="/plot/setup.do?plotType=ideogram" styleClass="plot-submenu">
 				Ideogram Plot</html:link>
+			</logic:notEqual>
+		</td>
+		
+		<td width="20"></td>
+		
+		
+		<!-- Frequency Plot -->
+		<td>
+			<logic:equal name="selectedSubMenuItem" value="frequency">
+				<html:link page="/plot/setup.do?plotType=frequency" styleClass="plot-submenu-selected">
+				Frequency Plot</html:link>
+			</logic:equal>	
+			<logic:notEqual name="selectedSubMenuItem" value="frequency">
+				<html:link page="/plot/setup.do?plotType=frequency" styleClass="plot-submenu">
+				Frequency Plot</html:link>
 			</logic:notEqual>
 		</td>
 		

@@ -420,6 +420,13 @@
 	  	<put name="content" value="/WEB-INF/jsp/plot/scatterPlot.jsp" />
 	  	<put name="helpTopic" value="scatterPlot" />
   	</definition>
+  	
+  	<definition name="frequency.plot.page" extends="plot.layout" >
+	  	<put name="title"  value="webGenome: Frequency Plot" />
+	  	<put name="selectedSubMenuItem" value="frequency" />
+	  	<put name="content" value="/WEB-INF/jsp/plot/frequencyPlot.jsp" />
+	  	<put name="helpTopic" value="scatterPlot" />
+  	</definition>
 
   	<definition name="annotation.plot.page" extends="plot.layout" >
 	  	<put name="title"  value="webGenome: Annotation Plot" />

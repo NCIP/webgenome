@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotType.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-26 14:42:05 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,62 +50,48 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.rti.webcgh.graph.widget.unit_test;
 
-/**
- * 
- */
-public class PlotType {
-    
-    
-    // =============================
-    //       Constants
-    // =============================
-    
-    /**
-     * Scatter plot
-     */
-    public static final PlotType SCATTER_PLOT = new PlotType();
-    
-    /**
-     * Ideogram plot
-     */
-    public static final PlotType IDEOGRAM_PLOT = new PlotType();
-    
-    /**
-     * Frequency plot
-     */
-    public static final PlotType FREQUENCY_PLOT = new PlotType();
-    
-    private static final Map PLOT_TYPE_INDEX = new HashMap();
-    
-    static {
-        PLOT_TYPE_INDEX.put("scatter", SCATTER_PLOT);
-        PLOT_TYPE_INDEX.put("ideogram", IDEOGRAM_PLOT);
-        PLOT_TYPE_INDEX.put("frequency", FREQUENCY_PLOT);
-    }
-    
-    
-    // =========================================
-    //      Constructors
-    // =========================================
-    
-    private PlotType() {}
-    
-    
-    // =================================
-    //     Static methods
-    // =================================
+import java.awt.Color;
 
-    /**
-     * Get plot type
-     * @param key Key
-     * @return Plot type
-     */
-    public static PlotType getPlotType(String key) {
-        return (PlotType)PLOT_TYPE_INDEX.get(key);
-    }
+import org.rti.webcgh.array.ArrayDatumFactory;
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.array.GenomeLocation;
+import org.rti.webcgh.array.GenomeLocationFactory;
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.PlotGenerator;
+import org.rti.webcgh.graph.unit_test.SvgTestPanel;
+import org.rti.webcgh.graph.widget.FrequencyPlot;
+
+import junit.framework.TestCase;
+
+public class FrequencyPlotTester extends TestCase {
+	
+	
+	public void test1() throws Exception {
+		PlotGenerator pg = new PlotGenerator();
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
+		Experiment exp = new Experiment();
+		exp.setName("Experiment");
+		BioAssay ba1 = new BioAssay("Bioassay 1");
+		exp.add(ba1);
+		ArrayDatumFactory fac = new ArrayDatumFactory();
+		ba1.add(fac.newArrayDatum("r1", (short)1, (long)1000, (float)0.5));
+		ba1.add(fac.newArrayDatum("r2", (short)1, (long)2000, (float)0.3));
+		ba1.add(fac.newArrayDatum("r3", (short)1, (long)3000, (float)-0.5));
+		ba1.add(fac.newArrayDatum("r4", (short)1, (long)4000, (float)0.1));
+		ba1.add(fac.newArrayDatum("r5", (short)1, (long)5000, (float)-0.2));
+		FrequencyPlot plot = new FrequencyPlot(400, 400, 4000);
+		GenomeLocationFactory fact = new GenomeLocationFactory();
+		GenomeLocation start = fact.newGenomeLocation((short)1, (long)1000);
+		GenomeLocation end = fact.newGenomeLocation((short)1, (long)5000);
+		ba1.graph(plot, start, end, Color.BLACK);
+		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("freq-plot.svg");
+	}
+
 }
