@@ -16,7 +16,6 @@
 </center>
 
 <html:form action="/configScatterPlotParams">
-    <%System.out.println("******************INSIDE JSPPPPPPPPPP**********");%>
 	<html:hidden property="plotType" value="scatter"/>	
 	<html:hidden property="paramsConfigured" value="true"/>
 	

@@ -17,10 +17,7 @@
 
 <html:form action="/configIdeogramPlotParams">
 
-	<html:hidden property="plotType" value="ideogram"/>
-	<%
-	   System.out.println("********INSIDE IDEOGRAMPLOT********");
-	%>
+	<html:hidden property="plotType" value="ideogram"/>	
 	<html:hidden property="paramsConfigured" value="true"/>
 	
 	<input type="hidden" name="calledFromPlotParams" value="true"/>

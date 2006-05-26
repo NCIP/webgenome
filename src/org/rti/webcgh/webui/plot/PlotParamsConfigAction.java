@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsConfigAction.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-26 17:17:22 $
+$Revision: 1.5 $
+$Date: 2006-05-26 17:39:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.apache.struts.Globals;
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
@@ -132,7 +134,7 @@ public class PlotParamsConfigAction extends Action {
 		ShoppingCart cart = AttributeManager.getShoppingCart(request);
 		Set qTypes = cart.quantitationTypes();
 		// set as attribute in session
-		request.getSession().setAttribute("quantitationTypes", qTypes);
+		request.setAttribute("quantitationTypes", qTypes);
 		
 		
 		
@@ -145,6 +147,9 @@ public class PlotParamsConfigAction extends Action {
 		
 		
 		String calledFromPlotParams = request.getParameter("calledFromPlotParams");
+		
+		// See if there are errors on validate
+		ActionErrors ae = (ActionErrors)request.getAttribute(Globals.ERROR_KEY);
 		
 		// if the user has supplied parameters that validate, forward to the
 		// page that will execute the plot.  if not, send user to appropriate
@@ -167,8 +172,8 @@ public class PlotParamsConfigAction extends Action {
 			forward = mapping.findForward("scatterPlotConfig");
 		*/
 		
-		
-		if (calledFromPlotParams != null) {
+		// if no errors and it's called from params jsp
+		if (ae == null && calledFromPlotParams != null) {
 			
 			// the user has successfully configured parameters, so reset
 			// the form-bean attribute to be ready for the next time

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsForm.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-26 09:13:21 $
+$Revision: 1.4 $
+$Date: 2006-05-26 17:39:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -370,6 +370,7 @@ public class PlotParamsForm extends ActionForm {
         	errors.add("global", new ActionError("invalid.fields"));
         	
         }
+        
         return errors;
     }
     

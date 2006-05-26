@@ -411,13 +411,14 @@
 			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
 		</action>
 
+
 		<action
 			path="/configScatterPlotParams"
 			type="org.rti.webcgh.webui.plot.PlotParamsConfigAction"
 			name="plotParamsForm"
 			scope="session"
 			validate="true"
-			input="scatter.plot.params.page">
+			input="/configPlotParams.do">
 			<forward name="scatterPlotConfig" path="scatter.plot.params.page"/>
 			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
 			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
@@ -429,7 +430,7 @@
 			name="plotParamsForm"
 			scope="session"
 			validate="true"
-			input="ideogram.plot.params.page">
+			input="/configPlotParams.do">
 			<forward name="scatterPlotConfig" path="scatter.plot.params.page"/>
 			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
 			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
