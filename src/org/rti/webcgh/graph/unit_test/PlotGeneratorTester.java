@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.7 $
-$Date: 2006-05-26 17:24:28 $
+$Revision: 1.8 $
+$Date: 2006-05-26 17:29:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,7 +91,7 @@ public class PlotGeneratorTester extends TestCase {
 		ba1.add(fac.newArrayDatum("r3", (short)1, (long)3000, (float)-0.5));
 		ba1.add(fac.newArrayDatum("r4", (short)1, (long)4000, (float)0.1));
 		ba1.add(fac.newArrayDatum("r5", (short)1, (long)5000, (float)-0.2));
-		GenomeLocationFactory glf = new GenomeLocationFactory();
+//		GenomeLocationFactory glf = new GenomeLocationFactory();
 		PlotParameters params = new PlotParameters();
 		params.setGenomeIntervalDtos(new GenomeIntervalDto[] {new GenomeIntervalDto(1, 0, 6000)});
 		params.setPlotType(PlotType.SCATTER_PLOT);
