@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.8 $
-$Date: 2006-05-26 07:18:21 $
+$Revision: 1.9 $
+$Date: 2006-05-26 17:21:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -378,7 +378,7 @@ public class BioAssayData {
      */
     public SortedSet chromosomes() {
     	SortedSet chromosomes = new TreeSet();
-    	Map chromIndex = new HashMap();
+//    	Map chromIndex = new HashMap();
     	for (ArrayDatumIterator it = this.arrayDatumIterator(); it.hasNext();) {
     		ArrayDatum datum = it.next();
     		Chromosome chrom = datum.chromosome();
