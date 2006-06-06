@@ -71,8 +71,43 @@ import junit.framework.TestCase;
 public class FrequencyPlotTester extends TestCase {
 	
 	
-	public void test1() throws Exception {
-		PlotGenerator pg = new PlotGenerator();
+//	public void testEmpty() throws Exception {
+//		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//		panel.setDrawBorder(true);
+//		Experiment exp = new Experiment();
+//		exp.setName("Experiment");
+//		BioAssay ba1 = new BioAssay("Bioassay 1");
+//		exp.add(ba1);
+//		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 5000, 0, 100);
+//		GenomeLocationFactory fact = new GenomeLocationFactory();
+//		GenomeLocation start = fact.newGenomeLocation((short)1, (long)0);
+//		GenomeLocation end = fact.newGenomeLocation((short)1, (long)5000);
+//		ba1.graph(plot, start, end, Color.BLACK);
+//		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+//		panel.toSvgFile("freq-plot-empty.svg");
+//	}
+	
+	
+//	public void testOneDatum() throws Exception {
+//		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+//		panel.setDrawBorder(true);
+//		Experiment exp = new Experiment();
+//		exp.setName("Experiment");
+//		BioAssay ba1 = new BioAssay("Bioassay 1");
+//		exp.add(ba1);
+//		ArrayDatumFactory fac = new ArrayDatumFactory();
+//		ba1.add(fac.newArrayDatum("r1", (short)1, (long)3000, (float)50));
+//		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 4000, 0, 100);
+//		GenomeLocationFactory fact = new GenomeLocationFactory();
+//		GenomeLocation start = fact.newGenomeLocation((short)1, (long)0);
+//		GenomeLocation end = fact.newGenomeLocation((short)1, (long)4000);
+//		ba1.graph(plot, start, end, Color.BLACK);
+//		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+//		panel.toSvgFile("freq-plot-one-datum.svg");
+//	}
+	
+	
+	public void testTwoDatum() throws Exception {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
 		panel.setDrawBorder(true);
 		Experiment exp = new Experiment();
@@ -80,18 +115,15 @@ public class FrequencyPlotTester extends TestCase {
 		BioAssay ba1 = new BioAssay("Bioassay 1");
 		exp.add(ba1);
 		ArrayDatumFactory fac = new ArrayDatumFactory();
-		ba1.add(fac.newArrayDatum("r1", (short)1, (long)1000, (float)0.5));
-		ba1.add(fac.newArrayDatum("r2", (short)1, (long)2000, (float)0.3));
-		ba1.add(fac.newArrayDatum("r3", (short)1, (long)3000, (float)-0.5));
-		ba1.add(fac.newArrayDatum("r4", (short)1, (long)4000, (float)0.1));
-		ba1.add(fac.newArrayDatum("r5", (short)1, (long)5000, (float)-0.2));
-		FrequencyPlot plot = new FrequencyPlot(400, 400, 4000);
+		ba1.add(fac.newArrayDatum("r1", (short)1, (long)2000, (float)30));
+		ba1.add(fac.newArrayDatum("r2", (short)1, (long)3000, (float)50));
+		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 4000, 0, 100);
 		GenomeLocationFactory fact = new GenomeLocationFactory();
-		GenomeLocation start = fact.newGenomeLocation((short)1, (long)1000);
-		GenomeLocation end = fact.newGenomeLocation((short)1, (long)5000);
+		GenomeLocation start = fact.newGenomeLocation((short)1, (long)0);
+		GenomeLocation end = fact.newGenomeLocation((short)1, (long)4000);
 		ba1.graph(plot, start, end, Color.BLACK);
 		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-		panel.toSvgFile("freq-plot.svg");
+		panel.toSvgFile("freq-plot-two-datum.svg");
 	}
 
 }
