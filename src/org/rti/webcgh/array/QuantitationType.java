@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/QuantitationType.java,v $
-$Revision: 1.2 $
-$Date: 2006-04-25 15:46:28 $
+$Revision: 1.3 $
+$Date: 2006-06-06 20:08:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,6 +82,13 @@ public class QuantitationType implements Cacheable {
 	 */
 	public static final QuantitationType LOH =
 		new QuantitationType("LOH");
+	
+	
+	/**
+	 * Percent
+	 */
+	public static final QuantitationType PERCENT =
+		new QuantitationType("Percent");
     
     
     // ========================================

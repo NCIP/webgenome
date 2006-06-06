@@ -124,7 +124,7 @@ public class FrequencyGraphGenerator {
         			dataSet, plotParameters.getXUnits());
         
         // Draw graph on panel
-        this.createScatterPlot(dataSet, genomeIntervals, quantitationType, 
+        this.createFrequencyPlot(dataSet, genomeIntervals, quantitationType, 
         		plotParameters, plotPanel, tile);
         
         // Add background and matte to drawing canvas and associate event listeners with these
@@ -144,19 +144,15 @@ public class FrequencyGraphGenerator {
     }
 	
 	
-    private void createScatterPlot(DataSet dataSet, 
+    private void createFrequencyPlot(DataSet dataSet, 
     		GenomeInterval[] genomeIntervals, QuantitationType quantitationType,
             PlotParameters plotParameters, PlotPanel panel, DrawingCanvas canvas) {
         
-        // Determine plot boundaries
-        double minY = this.minY(dataSet, plotParameters);
-        double maxY = this.maxY(dataSet, plotParameters);
-        
         // Create Y-axis
-        Axis yAxis = new Axis(minY, maxY, plotParameters.getHeight(), 
+        Axis yAxis = new Axis(0, 100, plotParameters.getHeight(), 
         		Orientation.VERTICAL, Location.LEFT_OF);
         
-        // Create individual scatter plots
+        // Create individual plots
         int cols = (genomeIntervals.length < plotParameters.getPlotsPerRow()) ?
                 genomeIntervals.length : plotParameters.getPlotsPerRow();
         int totalPadding = (cols - 1) * this.padding;
@@ -165,8 +161,8 @@ public class FrequencyGraphGenerator {
         PlotPanel row = panel.newChildPlotPanel();
         for (int i = 0; i < genomeIntervals.length; i++) {
         	int width = (int)((double)genomeIntervals[i].span() * widthScale);
-            PlotPanel scatterPlotPanel = this.createScatterPlot(dataSet, genomeIntervals[i], 
-                    width, plotParameters, panel, minY, maxY);
+            PlotPanel freqPlotPanel = this.createFrequencyPlot(dataSet, genomeIntervals[i], 
+                    width, plotParameters, panel, 0, 100);
             if (i % cols == 0 && i > 0) {
                 PlotPanel axisPanel = panel.newChildPlotPanel();
                 this.addYAxis(axisPanel, yAxis, quantitationType);
@@ -176,7 +172,7 @@ public class FrequencyGraphGenerator {
                 row = panel.newChildPlotPanel();
             }
             boolean referencePlot = (i % cols == 0)? true : false;
-            row.add(scatterPlotPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED, referencePlot);
+            row.add(freqPlotPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.BOTTOM_JUSTIFIED, referencePlot);
         }
         if (genomeIntervals.length % cols >= 0) {
             PlotPanel axisPanel = panel.newChildPlotPanel();
@@ -185,10 +181,6 @@ public class FrequencyGraphGenerator {
             		VerticalAlignment.BOTTOM_JUSTIFIED);
             panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
         }
-        
-        // Add legend
-        Legend legend = new Legend(dataSet, plotParameters);
-        panel.add(legend, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
     }
     
     
@@ -220,7 +212,7 @@ public class FrequencyGraphGenerator {
     }
     
     
-    private PlotPanel createScatterPlot(DataSet dataSet, GenomeInterval genomeInterval,
+    private PlotPanel createFrequencyPlot(DataSet dataSet, GenomeInterval genomeInterval,
             int width, PlotParameters plotParameters, PlotPanel parentPanel,
 			double minY, double maxY) {
     	PlotPanel panel = parentPanel.newChildPlotPanel();
@@ -232,7 +224,9 @@ public class FrequencyGraphGenerator {
     	panel.add(background, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
     	
     	// Add plot
-    	FrequencyPlot scatterPlot = new FrequencyPlot(width, plotParameters.getHeight(), genomeInterval.span());
+    	FrequencyPlot scatterPlot = new FrequencyPlot(width, 
+    			plotParameters.getHeight(), genomeInterval.startBp(),
+    			genomeInterval.endBp(), 0, 100);
     	for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();)
     		it.next().graph(scatterPlot, genomeInterval.start, 
     				genomeInterval.end, plotParameters);
@@ -296,7 +290,8 @@ public class FrequencyGraphGenerator {
     		if (chrom == null) {
     			
     			// ------------------------->
-    			// TODO: Remove this code.  It was put in as a quick fix for a demo
+    			// This property should only be null during unit testing.
+    			// It should be set using dependency injection under normal operation.
     			if (this.persistentDomainObjectMgr == null)
     				chrom = new Chromosome(GenomeAssembly.DUMMY_GENOME_ASSEMBLY, (short)dto.getChromosome());
     			// <------------------------

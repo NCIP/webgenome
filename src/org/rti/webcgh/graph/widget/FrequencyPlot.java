@@ -343,7 +343,7 @@ public class FrequencyPlot implements DataPlotter {
     
     
     private int xPixel(double bp) {
-        return (int)(this.xScale * bp);
+        return (int)(this.xScale * (bp - (double)this.startBp));
     }
     
     
