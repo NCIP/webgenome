@@ -58,6 +58,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -69,6 +70,8 @@ import org.rti.webcgh.graph.DataPoint;
  * 
  */
 public class FrequencyPlot implements DataPlotter {
+	
+	private static final int DEFAULT_BAR_WIDTH = 10;
     
     
     // ======================================
@@ -76,33 +79,23 @@ public class FrequencyPlot implements DataPlotter {
     // ======================================
     
     private final int width;
-    private final double scale;
+    private final double xScale;
+    private final double yScale;
+    private final double minFrequency;
+    private final double maxFrequency;
+    private final long startBp;
+    private final long endBp;
+    
     private final static NumberFormat FORMAT = new DecimalFormat("###.###");
     
     private int maxX = 0;
     private int maxY = 0;
     private int minX = 0;
     private int minY = 0;
-    private List dataPoints = new ArrayList();
+    private List<DataPoint> dataPoints = new ArrayList<DataPoint>();
     
     private final int height;
-    private double minMaskValue = Double.MAX_VALUE;
-    private double maxMaskValue = Double.MIN_VALUE;
-    
-    /**
-     * @param maxMaskValue The maxMaskValue to set.
-     */
-    public void setMaxMaskValue(double maxMaskValue) {
-        this.maxMaskValue = maxMaskValue;
-    }
-    
-    
-    /**
-     * @param minMaskValue The minMaskValue to set.
-     */
-    public void setMinMaskValue(double minMaskValue) {
-        this.minMaskValue = minMaskValue;
-    }
+    private boolean sorted = false;
     
     
     /**
@@ -123,11 +116,34 @@ public class FrequencyPlot implements DataPlotter {
      * @param minSaturation Minimum saturation value
      * @param maxSaturation Maximum saturation value
      */
-    public FrequencyPlot(int width, int height, long bp) {
+    public FrequencyPlot(int width, int height, long startBp, long endBp, double minFrequency, 
+    		double maxFrequency) {
+    	
+    	// Check arguments
+    	if (width < 1)
+    		throw new IllegalArgumentException("Width of frequency plot must be a positive integer");
+    	if (height < 1)
+    		throw new IllegalArgumentException("Height of frequency plot must be a positive integer");
+    	if (startBp < (long)0)
+    		throw new IllegalArgumentException("Starting base pair in frequency plot must be a positive integer or zero");
+    	if (endBp < (long)0)
+    		throw new IllegalArgumentException("End base pair in frequency plot must be a positive integer or zero");
+    	if (startBp >= endBp)
+    		throw new IllegalArgumentException("Starting base pair in frequency plot must be smaller than end base pair");
+    	if (minFrequency >= maxFrequency)
+    		throw new IllegalArgumentException("Minimum frequency plot value must be smaller than maximum value");
+    	
+    	// Initialize properties
         this.width = width;
         this.height = height;
-        this.scale = (double)width / (double)bp;
-        this.setExtremes();
+        this.maxX = this.width;
+        this.maxY = this.height;
+        this.minFrequency = minFrequency;
+        this.maxFrequency = maxFrequency;
+        this.startBp = startBp;
+        this.endBp = endBp;
+        this.xScale = (double)width / (double)(endBp - startBp);
+        this.yScale = (double)height / (maxFrequency - minFrequency);
     }
     
     
@@ -144,9 +160,7 @@ public class FrequencyPlot implements DataPlotter {
      */
     public void graphPoint(DataPoint dataPoint, Object pointGroupKey) {
         this.dataPoints.add(dataPoint);
-        int max = this.pixel(dataPoint.getValue1());
-    	if (max > this.maxX)
-    		this.maxX = max;
+        this.sorted = false;
     }
     
     
@@ -176,7 +190,11 @@ public class FrequencyPlot implements DataPlotter {
      * @return T/F
      */
     public boolean inPlotRange(DataPoint dataPoint) {
-        return true;
+        return
+        	dataPoint.getValue1() >= (double)this.startBp &&
+        	dataPoint.getValue1() <= (double)this.endBp &&
+        	dataPoint.getValue2() >= this.minFrequency &&
+        	dataPoint.getValue2() <= this.maxFrequency;
     }
     
     
@@ -189,46 +207,52 @@ public class FrequencyPlot implements DataPlotter {
      * @param canvas A canvas
      */
     public void paint(DrawingCanvas canvas) {
-    	List sorted = new ArrayList();
-    	int count = 0;
-    	for (Iterator it = this.dataPoints.iterator(); it.hasNext();) {
-    		DataPoint dp = (DataPoint)it.next();
-    		sorted.add(new DataPointIndex(dp, count++));
-    	}
-    	Collections.sort(sorted);
-    	for (Iterator it = sorted.iterator(); it.hasNext();) {
-    		DataPointIndex dpi = (DataPointIndex)it.next();
-            DataPoint centerDp = dpi.dataPoint;
+    	
+    	// Boundary case: no data points
+    	if (this.dataPoints.size() < 1)
+    		return;
+    	
+    	// Sort data points
+    	if (! this.sorted)
+    		Collections.sort(this.dataPoints, new DataPointComparator());
+    	
+    	// Iterate over data points and draw
+    	for (int i = 0; i < this.dataPoints.size(); i++) {
+    		
+    		// Determine start and end base pairs for bar
+            DataPoint centerDp = this.dataPoints.get(i);
             DataPoint startDp = null;
             DataPoint endDp = null;
-            if (! this.masked(centerDp)) {
-            	if (dpi.index > 0)
-            		startDp = (DataPoint)this.dataPoints.get(dpi.index - 1);
-            	else
-            		startDp = centerDp;
-            	if (dpi.index < this.dataPoints.size() - 1)
-            		endDp = (DataPoint)this.dataPoints.get(dpi.index + 1);
-            	else
-            		endDp = centerDp;
-            	long startBp = ((long)(startDp.getValue1() + centerDp.getValue1())) / 2;
-            	long endBp = ((long)(centerDp.getValue1() + endDp.getValue1())) / 2;
-            	int p = this.pixel((double)startBp);
-            	int q = this.pixel((double)endBp);
-            	double value = centerDp.getValue2();
-	            int x = 0, y = 0, width = 0, height = 0;
-                width = q - p;
-                x = p;
-                if (height >= 0) {
-	                height = (int)(value * (double)this.height);
-	                y = this.height - height;
-		            Rectangle rect = new Rectangle(x, y, width, height, Color.BLACK);
-		            long startMb = startBp / 1000000;
-		            long endMb = endBp / 1000000;
-		            String mouseOver = FORMAT.format(value) + " [" + startMb + "MB-" + endMb + "MB]";
-		            rect.setToolTipText(mouseOver);
-		            canvas.add(rect);
-                }
-            }
+        	if (i > 0)
+        		startDp = this.dataPoints.get(i - 1);
+        	else
+        		startDp = centerDp;
+        	if (i < this.dataPoints.size() - 1)
+        		endDp = this.dataPoints.get(i + 1);
+        	else
+        		endDp = centerDp;
+        	long startBp = ((long)(startDp.getValue1() + centerDp.getValue1())) / 2;
+        	long endBp = ((long)(centerDp.getValue1() + endDp.getValue1())) / 2;
+        	
+        	// Calculate bar position and dimensions
+        	int x = 0, width = 0;
+        	if (startBp == endBp) { // This should only occur if there is only 1 data point
+        		x = this.xPixel((double)startBp) - DEFAULT_BAR_WIDTH / 2;
+        		width = DEFAULT_BAR_WIDTH;
+        	} else {
+        		x = this.xPixel((double)startBp);
+        		width = this.xPixel((double)endBp) - x;
+        	}
+        	int barHeight = (int)(centerDp.getValue2() * this.yScale);
+        	int y = this.height - barHeight;
+        	
+        	// Draw bar
+            Rectangle rect = new Rectangle(x, y, width, barHeight, Color.BLACK);
+            long startMb = startBp / 1000000;
+            long endMb = endBp / 1000000;
+            String mouseOver = FORMAT.format(centerDp.getValue2()) + " [" + startMb + "MB-" + endMb + "MB]";
+            rect.setToolTipText(mouseOver);
+            canvas.add(rect);
         }
     }
     
@@ -313,21 +337,9 @@ public class FrequencyPlot implements DataPlotter {
     //           Private methods
     // =============================================
     
-    private void setExtremes() {
-            this.maxX = this.width;
-            this.maxY = this.height;
-    }
     
-    
-    private int pixel(double bp) {
-        return (int)(this.scale * bp);
-    }
-    
-    
-    private boolean masked(DataPoint dp) {
-        if (Double.isNaN(this.minMaskValue) || Double.isNaN(this.maxMaskValue))
-            return false;
-        return dp.getValue2() >= this.minMaskValue && dp.getValue2() <= this.maxMaskValue;
+    private int xPixel(double bp) {
+        return (int)(this.xScale * bp);
     }
     
     
@@ -336,26 +348,23 @@ public class FrequencyPlot implements DataPlotter {
     // ====================================================
     
     
-    static class DataPointIndex implements Comparable {
+    static class DataPointComparator implements Comparator {
+
+		public int compare(Object o1, Object o2) {
+			if (! (o1 instanceof DataPoint) || ! (o2 instanceof DataPoint))
+				throw new IllegalArgumentException("All objects must be of type DataPoint");
+			int result = 0;
+			DataPoint dp1 = (DataPoint)o1;
+			DataPoint dp2 = (DataPoint)o2;
+			if (dp1.getValue1() < dp2.getValue1())
+				result = -1;
+			else if (dp1.getValue1() == dp2.getValue1())
+				result = 0;
+			else if (dp1.getValue1() > dp2.getValue1())
+				result = 1;
+			return result;
+		}
     	
-    	public DataPoint dataPoint = null;
-    	public int index = -1;
-    	
-    	public DataPointIndex(DataPoint dataPoint, int index) {
-    		this.dataPoint = dataPoint;
-    		this.index = index;
-    	}
-    	
-    	
-    	public int compareTo(Object obj) {
-    		int val = 0;
-    		DataPointIndex dpi = (DataPointIndex)obj;
-    		if (this.dataPoint.getValue2() < dpi.dataPoint.getValue2())
-    			val = -1;
-    		else if (this.dataPoint.getValue2() > dpi.dataPoint.getValue2())
-    			val = 1;
-    		return val;
-    	}
     }
     
     
