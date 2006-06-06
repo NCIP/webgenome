@@ -113,8 +113,12 @@ public class FrequencyPlot implements DataPlotter {
     
     /**
      * Constructor
-     * @param minSaturation Minimum saturation value
-     * @param maxSaturation Maximum saturation value
+     * @param width Width in pixels
+     * @param height Height in pixels
+     * @param startBp Starting point in base pairs of plot
+     * @param endBp Ending point in base pairs of plot
+     * @param minFequency Minimum frequency in plot
+     * @param maxFrequency Maximum frequency in plot
      */
     public FrequencyPlot(int width, int height, long startBp, long endBp, double minFrequency, 
     		double maxFrequency) {
