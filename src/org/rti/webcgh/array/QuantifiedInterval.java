@@ -315,4 +315,24 @@ public class QuantifiedInterval implements Comparable {
 	public boolean properlyContains(QuantifiedInterval qi) {
 		return this.start <= qi.start && this.end >= qi.end;
 	}
+	
+	
+	/**
+	 * Less than function
+	 * @param qi A quantified interval
+	 * @return T/F
+	 */
+	public boolean lessThan(QuantifiedInterval qi) {
+		return this.compareTo(qi) < 0;
+	}
+	
+	
+	/**
+	 * Greater than function
+	 * @param qi A quantified interval
+	 * @return T/F
+	 */
+	public boolean greaterThan(QuantifiedInterval qi) {
+		return this.compareTo(qi) > 0;
+	}
 }
