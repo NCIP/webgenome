@@ -66,6 +66,7 @@ import org.rti.webcgh.array.GenomeAssembly;
 import org.rti.webcgh.array.GenomeInterval;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.array.GenomeLocation;
+import org.rti.webcgh.array.QuantifiedIntervals;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.drawing.DrawingCanvas;
@@ -123,8 +124,11 @@ public class FrequencyGraphGenerator {
         	this.extractGenomeIntervals(plotParameters.getGenomeIntervalDtos(), 
         			dataSet, plotParameters.getXUnits());
         
+        // Generate quantified intervals
+        
         // Draw graph on panel
-        this.createFrequencyPlot(dataSet, genomeIntervals, quantitationType, 
+        QuantifiedIntervals qis = dataSet.amplificationFrequencies(plotParameters.getUpperMaskValue());
+        this.createFrequencyPlot(qis, genomeIntervals, quantitationType, 
         		plotParameters, plotPanel, tile);
         
         // Add background and matte to drawing canvas and associate event listeners with these
@@ -144,12 +148,12 @@ public class FrequencyGraphGenerator {
     }
 	
 	
-    private void createFrequencyPlot(DataSet dataSet, 
+    private void createFrequencyPlot(QuantifiedIntervals intervals,
     		GenomeInterval[] genomeIntervals, QuantitationType quantitationType,
             PlotParameters plotParameters, PlotPanel panel, DrawingCanvas canvas) {
         
         // Create Y-axis
-        Axis yAxis = new Axis(0, 100, plotParameters.getHeight(), 
+        Axis yAxis = new Axis(0, 1.0, plotParameters.getHeight(), 
         		Orientation.VERTICAL, Location.LEFT_OF);
         
         // Create individual plots
@@ -161,7 +165,7 @@ public class FrequencyGraphGenerator {
         PlotPanel row = panel.newChildPlotPanel();
         for (int i = 0; i < genomeIntervals.length; i++) {
         	int width = (int)((double)genomeIntervals[i].span() * widthScale);
-            PlotPanel freqPlotPanel = this.createFrequencyPlot(dataSet, genomeIntervals[i], 
+            PlotPanel freqPlotPanel = this.createFrequencyPlot(intervals, genomeIntervals[i], 
                     width, plotParameters, panel, 0, 100);
             if (i % cols == 0 && i > 0) {
                 PlotPanel axisPanel = panel.newChildPlotPanel();
@@ -212,7 +216,7 @@ public class FrequencyGraphGenerator {
     }
     
     
-    private PlotPanel createFrequencyPlot(DataSet dataSet, GenomeInterval genomeInterval,
+    private PlotPanel createFrequencyPlot(QuantifiedIntervals intervals, GenomeInterval genomeInterval,
             int width, PlotParameters plotParameters, PlotPanel parentPanel,
 			double minY, double maxY) {
     	PlotPanel panel = parentPanel.newChildPlotPanel();
@@ -227,9 +231,7 @@ public class FrequencyGraphGenerator {
     	FrequencyPlot scatterPlot = new FrequencyPlot(width, 
     			plotParameters.getHeight(), genomeInterval.startBp(),
     			genomeInterval.endBp(), 0, 100);
-    	for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();)
-    		it.next().graph(scatterPlot, genomeInterval.start, 
-    				genomeInterval.end, plotParameters);
+    	scatterPlot.graphQuantifiedInterval(intervals);
     	panel.add(scatterPlot, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
     	
     	// Add x-axis

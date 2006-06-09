@@ -60,6 +60,8 @@ import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.array.GenomeLocationFactory;
+import org.rti.webcgh.array.QuantifiedInterval;
+import org.rti.webcgh.array.QuantifiedIntervals;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.PlotGenerator;
@@ -71,59 +73,54 @@ import junit.framework.TestCase;
 public class FrequencyPlotTester extends TestCase {
 	
 	
-//	public void testEmpty() throws Exception {
-//		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-//		panel.setDrawBorder(true);
-//		Experiment exp = new Experiment();
-//		exp.setName("Experiment");
-//		BioAssay ba1 = new BioAssay("Bioassay 1");
-//		exp.add(ba1);
-//		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 5000, 0, 100);
-//		GenomeLocationFactory fact = new GenomeLocationFactory();
-//		GenomeLocation start = fact.newGenomeLocation((short)1, (long)0);
-//		GenomeLocation end = fact.newGenomeLocation((short)1, (long)5000);
-//		ba1.graph(plot, start, end, Color.BLACK);
-//		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-//		panel.toSvgFile("freq-plot-empty.svg");
-//	}
+	public void testEmpty() throws Exception {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
+		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 5000, 0, 1.0);
+		QuantifiedIntervals qis = new QuantifiedIntervals();
+		plot.graphQuantifiedInterval(qis);
+		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("freq-plot-empty.svg");
+	}
 	
 	
-//	public void testOneDatum() throws Exception {
-//		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
-//		panel.setDrawBorder(true);
-//		Experiment exp = new Experiment();
-//		exp.setName("Experiment");
-//		BioAssay ba1 = new BioAssay("Bioassay 1");
-//		exp.add(ba1);
-//		ArrayDatumFactory fac = new ArrayDatumFactory();
-//		ba1.add(fac.newArrayDatum("r1", (short)1, (long)3000, (float)50));
-//		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 4000, 0, 100);
-//		GenomeLocationFactory fact = new GenomeLocationFactory();
-//		GenomeLocation start = fact.newGenomeLocation((short)1, (long)0);
-//		GenomeLocation end = fact.newGenomeLocation((short)1, (long)4000);
-//		ba1.graph(plot, start, end, Color.BLACK);
-//		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
-//		panel.toSvgFile("freq-plot-one-datum.svg");
-//	}
+	public void testOneDatum() throws Exception {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
+		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 5000, 0, 1.0);
+		QuantifiedIntervals qis = new QuantifiedIntervals();
+		qis.add(new QuantifiedInterval((long)2000, (long)2000, 0.4));
+		plot.graphQuantifiedInterval(qis);
+		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("freq-plot-one-datum.svg");
+	}
 	
 	
 	public void testTwoDatum() throws Exception {
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
 		panel.setDrawBorder(true);
-		Experiment exp = new Experiment();
-		exp.setName("Experiment");
-		BioAssay ba1 = new BioAssay("Bioassay 1");
-		exp.add(ba1);
-		ArrayDatumFactory fac = new ArrayDatumFactory();
-		ba1.add(fac.newArrayDatum("r1", (short)1, (long)2000, (float)30));
-		ba1.add(fac.newArrayDatum("r2", (short)1, (long)3000, (float)50));
-		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 4000, 0, 100);
-		GenomeLocationFactory fact = new GenomeLocationFactory();
-		GenomeLocation start = fact.newGenomeLocation((short)1, (long)0);
-		GenomeLocation end = fact.newGenomeLocation((short)1, (long)4000);
-		ba1.graph(plot, start, end, Color.BLACK);
+		FrequencyPlot plot = new FrequencyPlot(400, 400, 0, 5000, 0, 1.0);
+		QuantifiedIntervals qis = new QuantifiedIntervals();
+		qis.add(new QuantifiedInterval((long)2000, (long)2500, 0.4));
+		qis.add(new QuantifiedInterval((long)3000, (long)4000, 0.4));
+		plot.graphQuantifiedInterval(qis);
 		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
 		panel.toSvgFile("freq-plot-two-datum.svg");
+	}
+	
+	
+	public void testOutOfRanges() throws Exception {
+		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();
+		panel.setDrawBorder(true);
+		FrequencyPlot plot = new FrequencyPlot(400, 400, 1000, 5000, 0, 1.0);
+		QuantifiedIntervals qis = new QuantifiedIntervals();
+		qis.add(new QuantifiedInterval((long)100, (long)900, 0.4));
+		qis.add(new QuantifiedInterval((long)950, (long)2000, 0.4));
+		qis.add(new QuantifiedInterval((long)2500, (long)6000, 0.5));
+		qis.add(new QuantifiedInterval((long)7000, (long)8000, 0.4));
+		plot.graphQuantifiedInterval(qis);
+		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.CENTERED);
+		panel.toSvgFile("freq-plot-out-of-range.svg");
 	}
 
 }

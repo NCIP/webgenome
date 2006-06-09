@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/DataAssembler.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-26 17:27:11 $
+$Revision: 1.5 $
+$Date: 2006-06-09 20:01:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -78,19 +78,12 @@ import org.rti.webcgh.service.WebcghDatabaseException;
  * computations as requried.
  */
 public class DataAssembler {
-	
-	private HttpServletRequest request = null;
-	
+		
 	
 	/**
 	 * Constructor
-	 * @param request Servlet request object
-	 * @throws WebcghSystemException
 	 */
-	public DataAssembler(HttpServletRequest request)
-		throws WebcghSystemException {
-		this.request = request;
-	}
+	public DataAssembler() {}
 
 
 	/**

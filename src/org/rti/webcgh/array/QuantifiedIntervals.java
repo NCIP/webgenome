@@ -54,6 +54,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.array;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -122,6 +123,8 @@ public class QuantifiedIntervals {
 					// Intervals equal
 					if (i1.equals(i2)) {
 						i1.add(i2);
+						i1 = (it1.hasNext())? it1.next() : null;
+						i2 = (it2.hasNext())? it2.next() : null;
 					}
 					
 					// Intervals not equal but overlapping
@@ -178,6 +181,24 @@ public class QuantifiedIntervals {
 				break;
 			}
 		}
+	}
+	
+	
+	/**
+	 * Merge group of interval sets
+	 * @param intervals Group of interval sets
+	 * @return Quantified intervals
+	 */
+	public static QuantifiedIntervals merge(Collection<QuantifiedIntervals> intervals) {
+		if (intervals == null)
+			return null;
+		Iterator<QuantifiedIntervals> it = intervals.iterator();
+		QuantifiedIntervals template = it.next();
+		while (it.hasNext()) {
+			QuantifiedIntervals source = it.next();
+			template.merge(source);
+		}
+		return template;
 	}
 	
 	

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/UploadExperimentDispatchAction.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-26 17:15:58 $
+$Revision: 1.5 $
+$Date: 2006-06-09 20:01:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -240,7 +240,6 @@ public class UploadExperimentDispatchAction extends CommonLookupDispatchAction {
         experiments[0] = exp;
         
         // add to shopping car
-        shoppingCart.add(experiments);
         Collection experimentsCol = CollectionUtils.arrayToArrayList(experiments);                
         request.setAttribute(RequestParamsEnum.experiments.toString(), experimentsCol);
         

@@ -80,9 +80,12 @@ public class FrequencyGraphGeneratorTester extends TestCase {
 		BioAssay ba1 = new BioAssay("Bioassay 1");
 		exp.add(ba1);
 		ArrayDatumFactory fac = new ArrayDatumFactory();
-		ba1.add(fac.newArrayDatum("r1", (short)1, (long)2000, (float)30));
-		ba1.add(fac.newArrayDatum("r2", (short)1, (long)3000, (float)50));
+		ba1.add(fac.newArrayDatum("r1", (short)1, (long)2000, (float)0.3));
+		ba1.add(fac.newArrayDatum("r2", (short)1, (long)2500, (float)0.5));
+		ba1.add(fac.newArrayDatum("r2", (short)1, (long)3000, (float)0.4));
+		ba1.add(fac.newArrayDatum("r2", (short)1, (long)4000, (float)0.3));
 		PlotParameters params = new PlotParameters();
+		params.setUpperMaskValue(0.35);
 		params.setGenomeIntervalDtos(new GenomeIntervalDto[]{
 				new GenomeIntervalDto(1, (long)0, (long) 5000)});
 		SvgTestPanel panel = SvgTestPanel.newSvgTestPanel();

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlterationSet.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.3 $
+$Date: 2006-06-09 20:01:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import org.rti.webcgh.util.CollectionUtils;
  */
 public class ChromosomalAlterationSet {
 	
-	private List alterations = new ArrayList();
+	private List<ChromosomalAlteration> alterations = new ArrayList<ChromosomalAlteration>();
 	
 	
 	// =========================
@@ -140,6 +140,37 @@ public class ChromosomalAlterationSet {
 			}
 		} else
 			this.alterations = caSet.alterations;
+	}
+	
+	
+	/**
+	 * Convert alteration set into quantified intervals
+	 * @param numSamples Number of samples
+	 * @return Quantified intervals
+	 */
+	public QuantifiedIntervals getQuantifiedIntervals(int numSamples) {
+		double quantity = 1.0 / (double)numSamples;
+		QuantifiedIntervals qi = new QuantifiedIntervals();
+		if (this.alterations != null) {
+			for (int i = 0; i < this.alterations.size(); i++) {
+				ChromosomalAlteration prevAlt = null, thisAlt = null, nextAlt = null;
+				thisAlt = this.alterations.get(i);
+				if (i > 0) {
+					prevAlt = this.alterations.get(i - 1);
+					if (! prevAlt.sameChromosome(thisAlt))
+						prevAlt = null;
+				}
+				if (i < this.alterations.size() - 1) {
+					nextAlt = this.alterations.get(i + 1);
+					if (! nextAlt.sameChromosome(thisAlt))
+						nextAlt = null;
+				}
+				long p = (prevAlt == null)? thisAlt.startBp() : (thisAlt.startBp() + prevAlt.endBp()) / (long)2;
+				long q = (nextAlt == null)? thisAlt.endBp() : (thisAlt.endBp() + nextAlt.startBp()) / (long)2;
+				qi.add(new QuantifiedInterval(p, q, quantity));
+			}
+		}
+		return qi;
 	}
 	
 	

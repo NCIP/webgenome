@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotSetupAction.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-26 17:26:52 $
+$Revision: 1.5 $
+$Date: 2006-06-09 20:01:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -164,7 +164,7 @@ public class PlotSetupAction extends Action {
 		// TODO: probably do not need to actually retrieve experiments
 		
 		// Recover experiments from cart
-		DataAssembler assembler = new DataAssembler(request);
+		DataAssembler assembler = new DataAssembler();
 		AnalyticPipeline anPipeline = WebUtils.getPipeline(pform.getPipelineName(),
 		        this.persistentDomainObjectMgr, profile);
 		Experiment[] experiments = cart.getExperiments();

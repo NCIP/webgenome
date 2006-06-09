@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/DataSet.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.4 $
+$Date: 2006-06-09 20:01:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.array;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class DataSet {
 	//     Attributes
 	// ===============================
 	
-	private List experiments = new ArrayList();
+	private List<Experiment> experiments = new ArrayList<Experiment>();
 	
 	
 	// ==============================
@@ -218,6 +219,32 @@ public class DataSet {
     		}
     	} else
     		this.experiments = dataSet.experiments;
+    }
+    
+    
+    public QuantifiedIntervals amplificationFrequencies(double threshold) {
+    	Collection<QuantifiedIntervals> qis = new ArrayList<QuantifiedIntervals>();
+    	Collection<BioAssay> bioassays = new ArrayList<BioAssay>();
+    	for (Experiment exp : this.experiments) {
+    		for (BioAssayIterator it = exp.bioAssayIterator(); it.hasNext();)
+    			bioassays.add(it.next());
+    	}
+    	for (BioAssay bioassay : bioassays)
+    		qis.add(bioassay.amplifiedRegions(threshold).getQuantifiedIntervals(bioassays.size()));
+    	return QuantifiedIntervals.merge(qis);
+    }
+    
+    
+    public QuantifiedIntervals deletionFrequencies(double threshold) {
+    	Collection<QuantifiedIntervals> qis = new ArrayList<QuantifiedIntervals>();
+    	Collection<BioAssay> bioassays = new ArrayList<BioAssay>();
+    	for (Experiment exp : this.experiments) {
+    		for (BioAssayIterator it = exp.bioAssayIterator(); it.hasNext();)
+    			bioassays.add(it.next());
+    	}
+    	for (BioAssay bioassay : bioassays)
+    		qis.add(bioassay.deletedRegions(threshold).getQuantifiedIntervals(bioassays.size()));
+    	return QuantifiedIntervals.merge(qis);
     }
 	
 	

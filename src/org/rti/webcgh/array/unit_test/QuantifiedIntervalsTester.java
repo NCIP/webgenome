@@ -53,6 +53,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.array.unit_test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import junit.framework.TestCase;
 
 import org.rti.webcgh.array.QuantifiedInterval;
@@ -451,4 +454,128 @@ public class QuantifiedIntervalsTester extends TestCase {
 	}
 	
 	
+	public void testStaticMergeAmongEquals() {
+		QuantifiedIntervals qi1 = new QuantifiedIntervals();
+		QuantifiedIntervals qi2 = new QuantifiedIntervals();
+		QuantifiedIntervals qi3 = new QuantifiedIntervals();
+		Collection<QuantifiedIntervals> intervals = new ArrayList<QuantifiedIntervals>();
+		intervals.add(qi1);
+		intervals.add(qi2);
+		intervals.add(qi3);
+		qi1.add(new QuantifiedInterval((long)5, (long)10, 1.0));
+		qi1.add(new QuantifiedInterval((long)20, (long)30, 1.0));
+		qi2.add(new QuantifiedInterval((long)5, (long)10, 1.0));
+		qi2.add(new QuantifiedInterval((long)20, (long)30, 1.0));
+		qi3.add(new QuantifiedInterval((long)5, (long)10, 1.0));
+		qi3.add(new QuantifiedInterval((long)20, (long)30, 1.0));
+		QuantifiedIntervals qi4 = QuantifiedIntervals.merge(intervals);
+		
+		assertEquals(2, qi4.getIntervals().size());
+		
+		// First interval
+		QuantifiedInterval i = qi4.getIntervals().get(0);
+		assertEquals(i.getStart(), 5);
+		assertEquals(i.getEnd(), 10);
+		assertEquals(i.getValue(), 3.0);
+		
+		// Second interval
+		i = qi4.getIntervals().get(1);
+		assertEquals(i.getStart(), 20);
+		assertEquals(i.getEnd(), 30);
+		assertEquals(i.getValue(), 3.0);
+	}
+	
+	
+	public void testStaticMergeAmongOverlapping() {
+		QuantifiedIntervals qi1 = new QuantifiedIntervals();
+		QuantifiedIntervals qi2 = new QuantifiedIntervals();
+		QuantifiedIntervals qi3 = new QuantifiedIntervals();
+		Collection<QuantifiedIntervals> intervals = new ArrayList<QuantifiedIntervals>();
+		intervals.add(qi1);
+		intervals.add(qi2);
+		intervals.add(qi3);
+		qi1.add(new QuantifiedInterval((long)30, (long)40, 1.0));
+		qi2.add(new QuantifiedInterval((long)20, (long)50, 1.0));
+		qi3.add(new QuantifiedInterval((long)10, (long)60, 1.0));
+		QuantifiedIntervals qi4 = QuantifiedIntervals.merge(intervals);
+		
+		assertEquals(5, qi4.getIntervals().size());
+		
+		// First interval
+		QuantifiedInterval i = qi4.getIntervals().get(0);
+		assertEquals(i.getStart(), 10);
+		assertEquals(i.getEnd(), 20);
+		assertEquals(i.getValue(), 1.0);
+		
+		// Second interval
+		i = qi4.getIntervals().get(1);
+		assertEquals(i.getStart(), 20);
+		assertEquals(i.getEnd(), 30);
+		assertEquals(i.getValue(), 2.0);
+		
+		// Third interval
+		i = qi4.getIntervals().get(2);
+		assertEquals(i.getStart(), 30);
+		assertEquals(i.getEnd(), 40);
+		assertEquals(i.getValue(), 3.0);
+		
+		// Fourth interval
+		i = qi4.getIntervals().get(3);
+		assertEquals(i.getStart(), 40);
+		assertEquals(i.getEnd(), 50);
+		assertEquals(i.getValue(), 2.0);
+		
+		// Fifth interval
+		i = qi4.getIntervals().get(4);
+		assertEquals(i.getStart(), 50);
+		assertEquals(i.getEnd(), 60);
+		assertEquals(i.getValue(), 1.0);
+	}
+	
+	
+	public void testStaticMergeAmongOverlappingReversed() {
+		QuantifiedIntervals qi1 = new QuantifiedIntervals();
+		QuantifiedIntervals qi2 = new QuantifiedIntervals();
+		QuantifiedIntervals qi3 = new QuantifiedIntervals();
+		Collection<QuantifiedIntervals> intervals = new ArrayList<QuantifiedIntervals>();
+		intervals.add(qi1);
+		intervals.add(qi2);
+		intervals.add(qi3);
+		qi3.add(new QuantifiedInterval((long)30, (long)40, 1.0));
+		qi2.add(new QuantifiedInterval((long)20, (long)50, 1.0));
+		qi1.add(new QuantifiedInterval((long)10, (long)60, 1.0));
+		QuantifiedIntervals qi4 = QuantifiedIntervals.merge(intervals);
+		
+		assertEquals(5, qi4.getIntervals().size());
+		
+		// First interval
+		QuantifiedInterval i = qi4.getIntervals().get(0);
+		assertEquals(i.getStart(), 10);
+		assertEquals(i.getEnd(), 20);
+		assertEquals(i.getValue(), 1.0);
+		
+		// Second interval
+		i = qi4.getIntervals().get(1);
+		assertEquals(i.getStart(), 20);
+		assertEquals(i.getEnd(), 30);
+		assertEquals(i.getValue(), 2.0);
+		
+		// Third interval
+		i = qi4.getIntervals().get(2);
+		assertEquals(i.getStart(), 30);
+		assertEquals(i.getEnd(), 40);
+		assertEquals(i.getValue(), 3.0);
+		
+		// Fourth interval
+		i = qi4.getIntervals().get(3);
+		assertEquals(i.getStart(), 40);
+		assertEquals(i.getEnd(), 50);
+		assertEquals(i.getValue(), 2.0);
+		
+		// Fifth interval
+		i = qi4.getIntervals().get(4);
+		assertEquals(i.getStart(), 50);
+		assertEquals(i.getEnd(), 60);
+		assertEquals(i.getValue(), 1.0);
+	}
 }

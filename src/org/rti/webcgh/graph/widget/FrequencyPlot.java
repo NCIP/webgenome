@@ -57,19 +57,18 @@ import java.awt.Point;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
+import org.rti.webcgh.array.QuantifiedInterval;
+import org.rti.webcgh.array.QuantifiedIntervals;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.graph.DataPoint;
+
 
 /**
  * 
  */
-public class FrequencyPlot implements DataPlotter {
+public class FrequencyPlot implements PlotElement {
 	
 	private static final int DEFAULT_BAR_WIDTH = 10;
     
@@ -81,8 +80,6 @@ public class FrequencyPlot implements DataPlotter {
     private final int width;
     private final double xScale;
     private final double yScale;
-    private final double minFrequency;
-    private final double maxFrequency;
     private final long startBp;
     private final long endBp;
     
@@ -92,10 +89,9 @@ public class FrequencyPlot implements DataPlotter {
     private int maxY = 0;
     private int minX = 0;
     private int minY = 0;
-    private List<DataPoint> dataPoints = new ArrayList<DataPoint>();
+    private List<QuantifiedIntervals> quantifiedIntervals = new ArrayList<QuantifiedIntervals>();
     
     private final int height;
-    private boolean sorted = false;
     
     
     /**
@@ -142,8 +138,6 @@ public class FrequencyPlot implements DataPlotter {
         this.height = height;
         this.maxX = this.width;
         this.maxY = this.height;
-        this.minFrequency = minFrequency;
-        this.maxFrequency = maxFrequency;
         this.startBp = startBp;
         this.endBp = endBp;
         this.xScale = (double)width / (double)(endBp - startBp);
@@ -157,50 +151,13 @@ public class FrequencyPlot implements DataPlotter {
     
     
     /**
-     * Graph a data point
-     * @param dataPoint A data point
-     * @param pointGroupKey Key identifying a group of data points to which
-     * given data point should be associated
+     * Graph quantified intervals
+     * @param qi Quantified intervals
      */
-    public void graphPoint(DataPoint dataPoint, Object pointGroupKey) {
-        this.dataPoints.add(dataPoint);
-        this.sorted = false;
+    public void graphQuantifiedInterval(QuantifiedIntervals qi) {
+        this.quantifiedIntervals.add(qi);
     }
-    
-    
-    /**
-     * Graph a line between given data points
-     * @param dataPoints Data points
-     * @param key Key identifying group of lines specified by given data points
-     */
-    public void graphLines(DataPoint[] dataPoints, Object key) {
         
-    }
-    
-    
-    /**
-     * Set color of group of pints
-     * @param pointGroupKey Key identifying group of points
-     * @param color Color
-     */
-    public void setGroupColor(Object pointGroupKey, Color color) {
-        
-    }
-    
-    
-    /**
-     * Is data point in plot?
-     * @param dataPoint A data point
-     * @return T/F
-     */
-    public boolean inPlotRange(DataPoint dataPoint) {
-        return
-        	dataPoint.getValue1() >= (double)this.startBp &&
-        	dataPoint.getValue1() <= (double)this.endBp &&
-        	dataPoint.getValue2() >= this.minFrequency &&
-        	dataPoint.getValue2() <= this.maxFrequency;
-    }
-    
     
     // =============================================
     //         PlotElement interface
@@ -212,52 +169,52 @@ public class FrequencyPlot implements DataPlotter {
      */
     public void paint(DrawingCanvas canvas) {
     	
-    	// Boundary case: no data points
-    	if (this.dataPoints.size() < 1)
-    		return;
-    	
-    	// Sort data points
-    	if (! this.sorted)
-    		Collections.sort(this.dataPoints, new DataPointComparator());
-    	
     	// Iterate over data points and draw
-    	for (int i = 0; i < this.dataPoints.size(); i++) {
+    	for (QuantifiedIntervals qis : this.quantifiedIntervals) {
     		
-    		// Determine start and end base pairs for bar
-            DataPoint centerDp = this.dataPoints.get(i);
-            DataPoint startDp = null;
-            DataPoint endDp = null;
-        	if (i > 0)
-        		startDp = this.dataPoints.get(i - 1);
-        	else
-        		startDp = centerDp;
-        	if (i < this.dataPoints.size() - 1)
-        		endDp = this.dataPoints.get(i + 1);
-        	else
-        		endDp = centerDp;
-        	long startBp = ((long)(startDp.getValue1() + centerDp.getValue1())) / 2;
-        	long endBp = ((long)(centerDp.getValue1() + endDp.getValue1())) / 2;
-        	
-        	// Calculate bar position and dimensions
-        	int x = 0, width = 0;
-        	if (startBp == endBp) { // This should only occur if there is only 1 data point
-        		x = this.xPixel((double)startBp) - DEFAULT_BAR_WIDTH / 2;
-        		width = DEFAULT_BAR_WIDTH;
-        	} else {
-        		x = this.xPixel((double)startBp);
-        		width = this.xPixel((double)endBp) - x;
-        	}
-        	int barHeight = (int)(centerDp.getValue2() * this.yScale);
-        	int y = this.height - barHeight;
-        	
-        	// Draw bar
-            Rectangle rect = new Rectangle(x, y, width, barHeight, Color.BLACK);
-            long startMb = startBp / 1000000;
-            long endMb = endBp / 1000000;
-            String mouseOver = FORMAT.format(centerDp.getValue2()) + " [" + startMb + "MB-" + endMb + "MB]";
-            rect.setToolTipText(mouseOver);
-            canvas.add(rect);
+    		for (QuantifiedInterval qi : qis.getIntervals()) {
+
+    			long startBp = qi.getStart();
+    			long endBp = qi.getEnd();
+    			if (this.inRange(startBp, endBp)) {
+    				
+    				if (startBp < this.startBp)
+    					startBp = this.startBp;
+    				if (endBp > this.endBp)
+    					endBp = this.endBp;
+    			
+		        	// Calculate bar position and dimensions
+		        	int x = 0, width = 0;
+		        	if (startBp == endBp) { // This should only occur if there is only 1 data point
+		        		x = this.xPixel((double)startBp) - DEFAULT_BAR_WIDTH / 2;
+		        		width = DEFAULT_BAR_WIDTH;
+		        	} else {
+		        		x = this.xPixel((double)startBp);
+		        		width = this.xPixel((double)endBp) - x;
+		        	}
+		        	int barHeight = (int)(qi.getValue() * this.yScale);
+		        	int y = this.height - barHeight;
+		        	
+		        	// Draw bar
+		            Rectangle rect = new Rectangle(x, y, width, barHeight, Color.BLACK);
+		            long startMb = startBp / 1000000;
+		            long endMb = endBp / 1000000;
+		            String mouseOver = FORMAT.format(qi.getValue()) + " [" + startMb + "MB-" + endMb + "MB]";
+		            rect.setToolTipText(mouseOver);
+		            canvas.add(rect);
+    			}
+    		}
         }
+    }
+    
+    
+    private boolean inRange(long start, long end) {
+    	return this.inRange(start) || this.inRange(end);
+    }
+    
+    
+    private boolean inRange(long p) {
+    	return p >= this.startBp && p <= this.endBp;
     }
     
     
@@ -345,33 +302,4 @@ public class FrequencyPlot implements DataPlotter {
     private int xPixel(double bp) {
         return (int)(this.xScale * (bp - (double)this.startBp));
     }
-    
-    
-    // ====================================================
-    //       Inner classes
-    // ====================================================
-    
-    
-    static class DataPointComparator implements Comparator {
-
-		public int compare(Object o1, Object o2) {
-			if (! (o1 instanceof DataPoint) || ! (o2 instanceof DataPoint))
-				throw new IllegalArgumentException("All objects must be of type DataPoint");
-			int result = 0;
-			DataPoint dp1 = (DataPoint)o1;
-			DataPoint dp2 = (DataPoint)o2;
-			if (dp1.getValue1() < dp2.getValue1())
-				result = -1;
-			else if (dp1.getValue1() == dp2.getValue1())
-				result = 0;
-			else if (dp1.getValue1() > dp2.getValue1())
-				result = 1;
-			return result;
-		}
-    	
-    }
-    
-    
-    
-
 }

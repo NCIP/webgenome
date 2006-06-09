@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ChromosomalAlteration.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-26 17:22:07 $
+$Revision: 1.7 $
+$Date: 2006-06-09 20:01:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -118,6 +118,16 @@ public class ChromosomalAlteration {
 	 */
 	public boolean onChromosome(Chromosome chromosome) {
 		return this.genomeInterval.chromosome().equals(chromosome);
+	}
+	
+	
+	/**
+	 * Are this and given chromosomal alteration on the same chromosome?
+	 * @param alt Chromosomal alteration
+	 * @return T/F
+	 */
+	public boolean sameChromosome(ChromosomalAlteration alt) {
+		return this.genomeInterval.chromosome().equals(alt.genomeInterval.chromosome());
 	}
 	
 	
