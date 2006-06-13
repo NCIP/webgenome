@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdLohDataStream.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-24 14:14:22 $
+$Revision: 1.6 $
+$Date: 2006-06-13 13:48:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,9 +76,7 @@ public class SmdLohDataStream implements SmdDataStream {
                                       QuantitationType qt,
                                       GenomeAssembly genomeAssembly ) throws SmdFormatException {
 
-        // TODO
-        
-        return null ;
+        return loadExperiment ( ",", in, qt, genomeAssembly ) ;
     }
     
     /**
@@ -101,5 +99,48 @@ public class SmdLohDataStream implements SmdDataStream {
     	
     	return exp;
     }
+    
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param delimiter - data delimiter to use when parsing the input stream
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( String delimiter,
+                                      InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly ) throws SmdFormatException {
+        // TODO
+        return null ;
+    }
+
+
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param delimiter - data delimiter to use when parsing the input stream
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @param experimentName - the name of the experiment
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( String delimiter,
+                                      InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly,
+                                      String experimentName) throws SmdFormatException {
+        Experiment exp = loadExperiment ( ",", in, qt, genomeAssembly ) ;
+        exp.setName( experimentName ) ;
+        return exp ;
+    }
+
 
 }
