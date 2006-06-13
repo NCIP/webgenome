@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.5 $
-$Date: 2006-05-26 10:14:41 $
+$Revision: 1.6 $
+$Date: 2006-06-13 13:46:15 $
 
 The Web CGH Software License, Version 1.0
 
@@ -89,7 +89,7 @@ import org.rti.webcgh.service.DomainObjectFactory;
  *
  * <p>Example:</p>
  * <pre>
- * <NAME>	CHROMOSOME		POSITION		<BIOASSAY1>		<BIOASSAY2>  ...  <BIOASSAY n>
+ * &lt;NAME&gt;	CHROMOSOME		POSITION		&lt;BIOASSAY1&gt;		&lt;BIOASSAY2&gt;  ...  &lt;BIOASSAY n&gt;
  * RP-1		1				15000			0.3				-0.1         ...  0.2
  * RP-2		1				34000			-0.2			0.5          ...  0.1
  * </pre>
@@ -101,8 +101,7 @@ public class SmdFpDataStream implements SmdDataStream {
     private static final String POSITION_COL_HEADING   = "POSITION";   // optional, see Step 4.ii notes above
     // other columns could have any name
     
-    private static final String DB_NAME = "File Upload"; // db name we need to be consistant with the rest of the system
-    
+    private static final String DB_NAME = "File Upload"; // db name we need to be consistent with the rest of the system
     
 
     // Parser for extracting field values from a delimited line of text
@@ -121,10 +120,10 @@ public class SmdFpDataStream implements SmdDataStream {
     // ==============================
     //         Public methods
     // ==============================
-
+    
     /**
      * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
-     * point data.
+     * point data. Uses the default delimiter to parse the input stream data.
      * @param in - InputStream containing the data
      * @param qt - QuantitationType
      * @param genomeAssembly
@@ -133,6 +132,44 @@ public class SmdFpDataStream implements SmdDataStream {
      * @throws SmdFormatException
      */
     public Experiment loadExperiment( InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly ) throws SmdFormatException {
+        return loadExperiment ( DEFAULT_DELIMITER, in, qt, genomeAssembly ) ; 
+    }
+
+
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @param experimentName - the name of the experiment
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly, String experimentName) throws SmdFormatException {
+    	Experiment exp = loadExperiment( DEFAULT_DELIMITER, in, qt, genomeAssembly);
+    	exp.setName(experimentName);
+    	return exp;
+    }
+    
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param delimiter - The delimiter String to use when decollating/parsing the input stream.
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( String delimiter,
+                                      InputStream in,
                                       QuantitationType qt,
                                       GenomeAssembly genomeAssembly ) throws SmdFormatException {
 
@@ -149,7 +186,8 @@ public class SmdFpDataStream implements SmdDataStream {
             if (line == null)
                 throw new SmdFormatException("File is empty");
             // Establish a line field parser, passing in the first line which contains the headings
-            dlp = new DelimitedLineParser ( line ) ;
+            
+            dlp = new DelimitedLineParser ( delimiter, line ) ;
 
             boolean havePositions = this.havePositions( dlp ) ;
             int bioAssayBeginIdx =  havePositions ? 3 : 1 ; // which column does our bio assay data start from?
@@ -175,15 +213,15 @@ public class SmdFpDataStream implements SmdDataStream {
                     }
 
                     try {
-						populateBioAssays ( bioAssays, bioAssayFields, qt, reporter ) ;
-					} catch (WebcghApplicationException e) {
-						throw new SmdFormatException(e);
-					}
+                        populateBioAssays ( bioAssays, bioAssayFields, qt, reporter ) ;
+                    } catch (WebcghApplicationException e) {
+                        throw new SmdFormatException(e);
+                    }
                 }
             }
             exp.add ( bioAssays ) ;
             
-            // Init database to be complient with other data sources
+            // Init database to be compliant with other data sources
             exp.setDatabaseName(DB_NAME);
             
         } catch (IOException e) {
@@ -202,23 +240,27 @@ public class SmdFpDataStream implements SmdDataStream {
         return exp;
     }
 
+
     /**
      * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
-     * point data.
+     * point data. This method uses the standard delimiter character "," (comma) for parsing
+     * the input stream.
      * @param in - InputStream containing the data
      * @param qt - QuantitationType
      * @param genomeAssembly
-     * @param experimentName - the name of the experiment
      * @return Experiment - a representation of the the SMD input stream data, loaded into
      * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
      * @throws SmdFormatException
      */
-    public Experiment loadExperiment( InputStream in,
+    public Experiment loadExperiment( String delimiter,
+                                      InputStream in,
                                       QuantitationType qt,
-                                      GenomeAssembly genomeAssembly, String experimentName) throws SmdFormatException {
-    	Experiment exp = loadExperiment(in, qt, genomeAssembly);
-    	exp.setName(experimentName);
-    	return exp;
+                                      GenomeAssembly genomeAssembly,
+                                      String experimentName ) throws SmdFormatException {
+        // Standard delimiter is the comma String
+        Experiment exp = loadExperiment ( delimiter, in, qt, genomeAssembly ) ;
+        exp.setName ( experimentName ) ;
+        return exp ;
     }
 
     // ===============================
