@@ -12,22 +12,27 @@
 <html:form action="/cart/uploadExperiment" method="POST" enctype="multipart/form-data">
 
   <table cellpadding="0" cellspacing="0" class="tbl"> 
-      <tr><td>&nbsp&nbsp</td></tr>     
+      <tr><td>&nbsp;</td></tr>     
       <tr>
-	   <td class="contentTD">QuantitationType:</td>
+	   <td class="contentTD">Quantitation Type:</td>
 	   <td class="contentTD">
-	      <html:select property="quantitationType"  onchange="onQuantitationType()">
-            <html:options collection="quantitationTypes" property="value" labelProperty="label"/>
+	     <html:select property="quantitationType"  onchange="onQuantitationType()">
+           <html:options collection="quantitationTypes" property="value" labelProperty="label"/>
      	 </html:select>
        </td>
        <td class="contentTD">Other:</td>	   
 	   <td class="contentTD"><html:text property="otherQuantitationType"/></td>
 	 </tr>	   
 	  <tr>
-	   <td  class="contentTD" colspan="4">SMD File:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-	   &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<html:file property="experimentFile" /></td>
+	   <td class="contentTD" valign="top" align="right">SMD File:</td>
+	   <td class="contentTD" colspan="3"><html:file property="experimentFile" />
+         <div style="font-size: 75%; margin-top: 7px; margin-bottom: 0px; padding: 0 0 0 0;">
+           (.txt files will be processed as tab-delimited data,</br>
+            &nbsp;.csv files will be processed as comma-delimited data)
+         </div>
+	   </td>
 	 </tr>
-	 <tr><td>&nbsp&nbsp</td></tr>
+	 <tr><td>&nbsp;</td></tr>
 	 <tr>
 	    <td colspan="4" align="center">
 	   	 <html:submit property="methodToCall"><bean:message key="button.upload"/></html:submit>
