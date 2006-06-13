@@ -68,6 +68,7 @@ import junit.framework.TestCase;
 public class FileSerializerTester extends TestCase {
 	
 	private String testDirName = null;
+	private FileSerializer fs = null;
 	
 	public void setUp() {
 		Properties props = SystemUtils.loadProperties("conf/unit_test.properties");
@@ -80,18 +81,38 @@ public class FileSerializerTester extends TestCase {
 		File testDir = new File(this.testDirName);
 		if (! testDir.exists())
 			testDir.mkdir();
+		this.fs = new FileSerializer(this.testDirName);
+		this.fs.decommissionAllObjects();
 	}
 	
-	public void test1() {
-		FileSerializer fs = new FileSerializer(this.testDirName);
+	
+	public void tearDown() {
+		this.fs.decommissionAllObjects();
+	}
+	
+	public void testSerializeAndDeserialize() {
 		String s1 = "Hello";
 		String s2 = "world!";
-		long oid1 = fs.serialize(s1);
-		long oid2 = fs.serialize(s2);
-		String s3 = (String)fs.deSerialize(oid1);
+		long oid1 = this.fs.serialize(s1);
+		long oid2 = this.fs.serialize(s2);
+		String s3 = (String)this.fs.deSerialize(oid1);
 		assertEquals(s1, s3);
-		s3 = (String)fs.deSerialize(oid2);
+		s3 = (String)this.fs.deSerialize(oid2);
 		assertEquals(s2, s3);
 	}
-
+	
+	public void testDecomission() {
+		long oid = this.fs.serialize("Hello");
+		assertEquals(0, oid);
+		oid = this.fs.serialize("world!");
+		assertEquals(1, oid);
+		this.fs.decommissionObject(1);
+		FileSerializer fs2 = new FileSerializer(this.testDirName);
+		oid = fs2.serialize("Hello again");
+		assertEquals(1, oid);
+		fs2.decommissionAllObjects();
+		fs2 = new FileSerializer(this.testDirName);
+		oid = fs2.serialize("Hello again again");
+		assertEquals(0, oid);
+	}
 }

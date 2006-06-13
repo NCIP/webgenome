@@ -62,6 +62,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.util.IOUtils;
 
 /**
  * Implementation of <code>Serializer</code> interface that
@@ -76,6 +77,9 @@ public class FileSerializer implements Serializer {
 	// File extension
 	private static final String FILE_EXTENSION = ".obj";
 	
+	// Directory name delimiter
+	private static final String DIRECTORY_DELIMITER = "/";
+	
 	// ============================
 	//       Attributes
 	// ============================
@@ -83,7 +87,8 @@ public class FileSerializer implements Serializer {
 	// Directory containing serialized files
 	private final File directory;
 	
-	private final OidSequence oidSequence = new OidSequence();
+	// Object ID sequence
+	private final OidSequence oidSequence;
 	
 
 	// ==============================
@@ -101,22 +106,9 @@ public class FileSerializer implements Serializer {
 		if (! this.directory.exists() || ! this.directory.isDirectory())
 			throw new IllegalArgumentException("Directory '" + directory + "' does not exist");
 		
-		// Try to clean out directory
-		if (! this.cleanDirectory())
-			LOGGER.warn("Could not clean out directory '" + 
-					this.directory.getAbsolutePath() + "'");
+		// Set properties
+		this.oidSequence = new OidSequence(this.directory);
 	}
-	
-	
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		// Try to clean out directory
-		if (! this.cleanDirectory())
-			LOGGER.warn("Could not clean out directory '" + 
-					this.directory.getAbsolutePath() + "'");
-	}
-
 
 
 	// ===============================
@@ -133,11 +125,14 @@ public class FileSerializer implements Serializer {
 	public long serialize(Serializable serializable) {
 		long oid = this.oidSequence.next();
 		String fname = this.getFileName(oid);
+		ObjectOutputStream out = null;
 		try {
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(fname));
+			out = new ObjectOutputStream(new FileOutputStream(fname));
 			out.writeObject(serializable);
 		} catch (Exception e) {
 			throw new WebcghSystemException("Error serializing object", e);
+		} finally {
+			IOUtils.close(out);
 		}
 		return oid;
 	}
@@ -151,33 +146,57 @@ public class FileSerializer implements Serializer {
 	public Serializable deSerialize(long objectId) {
 		String fname = this.getFileName(objectId);
 		Serializable serializable = null;
+		ObjectInputStream in = null;
 		try {
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(fname));
+			in = new ObjectInputStream(new FileInputStream(fname));
 			serializable = (Serializable)in.readObject();
 		} catch (Exception e) {
 			throw new WebcghSystemException(
 					"Error de-serializing object with id '" + objectId + "'", e);
+		} finally {
+			IOUtils.close(in);
 		}
 		return serializable;
+	}
+	
+
+	/**
+	 * Decommission all objects managed by serializer.
+	 * After object has been decommissioned, it can
+	 * no longer be de-serialized.
+	 */
+	public void decommissionAllObjects() {
+		File[] files = this.directory.listFiles();
+		for (int i = 0; i < files.length; i++)
+			if (! files[i].delete())
+				LOGGER.warn("Could not decomission file '" + files[i].getAbsolutePath() +
+						"'");
+	}
+	
+	
+	/**
+	 * Decommission object given by objectId.
+	 * After object has been decommissioned, it can
+	 * no longer be de-serialized.
+	 * @param objectId An object identifier
+	 * @throws <code>IllegalArgumentException</code> if
+	 * object denoted by <code>objectId</code> has already
+	 * been decomissioned.
+	 */
+	public void decommissionObject(long objectId) {
+		String fname = this.getFileName(objectId);
+		File file = new File(fname);
+		if (! file.exists())
+			throw new IllegalArgumentException("Cannot find object with id '" +
+					objectId + "'");
+		if (! file.delete())
+			LOGGER.warn("Could not decomission file '" + file.getAbsolutePath() +
+			"'");
 	}
 	
 	// ===============================
 	//       Private methods
 	// ===============================
-	
-	/**
-	 * Clean out directory of any files
-	 * @return Returns whether or not directory
-	 * was successfully cleaned
-	 */
-	private boolean cleanDirectory() {
-		boolean cleanedAll = true;
-		File[] files = this.directory.listFiles();
-		for (int i = 0; i < files.length; i++)
-			if (! files[i].delete())
-				cleanedAll = false;
-		return cleanedAll;
-	}
 	
 	
 	/**
@@ -186,7 +205,24 @@ public class FileSerializer implements Serializer {
 	 * @return A file name
 	 */
 	private String getFileName(long oid) {
-		return this.directory.getAbsolutePath() + "/" + oid + FILE_EXTENSION;
+		return this.directory.getAbsolutePath() + DIRECTORY_DELIMITER + 
+		oid + FILE_EXTENSION;
+	}
+	
+	
+	/**
+	 * Parse object id from file name
+	 * @param file A file
+	 * @return Object id or -1 if an id cannot be parsed
+	 */
+	private long getObjectId(File file) {
+		long oid = (long)-1;
+		String fname = file.getName();
+		int p = fname.indexOf(FILE_EXTENSION);
+		try {
+			oid = Long.parseLong(fname.substring(0, p));
+		} catch (NumberFormatException e){}
+		return oid;
 	}
 	
 	// ===============================
@@ -196,7 +232,7 @@ public class FileSerializer implements Serializer {
 	/**
 	 * Helper class to generate a sequence of object identifiers
 	 */
-	static class OidSequence {
+	class OidSequence {
 		
 		// Next object id in the sequence
 		private long nextInSequence = (long)0;
@@ -204,7 +240,21 @@ public class FileSerializer implements Serializer {
 		/**
 		 * Constructor
 		 */
-		public OidSequence(){}
+		public OidSequence(File directory) {
+			
+			// Set next in sequence
+			if (directory == null || ! directory.isDirectory())
+				throw new IllegalArgumentException("'" + 
+						directory.getAbsolutePath() + "' is not a valid directory");
+			File[] files = directory.listFiles();
+			this.nextInSequence = (long)-1;
+			for (int i = 0; i < files.length; i++) {
+				long candidate = getObjectId(files[i]);
+				if (candidate >= 0 && candidate > this.nextInSequence)
+					this.nextInSequence = candidate;
+			}
+			this.nextInSequence++;
+		}
 		
 		/**
 		 * Return next object id in the sequence

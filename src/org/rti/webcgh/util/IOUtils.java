@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/IOUtils.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 19:06:50 $
+$Revision: 1.3 $
+$Date: 2006-06-13 16:31:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
@@ -132,6 +133,36 @@ public class IOUtils {
 				writer.close();
 			} catch (IOException e) {
 				throw new WebcghSystemException("Error closing writer", e);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Close input stream re-throwing any exceptions as unchecked
+	 * @param in Input stream
+	 */
+	public static void close(InputStream in) {
+		if (in != null) {
+			try {
+				in.close();
+			} catch (IOException e) {
+				throw new WebcghSystemException("Error closing input stream", e);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Close input stream re-throwing any exceptions as unchecked
+	 * @param out Output stream
+	 */
+	public static void close(OutputStream out) {
+		if (out != null) {
+			try {
+				out.close();
+			} catch (IOException e) {
+				throw new WebcghSystemException("Error closing output stream", e);
 			}
 		}
 	}

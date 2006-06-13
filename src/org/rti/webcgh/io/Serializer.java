@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.io;
 
+import java.io.File;
 import java.io.Serializable;
 
 /**
@@ -76,5 +77,25 @@ public interface Serializer {
 	 * @return A serializable object
 	 */
 	public Serializable deSerialize(long objectId);
+	
+	
+	/**
+	 * Decommission all objects managed by serializer.
+	 * After object has been decommissioned, it can
+	 * no longer be de-serialized.
+	 */
+	public void decommissionAllObjects();
+	
+	
+	/**
+	 * Decommission object given by objectId.
+	 * After object has been decommissioned, it can
+	 * no longer be de-serialized.
+	 * @param objectId An object identifier
+	 * @throws <code>IllegalArgumentException</code> if
+	 * object denoted by <code>objectId</code> has already
+	 * been decomissioned.
+	 */
+	public void decommissionObject(long objectId);
 
 }
