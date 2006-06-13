@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdDataStream.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-24 14:08:36 $
+$Revision: 1.5 $
+$Date: 2006-06-13 13:49:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,12 @@ import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.GenomeAssembly;
 
 public interface SmdDataStream {
+    
+    /**
+     * Default delimiter character which will be used whenever the delimiter isn't explicitly
+     * specified in the call to the loadExperiment methods provided by this interface.
+     */
+    public static final String DEFAULT_DELIMITER = "," ;
 
     /**
      * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
@@ -89,6 +95,42 @@ public interface SmdDataStream {
      */
     public Experiment loadExperiment( InputStream in,
                                       QuantitationType qt,
-                                      GenomeAssembly genomeAssembly, String experimentName) throws SmdFormatException ;
+                                      GenomeAssembly genomeAssembly,
+                                      String experimentName) throws SmdFormatException ;
+    
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param delimiter - data delimiter to use when parsing the input stream
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( String delimiter,
+                                      InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly ) throws SmdFormatException ;
+
+
+    /**
+     * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
+     * point data.
+     * @param delimiter - data delimiter to use when parsing the input stream
+     * @param in - InputStream containing the data
+     * @param qt - QuantitationType
+     * @param genomeAssembly
+     * @param experimentName - the name of the experiment
+     * @return Experiment - a representation of the the SMD input stream data, loaded into
+     * an Experiment comprising BioAssays, ArrayDatums, Reporters et al.
+     * @throws SmdFormatException
+     */
+    public Experiment loadExperiment( String delimiter,
+                                      InputStream in,
+                                      QuantitationType qt,
+                                      GenomeAssembly genomeAssembly,
+                                      String experimentName) throws SmdFormatException ;
 
 }
