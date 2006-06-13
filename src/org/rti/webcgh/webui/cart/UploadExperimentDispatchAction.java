@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/UploadExperimentDispatchAction.java,v $
-$Revision: 1.5 $
-$Date: 2006-06-09 20:01:27 $
+$Revision: 1.6 $
+$Date: 2006-06-13 14:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -226,20 +226,31 @@ public class UploadExperimentDispatchAction extends CommonLookupDispatchAction {
 	 * @throws Exception
 	 */
 	public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        
 		UploadExperimentForm uef = (UploadExperimentForm)form;
+        
+        String delimiter = determineDelimiterFromFileExtension ( uef.getExperimentFile().getFileName() ) ;
 		
 		// read experiment from uploaded file
-		Experiment exp = smdDataStream.loadExperiment( uef.getExperimentFile().getInputStream(), new QuantitationType(uef.getQuantitationType()), GenomeAssembly.DUMMY_GENOME_ASSEMBLY , uef.getExperimentFile().getFileName());
+		Experiment exp = smdDataStream.loadExperiment( delimiter,
+                                                       uef.getExperimentFile().getInputStream(),
+                                                       new QuantitationType(uef.getQuantitationType()), GenomeAssembly.DUMMY_GENOME_ASSEMBLY ,
+                                                       uef.getExperimentFile().getFileName() );
 		
 		// get attribute beans
         UserProfile profile = AttributeManager.getUserProfile(request);
-        ShoppingCart shoppingCart = AttributeManager.getShoppingCart(request);
+        
+        // Don't add this to the cart, just yet. Below commented out as it causes
+        // problems if the user [Cancels] an upload operation half-way through.
+//        ShoppingCart shoppingCart = AttributeManager.getShoppingCart(request);
         
         // initiate experiment array
         Experiment[] experiments = new Experiment[1];
         experiments[0] = exp;
         
         // add to shopping car
+        // Don't add this to the cart, see comment above.
+//        shoppingCart.add(experiments);
         Collection experimentsCol = CollectionUtils.arrayToArrayList(experiments);                
         request.setAttribute(RequestParamsEnum.experiments.toString(), experimentsCol);
         
@@ -358,6 +369,24 @@ public class UploadExperimentDispatchAction extends CommonLookupDispatchAction {
 			
 		}
 	}
+    
+    /**
+     * Determine the delimiter String to use when loading the experiment, based on the
+     * extension of the input filename provided.
+     * ".txt" files will be tab-delimited, ".csv" files will be "," comma-delimited.
+     * <em>unknown</em> file extensions will be assumed to be comma-delimiter by default.
+     * @param filename
+     * @return delimiter string based on extension.
+     */
+    private String determineDelimiterFromFileExtension( String filename ) {
+        String delimiter = SmdDataStream.DEFAULT_DELIMITER ;
+        if ( filename != null ) {
+            filename = filename.toLowerCase() ;
+            if ( filename.endsWith( ".txt" ) )
+                delimiter = "\t" ; // tab
+        }
+        return delimiter ;
+    }
 	
 	/**
 	 * 
