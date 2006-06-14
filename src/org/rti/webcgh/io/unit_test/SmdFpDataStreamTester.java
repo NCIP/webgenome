@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/unit_test/SmdFpDataStreamTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-26 17:25:10 $
+$Revision: 1.3 $
+$Date: 2006-06-14 18:58:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -187,6 +187,37 @@ public class SmdFpDataStreamTester extends TestCase {
         }
         catch ( Exception e ) {
             System.err.println ( e ) ;
+        }
+    }
+    
+    // Data set without Chromosome and Position
+    private String testDataWithIncorrectPositionHeadings =
+            "Name,Chromosome,XXX_Position,BioAssay1,BioAssay2,AnyName\n" +
+            "RP11-82D16,0.106308,0.106318\n" +
+            "RP11-62M23,-0.010037,-0.010027" ;
+    
+    /**
+     * Test the loadExperiment() method on a data set which doesn't have CHROMOSOME and POSITION.
+     *
+     * @throws Exception
+     */
+    public void testInvalidPositions ( ) throws Exception {
+        try {
+            // Convert the string to a input stream
+            InputStream is =
+                new ByteArrayInputStream(
+                        testDataWithIncorrectPositionHeadings.getBytes("UTF-8") );
+
+            GenomeAssembly ga = GenomeAssembly.DUMMY_GENOME_ASSEMBLY ;
+
+            SmdFpDataStream smd = new SmdFpDataStream() ;
+            Experiment exp = smd.loadExperiment( is, QuantitationType.LOG_2_RATIO, ga ) ;
+            
+            // This should throw an exception - SmdFormatException
+            assertTrue ( false ) ; // shouldn't have arrived here
+        }
+        catch ( Exception exception ) { 
+            System.err.println( exception.getMessage() ) ;
         }
     }
 
