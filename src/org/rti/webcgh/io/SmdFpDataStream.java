@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.6 $
-$Date: 2006-06-13 13:46:15 $
+$Revision: 1.7 $
+$Date: 2006-06-14 19:00:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,10 +76,17 @@ import org.rti.webcgh.service.DomainObjectFactory;
  * (4) The following are special columns:
  *         i.  The first column contains reporter names (can have any column name)
  *         ii. OPTIONAL: The file may contain columns with
- *             headings named 'CHROMOSOME' and 'POSITION.'
+ *             headings named 'CHROMOSOME' and
+ *             either 'POSITION', 'KB_POSITION' or 'MB_POSITION'. 
  *             These contain the chromosome number and physical
  *             position (i.e., base pair), respectively,
  *             of the corresponding reporter.
+ *             If the position column is headed by KB_POSITION, the physical position
+ *             is expected to be expressed in thousands units, therefore the actual
+ *             physical position will be multiplied by 1,000.
+ *             If the position column is headed by MB_POSITION, the physical position
+ *             is expected to be in millions units, therefore the actual
+ *             physical position will be multiplied by 1,000,000.
  *             The column names may be lower case or upper case.
  * (5) The heading (i.e., first row) of each column gives the identifier (name)
  *     of the corresponding bioassay.
@@ -89,16 +96,20 @@ import org.rti.webcgh.service.DomainObjectFactory;
  *
  * <p>Example:</p>
  * <pre>
- * &lt;NAME&gt;	CHROMOSOME		POSITION		&lt;BIOASSAY1&gt;		&lt;BIOASSAY2&gt;  ...  &lt;BIOASSAY n&gt;
+ * &lt;NAME&gt;	CHROMOSOME		POSITION*    &lt;BIOASSAY1&gt;		&lt;BIOASSAY2&gt;  ...  &lt;BIOASSAY n&gt;
  * RP-1		1				15000			0.3				-0.1         ...  0.2
  * RP-2		1				34000			-0.2			0.5          ...  0.1
  * </pre>
+ * * ~ name of the position column can be POSITION, KB_POSITION or MB_POSITION
  *
  */
 public class SmdFpDataStream implements SmdDataStream {
 
-    private static final String CHROMOSOME_COL_HEADING = "CHROMOSOME"; // optional, see Step 4.ii notes above
-    private static final String POSITION_COL_HEADING   = "POSITION";   // optional, see Step 4.ii notes above
+    private static final String CHROMOSOME_COL_HEADING  = "CHROMOSOME";   // optional, see Step 4.ii notes above
+    // The different column names allowed for the position column.
+    private static final String POSITION_COL_HEADING    = "POSITION";     // optional, see Step 4.ii notes above
+    private static final String KB_POSITION_COL_HEADING = "KB_POSITION" ; // optional, see Step 4.ii notes above
+    private static final String MB_POSITION_COL_HEADING = "MB_POSITION" ; // optional, see Step 4.ii notes above
     // other columns could have any name
     
     private static final String DB_NAME = "File Upload"; // db name we need to be consistent with the rest of the system
@@ -188,9 +199,16 @@ public class SmdFpDataStream implements SmdDataStream {
             // Establish a line field parser, passing in the first line which contains the headings
             
             dlp = new DelimitedLineParser ( delimiter, line ) ;
-
+            
+            // Sort out whether we have chromosome and position info in the data
             boolean havePositions = this.havePositions( dlp ) ;
             int bioAssayBeginIdx =  havePositions ? 3 : 1 ; // which column does our bio assay data start from?
+            String positionHeading = null ;
+            double positionMultiplier = 1.0 ;
+            if ( havePositions ) {
+                positionHeading = getPositionHeading ( dlp ) ;
+                positionMultiplier = getPositionMultiplier ( positionHeading ) ;
+            }
 
             BioAssay[] bioAssays = createBioAssays ( dlp.getColumnNames(), bioAssayBeginIdx ) ; // create our bio assay "buckets"
 
@@ -208,7 +226,7 @@ public class SmdFpDataStream implements SmdDataStream {
                     Reporter reporter = domainObjectFactory.getReporter( name ) ;
 
                     if ( havePositions && ! reporter.isMapped ( genomeAssembly )) {
-                        ReporterMapping reporterMapping = createReporterMapping ( line, genomeAssembly, reporter ) ;
+                        ReporterMapping reporterMapping = createReporterMapping ( positionHeading, positionMultiplier, line, genomeAssembly, reporter ) ;
                         reporter.setReporterMapping(reporterMapping) ;
                     }
 
@@ -330,14 +348,21 @@ public class SmdFpDataStream implements SmdDataStream {
      * @param reporter
      * @return ReporterMapping
      */
-    private ReporterMapping createReporterMapping ( String line,
+    private ReporterMapping createReporterMapping ( String positionHeading,
+                                                    double positionMultiplier,
+                                                    String line,
                                                     GenomeAssembly genomeAssembly,
                                                     Reporter reporter ) {
         double chromosome = dlp.getNumericProperty( line, CHROMOSOME_COL_HEADING ) ;
         
-    	// TODO: Make position units (i.e. BP, KB, MB) configurable.  For now,
-    	// we will assume that units are KB (i.e., 1000 base pairs)
-        double position =   dlp.getNumericProperty( line, POSITION_COL_HEADING ) * 1000 ;
+        //
+        //  Position may be expressed in BP, KB and MB units.
+        //  For KB and MB we multiply to get the actual value.
+        //
+        double position =   dlp.getNumericProperty( line, positionHeading )  ;
+        if ( positionMultiplier > 1.0 )
+            position = position * positionMultiplier ;
+        
 
         Chromosome chromosomeObj = domainObjectFactory.getChromosome (
                 genomeAssembly, (short) chromosome ) ;
@@ -352,9 +377,60 @@ public class SmdFpDataStream implements SmdDataStream {
      * the delimited line parser class for determining this).
      * @return true - if present, otherwise false.
      */
-    private boolean havePositions( DelimitedLineParser dlp ) {
-        return dlp.hasColumn ( CHROMOSOME_COL_HEADING ) &&
-               dlp.hasColumn ( POSITION_COL_HEADING ) ;
+    private boolean havePositions( DelimitedLineParser dlp ) throws SmdFormatException {
+        boolean hasPositions = false ;
+        
+        boolean hasChromosome = dlp.hasColumn ( CHROMOSOME_COL_HEADING ) ;
+        boolean hasPosition = dlp.hasColumn ( POSITION_COL_HEADING )    ||
+                              dlp.hasColumn ( KB_POSITION_COL_HEADING ) ||
+                              dlp.hasColumn ( MB_POSITION_COL_HEADING ) ;
+        
+        if ( hasChromosome && ! hasPosition )
+            throw new SmdFormatException ( "Have Chromosome, but missing Position column in data" ) ;
+        
+        if ( ! hasChromosome && hasPosition )
+            throw new SmdFormatException ( "Has Position, but missing Chromosome column in data" ) ;
+        
+        if ( hasChromosome && hasPosition )
+            hasPositions = true ;
+        
+        return hasPositions ;
+    }
+    
+    /**
+     * Get the actual position heading present in the heading line. It could either
+     * be POSITION, KB_POSITION or MB_POSITION
+     * @param dlp
+     * @return String
+     */
+    private String getPositionHeading ( DelimitedLineParser dlp ) {
+        String positionHeading = null ;
+        
+        if ( dlp.hasColumn ( POSITION_COL_HEADING ) )
+            positionHeading = POSITION_COL_HEADING ;
+        else if ( dlp.hasColumn ( KB_POSITION_COL_HEADING ) )
+            positionHeading = KB_POSITION_COL_HEADING ;
+        else if ( dlp.hasColumn ( MB_POSITION_COL_HEADING ) )
+            positionHeading = MB_POSITION_COL_HEADING ;
+        
+        return positionHeading ;
+    }
+    
+    /**
+     * Checks the position column heading and determines the multiplier
+     * needed to obtain the actual position.
+     * @param positionHeading
+     * @return double - the multiplier we'll use later to get the actual (raw) value of the position
+     */
+    private double getPositionMultiplier ( String positionHeading ) {
+        double positionMultiplier = 1.0 ;
+        
+        if ( positionHeading.equalsIgnoreCase ( KB_POSITION_COL_HEADING ) )
+            positionMultiplier =    1000.0 ;
+        else if ( positionHeading.equalsIgnoreCase ( MB_POSITION_COL_HEADING ) ) 
+            positionMultiplier = 1000000.0 ;
+        
+        return positionMultiplier ;
     }
 
     /**
