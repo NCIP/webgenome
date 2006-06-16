@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.7 $
-$Date: 2006-06-14 19:00:32 $
+$Revision: 1.8 $
+$Date: 2006-06-16 19:41:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,41 +64,44 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.service.DomainObjectFactory;
 
 /**
- * Convert a stream of floating point SMD (Stanford Microarray Database) data into data objects.
+ * <p>Convert a stream of floating point SMD (Stanford Microarray Database) data into data objects.</p>
  *
- * The following describes the SMD data file format:
- * 
- * (1) Data are delimited text (e.g., comma-separated values)
- * (2) Each column, with the exception of special columns,
- *     corresponds to a separate bioassay (i.e., physical array).
- * (3) Each row, with the exception of the first (i.e., column headings),
- *     corresponds to a reporter (i.e., probe).
- * (4) The following are special columns:
- *         i.  The first column contains reporter names (can have any column name)
- *         ii. OPTIONAL: The file may contain columns with
+ * <p>The following describes the SMD data file format:</p>
+ * <ol>
+ * <li>Data are delimited text (e.g., comma-separated values)</li>
+ * <li>Each column, with the exception of special columns,
+ *     corresponds to a separate bioassay (i.e., physical array).</li>
+ * <li>Each row, with the exception of the first (i.e., column headings),
+ *     corresponds to a reporter (i.e., probe).</li>
+ * <li>The following are special columns:
+ *         <ol style="list-style-type: lower-roman">
+ *         <li>The first column contains reporter names (can have any column name)</li>
+ *         <li>OPTIONAL: The file may contain columns with
  *             headings named 'CHROMOSOME' and
- *             either 'POSITION', 'KB_POSITION' or 'MB_POSITION'. 
+ *             either 'POSITION', 'KB_POSITION' or 'MB_POSITION'.
  *             These contain the chromosome number and physical
  *             position (i.e., base pair), respectively,
  *             of the corresponding reporter.
  *             If the position column is headed by KB_POSITION, the physical position
- *             is expected to be expressed in thousands units, therefore the actual
- *             physical position will be multiplied by 1,000.
- *             If the position column is headed by MB_POSITION, the physical position
- *             is expected to be in millions units, therefore the actual
- *             physical position will be multiplied by 1,000,000.
- *             The column names may be lower case or upper case.
- * (5) The heading (i.e., first row) of each column gives the identifier (name)
- *     of the corresponding bioassay.
- * (6) Values in bioassay columns give the measurements of the corresponding
+ *             is expected to be expressed in thousands units, therefore it
+ *             will be multiplied by 1,000 to get its true position value.
+ *             If the position column is headed by MB_POSITION, the position
+ *             is expected to be in millions units, therefore the 
+ *             it will be multiplied by 1,000,000 to get the actual position.
+ *             The column names may be lower case or upper case.</li>
+ *         </ol>
+ * </li>
+ * <li>The heading (i.e., first row) of each column gives the identifier (name)
+ *     of the corresponding bioassay.</li>
+ * <li>Values in bioassay columns give the measurements of the corresponding
  *     reporters. Bioassay columns which follow can have any column name (see point 5 above).
- *     There can be any number of them, but there must be at least one.
- *
+ *     There can be any number of them, but there must be at least one.</li>
+ * </ol>
  * <p>Example:</p>
  * <pre>
- * &lt;NAME&gt;	CHROMOSOME		POSITION*    &lt;BIOASSAY1&gt;		&lt;BIOASSAY2&gt;  ...  &lt;BIOASSAY n&gt;
- * RP-1		1				15000			0.3				-0.1         ...  0.2
- * RP-2		1				34000			-0.2			0.5          ...  0.1
+ * &lt;NAME&gt;	CHROMOSOME &lt;POSITION*&gt;    &lt;BIOASSAY1&gt;    &lt;BIOASSAY2&gt;  ...  &lt;BIOASSAY n&gt;
+ * RP-1    1            15000           0.3          -0.1      ...     0.2
+ * RP-2    1            34000          -0.2           0.5      ...     0.1
  * </pre>
  * * ~ name of the position column can be POSITION, KB_POSITION or MB_POSITION
  *
@@ -211,7 +214,7 @@ public class SmdFpDataStream implements SmdDataStream {
             }
 
             BioAssay[] bioAssays = createBioAssays ( dlp.getColumnNames(), bioAssayBeginIdx ) ; // create our bio assay "buckets"
-
+            
             //
             //    Read the contents of the SMD stream, line by line
             //
@@ -261,8 +264,8 @@ public class SmdFpDataStream implements SmdDataStream {
 
     /**
      * Load experiment from an input stream containing SMD (Stanford Microarray Database) floating
-     * point data. This method uses the standard delimiter character "," (comma) for parsing
-     * the input stream.
+     * point data.
+     * @param delimiter - the delimiter string to use to decollate the data for parsing
      * @param in - InputStream containing the data
      * @param qt - QuantitationType
      * @param genomeAssembly
@@ -275,7 +278,6 @@ public class SmdFpDataStream implements SmdDataStream {
                                       QuantitationType qt,
                                       GenomeAssembly genomeAssembly,
                                       String experimentName ) throws SmdFormatException {
-        // Standard delimiter is the comma String
         Experiment exp = loadExperiment ( delimiter, in, qt, genomeAssembly ) ;
         exp.setName ( experimentName ) ;
         return exp ;
