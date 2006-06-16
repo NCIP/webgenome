@@ -51,8 +51,8 @@ The tool enables users to:
 		</html:link>
 		to check if your browser supports SVG.  If not, Adobe offers
 		a free SVG browser plugin.  
-		[<html:link href="http://www.adobe.com/svg/viewer/install/main.html">Download
-		</html:link>]
+		[<html:link href="http://www.adobe.com/svg/viewer/install/main.html">Download</html:link> |
+		<html:link page="/svgInstall.do">Installation Instructions</html:link>]
 	</li>
 </ul>
 

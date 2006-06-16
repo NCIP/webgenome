@@ -58,6 +58,15 @@
 	  	<put name="helpTopic" value="svg" />
   	</definition>
 
+  	<definition name="svg.install.page" extends="def.layout" >
+	  	<put name="title" value="webGenome: SVG Installation Instructions" />
+	  	<put name="selectedMenuItem" value="overview" />
+	  	<put name="submenu" value="/WEB-INF/jsp/common/empty.jsp"/>
+	  	<put name="navigationMap" value="/WEB-INF/jsp/common/empty.jsp" />
+	  	<put name="content" value="/WEB-INF/jsp/svgInstall.jsp" />
+	  	<put name="helpTopic" value="svg" />
+  	</definition>
+
 
   	<!-- ====================================================== -->
   	<!--                User profile pages                      -->

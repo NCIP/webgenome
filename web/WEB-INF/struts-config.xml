@@ -46,86 +46,91 @@
 		<form-bean
 			name="uploadExperimentForm"
 			type="org.rti.webcgh.webui.UploadExperimentForm"/>
-						
+
 	</form-beans>
-	
-	
+
+
 	<!-- =========================================================== -->
 	<!--                   Exception handlers                        -->
 	<!-- =========================================================== -->
 	<global-exceptions>
-	
+
     <exception
     	type="org.rti.webcgh.webui.SessionTimeoutException"
     	path="session.timeout.exception.page"
     	key="session.timeout"
     	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
     	scope="request"/>
-    	
+
     <exception
     	type="org.rti.webcgh.domain.analytic.DataSetInvalidationException"
     	path="data.invalidation.page"
     	key="data.invalidation"
     	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
     	scope="request"/>
-    	
+
     <exception
     	type="org.rti.webcgh.core.WebcghSecurityException"
     	path="security.exception.page"
     	key="security.exception"
     	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
     	scope="request"/>
-  
+
     <exception
     	type="org.rti.webcgh.core.WebcghSystemException"
     	path="system.exception.page"
     	key="system.exception"
     	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
     	scope="request"/>
-    	
+
     <exception
     	type="org.rti.webcgh.core.WebcghApplicationException"
     	path="application.exception.page"
     	key="application.exception"
     	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
     	scope="request"/>
-    	
+
     <exception
     	type="java.lang.Exception"
     	path="unknown.exception.page"
     	key="system.exception"
     	handler="org.rti.webcgh.webui.WebcghExceptionHandler"
     	scope="request"/>
-		
+
   	</global-exceptions>
-	
-	
-	
+
+
+
 	<!-- ================================================= -->
 	<!--                   Actions                         -->
 	<!-- ================================================= -->
 	<action-mappings>
-	
+
 		<action
 			path="/home"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="home.page"/>
-			
+
 		<action
 			path="/svgTest"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="svg.test.page"/>
-			
-			
+
+		<action
+			path="/svgInstall"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="svg.install.page"/>
+
+
 		<!-- ================================================= -->
 		<!--        User profile related actions               -->
 		<!-- ================================================= -->
-		
+
 		<action
 			path="/profile/loginPage"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="profile.login.page"/>
-			
+
 		<action
 			path="/profile/login"
 			name="loginForm"
@@ -136,7 +141,7 @@
 			<forward name="failure" path="/profile/loginPage.do"/>
 			<forward name="admin" path="/admin/home.do"/>
 		</action>
-			
+
 		<action
 			path="/profile/logout"
 			name="loginForm"
@@ -144,21 +149,21 @@
 			validate="false">
 			<forward name="success" path="/home.do"/>
 		</action>
-		
+
 		<!-- ================================================= -->
 		<!--       Virtual experiment related actions          -->
 		<!-- ================================================= -->
-		
+
 		<action
 			path="/virtual/list">
 			<forward name="success" path="virtual.list.page"/>
 		</action>
-		
+
 		<action
 			path="/virtual/selectExperiments">
 			<forward name="success" path="virtual.select.experiments.page"/>
 		</action>
-		
+
 		<action
 			path="/virtual/recordSelectedExperiments"
 			type="org.apache.struts.actions.ForwardAction"
@@ -167,7 +172,7 @@
 			validate="true"
 			input="/virtual/selectExperiments.do"
 			parameter="/virtual/selectBioAssays.do"/>
-		
+
 		<action
 			path="/virtual/selectBioAssays"
 			name="dataSelectionForm"
@@ -175,7 +180,7 @@
 			validate="false">
 			<forward name="success" path="virtual.select.bioassays.page"/>
 		</action>
-		
+
 		<action
 			path="/virtual/recordSelectedBioAssays"
 			type="org.apache.struts.actions.ForwardAction"
@@ -184,12 +189,12 @@
 			validate="true"
 			input="/virtual/selectBioAssays.do"
 			parameter="/virtual/annotation.do"/>
-				
+
 		<action
 			path="/virtual/annotation"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="virtual.annotation.page"/>
-			
+
 		<action
 			path="/virtualRecordAnnotation"
 			type="org.apache.struts.actions.ForwardAction"
@@ -198,7 +203,7 @@
 			validate="true"
 			input="/virtual/annotation.do"
 			parameter="/virtual/summary.do"/>
-			
+
 		<action
 			path="/virtual/summary"
 			name="virtualExperimentForm"
@@ -206,7 +211,7 @@
 			validate="false"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="virtual.summary.page"/>
-		
+
 		<action
 			path="/virtual/save"
 			name="virtualExperimentForm"
@@ -214,18 +219,18 @@
 			validate="false">
 			<forward name="success" path="virtual.confirm.page"/>
 		</action>
-		
+
 		<action
 			path="/virtual/delete"
 			name="defaultForm">
 			<forward name="success" path="virtual.confirm.page"/>
 		</action>
-		
-		
+
+
 		<!-- ================================================ -->
 		<!--         Analytic pipeline related actions        -->
 		<!-- ================================================ -->
-		
+
 		<action
 			path="/pipeline/show"
 			name="pipelineForm"
@@ -234,7 +239,7 @@
 			<forward name="no.pipelines" path="no.pipelines.page"/>
 			<forward name="success" path="pipelines.page"/>
 		</action>
-		
+
 		<action
 			path="/pipeline/new"
 			name="pipelineForm"
@@ -242,7 +247,7 @@
 			validate="false">
 			<forward name="success" path="pipeline.edit.page"/>
 		</action>
-		
+
 		<action
 			path="/pipeline/addOperation"
 			type="org.rti.webcgh.webui.pipeline.AddOperationAction"
@@ -251,7 +256,7 @@
 			validate="false">
 			<forward name="success" path="pipeline.edit.page"/>
 		</action>
-		
+
 		<action
 			path="/pipeline/removeOperation"
 			name="pipelineForm"
@@ -259,7 +264,7 @@
 			validate="false">
 			<forward name="success" path="pipeline.edit.page"/>
 		</action>
-		
+
 		<action
 			path="/pipeline/save"
 			name="pipelineForm"
@@ -269,7 +274,7 @@
 			<forward name="success" path="pipeline.confirm.modification.page"/>
 			<forward name="failure" path="pipeline.edit.page"/>
 		</action>
-		
+
 		<action
 			path="/pipeline/delete"
 			name="pipelineForm"
@@ -277,7 +282,7 @@
 			validate="false">
 			<forward name="success" path="pipeline.confirm.modification.page"/>
 		</action>
-		
+
 		<action
 			path="/pipeline/edit"
 			name="pipelineForm"
@@ -285,11 +290,11 @@
 			validate="false">
 			<forward name="success" path="pipeline.edit.page"/>
 		</action>
-		
+
 		<!-- ==================================================== -->
 		<!--          Application Client                          -->
 		<!-- ==================================================== -->
-		
+
 		<action
 			path="/client/plot"
 			name="plotParamsForm"
@@ -297,11 +302,11 @@
 			validate="false">
 			<forward name="success" path="/plot/setup.do"/>
 		</action>
-		
+
 		<!-- ==================================================== -->
 		<!--          Shopping cart actions                       -->
 		<!-- ==================================================== -->
-		
+
 		<action
 			path="/cart/contents"
 			name="plotParamsForm"
@@ -310,7 +315,7 @@
 			<forward name="success" path="cart.contents.page"/>
 			<forward name="emptyCart" path="cart.empty.page"/>
 		</action>
-		
+
 		<action
 			path="/cart/removeExperiments"
 			name="dataSelectionForm"
@@ -318,7 +323,7 @@
 			validate="true">
 			<forward name="success" path="/cart/contents.do"/>
 		</action>
-		
+
 		<action path="/cart/selectExperiments">
 			<forward name="success" path="cart.select.experiments.page"/>
 		</action>
@@ -332,7 +337,7 @@
 			<forward name="viewUpload" path="cart.view.upload.page"/>
 			<forward name="success" path="/cart/selectExperimentTypes.do"/>
 		</action>
-		
+
 		<action
 			path="/cart/recordSelectedExperiments"
 			name="dataSelectionForm"
@@ -341,7 +346,7 @@
 			input="/cart/selectExperiments.do">
 			<forward name="success" path="/cart/selectExperimentTypes.do"/>
 		</action>
-				
+
 		<action
 			path="/cart/selectExperimentTypes">
 			<forward name="success" path="cart.select.experiment.types.page"/>
@@ -354,11 +359,11 @@
 			<forward name="noExperimentTypes" path="/cart/selectExperimentTypes.do"/>
 			<forward name="splits" path="cart.experiment.type.splits.page"/>
 		</action>
-		
+
 		<action path="/cart/selectArrays">
 			<forward name="success" path="cart.select.arrays.page"/>
 		</action>
-		
+
 		<action
 			path="/cart/recordArrays"
 			name="defaultForm">
@@ -366,23 +371,23 @@
 			<forward name="noProbeSets" path="/cart/selectArrays.do"/>
 			<forward name="splits" path="cart.organism.splits.page"/>
 		</action>
-		
+
 		<action
 			path="/cart/selectAssembly">
 			<forward name="success" path="cart.select.assembly.page"/>
 		</action>
-		
+
 		<action
 			path="/cart/mapProbes"
 			name="defaultForm">
 			<forward name="success" path="cart.probe.mapping.results.page"/>
 			<forward name="noAssembly" path="/cart/selectAssembly.do"/>
 		</action>
-		
+
 		<!-- ================================================ -->
 		<!--             Plot related actions                 -->
 		<!-- ================================================ -->
-			
+
 		<action
 			path="/plot/params"
 			name="plotParamsForm"
@@ -390,7 +395,7 @@
 			validate="false">
 			<forward name="success" path="plot.params.page"/>
 		</action>
-		
+
 		<action
 			path="/recordPlotParams"
 			type="org.apache.struts.actions.ForwardAction"
@@ -435,7 +440,7 @@
 			<forward name="ideogramPlotConfig" path="ideogram.plot.params.page"/>
 			<forward name="readyToPlot" path="/recordConfigPlotParams.do"/>
 		</action>
-		
+
 		<action
 			path="/recordConfigPlotParams"
 			type="org.rti.webcgh.webui.plot.PlotParamsConfigRecordAction"
@@ -446,8 +451,8 @@
 			<forward name="scatterPlotReadyToPlot" path="confirm.configure.scatter.plot.params.page"/>
 			<forward name="ideogramPlotReadyToPlot" path="confirm.configure.ideogram.plot.params.page"/>
 		</action>
-		
-		
+
+
 		<action
 			path="/updateSelectedFeatureTypes"
 			type="org.rti.webcgh.webui.plot.FeatureTypesSetupAction"
@@ -457,7 +462,7 @@
 			<forward name="success" path="update.selected.feature.types.page"/>
 			<forward name="no.assembly" path="/plot/params.do"/>
 		</action>
-		
+
 		<action
 			path="/plot/setup"
 			name="plotParamsForm"
@@ -473,7 +478,7 @@
 			<forward name="no.intervals" path="/plot/params.do"/>
 			<forward name="incompatible.assemblies" path="/plot/params.do"/>
 		</action>
-		
+
 		<action
 			path="/annotationReport"
 			type="org.rti.webcgh.webui.plot.AnnotationReportAction"
@@ -482,7 +487,7 @@
 			validate="false">
 			<forward name="success" path="annotation.report.page"/>
 		</action>
-		
+
 		<action
 			path="/plot/svg"
 			name="plotParamsForm"
@@ -490,7 +495,7 @@
 			scope="session">
 			<forward name="success" path="/WEB-INF/jsp/plot/showSvg.jsp"/>
 		</action>
-		
+
 		<action
 			path="/plot/saveAs"
 			name="plotSaveAsForm"
@@ -498,32 +503,32 @@
 			validate="false">
 			<forward name="success" path="plot.saveAs.page"/>
 		</action>
-			
+
 		<action
 			path="/fileDownload"
 			type="org.rti.webcgh.webui.download.FileDownloadAction">
 			<forward name="success" path="annotation.report.page"/>
 		</action>
-		
+
 		<!-- ======================================================== -->
 		<!--           Administrator actions                          -->
 		<!-- ======================================================== -->
-		
+
 		<action
 			path="/admin/home"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.home.page"/>
-			
+
 		<action
 			path="/admin/showSky">
 			<forward name="success" path="admin.show.sky.page"/>
 		</action>
-				
+
 		<action
 			path="/admin/loadSkyForm"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.load.sky.page"/>
-			
+
 		<action
 			path="/admin/loadSkyData"
 			name="skyForm"
@@ -532,20 +537,20 @@
 			scope="session">
 			<forward name="success" path="/admin/showSky.do"/>
 		</action>
-		
+
 		<action path="/admin/deleteSkyData">
 			<forward name="success" path="/admin/showSky.do"/>
 		</action>
-			
+
 		<action path="/admin/showCytobands">
 			<forward name="success" path="admin.show.cytobands.page"/>
 		</action>
-			
+
 		<action
 			path="/admin/loadCytobandsForm"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.load.cytobands.page"/>
-			
+
 		<action
 			path="/admin/loadCytobands"
 			name="cytobandForm"
@@ -554,20 +559,20 @@
 			input="admin.load.cytobands.page">
 			<forward name="success" path="/admin/showCytobands.do"/>
 		</action>
-		
+
 		<action path="/admin/deleteCytobands">
 			<forward name="success" path="/admin/showCytobands.do"/>
 		</action>
-		
+
 		<action path="/admin/showAnnotation">
 			<forward name="success" path="admin.show.annotation.page"/>
 		</action>
-		
+
 		<action
 			path="/admin/loadAnnotationForm"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.load.annotation.page"/>
-			
+
 		<action
 			path="/admin/loadAnnotation"
 			name="annotationForm"
@@ -576,20 +581,20 @@
 			input="admin.load.annotation.page">
 			<forward name="success" path="/admin/showAnnotation.do"/>
 		</action>
-		
+
 		<action path="/admin/deleteAnnotation">
 			<forward name="success" path="/admin/showAnnotation.do"/>
 		</action>
-		
+
 		<action path="/admin/showArrays">
 			<forward name="success" path="admin.show.arrays.page"/>
 		</action>
-		
+
 		<action
 			path="/admin/loadArrayForm"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.load.array.page"/>
-			
+
 		<action
 			path="/admin/loadArray"
 			name="probeSetForm"
@@ -598,40 +603,40 @@
 			input="admin.load.array.page">
 			<forward name="success" path="/admin/showArrays.do"/>
 		</action>
-		
+
 		<action path="/admin/deleteArray">
 			<forward name="success" path="/admin/showArrays.do"/>
 		</action>
-		
-		
+
+
 	</action-mappings>
-	
-	
+
+
 	<!-- ==================================================== -->
 	<!--            Controller                                -->
 	<!-- ==================================================== -->
-	
-	
+
+
 	<controller>
 	  <set-property property="processorClass"
 	      value="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
 	</controller>
-	
+
 	<!-- =========================================================== -->
 	<!--                  Plug-ins                                   -->
 	<!-- =========================================================== -->
 	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
-	    <set-property property="definitions-config" 
+	    <set-property property="definitions-config"
 		                 value="/WEB-INF/tiles-config.xml" />
 	    <set-property property="moduleAware" value="true" />
 	    <set-property property="definitions-parser-validate" value="true" />
 	</plug-in>
-	
+
 	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
 	  <set-property property="contextConfigLocation"
 	      value="/WEB-INF/applicationContext.xml"/>
 	</plug-in>
-	
 
-	
+
+
 </struts-config>
