@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/QuantitationType.java,v $
-$Revision: 1.3 $
-$Date: 2006-06-06 20:08:28 $
+$Revision: 1.4 $
+$Date: 2006-06-19 19:37:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,40 +52,42 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
+import java.io.Serializable;
+
 import org.rti.webcgh.service.Cacheable;
 import org.rti.webcgh.util.StringUtils;
 
 /**
- * Enumerated type representing type of quantitation
+ * Enumerated type representing type of quantitation.
  */
-public class QuantitationType implements Cacheable {
+public final class QuantitationType implements Cacheable, Serializable {
 	
 	// ====================================
 	//     Constants
 	// ====================================
 	
 	/**
-	 * Log2 ratio
+	 * Log2 ratio.
 	 */
 	public static final QuantitationType LOG_2_RATIO = 
 		new QuantitationType("Log2 Ratio");
 	
 	
 	/**
-	 * Unknown
+	 * Unknown.
 	 */
 	public static final QuantitationType UNKNOWN =
 		new QuantitationType("Unknown");
 	
 	/**
-	 * LOH
+	 * LOH.
 	 */
 	public static final QuantitationType LOH =
 		new QuantitationType("LOH");
 	
 	
 	/**
-	 * Percent
+	 * Percent.
 	 */
 	public static final QuantitationType PERCENT =
 		new QuantitationType("Percent");

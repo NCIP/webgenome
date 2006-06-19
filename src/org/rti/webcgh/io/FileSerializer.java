@@ -145,10 +145,14 @@ public class FileSerializer implements Serializer {
 	 */
 	public Serializable deSerialize(long objectId) {
 		String fname = this.getFileName(objectId);
+		File file = new File(fname);
+		if (! file.exists())
+			throw new WebcghSystemException("Cannot find file '" + 
+					file + "'");
 		Serializable serializable = null;
 		ObjectInputStream in = null;
 		try {
-			in = new ObjectInputStream(new FileInputStream(fname));
+			in = new ObjectInputStream(new FileInputStream(file));
 			serializable = (Serializable)in.readObject();
 		} catch (Exception e) {
 			throw new WebcghSystemException(

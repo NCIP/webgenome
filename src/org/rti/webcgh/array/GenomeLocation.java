@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeLocation.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.4 $
+$Date: 2006-06-19 19:37:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,13 +52,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
+import java.io.Serializable;
+
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.service.Cacheable;
 
 /**
  * Location in the genome
  */
-public class GenomeLocation implements Comparable, Locatable, Cacheable {
+public class GenomeLocation implements Comparable, Locatable, Cacheable, Serializable {
     
     
     // =============================

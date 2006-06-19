@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.7 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.8 $
+$Date: 2006-06-19 19:37:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,8 +58,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.core.WebcghApiUsageException;
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graph.widget.DataPlotter;
+import org.rti.webcgh.io.Serializer;
 import org.rti.webcgh.service.Cacheable;
 
 
@@ -68,6 +71,9 @@ import org.rti.webcgh.service.Cacheable;
  */
 public class BioAssay implements Cacheable {
 	
+	// Suffix appended to bioassay names during processing
+	// by an analytic pipeline indicating that the data
+	// are raw (i.e., unprocessed)
 	private static final String RAW_SUFFIX = " (raw)";
     
     
@@ -75,20 +81,49 @@ public class BioAssay implements Cacheable {
     //    Attributes
     // =================================
     
-    protected Long id;
-    protected String name;
-    protected String description;
-    protected BioAssayData bioAssayData = null;
-    protected Organism organism = null;
-    protected String bioAssayDataId = null;
-    protected String databaseName = null;
-    protected BinnedData binnedData = null;
+	// Properties that are currently only used for persistent
+	// storage of bioassays that are ETLd from SKY/M-FISH&CGH database
+    protected Long id; // Essentially a primary key
+    protected String bioAssayDataId = null; // Foreign key to bioassay data object
     protected Long binnedDataId = null;
-    protected Array array = null;
-    protected BioAssayType bioAssayType = null;
-    protected boolean raw = false;
+    protected BinnedData binnedData = null;
+    
+    // Atomic properties
+    protected String name;  // Name of bioassay that is displayed in UI
+    protected String description; // Description of bioassay displayed in UI
+    protected Organism organism = null; // Organism that was tested
+    protected String databaseName = null; // Name of data store where bioassay came from
+    protected Array array = null; // Array model used in physical bioassay
+    protected BioAssayType bioAssayType = null; // Type of bioassay
+    protected boolean raw = false; // Are data raw (i.e., not statistically processed)?
+    protected int numArrayDatum = 0; // Number of array datum objects
+    
+    // Bioassay data.  This object may be very big.  Clients can
+    // move this object and the data it represents
+    // in and out of memory data is in memory by the methods
+    // moveDataToMemory() and moveDataToDisk().  The amount
+    // of bioassay data in memory at one time should be
+    // minimized by clients.  Bioassay data must be in memory
+    // in three circumstances: (i) data loading, (ii) performing
+    // statistical caulculations, and (iii) creating graphics.
+    protected BioAssayData bioAssayData = null;
     
     
+    // Serializer used to move bioassay data in and out of memory
+    protected Serializer serializer = null;
+    
+    // Object identifiers used when bioassay data serialized to disk
+    protected long oid = -1;
+    
+    
+    /**
+     * @param serializer Serializer used to move bioassay data in and out of memory
+     */
+	public void setSerializer(Serializer serializer) {
+		this.serializer = serializer;
+	}
+
+
 	/**
 	 * @return Returns the raw.
 	 */
@@ -342,16 +377,16 @@ public class BioAssay implements Cacheable {
     //    Public methods
     // ===============================
 	
+	
+	
     /**
      * Return array datum with given reporter name
      * @param reporterName Name of reporter
      * @return An array datum
      */
     public ArrayDatum getArrayDatumByReporterName(String reporterName) {
-    	ArrayDatum datum = null;
-    	if (this.bioAssayData != null)
-    		return this.bioAssayData.getArrayDatumByReporterName(reporterName);
-    	return datum;
+    	this.checkBioAssayInMemory();
+    	return this.bioAssayData.getArrayDatumByReporterName(reporterName);
     }
     
     /**
@@ -363,8 +398,8 @@ public class BioAssay implements Cacheable {
      */
     public void graph(DataPlotter plot, GenomeLocation start, GenomeLocation end, 
     		Color color) {
-        if (this.bioAssayData != null)
-            this.bioAssayData.graph(plot, start, end, this.getName(), color);
+    	this.checkBioAssayInMemory();
+        this.bioAssayData.graph(plot, start, end, this.getName(), color);
     }
     
 
@@ -373,10 +408,8 @@ public class BioAssay implements Cacheable {
      * @return Minimum value represented in bioassay
      */
     public double minValue() {
-        double min = Double.NaN;
-        if (this.bioAssayData != null)
-            min = this.bioAssayData.minValue();
-    	return min;
+    	this.checkBioAssayInMemory();
+        return this.bioAssayData.minValue();
     }
     
     
@@ -385,10 +418,8 @@ public class BioAssay implements Cacheable {
      * @return Maximum value represented in bioassay
      */
     public double maxValue() {
-        double max = Double.NaN;
-        if (this.bioAssayData != null)
-            max = this.bioAssayData.maxValue();
-    	return max;
+    	this.checkBioAssayInMemory();
+        return this.bioAssayData.maxValue();
     }
     
     
@@ -397,19 +428,8 @@ public class BioAssay implements Cacheable {
      * @return An iterator
      */
     public ArrayDatumIterator arrayDatumIterator() {
-    	ArrayDatumIterator it = null;
-    	if (this.bioAssayData == null)
-    		it = new ArrayDatumIterator() {
-	    	    public ArrayDatum next() {
-	    	        return null;
-	    	    }
-	    	    public boolean hasNext() {
-	    	        return false;
-	    	    }
-    	};
-    	else
-    		it = this.bioAssayData.arrayDatumIterator();
-    	return it;
+    	this.checkBioAssayInMemory();
+    	return this.bioAssayData.arrayDatumIterator();
     }
     
     
@@ -427,9 +447,9 @@ public class BioAssay implements Cacheable {
      * @param datum Array datum
      */
     public void add(ArrayDatum datum) throws WebcghApplicationException {
-        if (this.bioAssayData == null)
-            this.bioAssayData = new BioAssayData();
+    	this.checkBioAssayInMemory();
         this.bioAssayData.add(datum);
+        this.numArrayDatum++;
     }
     
     
@@ -438,10 +458,7 @@ public class BioAssay implements Cacheable {
      * @return Number of array datum
      */
     public int numArrayDatum() {
-    	int num = 0;
-    	if (this.bioAssayData != null)
-    		num = this.bioAssayData.numArrayDatum();
-    	return num;
+    	return this.numArrayDatum;
     }
     
     
@@ -451,10 +468,8 @@ public class BioAssay implements Cacheable {
      * @return An array datum
      */
     public ArrayDatum getArrayDatum(int p) {
-    	ArrayDatum datum = null;
-    	if (this.bioAssayData != null)
-    		datum = this.bioAssayData.getArrayDatum(p);
-    	return datum;
+    	this.checkBioAssayInMemory();
+    	return this.bioAssayData.getArrayDatum(p);
     }
     
     
@@ -518,8 +533,7 @@ public class BioAssay implements Cacheable {
      * @param bioAssayData Bioassay data
      */
     public void add(BioAssayData bioAssayData) {
-    	if (this.bioAssayData == null)
-    		this.bioAssayData = bioAssayData;
+    	this.bioAssayData = bioAssayData;
     }
     
     
@@ -528,8 +542,7 @@ public class BioAssay implements Cacheable {
      * @return Set of QuantitationType objects
      */
     public Set quantitationTypes() {
-        if (this.bioAssayData == null)
-            return new HashSet();
+    	this.checkBioAssayInMemory();
         return this.bioAssayData.quantitationTypes();
     }
     
@@ -539,8 +552,7 @@ public class BioAssay implements Cacheable {
      * @return Sorted set of Chromosome objects
      */
     public SortedSet chromosomes() {
-    	if (this.bioAssayData == null)
-    		return new TreeSet();
+    	this.checkBioAssayInMemory();
     	return this.bioAssayData.chromosomes();
     }
     
@@ -550,6 +562,7 @@ public class BioAssay implements Cacheable {
      * @param dto A DTO
      */
     public void expand(GenomeIntervalDto dto) {
+    	this.checkBioAssayInMemory();
     	for (ArrayDatumIterator it = this.arrayDatumIterator(); it.hasNext();) {
     		ArrayDatum datum = it.next();
     		datum.expand(dto);
@@ -562,6 +575,7 @@ public class BioAssay implements Cacheable {
      * @param bioAssay A bioassay
      */
     public void add(BioAssay bioAssay) throws WebcghApplicationException {
+    	this.checkBioAssayInMemory();
     	for (ArrayDatumIterator it = bioAssay.arrayDatumIterator(); it.hasNext();) {
     		ArrayDatum datum = it.next();
     		this.add(datum);
@@ -585,8 +599,7 @@ public class BioAssay implements Cacheable {
      * @return Amplified regions
      */
     public ChromosomalAlterationSet amplifiedRegions(double threshold) {
-    	if (this.bioAssayData == null)
-    		return new ChromosomalAlterationSet();
+    	this.checkBioAssayInMemory();
     	return this.bioAssayData.amplifiedRegions(threshold);
     }
     
@@ -597,8 +610,7 @@ public class BioAssay implements Cacheable {
      * @return Amplified regions
      */
     public ChromosomalAlterationSet deletedRegions(double threshold) {
-    	if (this.bioAssayData == null)
-    		return new ChromosomalAlterationSet();
+    	this.checkBioAssayInMemory();
     	return this.bioAssayData.deletedRegions(threshold);
     }
     
@@ -624,6 +636,31 @@ public class BioAssay implements Cacheable {
     	this.description = bioAssay.description;
     	this.name = bioAssay.name;
     	this.organism = bioAssay.organism;
+    	this.oid = bioAssay.oid;
+    }
+    
+    
+    /**
+     * Move bioassay data from disk to memory.
+     */
+    public void moveDataToMemory() {
+    	if (this.bioAssayData == null) {
+    		if (this.oid >= 0) {
+    			this.bioAssayData = (BioAssayData)this.serializer.deSerialize(this.oid);
+    			this.serializer.decommissionObject(this.oid);
+    			this.oid = -1;
+    		} else
+    			this.bioAssayData = new BioAssayData();
+    	}
+    }
+    
+    
+    /**
+     * Move bioassay data from memory to disk
+     */
+    public void moveDataToDisk() {
+    	this.oid = this.serializer.serialize(this.bioAssayData);
+    	this.bioAssayData = null;
     }
     
     private void deepCopyCollections(BioAssay bioAssay) {
@@ -648,10 +685,27 @@ public class BioAssay implements Cacheable {
     	this.bioAssayData = bioAssay.bioAssayData;
     }
     
+    
+    /**
+     * Checks that the bioassay property is in memory.  If it is not,
+     * then methods throws a <code>WebcghApiUsageException</code>.  This
+     * method should be called in any method that uses bioassay data.
+     * Clients need to make sure they load bioassay data into memory
+     * before calling methods that access data.
+     * @throws WebcghApiUsageException if <code>bioAssayData</code>
+     * property is null
+     */
+    private void checkBioAssayInMemory() {
+	    if (this.bioAssayData == null)
+	    	throw new WebcghApiUsageException(
+	    			"The method 'moveDataToMemory()' must first be called.");
+    }
+    
     // ====================================
     //      Static methods
     // ====================================
     
+    // TODO: Make this memory efficient
     /**
      * Compute aggregate mean of all underlying data
      * @param bioAssays Bio assays

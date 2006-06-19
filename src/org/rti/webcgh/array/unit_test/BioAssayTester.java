@@ -51,74 +51,79 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.io.unit_test;
+package org.rti.webcgh.array.unit_test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.apache.log4j.Logger;
+import org.rti.webcgh.array.ArrayDatum;
+import org.rti.webcgh.array.BioAssay;
+import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.io.FileSerializer;
+import org.rti.webcgh.io.Serializer;
 import org.rti.webcgh.unit_test.UnitTestUtils;
+import org.rti.webcgh.util.ArrayDatumGenerator;
 
 import junit.framework.TestCase;
 
 /**
- * Tester for class <code>FileSerializer</code>.
+ * Tester for <code>BioAssay</code>.
+ * @author dhall
+ *
  */
-public final class FileSerializerTester extends TestCase {
-	
-    /** Test directory path name. */
-	private String testDirName = null;
+public final class BioAssayTester extends TestCase {
     
-    /** File serializer. */
-	private FileSerializer fs = null;
-	
-    /**
-     * @overrides
-     */
-	public void setUp() {
-        this.testDirName = UnitTestUtils.newTestDirectory(
-                "/file_serializer_tester");
-		this.fs = new FileSerializer(this.testDirName);
-		this.fs.decommissionAllObjects();
-	}
-	
-	
-    /**
-     * @overrides
-     */
-	public void tearDown() {
-		this.fs.decommissionAllObjects();
-	}
-	
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(BioAssayTester.class);
+    
+    /** A big number. */
+    private static final long BIG_NUM = (long) 500000;
+    
+    /** Number of bioassays created in testing load. */
+    private static final int NUM_BIOASSAYS = 5;
     
     /**
-     * Test serialize and deserialize.
-     *
+     * Test ability of bioassay to absort
+     * large amounts of data.
+     * @throws Exception If there is a problem
      */
-	public void testSerializeAndDeserialize() {
-		String s1 = "Hello";
-		String s2 = "world!";
-		long oid1 = this.fs.serialize(s1);
-		long oid2 = this.fs.serialize(s2);
-		String s3 = (String) this.fs.deSerialize(oid1);
-		assertEquals(s1, s3);
-		s3 = (String) this.fs.deSerialize(oid2);
-		assertEquals(s2, s3);
-	}
-	
-    /**
-     * Test decomissioning.
-     *
-     */
-	public void testDecomission() {
-		long oid = this.fs.serialize("Hello");
-		assertEquals(0, oid);
-		oid = this.fs.serialize("world!");
-		assertEquals(1, oid);
-		this.fs.decommissionObject(1);
-		FileSerializer fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again");
-		assertEquals(1, oid);
-		fs2.decommissionAllObjects();
-		fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again again");
-		assertEquals(0, oid);
-	}
+    public void testBigData() throws Exception {
+        
+        // Create some bioassays and write data do disk
+        Collection<BioAssay> bioAssays = new ArrayList<BioAssay>();
+        String testDirName = UnitTestUtils.newTestDirectory("bioassay_tests");
+        Serializer serializer = new FileSerializer(testDirName);
+        for (int i = 0; i < NUM_BIOASSAYS; i++) {
+            LOGGER.info("Creating bioassay " + i);
+            BioAssay b = new BioAssay();
+            bioAssays.add(b);
+            b.setSerializer(serializer);
+            b.moveDataToMemory();
+            ArrayDatumGenerator adg = new ArrayDatumGenerator();
+            for (long j = 0; j < BIG_NUM; j++) {
+                ArrayDatum datum = adg.newArrayDatum("Name", 
+                        (short) 1, (long) 1);
+                b.add(datum);
+            }
+            LOGGER.info("Writing data to disk");
+            b.moveDataToDisk();
+            LOGGER.info("Completed write");
+        }
+        
+        // Iterate through bioassays and load then save data
+        int count = 0;
+        for (BioAssay b : bioAssays) {
+            LOGGER.info("Retrieving data from bioassay " + (count++));
+            b.moveDataToMemory();
+            assertNotNull(b.getBioAssayData());
+            assertEquals(BIG_NUM, b.getBioAssayData().numArrayDatum());
+            b.moveDataToDisk();
+            LOGGER.info("Relinquishing memory");
+        }
+        
+        // Clean up
+        serializer.decommissionAllObjects();
+    }
+
 }

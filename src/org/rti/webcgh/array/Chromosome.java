@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Chromosome.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-06-19 19:37:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,12 +52,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
+import java.io.Serializable;
+
 import org.rti.webcgh.service.Cacheable;
 
 /**
  * A chromosome
  */
-public class Chromosome implements Comparable, Cacheable {
+public class Chromosome implements Comparable, Cacheable, Serializable {
     
     
     // ==============================

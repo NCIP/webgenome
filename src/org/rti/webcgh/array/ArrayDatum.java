@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatum.java,v $
-$Revision: 1.7 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.8 $
+$Date: 2006-06-19 19:37:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -62,7 +63,8 @@ import org.rti.webcgh.service.Cacheable;
 /**
  * An array data point
  */
-public class ArrayDatum implements Comparable, Locatable, Cacheable {
+public class ArrayDatum implements Comparable, Locatable, 
+    Cacheable, Serializable {
     
     
     // ============================

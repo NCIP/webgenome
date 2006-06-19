@@ -51,74 +51,41 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.io.unit_test;
+package org.rti.webcgh.core;
 
-import org.rti.webcgh.io.FileSerializer;
-import org.rti.webcgh.unit_test.UnitTestUtils;
+public class WebcghApiUsageException extends RuntimeException {
+	
+	
+	/**
+	 * Constructor
+	 */
+	public WebcghApiUsageException() {
+		super();
+	}
+	
+	/**
+	 * Constructor
+	 * @param msg Message
+	 */
+	public WebcghApiUsageException(String msg) {
+		super(msg);
+	}
+	
+	/**
+	 * Constructor
+	 * @param origThrowable Original throwable
+	 */
+	public WebcghApiUsageException(Throwable origThrowable) {
+		super(origThrowable);
+	}
 
-import junit.framework.TestCase;
+	/**
+	 * Constructor
+	 * @param msg Message
+	 * @param origThrowable Original throwable
+	 */
+	public WebcghApiUsageException(String msg, Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
 
-/**
- * Tester for class <code>FileSerializer</code>.
- */
-public final class FileSerializerTester extends TestCase {
-	
-    /** Test directory path name. */
-	private String testDirName = null;
-    
-    /** File serializer. */
-	private FileSerializer fs = null;
-	
-    /**
-     * @overrides
-     */
-	public void setUp() {
-        this.testDirName = UnitTestUtils.newTestDirectory(
-                "/file_serializer_tester");
-		this.fs = new FileSerializer(this.testDirName);
-		this.fs.decommissionAllObjects();
-	}
-	
-	
-    /**
-     * @overrides
-     */
-	public void tearDown() {
-		this.fs.decommissionAllObjects();
-	}
-	
-    
-    /**
-     * Test serialize and deserialize.
-     *
-     */
-	public void testSerializeAndDeserialize() {
-		String s1 = "Hello";
-		String s2 = "world!";
-		long oid1 = this.fs.serialize(s1);
-		long oid2 = this.fs.serialize(s2);
-		String s3 = (String) this.fs.deSerialize(oid1);
-		assertEquals(s1, s3);
-		s3 = (String) this.fs.deSerialize(oid2);
-		assertEquals(s2, s3);
-	}
-	
-    /**
-     * Test decomissioning.
-     *
-     */
-	public void testDecomission() {
-		long oid = this.fs.serialize("Hello");
-		assertEquals(0, oid);
-		oid = this.fs.serialize("world!");
-		assertEquals(1, oid);
-		this.fs.decommissionObject(1);
-		FileSerializer fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again");
-		assertEquals(1, oid);
-		fs2.decommissionAllObjects();
-		fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again again");
-		assertEquals(0, oid);
-	}
 }

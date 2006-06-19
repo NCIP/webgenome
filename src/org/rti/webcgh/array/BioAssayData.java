@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssayData.java,v $
-$Revision: 1.9 $
-$Date: 2006-05-26 17:21:53 $
+$Revision: 1.10 $
+$Date: 2006-06-19 19:37:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.array;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ import org.rti.webcgh.graph.widget.DataPlotter;
 /**
  * Bio-assay data
  */
-public class BioAssayData {
+public class BioAssayData implements Serializable {
 	
 	private static final Logger LOGGER = Logger.getLogger(BioAssayData.class);
     
