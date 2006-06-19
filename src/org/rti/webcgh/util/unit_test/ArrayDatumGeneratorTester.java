@@ -65,6 +65,9 @@ import org.rti.webcgh.util.ArrayDatumGenerator;
  */
 public final class ArrayDatumGeneratorTester extends TestCase {
     
+    /** Seed for array datum generator. */
+    private static final long SEED = (long) 10;
+    
     /**
      * Test newArrayDatum() method call.
      *
@@ -80,7 +83,7 @@ public final class ArrayDatumGeneratorTester extends TestCase {
         assertNotNull(datum);
         
         // Test with seed
-        adg = new ArrayDatumGenerator();
+        adg = new ArrayDatumGenerator(SEED);
         datum = adg.newArrayDatum(name, chromosome, location);
         assertNotNull(adg);
     }
