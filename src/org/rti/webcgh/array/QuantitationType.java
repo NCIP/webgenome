@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/QuantitationType.java,v $
-$Revision: 1.4 $
-$Date: 2006-06-19 19:37:42 $
+$Revision: 1.5 $
+$Date: 2006-07-21 20:06:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,10 @@ import org.rti.webcgh.util.StringUtils;
 /**
  * Enumerated type representing type of quantitation.
  */
-public final class QuantitationType implements Cacheable, Serializable {
+public class QuantitationType implements Cacheable, Serializable {
+    
+    /** Used during serialization. **/
+    private static final long serialVersionUID = (long) 1;
 	
 	// ====================================
 	//     Constants

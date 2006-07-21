@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="org.rti.webcgh.domain.ChromosomeArrayData" table="CHROMOSOME_ARRAY_DATA_2">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+		<property name="chromosome" update="false" insert="false"/>
+		
+		<property
+			name="bioAssayDataId"
+			column="bio_assay_data_id"
+			update="false"
+			insert="false"
+		/>
+		
+		<set
+			name="arrayData"
+			cascade="all"
+			sort="org.rti.webcgh.domain.ArrayDatum$ChromosomeLocationComparator">
+			<key
+				column="chromosome_array_data_id"
+				not-null="true"
+			/>
+			<one-to-many class="org.rti.webcgh.domain.ArrayDatum"/>
+		</set>
+	</class>
+
+</hibernate-mapping>

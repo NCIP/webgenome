@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.8 $
-$Date: 2006-06-19 19:37:42 $
+$Revision: 1.9 $
+$Date: 2006-07-21 20:06:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,28 +67,38 @@ import org.rti.webcgh.service.Cacheable;
 
 
 /**
- * A bioassay
+ * A bioassay.
  */
 public class BioAssay implements Cacheable {
 	
-	// Suffix appended to bioassay names during processing
-	// by an analytic pipeline indicating that the data
-	// are raw (i.e., unprocessed)
+    /**
+	 * Suffix appended to bioassay names during processing
+	 * by an analytic pipeline indicating that the data
+	 * are raw (i.e., unprocessed).
+     */
 	private static final String RAW_SUFFIX = " (raw)";
     
-    
-    // =================================
-    //    Attributes
-    // =================================
-    
-	// Properties that are currently only used for persistent
+	// ==========================================
+    // Properties that are currently only used for persistent
 	// storage of bioassays that are ETLd from SKY/M-FISH&CGH database
-    protected Long id; // Essentially a primary key
-    protected String bioAssayDataId = null; // Foreign key to bioassay data object
+    // ==========================================
+    
+    /** Primary key used by Hibernate. */
+    protected Long id;
+    
+    /** Identifies associated bioassay data object. */
+    protected String bioAssayDataId = null;
+    
+    /** Foreign key to binned SKY/M-FISH&CGH data stored by Hibernate. */
     protected Long binnedDataId = null;
+    
+    /** Binned SKY/M-FISH&CGH data. */
     protected BinnedData binnedData = null;
     
-    // Atomic properties
+    // ========================================
+    //            Atomic properties
+    // ========================================
+    
     protected String name;  // Name of bioassay that is displayed in UI
     protected String description; // Description of bioassay displayed in UI
     protected Organism organism = null; // Organism that was tested

@@ -66,28 +66,28 @@ import org.rti.webcgh.util.IOUtils;
 
 /**
  * Implementation of <code>Serializer</code> interface that
- * serialized to a file
+ * serialized to a file.
  *
  */
-public class FileSerializer implements Serializer {
+public final class FileSerializer implements Serializer {
 	
-	// Logger
+	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(FileSerializer.class);
 	
-	// File extension
+	/** File extension. */
 	private static final String FILE_EXTENSION = ".obj";
 	
-	// Directory name delimiter
+	/** Directory name delimiter. */
 	private static final String DIRECTORY_DELIMITER = "/";
 	
 	// ============================
 	//       Attributes
 	// ============================
 	
-	// Directory containing serialized files
+	/** Directory containing serialized files. */
 	private final File directory;
 	
-	// Object ID sequence
+	/** Object ID sequence. */
 	private final OidSequence oidSequence;
 	
 
@@ -96,15 +96,17 @@ public class FileSerializer implements Serializer {
 	// ==============================
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param directoryPath Directory to serialize files into
 	 */
-	public FileSerializer(String directoryPath) {
+	public FileSerializer(final String directoryPath) {
 		this.directory = new File(directoryPath);
 		
 		// Make sure directory exists
-		if (! this.directory.exists() || ! this.directory.isDirectory())
-			throw new IllegalArgumentException("Directory '" + directory + "' does not exist");
+		if (!this.directory.exists() || !this.directory.isDirectory()) {
+			throw new IllegalArgumentException("Directory '"
+                    + directory + "' does not exist");
+        }
 		
 		// Set properties
 		this.oidSequence = new OidSequence(this.directory);
@@ -118,11 +120,11 @@ public class FileSerializer implements Serializer {
 	
 	/**
 	 * Serialize given serializable object and return an object
-	 * ID that can be used to de-serialize object at a later time
+	 * ID that can be used to de-serialize object at a later time.
 	 * @param serializable A serializable object
 	 * @return An object identifier
 	 */
-	public long serialize(Serializable serializable) {
+	public long serialize(final Serializable serializable) {
 		long oid = this.oidSequence.next();
 		String fname = this.getFileName(oid);
 		ObjectOutputStream out = null;
@@ -139,24 +141,26 @@ public class FileSerializer implements Serializer {
 
 	
 	/**
-	 * De-serialize object with given object id
+	 * De-serialize object with given object id.
 	 * @param objectId An object identifier
 	 * @return A serializable object
 	 */
-	public Serializable deSerialize(long objectId) {
+	public Serializable deSerialize(final long objectId) {
 		String fname = this.getFileName(objectId);
 		File file = new File(fname);
-		if (! file.exists())
-			throw new WebcghSystemException("Cannot find file '" + 
-					file + "'");
+		if (!file.exists()) {
+			throw new WebcghSystemException("Cannot find file '"
+                    + file + "'");
+        }
 		Serializable serializable = null;
 		ObjectInputStream in = null;
 		try {
 			in = new ObjectInputStream(new FileInputStream(file));
-			serializable = (Serializable)in.readObject();
+			serializable = (Serializable) in.readObject();
 		} catch (Exception e) {
 			throw new WebcghSystemException(
-					"Error de-serializing object with id '" + objectId + "'", e);
+					"Error de-serializing object with id '"
+                    + objectId + "'", e);
 		} finally {
 			IOUtils.close(in);
 		}
@@ -171,10 +175,13 @@ public class FileSerializer implements Serializer {
 	 */
 	public void decommissionAllObjects() {
 		File[] files = this.directory.listFiles();
-		for (int i = 0; i < files.length; i++)
-			if (! files[i].delete())
-				LOGGER.warn("Could not decomission file '" + files[i].getAbsolutePath() +
-						"'");
+		for (int i = 0; i < files.length; i++) {
+			if (!files[i].delete()) {
+				LOGGER.warn("Could not decomission file '"
+                        + files[i].getAbsolutePath()
+                        + "'");
+            }
+        }
 	}
 	
 	
@@ -187,16 +194,19 @@ public class FileSerializer implements Serializer {
 	 * object denoted by <code>objectId</code> has already
 	 * been decomissioned.
 	 */
-	public void decommissionObject(long objectId) {
+	public void decommissionObject(final long objectId) {
 		String fname = this.getFileName(objectId);
 		File file = new File(fname);
-		if (! file.exists())
-			throw new IllegalArgumentException("Cannot find object with id '" +
-					objectId + "'");
-		if (! file.delete())
-			LOGGER.warn("Could not decomission file '" + file.getAbsolutePath() +
-			"'");
+		if (!file.exists()) {
+			throw new IllegalArgumentException("Cannot find object with id '"
+                    + objectId + "'");
+        }
+		if (!file.delete()) {
+			LOGGER.warn("Could not decomission file '"
+                    + file.getAbsolutePath() + "'");
+        }
 	}
+    
 	
 	// ===============================
 	//       Private methods
@@ -204,28 +214,31 @@ public class FileSerializer implements Serializer {
 	
 	
 	/**
-	 * Return a file name corresponding to given object id
+	 * Return a file name corresponding to given object id.
 	 * @param oid Object id
 	 * @return A file name
 	 */
-	private String getFileName(long oid) {
-		return this.directory.getAbsolutePath() + DIRECTORY_DELIMITER + 
-		oid + FILE_EXTENSION;
+	private String getFileName(final long oid) {
+		return this.directory.getAbsolutePath() + DIRECTORY_DELIMITER 
+		    + oid + FILE_EXTENSION;
 	}
 	
 	
 	/**
-	 * Parse object id from file name
+	 * Parse object id from file name.
 	 * @param file A file
 	 * @return Object id or -1 if an id cannot be parsed
 	 */
-	private long getObjectId(File file) {
-		long oid = (long)-1;
+	private long getObjectId(final File file) {
+		long oid = (long) -1;
 		String fname = file.getName();
 		int p = fname.indexOf(FILE_EXTENSION);
 		try {
 			oid = Long.parseLong(fname.substring(0, p));
-		} catch (NumberFormatException e){}
+		} catch (NumberFormatException e) {
+            LOGGER.warn("Data directory contains non-webGenonome file '"
+                    + file.getName() + "'");
+        }
 		return oid;
 	}
 	
@@ -234,42 +247,47 @@ public class FileSerializer implements Serializer {
 	// ===============================
 	
 	/**
-	 * Helper class to generate a sequence of object identifiers
+	 * Helper class to generate a sequence of object identifiers.
 	 */
 	class OidSequence {
 		
-		// Next object id in the sequence
-		private long nextInSequence = (long)0;
+		/** Next object id in the sequence. */
+		private long nextInSequence = (long) 0;
 		
 		/**
-		 * Constructor
+		 * Constructor.
+         * @param directory Directory containing files.
 		 */
-		public OidSequence(File directory) {
+		public OidSequence(final File directory) {
 			
 			// Set next in sequence
-			if (directory == null || ! directory.isDirectory())
-				throw new IllegalArgumentException("'" + 
-						directory.getAbsolutePath() + "' is not a valid directory");
+			if (directory == null || !directory.isDirectory()) {
+				throw new IllegalArgumentException("'"
+                        + directory.getAbsolutePath()
+                        + "' is not a valid directory");
+            }
 			File[] files = directory.listFiles();
-			this.nextInSequence = (long)-1;
+			this.nextInSequence = (long) -1;
 			for (int i = 0; i < files.length; i++) {
 				long candidate = getObjectId(files[i]);
-				if (candidate >= 0 && candidate > this.nextInSequence)
+				if (candidate >= 0 && candidate > this.nextInSequence) {
 					this.nextInSequence = candidate;
+                }
 			}
 			this.nextInSequence++;
 		}
 		
 		/**
-		 * Return next object id in the sequence
+		 * Return next object id in the sequence.
 		 * @return An object id
 		 */
 		public long next() {
 			long value = this.nextInSequence;
-			if (this.nextInSequence == Long.MAX_VALUE)
-				this.nextInSequence = (long)0;
-			else
+			if (this.nextInSequence == Long.MAX_VALUE) {
+				this.nextInSequence = (long) 0;
+            } else {
 				this.nextInSequence++;
+            }
 			return value;
 		}
 	}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>jdbc:oracle:thin:@rtilxs02.rti.org:1521:webgrtid</value></property>
+		<property name="username"><value>webg</value></property>
+		<property name="password"><value>webcgh9</value></property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	<property name="mappingDirectoryLocations">
+	      	<list>
+        		<bean class="org.springframework.core.io.ClassPathResource">
+        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/service/dao/hibernate</value></constructor-arg>
+        		</bean>
+	      	</list>
+    	</property>
+    	<property name="hibernateProperties">
+      		<props>
+        		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+      		</props>
+    	</property>
+  	</bean>
+  	
+  	<bean id="reporterDao" class="org.rti.webcgh.service.dao.hibernate.HibernateReporterDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="chromosomeArrayDataDao" class="org.rti.webcgh.service.dao.hibernate.HibernateChromosomeArrayDataDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="bioAssayDataDao" class="org.rti.webcgh.service.dao.hibernate.HibernateBioAssayDataDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="organismDao" class="org.rti.webcgh.service.dao.hibernate.HibernateOrganismDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="shoppingCartDao" class="org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+
+</beans>
