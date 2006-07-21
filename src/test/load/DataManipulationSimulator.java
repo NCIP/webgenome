@@ -251,7 +251,7 @@ public class DataManipulationSimulator {
                     Collection<ChromosomeArrayData> cads =
                         new ArrayList<ChromosomeArrayData>();
                     for (BioAssay ba : experiment.getBioAssays()) {
-                        cads.add(dataFileManager.getChromosomeArrayData(ba,
+                        cads.add(dataFileManager.loadChromosomeArrayData(ba,
                                 chrom));
                     }
                 }

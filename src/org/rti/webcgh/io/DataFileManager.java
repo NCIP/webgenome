@@ -62,10 +62,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.Array;
@@ -230,7 +226,7 @@ public final class DataFileManager {
      * @param chromosome Chromosome number
      * @return Chromosome array data
      */
-    public ChromosomeArrayData getChromosomeArrayData(
+    public ChromosomeArrayData loadChromosomeArrayData(
             final BioAssay bioAssay, final short chromosome) {
         
         // Recover reporters

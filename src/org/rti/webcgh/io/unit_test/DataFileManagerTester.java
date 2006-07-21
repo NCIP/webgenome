@@ -130,7 +130,7 @@ public final class DataFileManagerTester extends TestCase {
         // Recover some data
         BioAssay ba = exp.getBioAssays().iterator().next();
         short chromosome = (short) 1;
-        ChromosomeArrayData cad = mgr.getChromosomeArrayData(ba, chromosome);
+        ChromosomeArrayData cad = mgr.loadChromosomeArrayData(ba, chromosome);
         assertNotNull(cad);
         
         // Delete all data
