@@ -129,8 +129,7 @@ public final class SlidingWindowSmoother
         
         ChromosomeArrayData out =
             new ChromosomeArrayData(input.getChromosome());
-        List<ArrayDatum> arrayData =
-            new ArrayList<ArrayDatum>(input.getArrayData());
+        List<ArrayDatum> arrayData = input.getArrayData();
         
         // Calculate number of reporters to left and right
         // boundaries of window from the "center"
@@ -165,7 +164,7 @@ public final class SlidingWindowSmoother
                     totalError += ad.getValue();
                 }
             }
-            float actualWindowSize = (float) (p - q) + (float) 1.0;
+            float actualWindowSize = (float) (q - p) + (float) 1.0;
             float smoothedValue = totalValue / actualWindowSize;
             float smoothedError = totalError / actualWindowSize;
             ArrayDatum smoothedDatum = new ArrayDatum(smoothedValue,

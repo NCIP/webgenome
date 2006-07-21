@@ -81,12 +81,18 @@ public class SlidingWindowSmootherTester extends TestCase {
         ChromosomeArrayData in = new ChromosomeArrayData((short) 1);
         Reporter r = new Reporter("r1", (short) 1, (long) 100);
         in.add(new ArrayDatum((float) 1.0, r));
-        in.add(new ArrayDatum((float) 2.0, r));
-        in.add(new ArrayDatum((float) 3.0, r));
-        in.add(new ArrayDatum((float) 4.0, r));
-        in.add(new ArrayDatum((float) 5.0, r));
-        in.add(new ArrayDatum((float) 6.0, r));
-        in.add(new ArrayDatum((float) 7.0, r));
+        in.add(new ArrayDatum((float) 2.0,
+                new Reporter("r1", (short) 1, (long) 200)));
+        in.add(new ArrayDatum((float) 3.0,
+                new Reporter("r1", (short) 1, (long) 300)));
+        in.add(new ArrayDatum((float) 4.0,
+                new Reporter("r1", (short) 1, (long) 400)));
+        in.add(new ArrayDatum((float) 5.0,
+                new Reporter("r1", (short) 1, (long) 500)));
+        in.add(new ArrayDatum((float) 6.0,
+                new Reporter("r1", (short) 1, (long) 600)));
+        in.add(new ArrayDatum((float) 7.0,
+                new Reporter("r1", (short) 1, (long) 700)));
         
         // Perform operation
         SlidingWindowSmoother smoother = new SlidingWindowSmoother();
@@ -99,6 +105,8 @@ public class SlidingWindowSmootherTester extends TestCase {
         assertEquals(r, data.get(0).getReporter());
         assertEquals((float) 2.0, data.get(0).getValue());
         assertEquals((float) 0.0, data.get(0).getError());
+        assertEquals((float) 4.0, data.get(3).getValue());
+        assertEquals((float) 22.0 / (float) 4.0, data.get(5).getValue());
     }
 
 }

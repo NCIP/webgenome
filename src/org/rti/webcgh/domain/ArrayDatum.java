@@ -81,7 +81,7 @@ public class ArrayDatum implements Serializable {
      * Experimental error measurement.  This value will be calculated
      * by methods in the application.
      */
-    private float error = (float) 1.0;
+    private float error = Float.NaN;
     
     /** Reporter that took this measurement. **/
     private Reporter reporter = null;
@@ -186,7 +186,7 @@ public class ArrayDatum implements Serializable {
      * @param reporter Reporter that produced this measurement
      */
     public ArrayDatum(final float value, final Reporter reporter) {
-        this(value, (float) 1.0, reporter);
+        this(value, Float.NaN, reporter);
     }
     
     
