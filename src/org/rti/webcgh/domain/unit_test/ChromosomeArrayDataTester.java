@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain.unit_test;
 
+import java.util.List;
 import java.util.SortedSet;
 
 import org.rti.webcgh.domain.ArrayDatum;
@@ -77,7 +78,7 @@ public class ChromosomeArrayDataTester extends TestCase {
         ChromosomeArrayData cad = new ChromosomeArrayData((short) 1);
         
         // Do test on chromosome with no data
-        SortedSet<ArrayDatum> set = cad.getArrayData((long) 100, (long) 300);
+        List<ArrayDatum> set = cad.getArrayData((long) 100, (long) 300);
         assertEquals(0, set.size());
         
         // Add data

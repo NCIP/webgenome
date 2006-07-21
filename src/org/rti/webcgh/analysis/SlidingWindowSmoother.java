@@ -134,8 +134,11 @@ public final class SlidingWindowSmoother
         
         // Calculate number of reporters to left and right
         // boundaries of window from the "center"
-        int numBack = (int) Math.ceil((double) this.windowSize / 2.0) - 1;
-        int numForward = (int) Math.ceil((double) this.windowSize / 2.0);
+        int numBack = (int) Math.floor((double) this.windowSize / 2.0);
+        int numForward = (int) Math.floor((double) this.windowSize / 2.0);
+        if (this.windowSize % 2 == 0) {
+            numForward++;
+        }
         LOGGER.debug("Number of reporters to left of center = " + numBack);
         LOGGER.debug("Number of reporters to right of center = " + numForward);
         
@@ -148,8 +151,8 @@ public final class SlidingWindowSmoother
                 p = 0;
             }
             int q = i + numForward;
-            if (p > indexLastDatum) {
-                p = indexLastDatum;
+            if (q > indexLastDatum) {
+                q = indexLastDatum;
             }
             float totalValue = (float) 0.0;
             float totalError = (float) 0.0;

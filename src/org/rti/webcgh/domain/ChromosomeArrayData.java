@@ -90,11 +90,13 @@ public class ChromosomeArrayData implements Serializable {
     private Long bioAssayDataId = null;
     
     /** Array data from chromosome. */
-    private SortedSet<ArrayDatum> arrayData = new TreeSet<ArrayDatum>(
-            new ArrayDatum.ChromosomeLocationComparator());
+    private List<ArrayDatum> arrayData = new ArrayList<ArrayDatum>();
     
     /** Chromosome number. */
     private short chromosome = -1;
+    
+    /** Is <code>arrayData</code> attribute sorted? */
+    private boolean sorted = false;
 
     
     /**
@@ -111,15 +113,21 @@ public class ChromosomeArrayData implements Serializable {
      * to which this chromosome array data belongs.
      * @param bioAssayDataId Bioassay identifier
      */
-    public final void setBioAssayDataId(Long bioAssayDataId) {
+    public final void setBioAssayDataId(final Long bioAssayDataId) {
         this.bioAssayDataId = bioAssayDataId;
     }
 
     /**
-     * Get array data from chromosome.
+     * Get array data from chromosome.  The list
+     * returned will be sorted.
      * @return Array data
      */
-    public final SortedSet<ArrayDatum> getArrayData() {
+    public final List<ArrayDatum> getArrayData() {
+        if (!this.sorted) {
+            Collections.sort(this.arrayData,
+                    new ArrayDatum.ChromosomeLocationComparator());
+            this.sorted = true;
+        }
         return arrayData;
     }
 
@@ -127,7 +135,7 @@ public class ChromosomeArrayData implements Serializable {
      * Set array data from chromosome.
      * @param arrayData Array data
      */
-    public final void setArrayData(final SortedSet<ArrayDatum> arrayData) {
+    public final void setArrayData(final List<ArrayDatum> arrayData) {
         this.arrayData = arrayData;
     }
 
@@ -200,6 +208,7 @@ public class ChromosomeArrayData implements Serializable {
                     "Array datum not on same chromosome");
         }
         this.arrayData.add(arrayDatum);
+        this.sorted = false;
     }
     
     
@@ -211,7 +220,7 @@ public class ChromosomeArrayData implements Serializable {
      * @return Array data
      * @throws IllegalArgumentException if <code>from > to </code>
      */
-    public final SortedSet<ArrayDatum> getArrayData(
+    public final List<ArrayDatum> getArrayData(
             final long from, final long to) {
         
         // Check args
@@ -226,22 +235,24 @@ public class ChromosomeArrayData implements Serializable {
         ArrayDatum a1 = new ArrayDatum(Float.NaN, r1);
         ArrayDatum a2 = new ArrayDatum(Float.NaN, r2);
         Comparator c = new ArrayDatum.ChromosomeLocationComparator();
-        List<ArrayDatum> list = new ArrayList<ArrayDatum>(this.arrayData);
-        int p = Collections.binarySearch(list, a1, c);
-        int q = Collections.binarySearch(list, a2, c);
+        if (!this.sorted) {
+            Collections.sort(this.arrayData,
+                    new ArrayDatum.ChromosomeLocationComparator());
+        }
+        int p = Collections.binarySearch(this.arrayData, a1, c);
+        int q = Collections.binarySearch(this.arrayData, a2, c);
         if (p < 0) {
             p = -p - 1;
         }
         if (q < 0) {
             q = -q - 2;
         }
-        assert p <= q && p >= 0 && q < list.size();
+        assert p <= q && p >= 0 && q < this.arrayData.size();
         
         // Fill set to be returned
-        SortedSet<ArrayDatum> included = new TreeSet<ArrayDatum>(
-                new ArrayDatum.ChromosomeLocationComparator());
+        List<ArrayDatum> included = new ArrayList<ArrayDatum>();
         for (int i = p; i <= q; i++) {
-            included.add(list.get(i));
+            included.add(this.arrayData.get(i));
         }
         
         return included;
@@ -262,7 +273,7 @@ public class ChromosomeArrayData implements Serializable {
      * Get all reporters.
      * @return Reporters
      */
-    public Set<Reporter> getReporters() {
+    public final Set<Reporter> getReporters() {
         Set<Reporter> reporters = new HashSet<Reporter>();
         for (ArrayDatum d : this.arrayData) {
             reporters.add(d.getReporter());

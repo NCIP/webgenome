@@ -55,6 +55,7 @@ package org.rti.webcgh.domain;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
@@ -158,8 +159,8 @@ public class BioAssayData implements Serializable {
      * @param chromosome Chromosome number
      * @return Array data
      */
-    public final SortedSet<ArrayDatum> getArrayData(final short chromosome) {
-        SortedSet<ArrayDatum> data = null;
+    public final List<ArrayDatum> getArrayData(final short chromosome) {
+        List<ArrayDatum> data = null;
         ChromosomeArrayData cad = this.chromosomeArrayData.get(chromosome);
         if (cad != null) {
             data = cad.getArrayData();

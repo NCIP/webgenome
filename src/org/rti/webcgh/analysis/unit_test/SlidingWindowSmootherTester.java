@@ -51,53 +51,54 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.service.dao.jdbc.unit_test;
+package org.rti.webcgh.analysis.unit_test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rti.webcgh.analysis.SlidingWindowSmoother;
+import org.rti.webcgh.domain.ArrayDatum;
+import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.Reporter;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.service.dao.OrganismDao;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 /**
- * Tester for <code>JdbcOrganismDao</code>.
+ * Tester for <code>SlidingWindowSmoother</code>.
  * @author dhall
  *
  */
-public final class JdbcOrganismDaoTester extends TestCase {
+public class SlidingWindowSmootherTester extends TestCase {
     
+
     /**
-     * Test all methods.
+     * Test perform() method.
      *
      */
-    public void testAllMethods() {
+    public void testPerform() {
         
-        // Get Spring DAO bean
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        "org/rti/webcgh/service/dao/jdbc/unit_test/beans.xml");
-        OrganismDao dao = (OrganismDao) ctx.getBean("organismDao");
+        // Setup input data set
+        ChromosomeArrayData in = new ChromosomeArrayData((short) 1);
+        Reporter r = new Reporter("r1", (short) 1, (long) 100);
+        in.add(new ArrayDatum((float) 1.0, r));
+        in.add(new ArrayDatum((float) 2.0, r));
+        in.add(new ArrayDatum((float) 3.0, r));
+        in.add(new ArrayDatum((float) 4.0, r));
+        in.add(new ArrayDatum((float) 5.0, r));
+        in.add(new ArrayDatum((float) 6.0, r));
+        in.add(new ArrayDatum((float) 7.0, r));
         
-        // Create organism
-        String genus = "Mus";
-        String species = "musculus";
-        Organism org = new Organism(genus, species);
+        // Perform operation
+        SlidingWindowSmoother smoother = new SlidingWindowSmoother();
+        smoother.setWindowSize(5);
+        ChromosomeArrayData out = smoother.perform(in);
         
-        // Save
-        dao.save(org);
-        assertTrue(org.getId() >= 0);
-        
-        // Load in various ways
-        org = dao.load(org.getId());
-        assertNotNull(org);
-        org = dao.load(genus, species);
-        assertNotNull(org);
-        
-        // Delete
-        dao.delete(org);
-        assertNull(org.getId());
-        org = dao.load(genus, species);
-        assertNull(org);
+        // Check output
+        List<ArrayDatum> data = new ArrayList<ArrayDatum>(out.getArrayData());
+        assertEquals(in.getArrayData().size(), data.size());
+        assertEquals(r, data.get(0).getReporter());
+        assertEquals((float) 2.0, data.get(0).getValue());
+        assertEquals((float) 0.0, data.get(0).getError());
     }
 
 }

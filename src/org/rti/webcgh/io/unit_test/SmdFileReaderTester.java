@@ -106,17 +106,17 @@ public final class SmdFileReaderTester extends TestCase {
         // First bioassay
         BioAssayData bad = reader.getBioAssayData("bioassay1");
         assertNotNull(bad);
-        SortedSet<ArrayDatum> aData = bad.getArrayData((short) 1);
+        List<ArrayDatum> aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(3, aData.size());
-        assertEquals((float) 0.1, aData.first().getValue());
-        assertEquals((float) 0.3, aData.last().getValue());
-        assertEquals((long) 100, aData.first().getReporter().getLocation());
+        assertEquals((float) 0.1, aData.get(0).getValue());
+        assertEquals((float) 0.3, aData.get(aData.size() - 1).getValue());
+        assertEquals((long) 100, aData.get(0).getReporter().getLocation());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.first().getValue());
-        assertEquals((float) 0.5, aData.last().getValue());
+        assertEquals((float) 0.4, aData.get(0).getValue());
+        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
         
         
         // Second bioassay
@@ -125,13 +125,13 @@ public final class SmdFileReaderTester extends TestCase {
         aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(3, aData.size());
-        assertEquals((float) -0.1, aData.first().getValue());
-        assertEquals((float) -0.3, aData.last().getValue());
+        assertEquals((float) -0.1, aData.get(0).getValue());
+        assertEquals((float) -0.3, aData.get(aData.size() - 1).getValue());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.first().getValue());
-        assertEquals((float) -0.5, aData.last().getValue());
+        assertEquals((float) -0.4, aData.get(0).getValue());
+        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
     }
     
     
@@ -147,17 +147,17 @@ public final class SmdFileReaderTester extends TestCase {
         // First bioassay
         BioAssayData bad = reader.getBioAssayData("bioassay1");
         assertNotNull(bad);
-        SortedSet<ArrayDatum> aData = bad.getArrayData((short) 1);
+        List<ArrayDatum> aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(3, aData.size());
-        assertEquals((float) 0.1, aData.first().getValue());
-        assertEquals((float) 0.3, aData.last().getValue());
-        assertEquals((long) 100000, aData.first().getReporter().getLocation());
+        assertEquals((float) 0.1, aData.get(0).getValue());
+        assertEquals((float) 0.3, aData.get(aData.size() - 1).getValue());
+        assertEquals((long) 100000, aData.get(0).getReporter().getLocation());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.first().getValue());
-        assertEquals((float) 0.5, aData.last().getValue());
+        assertEquals((float) 0.4, aData.get(0).getValue());
+        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
         
         
         // Second bioassay
@@ -166,13 +166,13 @@ public final class SmdFileReaderTester extends TestCase {
         aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(3, aData.size());
-        assertEquals((float) -0.1, aData.first().getValue());
-        assertEquals((float) -0.3, aData.last().getValue());
+        assertEquals((float) -0.1, aData.get(0).getValue());
+        assertEquals((float) -0.3, aData.get(aData.size() - 1).getValue());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.first().getValue());
-        assertEquals((float) -0.5, aData.last().getValue());
+        assertEquals((float) -0.4, aData.get(0).getValue());
+        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
     }
     
     
@@ -188,16 +188,16 @@ public final class SmdFileReaderTester extends TestCase {
         // First bioassay
         BioAssayData bad = reader.getBioAssayData("bioassay1");
         assertNotNull(bad);
-        SortedSet<ArrayDatum> aData = bad.getArrayData((short) 1);
+        List<ArrayDatum> aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(1, aData.size());
-        assertEquals((float) 0.1, aData.first().getValue());
-        assertEquals((float) 0.1, aData.last().getValue());
+        assertEquals((float) 0.1, aData.get(0).getValue());
+        assertEquals((float) 0.1, aData.get(aData.size() - 1).getValue());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.first().getValue());
-        assertEquals((float) 0.5, aData.last().getValue());
+        assertEquals((float) 0.4, aData.get(0).getValue());
+        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
         
         
         // Second bioassay
@@ -206,13 +206,13 @@ public final class SmdFileReaderTester extends TestCase {
         aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(1, aData.size());
-        assertEquals((float) -0.1, aData.first().getValue());
-        assertEquals((float) -0.1, aData.last().getValue());
+        assertEquals((float) -0.1, aData.get(0).getValue());
+        assertEquals((float) -0.1, aData.get(aData.size() - 1).getValue());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.first().getValue());
-        assertEquals((float) -0.5, aData.last().getValue());
+        assertEquals((float) -0.4, aData.get(0).getValue());
+        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
     }
     
     
@@ -228,16 +228,16 @@ public final class SmdFileReaderTester extends TestCase {
         // First bioassay
         BioAssayData bad = reader.getBioAssayData("bioassay1");
         assertNotNull(bad);
-        SortedSet<ArrayDatum> aData = bad.getArrayData((short) 1);
+        List<ArrayDatum> aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(1, aData.size());
-        assertEquals((float) 0.2, aData.first().getValue());
-        assertEquals((float) 0.2, aData.last().getValue());
+        assertEquals((float) 0.2, aData.get(0).getValue());
+        assertEquals((float) 0.2, aData.get(aData.size() - 1).getValue());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.first().getValue());
-        assertEquals((float) 0.5, aData.last().getValue());
+        assertEquals((float) 0.4, aData.get(0).getValue());
+        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
         
         
         // Second bioassay
@@ -246,13 +246,13 @@ public final class SmdFileReaderTester extends TestCase {
         aData = bad.getArrayData((short) 1);
         assertNotNull(aData);
         assertEquals(3, aData.size());
-        assertEquals((float) -0.1, aData.first().getValue());
-        assertEquals((float) -0.3, aData.last().getValue());
+        assertEquals((float) -0.1, aData.get(0).getValue());
+        assertEquals((float) -0.3, aData.get(aData.size() - 1).getValue());
         aData = bad.getArrayData((short) 2);
         assertNotNull(aData);
         assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.first().getValue());
-        assertEquals((float) -0.5, aData.last().getValue());
+        assertEquals((float) -0.4, aData.get(0).getValue());
+        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
     }
     
     /**
