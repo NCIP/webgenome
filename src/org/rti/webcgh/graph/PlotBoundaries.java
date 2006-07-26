@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotBoundaries.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-16 12:49:02 $
+$Revision: 1.4 $
+$Date: 2006-07-26 18:43:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -122,6 +122,20 @@ public class PlotBoundaries {
 			dataPoint.getValue1() >= this.bottomLeftDataPoint.getValue1() &&
 			dataPoint.getValue2() <= this.topRightDataPoint.getValue2() &&
 			dataPoint.getValue1() <= this.topRightDataPoint.getValue1();
+    }
+    
+    /**
+     * Is data point represented by <code>x</code> and <code>y</code>
+     * within plot?
+     * @param x X-coordinate value
+     * @param y Y-coordinate value
+     * @return T/F
+     */
+    public final boolean withinBoundaries(final double x, final double y) {
+        return x >= this.bottomLeftDataPoint.getValue1()
+            && x <= this.topRightDataPoint.getValue1()
+            && y >= this.bottomLeftDataPoint.getValue2()
+            && y <= this.topRightDataPoint.getValue1();
     }
     
     

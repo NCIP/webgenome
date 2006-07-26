@@ -86,22 +86,22 @@ public final class DataFileManagerTester extends TestCase {
         "org/rti/webcgh/io/unit_test/data_file_manager_test_files";
     
     
-//    /**
-//     * Test all methods on small file.
-//     * @throws Exception if there is any problem
-//     */
-//    public void testAllMethodsOnSmallFile() throws Exception {
-//        this.runAllMethods("small-smd.csv");
-//    }
+    /**
+     * Test all methods on small file.
+     * @throws Exception if there is any problem
+     */
+    public void testAllMethodsOnSmallFile() throws Exception {
+        this.runAllMethods("small-smd.csv");
+    }
     
     
-//    /**
-//     * Test all methods on medium large file.
-//     * @throws Exception if there is any problem
-//     */
-//    public void testAllMethodsOnMediumLargeFile() throws Exception {
-//        this.runAllMethods("medium-large-smd.csv");
-//    }
+    /**
+     * Test all methods on medium large file.
+     * @throws Exception if there is any problem
+     */
+    public void testAllMethodsOnMediumLargeFile() throws Exception {
+        this.runAllMethods("medium-large-smd.csv");
+    }
     
     
     /**
@@ -111,6 +111,7 @@ public final class DataFileManagerTester extends TestCase {
     public void testAllMethodsOnLargeFile() throws Exception {
         this.runAllMethods("large-smd.csv");
     }
+    
     
     
     /**

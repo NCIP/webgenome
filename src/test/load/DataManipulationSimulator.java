@@ -59,6 +59,7 @@ import java.util.Collection;
 import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
+import org.rti.webcgh.analysis.SlidingWindowSmoother;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
@@ -123,7 +124,7 @@ public class DataManipulationSimulator {
         // Perform simulation
         LOGGER.info("Performing simulations");
         AnalyticOperationSimulator sim =
-            new AllBioassayInMemoryAnalyticOperationSimulator();
+            new SingleBioassayInMemoryAnalyticOperationSimulator();
         sim.perform(mgr, exp, numDataAccesses);
         LOGGER.info("Finished simulations");
         
@@ -253,6 +254,50 @@ public class DataManipulationSimulator {
                     for (BioAssay ba : experiment.getBioAssays()) {
                         cads.add(dataFileManager.loadChromosomeArrayData(ba,
                                 chrom));
+                    }
+                }
+                LOGGER.info("Completed simulation iteration " + (i + 1));
+            }
+        }
+    }
+    
+    
+    /**
+     * Simulates analytic operations that
+     * load data from a single analytic operations into
+     * memory at any given time.  Class actually calls
+     * a simple smoothing operation.
+     * @author dhall
+     *
+     */
+    static class SingleBioassayInMemoryAnalyticOperationSimulator
+        implements AnalyticOperationSimulator {
+                
+        /**
+         * Perform simulation.  Method actually calls
+         * a smoothing operation.
+         * @param dataFileManager Manager of data files
+         * that will be loaded for this simulation
+         * @param experiment Experiment from which to
+         * load data
+         * @param numIterations Number of iterations
+         * of the simulation
+         */
+        public void perform(final DataFileManager dataFileManager,
+                final Experiment experiment, final int numIterations) {
+            for (int i = 0; i < numIterations; i++) {
+                LOGGER.info("Starting simulation iteration " + (i + 1));
+                SortedSet<Short> chromosomes =
+                    experiment.getChromosomes();
+                for (Short chrom : chromosomes) {
+                    LOGGER.info("Loading all data from chromosome "
+                            + chrom);
+                    for (BioAssay ba : experiment.getBioAssays()) {
+                        ChromosomeArrayData in =
+                            dataFileManager.loadChromosomeArrayData(ba, chrom);
+                        SlidingWindowSmoother smoother =
+                            new SlidingWindowSmoother();
+                        ChromosomeArrayData out = smoother.perform(in);
                     }
                 }
                 LOGGER.info("Completed simulation iteration " + (i + 1));

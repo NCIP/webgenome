@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/DataPoint.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-25 19:41:31 $
+$Revision: 1.4 $
+$Date: 2006-07-26 18:43:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 package org.rti.webcgh.graph;
+
+import org.rti.webcgh.domain.ArrayDatum;
 
 /**
  * A data point
@@ -201,9 +203,22 @@ public class DataPoint implements Groupable {
     }
     
     
+    
     // ===================================
     //       Public methods
     // ===================================
+    
+    /**
+     * Bulk set properties of this object.
+     * using property values from given
+     * datum.
+     * @param datum An array datum
+     */
+    public void bulkSet(ArrayDatum datum) {
+        this.value2 = datum.getValue();
+        this.error = datum.getError();
+        this.value1 = datum.getReporter().getLocation();
+    }
     
 
     /**

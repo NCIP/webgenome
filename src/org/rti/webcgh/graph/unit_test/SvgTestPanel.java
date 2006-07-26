@@ -77,49 +77,77 @@ import org.w3c.dom.Document;
  * a method for writing the SVG document to a file.
  *
  */
-public class SvgTestPanel extends PlotPanel {
+public final class SvgTestPanel extends PlotPanel {
+    
+    // ============================
+    //    Constants
+    // ============================
 	
+    /** Path to SVG template file relative to the classpath. */
 	private static final String CLASSPATH_RELATIVE_PATH_TO_SVG_TEMPLATE =
 		"svg/plotTemplate.svg";
+    
+    /**
+     * Default X-axis coordinate for top left point of test graphic
+     * relative to the <code>baseCanvas</code>.
+     */ 
+    private static final int DEF_TOP_LEFT_X = 100;
+    
+    
+    /**
+     * Default Y-axis coordinate for top left point of test graphic
+     * relative to the <code>baseCanvas</code>.
+     */
+    private static final int DEF_TOP_LEFT_Y = 100;
+    
 	
 	// =====================================
 	//      Attributes
 	// =====================================
 	
-	// Directory where generated SVG files are deposited
+	/** Directory where generated SVG files are deposited. */
 	private File svgDirectory = new File("C:\\temp\\svg");
 	
-	// Document object containing SVG
+	/** Document object containing SVG. */
 	private Document doc = null;
 	
-	// Base canvas underneath canvas that is drawn on.  This
-	// canvas is used to ensure that drawn part of drawing
-	// canvas is completely visible.
+	/**
+     * Base canvas underneath canvas that is drawn on.  This
+	 * canvas is used to ensure that drawn part of drawing
+	 * canvas is completely visible.
+     */
 	private DrawingCanvas baseCanvas = null;
 	
-	// Width of border that may or may not be drawn around panel
-	// when rendered. This property also controls width of crosshairs
-	// which also may or may not be drawn.
+    /**
+     * Width of border that may or may not be drawn around panel
+     * when rendered. This property also controls width of crosshairs
+     * which also may or may not be drawn.
+     */
 	private int borderWidth = 2;
 	
-	// Color of border that may or may not be drawn around panel
-	// when rendered. This property also controls color of crosshairs
-	// which also may or may not be drawn.
+	/**
+	 * Color of border that may or may not be drawn around panel
+	 * when rendered. This property also controls color of crosshairs
+	 * which also may or may not be drawn.
+     */
 	private Color borderColor = Color.BLACK;
 	
-	// Draw border around panel when rendered?
+	/** Draw border around panel when rendered? */
 	private boolean drawBorder = false;
 	
-	// Draw centered crosshairs in panel when rendered?
+	/** Draw centered crosshairs in panel when rendered? */
 	private boolean drawCrossHairs = false;
-	
-	// Point within viewer (e.g., web browser window)
-	// where top left point of test panel rendered
-	private Point origin = new Point(100, 100);
 	
 	/**
 	 * Point within viewer (e.g., web browser window)
-	 * where top left point of test panel rendered
+	 * where top left point of test panel rendered.
+     */
+	private Point origin = new Point(SvgTestPanel.DEF_TOP_LEFT_X,
+            SvgTestPanel.DEF_TOP_LEFT_Y);
+	
+	/**
+	 * Point within viewer (e.g., web browser window)
+	 * where top left point of test panel rendered.
 	 * @return A point
 	 */
 	public Point getOrigin() {
@@ -129,10 +157,10 @@ public class SvgTestPanel extends PlotPanel {
 
 	/**
 	 * Point within viewer (e.g., web browser window)
-	 * where top left point of test panel rendered
-	 * @param Point A point
+	 * where top left point of test panel rendered.
+	 * @param origin A point
 	 */
-	public void setOrigin(Point origin) {
+	public void setOrigin(final Point origin) {
 		this.origin = origin;
 	}
 
@@ -158,7 +186,7 @@ public class SvgTestPanel extends PlotPanel {
 	 * @see org.rti.webcgh.graph.unit_test.SvgTestPanel#setDrawCrossHairs(boolean)
 	 * @param borderColor A color
 	 */
-	public void setBorderColor(Color borderColor) {
+	public void setBorderColor(final Color borderColor) {
 		this.borderColor = borderColor;
 	}
 
@@ -184,7 +212,7 @@ public class SvgTestPanel extends PlotPanel {
 	 * @see org.rti.webcgh.graph.unit_test.SvgTestPanel#setDrawCrossHairs(boolean)
 	 * @param borderWidth Width of border in pixels
 	 */
-	public void setBorderWidth(int borderWidth) {
+	public void setBorderWidth(final int borderWidth) {
 		this.borderWidth = borderWidth;
 	}
 
@@ -202,7 +230,7 @@ public class SvgTestPanel extends PlotPanel {
 	 * Should rendered panel include a border around it?
 	 * @param drawBorder T/F
 	 */
-	public void setDrawBorder(boolean drawBorder) {
+	public void setDrawBorder(final boolean drawBorder) {
 		this.drawBorder = drawBorder;
 	}
 
@@ -220,13 +248,13 @@ public class SvgTestPanel extends PlotPanel {
 	 * Should rendered panel include centered crosshairs?
 	 * @param drawCrossHairs T/F
 	 */
-	public void setDrawCrossHairs(boolean drawCrossHairs) {
+	public void setDrawCrossHairs(final boolean drawCrossHairs) {
 		this.drawCrossHairs = drawCrossHairs;
 	}
 
 
 	/**
-	 * Get directory that output SVG files are written to
+	 * Get directory that output SVG files are written to.
 	 * @return A directory
 	 */
 	public File getSvgDirectory() {
@@ -235,10 +263,10 @@ public class SvgTestPanel extends PlotPanel {
 
 
 	/**
-	 * Set directory that output SVG files are written to
+	 * Set directory that output SVG files are written to.
 	 * @param svgDirectory A directory
 	 */
-	public void setSvgDirectory(File svgDirectory) {
+	public void setSvgDirectory(final File svgDirectory) {
 		this.svgDirectory = svgDirectory;
 	}
 
@@ -249,12 +277,13 @@ public class SvgTestPanel extends PlotPanel {
 	// ====================================
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param baseCanvas Underlying canvas
 	 * @param drawingCanvas Top canvas, which is drawn upon
 	 * @param doc A document
 	 */
-	private SvgTestPanel(DrawingCanvas baseCanvas, DrawingCanvas drawingCanvas, Document doc) {
+	private SvgTestPanel(final DrawingCanvas baseCanvas,
+            final DrawingCanvas drawingCanvas, final Document doc) {
 		super(drawingCanvas);
 		this.baseCanvas = baseCanvas;
 		this.doc = doc;
@@ -266,15 +295,18 @@ public class SvgTestPanel extends PlotPanel {
 	// ===================================
 		
 	/**
-	 * Factory method for creating a new SvgTestPanel object
+	 * Factory method for creating a new SvgTestPanel object.
+     * @return An SvgTestPanel instance
 	 */
 	public static SvgTestPanel newSvgTestPanel() {
 		
 		// Load SVG plotting template document
-		Document doc = 
-			XmlUtils.loadDocument(CLASSPATH_RELATIVE_PATH_TO_SVG_TEMPLATE, false);
-		if (doc == null)
-			throw new WebcghSystemException("Unable to load SVG template document");
+		Document doc = XmlUtils.loadDocument(
+                CLASSPATH_RELATIVE_PATH_TO_SVG_TEMPLATE, false);
+		if (doc == null) {
+			throw new WebcghSystemException(
+                    "Unable to load SVG template document");
+        }
 		
 		// Instantiate canvases
 		DrawingCanvas baseCanvas = new SvgDrawingCanvas(doc);
@@ -298,12 +330,15 @@ public class SvgTestPanel extends PlotPanel {
 	 * @see org.rti.webcgh.graph.unit_test.SvgTestPanel#setSvgDirectory(File)
 	 * @param fileName Name of file
 	 */
-	public void toSvgFile(String fileName) {
-		if (this.drawBorder)
+	public void toSvgFile(final String fileName) {
+		if (this.drawBorder) {
 			this.addBorder();
-		if (this.drawCrossHairs)
+        }
+		if (this.drawCrossHairs) {
 			this.addCrossHairs();
-		this.baseCanvas.add(this.drawingCanvas, this.origin.x - this.topLeftPoint().x,
+        }
+		this.baseCanvas.add(this.drawingCanvas, this.origin.x
+                - this.topLeftPoint().x,
 				this.origin.y - this.topLeftPoint().y);
 		File outFile = 
 			new File(this.svgDirectory.getAbsolutePath() + "/" + fileName);
@@ -320,7 +355,7 @@ public class SvgTestPanel extends PlotPanel {
 	
 	
 	/**
-	 * Get drawing canvas associated with this panel
+	 * Get drawing canvas associated with this panel.
 	 * @return A drawing canvas
 	 */
 	public DrawingCanvas getDrawingCanvas() {
@@ -332,7 +367,7 @@ public class SvgTestPanel extends PlotPanel {
 	// ==========================================
 	
 	/**
-	 * Add border around graphic
+	 * Add border around graphic.
 	 */
 	private void addBorder() {
 		int minX = this.topLeftPoint().x;
@@ -359,7 +394,7 @@ public class SvgTestPanel extends PlotPanel {
 	
 	
 	/**
-	 * Add centered crosshairs to graphic
+	 * Add centered crosshairs to graphic.
 	 *
 	 */
 	private void addCrossHairs() {

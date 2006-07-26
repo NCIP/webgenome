@@ -123,11 +123,7 @@ public class ChromosomeArrayData implements Serializable {
      * @return Array data
      */
     public final List<ArrayDatum> getArrayData() {
-        if (!this.sorted) {
-            Collections.sort(this.arrayData,
-                    new ArrayDatum.ChromosomeLocationComparator());
-            this.sorted = true;
-        }
+        this.ensureSorted();
         return arrayData;
     }
 
@@ -235,10 +231,7 @@ public class ChromosomeArrayData implements Serializable {
         ArrayDatum a1 = new ArrayDatum(Float.NaN, r1);
         ArrayDatum a2 = new ArrayDatum(Float.NaN, r2);
         Comparator c = new ArrayDatum.ChromosomeLocationComparator();
-        if (!this.sorted) {
-            Collections.sort(this.arrayData,
-                    new ArrayDatum.ChromosomeLocationComparator());
-        }
+        this.ensureSorted();
         int p = Collections.binarySearch(this.arrayData, a1, c);
         int q = Collections.binarySearch(this.arrayData, a2, c);
         if (p < 0) {
@@ -279,5 +272,85 @@ public class ChromosomeArrayData implements Serializable {
             reporters.add(d.getReporter());
         }
         return reporters;
+    }
+    
+    
+    /**
+     * Ensure data are sorted on chromosome position.
+     *
+     */
+    private void ensureSorted() {
+        if (!this.sorted) {
+            Collections.sort(this.arrayData,
+                    new ArrayDatum.ChromosomeLocationComparator());
+            this.sorted = true;
+        }
+    }
+    
+    
+    /**
+     * Get inferred chromosome size.  This will be equal to
+     * the position of the rightmost reporter.
+     * @return Inferred chromosome size
+     */
+    public final long inferredChromosomeSize() {
+        long size = (long) 0;
+        int n = this.arrayData.size();
+        if (n > 0) {
+            size = this.arrayData.get(n - 1).getReporter().getLocation();
+        }
+        return size;
+    }
+    
+    
+    /**
+     * Find minimum value.  If <code>includeError</code>
+     * is <code>true</code>, then method looks for minimum
+     * <code>value</code> - <code>error</code>.
+     * @param includeError Should errors be subtracted
+     * from values?
+     * @return Minimum value or NaN if data are empty
+     */
+    public final float minValue(final boolean includeError) {
+        if (this.arrayData.size() < 1) {
+            return Float.NaN;
+        }
+        float min = Float.MAX_VALUE;
+        for (ArrayDatum datum : this.arrayData) {
+            float candidateMin = datum.getValue();
+            if (includeError) {
+                candidateMin -= datum.getError() / (float) 2.0;
+            }
+            if (candidateMin < min) {
+                min = candidateMin;
+            }
+        }
+        return min;
+    }
+    
+    
+    /**
+     * Find maximum value.  If <code>includeError</code>
+     * is <code>true</code>, then method looks for maximum
+     * <code>value</code> + <code>error</code>.
+     * @param includeError Should errors be added
+     * to values?
+     * @return Maximum value or NaN if data are empty
+     */
+    public final float maxValue(final boolean includeError) {
+        if (this.arrayData.size() < 1) {
+            return (float) Float.NaN;
+        }
+        float max = Float.MIN_VALUE;
+        for (ArrayDatum datum : this.arrayData) {
+            float candidateMax = datum.getValue();
+            if (includeError) {
+                candidateMax += datum.getError() / (float) 2.0;
+            }
+            if (candidateMax > max) {
+                max = candidateMax;
+            }
+        }
+        return max;
     }
 }
