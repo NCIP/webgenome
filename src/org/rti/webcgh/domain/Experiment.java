@@ -85,6 +85,11 @@ public class Experiment implements Serializable {
     
     /** Bioassays performed during experiment. */
     private Set<BioAssay> bioAssays = new HashSet<BioAssay>();
+    
+    
+    // ===============================
+    //     Getters/setters
+    // ===============================
 
     
     /**

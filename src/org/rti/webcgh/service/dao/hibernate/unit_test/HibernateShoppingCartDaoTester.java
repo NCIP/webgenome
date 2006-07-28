@@ -82,8 +82,8 @@ public class HibernateShoppingCartDaoTester extends TestCase {
         Experiment exp = new Experiment("Experiment");
         ShoppingCart cart = new ShoppingCart("user");
         cDao.save(cart);
-        exp.add(new BioAssay("b1", oDao.loadDefault()));
-        exp.add(new BioAssay("b2", oDao.loadDefault()));
+//        exp.add(new BioAssay("b1", oDao.loadDefault()));
+//        exp.add(new BioAssay("b2", oDao.loadDefault()));
         cart.add(exp);
         cDao.update(cart);
         cDao.delete(cart);

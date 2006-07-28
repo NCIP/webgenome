@@ -62,6 +62,7 @@ import org.apache.log4j.Logger;
 import org.rti.webcgh.analysis.SlidingWindowSmoother;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.io.DataFileManager;
@@ -182,8 +183,8 @@ public class DataManipulationSimulator {
      * Print usage statement and exit.
      * @param exitCode Exit code
      */
-    private static void printUsageAndExit(int exitCode) {
-        String usage = "java test.load DataManipulationSimulator "
+    private static void printUsageAndExit(final int exitCode) {
+        String usage = "java test.load.DataManipulationSimulator "
             + "SMD_FILE_PATH TEMP_DIR_PATH NUM_ITERATIONS";
         System.err.println(usage);
         System.exit(exitCode);
@@ -252,7 +253,7 @@ public class DataManipulationSimulator {
                     Collection<ChromosomeArrayData> cads =
                         new ArrayList<ChromosomeArrayData>();
                     for (BioAssay ba : experiment.getBioAssays()) {
-                        cads.add(dataFileManager.loadChromosomeArrayData(ba,
+                        cads.add(dataFileManager.loadChromosomeArrayData((DataSerializedBioAssay) ba,
                                 chrom));
                     }
                 }
@@ -294,7 +295,8 @@ public class DataManipulationSimulator {
                             + chrom);
                     for (BioAssay ba : experiment.getBioAssays()) {
                         ChromosomeArrayData in =
-                            dataFileManager.loadChromosomeArrayData(ba, chrom);
+                            dataFileManager.loadChromosomeArrayData(
+                                    (DataSerializedBioAssay) ba, chrom);
                         SlidingWindowSmoother smoother =
                             new SlidingWindowSmoother();
                         ChromosomeArrayData out = smoother.perform(in);

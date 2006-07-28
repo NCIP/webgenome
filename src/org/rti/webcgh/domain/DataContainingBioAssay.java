@@ -51,98 +51,87 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.domain.unit_test;
+package org.rti.webcgh.domain;
 
-import org.apache.log4j.Logger;
-import org.rti.webcgh.domain.ArrayDatum;
-import org.rti.webcgh.domain.ArrayDatumGenerator;
-import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.BioAssayData;
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.Organism;
-
-import junit.framework.TestCase;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
- * Tests memory requirements for the domain object model.
+ * Concrete implementation of <code>BioAssay</code>
+ * that includes data.  This class will be used
+ * by clients when the amount of data being
+ * manipulated is relatively small such that it
+ * can all be kept in main memory during the
+ * lifetime of the user session without denigrating
+ * the performance of the system.
  * @author dhall
  *
  */
-public final class MemoryTest extends TestCase {
+public class DataContainingBioAssay extends BioAssay {
     
-    // ==================================
-    //      Constants
-    // ==================================
+    /** Serialized version ID. */
+    private static final long serialVersionUID = (long) 1;
     
-    /** Number of array datum per bioassay. */
-    private static final int DATUM_PER_BIOASSAY = 250000;
-    
-    /** Number of bioassays per experiment. */
-    private static final int BIOASSAY_PER_EXPERIMENT = 50;
-    
-    /** Logger. */
-    private static final Logger LOGGER = Logger.getLogger(MemoryTest.class);
-    
-    
-    // ====================================
+    // =================================
     //        Attributes
-    // ====================================
+    // =================================
     
-    /** Array datum generator. */
-    private ArrayDatumGenerator arrayDatumGenerator =
-        new ArrayDatumGenerator();
-    
-    /** Organism associated with bioassays. */
-    private Organism organism = new Organism("Homo", "sapiens");
+    /** Map of chromosome number to associated chromosome array data. */
+    private SortedMap<Short, ChromosomeArrayData> chromosomeArrayDataIndex =
+        new TreeMap<Short, ChromosomeArrayData>();
     
     
     // ================================
-    //         Test cases
+    //     Getters/setters
     // ================================
     
     
     /**
-     * Create a single experiment.
+     * Get map of chromosome number to associated chromosome array data.
+     * @return Map of chromosome number to associated chromosome array data
      */
-    public void testCreateOneExperiment() {
-         this.newExperiment();
+    public final SortedMap<Short, ChromosomeArrayData>
+        getChromosomeArrayDataIndex() {
+        return chromosomeArrayDataIndex;
+    }
+
+
+    /**
+     * Set map of chromosome number to associated chromosome array data.
+     * @param chromosomeArrayDataIndex Map of chromosome number to associated
+     * chromosome array data
+     */
+    public final void setChromosomeArrayDataIndex(
+            final SortedMap<Short, ChromosomeArrayData>
+            chromosomeArrayDataIndex) {
+        this.chromosomeArrayDataIndex = chromosomeArrayDataIndex;
     }
     
     
-    // ============================
-    //      Helper methods
-    // ============================
+    // =================================
+    //     Implemented abstract methods
+    // =================================
     
     
     /**
-     * Generate new experiment.
-     * @return An experiment
+     * Get set of chromosomes.
+     * @return Chromosomes
      */
-    private Experiment newExperiment() {
-        Experiment exp = new Experiment("Experiment");
-        for (int i = 0; i < BIOASSAY_PER_EXPERIMENT; i++) {
-            LOGGER.info("Creating bioassay " + i);
-            LOGGER.info("Total memory: " + Runtime.getRuntime().totalMemory());
-            BioAssay ba = this.newBioAssay();
-            exp.add(ba);
-        }
-        return exp;
+    public final SortedSet<Short> getChromosomes() {
+        return new TreeSet<Short>(this.chromosomeArrayDataIndex.keySet());
     }
     
     
     /**
-     * Generate a new bioassay.
-     * @return A bioassay
+     * Get chromosome array data from given chromosome.
+     * @param chromosome Chromosome number
+     * @return Chromosome array data
      */
-    private BioAssay newBioAssay() {
-        BioAssay ba = new BioAssay("Bioassay", this.organism);
-        BioAssayData bad = new BioAssayData();
-        ba.setBioAssayData(bad);
-        for (int i = 0; i < DATUM_PER_BIOASSAY; i++) {
-            ArrayDatum d = this.arrayDatumGenerator.newArrayDatum();
-            bad.add(d);
-        }
-        this.arrayDatumGenerator.reset();
-        return ba;
+    public final ChromosomeArrayData
+        getChromosomeArrayData(final short chromosome) {
+        return this.chromosomeArrayDataIndex.get(chromosome);
     }
+
 }

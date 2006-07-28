@@ -60,8 +60,8 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.io.DataFileManager;
@@ -129,7 +129,7 @@ public final class DataFileManagerTester extends TestCase {
         Experiment exp = mgr.convertSmdData(testFile, org);
         
         // Recover some data
-        BioAssay ba = exp.getBioAssays().iterator().next();
+        DataSerializedBioAssay ba = (DataSerializedBioAssay) exp.getBioAssays().iterator().next();
         short chromosome = (short) 1;
         ChromosomeArrayData cad = mgr.loadChromosomeArrayData(ba, chromosome);
         assertNotNull(cad);

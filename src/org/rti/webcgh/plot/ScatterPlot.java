@@ -386,19 +386,19 @@ public final class ScatterPlot implements PlotElement {
             this.paintPoints(cad, color, pointsTile);
             
             // Error bars
-            DrawingCanvas errorBarsTile = tile.newTile();
-            tile.add(errorBarsTile);
-            errorBarsTile.setAttribute(GRP_ATT_NAME, ERROR_BARS_GRP_ATT_VALUE);
-            this.paintErrorBars(cad, color, errorBarsTile);
-        
-            // Lines
-            DrawingCanvas linesTile = tile.newTile();
-            tile.add(linesTile);
-            linesTile.setAttribute(GRP_ATT_NAME, LINES_GRP_ATT_VALUE);
-            String command = "highlight('" + name + "')";
-            linesTile.addGraphicEventResponse(GraphicEvent.mouseClickEvent,
-                    command);
-            this.paintLines(cad, color, linesTile);
+//            DrawingCanvas errorBarsTile = tile.newTile();
+//            tile.add(errorBarsTile);
+//            errorBarsTile.setAttribute(GRP_ATT_NAME, ERROR_BARS_GRP_ATT_VALUE);
+//            this.paintErrorBars(cad, color, errorBarsTile);
+//        
+//            // Lines
+//            DrawingCanvas linesTile = tile.newTile();
+//            tile.add(linesTile);
+//            linesTile.setAttribute(GRP_ATT_NAME, LINES_GRP_ATT_VALUE);
+//            String command = "highlight('" + name + "')";
+//            linesTile.addGraphicEventResponse(GraphicEvent.mouseClickEvent,
+//                    command);
+//            this.paintLines(cad, color, linesTile);
         }
     }
     
@@ -531,7 +531,7 @@ public final class ScatterPlot implements PlotElement {
     private void drawPoint(final int x, final int y, final Color color,
             final String label, final DrawingCanvas drawingCanvas) {
         Circle circle = new Circle(x, y, this.pointRadius, color);
-        circle.setToolTipText(label);
+        //circle.setToolTipText(label);
         drawingCanvas.add(circle, false);
     }
     

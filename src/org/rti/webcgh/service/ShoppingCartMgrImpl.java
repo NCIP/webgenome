@@ -200,20 +200,20 @@ public final class ShoppingCartMgrImpl implements ShoppingCartMgr {
     public void loadSmdFile(final File file, final String userName,
             final Organism organism)
         throws SmdFormatException {
-        LOGGER.info("Loading SMD data file '" + file.getName()
-                + "' into shopping cart of '" + userName + "'");
-        SmdFileReader reader = new SmdFileReader(file);
-        
-        // Get shopping cart
-        ShoppingCart shoppingCart = this.shoppingCartDao.load(userName);
-        if (shoppingCart == null) {
-            throw new WebcghSystemException(
-                    "No persistent shopping cart found for user '"
-                    + userName + "'");
-        }
-        
-        // Persist reporters
-        StopWatch stopWatch = new StopWatch();
+//        LOGGER.info("Loading SMD data file '" + file.getName()
+//                + "' into shopping cart of '" + userName + "'");
+//        SmdFileReader reader = new SmdFileReader(file);
+//        
+//        // Get shopping cart
+//        ShoppingCart shoppingCart = this.shoppingCartDao.load(userName);
+//        if (shoppingCart == null) {
+//            throw new WebcghSystemException(
+//                    "No persistent shopping cart found for user '"
+//                    + userName + "'");
+//        }
+//        
+//        // Persist reporters
+//        StopWatch stopWatch = new StopWatch();
 //        stopWatch.start();
 //        List<Reporter> reporters = reader.getReporters();
 //        LOGGER.info("Persisting " + reporters.size() + " reporters");
@@ -221,27 +221,27 @@ public final class ShoppingCartMgrImpl implements ShoppingCartMgr {
 //            this.reporterDao.save(r);
 //        }
 //        LOGGER.info("Persisted in " + stopWatch.getFormattedLapTime());
-        
-        // Add new experiment to shopping cart and persist bioassay data
-        Experiment exp = new Experiment(file.getName());
-        List<String> bioAssayNames = reader.getBioAssayNames();
-        for (String name : bioAssayNames) {
-            BioAssay ba = new BioAssay(name, organism);
-            exp.add(ba);
-            BioAssayData bad = reader.getBioAssayData(name);
-            LOGGER.info("Persisting bioassay data from '" + name + "'");
-            this.bioAssayDataDao.save(bad);
-            ba.setBioAssayDataId(bad.getId());
-        }
-        LOGGER.info("Bioassays persisted in "
-                + stopWatch.getFormattedLapTime());
-        
-        shoppingCart.add(exp);
-        LOGGER.info("Persisting experiment metadata");
-        this.shoppingCartDao.update(shoppingCart);
-        LOGGER.info("Completed SMD data load");
-        LOGGER.info("Total elapsed time: "
-                + stopWatch.getFormattedElapsedTime());
+//        
+//        // Add new experiment to shopping cart and persist bioassay data
+//        Experiment exp = new Experiment(file.getName());
+//        List<String> bioAssayNames = reader.getBioAssayNames();
+//        for (String name : bioAssayNames) {
+//            BioAssay ba = new BioAssay(name, organism);
+//            exp.add(ba);
+//            BioAssayData bad = reader.getBioAssayData(name);
+//            LOGGER.info("Persisting bioassay data from '" + name + "'");
+//            this.bioAssayDataDao.save(bad);
+//            ba.setBioAssayDataId(bad.getId());
+//        }
+//        LOGGER.info("Bioassays persisted in "
+//                + stopWatch.getFormattedLapTime());
+//        
+//        shoppingCart.add(exp);
+//        LOGGER.info("Persisting experiment metadata");
+//        this.shoppingCartDao.update(shoppingCart);
+//        LOGGER.info("Completed SMD data load");
+//        LOGGER.info("Total elapsed time: "
+//                + stopWatch.getFormattedElapsedTime());
     }
     
     
@@ -252,46 +252,46 @@ public final class ShoppingCartMgrImpl implements ShoppingCartMgr {
      * @param userName User name
      */
     public void clear(final String userName) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        LOGGER.info("Clearing shopping cart of user '" + userName + "'");
-        ShoppingCart cart = this.shoppingCartDao.load(userName);
-        Set<Experiment> experiments = cart.getExperiments();
-        Set<Reporter> reporters = new HashSet<Reporter>();
-        for (Iterator<Experiment> it = experiments.iterator(); it.hasNext();) {
-            Experiment exp = it.next();
-            
-            // Remove bioassay data and collect reporters
-            Set<BioAssay> bioAssays = exp.getBioAssays();
-            for (BioAssay ba : bioAssays) {
-                BioAssayData bad = 
-                    this.bioAssayDataDao.load(ba.getBioAssayDataId());
-                reporters.addAll(bad.getReporters());
-                
-                // TODO: Implement method that will delete a
-                // BioAssayData object from persistent storage
-                // without first loading it into memory.
-                LOGGER.info("Removing bioassay data for '"
-                        + ba.getName() + "' from persistent store");
-                this.bioAssayDataDao.delete(bad);
-            }
-            
-            // Remove experiment
-            it.remove();
-        }
-        LOGGER.info("Reporters removed in " + stopWatch.getFormattedLapTime());
-        LOGGER.info("Removing experiment metadata from persistent store");
-        this.shoppingCartDao.update(cart);
-        
-        // Remove reporters
-        LOGGER.info("Deleting reporters from persistent store");
-        for (Reporter r : reporters) {
-            this.reporterDao.delete(r);
-        }
-        LOGGER.info("Reporters deleted in " + stopWatch.getFormattedLapTime());
-        LOGGER.info("Shopping cart cleared");
-        LOGGER.info("Total elapsed time: "
-                + stopWatch.getFormattedElapsedTime());
+//        StopWatch stopWatch = new StopWatch();
+//        stopWatch.start();
+//        LOGGER.info("Clearing shopping cart of user '" + userName + "'");
+//        ShoppingCart cart = this.shoppingCartDao.load(userName);
+//        Set<Experiment> experiments = cart.getExperiments();
+//        Set<Reporter> reporters = new HashSet<Reporter>();
+//        for (Iterator<Experiment> it = experiments.iterator(); it.hasNext();) {
+//            Experiment exp = it.next();
+//            
+//            // Remove bioassay data and collect reporters
+//            Set<BioAssay> bioAssays = exp.getBioAssays();
+//            for (BioAssay ba : bioAssays) {
+//                BioAssayData bad = 
+//                    this.bioAssayDataDao.load(ba.getBioAssayDataId());
+//                reporters.addAll(bad.getReporters());
+//                
+//                // TODO: Implement method that will delete a
+//                // BioAssayData object from persistent storage
+//                // without first loading it into memory.
+//                LOGGER.info("Removing bioassay data for '"
+//                        + ba.getName() + "' from persistent store");
+//                this.bioAssayDataDao.delete(bad);
+//            }
+//            
+//            // Remove experiment
+//            it.remove();
+//        }
+//        LOGGER.info("Reporters removed in " + stopWatch.getFormattedLapTime());
+//        LOGGER.info("Removing experiment metadata from persistent store");
+//        this.shoppingCartDao.update(cart);
+//        
+//        // Remove reporters
+//        LOGGER.info("Deleting reporters from persistent store");
+//        for (Reporter r : reporters) {
+//            this.reporterDao.delete(r);
+//        }
+//        LOGGER.info("Reporters deleted in " + stopWatch.getFormattedLapTime());
+//        LOGGER.info("Shopping cart cleared");
+//        LOGGER.info("Total elapsed time: "
+//                + stopWatch.getFormattedElapsedTime());
     }
 
 }

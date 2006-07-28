@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/MathUtils.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-07-28 21:59:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,30 +54,39 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.util;
 
 /**
- * Mathematical routines
+ * Mathematical routines.
  */
-public class MathUtils {
+public final class MathUtils {
+    
+    /**
+     * Constructor.
+     *
+     */
+    private MathUtils() {
+        
+    }
 	
 	
 	/**
-	 * Logarithmic function
+	 * Logarithmic function.
 	 * @param value Value
 	 * @param base Log base
 	 * @return Log
 	 */
-	public static double log(double value, double base) {
-		if (value == 0.0)
+	public static double log(final double value, final double base) {
+		if (value == 0.0) {
 			return value;
+        }
 		return Math.log(value) / Math.log(base);
 	}
 	
 	
 	/**
-	 * Log base 2 function
+	 * Log base 2 function.
 	 * @param value Value
 	 * @return Log
 	 */
-	public static double log2(double value) {
+	public static double log2(final double value) {
 		return MathUtils.log(value, 2.0);
 	}
 	
@@ -88,25 +97,40 @@ public class MathUtils {
 	 * @param y A value
 	 * @return A value
 	 */
-	public static float add(float x, float y) {
+	public static float add(final float x, final float y) {
 		float value = Float.NaN;
-		if (! Float.isNaN(x) && ! Float.isNaN(y))
+		if (!Float.isNaN(x) && !Float.isNaN(y)) {
 			value = x + y;
+        }
 		return value;
 	}
 	
 	
 	/**
 	 * Division that is tolerant of NaN.  NaN / x = NaN and x / NaN = NaN.
-	 * @param dividend
-	 * @param divisor
+	 * @param dividend Dividend
+	 * @param divisor Divisor
 	 * @return A value
 	 */
-	public static float divide(float dividend, float divisor) {
+	public static float divide(final float dividend,
+            final float divisor) {
 		float value = Float.NaN;
-		if (! Float.isNaN(dividend) && ! Float.isNaN(divisor))
+		if (!Float.isNaN(dividend) && !Float.isNaN(divisor)) {
 			value = dividend / divisor;
+        }
 		return value;
 	}
+    
+    
+    /**
+     * Generate random integer over range specified by <code>min</code>
+     * and <code>max</code>, inclusively.
+     * @param min Low value in range
+     * @param max High value in range
+     * @return A random integer
+     */
+    public static int randomInt(final int min, final int max) {
+        return min + (int) (Math.random() * (double) (max - min));
+    }
 
 }

@@ -53,6 +53,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.List;
+
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
@@ -63,13 +65,13 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
  * @author dhall
  *
  */
-public interface ListToScalarAnalyticOperation {
+public interface ListToScalarAnalyticOperation extends AnalyticOperation {
     
     /**
      * Perform operation.
      * @param input Input data
      * @return Output data
      */
-    ChromosomeArrayData perform(ChromosomeArrayData input);
+    ChromosomeArrayData perform(List<ChromosomeArrayData> input);
 
 }

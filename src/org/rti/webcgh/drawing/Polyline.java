@@ -66,14 +66,21 @@ import org.rti.webcgh.deprecated.Line;
  */
 public class Polyline extends GraphicPrimitive {
 	
-	private final List points = new ArrayList();
+    /** Points in polyine. */
+	private final List<Point> points = new ArrayList<Point>();
+    
+    /** Maximum number of points in polyline. */
 	private final int maxSize;
+    
+    /** Width of line. */
 	private int width = 2;
+    
+    /** Fill color of polyline. */
 	private Color fillColor = null;
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 */
 	public Polyline() {
@@ -83,11 +90,11 @@ public class Polyline extends GraphicPrimitive {
 	
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param width Width of line
 	 * @param color Color of line
 	 */
-	public Polyline(int width, Color color) {
+	public Polyline(final int width, final Color color) {
 		this();
 		this.width = width;
 		this.color = color;	
@@ -97,12 +104,13 @@ public class Polyline extends GraphicPrimitive {
 
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param width Line width
 	 * @param color Line color
 	 * @param fillColor Fill color (if polyline closed)
 	 */
-	public Polyline(int width, Color color, Color fillColor) {
+	public Polyline(final int width, final Color color,
+            final Color fillColor) {
 		this(width, color);
 		this.fillColor = fillColor;
 	}
@@ -110,12 +118,13 @@ public class Polyline extends GraphicPrimitive {
 	
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param width Width of line
 	 * @param maxSize Max number of points
 	 * @param color Color
 	 */
-	public Polyline(int width, int maxSize, Color color) {
+	public Polyline(final int width, final int maxSize,
+            final Color color) {
 		this.width = width;
 		this.maxSize = maxSize;
 		this.color = color;
@@ -125,39 +134,41 @@ public class Polyline extends GraphicPrimitive {
 
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param width Width
 	 * @param maxSize Max number of points
 	 * @param color Color of line
 	 * @param fillColor Fill color (if line is closed)
 	 */
-	public Polyline(int width, int maxSize, Color color, Color fillColor) {
+	public Polyline(final int width, final int maxSize,
+            final Color color, final Color fillColor) {
 		this(width, maxSize, color);
 		this.fillColor = fillColor;	
 	}
 	
 	
 	/**
-	 * Add point to line
+	 * Add point to line.
 	 * @param x X-coordinate of point
 	 * @param y Y-coordinate of point
-	 * @return <code>true</code> if point successfully added (i.e. if maximum number
+	 * @return <code>true</code> if point successfully
+     * added (i.e. if maximum number
 	 * of points has not been exceeded), <code>false</code> otherwise
 	 */
-	public boolean add(int x, int y) {
+	public final boolean add(final int x, final int y) {
 		return add(new Point(x, y));
 	}
 	
 	
 	/**
-	 * Add a point
+	 * Add a point.
 	 * @param p A point
 	 * @return <code>true</code> if successful, <code>false</code>
 	 * otherwise
 	 */
-	public boolean add(Point p) {
+	public final boolean add(final Point p) {
 		boolean success = false;
-		if (! this.isFull()) {
+		if (!this.isFull()) {
 			points.add(p);
 			success = true;
 		}
@@ -175,18 +186,20 @@ public class Polyline extends GraphicPrimitive {
 	 * @return <code>true</code> if successful, <code>false</code>
 	 * otherwise
 	 */
-	public boolean add(Line line) {
+	public final boolean add(final Line line) {
 		boolean success = false;
 		Point2D p1 = line.getP1();
 		Point2D p2 = line.getP2();
-		if (! this.isFull()) {
+		if (!this.isFull()) {
 			if (points.size() > 0) {
-				Point temp = (Point)points.get(points.size() - 1);
-				if (temp.getX() != p1.getX() || temp.getY() != p1.getY())
-					this.add(new Point((int)p1.getX(), (int)p1.getY()));
-			} else
-				this.add(new Point((int)p1.getX(), (int)p1.getY()));
-			this.add(new Point((int)p2.getX(), (int)p2.getY()));
+				Point temp = (Point) points.get(points.size() - 1);
+				if (temp.getX() != p1.getX() || temp.getY() != p1.getY()) {
+					this.add(new Point((int) p1.getX(), (int) p1.getY()));
+                }
+			} else {
+				this.add(new Point((int) p1.getX(), (int) p1.getY()));
+            }
+			this.add(new Point((int) p2.getX(), (int) p2.getY()));
 		}
 		return success;
 	}
@@ -196,65 +209,66 @@ public class Polyline extends GraphicPrimitive {
 	 * Is list of points full?
 	 * @return T/F
 	 */
-	public boolean isFull() {
+	public final boolean isFull() {
 		return points.size() >= maxSize;
 	}
 	
 	
 	/**
-	 * Get data points
+	 * Get data points.
 	 * @return <code>Point</code> objects
 	 */
-	public List getPoints() {
+	public final List<Point> getPoints() {
 		return points;
 	}
 	
 	
 	/**
-	 * Maximum size
+	 * Maximum size.
 	 * @return Maximum size
 	 */
-	public int getMaxSize() {
+	public final int getMaxSize() {
 		return maxSize;
 	}
 
 	/**
-	 * @return Width of line
+	 * @return Width of line.
 	 */
-	public int getWidth() {
+	public final int getWidth() {
 		return width;
 	}
 
 	/**
-	 * @param i Width of line
+	 * @param i Width of line.
 	 */
-	public void setWidth(int i) {
+	public final void setWidth(final int i) {
 		width = i;
 	}
 
 	/**
-	 * @return Fill color
+	 * @return Fill color.
 	 */
-	public Color getFillColor() {
+	public final Color getFillColor() {
 		return fillColor;
 	}
 
 	/**
-	 * @param color Fill color
+	 * @param color Fill color.
 	 */
-	public void setFillColor(Color color) {
+	public final void setFillColor(final Color color) {
 		fillColor = color;
 	}
 	
 	
 	/**
-	 * Add a new line
+	 * Add a new line.
 	 * @param x1 X-coordinate of first endpoint
 	 * @param y1 Y-coordinate of first endpoint
 	 * @param x2 X-coordinate of second endpoint
 	 * @param y2 Y-coordinate of second endpoint
 	 */
-	public void add(int x1, int y1, int x2, int y2) {
+	public final void add(final int x1, final int y1,
+            final int x2, final int y2) {
 	    this.add(new Line(x1, y1, x2, y2));
 	}
 	
@@ -263,7 +277,7 @@ public class Polyline extends GraphicPrimitive {
 	 * Does polyline have points?
 	 * @return T/F
 	 */
-	public boolean empty() {
+	public final boolean empty() {
 	    return this.points.size() < 1;
 	}
 

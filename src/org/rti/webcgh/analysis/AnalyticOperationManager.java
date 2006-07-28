@@ -53,26 +53,22 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-import java.util.List;
-
-import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.Experiment;
 
 /**
- * An analytic operation that takes
- * a list of <code>ChromosomeArrayData</code>
- * objects as inputs and produces a list
- * of the same class of objects as output.
+ * Manages the performance of analytic operations.
  * @author dhall
  *
  */
-public interface ListToListAnalyticOperation extends AnalyticOperation {
-    
-    /**
-     * Perform operation.
-     * @param input Input data
-     * @return Output data
-     */
-    List<ChromosomeArrayData> perform(
-            List<ChromosomeArrayData> input);
+public interface AnalyticOperationManager {
 
+    /**
+     * Perform given analytic operation on data contained
+     * in given input experiment.
+     * @param input Input experiment data
+     * @param operation Analytic operation to perform
+     * @return New experiment containing data produced
+     * by analytic operation
+     */
+    Experiment perform(Experiment input, AnalyticOperation operation);
 }

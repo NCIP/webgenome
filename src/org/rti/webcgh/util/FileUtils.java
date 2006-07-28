@@ -77,9 +77,14 @@ public final class FileUtils {
      */
     public static File createDirectory(final String path) {
         PathTokenizer pt = new PathTokenizer(path);
+        StringBuffer dirName = new StringBuffer();
         while (pt.hasNext()) {
-            String dirName = pt.next();
-            File dir = new File(dirName);
+            String subDirName = pt.next();
+            if (dirName.length() > 0) {
+                dirName.append("/");
+            }
+            dirName.append(subDirName);
+            File dir = new File(dirName.toString());
             if (dir.exists()) {
                 if (!dir.isDirectory()) {
                     return null;

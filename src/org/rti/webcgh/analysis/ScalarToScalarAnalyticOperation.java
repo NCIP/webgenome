@@ -63,7 +63,7 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
  * @author dhall
  *
  */
-public interface ScalarToScalarAnalyticOperation {
+public interface ScalarToScalarAnalyticOperation extends AnalyticOperation {
     
     /**
      * Perform operation.

@@ -54,21 +54,19 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
-import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.rti.webcgh.util.StringUtils;
 
 
 /**
- * Represents a bioassay (i.e., the hybridization of one microarray
+ * Abstract base class representing
+ * a bioassay (i.e., the hybridization of one microarray
  * against one biological sample).
  * @author dhall
  *
  */
-public class BioAssay implements Serializable {
+public abstract class BioAssay implements Serializable {
     
     /** Serialized version ID. */
     private static final long serialVersionUID = (long) 1;
@@ -81,28 +79,12 @@ public class BioAssay implements Serializable {
     /** Identifier used for persistence. */
     private Long id = null;
     
-    /** Identifier of associated <code>BioAssayData</code> object. */
-    private Long bioAssayDataId = null;
-    
     /** Name of bioassay. */
     private String name = null;
     
     /** Organism that was tested. */
     private Organism organism = null;
     
-    /** Bioassay data. */
-    private BioAssayData bioAssayData = null;
-    
-    /**
-     * Map to names of binary files of serialized
-     * <code>ChromosomeArrayData</code> objects.
-     * These file names are relative -- not absolute
-     * paths.  Clients that reference <code>BioAssay</code>
-     * objects must know how to construct the corresponding
-     * absolute paths to recover the data.
-     */
-    private SortedMap<Short, String> chromosomeArrayDataFileIndex =
-        new TreeMap<Short, String>();
     
     /** Microarray model used in bioassay. */
     private Array array = null;
@@ -127,61 +109,7 @@ public class BioAssay implements Serializable {
     public final void setArray(final Array array) {
         this.array = array;
     }
-    
-    /**
-     * Set map of chromosome numbers to relative names
-     * of files containg chromosome array data.
-     * @return Map
-     */
-    public final SortedMap<Short, String> getChromosomeArrayDataFileIndex() {
-        return chromosomeArrayDataFileIndex;
-    }
 
-
-    /**
-     * Get map of chromosome numbers to relative
-     * names of files containing chromosome array data.
-     * @param chromosomeArrayDataFileIndex Map
-     */
-    public final void setChromosomeArrayDataFileIndex(
-            final SortedMap<Short, String> chromosomeArrayDataFileIndex) {
-        this.chromosomeArrayDataFileIndex = chromosomeArrayDataFileIndex;
-    }
-
-    /**
-     * Get bioassay data.
-     * @return Bioassay data
-     */
-    public final BioAssayData getBioAssayData() {
-        return bioAssayData;
-    }
-
-
-    /**
-     * Set bioassay data.
-     * @param bioAssayData Bioassay data
-     */
-    public final void setBioAssayData(final BioAssayData bioAssayData) {
-        this.bioAssayData = bioAssayData;
-    }
-
-
-    /**
-     * Get identifier of associated <code>BioAssayData</code> object.
-     * @return Identifier
-     */
-    public final Long getBioAssayDataId() {
-        return bioAssayDataId;
-    }
-
-
-    /**
-     * Set identifier of associated <code>BioAssayData</code> object.
-     * @param bioAssayDataId Identifier
-     */
-    public final void setBioAssayDataId(final Long bioAssayDataId) {
-        this.bioAssayDataId = bioAssayDataId;
-    }
 
     /**
      * Get identifier used for persistence.
@@ -252,17 +180,6 @@ public class BioAssay implements Serializable {
         this.organism = organism;
     }
     
-    /**
-     * Constructor.
-     * @param name Name of bioassay
-     * @param organism Organism that was tested
-     * @param bioAssayDataId Identifier of associated bioassay data
-     */
-    public BioAssay(final String name, final Organism organism,
-            final Long bioAssayDataId) {
-        this(name, organism);
-        this.bioAssayDataId = bioAssayDataId;
-    }
     
     // ===================================
     //    Business methods
@@ -279,45 +196,18 @@ public class BioAssay implements Serializable {
     public final boolean synonymousWith(final BioAssay ba) {
         return
             StringUtils.equal(this.name, ba.name)
-            && this.organism == ba.organism
-            && this.bioAssayDataId == ba.bioAssayDataId;
+            && this.organism == ba.organism;
     }
     
     
-    /**
-     * Get relative name of file (i.e., not absolute path)
-     * containing chromosome array data from this bioassay
-     * and from the given chromosome.  Clients calling
-     * this method should know how to convert the relative
-     * file name into an absolute path.
-     * @param chromosome A chromosome number
-     * @return Relative name of file, not absolute path.
-     */
-    public final String getFileName(final short chromosome) {
-        return this.chromosomeArrayDataFileIndex.get(chromosome);
-    }
-    
-    
-    /**
-     * Set relative name of file (i.e., not absolute path)
-     * containing chromosome array data from this bioassay
-     * for the given chromosome.  Clients calling
-     * this method should know how to convert the relative
-     * file name into an absolute path.
-     * @param chromosome A chromosome number
-     * @param fileName Relative name of file, not absolute path.
-     */
-    public final void setFileName(final short chromosome,
-            final String fileName) {
-        this.chromosomeArrayDataFileIndex.put(chromosome, fileName);
-    }
+    // ==============================
+    //      Abstract methods
+    // ==============================
+
     
     /**
      * Get set of chromosomes.
      * @return Chromosomes
      */
-    public final SortedSet<Short> getChromosomes() {
-        return new TreeSet<Short>(
-                this.chromosomeArrayDataFileIndex.keySet());
-    }
+    public abstract SortedSet<Short> getChromosomes();
 }

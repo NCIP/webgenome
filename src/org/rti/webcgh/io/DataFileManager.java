@@ -70,6 +70,7 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.BioAssayData;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.ChromosomeReporters;
+import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.Reporter;
@@ -190,7 +191,7 @@ public final class DataFileManager {
         LOGGER.info("Serializing array data");
         List<String> baNames = in.getBioAssayNames();
         for (String name : baNames) {
-            BioAssay ba = new BioAssay(name, organism);
+            DataSerializedBioAssay ba = new DataSerializedBioAssay(name, organism);
             exp.add(ba);
             ba.setArray(array);
             BioAssayData bad = in.getBioAssayData(name, true);
@@ -227,7 +228,7 @@ public final class DataFileManager {
      * @return Chromosome array data
      */
     public ChromosomeArrayData loadChromosomeArrayData(
-            final BioAssay bioAssay, final short chromosome) {
+            final DataSerializedBioAssay bioAssay, final short chromosome) {
         
         // Recover reporters
         String fname =
@@ -272,13 +273,16 @@ public final class DataFileManager {
         LOGGER.info("Deleting data files associated with experiment '"
                 + exp.getName() + "'");
         for (BioAssay ba : exp.getBioAssays()) {
-           for (Iterator<Short> it = ba.getChromosomeArrayDataFileIndex()
-                   .keySet().iterator(); it.hasNext();) {
-               short chromosome = it.next();
-               String fname = ba.getFileName(chromosome);
-               this.serializer.decommissionObject(new Long(fname));
-               it.remove();
-           }
+            if (ba instanceof DataSerializedBioAssay) {
+               DataSerializedBioAssay dsba = (DataSerializedBioAssay) ba;
+               for (Iterator<Short> it = dsba.getChromosomeArrayDataFileIndex()
+                       .keySet().iterator(); it.hasNext();) {
+                   short chromosome = it.next();
+                   String fname = dsba.getFileName(chromosome);
+                   this.serializer.decommissionObject(new Long(fname));
+                   it.remove();
+               }
+            }
         }
         
         // Delete reporters, if specified
