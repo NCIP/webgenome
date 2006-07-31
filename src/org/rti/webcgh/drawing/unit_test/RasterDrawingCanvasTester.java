@@ -64,6 +64,7 @@ import javax.imageio.ImageIO;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.Circle;
+import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Polygon;
 import org.rti.webcgh.drawing.Polyline;
@@ -127,57 +128,76 @@ public final class RasterDrawingCanvasTester extends TestCase {
         this.canvas.setHeight(HEIGHT);
     }
     
-    /**
-     * Test drawing a circle.
-     */
-    public void testCircle() {
-        this.canvas.add(new Circle(100, 100, 20, Color.GREEN));
-        this.outputCanvas("circle.png");
-    }
+//    /**
+//     * Test drawing a circle.
+//     */
+//    public void testCircle() {
+//        this.canvas.add(new Circle(100, 100, 20, Color.GREEN));
+//        this.outputCanvas("circle.png");
+//    }
+//    
+//    
+//    /**
+//     * Test drawing a line.
+//     */
+//    public void testLine() {
+//        this.canvas.add(new Line(10, 10, 250, 250, 4, Color.RED));
+//        this.outputCanvas("line.png");
+//    }
+//    
+//    /**
+//     * Test drawing a rectangle.
+//     *
+//     */
+//    public void testRect() {
+//        this.canvas.add(new Rectangle(40, 40, 100, 100, Color.CYAN));
+//        this.outputCanvas("rect.png");
+//    }
+//    
+//    
+//    /**
+//     * Test drawing a polyline.
+//     *
+//     */
+//    public void testPolyline() {
+//        Polyline p = new Polyline(3, Color.GREEN);
+//        p.add(10, 200);
+//        p.add(100, 5);
+//        p.add(300, 250);
+//        this.canvas.add(p);
+//        this.outputCanvas("polyline.png");
+//    }
+//    
+//    
+//    /**
+//     * Test drawing a polygon.
+//     *
+//     */
+//    public void testPolygon() {
+//        Point[] points = new Point[]{new Point(50, 50), new Point(100, 100),
+//                                   new Point(100, 200), new Point(20, 150)};
+//        Polygon p = new Polygon(points, Color.RED);
+//        this.canvas.add(p);
+//        this.outputCanvas("polygon.png");
+//    }
     
     
     /**
-     * Test drawing a line.
-     */
-    public void testLine() {
-        this.canvas.add(new Line(10, 10, 250, 250, 4, Color.RED));
-        this.outputCanvas("line.png");
-    }
-    
-    /**
-     * Test drawing a rectangle.
+     * Tests adding a child to a parent canvas
      *
      */
-    public void testRect() {
-        this.canvas.add(new Rectangle(40, 40, 100, 100, Color.CYAN));
-        this.outputCanvas("rect.png");
-    }
-    
-    
-    /**
-     * Test drawing a polyline.
-     *
-     */
-    public void testPolyline() {
-        Polyline p = new Polyline(3, Color.GREEN);
-        p.add(10, 200);
-        p.add(100, 5);
-        p.add(300, 250);
-        this.canvas.add(p);
-        this.outputCanvas("polyline.png");
-    }
-    
-    
-    /**
-     * Test drawing a polygon.
-     *
-     */
-    public void testPolygon() {
-        Point[] points = new Point[]{new Point(50, 50), new Point(100, 100),
-                                   new Point(100, 200), new Point(20, 150)};
-        Polygon p = new Polygon(points, Color.RED);
-        this.canvas.add(p);
-        this.outputCanvas("polygon.png");
+    public void testAddCanvas() {
+        DrawingCanvas canvas2 = this.canvas.newTile();
+        DrawingCanvas canvas3 = canvas2.newTile();
+        Rectangle r1 = new Rectangle(100, 100, 100, 100, Color.BLUE);
+        Rectangle r2 = new Rectangle(100, 100, 100, 100, Color.RED);
+        Rectangle r3 = new Rectangle(100, 100, 100, 100, Color.GREEN);
+        canvas3.add(r3);
+        canvas2.add(canvas3);
+        canvas2.add(r2);
+        this.canvas.add(r1);
+        this.canvas.add(canvas2, 100, 100);
+        this.outputCanvas("add.png");
     }
     
     
@@ -196,5 +216,4 @@ public final class RasterDrawingCanvasTester extends TestCase {
             throw new WebcghSystemException("Error writing image to file", e);
         }
     }
-
 }

@@ -75,6 +75,16 @@ import org.rti.webcgh.core.WebcghSystemException;
  */
 public final class RasterDrawingCanvas implements DrawingCanvas {
     
+    // ===========================
+    //    Constants
+    // ===========================
+    
+    /**
+     * Number of cells in matrix of values that
+     * specify an affine transformation.
+     */
+    private static final int NUM_AFFINE_MATRIX_CELLS = 6;
+    
     // =====================================
     //         Attributes
     // =====================================
@@ -142,7 +152,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @return A new drawing tile
      */
     public DrawingCanvas newTile() {
-        return null;
+        return new RasterDrawingCanvas();
     }
     
     
@@ -161,7 +171,8 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param canvas A canvas
      */
     public void add(final DrawingCanvas canvas) {
-        
+        assert canvas instanceof RasterDrawingCanvas;
+        this.drawingCanvases.add((RasterDrawingCanvas) canvas);
     }
     
     
@@ -172,7 +183,23 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param y Y-coordinate of insertion point
      */
     public void add(final DrawingCanvas canvas, final int x, final int y) {
-        
+        assert canvas instanceof RasterDrawingCanvas;
+        this.drawingCanvases.add((RasterDrawingCanvas) canvas);
+        ((RasterDrawingCanvas) canvas).translateCoordinates(x, y);
+    }
+    
+    
+    /**
+     * Translate the location of this canvas by
+     * the amounts given by the arguments.
+     * @param deltaX Change in x-coordinate
+     * @param deltaY Change in y-coordinate
+     */
+    private void translateCoordinates(final int deltaX, final int deltaY) {
+        this.affineTransform.translate(deltaX, deltaY);
+        for (RasterDrawingCanvas canvas : this.drawingCanvases) {
+            canvas.translateCoordinates(deltaX, deltaY);
+        }
     }
     
     
