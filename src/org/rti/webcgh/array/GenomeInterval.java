@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeInterval.java,v $
-$Revision: 1.3 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.4 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
-import org.rti.webcgh.graph.PlotBoundaries;
+import org.rti.webcgh.plot.PlotBoundaries;
 import org.rti.webcgh.service.Cacheable;
 
 /**

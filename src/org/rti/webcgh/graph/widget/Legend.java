@@ -68,7 +68,7 @@ import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 
 /**
  * Plot legend
@@ -280,7 +280,7 @@ public class Legend implements PlotElement {
     	
     	// Print experiment name
     	Point point = drawingCoords.next(experiment.getName(), canvas);
-    	Text text = canvas.newGraphicText(experiment.getName(), point.x, 
+    	Text text = canvas.newText(experiment.getName(), point.x, 
     			point.y + this.fontSize, this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED,
 				this.textColor);
     	canvas.add(text);
@@ -316,7 +316,7 @@ public class Legend implements PlotElement {
     	
     	// Draw text
     	x += this.padding + width;
-    	Text text = canvas.newGraphicText(bioAssay.getName(), x, point.y + this.fontSize, 
+    	Text text = canvas.newText(bioAssay.getName(), x, point.y + this.fontSize, 
     			this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED, this.textColor);
     	text.setCursor(Cursor.POINTER);
     	text.addGraphicEventResponse(GraphicEvent.mouseClickEvent, "highlight('" +

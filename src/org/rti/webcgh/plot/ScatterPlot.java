@@ -66,7 +66,6 @@ import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Polyline;
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.PlotBoundaries;
 import org.rti.webcgh.graph.widget.PlotElement;
 
 /**

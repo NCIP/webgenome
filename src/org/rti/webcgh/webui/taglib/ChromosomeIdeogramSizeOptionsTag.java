@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/ChromosomeIdeogramSizeOptionsTag.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-08-01 19:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.rti.webcgh.graph.ChromosomeIdeogramSize;
+import org.rti.webcgh.plot.ChromosomeIdeogramSize;
 
 /**
  * Prints list of chromosome ideogram sizes as options for enclosing

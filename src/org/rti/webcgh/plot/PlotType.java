@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/LinearRegressionNormalizationOperation.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:10 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,73 +50,62 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+package org.rti.webcgh.plot;
 
-package org.rti.webcgh.analytic;
-
-import org.rti.regression.LinearRegression;
-import org.rti.regression.RegressionVariables;
-import org.rti.regression.matrix.BioinfoMatrix;
-import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.plot.PlotParameters;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
  */
-public class LinearRegressionNormalizationOperation implements
-		NormalizationOperation {
+public class PlotType {
+    
+    
+    // =============================
+    //       Constants
+    // =============================
+    
+    /**
+     * Scatter plot
+     */
+    public static final PlotType SCATTER_PLOT = new PlotType();
+    
+    /**
+     * Ideogram plot
+     */
+    public static final PlotType IDEOGRAM_PLOT = new PlotType();
+    
+    /**
+     * Frequency plot
+     */
+    public static final PlotType FREQUENCY_PLOT = new PlotType();
+    
+    private static final Map PLOT_TYPE_INDEX = new HashMap();
+    
+    static {
+        PLOT_TYPE_INDEX.put("scatter", SCATTER_PLOT);
+        PLOT_TYPE_INDEX.put("ideogram", IDEOGRAM_PLOT);
+        PLOT_TYPE_INDEX.put("frequency", FREQUENCY_PLOT);
+    }
+    
+    
+    // =========================================
+    //      Constructors
+    // =========================================
+    
+    private PlotType() {}
+    
+    
+    // =================================
+    //     Static methods
+    // =================================
 
-	Long id = null;
-	
-
-	/**
-	 * @return Returns the id.
-	 */
-	public Long getId() {
-		return id;
-	}
-	
-	
-	/**
-	 * @param id The id to set.
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	
-	/**
-	 * Validate data set prior to performing operation
-	 * @param data Target data sets
-	 * @param params Plot parameters
-	 * @return Validation results
-	 */
-	public DataSetInvalidations validate(Experiment[] data,
-			PlotParameters params) {
-		DataSetInvalidations dsi = ValidationUtil.basicValidation(data);
-		if (data.length < 2)
-		    dsi.addInvalidation(new DataSetInvalidation("Linear regression requires more than one experiment"));
-		return dsi;
-	}
-
-	
-	/**
-	 * Perform analytical operation
-	 * @param data Target data sets
-	 * @param params Plot parameters
-	 * @return Data set containing the results of the operation
-	 * @throws AnalyticException if any problems encountered
-	 */
-	public Experiment[] perform(Experiment[] data, 
-			PlotParameters params) throws AnalyticException {
-	    Experiment[] dataSets = new Experiment[0];
-	    try {
-			RegressionVariables regVars = BioinfoMatrixTransformer.transform(data);
-			BioinfoMatrix results = LinearRegression.normalize(regVars);
-			dataSets = BioinfoMatrixTransformer.transform(data, results);
-	    } catch (Exception e) {
-	        throw new AnalyticException("Error performing linear regression normalization", e);
-	    }
-		return dataSets;
-	}
-
+    /**
+     * Get plot type
+     * @param key Key
+     * @return Plot type
+     */
+    public static PlotType getPlotType(String key) {
+        return (PlotType)PLOT_TYPE_INDEX.get(key);
+    }
 }

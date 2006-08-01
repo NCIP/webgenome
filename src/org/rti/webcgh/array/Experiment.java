@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Experiment.java,v $
-$Revision: 1.11 $
-$Date: 2006-05-26 17:22:23 $
+$Revision: 1.12 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,8 +66,8 @@ import java.util.TreeSet;
 import org.rti.webcgh.analytic.AnalyticPipeline;
 import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.graph.widget.DataPlotter;
+import org.rti.webcgh.plot.PlotParameters;
 import org.rti.webcgh.service.Cacheable;
 
 /**

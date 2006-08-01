@@ -55,6 +55,9 @@ package org.rti.webcgh.drawing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -75,15 +78,14 @@ import org.rti.webcgh.core.WebcghSystemException;
  */
 public final class RasterDrawingCanvas implements DrawingCanvas {
     
-    // ===========================
-    //    Constants
-    // ===========================
     
-    /**
-     * Number of cells in matrix of values that
-     * specify an affine transformation.
-     */
-    private static final int NUM_AFFINE_MATRIX_CELLS = 6;
+    // ==============================
+    //      Constants
+    // ==============================
+    
+    /** Type of buffered image. */
+    public static final int IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
+    
     
     // =====================================
     //         Attributes
@@ -110,6 +112,64 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
     /** Height of plot in pixels. */
     private int height = 0;
     
+    /** Minimum x-axis coordinate of elements added to canvas. */
+    private int minX = 0;
+    
+    /** Minimum y-axis coordinate of elements added to canvas. */
+    private int minY = 0;
+    
+    // =========================
+    //      Getters/setters
+    // =========================
+    
+    /**
+     * Get minimum x-axis coordinate of elements added to canvas.
+     * @return Minimum x-axis coordinate of elements added to canvas.
+     */
+    public int getMinX() {
+        return minX;
+    }
+
+
+    /**
+     * Set minimum x-axis coordinate of elements added to canvas.
+     * @param minX Minimum x-axis coordinate of elements added to canvas.
+     */
+    public void setMinX(final int minX) {
+        this.minX = minX;
+    }
+
+    
+    /**
+     * Get minimum y-axis coordinate of elements added to canvas.
+     * @return Minimum y-axis coordinate of elements added to canvas.
+     */
+    public int getMinY() {
+        return minY;
+    }
+
+    
+    /**
+     * Set minimum y-axis coordinate of elements added to canvas.
+     * @param minY Minimum y-axis coordinate of elements added to canvas.
+     */
+    public void setMinY(final int minY) {
+        this.minY = minY;
+    }
+    
+        
+    
+    // =================================
+    //      Constructors
+    // =================================
+
+    /**
+     * Constructor.
+     */
+    public RasterDrawingCanvas() {
+   
+    }
+    
     
     // ==================================
     //         DrawingCanvas interface
@@ -120,6 +180,10 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param element Primitive element
      */
     public void add(final GraphicPrimitive element) {
+        if (element == null) {
+            throw new IllegalArgumentException(
+                    "Graphic primitive cannot be null");
+        }
         this.graphicPrimitives.add(element);
     }
     
@@ -232,11 +296,11 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param color Color of text
      * @return New text element
      */
-    public Text newGraphicText(
+    public Text newText(
             final String value, final int x, final int y, final int fontSize,
             final HorizontalAlignment alignment, final Color color
     ) {
-        return null;
+        return new RasterText(value, x, y, fontSize, alignment, color);
     }
     
     
@@ -257,7 +321,14 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @return Rendered with of given text
      */
     public int renderedWidth(final String text, final int fontSize) {
-        return -1;
+       BufferedImage img = new BufferedImage(1, 1,
+                IMAGE_TYPE);
+       Graphics graphics = img.getGraphics();
+       Font font = graphics.getFont();
+       Font newFont = new Font(font.getFontName(), font.getStyle(), fontSize);
+       graphics.setFont(newFont);
+       FontMetrics fm = graphics.getFontMetrics();
+       return fm.stringWidth(text);
     }
     
     
@@ -309,12 +380,25 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @return A buffered image
      */
     public BufferedImage toBufferedImage() {
+        
+        // Initialize graphics
         BufferedImage img = new BufferedImage(this.width, this.height,
-                BufferedImage.TYPE_INT_RGB);
+                IMAGE_TYPE);
         Graphics2D graphics = (Graphics2D) img.getGraphics();
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // Add white background
+        Rectangle bg = new Rectangle(0, 0, this.width, this.height,
+                Color.WHITE);
+        this.render(bg, graphics);
+        
+        // Render elements
+        AffineTransform oldTransform = this.affineTransform;
+        this.affineTransform = new AffineTransform(this.affineTransform);
+        this.affineTransform.translate(-this.minX, -this.minY);
         this.render(this, graphics);
+        this.affineTransform = oldTransform;
         return img;
     }
     
@@ -397,6 +481,13 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
                 }
                 graphics.fillPolygon(x, y, points.length);
             }
+        } else if (prim instanceof Text) {
+            Text t = (Text) prim;
+            Font font = graphics.getFont();
+            Font newFont = new Font(font.getFontName(), font.getStyle(),
+                    t.getFontSize());
+            graphics.setFont(newFont);
+            graphics.drawString(t.getValue(), t.getX(), t.getY());
         }
     }
 }

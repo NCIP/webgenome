@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/unit_test/SvgDrawingCanvasTester.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-15 20:31:52 $
+$Revision: 1.5 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,7 +69,7 @@ import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
 import org.rti.webcgh.drawing.SvgElementFactory;
-import org.rti.webcgh.drawing.SvgGraphicText;
+import org.rti.webcgh.drawing.SvgText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -101,7 +101,7 @@ public class SvgDrawingCanvasTester extends TestCase {
 		line = new Line(10, 10, 50, 50, 5, Color.red);
 		poly = new Polyline(1, 10, Color.blue);
 		rect = new Rectangle(70, 70, 50, 15, Color.black);
-		text = new SvgGraphicText("Hello", 100, 100, 12, HorizontalAlignment.CENTERED, Color.cyan);
+		text = new SvgText("Hello", 100, 100, 12, HorizontalAlignment.CENTERED, Color.cyan);
 		poly.add(new Point(10, 10));
 		poly.add(new Point(10, 100));
 		poly.add(new Point(50, 100));

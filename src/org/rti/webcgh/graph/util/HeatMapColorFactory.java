@@ -377,7 +377,7 @@ public class HeatMapColorFactory implements PlotElement {
         int x = this.pixel(value);
         String txt = this.formatter.format(value);
         int width = canvas.renderedWidth(txt, this.fontSize);
-        Text graphic = canvas.newGraphicText(txt, x, y, this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
+        Text graphic = canvas.newText(txt, x, y, this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
         canvas.add(graphic);
         int candidateMin = x - width / 2;
         if (candidateMin < this.minX)

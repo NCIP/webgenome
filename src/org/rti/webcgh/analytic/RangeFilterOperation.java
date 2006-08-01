@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/RangeFilterOperation.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-29 22:26:30 $
+$Revision: 1.3 $
+$Date: 2006-08-01 19:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 
 
 

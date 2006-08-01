@@ -346,7 +346,7 @@ public class GenomeFeatureMap implements PlotElement {
     		this.minY = -(this.padding + this.fontSize);
     	for (Iterator it = this.labels.iterator(); it.hasNext();) {
     		Label label = (Label)it.next();
-    		Text text = canvas.newGraphicText(label.textValue, label.x, y, 
+    		Text text = canvas.newText(label.textValue, label.x, y, 
     		    this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
     		if (label.url != null)
     			text.setUrl(label.url);

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgElementFactory.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-15 20:31:52 $
+$Revision: 1.4 $
+$Date: 2006-08-01 19:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -109,7 +109,7 @@ public class SvgElementFactory {
 		else if (graphic instanceof Polyline)
 			element = newPolylineElement((Polyline)graphic);
 		else if (graphic instanceof Text)
-			element = newTextElement((SvgGraphicText)graphic);
+			element = newTextElement((SvgText)graphic);
 		else if (graphic instanceof Arc)
 			element = newArcElement((Arc)graphic);
 		else if (graphic instanceof Curve)
@@ -215,7 +215,7 @@ public class SvgElementFactory {
 	 * @param text Graphic text
 	 * @return Text node
 	 */
-	private Element newTextElement (SvgGraphicText text){
+	private Element newTextElement (SvgText text){
 		Element el = document.createElement("text");
 		el.setAttribute("x", String.valueOf(text.getX()));
 		el.setAttribute("y", String.valueOf(text.getY()));

@@ -117,7 +117,7 @@ public class DataScaleRenderer {
 		int x = - (canvas.renderedWidth(label, fontSize) + padding);
 		int y = scaleHeight / 2 + fontSize / 2;
 		if (label != null) {
-			Text text = canvas.newGraphicText(label, x, y, 
+			Text text = canvas.newText(label, x, y, 
 			   fontSize, HorizontalAlignment.LEFT_JUSTIFIED, labelColor);
 			canvas.add(text);
 		}
@@ -151,14 +151,14 @@ public class DataScaleRenderer {
 		// Left side
 		String minSatStr = minSatStr(scale);
 		int minSatX = binWidth / 2;
-		canvas.add(canvas.newGraphicText(minSatStr, minSatX, y, 
+		canvas.add(canvas.newText(minSatStr, minSatX, y, 
 		 	fontSize, HorizontalAlignment.CENTERED, labelColor));
 		 	
 		// Right side
 		String maxSatStr = maxSatStr(scale);
 		int maxSatBin = scale.binNum(scale.getMaxSat());
 		int maxSatX = binWidth * maxSatBin + binWidth / 2;
-		canvas.add(canvas.newGraphicText(maxSatStr, maxSatX, y, 
+		canvas.add(canvas.newText(maxSatStr, maxSatX, y, 
 		 	fontSize, HorizontalAlignment.CENTERED, labelColor));
 		 	
 		// Zero point
@@ -172,7 +172,7 @@ public class DataScaleRenderer {
 			 int minZeroX = zeroSatX - zeroSatStrWidth / 2 - padding;
 			 int maxZeroX = zeroSatX + zeroSatStrWidth / 2 - padding;
 			 if (minZeroX > minX && maxZeroX < maxX)
-			 	canvas.add(canvas.newGraphicText(zeroSatStr, zeroSatX, y, 
+			 	canvas.add(canvas.newText(zeroSatStr, zeroSatX, y, 
 			 		fontSize, HorizontalAlignment.CENTERED, labelColor));
 		 }
 	}

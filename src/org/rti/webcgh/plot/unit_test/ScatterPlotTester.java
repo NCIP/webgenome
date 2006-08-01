@@ -62,8 +62,8 @@ import org.rti.webcgh.domain.ArrayDatumGenerator;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.PlotBoundaries;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
+import org.rti.webcgh.plot.PlotBoundaries;
 import org.rti.webcgh.plot.ScatterPlot;
 
 import junit.framework.TestCase;

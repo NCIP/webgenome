@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/unit_test/McarMcdrOperationTester.java,v $
-$Revision: 1.1 $
-$Date: 2006-03-21 15:48:55 $
+$Revision: 1.2 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.ChromosomalAlteration;
 import org.rti.webcgh.array.ChromosomalAlterationIterator;
 import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 
 import junit.framework.TestCase;
 

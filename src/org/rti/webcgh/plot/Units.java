@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/Units.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-12 15:06:23 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.graph;
+package org.rti.webcgh.plot;
 
 import java.util.Collection;
 import java.util.HashMap;

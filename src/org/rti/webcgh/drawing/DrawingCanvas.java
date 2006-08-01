@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/DrawingCanvas.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-15 20:31:52 $
+$Revision: 1.4 $
+$Date: 2006-08-01 19:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,78 +64,78 @@ public interface DrawingCanvas {
 	
 	
 	/**
-	 * Add a graphic primitive
+	 * Add a graphic primitive.
 	 * @param element Primitive element
 	 */
-	public abstract void add(GraphicPrimitive element);
+	void add(GraphicPrimitive element);
 	
 	
 	/**
-	 * Rotate canvas
+	 * Rotate canvas.
 	 * @param degrees Degrees of rotation
 	 * @param x X-coordinate of rotation point
 	 * @param y Y-coordinate of rotation point
 	 */
-	public abstract void rotate(int degrees, int x, int y);
+	void rotate(int degrees, int x, int y);
 	
 	
 	/**
-	 * Add a graphic primitive
+	 * Add a graphic primitive.
 	 * @param graphic Graphic primitive
 	 * @param overwriteCanvasProperties Overwrite global properties
 	 * for graphic primitives set within canvas?
 	 */
-	public void add(GraphicPrimitive graphic, boolean overwriteCanvasProperties);
+	void add(GraphicPrimitive graphic, boolean overwriteCanvasProperties);
 	
 	
 	/**
-	 * Return new drawing tile (i.e. a portion of canvas)
+	 * Return new drawing tile (i.e. a portion of canvas).
 	 * @return A new drawing tile
 	 */
-	public abstract DrawingCanvas newTile();
+	DrawingCanvas newTile();
 	
 	
 	/**
-	 * Return new drawing tile (i.e. a portion of canvas)
+	 * Return new drawing tile (i.e. a portion of canvas).
 	 * @param tileName Name of tile
 	 * @return A new drawing tile
 	 */
-	public abstract DrawingCanvas newTile(String tileName);
+	DrawingCanvas newTile(String tileName);
 	
 	
 	/**
-	 * Add a canvas
+	 * Add a canvas.
 	 * @param canvas A canvas
 	 */
-	public abstract void add(DrawingCanvas canvas);
+	void add(DrawingCanvas canvas);
 	
 	
 	/**
-	 * Add a canvas at specified location
+	 * Add a canvas at specified location.
 	 * @param canvas A canvas
 	 * @param x X-coordinate of insertion point
 	 * @param y Y-coordinate of insertion point
 	 */
-	public abstract void add(DrawingCanvas canvas, int x, int y);
+	void add(DrawingCanvas canvas, int x, int y);
 	
 	
 	/**
-	 * Set global line width property that applies to all lines
+	 * Set global line width property that applies to all lines.
 	 * withiin this canvas
 	 * @param width Line width
 	 */
-	public abstract void setLineWidth(int width);
+	void setLineWidth(int width);
 	
 	
 	/**
-	 * Set id of canvas
+	 * Set id of canvas.
 	 * @param id Canvas id
 	 */
-	public abstract void setId(String id);
+	void setId(String id);
 	
 	
 	/**
-	 * Return new text element
+	 * Return new text element.
 	 * @param value String value of text
 	 * @param x X-coordinate of text
 	 * @param y Y-coordinate of text
@@ -144,54 +144,54 @@ public interface DrawingCanvas {
 	 * @param color Color of text
 	 * @return New text element
 	 */
-	public abstract Text newGraphicText
-	(
-		String value, int x, int y, int fontSize, HorizontalAlignment alignment, Color color
+	Text newText(
+		String value, int x, int y, int fontSize,
+        HorizontalAlignment alignment, Color color
 	);
 	
 	
 	/**
 	 * Set global property for data set names.  This is a list of all
-	 * data sets represented in graphic
+	 * data sets represented in graphic.
 	 * @param names Data set names
 	 */
-	public abstract void setDataSetNames(String[] names);
+	void setDataSetNames(String[] names);
 	
 	
 	/**
-	 * Rendered with of given text
+	 * Rendered with of given text.
 	 * @param text Text element
 	 * @param fontSize Font size
 	 * @return Rendered with of given text
 	 */
-	public abstract int renderedWidth(String text, int fontSize);
+	int renderedWidth(String text, int fontSize);
 	
 	
 	/**
-	 * Set width of canvas
+	 * Set width of canvas.
 	 * @param width Width in pixels
 	 */
-	public abstract void setWidth(int width);
+	void setWidth(int width);
 	
 	
 	/**
-	 * Set height of canvas
+	 * Set height of canvas.
 	 * @param height Height in pixels
 	 */
-	public abstract void setHeight(int height);
+	void setHeight(int height);
 	
 	
 	/**
-	 * Set artibrary attribute
+	 * Set artibrary attribute.
 	 * @param name Attribute name
 	 * @param value Attribute value
 	 */
-	public abstract void setAttribute(String name, String value);
+	void setAttribute(String name, String value);
 	
 	/**
-	 * Add a response to an event
+	 * Add a response to an event.
 	 * @param event An event
 	 * @param response A response
 	 */
-	public void addGraphicEventResponse(GraphicEvent event, String response);
+	void addGraphicEventResponse(GraphicEvent event, String response);
 }

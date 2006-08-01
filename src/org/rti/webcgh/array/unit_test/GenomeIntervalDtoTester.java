@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/unit_test/GenomeIntervalDtoTester.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.array.unit_test;
 
 import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.graph.Units;
+import org.rti.webcgh.plot.Units;
 
 import junit.framework.TestCase;
 

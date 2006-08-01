@@ -68,9 +68,9 @@ import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.Reporter;
 import org.rti.webcgh.array.ReporterMapping;
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.PlotBoundaries;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.ScatterPlot;
+import org.rti.webcgh.plot.PlotBoundaries;
 import org.w3c.dom.Document;
 
 /**

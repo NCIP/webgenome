@@ -457,4 +457,22 @@ public class PlotPanel implements ScalePlotElement {
         }
     	return coord;
     }
+    
+    
+    /**
+     * Get minimum x-axis coordinate.
+     * @return Minimum x-axis coordinate
+     */
+    protected int getMinX() {
+        return this.leftElement.topLeftPoint().x;
+    }
+    
+    
+    /**
+     * Get minimum y-axis coordinate.
+     * @return Minimum y-axis coordinate
+     */
+    protected int getMinY() {
+        return this.topElement.topLeftPoint().y;
+    }
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/DataAssembler.java,v $
-$Revision: 1.5 $
-$Date: 2006-06-09 20:01:27 $
+$Revision: 1.6 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,7 @@ import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 import org.rti.webcgh.service.AuthenticationException;
 import org.rti.webcgh.service.WebcghDatabaseException;
 

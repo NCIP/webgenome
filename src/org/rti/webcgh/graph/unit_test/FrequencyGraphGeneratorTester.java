@@ -62,7 +62,7 @@ import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.graph.FrequencyGraphGenerator;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 
 
 /**

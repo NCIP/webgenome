@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/LinearRegressionNormalizationOperation.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:10 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,72 +51,76 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.analytic;
 
-import org.rti.regression.LinearRegression;
-import org.rti.regression.RegressionVariables;
-import org.rti.regression.matrix.BioinfoMatrix;
-import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.plot.PlotParameters;
+package org.rti.webcgh.drawing;
+
+import java.awt.Color;
 
 /**
- * 
+ * Implementation of <code>Text</code> interface for
+ * an SVG canvas.
  */
-public class LinearRegressionNormalizationOperation implements
-		NormalizationOperation {
-
-	Long id = null;
+public final class SvgText extends Text {
+	
 	
 
 	/**
-	 * @return Returns the id.
+	 * Constructor.
 	 */
-	public Long getId() {
-		return id;
-	}
-	
-	
-	/**
-	 * @param id The id to set.
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	
-	/**
-	 * Validate data set prior to performing operation
-	 * @param data Target data sets
-	 * @param params Plot parameters
-	 * @return Validation results
-	 */
-	public DataSetInvalidations validate(Experiment[] data,
-			PlotParameters params) {
-		DataSetInvalidations dsi = ValidationUtil.basicValidation(data);
-		if (data.length < 2)
-		    dsi.addInvalidation(new DataSetInvalidation("Linear regression requires more than one experiment"));
-		return dsi;
+	public SvgText() {
+		super();
 	}
 
-	
 	/**
-	 * Perform analytical operation
-	 * @param data Target data sets
-	 * @param params Plot parameters
-	 * @return Data set containing the results of the operation
-	 * @throws AnalyticException if any problems encountered
+     * Constructor.
+	 * @param value Text value
 	 */
-	public Experiment[] perform(Experiment[] data, 
-			PlotParameters params) throws AnalyticException {
-	    Experiment[] dataSets = new Experiment[0];
-	    try {
-			RegressionVariables regVars = BioinfoMatrixTransformer.transform(data);
-			BioinfoMatrix results = LinearRegression.normalize(regVars);
-			dataSets = BioinfoMatrixTransformer.transform(data, results);
-	    } catch (Exception e) {
-	        throw new AnalyticException("Error performing linear regression normalization", e);
-	    }
-		return dataSets;
+	public SvgText(final String value) {
+		super(value);
+	}
+	
+
+	/**
+     * Constructor.
+	 * @param value Text value
+	 * @param x X-coordinate position
+	 * @param y Y-coordinate position
+	 * @param fontSize Font size
+	 * @param alignment Alignment relative to (x,y) coordinate
+	 * @param color Color
+	 */
+	public SvgText(
+		final String value,
+        final int x,
+        final int y,
+        final int fontSize,
+        final HorizontalAlignment alignment,
+        final Color color) {
+		super(value, x, y, fontSize, alignment, color);
+	}
+	
+	
+
+	/**
+	 * Get width of rendered text.
+	 * @return Width of rendered text
+	 */
+	public int renderedWidth() {
+		int len = 0;
+		if (value != null) {
+			int count = 0;
+			char lastChar = 'A';
+			for (int i = 0; i < value.length(); i++) {
+				char c = value.charAt(i);
+				if (!(Character.isWhitespace(c)
+                        && Character.isWhitespace(lastChar))) {
+					count++;
+                }
+				lastChar = c;
+			}
+			len = (int) ((double) count * (double) fontSize * 0.6);
+		}
+		return len;
 	}
 
 }

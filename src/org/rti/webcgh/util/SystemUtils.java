@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/SystemUtils.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,51 +64,81 @@ import org.rti.webcgh.core.WebcghSystemException;
 
 
 /**
- * Contains general utility methods used by multiple classes
+ * Contains general utility methods used by multiple classes.
  */
-public class SystemUtils {
+public final class SystemUtils {
+    
+    // ================================
+    //     Constants
+    // ================================
 	
+    /**
+     * Properties applying to application. These are read in
+     * from file given by SYS_PROPS_FILE.
+     */
 	private static Properties applicationProperties = null;
+    
+    /** Classpath-relative application properties file. */
     private static final String SYS_PROPS_FILE = "conf/webcgh.properties";
+    
+    /** Classpath-relative file containing properties for unit test classes. */
+    private static final String UNIT_TEST_PROPS_FILE =
+        "conf/unit_test.properties";
 
     
+    // ========================
+    //   Constructor
+    // ========================
+    
     /**
-     * Get system properties
-     * @return System properties
-     * @throws WebcghSystemException
+     * Constructor.  This is declared private
+     * to protect against instantiation of
+     * instances of this class.
      */
-    public static synchronized Properties getApplicationProperties() 
-    	throws WebcghSystemException {
-    	if (applicationProperties == null)
+    private SystemUtils() {
+        
+    }
+    
+    
+    // ===============================
+    //      Utility methods
+    // ===============================
+    
+    /**
+     * Get system properties.
+     * @return System properties
+     */
+    public static synchronized Properties getApplicationProperties() {
+    	if (applicationProperties == null) {
     		applicationProperties = loadProperties(SYS_PROPS_FILE);
+        }
     	return applicationProperties;
     }
     
     
     /**
-     * Get a system property
+     * Get a system property.
      * @param key Name of property
      * @return System property
-     * @throws WebcghSystemException
      */
-    public static synchronized String getApplicationProperty(String key) 
-    	throws WebcghSystemException {
+    public static synchronized String getApplicationProperty(
+            final String key) {
     	Properties props = getApplicationProperties();
-    	return (String)props.get(key);
+    	return (String) props.get(key);
     }
     
     
     /**
-     * Load properties from a file
+     * Load properties from a file.
      * @param fname File name
      * @return Properties
-     * @throws WebcghSystemException
      */
-    public static synchronized Properties loadProperties(String fname)
-    	throws WebcghSystemException {
+    public static synchronized Properties loadProperties(
+            final String fname) {
     	Properties props = new Properties();
 		try {
-			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(fname);
+			InputStream in = Thread.currentThread().
+                getContextClassLoader().getResourceAsStream(fname);
 			props.load(in);
 		} catch (IOException e) {
 			throw new WebcghSystemException(
@@ -121,15 +151,30 @@ public class SystemUtils {
     /**
      * Find a property.  Look first in system properties, then in application
      * properties (i.e. webcgh.properties file).
-     * @param propName
+     * @param propName Property name
      * @return Property
      */
-    public static String findProperty(String propName) {
+    public static String findProperty(final String propName) {
         String prop = System.getProperty(propName);
-        if (prop == null)
+        if (prop == null) {
             prop = SystemUtils.getApplicationProperty(propName);
+        }
         return prop;
     }
     
     
+    /**
+     * Get specified unit test property.
+     * @param key Name of property
+     * @return Property value
+     */
+    public static String getUnitTestProperty(final String key) {
+        Properties props = SystemUtils.loadProperties(
+                SystemUtils.UNIT_TEST_PROPS_FILE);
+        if (props == null) {
+            throw new WebcghSystemException(
+                    "Cannot find 'unit_test.properties' file");
+        }
+        return props.getProperty(key);
+    }
 }

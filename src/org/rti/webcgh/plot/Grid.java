@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widget;
+package org.rti.webcgh.plot;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -61,53 +61,90 @@ import java.util.List;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.graph.widget.PlotElement;
 
 /**
- * A graphical grid
+ * Class that represents a grid of lines drawn
+ * on plot.  Grids will typically be aligned
+ * to axes; hatch marks for the axis will
+ * connect to grid lines.
  */
-public class Grid implements PlotElement {
+public final class Grid implements PlotElement {
+    
+    // =======================
+    //       Constants
+    // =======================
+    
+    /** Default thickness of grid line. */
+    private static final int DEF_GRID_MARK_THICKNESS = 3;
     
     
     // ==================================
     //       Attributes
     // ==================================
     
+    /** Orientation of grid. */
     private final Orientation orientation;
-    private final List gridMarkLocations = new ArrayList();
+    
+    /** Pixel locations of grid marks. */
+    private final List<Integer> gridMarkLocations = new ArrayList<Integer>();
+    
+    /** Pixel location of grid line representing "0". */
     private int zeroPointLocation = 0;
+    
+    /** Does grid contain a zeroPoint? */
     private boolean zeroPointSet = false;
+    
+    /** Color of grid. */
     private final Color color;
+    
+    /** Width of grid in pixels. */
     private final int width;
+    
+    /** Height of grid in pixels. */
     private final int height;
     
-    private int gridMarkThickness = 3;
+    /** Thickness of grid lines in pixels. */
+    private int gridMarkThickness = DEF_GRID_MARK_THICKNESS;
+    
+    /** Color of grid line corresponding to "0". */
     private Color zeroMarkColor = Color.black;
     
+    /** Minimum X-coordinate in grid. */
     private int minX = 0;
+    
+    /** Minimum Y-coordinate in grid. */
     private int minY = 0;
     
     
+    // =================================
+    //      Getters/setters
+    // =================================
+    
     /**
+     * Set thickness of grid lines in pixels.
      * @param gridMarkThickness The gridMarkThickness to set.
      */
-    public void setGridMarkThickness(int gridMarkThickness) {
+    public void setGridMarkThickness(final int gridMarkThickness) {
         this.gridMarkThickness = gridMarkThickness;
     }
     
     
 	/**
+     * Set pixel location of line representing "0".
 	 * @param zeroPointLocation The zeroPointLocation to set.
 	 */
-	public void setZeroPointLocation(int zeroPointLocation) {
+	public void setZeroPointLocation(final int zeroPointLocation) {
 		this.zeroPointLocation = zeroPointLocation;
 		this.zeroPointSet = true;
 	}
 	
 	
 	/**
+     * Set grid line color.
 	 * @param zeroMarkColor The zeroMarkColor to set.
 	 */
-	public void setZeroMarkColor(Color zeroMarkColor) {
+	public void setZeroMarkColor(final Color zeroMarkColor) {
 		this.zeroMarkColor = zeroMarkColor;
 	}
 	
@@ -117,13 +154,14 @@ public class Grid implements PlotElement {
     // ===============================
     
     /**
-     * Constructor
+     * Constructor.
      * @param width Width in pixels
      * @param height Height in pixels
      * @param orientation Orientation
      * @param color Color
      */
-    public Grid(int width, int height, Orientation orientation, Color color) {
+    public Grid(final int width, final int height,
+            final Orientation orientation, final Color color) {
         this.width = width;
         this.height = height;
         this.orientation = orientation;
@@ -137,25 +175,28 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Paint element
+     * Paint element.
      * @param canvas A canvas
      */
-    public void paint(DrawingCanvas canvas) {
+    public void paint(final DrawingCanvas canvas) {
     	
     	// Add all lines except zero point
         for (Iterator it = this.gridMarkLocations.iterator(); it.hasNext();) {
-            int pos = ((Integer)it.next()).intValue();
+            int pos = ((Integer) it.next()).intValue();
             int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
             if (this.orientation == Orientation.HORIZONTAL) {
                 x1 = 0;
                 x2 = this.width;
-                y1 = y2 = this.height - pos;
+                y1 = this.height - pos;
+                y2 = y1;
             } else if (this.orientation == Orientation.VERTICAL) {
-                x1 = x2 = pos;
+                x1 = pos;
+                x2 = x1;
                 y1 = 0;
                 y2 = this.height;
             }
-            Line line = new Line(x1, y1, x2, y2, this.gridMarkThickness, this.color);
+            Line line = new Line(x1, y1, x2, y2,
+                    this.gridMarkThickness, this.color);
             canvas.add(line);
         }
         
@@ -167,8 +208,10 @@ public class Grid implements PlotElement {
         		line = new Line(0, y, this.width, y, this.gridMarkThickness, 
         				this.zeroMarkColor);
         	} else if (this.orientation == Orientation.VERTICAL) {
-        		line = new Line(this.zeroPointLocation, 0, this.zeroPointLocation,
-        				this.height, this.gridMarkThickness, this.zeroMarkColor);
+        		line = new Line(this.zeroPointLocation, 0,
+                        this.zeroPointLocation,
+        				this.height, this.gridMarkThickness,
+                        this.zeroMarkColor);
         	}
         	canvas.add(line);
         }
@@ -176,7 +219,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Point at top left used to align with other plot elements
+     * Point at top left used to align with other plot elements.
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
@@ -185,7 +228,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Point at bottom left used to align with other plot elements
+     * Point at bottom left used to align with other plot elements.
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
@@ -194,7 +237,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Point at top right used to align with other plot elements
+     * Point at top right used to align with other plot elements.
      * @return A point
      */
     public Point topRightAlignmentPoint() {
@@ -203,7 +246,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Point at bottom right used to align with other plot elements
+     * Point at bottom right used to align with other plot elements.
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
@@ -212,7 +255,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Width in pixels
+     * Width in pixels.
      * @return Width in pixels
      */
     public int width() {
@@ -221,7 +264,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Height in pixels
+     * Height in pixels.
      * @return Height in pixels
      */
     public int height() {
@@ -230,7 +273,7 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Return point at top left of element
+     * Return point at top left of element.
      * @return A point
      */
     public Point topLeftPoint() {
@@ -239,28 +282,29 @@ public class Grid implements PlotElement {
     
     
     /**
-     * Move element
+     * Move element.
      * @param deltaX Number of pixels horizontally
      * @param deltaY Number of pixels vertically
      */
-    public void move(int deltaX, int deltaY) {
+    public void move(final int deltaX, final int deltaY) {
     	this.minX += deltaX;
     	this.minY += deltaY;
-    	if (this.orientation == Orientation.HORIZONTAL)
+    	if (this.orientation == Orientation.HORIZONTAL) {
     		this.zeroPointLocation += deltaX;
-    	else if (this.orientation == Orientation.VERTICAL)
+        } else if (this.orientation == Orientation.VERTICAL) {
     		this.zeroPointLocation += deltaY;
+        }
     }
     
     // ==============================
-    //     Public methods
+    //     Business methods
     // ==============================
     
     /**
-     * Add a grid mark position
+     * Add a grid mark position.
      * @param pos Grid mark position in pixels from origin
      */
-    public void addGridMarkPosition(int pos) {
+    public void addGridMarkPosition(final int pos) {
         this.gridMarkLocations.add(new Integer(pos));
     }
 

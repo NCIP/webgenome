@@ -57,6 +57,7 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.drawing.Cursor;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
@@ -67,39 +68,64 @@ import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.graph.util.NumberFormatter;
 import org.rti.webcgh.graph.util.RealNumberFormatter;
+import org.rti.webcgh.plot.Grid;
 
 
 /**
- * A plot axis
+ * A plot axis.
  */
-public class Axis implements ScalePlotElement {
+public final class Axis implements ScalePlotElement {
     
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(Axis.class);
     
-    // ===================================
-    //     Constants
-    // ===================================
-    
-    private final static int PIXELS_BETWEEN_NUMBERS = 5;
-    
-    
+
     // =============================
     //       Attributes
     // =============================
     
     
+    /** Minimum value on axis in the native units. */
     private final double minValue;
+    
+    /** Maximum value on axis in the native units. */
     private final double maxValue;
+    
+    /** Length of axis in pixels. */
     private final int length;
+    
+    /** Color of axis. */
     private final Color color = Color.black;
+    
+    /** Orientation of axis. */
     private final Orientation orientation;
+    
+    /** Position of text relative to hatch marks. */
     private final Location positionTextRelativeToHatches;
     
+    /**
+     * Number of minor tic marks between major tic marks.
+     * Major tic marks have text labels; minor tic marks
+     * do not.
+     */
     private int numMinorTicsBetweenMajorTics = 5;
+    
+    /** Length of major tic marks in pixels. */
     private int majorTicLength = 20;
+    
+    /** Length of minor tic marks in pixels. */
     private int minorTicLength = 8;
+    
+    /** Font size of major tic mark text labels. */
     private int fontSize = 12;
+    
+    /** Thickness of main axis line and hatch marks. */
     private int lineThickness = 3;
+    
+    /** Padding between all graphical elements in pixels. */
     private int padding = 5;
+    
+    /** Number formatter. */
     private NumberFormatter numberFormatter = new RealNumberFormatter(12, 4);
     
     private int minX = 0;
@@ -446,7 +472,7 @@ public class Axis implements ScalePlotElement {
 	        if (candidateMaxWidth > maxWidth)
 	            maxWidth = candidateMaxWidth;
 	    }
-		maxWidth += PIXELS_BETWEEN_NUMBERS;
+		maxWidth += this.padding;
 		return (int)Math.floor((double)width / (double)maxWidth);
 	}
 	
@@ -783,7 +809,7 @@ public class Axis implements ScalePlotElement {
 		
 		
 		private void drawText(DrawingCanvas canvas) {
-		    Text text = canvas.newGraphicText(this.label, this.textX, this.textY,
+		    Text text = canvas.newText(this.label, this.textX, this.textY,
 		        this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED, this.color);
 		    if (this.link != null) {
 		        text.setHyperlink(new Hyperlink(this.link));

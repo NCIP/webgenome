@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/WebUtils.java,v $
-$Revision: 1.2 $
-$Date: 2006-06-09 20:01:27 $
+$Revision: 1.3 $
+$Date: 2006-08-01 19:37:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import org.rti.webcgh.array.Pipeline;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 import org.rti.webcgh.service.AuthenticationException;
 import org.rti.webcgh.service.UserProfile;
 import org.rti.webcgh.service.WebcghDatabaseException;

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/SmoothOperation.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.4 $
+$Date: 2006-08-01 19:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ArrayDatum;
 import org.rti.webcgh.core.WebcghApplicationException;
-import org.rti.webcgh.graph.PlotParameters;
+import org.rti.webcgh.plot.PlotParameters;
 
 
 /**

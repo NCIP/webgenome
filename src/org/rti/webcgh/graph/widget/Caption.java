@@ -388,7 +388,7 @@ public class Caption implements PlotElement {
     
     
     private void paintLine(String line, int x, int y, DrawingCanvas drawingCanvas) {
-        Text text = drawingCanvas.newGraphicText(line, x, y, this.fontSize, this.textAlignment, this.color);
+        Text text = drawingCanvas.newText(line, x, y, this.fontSize, this.textAlignment, this.color);
         if (this.orientation == Orientation.VERTICAL)
             text.setRotation(270);
         if (this.url != null)

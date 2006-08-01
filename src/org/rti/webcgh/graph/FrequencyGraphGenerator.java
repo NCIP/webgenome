@@ -82,6 +82,9 @@ import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.FrequencyPlot;
 import org.rti.webcgh.graph.widget.Legend;
 import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.PlotBoundaries;
+import org.rti.webcgh.plot.PlotParameters;
+import org.rti.webcgh.plot.Units;
 
 public class FrequencyGraphGenerator {
 	

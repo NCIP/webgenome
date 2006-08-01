@@ -128,62 +128,62 @@ public final class RasterDrawingCanvasTester extends TestCase {
         this.canvas.setHeight(HEIGHT);
     }
     
-//    /**
-//     * Test drawing a circle.
-//     */
-//    public void testCircle() {
-//        this.canvas.add(new Circle(100, 100, 20, Color.GREEN));
-//        this.outputCanvas("circle.png");
-//    }
-//    
-//    
-//    /**
-//     * Test drawing a line.
-//     */
-//    public void testLine() {
-//        this.canvas.add(new Line(10, 10, 250, 250, 4, Color.RED));
-//        this.outputCanvas("line.png");
-//    }
-//    
-//    /**
-//     * Test drawing a rectangle.
-//     *
-//     */
-//    public void testRect() {
-//        this.canvas.add(new Rectangle(40, 40, 100, 100, Color.CYAN));
-//        this.outputCanvas("rect.png");
-//    }
-//    
-//    
-//    /**
-//     * Test drawing a polyline.
-//     *
-//     */
-//    public void testPolyline() {
-//        Polyline p = new Polyline(3, Color.GREEN);
-//        p.add(10, 200);
-//        p.add(100, 5);
-//        p.add(300, 250);
-//        this.canvas.add(p);
-//        this.outputCanvas("polyline.png");
-//    }
-//    
-//    
-//    /**
-//     * Test drawing a polygon.
-//     *
-//     */
-//    public void testPolygon() {
-//        Point[] points = new Point[]{new Point(50, 50), new Point(100, 100),
-//                                   new Point(100, 200), new Point(20, 150)};
-//        Polygon p = new Polygon(points, Color.RED);
-//        this.canvas.add(p);
-//        this.outputCanvas("polygon.png");
-//    }
+    /**
+     * Test drawing a circle.
+     */
+    public void testCircle() {
+        this.canvas.add(new Circle(100, 100, 20, Color.GREEN));
+        this.outputCanvas("circle.png");
+    }
     
     
     /**
-     * Tests adding a child to a parent canvas
+     * Test drawing a line.
+     */
+    public void testLine() {
+        this.canvas.add(new Line(10, 10, 250, 250, 4, Color.RED));
+        this.outputCanvas("line.png");
+    }
+    
+    /**
+     * Test drawing a rectangle.
+     *
+     */
+    public void testRect() {
+        this.canvas.add(new Rectangle(40, 40, 100, 100, Color.CYAN));
+        this.outputCanvas("rect.png");
+    }
+    
+    
+    /**
+     * Test drawing a polyline.
+     *
+     */
+    public void testPolyline() {
+        Polyline p = new Polyline(3, Color.GREEN);
+        p.add(10, 200);
+        p.add(100, 5);
+        p.add(300, 250);
+        this.canvas.add(p);
+        this.outputCanvas("polyline.png");
+    }
+    
+    
+    /**
+     * Test drawing a polygon.
+     *
+     */
+    public void testPolygon() {
+        Point[] points = new Point[]{new Point(50, 50), new Point(100, 100),
+                                   new Point(100, 200), new Point(20, 150)};
+        Polygon p = new Polygon(points, Color.RED);
+        this.canvas.add(p);
+        this.outputCanvas("polygon.png");
+    }
+    
+    
+    /**
+     * Tests adding a child to a parent canvas.
      *
      */
     public void testAddCanvas() {

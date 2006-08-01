@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgGraphicText.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-15 20:31:52 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,72 +51,57 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-
 package org.rti.webcgh.drawing;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 
 /**
- * Implementation of GraphicText interface for
- * an SVG canvas
+ * Extension of <code>Text</code> for raster
+ * drawing canvases.
+ * @author dhall
+ *
  */
-public class SvgGraphicText extends Text {
-	
-	
+public final class RasterText extends Text {
+    
+    
+    
+    // ============================
+    //     Overridden methods
+    // ============================
 
-	/**
-	 * 
-	 */
-	public SvgGraphicText() {
-		super();
-	}
+    /**
+     * Constructor.
+     * @param value Text value
+     * @param x X-coordinate
+     * @param y Y-coordinate
+     * @param fontSize Font size
+     * @param alignment Alignment relative to (x,y) coordinate
+     * @param color Color
+     */
+    public RasterText(final String value, final int x,
+            final int y, final int fontSize,
+            final HorizontalAlignment alignment,
+            final Color color) {
+        super(value, x, y, fontSize, alignment, color);
+    }
 
-	/**
-	 * @param value
-	 */
-	public SvgGraphicText(String value) {
-		super(value);
-	}
-	
-
-	/**
-	 * @param value
-	 * @param x
-	 * @param y
-	 * @param fontSize
-	 * @param alignment Alignment relative to (x,y) coordinate
-	 * @param color
-	 */
-	public SvgGraphicText(
-		String value,
-		int x,
-		int y,
-		int fontSize,
-		HorizontalAlignment alignment,
-		Color color) {
-		super(value, x, y, fontSize, alignment, color);
-	}
-	
-	
-
-	/**
-	 * Get width of rendered text
-	 * @return Width of rendered text
-	 */
-	public int renderedWidth() {
-		int len = 0;
-		if (value != null) {
-			int count = 0;
-			char lastChar = 'A';
-			for (int i = 0; i < value.length(); i++) {
-				char c = value.charAt(i);
-				if (!(Character.isWhitespace(c) && Character.isWhitespace(lastChar)))
-					count++;
-				lastChar = c;
-			}
-			len = (int)((double)count * (double)fontSize * 0.6);
-		}
-		return len;
-	}
+    /**
+     * @override
+     * @return Rendered width in pixels
+     */
+    public int renderedWidth() {
+       BufferedImage img = new BufferedImage(1, 1,
+                RasterDrawingCanvas.IMAGE_TYPE);
+       Graphics graphics = img.getGraphics();
+       Font font = graphics.getFont();
+       Font newFont = new Font(font.getFontName(), font.getStyle(), fontSize);
+       graphics.setFont(newFont);
+       FontMetrics fm = graphics.getFontMetrics();
+       return fm.stringWidth(this.value);
+    }
 
 }

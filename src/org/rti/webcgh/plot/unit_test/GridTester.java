@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotType.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-26 14:42:05 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -50,62 +50,79 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph;
 
-import java.util.HashMap;
-import java.util.Map;
+package org.rti.webcgh.plot.unit_test;
+
+import java.awt.Color;
+
+import junit.framework.TestCase;
+
+import org.rti.webcgh.drawing.HorizontalAlignment;
+import org.rti.webcgh.drawing.Location;
+import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.drawing.VerticalAlignment;
+import org.rti.webcgh.graph.widget.Axis;
+import org.rti.webcgh.graph.widget.Background;
+import org.rti.webcgh.plot.Grid;
+import org.rti.webcgh.util.FileUtils;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
- * 
+ * Test class for <code>Grid</code>.
+ * @author dhall
+ *
  */
-public class PlotType {
+public class GridTester extends TestCase {
     
-    
-    // =============================
-    //       Constants
-    // =============================
-    
-    /**
-     * Scatter plot
-     */
-    public static final PlotType SCATTER_PLOT = new PlotType();
+    // ===============================
+    //     Constants
+    // ===============================
     
     /**
-     * Ideogram plot
+     * Name of directory holding graphic files produced
+     * during tests.  The absolute path will be a
+     * concatenation of the 'test.dir' property in
+     * the file 'unit_test.properties' and this
+     * constant.
      */
-    public static final PlotType IDEOGRAM_PLOT = new PlotType();
+    private static final String TEST_DIR_NAME = "grid-tester";
     
     /**
-     * Frequency plot
+     * Draw horizontal grid.
+     *
      */
-    public static final PlotType FREQUENCY_PLOT = new PlotType();
-    
-    private static final Map PLOT_TYPE_INDEX = new HashMap();
-    
-    static {
-        PLOT_TYPE_INDEX.put("scatter", SCATTER_PLOT);
-        PLOT_TYPE_INDEX.put("ideogram", IDEOGRAM_PLOT);
-        PLOT_TYPE_INDEX.put("frequency", FREQUENCY_PLOT);
+    public void testHorizontal() {
+        RasterFileTestPlotPanel panel =
+            new RasterFileTestPlotPanel(this.getPathToTestDir());
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL,
+                Location.LEFT_OF);
+        Grid grid = axis.newGrid(400, 400, Color.white,
+                panel);
+        Background background = new Background(400, 400, Color.yellow);
+        panel.add(background, HorizontalAlignment.CENTERED,
+                VerticalAlignment.CENTERED);
+        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED,
+                VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED,
+                VerticalAlignment.BOTTOM_JUSTIFIED);
+        panel.toPngFile("horizontal.png");
     }
     
     
-    // =========================================
-    //      Constructors
-    // =========================================
-    
-    private PlotType() {}
-    
-    
-    // =================================
-    //     Static methods
-    // =================================
+    /**
+     * Get absolute path to directory that contains
+     * test output files.  If necessary, method creates
+     * directory.
+     * @return Absolute path to directory that contains
+     * test output files
+     */
+    private String getPathToTestDir() {
+        String masterTestDirPath =
+            SystemUtils.getUnitTestProperty("temp.dir");
+        String dirPath = masterTestDirPath + "/"
+            + GridTester.TEST_DIR_NAME;
+        FileUtils.createDirectory(dirPath);
+        return dirPath;
+    }
 
-    /**
-     * Get plot type
-     * @param key Key
-     * @return Plot type
-     */
-    public static PlotType getPlotType(String key) {
-        return (PlotType)PLOT_TYPE_INDEX.get(key);
-    }
 }

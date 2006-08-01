@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgDrawingCanvas.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-15 20:31:52 $
+$Revision: 1.4 $
+$Date: 2006-08-01 19:37:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -274,11 +274,11 @@ public class SvgDrawingCanvas implements DrawingCanvas {
 	 * @param color Color of text
 	 * @return New text element
 	 */
-	public Text newGraphicText
+	public Text newText
 	(
 		String value, int x, int y, int fontSize, HorizontalAlignment alignment, Color color
 	) {
-		return new SvgGraphicText(value, x, y, fontSize, alignment, color);
+		return new SvgText(value, x, y, fontSize, alignment, color);
 	}
 	
 	
