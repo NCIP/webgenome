@@ -86,6 +86,9 @@ public class Experiment implements Serializable {
     /** Bioassays performed during experiment. */
     private Set<BioAssay> bioAssays = new HashSet<BioAssay>();
     
+    /** Quantitation type. */
+    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO;
+    
     
     // ===============================
     //     Getters/setters
@@ -140,10 +143,28 @@ public class Experiment implements Serializable {
         this.name = name;
     }
     
+    
+    /**
+     * Get quantitation type.
+     * @return Quantitation type
+     */
+    public final QuantitationType getQuantitationType() {
+        return quantitationType;
+    }
+
+    /**
+     * Set quantitation type.
+     * @param quantitationType Quantitation type
+     */
+    public final void setQuantitationType(
+            final QuantitationType quantitationType) {
+        this.quantitationType = quantitationType;
+    }
+    
     // ==================================
     //       Constructors
     // ==================================
-    
+
     /**
      * Default constructor.
      */

@@ -59,20 +59,59 @@ import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.widget.Axis;
 
 /**
  * Defines region over x- and y-axes that contains plot.
  */
 public class PlotBoundaries {
     
+    // ================================
+    //        Attributes
+    // ================================
     
+    /**
+     * Point in native units corresponding to
+     * the bottom left of the plot.
+     */
     private final DataPoint bottomLeftDataPoint;
+    
+    /**
+     * Point in native units corresponding to
+     * the bottom right of the plot.
+     */
     private final DataPoint bottomRightDataPoint;
+    
+    /**
+     * Point in native units corresponding to
+     * the top left of the plot.
+     */
     private final DataPoint topLeftDataPoint;
+    
+    /**
+     * Point in native units corresponding to
+     * the bottom left of the plot.
+     */
     private final DataPoint topRightDataPoint;
+    
+    
+    /**
+     * Difference in native units between left and
+     * right side of plot.
+     */
     private final double deltaX;
+    
+    /**
+     * Difference in native units between top and
+     * bottom of plot.
+     */
     private final double deltaY;
+    
+    /**
+     * Bounding box defining perimeter of plotting
+     * region in the coordinate space based
+     * on native units (i.e., base pairs vs.
+     * some quantitation type).
+     */
     private final Rectangle2D.Double boundingBox;
     
     // ===================================
@@ -80,36 +119,46 @@ public class PlotBoundaries {
     // ===================================
     
     /**
-     * Constructor
+     * Constructor.
      * @param bottomLeftDataPoint Bottom left data point
      * @param topRightDataPoint Top right data point
      */
-    public PlotBoundaries(DataPoint bottomLeftDataPoint, DataPoint topRightDataPoint) {
+    public PlotBoundaries(final DataPoint bottomLeftDataPoint,
+            final DataPoint topRightDataPoint) {
         this.bottomLeftDataPoint = bottomLeftDataPoint;
-        this.bottomRightDataPoint = new DataPoint(topRightDataPoint.getValue1(), bottomLeftDataPoint.getValue2());
-        this.topLeftDataPoint = new DataPoint(bottomLeftDataPoint.getValue1(), topRightDataPoint.getValue2());
+        this.bottomRightDataPoint =
+            new DataPoint(topRightDataPoint.getValue1(),
+                    bottomLeftDataPoint.getValue2());
+        this.topLeftDataPoint = new DataPoint(
+                bottomLeftDataPoint.getValue1(),
+                topRightDataPoint.getValue2());
         this.topRightDataPoint = topRightDataPoint;
-        this.deltaX = this.topRightDataPoint.getValue1() - this.bottomLeftDataPoint.getValue1();
-        this.deltaY = this.topRightDataPoint.getValue2() - this.bottomLeftDataPoint.getValue2();
-        this.boundingBox = new Rectangle2D.Double(this.bottomLeftDataPoint.getValue1(), this.bottomLeftDataPoint.getValue2(),
-            this.deltaX, this.deltaY);
+        this.deltaX = this.topRightDataPoint.getValue1()
+            - this.bottomLeftDataPoint.getValue1();
+        this.deltaY = this.topRightDataPoint.getValue2()
+            - this.bottomLeftDataPoint.getValue2();
+        this.boundingBox = new Rectangle2D.Double(
+                this.bottomLeftDataPoint.getValue1(),
+                this.bottomLeftDataPoint.getValue2(),
+                this.deltaX, this.deltaY);
     }
     
     
     /**
-     * Constructor
+     * Constructor.
      * @param minX Minimum X-axis value
      * @param minY Minimum Y-axis value
      * @param maxX Maximum X-axis value
      * @param maxY Maximum Y-axis value
      */
-    public PlotBoundaries(double minX, double minY, double maxX, double maxY) {
+    public PlotBoundaries(final double minX, final double minY,
+            final double maxX, final double maxY) {
     	this(new DataPoint(minX, minY), new DataPoint(maxX, maxY));
     }
     
     
     // ===================================
-    //      Public methods
+    //      Business methods
     // ===================================
     
     /**
@@ -117,12 +166,12 @@ public class PlotBoundaries {
      * @param dataPoint A data point
      * @return T/F
      */
-    public boolean withinBoundaries(DataPoint dataPoint) {
+    public final boolean withinBoundaries(final DataPoint dataPoint) {
         return
-			dataPoint.getValue2() >= this.bottomLeftDataPoint.getValue2() &&
-			dataPoint.getValue1() >= this.bottomLeftDataPoint.getValue1() &&
-			dataPoint.getValue2() <= this.topRightDataPoint.getValue2() &&
-			dataPoint.getValue1() <= this.topRightDataPoint.getValue1();
+			dataPoint.getValue2() >= this.bottomLeftDataPoint.getValue2()
+			&& dataPoint.getValue1() >= this.bottomLeftDataPoint.getValue1()
+            && dataPoint.getValue2() <= this.topRightDataPoint.getValue2()
+            && dataPoint.getValue1() <= this.topRightDataPoint.getValue1();
     }
     
     /**
@@ -141,31 +190,36 @@ public class PlotBoundaries {
     
     
     /**
-     * Get fractional distance from left edge of plot
+     * Get fractional distance from left edge of plot.
      * @param dataPoint A data point
-     * @return Fractional distance from left edge of plot (i.e. over range 0 - 1.0)
+     * @return Fractional distance from left edge of plot
+     * (i.e. over range 0 - 1.0)
      */
-    public double fractionalDistanceFromLeft(DataPoint dataPoint) {
-        return (dataPoint.getValue1() - this.bottomLeftDataPoint.getValue1()) / this.deltaX;
+    public final double fractionalDistanceFromLeft(final DataPoint dataPoint) {
+        return (dataPoint.getValue1()
+                - this.bottomLeftDataPoint.getValue1()) / this.deltaX;
     }
     
     
     /**
-     * Get fractional distance from bottom edge of plot
+     * Get fractional distance from bottom edge of plot.
      * @param dataPoint A data point
-     * @return Fractional distance from bottom edge of plot (i.e. over range 0 - 1.0)
+     * @return Fractional distance from bottom edge of plot
+     * (i.e. over range 0 - 1.0)
      */
-    public double fractionalDistanceFromBottom(DataPoint dataPoint) {
-        return (dataPoint.getValue2() - this.bottomLeftDataPoint.getValue2()) / this.deltaY;
+    public final double fractionalDistanceFromBottom(
+            final DataPoint dataPoint) {
+        return (dataPoint.getValue2()
+                - this.bottomLeftDataPoint.getValue2()) / this.deltaY;
     }
     
     
     /**
-     * What fraction of plot heigh is given height
+     * What fraction of plot heigh is given height?
      * @param height Height
      * @return Fraction of plot height (i.e. over range 0.0 - 1.0)
      */
-    public double fractionalHeight(double height) {
+    public final double fractionalHeight(final double height) {
         return height / this.deltaY;
     }
     
@@ -176,8 +230,10 @@ public class PlotBoundaries {
      * @param point2 Second line endpoint
      * @return T/F
      */
-    public boolean atLeastPartlyOnPlot(DataPoint point1, DataPoint point2) {
-        return this.boundingBox.intersectsLine(point1.getValue1(), point1.getValue2(), point2.getValue1(), point2.getValue2());
+    public final boolean atLeastPartlyOnPlot(final DataPoint point1,
+            final DataPoint point2) {
+        return this.boundingBox.intersectsLine(point1.getValue1(),
+                point1.getValue2(), point2.getValue1(), point2.getValue2());
     }
     
     
@@ -186,8 +242,9 @@ public class PlotBoundaries {
      * @param dataPoint Data point
      * @return T/F
      */
-    public boolean leftOfPlot(DataPoint dataPoint) {
-    	return dataPoint.getValue1() < this.bottomLeftDataPoint.getValue1();
+    public final boolean leftOfPlot(final DataPoint dataPoint) {
+    	return dataPoint.getValue1()
+            < this.bottomLeftDataPoint.getValue1();
     }
     
     
@@ -196,7 +253,7 @@ public class PlotBoundaries {
      * @param dataPoint Data point
      * @return T/F
      */
-    public boolean rightOfPlot(DataPoint dataPoint) {
+    public final boolean rightOfPlot(final DataPoint dataPoint) {
     	return dataPoint.getValue1() > this.topRightDataPoint.getValue1();
     }
     
@@ -206,7 +263,7 @@ public class PlotBoundaries {
      * @param dataPoint Data point
      * @return T/F
      */
-    public boolean abovePlot(DataPoint dataPoint) {
+    public final boolean abovePlot(final DataPoint dataPoint) {
     	return dataPoint.getValue2() > this.topRightDataPoint.getValue2();
     }
     
@@ -216,7 +273,7 @@ public class PlotBoundaries {
      * @param dataPoint Data point
      * @return T/F
      */
-    public boolean belowPlot(DataPoint dataPoint) {
+    public final boolean belowPlot(final DataPoint dataPoint) {
     	return dataPoint.getValue2() < this.bottomLeftDataPoint.getValue2();
     }
     
@@ -227,52 +284,59 @@ public class PlotBoundaries {
      * @param point1 First endpoint of line
      * @param point2 Second endpoint of line
      */
-    public void truncateToFitOnPlot(DataPoint point1, DataPoint point2) {
+    public final void truncateToFitOnPlot(final DataPoint point1,
+            final DataPoint point2) {
         double slope = DataPoint.slope(point1, point2);
-        if (! this.withinBoundaries(point1))
+        if (!this.withinBoundaries(point1)) {
             this.moveDataPointToBorder(point1, slope);
-        if (! this.withinBoundaries(point2))
+        }
+        if (!this.withinBoundaries(point2)) {
             this.moveDataPointToBorder(point2, slope);
+        }
     }
     
     
     /**
-     * Create new X-axis for this plot boundary
+     * Create new X-axis for this plot boundary.
      * @param length Length of axis in pixels
      * @param alignment Alignment of axis relative to 
      * @return New axis
      */
-    public Axis newXAxis(int length, VerticalAlignment alignment) {
+    public final Axis newXAxis(final int length,
+            final VerticalAlignment alignment) {
     	Location textLocation = null;
-    	if (alignment == VerticalAlignment.BOTTOM_JUSTIFIED)
+    	if (alignment == VerticalAlignment.BOTTOM_JUSTIFIED) {
     		textLocation = Location.BELOW;
-    	else if (alignment == VerticalAlignment.TOP_JUSTIFIED)
+        } else if (alignment == VerticalAlignment.TOP_JUSTIFIED) {
     		textLocation = Location.ABOVE;
-    	else
+        } else {
     		throw new IllegalArgumentException("Illegal alignment value");
+        }
     	return new Axis(this.bottomLeftDataPoint.getValue1(),
-    			this.topRightDataPoint.getValue1(), length, Orientation.HORIZONTAL,
-				textLocation);
+    			this.topRightDataPoint.getValue1(), length,
+                Orientation.HORIZONTAL, textLocation);
     }
     
     
     /**
-     * Create new Y-axis for this plot boundary
+     * Create new Y-axis for this plot boundary.
      * @param length Length of axis in pixels
      * @param alignment Alignment of axis relative to 
      * @return New axis
      */
-    public Axis newYAxis(int length, HorizontalAlignment alignment) {
+    public final Axis newYAxis(final int length,
+            final HorizontalAlignment alignment) {
     	Location textLocation = null;
-    	if (alignment == HorizontalAlignment.LEFT_JUSTIFIED)
+    	if (alignment == HorizontalAlignment.LEFT_JUSTIFIED) {
     		textLocation = Location.LEFT_OF;
-    	else if (alignment == HorizontalAlignment.RIGHT_JUSTIFIED)
+        } else if (alignment == HorizontalAlignment.RIGHT_JUSTIFIED) {
     		textLocation = Location.RIGHT_OF;
-    	else
+        } else {
     		throw new IllegalArgumentException("Illegal alignment value");
+        }
     	return new Axis(this.bottomLeftDataPoint.getValue2(),
-    			this.topRightDataPoint.getValue2(), length, Orientation.VERTICAL,
-				textLocation);
+    			this.topRightDataPoint.getValue2(), length,
+                Orientation.VERTICAL, textLocation);
     }
     
     
@@ -281,35 +345,43 @@ public class PlotBoundaries {
      * space to this.)
      * @param plotBoundaries Plot boundaries
      */
-    public void union(final PlotBoundaries plotBoundaries) {
+    public final void union(final PlotBoundaries plotBoundaries) {
 
     	// Adjust bottom left
     	DataPoint bLeft = plotBoundaries.bottomLeftDataPoint;
-    	if (bLeft.getValue1() < this.bottomLeftDataPoint.getValue1())
+    	if (bLeft.getValue1() < this.bottomLeftDataPoint.getValue1()) {
     		this.bottomLeftDataPoint.setValue1(bLeft.getValue1());
-    	if (bLeft.getValue2() < this.bottomLeftDataPoint.getValue2())
+        }
+    	if (bLeft.getValue2() < this.bottomLeftDataPoint.getValue2()) {
     		this.bottomLeftDataPoint.setValue2(bLeft.getValue2());
+        }
     	
     	// Adjust top left
     	DataPoint tLeft = plotBoundaries.topLeftDataPoint;
-    	if (tLeft.getValue1() < this.topLeftDataPoint.getValue1())
+    	if (tLeft.getValue1() < this.topLeftDataPoint.getValue1()) {
     		this.topLeftDataPoint.setValue1(tLeft.getValue1());
-    	if (tLeft.getValue2() > this.topLeftDataPoint.getValue2())
+        }
+    	if (tLeft.getValue2() > this.topLeftDataPoint.getValue2()) {
     		this.topLeftDataPoint.setValue2(tLeft.getValue2());
+        }
     	
     	// Adjust bottom right
     	DataPoint bRight = plotBoundaries.bottomRightDataPoint;
-    	if (bRight.getValue1() > this.bottomRightDataPoint.getValue1())
+    	if (bRight.getValue1() > this.bottomRightDataPoint.getValue1()) {
     		this.bottomRightDataPoint.setValue1(bRight.getValue1());
-    	if (bRight.getValue2() < this.bottomRightDataPoint.getValue2())
+        }
+    	if (bRight.getValue2() < this.bottomRightDataPoint.getValue2()) {
     		this.bottomRightDataPoint.setValue2(bRight.getValue2());
+        }
     	
     	// Adjust top right
     	DataPoint tRight = plotBoundaries.topRightDataPoint;
-    	if (tRight.getValue1() > this.topRightDataPoint.getValue1())
+    	if (tRight.getValue1() > this.topRightDataPoint.getValue1()) {
     		this.topRightDataPoint.setValue1(tRight.getValue1());
-    	if (tRight.getValue2() > this.topRightDataPoint.getValue2())
+        }
+    	if (tRight.getValue2() > this.topRightDataPoint.getValue2()) {
     		this.topRightDataPoint.setValue2(tRight.getValue2());
+        }
     }
     
     
@@ -317,12 +389,20 @@ public class PlotBoundaries {
     //       Private methods
     // =========================================
     
-    private void moveDataPointToBorder(DataPoint point, double slope) {
+    /**
+     * Move given data point to border of drawing area along
+     * a line of given slope containing given data point.
+     * @param point Data point to move
+     * @param slope Slope of line upon which to move data point
+     */
+    private void moveDataPointToBorder(final DataPoint point,
+            final double slope) {
         double y = 0.0;
-        if (this.abovePlot(point))
+        if (this.abovePlot(point)) {
             y = this.topRightDataPoint.getValue2();
-        else if (this.belowPlot(point))
+        } else if (this.belowPlot(point)) {
             y = this.bottomLeftDataPoint.getValue2();
+        }
         double x = point.getValue1() + (y - point.getValue2()) / slope;
         point.setValue1(x);
         point.setValue2(y);

@@ -53,76 +53,21 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.plot.unit_test;
 
-import java.awt.Color;
-
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widget.Background;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Grid;
-import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
-
 /**
- * Test class for <code>Grid</code>.
+ * Tester for <code>Legend</code>.
  * @author dhall
  *
  */
-public class GridTester extends TestCase {
-    
-    // ===============================
-    //     Constants
-    // ===============================
+public class LegendTexter extends TestCase {
+
     
     /**
-     * Name of directory holding graphic files produced
-     * during tests.  The absolute path will be a
-     * concatenation of the 'test.dir' property in
-     * the file 'unit_test.properties' and this
-     * constant.
-     */
-    private static final String TEST_DIR_NAME = "grid-tester";
-    
-    /**
-     * Draw horizontal grid.
+     * Test paint() method.
      *
      */
-    public void testHorizontal() {
-        RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL,
-                Location.LEFT_OF);
-        Grid grid = axis.newGrid(400, 400, Color.white,
-                panel);
-        Background background = new Background(400, 400, Color.yellow);
-        panel.add(background, HorizontalAlignment.CENTERED,
-                VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.toPngFile("horizontal.png");
+    public void testPaint() {
+        
     }
-    
-    
-    /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
-     */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + GridTester.TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
-    }
-
 }

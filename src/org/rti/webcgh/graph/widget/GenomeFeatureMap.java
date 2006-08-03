@@ -69,6 +69,7 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.util.Warper;
+import org.rti.webcgh.plot.PlotElement;
 
 /**
  * Map of genome features

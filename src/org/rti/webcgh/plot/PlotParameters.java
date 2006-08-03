@@ -50,278 +50,141 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
+
 package org.rti.webcgh.plot;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.rti.webcgh.array.BioAssay;
-import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.deprecated.ColorChooser;
 
 /**
- * Parameters for a plot
+ * Plotting parameters set by user.
+ * @author dhall
+ *
  */
 public class PlotParameters {
     
+    // ==========================
+    //       Attributes
+    // ==========================
     
-    private final Map colorIndex = new HashMap();
-    private final ColorChooser colorChooser = new ColorChooser();
-    private PlotType plotType;
-    private int width = 400;
-    private int height = 400;
-    private double minY = Double.NaN;
-    private double maxY = Double.NaN;
-    private Units xUnits = Units.KB;
-    private GenomeIntervalDto[] genomeIntervalDtos = null;
-    private int plotsPerRow = 5;
-    private boolean showIdeogram = false;
-    private ChromosomeIdeogramSize chromosomeIdeogramSize = null;
-    private double lowerMaskValue = Double.NaN;
-    private double upperMaskValue = Double.NaN;
+    /** Chromosome number. */
+    private short chromosome = (short) -1;
     
+    /** Left endpoint of chromosome interval to plot. */
+    private long startLocation = (long) -1;
     
+    /** Right endpoint of chromosome interval to plot. */
+    private long endLocation = (long) -1;
     
     /**
-     * @return Returns the lowerMaskValue.
+     * Units for <code>startLocation</code>
+     * and <code>endLocation</code> fields.
      */
-    public double getLowerMaskValue() {
-        return lowerMaskValue;
+    private Units units = Units.BP;
+    
+    
+    // ===========================
+    //    Getters/setters
+    // ===========================
+
+    /**
+     * Get units of <code>startLocation</code>
+     * and <code>endLocation</code> fields.
+     * @return Units
+     */
+    public final Units getUnits() {
+        return units;
+    }
+
+    
+    /**
+     * Set units of <code>startLocation</code>
+     * and <code>endLocation</code> fields.
+     * @param units Units of <code>startLocation</code>
+     * and <code>endLocation</code> fields
+     */
+    public final void setUnits(final Units units) {
+        this.units = units;
+    }
+
+    /**
+     * Get chromosome number.
+     * @return Chromosome number
+     */
+    public final short getChromosome() {
+        return chromosome;
+    }
+
+    /**
+     * Set chromosome number.
+     * @param chromosome Chromosome number
+     */
+    public final void setChromosome(final short chromosome) {
+        this.chromosome = chromosome;
+    }
+
+    /**
+     * Get right endpoint of chromosome interval
+     * to plot.
+     * @return Right endpoint of chromosome interval
+     * to plot
+     */
+    public final long getEndLocation() {
+        return endLocation;
+    }
+
+    /**
+     * Set right endpoint of chromosome interval
+     * to plot.
+     * @param endLocation Right endpoint of chromosome interval
+     * to plot
+     */
+    public final void setEndLocation(final long endLocation) {
+        this.endLocation = endLocation;
+    }
+
+    /**
+     * Get left endpoint of chromosome interval
+     * to plot.
+     * @return Left endpoint of chromosome interval
+     * to plot
+     */
+    public final long getStartLocation() {
+        return startLocation;
+    }
+
+    /**
+     * Set left endpoint of chromosome interval
+     * to plot.
+     * @param startLocation Left endpoint of chromosome interval
+     * to plot
+     */
+    public final void setStartLocation(final long startLocation) {
+        this.startLocation = startLocation;
     }
     
+    // ==================================
+    //       Constructors
+    // ==================================
     
     /**
-     * @param lowerMaskValue The lowerMaskValue to set.
-     */
-    public void setLowerMaskValue(double lowerMaskValue) {
-        this.lowerMaskValue = lowerMaskValue;
-    }
-    
-    
-    /**
-     * @return Returns the upperMaskValue.
-     */
-    public double getUpperMaskValue() {
-        return upperMaskValue;
-    }
-    
-    
-    /**
-     * @param upperMaskValue The upperMaskValue to set.
-     */
-    public void setUpperMaskValue(double upperMaskValue) {
-        this.upperMaskValue = upperMaskValue;
-    }
-    
-    
-    /**
-     * @return Returns the chromosomeIdeogramSize.
-     */
-    public ChromosomeIdeogramSize getChromosomeIdeogramSize() {
-        return chromosomeIdeogramSize;
-    }
-    
-    
-    /**
-     * @param chromosomeIdeogramSize The chromosomeIdeogramSize to set.
-     */
-    public void setChromosomeIdeogramSize(
-            ChromosomeIdeogramSize chromosomeIdeogramSize) {
-        this.chromosomeIdeogramSize = chromosomeIdeogramSize;
-    }
-    
-    
-    /**
-     * @return Returns the showIdeogram.
-     */
-    public boolean isShowIdeogram() {
-        return showIdeogram;
-    }
-    
-    
-    /**
-     * @param showIdeogram The showIdeogram to set.
-     */
-    public void setShowIdeogram(boolean showIdeogram) {
-        this.showIdeogram = showIdeogram;
-    }
-    
-    
-    /**
-     * @return Returns the plotsPerRow.
-     */
-    public int getPlotsPerRow() {
-        return plotsPerRow;
-    }
-    
-    
-    /**
-     * @param plotsPerRow The plotsPerRow to set.
-     */
-    public void setPlotsPerRow(int plotsPerRow) {
-        this.plotsPerRow = plotsPerRow;
-    }
-    
-    
-    /**
-     * @param plotType The plotType to set.
-     */
-    public void setPlotType(PlotType plotType) {
-        this.plotType = plotType;
-    }
-    
-    
-	/**
-	 * @return Returns the genomeIntervalDtos.
-	 */
-	public GenomeIntervalDto[] getGenomeIntervalDtos() {
-		return genomeIntervalDtos;
-	}
-	
-	
-	/**
-	 * @param genomeIntervalDtos The genomeIntervalDtos to set.
-	 */
-	public void setGenomeIntervalDtos(GenomeIntervalDto[] genomeIntervalDtos) {
-		this.genomeIntervalDtos = genomeIntervalDtos;
-	}
-	
-	
-    /**
-     * @return Returns the xUnits.
-     */
-    public Units getXUnits() {
-        return xUnits;
-    }
-    
-    
-    /**
-     * @param units The xUnits to set.
-     */
-    public void setXUnits(Units units) {
-        xUnits = units;
-    }
-    
-    
-    /**
-     * @return Returns the colorIndex.
-     */
-    public Map getColorIndex() {
-        return colorIndex;
-    }
-    
-    
-    /**
-     * @return Returns the plotType.
-     */
-    public PlotType getPlotType() {
-        return plotType;
-    }
-    
-    
-    /**
-     * @return Returns the height.
-     */
-    public int getHeight() {
-        return height;
-    }
-    
-    
-    /**
-     * @return Returns the width.
-     */
-    public int getWidth() {
-        return width;
-    }
-    
-    
-    /**
-     * @return Returns the maxY.
-     */
-    public double getMaxY() {
-        return maxY;
-    }
-    
-    
-    /**
-     * @param maxY The maxY to set.
-     */
-    public void setMaxY(double maxY) {
-        this.maxY = maxY;
-    }
-    
-    
-    /**
-     * @return Returns the minY.
-     */
-    public double getMinY() {
-        return minY;
-    }
-    
-    
-    /**
-     * @param minY The minY to set.
-     */
-    public void setMinY(double minY) {
-        this.minY = minY;
-    }
-    
-    
-    /**
-     * @param height The height to set.
-     */
-    public void setHeight(int height) {
-        this.height = height;
-    }
-    
-    
-    /**
-     * @param width The width to set.
-     */
-    public void setWidth(int width) {
-        this.width = width;
-    }
-    
-    
-    // ====================================
-    //     Constructors
-    // ====================================
-    
-    
-    /**
-     * Consturctor
+     * Constructor.
      */
     public PlotParameters() {
+        
     }
-    
+
     
     /**
-     * Consturctor
-     * @param plotType Plot type
+     * Constructor.
+     * @param chromosome Chromosome number
+     * @param startLocation Left endpoint of chromosome interval
+     * being plotted
+     * @param endLocation Right endpoint of chromosome interval
+     * being plotted
      */
-    public PlotParameters(PlotType plotType) {
-        this.plotType = plotType;
-    }
-    
-    
-    // ===========================================
-    //        Public methods
-    // ===========================================
-    
-    
-    /**
-     * Get color
-     * @param bioAssay A bioassay
-     * @return A color
-     */
-    public Color color(BioAssay bioAssay) {
-    	String key = bioAssay.getName();
-        Color color = (Color)this.colorIndex.get(bioAssay);
-        if (color == null) {
-            color = this.colorChooser.nextColor();
-            this.colorIndex.put(bioAssay, color);
-        }
-        return color;
+    public PlotParameters(final short chromosome, final long startLocation,
+            final long endLocation) {
+        this.chromosome = chromosome;
+        this.startLocation = startLocation;
+        this.endLocation = endLocation;
     }
 }

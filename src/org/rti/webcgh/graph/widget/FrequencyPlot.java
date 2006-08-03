@@ -63,6 +63,7 @@ import org.rti.webcgh.array.QuantifiedInterval;
 import org.rti.webcgh.array.QuantifiedIntervals;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Rectangle;
+import org.rti.webcgh.plot.PlotElement;
 
 
 /**

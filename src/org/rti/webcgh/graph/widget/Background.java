@@ -58,6 +58,7 @@ import java.awt.Point;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.Rectangle;
+import org.rti.webcgh.plot.PlotElement;
 
 /**
  * 

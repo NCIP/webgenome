@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/LinearRegressionNormalizationOperation.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.3 $
+$Date: 2006-08-03 21:52:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import org.rti.regression.LinearRegression;
 import org.rti.regression.RegressionVariables;
 import org.rti.regression.matrix.BioinfoMatrix;
 import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.plot.PlotParameters;
+import org.rti.webcgh.graph.PlotParameters;
 
 /**
  * 

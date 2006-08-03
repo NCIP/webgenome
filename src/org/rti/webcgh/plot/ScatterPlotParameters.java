@@ -51,78 +51,94 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot.unit_test;
-
-import java.awt.Color;
-
-import junit.framework.TestCase;
-
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widget.Background;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Grid;
-import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
+package org.rti.webcgh.plot;
 
 /**
- * Test class for <code>Grid</code>.
+ * Plot parameters specific to scatter plots.
  * @author dhall
  *
  */
-public class GridTester extends TestCase {
+public final class ScatterPlotParameters extends PlotParameters {
     
-    // ===============================
-    //     Constants
-    // ===============================
+    // ============================
+    //      Attributes
+    // ============================
     
+    /** Minimum Y-axis value specified by user. */
+    private float minY = Float.NaN;
+
+    /** Maximum Y-axis value specified by user. */
+    private float maxY = Float.NaN;
+    
+    // ==========================
+    //      Getters/setters
+    // ==========================
+
     /**
-     * Name of directory holding graphic files produced
-     * during tests.  The absolute path will be a
-     * concatenation of the 'test.dir' property in
-     * the file 'unit_test.properties' and this
-     * constant.
+     * Get maximum Y-axis value specified by user.
+     * @return Maximum Y-axis value specified by user
      */
-    private static final String TEST_DIR_NAME = "grid-tester";
-    
-    /**
-     * Draw horizontal grid.
-     *
-     */
-    public void testHorizontal() {
-        RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL,
-                Location.LEFT_OF);
-        Grid grid = axis.newGrid(400, 400, Color.white,
-                panel);
-        Background background = new Background(400, 400, Color.yellow);
-        panel.add(background, HorizontalAlignment.CENTERED,
-                VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.toPngFile("horizontal.png");
-    }
-    
-    
-    /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
-     */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + GridTester.TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
+    public float getMaxY() {
+        return maxY;
     }
 
+    
+    /**
+     * Set maximum Y-axis value specified by user.
+     * @param maxY Maximum Y-axis value specified by user
+     */
+    public void setMaxY(final float maxY) {
+        this.maxY = maxY;
+    }
+
+    
+    /**
+     * Get minimum Y-axis value specified by user.
+     * @return Minimum Y-axis value specified by user
+     */
+    public float getMinY() {
+        return minY;
+    }
+
+    
+    /**
+     * Set minimum Y-axis value specified by user.
+     * @param minY Minimum Y-axis value specified by user
+     */
+    public void setMinY(final float minY) {
+        this.minY = minY;
+    }
+    
+    // ==============================
+    //        Constructors
+    // ==============================
+
+    /**
+     * Constructor.
+     */
+    public ScatterPlotParameters() {
+        super();
+    }
+
+
+
+    /**
+     * Constructor.
+     * @param chromosome Chromosome number
+     * @param startLocation Left endpoint of chromosome interval
+     * to plot
+     * @param endLocation Right endpoint of chromosome interval to
+     * plot
+     * @param minY Minimum y-axis value specified by user
+     * @param maxY Maximum y-axis value specified by user
+     */
+    public ScatterPlotParameters(final short chromosome,
+            final long startLocation, final long endLocation,
+            final float minY, final float maxY) {
+        super(chromosome, startLocation, endLocation);
+        this.minY = minY;
+        this.maxY = maxY;
+    }
+    
+    
 }

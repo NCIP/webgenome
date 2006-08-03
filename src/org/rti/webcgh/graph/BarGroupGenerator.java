@@ -60,8 +60,8 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.widget.Bar;
-import org.rti.webcgh.graph.widget.Caption;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.Caption;
+import org.rti.webcgh.plot.PlotPanel;
 
 
 /**

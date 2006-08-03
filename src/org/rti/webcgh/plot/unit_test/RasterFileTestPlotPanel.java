@@ -54,6 +54,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.plot.unit_test;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +63,7 @@ import javax.imageio.ImageIO;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.RasterDrawingCanvas;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.PlotPanel;
 import org.rti.webcgh.util.SystemUtils;
 
 /**
@@ -275,12 +276,12 @@ public final class RasterFileTestPlotPanel extends PlotPanel {
      */
     public void toPngFile(final String fileName) {
         File file = new File(this.outputDirPath + "/" + fileName);
-        this.drawingCanvas.setWidth(this.width());
-        this.drawingCanvas.setHeight(this.height());
-        ((RasterDrawingCanvas) this.drawingCanvas).setMinX(this.getMinX());
-        ((RasterDrawingCanvas) this.drawingCanvas).setMinY(this.getMinY());
+        this.getDrawingCanvas().setWidth(this.width());
+        this.getDrawingCanvas().setHeight(this.height());
+        ((RasterDrawingCanvas) this.getDrawingCanvas()).
+            setOrigin(new Point(this.minX(), this.minY()));
         BufferedImage img = ((RasterDrawingCanvas)
-                this.drawingCanvas).toBufferedImage();
+                this.getDrawingCanvas()).toBufferedImage();
         try {
             ImageIO.write(img, "png", file);
         } catch (IOException e) {

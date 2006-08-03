@@ -64,7 +64,7 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.SvgDrawingCanvas;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.PlotPanel;
 import org.rti.webcgh.util.IOUtils;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Document;
@@ -337,7 +337,7 @@ public final class SvgTestPanel extends PlotPanel {
 		if (this.drawCrossHairs) {
 			this.addCrossHairs();
         }
-		this.baseCanvas.add(this.drawingCanvas, this.origin.x
+		this.baseCanvas.add(this.getDrawingCanvas(), this.origin.x
                 - this.topLeftPoint().x,
 				this.origin.y - this.topLeftPoint().y);
 		File outFile = 
@@ -354,13 +354,6 @@ public final class SvgTestPanel extends PlotPanel {
 	}
 	
 	
-	/**
-	 * Get drawing canvas associated with this panel.
-	 * @return A drawing canvas
-	 */
-	public DrawingCanvas getDrawingCanvas() {
-		return this.baseCanvas;
-	}
 	
 	// ==========================================
 	//        Private methods
@@ -376,19 +369,19 @@ public final class SvgTestPanel extends PlotPanel {
 		int maxY = minY + this.height();
 		
 		// Top border
-		this.drawingCanvas.add(new Line(minX, minY, maxX, minY, 
+		this.getDrawingCanvas().add(new Line(minX, minY, maxX, minY, 
 				this.borderWidth, this.borderColor));
 		
 		// Left border
-		this.drawingCanvas.add(new Line(minX, minY, minX, maxY, 
+		this.getDrawingCanvas().add(new Line(minX, minY, minX, maxY, 
 				this.borderWidth, this.borderColor));
 		
 		// Right border
-		this.drawingCanvas.add(new Line(maxX, minY, maxX, maxY, 
+		this.getDrawingCanvas().add(new Line(maxX, minY, maxX, maxY, 
 				this.borderWidth, this.borderColor));
 		
 		// Bottom border
-		this.drawingCanvas.add(new Line(minX, maxY, maxX, maxY, 
+		this.getDrawingCanvas().add(new Line(minX, maxY, maxX, maxY, 
 				this.borderWidth, this.borderColor));
 	}
 	
@@ -405,12 +398,12 @@ public final class SvgTestPanel extends PlotPanel {
 		
 		// Vertical crosshair
 		int x = (maxX + minX) / 2;
-		this.drawingCanvas.add(new Line(x, minY, x, maxY, 
+		this.getDrawingCanvas().add(new Line(x, minY, x, maxY, 
 				this.borderWidth, this.borderColor));
 		
 		// Horizontal crosshair
 		int y = (maxY + minY) / 2;
-		this.drawingCanvas.add(new Line(minX, y, maxX, y, 
+		this.getDrawingCanvas().add(new Line(minX, y, maxX, y, 
 				this.borderWidth, this.borderColor));
 	}
 }

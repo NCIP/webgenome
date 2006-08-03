@@ -61,7 +61,6 @@ import java.util.List;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.graph.widget.PlotElement;
 
 /**
  * Class that represents a grid of lines drawn

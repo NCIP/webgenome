@@ -65,9 +65,9 @@ import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.util.CentromereWarper;
 import org.rti.webcgh.graph.util.Warper;
-import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.GenomeFeatureMap;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.Caption;
+import org.rti.webcgh.plot.PlotPanel;
 
 
 /**

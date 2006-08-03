@@ -67,9 +67,9 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.HorizontalLine;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.Axis;
+import org.rti.webcgh.plot.PlotPanel;
 
 
 /**

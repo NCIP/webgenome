@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.8 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.9 $
+$Date: 2006-08-03 21:52:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.List;
 
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.plot.PlotParameters;
+import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.service.AcghService;
 
 /**

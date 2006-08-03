@@ -61,10 +61,10 @@ import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.Axis;
 import org.rti.webcgh.plot.Grid;
+import org.rti.webcgh.plot.PlotPanel;
 
 /**
  * 

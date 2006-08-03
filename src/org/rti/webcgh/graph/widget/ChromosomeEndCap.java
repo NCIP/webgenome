@@ -60,6 +60,7 @@ import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Curve;
 import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.plot.PlotElement;
 
 
 /**

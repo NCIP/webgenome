@@ -60,7 +60,7 @@ import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.graph.widget.Caption;
+import org.rti.webcgh.plot.Caption;
 
 /**
  * Tester for Caption

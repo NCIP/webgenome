@@ -55,6 +55,8 @@ package org.rti.webcgh.graph.widget;
 
 import java.awt.Point;
 
+import org.rti.webcgh.plot.PlotElement;
+
 /**
  * A plot element with a scale in some units of measurement
  * in 1 or 2 dimensions.

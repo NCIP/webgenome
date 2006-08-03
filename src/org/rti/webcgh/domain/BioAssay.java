@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.SortedSet;
 
@@ -85,13 +86,32 @@ public abstract class BioAssay implements Serializable {
     /** Organism that was tested. */
     private Organism organism = null;
     
-    
     /** Microarray model used in bioassay. */
     private Array array = null;
+    
+    /** Color of bioassay in plots. */
+    private Color color = null;
     
     // ===============================
     //       Getters/setters
     // ===============================
+    
+    /**
+     * Get color used in plots.
+     * @return Color used in plots
+     */
+    public final Color getColor() {
+        return color;
+    }
+
+
+    /**
+     * Set color used in plots.
+     * @param color Color used in plots
+     */
+    public final void setColor(final Color color) {
+        this.color = color;
+    }
     
     /**
      * Get microarray used in bioassay.

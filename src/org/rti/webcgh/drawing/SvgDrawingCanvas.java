@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgDrawingCanvas.java,v $
-$Revision: 1.4 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.5 $
+$Date: 2006-08-03 21:52:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.drawing;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -358,6 +359,15 @@ public class SvgDrawingCanvas implements DrawingCanvas {
 	public void addGraphicEventResponse(GraphicEvent event, String response) {
 		this.insertionPoint.setAttribute(event.getName(), response);
 	}
+    
+    
+    /**
+     * Set origin coordinate of canvas.
+     * @param point Origin on canvas coordinate system
+     */
+    public void setOrigin(final Point point) {
+        
+    }
 		
 	
 	private void move(int dx, int dy) {

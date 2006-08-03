@@ -50,7 +50,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widget;
+package org.rti.webcgh.plot;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -68,7 +68,7 @@ import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.graph.util.NumberFormatter;
 import org.rti.webcgh.graph.util.RealNumberFormatter;
-import org.rti.webcgh.plot.Grid;
+import org.rti.webcgh.graph.widget.ScalePlotElement;
 
 
 /**
@@ -120,7 +120,7 @@ public final class Axis implements ScalePlotElement {
     private int fontSize = 12;
     
     /** Thickness of main axis line and hatch marks. */
-    private int lineThickness = 3;
+    private int lineThickness = 2;
     
     /** Padding between all graphical elements in pixels. */
     private int padding = 5;

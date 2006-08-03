@@ -76,14 +76,13 @@ import org.rti.webcgh.drawing.Location;
 import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
-import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.FrequencyPlot;
 import org.rti.webcgh.graph.widget.Legend;
-import org.rti.webcgh.graph.widget.PlotPanel;
+import org.rti.webcgh.plot.Axis;
+import org.rti.webcgh.plot.Caption;
 import org.rti.webcgh.plot.PlotBoundaries;
-import org.rti.webcgh.plot.PlotParameters;
+import org.rti.webcgh.plot.PlotPanel;
 import org.rti.webcgh.plot.Units;
 
 public class FrequencyGraphGenerator {

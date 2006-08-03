@@ -58,6 +58,7 @@ import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Line;
+import org.rti.webcgh.plot.PlotElement;
 
 
 /**

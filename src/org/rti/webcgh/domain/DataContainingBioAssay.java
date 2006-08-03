@@ -87,7 +87,6 @@ public class DataContainingBioAssay extends BioAssay {
     //     Getters/setters
     // ================================
     
-    
     /**
      * Get map of chromosome number to associated chromosome array data.
      * @return Map of chromosome number to associated chromosome array data
@@ -110,11 +109,31 @@ public class DataContainingBioAssay extends BioAssay {
     }
     
     
+    // ===========================
+    //     Constructors
+    // ===========================
+    
+    /**
+     * Constructor.
+     */
+    public DataContainingBioAssay() {
+        super();
+    }
+
+
+    /**
+     * Constructor
+     * @param name Bioassay name
+     * @param organism Organism that was subject of bioassay
+     */
+    public DataContainingBioAssay(final String name, final Organism organism) {
+        super(name, organism);
+    }
+    
     // =================================
     //     Implemented abstract methods
     // =================================
-    
-    
+
     /**
      * Get set of chromosomes.
      * @return Chromosomes
@@ -132,6 +151,25 @@ public class DataContainingBioAssay extends BioAssay {
     public final ChromosomeArrayData
         getChromosomeArrayData(final short chromosome) {
         return this.chromosomeArrayDataIndex.get(chromosome);
+    }
+    
+    
+    // =================================
+    //    Additional business methods
+    // =================================
+    
+    /**
+     * Add given array datum.
+     * @param datum A datum
+     */
+    public final void add(ArrayDatum datum) {
+        short chromosome = datum.getReporter().getChromosome();
+        ChromosomeArrayData cad = this.getChromosomeArrayData(chromosome);
+        if (cad == null) {
+            cad = new ChromosomeArrayData(chromosome);
+            this.chromosomeArrayDataIndex.put(chromosome, cad);
+        }
+        cad.add(datum);
     }
 
 }

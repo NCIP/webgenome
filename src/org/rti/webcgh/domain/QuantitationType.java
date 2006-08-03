@@ -51,78 +51,58 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.plot.unit_test;
+package org.rti.webcgh.domain;
 
-import java.awt.Color;
-
-import junit.framework.TestCase;
-
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.widget.Background;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Grid;
-import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
+import java.io.Serializable;
 
 /**
- * Test class for <code>Grid</code>.
+ * Quantitation type for array experiment values.
  * @author dhall
  *
  */
-public class GridTester extends TestCase {
+public final class QuantitationType implements Serializable {
     
-    // ===============================
-    //     Constants
-    // ===============================
+    // =============================
+    //   Constants
+    // =============================
+    
+    /** Log2 ratio. */
+    public static final QuantitationType LOG_2_RATIO =
+        new QuantitationType("Log2 Ratio");
+    
+    /** Serialized version ID. */
+    private static final long serialVersionUID = (long) 1;
+    
+    // =====================
+    //      Attributes
+    // =====================
+    
+    /** Name of quantitation type. */
+    private final String name;
+    
+    
+    // =======================
+    //     Getters/setters
+    // =======================
     
     /**
-     * Name of directory holding graphic files produced
-     * during tests.  The absolute path will be a
-     * concatenation of the 'test.dir' property in
-     * the file 'unit_test.properties' and this
-     * constant.
+     * Get name of quantitation type.
+     * @return Name of quantitation type
      */
-    private static final String TEST_DIR_NAME = "grid-tester";
-    
-    /**
-     * Draw horizontal grid.
-     *
-     */
-    public void testHorizontal() {
-        RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL,
-                Location.LEFT_OF);
-        Grid grid = axis.newGrid(400, 400, Color.white,
-                panel);
-        Background background = new Background(400, 400, Color.yellow);
-        panel.add(background, HorizontalAlignment.CENTERED,
-                VerticalAlignment.CENTERED);
-        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.toPngFile("horizontal.png");
+    public String getName() {
+        return name;
     }
     
     
+    // ==========================
+    //     Constructors
+    // ==========================
+    
     /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
+     * Constructor.
+     * @param name Name of quantitation type
      */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + GridTester.TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
+    public QuantitationType(final String name) {
+        this.name = name;
     }
-
 }

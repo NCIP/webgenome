@@ -50,78 +50,78 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.graph.widget;
+package org.rti.webcgh.plot;
 
 import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 
 /**
- * A graphical element in a plot
+ * A graphical element in a plot.
  */
 public interface PlotElement {
     
     
     /**
-     * Paint element
+     * Paint element.
      * @param canvas A canvas
      */
-    public void paint(DrawingCanvas canvas);
+    void paint(DrawingCanvas canvas);
     
     
     /**
-     * Point at top left used to align with other plot elements
+     * Point at top left used to align with other plot elements.
      * @return A point
      */
-    public Point topLeftAlignmentPoint();
+    Point topLeftAlignmentPoint();
     
     
     /**
-     * Point at bottom left used to align with other plot elements
+     * Point at bottom left used to align with other plot elements.
      * @return A point
      */
-    public Point bottomLeftAlignmentPoint();
+    Point bottomLeftAlignmentPoint();
     
     
     /**
-     * Point at top right used to align with other plot elements
+     * Point at top right used to align with other plot elements.
      * @return A point
      */
-    public Point topRightAlignmentPoint();
+    Point topRightAlignmentPoint();
     
     
     /**
-     * Point at bottom right used to align with other plot elements
+     * Point at bottom right used to align with other plot elements.
      * @return A point
      */
-    public Point bottomRightAlignmentPoint();
+    Point bottomRightAlignmentPoint();
     
     
     /**
-     * Width in pixels
+     * Width in pixels.
      * @return Width in pixels
      */
-    public int width();
+    int width();
     
     
     /**
-     * Height in pixels
+     * Height in pixels.
      * @return Height in pixels
      */
-    public int height();
+    int height();
     
     
     /**
-     * Return point at top left of element
+     * Return point at top left of element.
      * @return A point
      */
-    public Point topLeftPoint();
+    Point topLeftPoint();
     
     
     /**
-     * Move element
+     * Move element.
      * @param deltaX Number of pixels horizontally
      * @param deltaY Number of pixels vertically
      */
-    public void move(int deltaX, int deltaY);
+    void move(int deltaX, int deltaY);
 }

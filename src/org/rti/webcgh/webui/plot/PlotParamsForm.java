@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsForm.java,v $
-$Revision: 1.5 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.6 $
+$Date: 2006-08-03 21:52:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -74,8 +74,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionError;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.array.GenomeIntervalFormatException;
+import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.plot.ChromosomeIdeogramSize;
-import org.rti.webcgh.plot.PlotParameters;
 import org.rti.webcgh.plot.PlotType;
 import org.rti.webcgh.plot.Units;
 

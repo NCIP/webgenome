@@ -112,52 +112,14 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
     /** Height of plot in pixels. */
     private int height = 0;
     
-    /** Minimum x-axis coordinate of elements added to canvas. */
-    private int minX = 0;
+    /** Origin of coordinate system for canvas. */
+    private Point origin = new Point(0, 0);
     
-    /** Minimum y-axis coordinate of elements added to canvas. */
-    private int minY = 0;
     
     // =========================
     //      Getters/setters
     // =========================
-    
-    /**
-     * Get minimum x-axis coordinate of elements added to canvas.
-     * @return Minimum x-axis coordinate of elements added to canvas.
-     */
-    public int getMinX() {
-        return minX;
-    }
-
-
-    /**
-     * Set minimum x-axis coordinate of elements added to canvas.
-     * @param minX Minimum x-axis coordinate of elements added to canvas.
-     */
-    public void setMinX(final int minX) {
-        this.minX = minX;
-    }
-
-    
-    /**
-     * Get minimum y-axis coordinate of elements added to canvas.
-     * @return Minimum y-axis coordinate of elements added to canvas.
-     */
-    public int getMinY() {
-        return minY;
-    }
-
-    
-    /**
-     * Set minimum y-axis coordinate of elements added to canvas.
-     * @param minY Minimum y-axis coordinate of elements added to canvas.
-     */
-    public void setMinY(final int minY) {
-        this.minY = minY;
-    }
-    
-        
+            
     
     // =================================
     //      Constructors
@@ -207,7 +169,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      */
     public void add(final GraphicPrimitive graphic,
             final boolean overwriteCanvasProperties) {
-        
+        this.graphicPrimitives.add(graphic);
     }
     
     
@@ -370,6 +332,15 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
     }
     
     
+    /**
+     * Set origin coordinate of canvas.
+     * @param origin Origin on canvas coordinate system
+     */
+    public void setOrigin(final Point origin) {
+        this.origin = origin;
+    }
+    
+    
     // ==================================
     //    Additional business methods
     // ==================================
@@ -396,7 +367,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
         // Render elements
         AffineTransform oldTransform = this.affineTransform;
         this.affineTransform = new AffineTransform(this.affineTransform);
-        this.affineTransform.translate(-this.minX, -this.minY);
+        this.affineTransform.translate(-this.origin.x, -this.origin.y);
         this.render(this, graphics);
         this.affineTransform = oldTransform;
         return img;

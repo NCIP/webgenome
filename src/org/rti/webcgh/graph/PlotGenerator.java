@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.15 $
-$Date: 2006-08-01 19:37:11 $
+$Revision: 1.16 $
+$Date: 2006-08-03 21:52:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -88,19 +88,18 @@ import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.util.CentromereWarper;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
 import org.rti.webcgh.graph.util.Warper;
-import org.rti.webcgh.graph.widget.Axis;
 import org.rti.webcgh.graph.widget.Background;
-import org.rti.webcgh.graph.widget.Caption;
 import org.rti.webcgh.graph.widget.ChromosomeEndCap;
 import org.rti.webcgh.graph.widget.ColorCodePlot;
 import org.rti.webcgh.graph.widget.GenomeFeatureMap;
 import org.rti.webcgh.graph.widget.Legend;
-import org.rti.webcgh.graph.widget.PlotPanel;
 import org.rti.webcgh.graph.widget.ScatterPlot;
+import org.rti.webcgh.plot.Axis;
+import org.rti.webcgh.plot.Caption;
 import org.rti.webcgh.plot.ChromosomeIdeogramSize;
 import org.rti.webcgh.plot.Grid;
 import org.rti.webcgh.plot.PlotBoundaries;
-import org.rti.webcgh.plot.PlotParameters;
+import org.rti.webcgh.plot.PlotPanel;
 import org.rti.webcgh.plot.PlotType;
 import org.rti.webcgh.plot.Units;
 

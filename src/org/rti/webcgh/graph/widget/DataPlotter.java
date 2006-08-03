@@ -55,6 +55,7 @@ package org.rti.webcgh.graph.widget;
 import java.awt.Color;
 
 import org.rti.webcgh.graph.DataPoint;
+import org.rti.webcgh.plot.PlotElement;
 
 
 

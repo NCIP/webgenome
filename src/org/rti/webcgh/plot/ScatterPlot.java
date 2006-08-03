@@ -62,11 +62,9 @@ import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.drawing.Circle;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Polyline;
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graph.widget.PlotElement;
 
 /**
  * A two dimensional plotting space that renders
