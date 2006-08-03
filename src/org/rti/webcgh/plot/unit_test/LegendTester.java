@@ -53,6 +53,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.plot.unit_test;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.plot.Legend;
+import org.rti.webcgh.util.FileUtils;
+import org.rti.webcgh.util.SystemUtils;
+
 import junit.framework.TestCase;
 
 /**
@@ -60,7 +68,21 @@ import junit.framework.TestCase;
  * @author dhall
  *
  */
-public class LegendTexter extends TestCase {
+public final class LegendTester extends TestCase {
+    
+    
+    /**
+     * Name of directory holding graphic files produced
+     * during tests.  The absolute path will be a
+     * concatenation of the 'test.dir' property in
+     * the file 'unit_test.properties' and this
+     * constant.
+     */
+    private static final String TEST_DIR_NAME = "legend-tester";
+    
+    
+    /** Width of legend in pixels. */
+    private static final int WIDTH = 400;
 
     
     /**
@@ -68,6 +90,30 @@ public class LegendTexter extends TestCase {
      *
      */
     public void testPaint() {
-        
+        RasterFileTestPlotPanel panel =
+            new RasterFileTestPlotPanel(this.getPathToTestDir());
+        Collection<Experiment> experiments = new ArrayList<Experiment>();
+        Experiment exp1 = new Experiment("Experiment 1");
+        experiments.add(exp1);
+        Legend legend = new Legend(experiments, WIDTH);
+        panel.add(legend);
+        panel.toPngFile("legend.png");
+    }
+    
+    
+    /**
+     * Get absolute path to directory that contains
+     * test output files.  If necessary, method creates
+     * directory.
+     * @return Absolute path to directory that contains
+     * test output files
+     */
+    private String getPathToTestDir() {
+        String masterTestDirPath =
+            SystemUtils.getUnitTestProperty("temp.dir");
+        String dirPath = masterTestDirPath + "/"
+            + LegendTester.TEST_DIR_NAME;
+        FileUtils.createDirectory(dirPath);
+        return dirPath;
     }
 }

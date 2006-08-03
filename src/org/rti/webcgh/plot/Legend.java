@@ -104,6 +104,8 @@ public final class Legend implements PlotElement {
     //       Attributes
     // ===========================
     
+    /** Experiments in legend. */
+    private final Collection<Experiment> experiments;
 
     /**
      * List of graphic primitives that are rendered when
@@ -119,6 +121,10 @@ public final class Legend implements PlotElement {
     
     /** Height of legend in pixels. */
     private int height = 0;
+    
+    
+    /** Origin point of coordinates. */
+    private Point origin = new Point(0, 0);
     
     
     // ==========================
@@ -141,11 +147,12 @@ public final class Legend implements PlotElement {
                     + PADDING);
         }
         
+        // Set properties
+        this.experiments = experiments;
         this.width = width;
         
         // Layout graphic primitives
-        int bottomY = this.layoutGraphicPrimitives(experiments);
-        
+        this.height = this.layoutGraphicPrimitives(experiments);
     }
     
     
@@ -159,26 +166,34 @@ public final class Legend implements PlotElement {
             final Collection<Experiment>experiments) {
         
         // Top border line
-        this.graphicPrimitives.add(new Line(0, 0, this.width, 0,
+        this.graphicPrimitives.add(new Line(this.origin.x, this.origin.y,
+                this.origin.x + this.width, this.origin.y,
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         // Bioassay groupings
-        int topY = PADDING;
+        int topY = PADDING + this.origin.y;
         for (Experiment exp : experiments) {
             int bottomY = this.layoutGraphicPrimitives(exp, topY);
             topY = bottomY + PADDING;
         }
         
         // Left border line
-        this.graphicPrimitives.add(new Line(0, 0, 0, topY, 
+        this.graphicPrimitives.add(new Line(this.origin.x, this.origin.y,
+                this.origin.x, topY, 
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         // Right border line
-        this.graphicPrimitives.add(new Line(this.width, 0, this.width, topY,
+        this.graphicPrimitives.add(new Line(this.origin.x + this.width
+                - BORDER_LINE_WIDTH / 2,
+                this.origin.y, this.origin.x + this.width
+                - BORDER_LINE_WIDTH / 2, topY,
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         // Bottom border line
-        this.graphicPrimitives.add(new Line(0, topY, this.width, topY,
+        this.graphicPrimitives.add(new Line(this.origin.x, topY
+                - Legend.BORDER_LINE_WIDTH / 2,
+                this.origin.x + this.width, topY
+                - Legend.BORDER_LINE_WIDTH / 2,
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         return topY;
@@ -197,7 +212,7 @@ public final class Legend implements PlotElement {
      */
     private int layoutGraphicPrimitives(final Experiment experiment,
             final int topY) {
-        return -1;
+        return topY;
     }
     
     
@@ -211,7 +226,9 @@ public final class Legend implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(final DrawingCanvas canvas) {
-        
+        for (GraphicPrimitive prim : this.graphicPrimitives) {
+            canvas.add(prim);
+        }
     }
     
     
@@ -220,7 +237,7 @@ public final class Legend implements PlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return null;
+        return this.origin;
     }
     
     
@@ -229,7 +246,7 @@ public final class Legend implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-        return null;
+        return new Point(this.origin.x, this.origin.y + this.height);
     }
     
     
@@ -238,7 +255,7 @@ public final class Legend implements PlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-        return null;
+        return new Point(this.origin.x + this.width, this.origin.y);
     }
     
     
@@ -247,7 +264,8 @@ public final class Legend implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-        return null;
+        return new Point(this.origin.x + this.width,
+                this.origin.y + this.height);
     }
     
     
@@ -256,7 +274,7 @@ public final class Legend implements PlotElement {
      * @return Width in pixels
      */
     public int width() {
-        return -1;
+        return this.width;
     }
     
     
@@ -265,7 +283,7 @@ public final class Legend implements PlotElement {
      * @return Height in pixels
      */
     public int height() {
-        return -1;
+        return this.height;
     }
     
     
@@ -274,7 +292,7 @@ public final class Legend implements PlotElement {
      * @return A point
      */
     public Point topLeftPoint() {
-        return null;
+        return this.origin;
     }
     
     
@@ -284,7 +302,10 @@ public final class Legend implements PlotElement {
      * @param deltaY Number of pixels vertically
      */
     public void move(final int deltaX, final int deltaY) {
-        
+        this.origin.x += deltaX;
+        this.origin.y += deltaY;
+        this.graphicPrimitives.clear();
+        this.layoutGraphicPrimitives(this.experiments);
     }
 
 }
