@@ -55,12 +55,14 @@ package org.rti.webcgh.service;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Location;
@@ -68,6 +70,7 @@ import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.plot.Axis;
 import org.rti.webcgh.plot.Caption;
+import org.rti.webcgh.plot.Legend;
 import org.rti.webcgh.plot.PlotBoundaries;
 import org.rti.webcgh.plot.PlotPanel;
 import org.rti.webcgh.plot.ScatterPlot;
@@ -88,23 +91,25 @@ public final class InMemoryScatterPlotPainter {
     
     /**
      * Paints a scatter plot on the given drawing canvas.
-     * @param experiment Experiment to plot
+     * @param experiments Experiments to plot
      * @param canvas Canvas upon which to paint
      * @param plotParameters Plotting parameters specified
      * by user
      * @param width Width of plot in pixels
      * @param height Height of plot in pixels
+     * @param quantitationType Quantitation type
      * interval in base pairs
      */
-    public void paintScatterPlot(final Experiment experiment,
+    public void paintScatterPlot(final Collection<Experiment> experiments,
             final DrawingCanvas canvas,
             final ScatterPlotParameters plotParameters,
-            final int width, final int height) {
+            final int width, final int height,
+            final QuantitationType quantitationType) {
         
         // Check args
-        if (experiment == null || canvas == null) {
+        if (experiments == null || canvas == null) {
             throw new IllegalArgumentException(
-                    "Experiment and canvas cannot be null");
+                    "Experiments and canvas cannot be null");
         }
         if (plotParameters.getChromosome() < 1
                 || plotParameters.getStartLocation() < 0
@@ -130,16 +135,18 @@ public final class InMemoryScatterPlotPainter {
         List<ChromosomeArrayData> cads = new ArrayList<ChromosomeArrayData>();
         List<String> names = new ArrayList<String>();
         List<Color> colors = new ArrayList<Color>();
-        for (BioAssay ba : experiment.getBioAssays()) {
-            if (!(ba instanceof DataContainingBioAssay)) {
-                throw new IllegalArgumentException(
-                        "Bioassay must be of type DataContainingBioAssay");
+        for (Experiment experiment : experiments) {
+            for (BioAssay ba : experiment.getBioAssays()) {
+                if (!(ba instanceof DataContainingBioAssay)) {
+                    throw new IllegalArgumentException(
+                            "Bioassay must be of type DataContainingBioAssay");
+                }
+                ChromosomeArrayData cad = ((DataContainingBioAssay) ba)
+                    .getChromosomeArrayData(plotParameters.getChromosome());
+                cads.add(cad);
+                names.add(ba.getName());
+                colors.add(ba.getColor());
             }
-            ChromosomeArrayData cad = ((DataContainingBioAssay) ba)
-                .getChromosomeArrayData(plotParameters.getChromosome());
-            cads.add(cad);
-            names.add(ba.getName());
-            colors.add(ba.getColor());
         }
         PlotBoundaries pb = new PlotBoundaries(
                 (double) plotParameters.getStartLocation(),
@@ -168,12 +175,17 @@ public final class InMemoryScatterPlotPainter {
                 plotParameters.getMaxY(), scatterPlot.height(),
                 Orientation.VERTICAL, Location.LEFT_OF);
         Caption yCaption = new Caption(
-                experiment.getQuantitationType().getName(),
+                quantitationType.getName(),
                 Orientation.HORIZONTAL, true);
         panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
                 VerticalAlignment.BOTTOM_JUSTIFIED);
         panel.add(yCaption, HorizontalAlignment.LEFT_OF,
                 VerticalAlignment.CENTERED);
+        
+        // Legend
+        Legend legend = new Legend(experiments, scatterPlot.width());
+        panel.add(legend, HorizontalAlignment.LEFT_JUSTIFIED,
+                VerticalAlignment.BELOW);
         
         // Set dimensions of canvas
         canvas.setOrigin(panel.topLeftPoint());

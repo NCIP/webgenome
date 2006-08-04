@@ -56,6 +56,8 @@ package org.rti.webcgh.service.unit_test;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -66,6 +68,7 @@ import org.rti.webcgh.domain.ArrayDatumGenerator;
 import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.drawing.RasterDrawingCanvas;
 import org.rti.webcgh.plot.ScatterPlotParameters;
@@ -126,6 +129,8 @@ public final class InMemoryScatterPlotPainterTester extends TestCase {
         }
         exp.add(b1);
         exp.add(b2);
+        Collection<Experiment> experiments = new ArrayList<Experiment>();
+        experiments.add(exp);
         
         // Create plot parameters
         ScatterPlotParameters params = new ScatterPlotParameters();
@@ -142,7 +147,8 @@ public final class InMemoryScatterPlotPainterTester extends TestCase {
         
         // Run method
         InMemoryScatterPlotPainter painter = new InMemoryScatterPlotPainter();
-        painter.paintScatterPlot(exp, canvas, params, WIDTH, HEIGHT);
+        painter.paintScatterPlot(experiments, canvas, params, WIDTH, HEIGHT,
+                QuantitationType.LOG_2_RATIO);
         
         // Output graphics to file
         String testDirPath =

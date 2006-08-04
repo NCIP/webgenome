@@ -89,10 +89,10 @@ public final class Legend implements PlotElement {
     private static final Color TEXT_COLOR = Color.BLACK;
     
     /** Width of line around border of legend. */
-    private static final int BORDER_LINE_WIDTH = 3;
+    private static final int BORDER_LINE_WIDTH = 1;
     
     /** Color of line around border of legend. */
-    private static final Color BORDER_LINE_COLOR = Color.BLACK;
+    private static final Color BORDER_LINE_COLOR = Color.DARK_GRAY;
     
     /** Width of line around groups of bioassays. */
     private static final int GROUP_LINE_WIDTH = 1;
@@ -188,17 +188,13 @@ public final class Legend implements PlotElement {
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         // Right border line
-        this.graphicPrimitives.add(new Line(this.origin.x + this.width
-                - BORDER_LINE_WIDTH / 2,
-                this.origin.y, this.origin.x + this.width
-                - BORDER_LINE_WIDTH / 2, topY,
+        this.graphicPrimitives.add(new Line(this.origin.x + this.width,
+                this.origin.y, this.origin.x + this.width, topY,
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         // Bottom border line
-        this.graphicPrimitives.add(new Line(this.origin.x, topY
-                - Legend.BORDER_LINE_WIDTH / 2,
-                this.origin.x + this.width, topY
-                - Legend.BORDER_LINE_WIDTH / 2,
+        this.graphicPrimitives.add(new Line(this.origin.x, topY,
+                this.origin.x + this.width, topY,
                 Legend.BORDER_LINE_WIDTH, Legend.BORDER_LINE_COLOR));
         
         return topY;

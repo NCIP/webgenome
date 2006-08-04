@@ -57,7 +57,6 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.net.URL;
 
-import org.apache.log4j.Logger;
 import org.rti.webcgh.drawing.Cursor;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.HorizontalAlignment;
@@ -75,9 +74,6 @@ import org.rti.webcgh.graph.widget.ScalePlotElement;
  * A plot axis.
  */
 public final class Axis implements ScalePlotElement {
-    
-    /** Logger. */
-    private static final Logger LOGGER = Logger.getLogger(Axis.class);
     
 
     // =============================
@@ -111,7 +107,7 @@ public final class Axis implements ScalePlotElement {
     private int numMinorTicsBetweenMajorTics = 5;
     
     /** Length of major tic marks in pixels. */
-    private int majorTicLength = 20;
+    private int majorTicLength = 12;
     
     /** Length of minor tic marks in pixels. */
     private int minorTicLength = 8;
@@ -119,8 +115,14 @@ public final class Axis implements ScalePlotElement {
     /** Font size of major tic mark text labels. */
     private int fontSize = 12;
     
-    /** Thickness of main axis line and hatch marks. */
-    private int lineThickness = 2;
+    /** Thickness of main axis line in pixels. */
+    private int mainAxisLineThickness = 2;
+    
+    /** Thickness of major hatch lines in pixels. */
+    private int majorHatchLineThickness = 2;
+    
+    /** Thickness of minor hatch lines in pixels. */
+    private int minorHatchLineThickness = 1;
     
     /** Padding between all graphical elements in pixels. */
     private int padding = 5;
@@ -128,71 +130,132 @@ public final class Axis implements ScalePlotElement {
     /** Number formatter. */
     private NumberFormatter numberFormatter = new RealNumberFormatter(12, 4);
     
+    /** Minimum x-axis coordinate. */
     private int minX = 0;
+    
+    /** Maximum x-axis coordinate. */
     private int maxX = 0;
+    
+    /** Minimum y-axis coordinate. */
     private int minY = 0;
+    
+    /** Maximum y-axis coordinate. */
     private int maxY = 0;
+    
+    /** X-axis coordinate of point representing '0' in the native units. */
     private int zeroX = 0;
+    
+    /** Y-axis coordinate of point representing '0' in the native units. */
     private int zeroY = 0;
+    
+    /**
+     * Change in x-coordinate of canvas origin (i.e., top left point)
+     * that arises from one or more calls to move().
+     */
     private int deltaX = 0;
+     
+     /**
+      * Change in y-coordinate of canvas origin (i.e., top left point)
+      * that arises from one or more calls to move().
+      */
     private int deltaY = 0;
+      
+    /** Indicator that axis spans the value '0' in the native units. */
     private final boolean spansZero;
+    
+    /** Range between minimum and maximum values in native units. */
     private final double range;
+    
+    /**
+     * Multiplication factors used in calculating how many hatch marks
+     * will fit on axis.
+     */
     private final float[] multipliers = {(float)5.0, (float)2.0, (float)1.0};
 
 
 	/**
-     * @param numberFormatter The numberFormatter to set.
+     * Set number formatter used to render major hatch labels.
+     * @param numberFormatter A number formatter
      */
-    public void setNumberFormatter(NumberFormatter numberFormatter) {
+    public void setNumberFormatter(final NumberFormatter numberFormatter) {
         this.numberFormatter = numberFormatter;
     }
     
     
     /**
-     * @param fontSize The fontSize to set.
+     * Set font size of major hatch labels.
+     * @param fontSize Font size
      */
-    public void setFontSize(int fontSize) {
+    public void setFontSize(final int fontSize) {
         this.fontSize = fontSize;
     }
     
     
     /**
-     * @param majorTicLength The majorTicLength to set.
+     * Set length of major hatch marks.
+     * @param majorTicLength Length of major hatch marks in pixels.
      */
-    public void setMajorTicLength(int majorTicLength) {
+    public void setMajorTicLength(final int majorTicLength) {
         this.majorTicLength = majorTicLength;
     }
     
     
     /**
-     * @param minorTicLength The minorTicLength to set.
+     * Set length of minor hatch marks.
+     * @param minorTicLength Length of minor hatch marks in pixels.
      */
-    public void setMinorTicLength(int minorTicLength) {
+    public void setMinorTicLength(final int minorTicLength) {
         this.minorTicLength = minorTicLength;
     }
     
     
     /**
-     * @param numMinorTicsBetweenMajorTics The numMinorTicsBetweenMajorTics to set.
+     * Set the number of minor hatch marks between pairs of adjacent
+     * major hatch marks.
+     * @param numMinorTicsBetweenMajorTics Number of minor hatch
+     * marks between pairs of adjacent major hatch marks
      */
-    public void setNumMinorTicsBetweenMajorTics(int numMinorTicsBetweenMajorTics) {
+    public void setNumMinorTicsBetweenMajorTics(
+            final int numMinorTicsBetweenMajorTics) {
         this.numMinorTicsBetweenMajorTics = numMinorTicsBetweenMajorTics;
     }
     
     
     /**
-     * @param lineThickness The lineThickness to set.
-     */
-    public void setLineThickness(int lineThickness) {
-        this.lineThickness = lineThickness;
+     * Set thickness of main axis line.
+     * @param mainAxisLineThickness Thickness of main axis line
+     * in pixels
+     */    
+    public void setMainAxisLineThickness(final int mainAxisLineThickness) {
+        this.mainAxisLineThickness = mainAxisLineThickness;
     }
-    
-    
+
+
     /**
-     * @param padding The padding to set.
+     * Set thickness of major hatch lines.
+     * @param majorHatchLineThickness Thickness of major hatch lines
+     * in pixels.
      */
-    public void setPadding(int padding) {
+    public void setMajorHatchLineThickness(final int majorHatchLineThickness) {
+        this.majorHatchLineThickness = majorHatchLineThickness;
+    }
+
+
+    /**
+     * Set thickness of minor hatch lines.
+     * @param minorHatchLineThickness Thickness of minor hatch lines
+     * in pixels.
+     */
+    public void setMinorHatchLineThickness(final int minorHatchLineThickness) {
+        this.minorHatchLineThickness = minorHatchLineThickness;
+    }
+
+
+    /**
+     * Set padding between graphic elements.
+     * @param padding Padding in pixels.
+     */
+    public void setPadding(final int padding) {
         this.padding = padding;
     }
     
@@ -203,30 +266,35 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * @param minValue Minimum value
-     * @param maxValue Maximum value
+     * Constructor
+     * @param minValue Minimum value in native units
+     * @param maxValue Maximum value in native units
      * @param length Length in pixels
      * @param orientation Orientation
      * @param positionTextRelativeToHatches Position of hatch mark labels
+     * relative to hatch marks
      */
-    public Axis(double minValue, double maxValue, int length, Orientation orientation,
-        Location positionTextRelativeToHatches) {
+    public Axis(final double minValue, final double maxValue,
+            final int length, final Orientation orientation,
+            final Location positionTextRelativeToHatches) {
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.length = length;
         this.range = maxValue - minValue;
         this.orientation = orientation;
         this.positionTextRelativeToHatches = positionTextRelativeToHatches;
-        double scale = (double)length / (maxValue - minValue);
+        double scale = (double) length / (maxValue - minValue);
         this.spansZero = maxValue >= 0 && minValue <= 0;
         if (orientation == Orientation.HORIZONTAL) {
             this.maxX = length;
-            if (this.spansZero)
-            	this.zeroX = (int)((- minValue) * scale);
+            if (this.spansZero) {
+            	this.zeroX = (int) ((-minValue) * scale);
+            }
         } else if (orientation == Orientation.VERTICAL) {
             this.maxY = length;
-            if (this.spansZero)
-            	this.zeroY = length - (int)((- minValue) * scale);
+            if (this.spansZero) {
+            	this.zeroY = length - (int) ((-minValue) * scale);
+            }
         }
     }
     
@@ -237,11 +305,11 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Move element
+     * Move element.
      * @param deltaX Number of pixels horizontally
      * @param deltaY Number of pixels vertically
      */
-    public void move(int deltaX, int deltaY) {
+    public void move(final int deltaX, final int deltaY) {
     	this.minX += deltaX;
     	this.minY += deltaY;
     	this.maxX += deltaX;
@@ -253,28 +321,36 @@ public final class Axis implements ScalePlotElement {
     }
     
     /**
-     * Paint element
+     * Paint element.
      * @param canvas A canvas
      */
-    public void paint(DrawingCanvas canvas) {
+    public void paint(final DrawingCanvas canvas) {
         
         // Paint main axis line
         Line line = null;
-        if (this.orientation == Orientation.HORIZONTAL)
-            line = new Line(0, 0, this.length, 0, this.lineThickness, this.color);
-        else if (this.orientation == Orientation.VERTICAL)
-            line = new Line(0, 0, 0, this.length, this.lineThickness, this.color);
+        if (this.orientation == Orientation.HORIZONTAL) {
+            line = new Line(0, 0, this.length, 0, this.mainAxisLineThickness,
+                    this.color);
+        } else if (this.orientation == Orientation.VERTICAL) {
+            line = new Line(0, 0, 0, this.length, this.mainAxisLineThickness,
+                    this.color);
+        }
         canvas.add(line);
         
         // Set up for generating tic marks
-	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(new RenderedWidthCalculator(canvas), 
+	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
+                new RenderedWidthCalculator(canvas), 
 	    		this.length, this.minValue, this.maxValue, this.fontSize);
-        double majorTicInterval = this.computeTicInterval(this.minValue, this.maxValue, maxNumMajorTics);
-        double minorTicInterval = majorTicInterval / numMinorTicsBetweenMajorTics;
-        double startingMajorTic = this.computeStartTic(this.minValue, majorTicInterval);
+        double majorTicInterval = this.computeTicInterval(
+                this.minValue, this.maxValue, maxNumMajorTics);
+        double minorTicInterval = majorTicInterval
+            / numMinorTicsBetweenMajorTics;
+        double startingMajorTic = this.computeStartTic(this.minValue,
+                majorTicInterval);
         
         // Create tic marks
-        for (double i = startingMajorTic - majorTicInterval; i <= this.maxValue; i+= majorTicInterval) {
+        for (double i = startingMajorTic - majorTicInterval;
+            i <= this.maxValue; i += majorTicInterval) {
             
             // Major tic mark
             if (i >= this.minValue) {
@@ -284,7 +360,8 @@ public final class Axis implements ScalePlotElement {
             }
             
             // Minor tic marks
-            for (double j = i + minorTicInterval; j < i + majorTicInterval; j += minorTicInterval) {
+            for (double j = i + minorTicInterval; j < i + majorTicInterval;
+                j += minorTicInterval) {
                 if (j >= this.minValue && j <= this.maxValue) {
 	                AxisTicMark tic = this.newAxisTicMark(j, false);
 	                tic.paint(canvas, false);
@@ -296,7 +373,7 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Point at top left used to align with other plot elements
+     * Point at top left used to align with other plot elements.
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
@@ -305,31 +382,33 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Point at bottom left used to align with other plot elements
+     * Point at bottom left used to align with other plot elements.
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
     	int x = deltaX, y = this.deltaY;
-    	if (this.orientation == Orientation.VERTICAL)
+    	if (this.orientation == Orientation.VERTICAL) {
     			y = this.deltaY + this.length;
+        }
     	return new Point(x, y);
     }
     
     
     /**
-     * Point at top right used to align with other plot elements
+     * Point at top right used to align with other plot elements.
      * @return A point
      */
     public Point topRightAlignmentPoint() {
     	int x = deltaX, y = deltaY;
-    	if (this.orientation == Orientation.HORIZONTAL)
-    			x = this.deltaX + this.length;
+    	if (this.orientation == Orientation.HORIZONTAL) {
+    		x = this.deltaX + this.length;
+        }
     	return new Point(x, y);
     }
     
     
     /**
-     * Point at bottom right used to align with other plot elements
+     * Point at bottom right used to align with other plot elements.
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
@@ -338,7 +417,7 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Width in pixels
+     * Width in pixels.
      * @return Width in pixels
      */
     public int width() {
@@ -347,7 +426,7 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Height in pixels
+     * Height in pixels.
      * @return Height in pixels
      */
     public int height() {
@@ -356,7 +435,7 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Return point at top left of element
+     * Return point at top left of element.
      * @return A point
      */
     public Point topLeftPoint() {
@@ -365,86 +444,87 @@ public final class Axis implements ScalePlotElement {
     
     
     // =================================
-    //    Public methods
+    //    Other business methods
     // =================================
     
     /**
-     * Create grid with grid lines that match tic marks
+     * Create grid with grid lines that match tic marks.
      * @param width Width of grid in pixels
      * @param height Height of grid in pixels
      * @param color Color
      * @param panel A plot panel
      * @return New grid
      */
-    public Grid newGrid(int width, int height, Color color, PlotPanel panel) {
-        Grid grid = new Grid(width, height, Orientation.opposite(this.orientation), color);
-	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(new RenderedWidthCalculator(panel), 
+    public Grid newGrid(final int width, final int height,
+            final Color color, final PlotPanel panel) {
+        Grid grid = new Grid(width, height,
+                Orientation.opposite(this.orientation), color);
+	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
+                new RenderedWidthCalculator(panel), 
 	    		this.length, this.minValue, this.maxValue, this.fontSize);
-        double majorTicInterval = this.computeTicInterval(this.minValue, this.maxValue, maxNumMajorTics);
-        double startingMajorTic = this.computeStartTic(this.minValue, majorTicInterval);
-        for (double x = startingMajorTic; x <= this.maxValue; x += majorTicInterval) {
+        double majorTicInterval = this.computeTicInterval(
+                this.minValue, this.maxValue, maxNumMajorTics);
+        double startingMajorTic = this.computeStartTic(
+                this.minValue, majorTicInterval);
+        for (double x = startingMajorTic; x <= this.maxValue;
+            x += majorTicInterval) {
             int p = this.nativeUnitsToPixel(x);
-            if (x == 0.0)
+            if (x == 0.0) {
             	grid.setZeroPointLocation(p);
-            else
+            } else {
             	grid.addGridMarkPosition(p);
+            }
         }
         return grid;
     }
     
     
-    // =======================================
-    //      Private methods
-    // =======================================
-    
-    
-    
 	/**
-	 * Compute value of first tic mark
+	 * Compute value of first tic mark.
 	 * @param min Minimum value
 	 * @param interval Interval between tic marks
 	 * @return Value of first tic mark
 	 */
-	private double computeStartTic
-	(
-		double min, double interval
-	) {
-	    float minFloat = (float)min;
-	    float intervalFloat = (float)interval;
-		return (double)(intervalFloat * Math.ceil(minFloat / intervalFloat));
+	private double computeStartTic(
+            final double min, final double interval) {
+	    float minFloat = (float) min;
+	    float intervalFloat = (float) interval;
+		return (double) (intervalFloat * Math.ceil(minFloat / intervalFloat));
 	}
 
 	/**
-	 * Compute the interval between tic marks
+	 * Compute the interval between tic marks.
 	 * @param min Minimum value
 	 * @param max Maximum value
 	 * @param maxNumTics Maximum number of tic marks
 	 * @return Interval between tic marks
 	 */
-	private double computeTicInterval
-	(
-		double min, double max, int maxNumTics
-	) {
+	private double computeTicInterval(final double min, final double max,
+            final int maxNumTics) {
+        
 		// Special case: min == max
-		if (min == max)
+		if (min == max) {
 			return 1.0;
+        }
 			
-		float range = (float)Math.abs(max - min);
+		float range = (float) Math.abs(max - min);
 		float ticInterval = Float.NaN;
-		float power = (float)Math.pow((float)10.0, Math.ceil(Math.log(range) / 
-			Math.log((float)10.0)) + (float)1.0);
+		float power = (float) Math.pow((float) 10.0, Math.ceil(Math.log(range)
+                / Math.log((float) 10.0)) + (float) 1.0);
 		boolean done = false;
-		while (! done) {
-		    for (int i = 0; i < this.multipliers.length && ! done; i++) {
+		while (!done) {
+		    for (int i = 0; i < this.multipliers.length && !done; i++) {
 					float temp = this.multipliers[i] * power;
-				if (Math.ceil(range / temp) > maxNumTics)
+				if (Math.ceil(range / temp) > maxNumTics) {
 					done = true;
-				else if (range / temp > 0)
+                }
+				else if (range / temp > 0) {
 					ticInterval = temp;
+                }
 		    }
 			power /= (float)10.0;
 		}
-		return (double)ticInterval;
+		return (double) ticInterval;
 	}
 	
 	
@@ -452,7 +532,6 @@ public final class Axis implements ScalePlotElement {
 	 * Heuristically determine how many tic marks 
 	 * over given range could fit
 	 * on one text line of given width.
-	 * @param panel A plotpanel
 	 * @param width Width of target text line
 	 * @param min Minimum value in range
 	 * @param max Maximum value in range
@@ -494,7 +573,11 @@ public final class Axis implements ScalePlotElement {
 	        this.positionTextRelativeToHatches);
 	    tic.setColor(this.color);
 	    tic.setFontSize(this.fontSize);
-	    tic.setLineThickness(this.lineThickness);
+        if (isMajor) {
+            tic.setLineThickness(this.majorHatchLineThickness);
+        } else {
+            tic.setLineThickness(this.minorHatchLineThickness);
+        }
 	    tic.setPadding(this.padding);
 	    if (isMajor)
 	        tic.setLength(this.majorTicLength);
