@@ -53,10 +53,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.plot.unit_test;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.plot.Legend;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
@@ -95,6 +99,27 @@ public final class LegendTester extends TestCase {
         Collection<Experiment> experiments = new ArrayList<Experiment>();
         Experiment exp1 = new Experiment("Experiment 1");
         experiments.add(exp1);
+        Organism org = new Organism("", "");
+        BioAssay b1 = new DataContainingBioAssay("Bioassay 1", org);
+        BioAssay b2 = new DataContainingBioAssay("Bioassay 2", org);
+        BioAssay b3 = new DataContainingBioAssay("Bioassay 3", org);
+        BioAssay b4 = new DataContainingBioAssay("Bioassay 4", org);
+        BioAssay b5 = new DataContainingBioAssay("Bioassay 5", org);
+        b1.setColor(Color.BLACK);
+        b2.setColor(Color.BLUE);
+        b3.setColor(Color.RED);
+        b4.setColor(Color.GREEN);
+        b5.setColor(Color.YELLOW);
+        exp1.add(b1);
+        exp1.add(b2);
+        exp1.add(b3);
+        exp1.add(b4);
+        exp1.add(b5);
+        Experiment exp2 = new Experiment("Experiment 2");
+        BioAssay b6 = new DataContainingBioAssay("Bioassay 6", org);
+        b6.setColor(Color.GRAY);
+        exp2.add(b6);
+        experiments.add(exp2);
         Legend legend = new Legend(experiments, WIDTH);
         panel.add(legend);
         panel.toPngFile("legend.png");
