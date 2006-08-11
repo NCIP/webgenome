@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghDataTransformer.java,v $
-$Revision: 1.7 $
-$Date: 2006-05-26 17:13:43 $
+$Revision: 1.8 $
+$Date: 2006-08-11 18:53:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,6 +72,7 @@ public class AcghDataTransformer {
 	private static Logger LOGGER = Logger.getLogger(AcghDataTransformer.class.getName());
 	
 	/**
+	 * [Obsolete]
 	 * Transforms data for aCGH into an Experiment object
 	 * @param acghData
 	 * @return
@@ -104,6 +105,7 @@ public class AcghDataTransformer {
 	
 	
 	/**
+	 * [Obsolete]
 	 * Transforms data from an Experiment object into the form needed for aCGH
 	 * @param experiment
 	 * @return
@@ -192,59 +194,15 @@ public class AcghDataTransformer {
 	
 	
 	
-	//under construction
 	/**
-	 * Transforms data for aCGH into an Experiment object
-	 * @param acghData
-	 * @return
-	 */
-	public BioAssay transform(AcghData acghData, BioAssay origBioAssay) {
-		//System.out.println("transform(AcghData acghData, Experiment origExperiment)");
-		double[] smoothedRatios;  // smoothed value of log2 ratio
-
-		smoothedRatios = acghData.getSmoothedRatios();
-		
-		//System.out.println("smoothedRatios.length="+smoothedRatios.length);
-		
-		// make a deep copy of the original Experiment object to the new Experiment object
-		BioAssay newBioAssay = new BioAssay();
-		newBioAssay.bulkSet(origBioAssay, true);
-		
-		// iterate over ArrayDatum objects and insert each smoothed ratio value sequentially
-		ArrayDatumIterator arrayDatumIter = newBioAssay.arrayDatumIterator();
-
-		int i = 0;
-		for ( ; (arrayDatumIter.hasNext() && i<smoothedRatios.length) ; ) {
-			//System.out.println("for loop, i="+i);
-			ArrayDatum arrayDatum = arrayDatumIter.next();
-			//System.out.println("before:"+arrayDatum.getQuantitation().getValue());
-			LOGGER.debug("original ArrayDatum quantitation value = " + arrayDatum.getQuantitation().getValue());
-			arrayDatum.setMagnitude((float) smoothedRatios[i]);
-			//System.out.println("after:"+arrayDatum.getQuantitation().getValue());
-			LOGGER.debug("smoothed ArrayDatum quantiation value = " + arrayDatum.getQuantitation().getValue());
-			i++;
-		}
-		
-		return newBioAssay;		
-	}
-	
-	
-	
-	/**
-	 * Transforms data from an Experiment object into the form needed for aCGH
-	 * @param experiment
-	 * @return
+	 * Transforms data from an BioAssay object into the form needed for aCGH
+	 * @param assay The data given as a BioAssay object
+	 * @return Return transformed AcghData object
 	 */
 	public AcghData transform(BioAssay assay) {
 		AcghData acghData = new AcghData();
 		
-		// see if the Experiment object has any chromosomes.  if not, return empty object
-		Set chromosomeSet = assay.chromosomes();
-		int numChromosomes = chromosomeSet.size();
-		if (numChromosomes <= 0)
-			return acghData;
-		
-		// if Experiment object has any chromosomes, save data for aCGH in arrays
+		// if BioAssay object has any chromosomes, save data for aCGH in arrays
 		
 		double[] log2Ratios;      // log2 ratios of copy number changes
         		// rows correspond to the clones and columns to the samples
@@ -283,7 +241,6 @@ public class AcghDataTransformer {
 
 			log2Ratios[i] = (double) arrayDatum.getQuantitation().getValue();
 			clones[i] = arrayDatum.getReporter().getName();
-//			targets[i] = arrayDatum.getReporter().getId().toString();
 			targets[i] = arrayDatum.getReporter().getName();
 			chromosomes[i] = (int) arrayDatum.chromosome().getNumber();
 			positions[i] = (int) arrayDatum.getGenomeLocation().getLocation();
@@ -299,7 +256,36 @@ public class AcghDataTransformer {
 
 		return acghData;
 	}
+	
 
-	//under construction
+	/**
+	 * Transforms data for aCGH into an BioAssay object
+	 * @param acghData The data given as an AcghData object
+	 * @param origBioAssay The data of the original BioAssay object
+	 * @return Return transformed BioAssay object
+	 */
+	public BioAssay transform(AcghData acghData, BioAssay origBioAssay) {
+
+		double[] smoothedRatios;  // smoothed value of log2 ratio
+		smoothedRatios = acghData.getSmoothedRatios();
+		
+		// make a deep copy of the original BioAssay object to the new BioAssay object
+		BioAssay newBioAssay = new BioAssay();
+		newBioAssay.bulkSet(origBioAssay, true);
+		
+		// iterate over ArrayDatum objects and insert each smoothed ratio value sequentially
+		ArrayDatumIterator arrayDatumIter = newBioAssay.arrayDatumIterator();
+
+		int i = 0;
+		for ( ; (arrayDatumIter.hasNext() && i<smoothedRatios.length) ; ) {
+			ArrayDatum arrayDatum = arrayDatumIter.next();
+			LOGGER.debug("original ArrayDatum quantitation value = " + arrayDatum.getQuantitation().getValue());
+			arrayDatum.setMagnitude((float) smoothedRatios[i]);
+			LOGGER.debug("smoothed ArrayDatum quantiation value = " + arrayDatum.getQuantitation().getValue());
+			i++;
+		}
+		
+		return newBioAssay;		
+	}
 
 }
