@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AnalyticException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Source$
+$Revision$
+$Date$
 
 The Web CGH Software License, Version 1.0
 
@@ -51,46 +51,49 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.analytic;
+package org.rti.webcgh.analysis;
 
 import org.rti.webcgh.core.WebcghApplicationException;
 
 /**
- * Exceptions thrown when performing an analytic operation
+ * Exceptions thrown when performing an analytic operation.
  */
 public class AnalyticException extends WebcghApplicationException {
 	
+    /** Serialized verion ID. */
+    private static final long serialVersionUID = (long) 1;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public AnalyticException() {
 		super();
 	}
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param msg Message
 	 */
-	public AnalyticException(String msg) {
+	public AnalyticException(final String msg) {
 		super(msg);
 	}
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param origThrowable Original throwable
 	 */
-	public AnalyticException(Throwable origThrowable) {
+	public AnalyticException(final Throwable origThrowable) {
 		super();
 		nestedThrowable = origThrowable;
 	}
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param msg Message
 	 * @param origThrowable Original throwable
 	 */
-	public AnalyticException(String msg, Throwable origThrowable) {
+	public AnalyticException(final String msg,
+            final Throwable origThrowable) {
 		super(msg);
 		nestedThrowable = origThrowable;
 	}

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/ConsensusAlterationSegmentOperation.java,v $
-$Revision: 1.3 $
-$Date: 2006-08-03 21:52:18 $
+$Revision: 1.4 $
+$Date: 2006-08-17 18:54:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.array.ArrayDatum;
 import org.rti.webcgh.array.ArrayDatumIterator;
 import org.rti.webcgh.array.BioAssay;

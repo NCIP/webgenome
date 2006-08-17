@@ -69,7 +69,10 @@ public interface ScalarToScalarAnalyticOperation extends AnalyticOperation {
      * Perform operation.
      * @param input Input data
      * @return Output data
+     * @throws AnalyticException if an error occurs
+     * during this operation
      */
-    ChromosomeArrayData perform(ChromosomeArrayData input);
+    ChromosomeArrayData perform(ChromosomeArrayData input)
+        throws AnalyticException;
 
 }

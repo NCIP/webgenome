@@ -53,28 +53,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataContainingBioAssay;
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.QuantitationType;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Caption;
-import org.rti.webcgh.plot.Legend;
-import org.rti.webcgh.plot.PlotBoundaries;
-import org.rti.webcgh.plot.PlotPanel;
-import org.rti.webcgh.plot.ScatterPlot;
-import org.rti.webcgh.plot.ScatterPlotParameters;
+
 
 /**
  * Paints scatter plots using data that is
@@ -82,114 +64,23 @@ import org.rti.webcgh.plot.ScatterPlotParameters;
  * @author dhall
  *
  */
-public final class InMemoryScatterPlotPainter {
-    
-    
-    /** Padding around certain graphical elements in pixels. */
-    private static final int PADDING = 10;
-    
+public final class InMemoryScatterPlotPainter extends ScatterPlotPainter {
     
     /**
-     * Paints a scatter plot on the given drawing canvas.
-     * @param experiments Experiments to plot
-     * @param canvas Canvas upon which to paint
-     * @param plotParameters Plotting parameters specified
-     * by user
-     * @param width Width of plot in pixels
-     * @param height Height of plot in pixels
-     * @param quantitationType Quantitation type
-     * interval in base pairs
+     * Get chromosome array data associated with given
+     * bioassay and chromosome.
+     * @param bioAssay A bioassay
+     * @param chromosome Chromosome number
+     * @return Chromosome array data
      */
-    public void paintScatterPlot(final Collection<Experiment> experiments,
-            final DrawingCanvas canvas,
-            final ScatterPlotParameters plotParameters,
-            final int width, final int height,
-            final QuantitationType quantitationType) {
-        
-        // Check args
-        if (experiments == null || canvas == null) {
+    protected ChromosomeArrayData getChromosomeArrayData(
+            final BioAssay bioAssay, final short chromosome) {
+        if (!(bioAssay instanceof DataContainingBioAssay)) {
             throw new IllegalArgumentException(
-                    "Experiments and canvas cannot be null");
+                    "Bioassay must be of type DataContainingBioAssay");
         }
-        if (plotParameters.getChromosome() < 1
-                || plotParameters.getStartLocation() < 0
-                || plotParameters.getEndLocation() < 0
-                || plotParameters.getEndLocation()
-                    < plotParameters.getStartLocation()) {
-            throw new IllegalArgumentException("Invalid genome interval: "
-                    + plotParameters.getChromosome() + ":"
-                    + plotParameters.getStartLocation() + "-"
-                    + plotParameters.getEndLocation());
-        }
-        if (!Float.isNaN(plotParameters.getMinY())
-                && !Float.isNaN(plotParameters.getMaxY())
-                && plotParameters.getMinY() > plotParameters.getMaxY()) {
-            throw new IllegalArgumentException("Invalid plot range: "
-                    + plotParameters.getMinY() + " - "
-                    + plotParameters.getMaxY());
-        }
-        
-        PlotPanel panel = new PlotPanel(canvas);
-        
-        // Paint plot
-        List<ChromosomeArrayData> cads = new ArrayList<ChromosomeArrayData>();
-        List<String> names = new ArrayList<String>();
-        List<Color> colors = new ArrayList<Color>();
-        for (Experiment experiment : experiments) {
-            for (BioAssay ba : experiment.getBioAssays()) {
-                if (!(ba instanceof DataContainingBioAssay)) {
-                    throw new IllegalArgumentException(
-                            "Bioassay must be of type DataContainingBioAssay");
-                }
-                ChromosomeArrayData cad = ((DataContainingBioAssay) ba)
-                    .getChromosomeArrayData(plotParameters.getChromosome());
-                cads.add(cad);
-                names.add(ba.getName());
-                colors.add(ba.getColor());
-            }
-        }
-        PlotBoundaries pb = new PlotBoundaries(
-                (double) plotParameters.getStartLocation(),
-                (double) plotParameters.getMinY(),
-                (double) plotParameters.getEndLocation(),
-                (double) plotParameters.getMaxY());
-        ScatterPlot scatterPlot =
-            new ScatterPlot(cads, names, colors, width, height, pb);
-        panel.add(scatterPlot);
-        
-        // X-axis
-        Axis xAxis = new Axis(plotParameters.getStartLocation(),
-                plotParameters.getEndLocation(), scatterPlot.width(),
-                Orientation.HORIZONTAL, Location.BELOW);
-        String captionText = "Chromosome " + plotParameters.getChromosome()
-            + " (" + plotParameters.getUnits().getName() + ")";
-        Caption xCaption = new Caption(captionText,
-                Orientation.HORIZONTAL, false);
-        panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED, true);
-        panel.add(xCaption, HorizontalAlignment.CENTERED,
-                VerticalAlignment.BELOW);
-        
-        // Y-axis
-        Axis yAxis = new Axis(plotParameters.getMinY(),
-                plotParameters.getMaxY(), scatterPlot.height(),
-                Orientation.VERTICAL, Location.LEFT_OF);
-        Caption yCaption = new Caption(
-                quantitationType.getName(),
-                Orientation.HORIZONTAL, true);
-        panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(yCaption, HorizontalAlignment.LEFT_OF,
-                VerticalAlignment.CENTERED);
-        
-        // Legend
-        Legend legend = new Legend(experiments, scatterPlot.width());
-        panel.add(legend, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BELOW);
-        
-        // Set dimensions of canvas
-        canvas.setOrigin(panel.topLeftPoint());
-        canvas.setWidth(panel.width());
-        canvas.setHeight(panel.height() + PADDING);
+        return ((DataContainingBioAssay) bioAssay)
+            .getChromosomeArrayData(chromosome);
     }
+
 }

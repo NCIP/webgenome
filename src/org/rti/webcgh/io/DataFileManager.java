@@ -191,7 +191,8 @@ public final class DataFileManager {
         LOGGER.info("Serializing array data");
         List<String> baNames = in.getBioAssayNames();
         for (String name : baNames) {
-            DataSerializedBioAssay ba = new DataSerializedBioAssay(name, organism);
+            DataSerializedBioAssay ba =
+                new DataSerializedBioAssay(name, organism);
             exp.add(ba);
             ba.setArray(array);
             BioAssayData bad = in.getBioAssayData(name, true);
@@ -498,7 +499,5 @@ public final class DataFileManager {
             this.value = value;
             this.error = error;
         }
-        
-        
     }
 }

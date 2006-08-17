@@ -89,7 +89,7 @@ public class ChromosomeArrayData implements Serializable {
      */
     private Long bioAssayDataId = null;
     
-    /** Array data from chromosome. */
+    /** Array data from chromosome. This list is kept sorted. */
     private List<ArrayDatum> arrayData = new ArrayList<ArrayDatum>();
     
     /** Chromosome number. */

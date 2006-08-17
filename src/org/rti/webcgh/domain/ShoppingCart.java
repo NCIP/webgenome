@@ -79,6 +79,11 @@ public class ShoppingCart implements Serializable {
    
     /** User name associated with cart. */
     private String userName = null;
+    
+    
+    // =============================
+    //     Getters/setters
+    // =============================
 
     /**
      * Get identifier used as a primary key in persitence.

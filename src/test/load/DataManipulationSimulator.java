@@ -59,6 +59,7 @@ import java.util.Collection;
 import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
+import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.SlidingWindowSmoother;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -299,7 +300,11 @@ public class DataManipulationSimulator {
                                     (DataSerializedBioAssay) ba, chrom);
                         SlidingWindowSmoother smoother =
                             new SlidingWindowSmoother();
-                        ChromosomeArrayData out = smoother.perform(in);
+                        try {
+                            ChromosomeArrayData out = smoother.perform(in);
+                        } catch (AnalyticException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
                 LOGGER.info("Completed simulation iteration " + (i + 1));

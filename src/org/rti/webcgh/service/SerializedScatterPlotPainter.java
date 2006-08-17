@@ -51,62 +51,70 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.analysis.unit_test;
+package org.rti.webcgh.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.rti.webcgh.analysis.SlidingWindowSmoother;
-import org.rti.webcgh.domain.ArrayDatum;
+import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
-import org.rti.webcgh.domain.Reporter;
-
-import junit.framework.TestCase;
+import org.rti.webcgh.domain.DataSerializedBioAssay;
+import org.rti.webcgh.io.DataFileManager;
 
 /**
- * Tester for <code>SlidingWindowSmoother</code>.
+ * Implementation of <code>ScatterPlotPainter</code> where
+ * chromosome array data has been serialized.
  * @author dhall
  *
  */
-public final class SlidingWindowSmootherTester extends TestCase {
+public final class SerializedScatterPlotPainter extends ScatterPlotPainter {
     
-
+    // ============================
+    //       Attributes
+    // ============================
+    
+    
     /**
-     * Test perform() method.
-     * @throws Exception if an error occurs
+     * Data file manager used to retrieve serialized
+     * chromosome array data.  Should be injected.
      */
-    public void testPerform() throws Exception {
-        
-        // Setup input data set
-        ChromosomeArrayData in = new ChromosomeArrayData((short) 1);
-        Reporter r = new Reporter("r1", (short) 1, (long) 100);
-        in.add(new ArrayDatum((float) 1.0, r));
-        in.add(new ArrayDatum((float) 2.0,
-                new Reporter("r1", (short) 1, (long) 200)));
-        in.add(new ArrayDatum((float) 3.0,
-                new Reporter("r1", (short) 1, (long) 300)));
-        in.add(new ArrayDatum((float) 4.0,
-                new Reporter("r1", (short) 1, (long) 400)));
-        in.add(new ArrayDatum((float) 5.0,
-                new Reporter("r1", (short) 1, (long) 500)));
-        in.add(new ArrayDatum((float) 6.0,
-                new Reporter("r1", (short) 1, (long) 600)));
-        in.add(new ArrayDatum((float) 7.0,
-                new Reporter("r1", (short) 1, (long) 700)));
-        
-        // Perform operation
-        SlidingWindowSmoother smoother = new SlidingWindowSmoother();
-        smoother.setWindowSize(5);
-        ChromosomeArrayData out = smoother.perform(in);
-        
-        // Check output
-        List<ArrayDatum> data = new ArrayList<ArrayDatum>(out.getArrayData());
-        assertEquals(in.getArrayData().size(), data.size());
-        assertEquals(r, data.get(0).getReporter());
-        assertEquals((float) 2.0, data.get(0).getValue());
-        assertEquals((float) 0.0, data.get(0).getError());
-        assertEquals((float) 4.0, data.get(3).getValue());
-        assertEquals((float) 22.0 / (float) 4.0, data.get(5).getValue());
+    private DataFileManager dataFileManager = null;
+    
+    
+    // =========================
+    //     Setters
+    // =========================
+    
+    /**
+     * Set data file manager.  This method should
+     * be used for injection.
+     * @param dataFileManager Data file manager used
+     * to retrieve serialized chromosome array data
+     */
+    public void setDataFileManager(final DataFileManager dataFileManager) {
+        this.dataFileManager = dataFileManager;
     }
+    
+    
+    // ================================
+    //   Implemented abstract methods
+    // ================================
+    
+    /**
+     * Get chromosome array data associated with given
+     * bioassay and chromosome.
+     * @param bioAssay A bioassay
+     * @param chromosome Chromosome number
+     * @return Chromosome array data
+     */
+    protected ChromosomeArrayData getChromosomeArrayData(
+            final BioAssay bioAssay, final short chromosome) {
+        if (!(bioAssay instanceof DataSerializedBioAssay)) {
+            throw new IllegalArgumentException(
+                    "Bioassay must be of type DataSerializedBioAssay");
+        }
+        return this.dataFileManager.loadChromosomeArrayData(
+                (DataSerializedBioAssay) bioAssay, chromosome);
+    }
+
+
+
 
 }

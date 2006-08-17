@@ -122,54 +122,64 @@ public final class SlidingWindowSmoother
      * the same <code>Reporter</code> objects as the input.
      * @param input Input data
      * @return Output data
+     * @throws AnalyticException if an error occurs
+     * during this operation
      */
-    public ChromosomeArrayData perform(final ChromosomeArrayData input) {
+    public ChromosomeArrayData perform(final ChromosomeArrayData input)
+        throws AnalyticException {
         LOGGER.debug("Running sliding window smoother with window size = "
                 + this.windowSize);
         
         ChromosomeArrayData out =
             new ChromosomeArrayData(input.getChromosome());
-        List<ArrayDatum> arrayData = input.getArrayData();
         
-        // Calculate number of reporters to left and right
-        // boundaries of window from the "center"
-        int numBack = (int) Math.floor((double) this.windowSize / 2.0);
-        int numForward = (int) Math.floor((double) this.windowSize / 2.0);
-        if (this.windowSize % 2 == 0) {
-            numForward++;
-        }
-        LOGGER.debug("Number of reporters to left of center = " + numBack);
-        LOGGER.debug("Number of reporters to right of center = " + numForward);
-        
-        // Smooth data
-        int indexLastDatum = arrayData.size() - 1;
-        for (int i = 0; i < arrayData.size(); i++) {
-            ArrayDatum center = arrayData.get(i);
-            int p = i - numBack;
-            if (p < 0) {
-                p = 0;
+        try {
+            List<ArrayDatum> arrayData = input.getArrayData();
+            
+            // Calculate number of reporters to left and right
+            // boundaries of window from the "center"
+            int numBack = (int) Math.floor((double) this.windowSize / 2.0);
+            int numForward = (int) Math.floor((double) this.windowSize / 2.0);
+            if (this.windowSize % 2 == 0) {
+                numForward++;
             }
-            int q = i + numForward;
-            if (q > indexLastDatum) {
-                q = indexLastDatum;
-            }
-            float totalValue = (float) 0.0;
-            float totalError = (float) 0.0;
-            for (int j = p; j <= q; j++) {
-                ArrayDatum ad = arrayData.get(j);
-                if (!Float.isNaN(ad.getValue())) {
-                    totalValue += ad.getValue();
+            LOGGER.debug("Number of reporters to left of center = " + numBack);
+            LOGGER.debug("Number of reporters to right of center = "
+                    + numForward);
+            
+            // Smooth data
+            int indexLastDatum = arrayData.size() - 1;
+            for (int i = 0; i < arrayData.size(); i++) {
+                ArrayDatum center = arrayData.get(i);
+                int p = i - numBack;
+                if (p < 0) {
+                    p = 0;
                 }
-                if (!Float.isNaN(ad.getError())) {
-                    totalError += ad.getValue();
+                int q = i + numForward;
+                if (q > indexLastDatum) {
+                    q = indexLastDatum;
                 }
+                float totalValue = (float) 0.0;
+                float totalError = (float) 0.0;
+                for (int j = p; j <= q; j++) {
+                    ArrayDatum ad = arrayData.get(j);
+                    if (!Float.isNaN(ad.getValue())) {
+                        totalValue += ad.getValue();
+                    }
+                    if (!Float.isNaN(ad.getError())) {
+                        totalError += ad.getValue();
+                    }
+                }
+                float actualWindowSize = (float) (q - p) + (float) 1.0;
+                float smoothedValue = totalValue / actualWindowSize;
+                float smoothedError = totalError / actualWindowSize;
+                ArrayDatum smoothedDatum = new ArrayDatum(smoothedValue,
+                        smoothedError, center.getReporter());
+                out.add(smoothedDatum);
             }
-            float actualWindowSize = (float) (q - p) + (float) 1.0;
-            float smoothedValue = totalValue / actualWindowSize;
-            float smoothedError = totalError / actualWindowSize;
-            ArrayDatum smoothedDatum = new ArrayDatum(smoothedValue,
-                    smoothedError, center.getReporter());
-            out.add(smoothedDatum);
+        } catch (Exception e) {
+            throw new AnalyticException(
+                    "Error performing sliding window smoothing", e);
         }
         
         LOGGER.debug("Completed sliding window smoothing");

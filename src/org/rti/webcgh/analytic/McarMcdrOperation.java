@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/McarMcdrOperation.java,v $
-$Revision: 1.5 $
-$Date: 2006-08-03 21:52:18 $
+$Revision: 1.6 $
+$Date: 2006-08-17 18:54:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ package org.rti.webcgh.analytic;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.ChromosomalAlterationSet;

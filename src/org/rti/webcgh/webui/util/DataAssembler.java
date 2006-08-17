@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/DataAssembler.java,v $
-$Revision: 1.7 $
-$Date: 2006-08-03 21:52:19 $
+$Revision: 1.8 $
+$Date: 2006-08-17 18:54:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,7 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.rti.webcgh.analytic.AnalyticException;
+import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analytic.AnalyticOperation;
 import org.rti.webcgh.analytic.AnalyticPipeline;
 import org.rti.webcgh.analytic.DataSetInvalidationException;

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AcghOperation.java,v $
-$Revision: 1.10 $
-$Date: 2006-08-11 18:53:02 $
+$Revision: 1.11 $
+$Date: 2006-08-17 18:54:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,14 +55,14 @@ package org.rti.webcgh.analytic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.ArrayDatumIterator;
+import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.service.AcghService;
+
+
 
 /**
  * The analytic operation for aCGH data smoothing
@@ -112,45 +112,9 @@ public class AcghOperation implements NormalizationOperation {
 	 */
 	public DataSetInvalidations validate(Experiment[] data,
 			PlotParameters params) {
-		
-		DataSetInvalidations invalid = new DataSetInvalidations();
-		
-		for (int i = 0; i < data.length; i++) {
-			Experiment exp = data[i];
-			
-			BioAssay assay;
-			List<BioAssay> origAssays = (List<BioAssay>) exp.getBioAssays();
-			
-			// to varify chromosome numbers
-			for (int j = 0; j < origAssays.size(); j++) {
-				assay = origAssays.get(j);
-				
-				Set chromosomeSet = assay.chromosomes();
-				// CASE: assay does not contain choromosome information
-				if (chromosomeSet.size() <= 0) {
-					invalid.addInvalidation(new DataSetInvalidation("Selected dataset doesn't contain chromosome information"));
-				}
-
-				// CASE: choromosome equals to zero or negative number
-				ArrayDatumIterator arrayDatumIter = assay.arrayDatumIterator();
-				ArrayDatum arrayDatum = null;
-				int chr = 0;
-				for ( int k = 0; arrayDatumIter.hasNext() ; k++ ) {
-					arrayDatum = arrayDatumIter.next(); 
-					chr = (int) arrayDatum.chromosome().getNumber();
-					if (chr <= 0) {
-						invalid.addInvalidation(new DataSetInvalidation("Invalid Chromosome Number: " + chr));
-				        break;
-					}
-					arrayDatumIter.next();
-				}
-			}
-		}
-		
-		return invalid;
+		// TODO Auto-generated method stub
+		return null;
 	}
-
-	
 
 	/**
 	 * Executes this analytic pipeline operation on the input data and returns the results
@@ -160,7 +124,7 @@ public class AcghOperation implements NormalizationOperation {
 	 */
 	public Experiment[] perform(Experiment[] data, PlotParameters params)
 			throws AnalyticException {
-		
+
 		Experiment[] resultData = new Experiment[data.length];
 		
 		try {

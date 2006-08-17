@@ -71,8 +71,10 @@ public interface ListToListAnalyticOperation extends AnalyticOperation {
      * Perform operation.
      * @param input Input data
      * @return Output data
+     * @throws AnalyticException if an error occurs
+     * during this operation
      */
     List<ChromosomeArrayData> perform(
-            List<ChromosomeArrayData> input);
+            List<ChromosomeArrayData> input) throws AnalyticException;
 
 }

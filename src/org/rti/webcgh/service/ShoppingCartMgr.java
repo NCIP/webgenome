@@ -56,6 +56,7 @@ package org.rti.webcgh.service;
 import java.io.File;
 
 import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.io.SmdFormatException;
 
 
@@ -67,29 +68,6 @@ import org.rti.webcgh.io.SmdFormatException;
 public interface ShoppingCartMgr {
     
     
-    /**
-     * Load data from SMD-format file into the shopping
-     * cart belonging to given user.  The result is that
-     * a new experiment is created and persisted in the
-     * shopping cart> (i.e., All data are added to a new
-     * experiment object)  Bioassay data are also persisted
-     * (outside of the shopping cart).
-     * @param file SMD-format data file
-     * @param userName User name
-     * @param organism Organism that experiment was run on.
-     * @throws SmdFormatException if file does not comply with
-     * the SMD file format specification
-     */
-    void loadSmdFile(File file, String userName, Organism organism)
-        throws SmdFormatException;
-    
-    
-    /**
-     * Clear contents of shopping cart associated with
-     * given user.  Bioassay data associated with experiments
-     * in the cart will also be deleted.
-     * @param userName User name
-     */
-    public void clear(String userName);
+    ShoppingCart getShoppingCart(String userName);
 
 }
