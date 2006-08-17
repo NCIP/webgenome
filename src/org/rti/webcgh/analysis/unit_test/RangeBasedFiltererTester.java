@@ -65,7 +65,7 @@ import junit.framework.TestCase;
  * @author dhall
  *
  */
-public class RangeBasedFiltererTester extends TestCase {
+public final class RangeBasedFiltererTester extends TestCase {
     
     /**
      * Tests perform() method.

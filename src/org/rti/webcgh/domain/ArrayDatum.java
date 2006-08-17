@@ -165,6 +165,16 @@ public class ArrayDatum implements Serializable {
         
     }
     
+    /**
+     * Deep-copy based constructor.
+     * @param arrayDatum An array datum
+     */
+    public ArrayDatum(final ArrayDatum arrayDatum) {
+        this.error = arrayDatum.error;
+        this.reporter = arrayDatum.reporter;
+        this.value = arrayDatum.value;
+    }
+    
     
     /**
      * Constructor.
