@@ -53,18 +53,106 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.Map;
+
+import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
- * Represents an analytic operation.
+ * Performs "simple" normalization, subtracting
+ * either mean or median value of bioassay
+ * from all values to bring to mean or median,
+ * respectively, to 0.
  * @author dhall
  *
  */
-public interface AnalyticOperation {
+public final class SimpleBioAssayNormalizer
+    implements StatefulBioAssayAnalyticOperation {
+    
+    // =================================
+    //        Attributes
+    // =================================
+    
+    /** Use median in calculation instead of mean. */
+    private boolean useMedian = false;
+    
+    
+    // =========================
+    //    Getters/setters
+    // =========================
+    
+    
+    /**
+     * Use median instead of mean
+     * in calculations?
+     * @return T/F
+     */
+    public boolean isUseMedian() {
+        return useMedian;
+    }
 
+
+    /**
+     * User median instead of mean
+     * in calculations?
+     * @param useMedian T/F
+     */
+    public void setUseMedian(final boolean useMedian) {
+        this.useMedian = useMedian;
+    }
+    
+    
+    // =====================================
+    //  StatefulBioAssayAnalyticOperation
+    // =====================================
+
+    /**
+     * Adjust the state of this operation.
+     * @param chromosomeArrayData Chromosome array
+     * data that will modify the internal state
+     * @throws AnalyticException if there is a
+     * computational error
+     */
+    public void adjustState(
+            final ChromosomeArrayData chromosomeArrayData)
+        throws AnalyticException {
+        
+    }
+    
+    
+    /**
+     * Perform operation.
+     * @param input Input data
+     * @return Output data
+     * @throws AnalyticException if an error occurs
+     * during this operation
+     */
+    public ChromosomeArrayData perform(
+            final ChromosomeArrayData input)
+        throws AnalyticException {
+        return null;
+    }
+    
+    
     /**
      * Get name of operation.
      * @return Name of operation
      */
-    String getName();
+    public String getName() {
+        return "Simple array-based normalization";
+    }
     
+    /**
+     * Return configurable properties.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users.
+     * @return Configurable properties.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users
+     */
+    public Map<String, String> getConfigurableProperties() {
+        return null;
+    }
+
 }

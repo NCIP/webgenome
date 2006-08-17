@@ -53,8 +53,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.ArrayDatum;
@@ -72,7 +74,8 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
  *
  */
 public final class SlidingWindowSmoother
-    implements ScalarToScalarAnalyticOperation {
+    implements ScalarToScalarAnalyticOperation,
+    UserConfigurable {
     
     /** Logger. */
     private static final Logger LOGGER =
@@ -187,5 +190,45 @@ public final class SlidingWindowSmoother
     }
 
 
-
+    /**
+     * Get name of operation.
+     * @return Name of operation
+     */
+    public String getName() {
+        return "Sliding window smoother";
+    }
+    
+    
+    // ==========================
+    //   UserConfigurable
+    // ==========================
+    
+    /**
+     * Return simple configurable properties
+     * that would input through a text box.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users.
+     * @return Configurable properties.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users
+     */
+    public Map<String, String> getSimpleProperties() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("windowSize", "Window size");
+        return map;
+    }
+    
+    
+    /**
+     * Get properties that represent
+     * choices in a combox box.  Keys
+     * are property names and values
+     * option lists.
+     * @return Configurable properties
+     */
+    public Map<String, Collection<String>> getOptionProperties() {
+        return null;
+    }
 }

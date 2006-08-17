@@ -53,18 +53,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-
 /**
- * Represents an analytic operation.
+ * Represents a stateful analytic operation where the state
+ * should be adjusted by all data from an entire bioassay
+ * before performing the actual operation.
  * @author dhall
  *
  */
-public interface AnalyticOperation {
+public interface StatefulBioAssayAnalyticOperation
+    extends StatefulAnalyticOperation {
 
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    String getName();
-    
 }

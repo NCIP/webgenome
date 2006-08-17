@@ -55,7 +55,9 @@ package org.rti.webcgh.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -126,6 +128,14 @@ public final class Averager implements ListToScalarAnalyticOperation {
         return output;
     }
     
+    
+    /**
+     * Get name of operation.
+     * @return Name of operation
+     */
+    public String getName() {
+        return "Average";
+    }
     
     /**
      * Class responsble for finding matching

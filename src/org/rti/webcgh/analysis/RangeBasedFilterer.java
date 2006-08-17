@@ -53,6 +53,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
@@ -64,7 +68,7 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
  *
  */
 public final class RangeBasedFilterer implements
-    ScalarToScalarAnalyticOperation {
+    ScalarToScalarAnalyticOperation, UserConfigurable {
     
     
     // =====================
@@ -143,6 +147,9 @@ public final class RangeBasedFilterer implements
     }
 
 
+    // ====================================
+    //   ScalarToScalarAnalyticOperation
+    // ====================================
 
     /**
      * Perform operation.
@@ -165,5 +172,49 @@ public final class RangeBasedFilterer implements
             }
         }
         return output;
+    }
+    
+    
+    /**
+     * Get name of operation.
+     * @return Name of operation
+     */
+    public String getName() {
+        return "Range-based data filter";
+    }
+    
+    
+    // =============================
+    //      UserConfigurable
+    // =============================
+    
+    /**
+     * Return simple configurable properties
+     * that would input through a text box.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users.
+     * @return Configurable properties.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users
+     */
+    public Map<String, String> getSimpleProperties() {
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("min", "Lower bound");
+        map.put("max", "Upper bound");
+        return map;
+    }
+    
+    
+    /**
+     * Get properties that represent
+     * choices in a combox box.  Keys
+     * are property names and values
+     * option lists.
+     * @return Configurable properties
+     */
+    public Map<String, Collection<String>> getOptionProperties() {
+        return null;
     }
 }

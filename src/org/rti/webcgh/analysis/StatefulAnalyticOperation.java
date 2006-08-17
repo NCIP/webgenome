@@ -53,18 +53,27 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
- * Represents an analytic operation.
+ * A "scalar-to-scalar" anlaytic operation that maintains
+ * some sort of internal state that
+ * affects subsequent operations.
  * @author dhall
  *
  */
-public interface AnalyticOperation {
-
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    String getName();
+public interface StatefulAnalyticOperation
+    extends ScalarToScalarAnalyticOperation {
     
+    
+    /**
+     * Adjust the state of this operation.
+     * @param chromosomeArrayData Chromosome array
+     * data that will modify the internal state
+     * @throws AnalyticException if there is a
+     * computational error
+     */
+    void adjustState(ChromosomeArrayData chromosomeArrayData)
+        throws AnalyticException;
+
 }

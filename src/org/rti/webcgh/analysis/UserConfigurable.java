@@ -53,18 +53,36 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * Represents an analytic operation.
+ * Represents classes that are configurable
+ * by a user at runtime.
  * @author dhall
  *
  */
-public interface AnalyticOperation {
+public interface UserConfigurable {
 
     /**
-     * Get name of operation.
-     * @return Name of operation
+     * Return simple configurable properties
+     * that would input through a text box.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users.
+     * @return Configurable properties.
+     * Keys are property names and values
+     * the corresponding text that would
+     * be displayed by users
      */
-    String getName();
+    Map<String, String> getSimpleProperties();
     
+    /**
+     * Get properties that represent
+     * choices in a combox box.  Keys
+     * are property names and values
+     * option lists.
+     * @return Configurable properties
+     */
+    Map<String, Collection<String>> getOptionProperties();
 }
