@@ -75,5 +75,12 @@ public interface StatefulAnalyticOperation
      */
     void adjustState(ChromosomeArrayData chromosomeArrayData)
         throws AnalyticException;
+    
+    
+    /**
+     * Reset state of operation.
+     *
+     */
+    void resetState();
 
 }

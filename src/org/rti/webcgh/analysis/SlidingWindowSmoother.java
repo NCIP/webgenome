@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -203,32 +204,15 @@ public final class SlidingWindowSmoother
     //   UserConfigurable
     // ==========================
     
-    /**
-     * Return simple configurable properties
-     * that would input through a text box.
-     * Keys are property names and values
-     * the corresponding text that would
-     * be displayed by users.
-     * @return Configurable properties.
-     * Keys are property names and values
-     * the corresponding text that would
-     * be displayed by users
-     */
-    public Map<String, String> getSimpleProperties() {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("windowSize", "Window size");
-        return map;
-    }
-    
     
     /**
-     * Get properties that represent
-     * choices in a combox box.  Keys
-     * are property names and values
-     * option lists.
-     * @return Configurable properties
+     * Get user configurable properties.
+     * @return User configurable properties
      */
-    public Map<String, Collection<String>> getOptionProperties() {
-        return null;
+    public List<UserConfigurableProperty> getUserConfigurableProperties() {
+       List<UserConfigurableProperty> props =
+           new ArrayList<UserConfigurableProperty>();
+       props.add(new UserConfigurableProperty("windowSize", "Window size"));
+       return props;
     }
 }

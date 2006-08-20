@@ -53,17 +53,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-
 /**
  * Performs "simple" normalization, subtracting
  * either mean or median value of bioassay
  * from all values to bring to mean or median,
  * respectively, to 0.  Intended to be used
- * to normalize all data from a single bioassay.
+ * to normalize all data from a single experiment.
  * @author dhall
  *
  */
-public final class SimpleBioAssayNormalizer extends SimpleNormalizer
+public final class SimpleExperimentNormalizer extends SimpleNormalizer
     implements StatefulBioAssayAnalyticOperation {
     
     /**
@@ -71,6 +70,7 @@ public final class SimpleBioAssayNormalizer extends SimpleNormalizer
      * @return Name of operation
      */
     public String getName() {
-        return "Simple bioassay-based normalization";
+        return "Simple experiment-based normalization";
     }
+
 }

@@ -53,24 +53,98 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-
 /**
- * Performs "simple" normalization, subtracting
- * either mean or median value of bioassay
- * from all values to bring to mean or median,
- * respectively, to 0.  Intended to be used
- * to normalize all data from a single bioassay.
+ * Represents some property of an <code>AnalyticOperation</code>
+ * that can be configured by the user at run time.
  * @author dhall
  *
  */
-public final class SimpleBioAssayNormalizer extends SimpleNormalizer
-    implements StatefulBioAssayAnalyticOperation {
+public class UserConfigurableProperty {
+    
+    
+    // ===============================
+    //      Attributes
+    // ===============================
     
     /**
-     * Get name of operation.
-     * @return Name of operation
+     * Name of property.  Corresponds to property name
+     * of an <code>AnalyticOperation</code>.
      */
-    public String getName() {
-        return "Simple bioassay-based normalization";
+    private String name = null;
+    
+    /** Name of property that would be displayed to users. */
+    private String displayName = null;
+    
+    
+    // ============================
+    //     Getters/setters
+    // ============================
+    
+    /**
+     * Set name of property that is displayed to users.
+     * @param displayName Name of property that is displayed
+     * to users
+     */
+    public final void setDisplayName(final String displayName) {
+        this.displayName = displayName;
+    }
+
+    /**
+     * Set name of the property.  This should
+     * correspond to the actual property
+     * in an <code>AnalyticOperation</code>
+     * class.
+     * @param name Name of configurable property
+     */
+    public final void setName(final String name) {
+        this.name = name;
+    }
+
+
+    /**
+     * Get name of the property.  This should
+     * correspond to the actual property
+     * in an <code>AnalyticOperation</code>
+     * class.
+     * @return Name of configurable property
+     */
+    public final String getName() {
+        return this.name;
+    }
+    
+    
+    /**
+     * Get name of property that would actually
+     * be displayed to the user.
+     * @return Display name of property
+     */
+    public final String getDisplayName() {
+        return this.displayName;
+    }
+    
+    
+    // ============================
+    //      Constructors
+    // ============================
+    
+    /**
+     * Constructor.
+     */
+    public UserConfigurableProperty() {
+        
+    }
+    
+    
+    /**
+     * Constructor.
+     * @param name Name of property that corresponds to the
+     * actual property within a <code>AnalyticOperation</code>
+     * @param displayName Name of property displayed to
+     * users
+     */
+    public UserConfigurableProperty(final String name,
+            final String displayName) {
+        this.name = name;
+        this.displayName = displayName;
     }
 }

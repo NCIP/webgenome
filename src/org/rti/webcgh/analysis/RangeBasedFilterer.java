@@ -53,8 +53,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.rti.webcgh.domain.ArrayDatum;
@@ -189,32 +191,14 @@ public final class RangeBasedFilterer implements
     // =============================
     
     /**
-     * Return simple configurable properties
-     * that would input through a text box.
-     * Keys are property names and values
-     * the corresponding text that would
-     * be displayed by users.
-     * @return Configurable properties.
-     * Keys are property names and values
-     * the corresponding text that would
-     * be displayed by users
+     * Get user configurable properties.
+     * @return User configurable properties
      */
-    public Map<String, String> getSimpleProperties() {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("min", "Lower bound");
-        map.put("max", "Upper bound");
-        return map;
-    }
-    
-    
-    /**
-     * Get properties that represent
-     * choices in a combox box.  Keys
-     * are property names and values
-     * option lists.
-     * @return Configurable properties
-     */
-    public Map<String, Collection<String>> getOptionProperties() {
-        return null;
+    public List<UserConfigurableProperty> getUserConfigurableProperties() {
+       List<UserConfigurableProperty> props =
+           new ArrayList<UserConfigurableProperty>();
+       props.add(new UserConfigurableProperty("min", "Lower bound"));
+       props.add(new UserConfigurableProperty("max", "Upper bound"));
+       return props;
     }
 }
