@@ -122,7 +122,7 @@ public class DataContainingBioAssay extends BioAssay {
 
 
     /**
-     * Constructor
+     * Constructor.
      * @param name Bioassay name
      * @param organism Organism that was subject of bioassay
      */
@@ -162,7 +162,7 @@ public class DataContainingBioAssay extends BioAssay {
      * Add given array datum.
      * @param datum A datum
      */
-    public final void add(ArrayDatum datum) {
+    public final void add(final ArrayDatum datum) {
         short chromosome = datum.getReporter().getChromosome();
         ChromosomeArrayData cad = this.getChromosomeArrayData(chromosome);
         if (cad == null) {
@@ -170,6 +170,17 @@ public class DataContainingBioAssay extends BioAssay {
             this.chromosomeArrayDataIndex.put(chromosome, cad);
         }
         cad.add(datum);
+    }
+    
+    
+    /**
+     * Add given chromosome array data replacing any data.
+     * from the same chromosome
+     * @param chromosomeArrayData Chromosome array data
+     */
+    public final void put(final ChromosomeArrayData chromosomeArrayData) {
+        this.chromosomeArrayDataIndex.put(
+                chromosomeArrayData.getChromosome(), chromosomeArrayData);
     }
 
 }

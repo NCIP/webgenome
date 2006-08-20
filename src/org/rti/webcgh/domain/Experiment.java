@@ -179,6 +179,18 @@ public class Experiment implements Serializable {
     public Experiment(final String name) {
         this.name = name;
     }
+    
+    
+    /**
+     * Constructor.
+     * @param name Name of experiment
+     * @param quantitationType Quantitation type
+     */
+    public Experiment(final String name,
+            final QuantitationType quantitationType) {
+        this.name = name;
+        this.quantitationType = quantitationType;
+    }
         
     
     // ====================================

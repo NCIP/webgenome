@@ -261,6 +261,33 @@ public final class DataFileManager {
     }
     
     
+    
+    /**
+     * Save chromsome array data to disk.
+     * @param bioAssay Bioassay to which chromosome array data
+     * is associated
+     * @param chromosomeArrayData Chromosome array data
+     */
+    public void saveChromosomeArrayData(final DataSerializedBioAssay bioAssay,
+            final ChromosomeArrayData chromosomeArrayData) {
+        Array array = bioAssay.getArray();
+        if (array == null || array.getChromosomeReportersFileName(
+                chromosomeArrayData.getChromosome()) == null) {
+            throw new IllegalArgumentException(
+                    "Cannot save chromosome array data if reporters have not "
+                    + "already been saved.");
+        }
+        ArrayDataAttributes ada = new ArrayDataAttributes();
+        for (ArrayDatum ad : chromosomeArrayData.getArrayData()) {
+            ada.add(new ArrayDatumAttributes(ad.getValue(),
+                    ad.getError()));
+        }
+        long id = this.serializer.serialize(ada);
+        bioAssay.setFileName(chromosomeArrayData.getChromosome(),
+                String.valueOf(id));
+    }
+    
+    
     /**
      * Delete files associated with given experiment.
      * @param exp An experiment

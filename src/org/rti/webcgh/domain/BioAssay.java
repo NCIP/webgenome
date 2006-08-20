@@ -201,6 +201,20 @@ public abstract class BioAssay implements Serializable {
     }
     
     
+    /**
+     * Constructor.
+     * @param name Name of bioassay
+     * @param organism Organism that was tested
+     * @param array Array
+     */
+    public BioAssay(final String name, final Organism organism,
+            final Array array) {
+        this.name = name;
+        this.organism = organism;
+        this.array = array;
+    }
+    
+    
     // ===================================
     //    Business methods
     // ===================================
