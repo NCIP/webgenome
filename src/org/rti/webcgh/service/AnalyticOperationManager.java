@@ -58,7 +58,7 @@ import java.util.List;
 
 import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.AnalyticOperation;
-import org.rti.webcgh.analysis.ListToListAnalyticOperation;
+import org.rti.webcgh.analysis.AnalyticPipeline;
 import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.StatefulBioAssayAnalyticOperation;
@@ -131,19 +131,35 @@ public class AnalyticOperationManager {
      */
     public final Experiment perform(final Experiment input,
             final AnalyticOperation operation) throws AnalyticException {
+        String experimentName = input.getName() + " " + operation.getName();
         Experiment output =
-            new Experiment(input.getName(), input.getQuantitationType());
+            new Experiment(experimentName, input.getQuantitationType());
+        this.perform(input, output, operation, true);
+        return output;
+    }
+    
+    
+    /**
+     * Perform given analytic operation on given input data
+     * writing the results in given output experiment.
+     * @param input Input data
+     * @param output Output experiment
+     * @param operation Opeation to perform
+     * @param renameBioAssays Rename bioassays?
+     * @throws AnalyticException if a computation error occurs
+     */
+    private void perform(final Experiment input, final Experiment output,
+            final AnalyticOperation operation, final boolean renameBioAssays)
+    throws AnalyticException {
         if (operation instanceof ScalarToScalarAnalyticOperation) {
             this.perform(input, output,
-                    (ScalarToScalarAnalyticOperation) operation);
+                    (ScalarToScalarAnalyticOperation) operation, true);
         } else if (operation instanceof ListToScalarAnalyticOperation) {
             this.perform(input, output,
-                    (ListToScalarAnalyticOperation) operation);
-        } else if (operation instanceof ListToListAnalyticOperation) {
-            this.perform(input, output,
-                    (ListToListAnalyticOperation) operation);
+                    (ListToScalarAnalyticOperation) operation, true);
+        } else if (operation instanceof AnalyticPipeline) {
+            this.perform(input, output, (AnalyticPipeline) operation);
         }
-        return output;
     }
     
     
@@ -154,10 +170,12 @@ public class AnalyticOperationManager {
      * @param input Input data
      * @param output Output data
      * @param operation Operation to perform
+     * @param renameBioAssays Rename bioassays?
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ScalarToScalarAnalyticOperation operation)
+            final ScalarToScalarAnalyticOperation operation,
+            final boolean renameBioAssays)
         throws AnalyticException {
         if (operation instanceof StatefulExperimentAnalyticOperation) {
             ((StatefulExperimentAnalyticOperation) operation).resetState();
@@ -167,6 +185,10 @@ public class AnalyticOperationManager {
                 ((StatefulBioAssayAnalyticOperation) operation).resetState();
             }
             BioAssay newBa = this.clone(ba);
+            if (renameBioAssays) {
+                String newName = ba.getName() + " " + operation.getName();
+                newBa.setName(newName);
+            }
             ChromosomeArrayDataIterator it =
                 new ChromosomeArrayDataIterator(this.dataFileManager, ba);
             while (it.hasNext()) {
@@ -180,37 +202,77 @@ public class AnalyticOperationManager {
     
     /**
      * Perform given analytic operation on input data writing
-     * results to output.
+     * results to output.  This method pools chromosome array
+     * data from the same chromosome across all bioassays
+     * and performs operation on these pools.
      * @param input Input data
      * @param output Output data
      * @param operation Operation to perform
+     * @param renameBioAssays Rename bioassays?
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ListToScalarAnalyticOperation operation)
+            final ListToScalarAnalyticOperation operation,
+            final boolean renameBioAssays)
         throws AnalyticException {
-//        for (Short chromosome : input.getChromosomes()) {
-//            List<ChromosomeArrayData> cad =
-//                new ArrayList<ChromosomeArrayData>();
-//            for (BioAssay ba : input.getBioAssays()) {
-//                cad.add(this.)
-//            }
-//        }
+        if (input.getBioAssays().size() < 1) {
+            throw new IllegalArgumentException(
+                    "Cannot perform operation on empty data set");
+        }
+        BioAssay bioAssay = this.clone(input.getBioAssays().iterator().next());
+        if (renameBioAssays) {
+            String bioAssayName = input.getName() + " " + operation.getName();
+            bioAssay.setName(bioAssayName);
+        }
+        output.add(bioAssay);
+        for (Short chromosome : input.getChromosomes()) {
+            List<ChromosomeArrayData> cad =
+                new ArrayList<ChromosomeArrayData>();
+            for (BioAssay ba : input.getBioAssays()) {
+                cad.add(this.getChromosomeArrayData(ba, chromosome));
+            }
+            ChromosomeArrayData newCad = operation.perform(cad);
+            this.addChromosomeArrayData(bioAssay, newCad);
+        }
     }
     
     
     /**
-     * Perform given analytic operation on input data writing
-     * results to output.
-     * @param input Input data
-     * @param output Output data
-     * @param operation Operation to perform
+     * Perform each operation in given pipeline.
+     * @param input Data input into pipeline
+     * @param output Data output into pipeline
+     * @param pipeline Analytic pipeline
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ListToListAnalyticOperation operation)
-        throws AnalyticException {
+            final AnalyticPipeline pipeline) throws AnalyticException {
+        if (pipeline.getOperations().size() < 1) {
+            throw new IllegalArgumentException(
+                    "Pipeline must have at least one operation");
+        }
         
+        // Perform operations
+        Experiment intermediateIn = input;
+        Experiment intermediateOut = null;
+        List<AnalyticOperation> ops = pipeline.getOperations();
+        for (int i = 0; i < ops.size(); i++) {
+            AnalyticOperation op = ops.get(i);
+            if (i == ops.size() - 1) {
+                this.perform(intermediateIn, output, op, false);
+            } else {
+                intermediateOut = this.perform(intermediateIn, op);
+            }
+            if (intermediateIn != input) {
+                this.dataFileManager.deleteDataFiles(intermediateIn, false);
+            }
+            intermediateIn = intermediateOut;
+        }
+        
+        // Rename bioassays
+        for (BioAssay ba : output.getBioAssays()) {
+            String newName = ba.getName() + " " + pipeline.getName();
+            ba.setName(newName);
+        }
     }
     
     
@@ -250,5 +312,28 @@ public class AnalyticOperationManager {
             this.dataFileManager.saveChromosomeArrayData(
                     (DataSerializedBioAssay) bioAssay, chromosomeArrayData);
         }
+    }
+    
+    
+    /**
+     * Get chromosome array data from given bioassay and chromosome.
+     * This method handles the two cases where we are
+     * keeping all data in memory or are serializing
+     * data when not being used.
+     * @param bioAssay Bioassay
+     * @param chromosome Chromosome
+     * @return Chromosome array data
+     */
+    private ChromosomeArrayData getChromosomeArrayData(
+            final BioAssay bioAssay, final short chromosome) {
+        ChromosomeArrayData cad = null;
+        if (bioAssay instanceof DataContainingBioAssay) {
+            cad = ((DataContainingBioAssay)
+                    bioAssay).getChromosomeArrayData(chromosome);
+        } else if (bioAssay instanceof DataSerializedBioAssay) {
+            cad = this.dataFileManager.loadChromosomeArrayData(
+                    (DataSerializedBioAssay) bioAssay, chromosome);
+        }
+        return cad;
     }
 }

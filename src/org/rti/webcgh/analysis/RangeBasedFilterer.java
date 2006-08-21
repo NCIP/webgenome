@@ -54,10 +54,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.analysis;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;

@@ -51,30 +51,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.service.unit_test;
 
-import java.util.List;
-
-import org.rti.webcgh.domain.ChromosomeArrayData;
+import junit.framework.TestCase;
 
 /**
- * An analytic operation that takes
- * a list of <code>ChromosomeArrayData</code>
- * objects as inputs and produces a list
- * of the same class of objects as output.
+ * Tester for <code>AnalyticOperationManager</code>.
  * @author dhall
  *
  */
-public interface ListToListAnalyticOperation extends AnalyticOperation {
-    
-    /**
-     * Perform operation.
-     * @param input Input data
-     * @return Output data
-     * @throws AnalyticException if an error occurs
-     * during this operation
-     */
-    List<ChromosomeArrayData> perform(
-            List<ChromosomeArrayData> input) throws AnalyticException;
+public class AnalyticOperationManagerTester extends TestCase {
 
 }
