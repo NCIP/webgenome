@@ -62,6 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.Array;
@@ -271,13 +272,28 @@ public final class DataFileManager {
      */
     public void saveChromosomeArrayData(final DataSerializedBioAssay bioAssay,
             final ChromosomeArrayData chromosomeArrayData) {
+    	short chromNum = chromosomeArrayData.getChromosome();
+    	LOGGER.info("Serializing chromosome array data for "
+    			+ bioAssay.getName() + " chromosome " + chromNum);
         Array array = bioAssay.getArray();
-        if (array == null || array.getChromosomeReportersFileName(
-                chromosomeArrayData.getChromosome()) == null) {
-            throw new IllegalArgumentException(
-                    "Cannot save chromosome array data if reporters have not "
-                    + "already been saved.");
+        if (array == null) {
+            throw new IllegalArgumentException("Unknown reporter");
         }
+        
+        // Save reporters if they have not been saved
+        if (array.getChromosomeReportersFileName(chromNum) == null) {
+        	LOGGER.info("Serializing reporters for " + bioAssay.getName()
+        			+ " chromosome " + chromNum);
+        	SortedSet<Reporter> reporters = chromosomeArrayData.getReporters();
+        	ChromosomeReporters cr = new ChromosomeReporters(chromNum);
+        	cr.setReporters(reporters);
+        	long id = this.serializer.serialize(cr);
+        	String fileName = String.valueOf(id);
+        	array.setChromosomeReportersFileName(chromNum, fileName);
+        	LOGGER.info("Completed serialization of reporters");
+        }
+        
+        // Save array datum
         ArrayDataAttributes ada = new ArrayDataAttributes();
         for (ArrayDatum ad : chromosomeArrayData.getArrayData()) {
             ada.add(new ArrayDatumAttributes(ad.getValue(),
@@ -286,6 +302,7 @@ public final class DataFileManager {
         long id = this.serializer.serialize(ada);
         bioAssay.setFileName(chromosomeArrayData.getChromosome(),
                 String.valueOf(id));
+        LOGGER.info("Completed serialization of array data");
     }
     
     

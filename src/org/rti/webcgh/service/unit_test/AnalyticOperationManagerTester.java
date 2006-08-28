@@ -55,6 +55,7 @@ package org.rti.webcgh.service.unit_test;
 
 
 import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.Averager;
 import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.SlidingWindowSmoother;
 import org.rti.webcgh.core.WebcghSystemException;
@@ -106,7 +107,7 @@ public final class AnalyticOperationManagerTester extends TestCase {
 	 * Number of array datum per chromosome in
 	 * serialized data tests.
 	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 150000;
+	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 5000;
 	
 	// Initialize TEMP_DIR
 	static {
@@ -147,5 +148,99 @@ public final class AnalyticOperationManagerTester extends TestCase {
 		assertNotNull(output);
 		assertEquals(NUM_BIO_ASSAYS, output.getBioAssays().size());
 	}
+	
+	
+	/**
+	 * Test <code>ListToScalarAnalyticOperation</code>
+	 * on in-memory data.
+	 * @throws Exception if something bad happens
+	 */
+	public void testInMemoryListToScalar() throws Exception {
+		
+		// Instantiate analytic operation manager
+		AnalyticOperationManager mgr = new AnalyticOperationManager();
+		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
+		mgr.setDataFileManager(dfm);
+		
+		// Instantiate analytic operation
+		AnalyticOperation op = new Averager();
+		
+		// Instantiate test data
+		Experiment input = ExperimentGenerator.newInMemoryExperiment(
+				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
+				NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
+		
+		// Perform operation
+		Experiment output = mgr.perform(input, op);
+		
+		// Peform tests
+		assertNotNull(output);
+		assertEquals(1, output.getBioAssays().size());
+	}
 
+	
+	/**
+	 * Test <code>ScalarToScalarAnalyticOperation</code>
+	 * on serialized data.
+	 * @throws Exception if something bad happens
+	 */
+	public void testSerializedScalarToScalar() throws Exception {
+		
+		// Instantiate analytic operation manager
+		AnalyticOperationManager mgr = new AnalyticOperationManager();
+		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
+		mgr.setDataFileManager(dfm);
+		
+		// Instantiate analytic operation
+		AnalyticOperation op = new SlidingWindowSmoother();
+		
+		// Instantiate test data
+		Experiment input = ExperimentGenerator.newDataSerializedExperiment(
+				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
+				NUM_DATUM_PER_CHROMOSOME_SERIALIZED, dfm);
+		
+		// Perform operation
+		Experiment output = mgr.perform(input, op);
+		
+		// Peform tests
+		assertNotNull(output);
+		assertEquals(NUM_BIO_ASSAYS, output.getBioAssays().size());
+		
+		// Clean up
+		dfm.deleteDataFiles(input, false);
+		dfm.deleteDataFiles(output, true);
+	}
+	
+	
+	/**
+	 * Test <code>ListToScalarAnalyticOperation</code>
+	 * on serialized data.
+	 * @throws Exception if something bad happens
+	 */
+	public void testSerializedListToScalar() throws Exception {
+		
+		// Instantiate analytic operation manager
+		AnalyticOperationManager mgr = new AnalyticOperationManager();
+		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
+		mgr.setDataFileManager(dfm);
+		
+		// Instantiate analytic operation
+		AnalyticOperation op = new Averager();
+		
+		// Instantiate test data
+		Experiment input = ExperimentGenerator.newDataSerializedExperiment(
+				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
+				NUM_DATUM_PER_CHROMOSOME_SERIALIZED, dfm);
+		
+		// Perform operation
+		Experiment output = mgr.perform(input, op);
+		
+		// Peform tests
+		assertNotNull(output);
+		assertEquals(1, output.getBioAssays().size());
+		
+		// Clean up
+		dfm.deleteDataFiles(input, false);
+		dfm.deleteDataFiles(output, true);
+	}
 }

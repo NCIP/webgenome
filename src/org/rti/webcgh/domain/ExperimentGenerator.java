@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/domain/ExperimentGenerator.java,v $
-$Revision: 1.1 $
-$Date: 2006-08-28 20:16:28 $
+$Revision: 1.2 $
+$Date: 2006-08-28 21:55:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,9 +91,11 @@ public final class ExperimentGenerator {
 			final int numDatumPerChromosome) {
 		Experiment exp = new Experiment();
 		ArrayDatumGenerator adg = new ArrayDatumGenerator();
+		Array array = new Array();
 		for (int i = 0; i < numBioAssays; i++) {
 			DataContainingBioAssay ba = new DataContainingBioAssay();
 			exp.add(ba);
+			ba.setArray(array);
 			for (short j = 0; j < numChromosomes; j++) {
 				for (int k = 0; k < numDatumPerChromosome; k++) {
 					ArrayDatum ad = adg.newArrayDatum();
@@ -128,9 +130,11 @@ public final class ExperimentGenerator {
 			final DataFileManager dataFileManager) {
 		Experiment exp = new Experiment();
 		ArrayDatumGenerator adg = new ArrayDatumGenerator();
+		Array array = new Array();
 		for (int i = 0; i < numBioAssays; i++) {
 			DataSerializedBioAssay ba = new DataSerializedBioAssay();
 			exp.add(ba);
+			ba.setArray(array);
 			for (short j = 0; j < numChromosomes; j++) {
 				ChromosomeArrayData cad = new ChromosomeArrayData(j);
 				for (int k = 0; k < numDatumPerChromosome; k++) {
@@ -144,5 +148,4 @@ public final class ExperimentGenerator {
 		}
 		return exp;
 	}
-
 }

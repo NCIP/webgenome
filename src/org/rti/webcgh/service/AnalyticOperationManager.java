@@ -56,6 +56,7 @@ package org.rti.webcgh.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticPipeline;
@@ -77,6 +78,10 @@ import org.rti.webcgh.io.DataFileManager;
  *
  */
 public class AnalyticOperationManager {
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(AnalyticOperationManager.class);
     
     
     // ============================================
@@ -131,10 +136,13 @@ public class AnalyticOperationManager {
      */
     public final Experiment perform(final Experiment input,
             final AnalyticOperation operation) throws AnalyticException {
+    	LOGGER.info("Performing '" + operation.getName()
+    			+ "' operation on experiment '" + input.getName() + "'");
         String experimentName = input.getName() + " " + operation.getName();
         Experiment output =
             new Experiment(experimentName, input.getQuantitationType());
         this.perform(input, output, operation, true);
+        LOGGER.info("Completed operation");
         return output;
     }
     
@@ -293,6 +301,7 @@ public class AnalyticOperationManager {
             newBa = new DataSerializedBioAssay(bioAssay.getName(),
                     bioAssay.getOrganism());
         }
+        newBa.setArray(bioAssay.getArray());
         return newBa;
     }
     

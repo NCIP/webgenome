@@ -266,8 +266,8 @@ public class ChromosomeArrayData implements Serializable {
      * Get all reporters.
      * @return Reporters
      */
-    public final Set<Reporter> getReporters() {
-        Set<Reporter> reporters = new HashSet<Reporter>();
+    public final SortedSet<Reporter> getReporters() {
+        SortedSet<Reporter> reporters = new TreeSet<Reporter>();
         for (ArrayDatum d : this.arrayData) {
             reporters.add(d.getReporter());
         }
