@@ -263,7 +263,8 @@ public final class DataFileManager {
     
     
     /**
-     * Save chromsome array data to disk.
+     * Save chromsome array data to disk and update
+     * given bioassay with the file location of save data.
      * @param bioAssay Bioassay to which chromosome array data
      * is associated
      * @param chromosomeArrayData Chromosome array data

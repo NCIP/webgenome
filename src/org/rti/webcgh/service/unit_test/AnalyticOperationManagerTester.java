@@ -53,6 +53,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.unit_test;
 
+
+import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
+import org.rti.webcgh.analysis.SlidingWindowSmoother;
+import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.ExperimentGenerator;
+import org.rti.webcgh.io.DataFileManager;
+import org.rti.webcgh.service.AnalyticOperationManager;
+import org.rti.webcgh.util.FileUtils;
+import org.rti.webcgh.util.SystemUtils;
+
 import junit.framework.TestCase;
 
 /**
@@ -60,6 +72,80 @@ import junit.framework.TestCase;
  * @author dhall
  *
  */
-public class AnalyticOperationManagerTester extends TestCase {
+public final class AnalyticOperationManagerTester extends TestCase {
+	
+	/**
+	 * Name of temporary directory for storing
+	 * generated ata files.  This is not an absolute
+	 * path.
+	 */
+	private static final String TEMP_DIR_NAME =
+		"analytic_operation_manager_test_dir";
+	
+	/**
+	 * Path to temporary directory for storing data files.
+	 * It will be a subdirectory of the main
+	 * unit test temporary directory specified
+	 * by the property 'temp.dir' in 'unit_test.properties.'
+	 */
+	private static final String TEMP_DIR_PATH;
+	
+	/** Number of bioassays to generate in tests. */
+	private static final int NUM_BIO_ASSAYS = 3;
+	
+	/** Number of chromosomes in tests. */
+	private static final int NUM_CHROMOSOMES = 3;
+	
+	/**
+	 * Number of array datum per chromosome in
+	 * in-memory tests.
+	 */
+	private static final int NUM_DATUM_PER_CHROMOSOME_IN_MEMORY = 100;
+	
+	/**
+	 * Number of array datum per chromosome in
+	 * serialized data tests.
+	 */
+	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 150000;
+	
+	// Initialize TEMP_DIR
+	static {
+		String tempDirParent =
+			SystemUtils.getUnitTestProperty("temp.dir");
+		if (tempDirParent == null) {
+			throw new WebcghSystemException(
+					"Unit test property 'temp.dir' must be set");
+		}
+		TEMP_DIR_PATH = tempDirParent + "/" + TEMP_DIR_NAME;
+		FileUtils.createDirectory(TEMP_DIR_PATH);
+	}
+	
+	/**
+	 * Test <code>ScalarToScalarAnalyticOperation</code>
+	 * on in-memory data.
+	 * @throws Exception if something bad happens
+	 */
+	public void testInMemoryScalarToScalar() throws Exception {
+		
+		// Instantiate analytic operation manager
+		AnalyticOperationManager mgr = new AnalyticOperationManager();
+		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
+		mgr.setDataFileManager(dfm);
+		
+		// Instantiate analytic operation
+		AnalyticOperation op = new SlidingWindowSmoother();
+		
+		// Instantiate test data
+		Experiment input = ExperimentGenerator.newInMemoryExperiment(
+				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
+				NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
+		
+		// Perform operation
+		Experiment output = mgr.perform(input, op);
+		
+		// Peform tests
+		assertNotNull(output);
+		assertEquals(NUM_BIO_ASSAYS, output.getBioAssays().size());
+	}
 
 }

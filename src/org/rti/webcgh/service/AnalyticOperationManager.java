@@ -185,6 +185,7 @@ public class AnalyticOperationManager {
                 ((StatefulBioAssayAnalyticOperation) operation).resetState();
             }
             BioAssay newBa = this.clone(ba);
+            output.add(newBa);
             if (renameBioAssays) {
                 String newName = ba.getName() + " " + operation.getName();
                 newBa.setName(newName);

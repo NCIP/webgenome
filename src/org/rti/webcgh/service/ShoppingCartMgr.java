@@ -53,11 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service;
 
-import java.io.File;
-
-import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.io.SmdFormatException;
 
 
 /**
@@ -67,7 +63,11 @@ import org.rti.webcgh.io.SmdFormatException;
  */
 public interface ShoppingCartMgr {
     
-    
+    /**
+     * Get shopping cart associated with given user name.
+     * @param userName User name
+     * @return A shopping cart
+     */
     ShoppingCart getShoppingCart(String userName);
 
 }
