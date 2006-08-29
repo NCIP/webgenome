@@ -1,8 +1,8 @@
 /*
 
-$Source$
-$Revision$
-$Date$
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/DataTransformer.java,v $
+$Revision: 1.1 $
+$Date: 2006-08-29 17:18:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,59 +66,22 @@ import org.rti.webcgh.analysis.StatefulBioAssayAnalyticOperation;
 import org.rti.webcgh.analysis.StatefulExperimentAnalyticOperation;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
-import org.rti.webcgh.domain.DataContainingBioAssay;
-import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.io.DataFileManager;
+
 
 /**
- * Manager analytic operation on data where
- * all data are in memory.
+ * Abstract base class for classes that
+ * Manage the transformation of data
+ * through one or more analytic operations.
+ * Class usese template pattern.
  * @author dhall
  *
  */
-public class AnalyticOperationManager {
+public abstract class DataTransformer {
 	
 	/** Logger. */
 	private static final Logger LOGGER =
-		Logger.getLogger(AnalyticOperationManager.class);
-    
-    
-    // ============================================
-    //          Attributes
-    // ============================================
-    
-    /**
-     * Data file manager used to serialize/de-serialize data.
-     * This property should be injected.
-     */
-    private DataFileManager dataFileManager = null;
-    
-    
-    // ======================================
-    //        Getters/setters
-    // ======================================
-    
-    
-    /**
-     * Set data file manager used to serialize/de-serialize
-     * data.  This property should be injected.
-     * @return Data file manager
-     */
-    public final DataFileManager getDataFileManager() {
-        return dataFileManager;
-    }
-
-
-    /**
-     * Set data file manager used to serialize/de-serialize data.
-     * This property should be injected.
-     * @param dataFileManager Data file manager
-     */
-    public final void setDataFileManager(
-            final DataFileManager dataFileManager) {
-        this.dataFileManager = dataFileManager;
-    }
+		Logger.getLogger(DataTransformer.class);
 
     
     // =====================================
@@ -199,7 +162,7 @@ public class AnalyticOperationManager {
                 newBa.setName(newName);
             }
             ChromosomeArrayDataIterator it =
-                new ChromosomeArrayDataIterator(this.dataFileManager, ba);
+            	this.getChromosomeArrayDataIterator(ba);
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
@@ -272,7 +235,7 @@ public class AnalyticOperationManager {
                 intermediateOut = this.perform(intermediateIn, op);
             }
             if (intermediateIn != input) {
-                this.dataFileManager.deleteDataFiles(intermediateIn, false);
+                this.finalize(intermediateIn);
             }
             intermediateIn = intermediateOut;
         }
@@ -285,6 +248,10 @@ public class AnalyticOperationManager {
     }
     
     
+    // ======================================
+    //      Abstract template methods
+    // ======================================
+    
     /**
      * Create new bioassay of same type as given bioassay
      * and copy some of the properties.
@@ -292,58 +259,39 @@ public class AnalyticOperationManager {
      * @return A new bioassay of same type as given bioassay
      * and copy some of the properties
      */
-    private BioAssay clone(final BioAssay bioAssay) {
-        BioAssay newBa = null;
-        if (bioAssay instanceof DataContainingBioAssay) {
-            newBa = new DataContainingBioAssay(bioAssay.getName(),
-                    bioAssay.getOrganism());
-        } else if (bioAssay instanceof DataSerializedBioAssay) {
-            newBa = new DataSerializedBioAssay(bioAssay.getName(),
-                    bioAssay.getOrganism());
-        }
-        newBa.setArray(bioAssay.getArray());
-        return newBa;
-    }
+    protected abstract BioAssay clone(BioAssay bioAssay);
     
     
     /**
      * Add given chromosome array data to given bioassay.
-     * This method handles the two cases where we are
-     * keeping all data in memory or are serializing
-     * data when not being used.
      * @param bioAssay A bioassay
      * @param chromosomeArrayData Chromosome array data
      */
-    private void addChromosomeArrayData(final BioAssay bioAssay,
-            final ChromosomeArrayData chromosomeArrayData) {
-        if (bioAssay instanceof DataContainingBioAssay) {
-            ((DataContainingBioAssay) bioAssay).put(chromosomeArrayData);
-        } else if (bioAssay instanceof DataSerializedBioAssay) {
-            this.dataFileManager.saveChromosomeArrayData(
-                    (DataSerializedBioAssay) bioAssay, chromosomeArrayData);
-        }
-    }
+    protected abstract void addChromosomeArrayData(
+    		BioAssay bioAssay,
+            ChromosomeArrayData chromosomeArrayData);
     
     
     /**
      * Get chromosome array data from given bioassay and chromosome.
-     * This method handles the two cases where we are
-     * keeping all data in memory or are serializing
-     * data when not being used.
      * @param bioAssay Bioassay
      * @param chromosome Chromosome
      * @return Chromosome array data
      */
-    private ChromosomeArrayData getChromosomeArrayData(
-            final BioAssay bioAssay, final short chromosome) {
-        ChromosomeArrayData cad = null;
-        if (bioAssay instanceof DataContainingBioAssay) {
-            cad = ((DataContainingBioAssay)
-                    bioAssay).getChromosomeArrayData(chromosome);
-        } else if (bioAssay instanceof DataSerializedBioAssay) {
-            cad = this.dataFileManager.loadChromosomeArrayData(
-                    (DataSerializedBioAssay) bioAssay, chromosome);
-        }
-        return cad;
-    }
+    protected abstract ChromosomeArrayData getChromosomeArrayData(
+            BioAssay bioAssay, short chromosome);
+    
+    /**
+     * Get a chromosome data iterator.
+     * @param bioAssay Bioassay containing data
+     * @return Chromosome data iterator
+     */
+    protected abstract ChromosomeArrayDataIterator
+    	getChromosomeArrayDataIterator(BioAssay bioAssay);
+    
+    /**
+     * Finalize experiment before it sent to garbage collector.
+     * @param experiment Experiment to finalize
+     */
+    protected abstract void finalize(Experiment experiment);
 }

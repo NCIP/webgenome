@@ -57,9 +57,7 @@ import java.util.Iterator;
 
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
-import org.rti.webcgh.domain.DataContainingBioAssay;
-import org.rti.webcgh.domain.DataSerializedBioAssay;
-import org.rti.webcgh.io.DataFileManager;
+
 
 /**
  * Iterates over <code>ChromosomeArrayData</code>.
@@ -69,18 +67,7 @@ import org.rti.webcgh.io.DataFileManager;
  * @author dhall
  *
  */
-public class ChromosomeArrayDataIterator {
-    
-    
-    // =============================
-    //       Attributes
-    // =============================
-    
-    /**
-     * Data file manager used to serialize/de-serialize
-     * chromosome array data.
-     */
-    private final DataFileManager dataFileManager;
+public abstract class ChromosomeArrayDataIterator {
     
     
     /** Iterator for chromosomes. */
@@ -94,18 +81,14 @@ public class ChromosomeArrayDataIterator {
     // =============================
     //       Constructors
     // =============================
-    
-    
+        
     /**
      * Constructor.
-     * @param dataFileManager Data file manager used to
-     * serialize/de-serialize data
      * @param bioAssay Bioassay containing in-memory or serialized data
      * to iterate over
      */
-    public ChromosomeArrayDataIterator(final DataFileManager dataFileManager,
+    protected ChromosomeArrayDataIterator(
             final BioAssay bioAssay) {
-        this.dataFileManager = dataFileManager;
         this.bioAssay = bioAssay;
         this.chromosomeIterator = bioAssay.getChromosomes().iterator();
     }
@@ -133,14 +116,22 @@ public class ChromosomeArrayDataIterator {
         ChromosomeArrayData cad = null;
         if (this.hasNext()) {
             short chromosome = this.chromosomeIterator.next();
-            if (this.bioAssay instanceof DataContainingBioAssay) {
-                cad = ((DataContainingBioAssay)
-                        this.bioAssay).getChromosomeArrayData(chromosome);
-            } else if (this.bioAssay instanceof DataSerializedBioAssay) {
-                cad = this.dataFileManager.loadChromosomeArrayData((
-                        DataSerializedBioAssay) this.bioAssay, chromosome);
-            }
+            cad = this.getChromosomeArrayData(this.bioAssay, chromosome);
         }
         return cad;
     }
+    
+    
+    // ===============================
+    //        Abstract methods
+    // ===============================
+    
+    /**
+     * Get chromosome array data.
+     * @param bioAssay Bioassay containing data of interest
+     * @param chromosome Chromosome number
+     * @return Chromosome array data
+     */
+    protected abstract ChromosomeArrayData getChromosomeArrayData(
+    		BioAssay bioAssay, short chromosome);
 }

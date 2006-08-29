@@ -1,8 +1,8 @@
 /*
 
-$Source$
-$Revision$
-$Date$
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/unit_test/SerializeDataTransformerTester.java,v $
+$Revision: 1.1 $
+$Date: 2006-08-29 17:18:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,27 +53,26 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.unit_test;
 
-
 import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.AnalyticPipeline;
 import org.rti.webcgh.analysis.Averager;
-import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.SlidingWindowSmoother;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
 import org.rti.webcgh.io.DataFileManager;
-import org.rti.webcgh.service.AnalyticOperationManager;
+import org.rti.webcgh.service.SerializedDataTransformer;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
 /**
- * Tester for <code>AnalyticOperationManager</code>.
+ * Tester for <code>SerializedDataTransformer</code>.
  * @author dhall
  *
  */
-public final class AnalyticOperationManagerTester extends TestCase {
+public final class SerializeDataTransformerTester extends TestCase {
 	
 	/**
 	 * Name of temporary directory for storing
@@ -81,7 +80,7 @@ public final class AnalyticOperationManagerTester extends TestCase {
 	 * path.
 	 */
 	private static final String TEMP_DIR_NAME =
-		"analytic_operation_manager_test_dir";
+		"serialized_data_transformer_test_dir";
 	
 	/**
 	 * Path to temporary directory for storing data files.
@@ -99,15 +98,9 @@ public final class AnalyticOperationManagerTester extends TestCase {
 	
 	/**
 	 * Number of array datum per chromosome in
-	 * in-memory tests.
-	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_IN_MEMORY = 100;
-	
-	/**
-	 * Number of array datum per chromosome in
 	 * serialized data tests.
 	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 5000;
+	private static final int NUM_DATUM_PER_CHROMOSOME = 5000;
 	
 	// Initialize TEMP_DIR
 	static {
@@ -122,72 +115,13 @@ public final class AnalyticOperationManagerTester extends TestCase {
 	}
 	
 	/**
-	 * Test <code>ScalarToScalarAnalyticOperation</code>
-	 * on in-memory data.
+	 * Test <code>ScalarToScalarAnalyticOperation</code>.
 	 * @throws Exception if something bad happens
 	 */
-	public void testInMemoryScalarToScalar() throws Exception {
+	public void testScalarToScalar() throws Exception {
 		
 		// Instantiate analytic operation manager
-		AnalyticOperationManager mgr = new AnalyticOperationManager();
-		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
-		mgr.setDataFileManager(dfm);
-		
-		// Instantiate analytic operation
-		AnalyticOperation op = new SlidingWindowSmoother();
-		
-		// Instantiate test data
-		Experiment input = ExperimentGenerator.newInMemoryExperiment(
-				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
-				NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
-		
-		// Perform operation
-		Experiment output = mgr.perform(input, op);
-		
-		// Peform tests
-		assertNotNull(output);
-		assertEquals(NUM_BIO_ASSAYS, output.getBioAssays().size());
-	}
-	
-	
-	/**
-	 * Test <code>ListToScalarAnalyticOperation</code>
-	 * on in-memory data.
-	 * @throws Exception if something bad happens
-	 */
-	public void testInMemoryListToScalar() throws Exception {
-		
-		// Instantiate analytic operation manager
-		AnalyticOperationManager mgr = new AnalyticOperationManager();
-		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
-		mgr.setDataFileManager(dfm);
-		
-		// Instantiate analytic operation
-		AnalyticOperation op = new Averager();
-		
-		// Instantiate test data
-		Experiment input = ExperimentGenerator.newInMemoryExperiment(
-				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
-				NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
-		
-		// Perform operation
-		Experiment output = mgr.perform(input, op);
-		
-		// Peform tests
-		assertNotNull(output);
-		assertEquals(1, output.getBioAssays().size());
-	}
-
-	
-	/**
-	 * Test <code>ScalarToScalarAnalyticOperation</code>
-	 * on serialized data.
-	 * @throws Exception if something bad happens
-	 */
-	public void testSerializedScalarToScalar() throws Exception {
-		
-		// Instantiate analytic operation manager
-		AnalyticOperationManager mgr = new AnalyticOperationManager();
+		SerializedDataTransformer mgr = new SerializedDataTransformer();
 		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
 		mgr.setDataFileManager(dfm);
 		
@@ -197,7 +131,7 @@ public final class AnalyticOperationManagerTester extends TestCase {
 		// Instantiate test data
 		Experiment input = ExperimentGenerator.newDataSerializedExperiment(
 				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
-				NUM_DATUM_PER_CHROMOSOME_SERIALIZED, dfm);
+				NUM_DATUM_PER_CHROMOSOME, dfm);
 		
 		// Perform operation
 		Experiment output = mgr.perform(input, op);
@@ -213,14 +147,13 @@ public final class AnalyticOperationManagerTester extends TestCase {
 	
 	
 	/**
-	 * Test <code>ListToScalarAnalyticOperation</code>
-	 * on serialized data.
+	 * Test <code>ListToScalarAnalyticOperation</code>.
 	 * @throws Exception if something bad happens
 	 */
-	public void testSerializedListToScalar() throws Exception {
+	public void testListToScalar() throws Exception {
 		
 		// Instantiate analytic operation manager
-		AnalyticOperationManager mgr = new AnalyticOperationManager();
+		SerializedDataTransformer mgr = new SerializedDataTransformer();
 		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
 		mgr.setDataFileManager(dfm);
 		
@@ -230,10 +163,44 @@ public final class AnalyticOperationManagerTester extends TestCase {
 		// Instantiate test data
 		Experiment input = ExperimentGenerator.newDataSerializedExperiment(
 				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
-				NUM_DATUM_PER_CHROMOSOME_SERIALIZED, dfm);
+				NUM_DATUM_PER_CHROMOSOME, dfm);
 		
 		// Perform operation
 		Experiment output = mgr.perform(input, op);
+		
+		// Peform tests
+		assertNotNull(output);
+		assertEquals(1, output.getBioAssays().size());
+		
+		// Clean up
+		dfm.deleteDataFiles(input, false);
+		dfm.deleteDataFiles(output, true);
+	}
+
+	
+	/**
+	 * Test on analytic pipeline.
+	 * @throws Exception if something bad happens
+	 */
+	public void testAnalyticPipeline() throws Exception {
+		
+		// Instantiate analytic operation manager
+		SerializedDataTransformer mgr = new SerializedDataTransformer();
+		DataFileManager dfm = new DataFileManager(TEMP_DIR_PATH);
+		mgr.setDataFileManager(dfm);
+		
+		// Instantiate pipeline
+		AnalyticPipeline pipeline = new AnalyticPipeline();
+		pipeline.add(new SlidingWindowSmoother());
+		pipeline.add(new Averager());
+		
+		// Instantiate test data
+		Experiment input = ExperimentGenerator.newDataSerializedExperiment(
+				NUM_BIO_ASSAYS, NUM_CHROMOSOMES,
+				NUM_DATUM_PER_CHROMOSOME, dfm);
+		
+		// Perform operation
+		Experiment output = mgr.perform(input, pipeline);
 		
 		// Peform tests
 		assertNotNull(output);
