@@ -55,11 +55,11 @@ package org.rti.webcgh.graph.widget.unit_test;
 
 import java.awt.Color;
 
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.Bar;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.VerticalAlignment;
 
 import junit.framework.TestCase;
 

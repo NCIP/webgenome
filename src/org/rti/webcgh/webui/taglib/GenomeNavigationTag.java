@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/GenomeNavigationTag.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.webui.plot.PlotParamsForm;
 import org.rti.webcgh.webui.util.WebUtils;
 
@@ -135,7 +135,7 @@ public class GenomeNavigationTag extends TagSupport {
 			String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
 			
 			// Calculate jump intervals
-			GenomeIntervalDto[] intervals = GenomeIntervalDto.parse(form.getGenomeIntervals(), Units.getUnits(form.getUnits()));
+			GenomeIntervalDto[] intervals = GenomeIntervalDto.parse(form.getGenomeIntervals(), BpUnits.getUnits(form.getUnits()));
 			if (intervals == null || intervals.length < 1)
 				throw new WebcghSystemException("Genome interval unspecified");
 			GenomeIntervalDto interval = intervals[0];

@@ -63,9 +63,9 @@ import java.util.List;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
+import org.rti.webcgh.units.Orientation;
 
 /**
  * 

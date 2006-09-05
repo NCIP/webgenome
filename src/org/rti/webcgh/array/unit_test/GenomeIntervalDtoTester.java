@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/unit_test/GenomeIntervalDtoTester.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:11 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.array.unit_test;
 
 import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
 
 import junit.framework.TestCase;
 
@@ -69,21 +69,21 @@ public class GenomeIntervalDtoTester extends TestCase {
      */
     public void testParse() throws Exception {
         String s1 = "1:100-200";
-        GenomeIntervalDto[] dtos = GenomeIntervalDto.parse(s1, Units.BP);
+        GenomeIntervalDto[] dtos = GenomeIntervalDto.parse(s1, BpUnits.BP);
         assertEquals(dtos.length, 1);
         assertEquals(dtos[0].getChromosome(), 1);
         assertEquals(dtos[0].getStart(), 100.0, 0.0);
         assertEquals(dtos[0].getEnd(), 200.0, 0.0);
         
         s1 = "1 : 100 - 200 ";
-        dtos = GenomeIntervalDto.parse(s1, Units.BP);
+        dtos = GenomeIntervalDto.parse(s1, BpUnits.BP);
         assertEquals(dtos.length, 1);
         assertEquals(dtos[0].getChromosome(), 1);
         assertEquals(dtos[0].getStart(), 100.0, 0.0);
         assertEquals(dtos[0].getEnd(), 200.0, 0.0);
         
         s1 = "1:100-200;2:300-450";
-        dtos = GenomeIntervalDto.parse(s1, Units.BP);
+        dtos = GenomeIntervalDto.parse(s1, BpUnits.BP);
         assertEquals(dtos.length, 2);
         assertEquals(dtos[0].getChromosome(), 1);
         assertEquals(dtos[0].getStart(), 100.0, 0.0);
@@ -93,7 +93,7 @@ public class GenomeIntervalDtoTester extends TestCase {
         assertEquals(dtos[1].getEnd(), 450.0, 0.0);
         
         s1 = "1";
-        dtos = GenomeIntervalDto.parse(s1, Units.BP);
+        dtos = GenomeIntervalDto.parse(s1, BpUnits.BP);
         assertEquals(dtos.length, 1);
         assertEquals(dtos[0].getChromosome(), 1);
         assertTrue(Double.isNaN(dtos[0].getStart()));
@@ -101,43 +101,43 @@ public class GenomeIntervalDtoTester extends TestCase {
         
         s1 = "1:";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
         
         s1 = ":";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
         
         s1 = ":100-200";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
         
         s1 = "1:100-";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
         
         s1 = "1:100";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
         
         s1 = "1:-200";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
         
         s1 = "1:100-200;2:";
         try {
-            GenomeIntervalDto.parse(s1, Units.BP);
+            GenomeIntervalDto.parse(s1, BpUnits.BP);
             fail();
         } catch (Exception e){}
     }

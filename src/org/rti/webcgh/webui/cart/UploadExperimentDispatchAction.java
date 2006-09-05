@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/UploadExperimentDispatchAction.java,v $
-$Revision: 1.6 $
-$Date: 2006-06-13 14:37:10 $
+$Revision: 1.7 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,7 +77,7 @@ import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentGenomeAssembly;
 import org.rti.webcgh.array.persistent.PersistentOrganism;
 import org.rti.webcgh.io.SmdDataStream;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
 import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.UploadExperimentForm;
 import org.rti.webcgh.webui.common.CommonLookupDispatchAction;

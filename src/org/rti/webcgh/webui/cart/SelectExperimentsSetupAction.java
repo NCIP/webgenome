@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/SelectExperimentsSetupAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,8 +64,8 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
-import org.rti.webcgh.service.WebcghArrayDataSourceSet;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
+import org.rti.webcgh.service.datasrc.WebcghArrayDataSourceSet;
 import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.util.AttributeManager;
 

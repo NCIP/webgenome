@@ -54,6 +54,8 @@ package org.rti.webcgh.drawing;
 
 import java.awt.Color;
 
+import org.rti.webcgh.units.Orientation;
+
 /**
  * 
  */

@@ -61,7 +61,7 @@ import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.deprecated.ColorChooser;
 import org.rti.webcgh.plot.ChromosomeIdeogramSize;
 import org.rti.webcgh.plot.PlotType;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
 
 /**
  * Parameters for a plot
@@ -76,7 +76,7 @@ public class PlotParameters {
     private int height = 400;
     private double minY = Double.NaN;
     private double maxY = Double.NaN;
-    private Units xUnits = Units.KB;
+    private BpUnits xUnits = BpUnits.KB;
     private GenomeIntervalDto[] genomeIntervalDtos = null;
     private int plotsPerRow = 5;
     private boolean showIdeogram = false;
@@ -194,7 +194,7 @@ public class PlotParameters {
     /**
      * @return Returns the xUnits.
      */
-    public Units getXUnits() {
+    public BpUnits getXUnits() {
         return xUnits;
     }
     
@@ -202,7 +202,7 @@ public class PlotParameters {
     /**
      * @param units The xUnits to set.
      */
-    public void setXUnits(Units units) {
+    public void setXUnits(BpUnits units) {
         xUnits = units;
     }
     

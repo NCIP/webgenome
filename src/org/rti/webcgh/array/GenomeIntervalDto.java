@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeIntervalDto.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:11 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 
 /**
@@ -208,7 +208,7 @@ public class GenomeIntervalDto implements Serializable{
 	 * @return genome interval DTOs
 	 * @throws GenomeIntervalFormatException
 	 */
-	public static GenomeIntervalDto[] parse(String str, Units units) throws GenomeIntervalFormatException {
+	public static GenomeIntervalDto[] parse(String str, BpUnits units) throws GenomeIntervalFormatException {
 		if (str == null)
 			return null;
 		if (str.trim().length() < 1)
@@ -253,7 +253,7 @@ public class GenomeIntervalDto implements Serializable{
 	}
 	
 	
-	private static GenomeIntervalDto decode(String encoding, Units units) throws GenomeIntervalFormatException {
+	private static GenomeIntervalDto decode(String encoding, BpUnits units) throws GenomeIntervalFormatException {
 		int chromosome = -1;
 		double start = Double.NaN;
 		double end = Double.NaN;

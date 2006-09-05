@@ -62,11 +62,11 @@ import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.array.GenomeLocationFactory;
 import org.rti.webcgh.array.QuantifiedInterval;
 import org.rti.webcgh.array.QuantifiedIntervals;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.PlotGenerator;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.FrequencyPlot;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.VerticalAlignment;
 
 import junit.framework.TestCase;
 

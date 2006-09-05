@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/profile/LoginAction.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-09-05 14:06:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,9 +64,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionError;
 
-import org.rti.webcgh.service.AdminAuthenticator;
-import org.rti.webcgh.service.Authenticator;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.AdminAuthenticator;
+import org.rti.webcgh.service.authentication.Authenticator;
+import org.rti.webcgh.service.authentication.UserProfile;
 import org.rti.webcgh.webui.util.AttributeManager;
 
 

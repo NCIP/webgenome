@@ -63,13 +63,13 @@ import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ExperimentIterator;
 import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.widget.HorizontalLine;
 import org.rti.webcgh.plot.Axis;
 import org.rti.webcgh.plot.PlotPanel;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 
 
 /**

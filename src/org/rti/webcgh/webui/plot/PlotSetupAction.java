@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotSetupAction.java,v $
-$Revision: 1.7 $
-$Date: 2006-08-03 21:52:18 $
+$Revision: 1.8 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,8 +73,8 @@ import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.service.ClientDataService;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
+import org.rti.webcgh.service.util.ClientDataService;
 import org.rti.webcgh.webui.util.Attribute;
 import org.rti.webcgh.webui.util.AttributeManager;
 import org.rti.webcgh.webui.util.DataAssembler;

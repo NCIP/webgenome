@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ArrayDatumFactory.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-25 23:04:01 $
+$Revision: 1.4 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ package org.rti.webcgh.array;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.rti.webcgh.service.DomainObjectFactory;
+import org.rti.webcgh.deprecated.DomainObjectFactory;
 
 public class ArrayDatumFactory {
 	

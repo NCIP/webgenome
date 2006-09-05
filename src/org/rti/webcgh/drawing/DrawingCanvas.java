@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/DrawingCanvas.java,v $
-$Revision: 1.5 $
-$Date: 2006-08-03 21:52:19 $
+$Revision: 1.6 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,8 @@ package org.rti.webcgh.drawing;
 
 import java.awt.Color;
 import java.awt.Point;
+
+import org.rti.webcgh.units.HorizontalAlignment;
 
 
 /**

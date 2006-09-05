@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgElementFactory.java,v $
-$Revision: 1.4 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.5 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.rti.webcgh.units.Direction;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Orientation;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

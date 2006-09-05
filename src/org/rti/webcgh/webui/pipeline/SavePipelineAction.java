@@ -1,8 +1,8 @@
  /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/pipeline/SavePipelineAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-22 22:15:13 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionErrors;
 
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.util.Attribute;
 import org.rti.webcgh.webui.util.AttributeManager;

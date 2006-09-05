@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/virtual/CreateVirtualExperimentAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-26 17:17:56 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,8 +68,8 @@ import org.rti.webcgh.array.persistent.PersistentBioAssay;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentExperiment;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.service.UserProfile;
-import org.rti.webcgh.service.WebcghArrayDataSourceSet;
+import org.rti.webcgh.service.authentication.UserProfile;
+import org.rti.webcgh.service.datasrc.WebcghArrayDataSourceSet;
 import org.rti.webcgh.webui.DataSelectionForm;
 import org.rti.webcgh.webui.util.AttributeManager;
 import org.springframework.web.struts.ActionSupport;

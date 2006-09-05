@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.9 $
-$Date: 2006-07-21 20:06:30 $
+$Revision: 1.10 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,9 +61,9 @@ import java.util.TreeSet;
 import org.rti.webcgh.core.WebcghApiUsageException;
 import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.deprecated.Cacheable;
 import org.rti.webcgh.graph.widget.DataPlotter;
 import org.rti.webcgh.io.Serializer;
-import org.rti.webcgh.service.Cacheable;
 
 
 /**

@@ -53,6 +53,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.plot;
 
+import org.rti.webcgh.units.BpUnits;
+
 
 /**
  * Plotting parameters set by user.
@@ -78,7 +80,7 @@ public class PlotParameters {
      * Units for <code>startLocation</code>
      * and <code>endLocation</code> fields.
      */
-    private Units units = Units.BP;
+    private BpUnits units = BpUnits.BP;
     
     
     // ===========================
@@ -90,7 +92,7 @@ public class PlotParameters {
      * and <code>endLocation</code> fields.
      * @return Units
      */
-    public final Units getUnits() {
+    public final BpUnits getUnits() {
         return units;
     }
 
@@ -101,7 +103,7 @@ public class PlotParameters {
      * @param units Units of <code>startLocation</code>
      * and <code>endLocation</code> fields
      */
-    public final void setUnits(final Units units) {
+    public final void setUnits(final BpUnits units) {
         this.units = units;
     }
 

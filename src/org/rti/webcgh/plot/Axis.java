@@ -59,15 +59,15 @@ import java.net.URL;
 
 import org.rti.webcgh.drawing.Cursor;
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Hyperlink;
 import org.rti.webcgh.drawing.Line;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.graph.util.NumberFormatter;
 import org.rti.webcgh.graph.util.RealNumberFormatter;
 import org.rti.webcgh.graph.widget.ScalePlotElement;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
 
 
 /**

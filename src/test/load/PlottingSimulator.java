@@ -65,13 +65,13 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.io.DataFileManager;
 import org.rti.webcgh.io.SmdFormatException;
 import org.rti.webcgh.plot.PlotBoundaries;
 import org.rti.webcgh.plot.ScatterPlot;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.StopWatch;
 

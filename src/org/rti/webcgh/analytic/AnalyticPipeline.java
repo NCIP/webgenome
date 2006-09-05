@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/AnalyticPipeline.java,v $
-$Revision: 1.2 $
-$Date: 2006-03-03 15:29:47 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,7 @@ import org.rti.webcgh.array.persistent.PersistentPipeline;
 import org.rti.webcgh.array.persistent.PersistentPipelineStep;
 import org.rti.webcgh.array.persistent.PersistentPipelineStepParameter;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
 import org.rti.webcgh.util.BeanUtils;
 import org.rti.webcgh.util.XmlUtils;
 

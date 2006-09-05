@@ -57,13 +57,13 @@ import java.awt.Color;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.plot.Axis;
 import org.rti.webcgh.plot.Grid;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 

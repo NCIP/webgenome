@@ -56,11 +56,11 @@ import java.awt.Color;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.drawing.Direction;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graph.widget.ChromosomeEndCap;
+import org.rti.webcgh.units.Direction;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.VerticalAlignment;
 
 /**
  * 

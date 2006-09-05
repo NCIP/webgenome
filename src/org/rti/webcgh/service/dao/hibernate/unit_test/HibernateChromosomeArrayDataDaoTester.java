@@ -53,7 +53,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate.unit_test;
 
-import java.sql.Connection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -62,7 +61,6 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.service.dao.ChromosomeArrayDataDao;
 import org.rti.webcgh.service.dao.ReporterDao;
-import org.rti.webcgh.service.dao.hibernate.HibernateReporterDao;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

@@ -63,8 +63,8 @@ import java.util.StringTokenizer;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Text;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Orientation;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Orientation;
 
 /**
  * 

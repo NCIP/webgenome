@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/UnitOptionsTag.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-01 19:37:10 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,12 +54,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.taglib;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
 
 /**
  * Prints list of units as options for enclosing
@@ -105,10 +106,9 @@ public class UnitOptionsTag extends TagSupport {
                     throw new JspException("Error evaluating UnitOptionsTag", e);
                 }
 	    }
-		Units[] allUnits = Units.getUnits();
+		List<BpUnits> allUnits = BpUnits.getUnits();
 		PrintWriter out = new PrintWriter(pageContext.getOut());
-		for (int i = 0; i < allUnits.length; i++) {
-			Units units = allUnits[i];
+		for (BpUnits units : allUnits) {
 			out.print("<option");
 			if (value != null && units.getName().equals(value))
 			    out.print(" selected");

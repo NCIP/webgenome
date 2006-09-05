@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/cart/RecordSelectedExperimentsAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-24 14:08:36 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.array.ReporterMappingStagingArea;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
 import org.rti.webcgh.webui.DataSelectionForm;
 import org.rti.webcgh.webui.util.AttributeManager;
 

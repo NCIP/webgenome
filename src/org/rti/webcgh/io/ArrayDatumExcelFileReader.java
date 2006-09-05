@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/ArrayDatumExcelFileReader.java,v $
-$Revision: 1.1 $
-$Date: 2006-04-25 16:28:26 $
+$Revision: 1.2 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,7 +73,7 @@ import org.rti.webcgh.array.Quantitation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.Reporter;
 import org.rti.webcgh.array.ReporterMapping;
-import org.rti.webcgh.service.DomainObjectFactory;
+import org.rti.webcgh.deprecated.DomainObjectFactory;
 
 /**
  * Reads array data from Excel files

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotParamsForm.java,v $
-$Revision: 1.6 $
-$Date: 2006-08-03 21:52:18 $
+$Revision: 1.7 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,7 +77,7 @@ import org.rti.webcgh.array.GenomeIntervalFormatException;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.plot.ChromosomeIdeogramSize;
 import org.rti.webcgh.plot.PlotType;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
 
 
 /**
@@ -88,7 +88,7 @@ public class PlotParamsForm extends ActionForm {
     private String width = "800";  // Width of plot
     private String height = "300"; // Height of plot
     private String genomeIntervals = "1";
-    private String units = Units.KB.getName();
+    private String units = BpUnits.KB.getName();
 	private String minY = null;
 	private String maxY = null;
 	private String showLabels = "on";
@@ -302,7 +302,7 @@ public class PlotParamsForm extends ActionForm {
 			try {
 				GenomeIntervalDto[] dtos = 
 					GenomeIntervalDto.parse(this.genomeIntervals, 
-							Units.getUnits(this.units));
+							BpUnits.getUnits(this.units));
 				for (int i = 0; i < dtos.length; i++) {
 					GenomeIntervalDto dto = dtos[i];
 					if (dto.getStart() > dto.getEnd()) {
@@ -912,7 +912,7 @@ public class PlotParamsForm extends ActionForm {
 	 * @throws GenomeIntervalFormatException
 	 */
     public PlotParameters getPlotParameters() throws GenomeIntervalFormatException {
-        Units units = Units.getUnits(this.units);
+        BpUnits units = BpUnits.getUnits(this.units);
         PlotParameters pp = new PlotParameters();
         if (! this.emptyField(this.height))
         	pp.setHeight(Integer.parseInt(this.height));

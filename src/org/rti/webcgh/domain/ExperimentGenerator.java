@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/domain/ExperimentGenerator.java,v $
-$Revision: 1.2 $
-$Date: 2006-08-28 21:55:04 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:46 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,18 +38,19 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.domain;
+
+import java.util.List;
 
 import org.rti.webcgh.io.DataFileManager;
 
@@ -63,15 +62,30 @@ import org.rti.webcgh.io.DataFileManager;
  */
 public final class ExperimentGenerator {
 	
+	// =======================
+	//    Attributes
+	// =======================
+	
+	/** Array datum generator. */
+	private ArrayDatumGenerator arrayDatumGenerator =
+		new ArrayDatumGenerator();
+	
+	
+	// =========================
+	//     Constructors
+	// =========================
+	
 	/**
-	 * Private constructor to make sure
-	 * other classes do not create concrete
-	 * instances of this utility class.
+	 * Constructor.
 	 */
-	private ExperimentGenerator() {
+	public ExperimentGenerator() {
 		
 	}
 	
+	
+	// =======================
+	//    Business methods
+	// =======================
 	
 	/**
 	 * Create new experiment object where all data are
@@ -85,25 +99,26 @@ public final class ExperimentGenerator {
 	 * @return An experiment where all data are in
 	 * memory
 	 */
-	public static Experiment newInMemoryExperiment(
+	public Experiment newInMemoryExperiment(
 			final int numBioAssays,
 			final int numChromosomes,
 			final int numDatumPerChromosome) {
 		Experiment exp = new Experiment();
-		ArrayDatumGenerator adg = new ArrayDatumGenerator();
+		exp.setName("Experiment");
 		Array array = new Array();
 		for (int i = 0; i < numBioAssays; i++) {
 			DataContainingBioAssay ba = new DataContainingBioAssay();
 			exp.add(ba);
 			ba.setArray(array);
-			for (short j = 0; j < numChromosomes; j++) {
+			ba.setName("Bioassay " + i);
+			for (short j = 1; j <= numChromosomes; j++) {
 				for (int k = 0; k < numDatumPerChromosome; k++) {
-					ArrayDatum ad = adg.newArrayDatum();
+					ArrayDatum ad = this.arrayDatumGenerator.newArrayDatum();
 					ad.getReporter().setChromosome(j);
 					ba.add(ad);
 				}
 			}
-			adg.reset();
+			this.arrayDatumGenerator.reset();
 		}
 		return exp;
 	}
@@ -123,29 +138,39 @@ public final class ExperimentGenerator {
 	 * @return An experiment where chromosome array
 	 * data have been serialized
 	 */
-	public static Experiment newDataSerializedExperiment(
+	public Experiment newDataSerializedExperiment(
 			final int numBioAssays,
 			final int numChromosomes,
 			final int numDatumPerChromosome,
 			final DataFileManager dataFileManager) {
 		Experiment exp = new Experiment();
-		ArrayDatumGenerator adg = new ArrayDatumGenerator();
+		exp.setName("Experiment");
 		Array array = new Array();
 		for (int i = 0; i < numBioAssays; i++) {
 			DataSerializedBioAssay ba = new DataSerializedBioAssay();
 			exp.add(ba);
 			ba.setArray(array);
-			for (short j = 0; j < numChromosomes; j++) {
+			ba.setName("Bioassay " + i);
+			for (short j = 1; j <= numChromosomes; j++) {
 				ChromosomeArrayData cad = new ChromosomeArrayData(j);
 				for (int k = 0; k < numDatumPerChromosome; k++) {
-					ArrayDatum ad = adg.newArrayDatum();
+					ArrayDatum ad = this.arrayDatumGenerator.newArrayDatum();
 					ad.getReporter().setChromosome(j);
 					cad.add(ad);
 				}
 				dataFileManager.saveChromosomeArrayData(ba, cad);
 			}
-			adg.reset();
+			this.arrayDatumGenerator.reset();
 		}
 		return exp;
+	}
+	
+	
+	/**
+	 * Get all reporters generated thus far.
+	 * @return Reporters generated thus far
+	 */
+	public List<Reporter> getReporters() {
+		return this.arrayDatumGenerator.getReporters();
 	}
 }

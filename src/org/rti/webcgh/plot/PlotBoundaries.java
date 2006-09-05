@@ -54,11 +54,11 @@ package org.rti.webcgh.plot;
 
 import java.awt.geom.Rectangle2D;
 
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.DataPoint;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 
 /**
  * Defines region over x- and y-axes that contains plot.

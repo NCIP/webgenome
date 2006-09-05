@@ -67,9 +67,9 @@ import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Text;
-import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.graph.PlotParameters;
 import org.rti.webcgh.plot.PlotElement;
+import org.rti.webcgh.units.HorizontalAlignment;
 
 /**
  * Plot legend

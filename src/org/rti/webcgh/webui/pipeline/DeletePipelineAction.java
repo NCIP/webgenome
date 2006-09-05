@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/pipeline/DeletePipelineAction.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-22 22:15:13 $
+$Revision: 1.3 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,7 @@ import org.apache.struts.action.ActionForm;
 
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentPipeline;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
 import org.rti.webcgh.webui.util.AttributeManager;
 
 import javax.servlet.http.HttpSession;

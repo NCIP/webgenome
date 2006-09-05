@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webgenome/client/unit_test/WebgenomeClientTester.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-26 17:27:34 $
+$Revision: 1.4 $
+$Date: 2006-09-05 14:06:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webcgh.array.BioAssayData;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.array.Reporter;
-import org.rti.webcgh.service.DomainObjectFactory;
+import org.rti.webcgh.deprecated.DomainObjectFactory;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDatumDTO;
 import org.rti.webgenome.client.DefBioAssayDTOImpl;

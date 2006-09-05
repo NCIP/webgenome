@@ -56,6 +56,8 @@ package org.rti.webcgh.drawing;
 
 import java.awt.Color;
 
+import org.rti.webcgh.units.HorizontalAlignment;
+
 /**
  * Implementation of <code>Text</code> interface for
  * an SVG canvas.

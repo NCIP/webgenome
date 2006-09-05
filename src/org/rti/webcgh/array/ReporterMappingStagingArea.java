@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ReporterMappingStagingArea.java,v $
-$Revision: 1.6 $
-$Date: 2006-05-25 19:41:30 $
+$Revision: 1.7 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,9 +65,9 @@ import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.array.persistent.PersistentGenomeAssembly;
 import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.service.AuthenticationException;
-import org.rti.webcgh.service.WebcghArrayDataSourceSet;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.AuthenticationException;
+import org.rti.webcgh.service.authentication.UserProfile;
+import org.rti.webcgh.service.datasrc.WebcghArrayDataSourceSet;
 import org.rti.webcgh.util.CollectionUtils;
 
 

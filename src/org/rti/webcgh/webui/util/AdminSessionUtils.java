@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/AdminSessionUtils.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,8 +55,8 @@ package org.rti.webcgh.webui.util;
 import javax.servlet.http.HttpServletRequest;
 
 import org.rti.webcgh.core.WebcghSecurityException;
-import org.rti.webcgh.service.AdminUserProfile;
-import org.rti.webcgh.service.UserProfile;
+import org.rti.webcgh.service.authentication.AdminUserProfile;
+import org.rti.webcgh.service.authentication.UserProfile;
 
 /**
  * Utilities for managing a system administration session

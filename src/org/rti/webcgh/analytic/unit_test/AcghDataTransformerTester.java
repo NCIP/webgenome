@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/unit_test/AcghDataTransformerTester.java,v $
-$Revision: 1.4 $
-$Date: 2006-05-26 17:20:40 $
+$Revision: 1.5 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.rti.webcgh.array.ArrayDatumIterator;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.service.AcghService;
+import org.rti.webcgh.service.util.AcghService;
 
 import junit.framework.TestCase;
 

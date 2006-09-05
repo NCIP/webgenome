@@ -59,6 +59,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import org.rti.webcgh.units.HorizontalAlignment;
+
 /**
  * Extension of <code>Text</code> for raster
  * drawing canvases.

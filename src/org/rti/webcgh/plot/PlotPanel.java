@@ -55,11 +55,11 @@ package org.rti.webcgh.plot;
 import java.awt.Point;
 
 import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.widget.EmptySpace;
 import org.rti.webcgh.graph.widget.ScalePlotElement;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.VerticalAlignment;
 
 /**
  * A container and layout manager for plot widgets.

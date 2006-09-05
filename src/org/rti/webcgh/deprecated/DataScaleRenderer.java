@@ -60,8 +60,8 @@ import java.util.Locale;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Text;
-import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
+import org.rti.webcgh.units.HorizontalAlignment;
 
 /**
  * Renders data scale

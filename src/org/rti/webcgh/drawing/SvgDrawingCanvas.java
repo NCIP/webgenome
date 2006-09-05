@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/drawing/SvgDrawingCanvas.java,v $
-$Revision: 1.5 $
-$Date: 2006-08-03 21:52:19 $
+$Revision: 1.6 $
+$Date: 2006-09-05 14:06:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;

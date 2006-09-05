@@ -63,10 +63,10 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicPrimitive;
-import org.rti.webcgh.drawing.HorizontalAlignment;
 import org.rti.webcgh.drawing.Line;
 import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.drawing.Text;
+import org.rti.webcgh.units.HorizontalAlignment;
 
 
 /**

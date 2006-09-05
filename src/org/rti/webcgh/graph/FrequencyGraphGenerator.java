@@ -71,11 +71,7 @@ import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
 import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.drawing.VerticalAlignment;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.FrequencyPlot;
 import org.rti.webcgh.graph.widget.Legend;
@@ -83,7 +79,11 @@ import org.rti.webcgh.plot.Axis;
 import org.rti.webcgh.plot.Caption;
 import org.rti.webcgh.plot.PlotBoundaries;
 import org.rti.webcgh.plot.PlotPanel;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.units.BpUnits;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 
 public class FrequencyGraphGenerator {
 	
@@ -254,7 +254,7 @@ public class FrequencyGraphGenerator {
     
     
     private GenomeInterval[] extractGenomeIntervals(GenomeIntervalDto[] dtos, 
-    		DataSet dataSet, Units units) {
+    		DataSet dataSet, BpUnits units) {
     	GenomeInterval[] intervals = null;
     	if (dtos == null || dtos.length < 1)
     		intervals = this.extractGenome(dataSet, units);
@@ -264,7 +264,7 @@ public class FrequencyGraphGenerator {
     }
     
     
-    private GenomeInterval[] extractGenome(DataSet dataSet, Units units) {
+    private GenomeInterval[] extractGenome(DataSet dataSet, BpUnits units) {
     	SortedSet chromosomes = dataSet.chromosomeSet();
     	GenomeIntervalDto[] dtos = new GenomeIntervalDto[chromosomes.size()];
     	int p = 0;
@@ -277,7 +277,7 @@ public class FrequencyGraphGenerator {
     	
     
     private GenomeInterval[] extractSubGenome(GenomeIntervalDto[] dtos, 
-    		DataSet dataSet, Units units) {
+    		DataSet dataSet, BpUnits units) {
     	assert dtos != null && dtos.length > 0;
     	List intervalList = new ArrayList();
     	SortedSet chromosomes = dataSet.chromosomeSet();

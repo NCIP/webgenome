@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.16 $
-$Date: 2006-08-03 21:52:19 $
+$Revision: 1.17 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,31 +77,31 @@ import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.drawing.Direction;
 import org.rti.webcgh.drawing.DrawingCanvas;
 import org.rti.webcgh.drawing.GraphicEvent;
 import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.drawing.HorizontalAlignment;
-import org.rti.webcgh.drawing.Location;
-import org.rti.webcgh.drawing.Orientation;
-import org.rti.webcgh.drawing.VerticalAlignment;
-import org.rti.webcgh.graph.util.CentromereWarper;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
-import org.rti.webcgh.graph.util.Warper;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.ChromosomeEndCap;
 import org.rti.webcgh.graph.widget.ColorCodePlot;
-import org.rti.webcgh.graph.widget.GenomeFeatureMap;
 import org.rti.webcgh.graph.widget.Legend;
 import org.rti.webcgh.graph.widget.ScatterPlot;
 import org.rti.webcgh.plot.Axis;
 import org.rti.webcgh.plot.Caption;
+import org.rti.webcgh.plot.CentromereWarper;
 import org.rti.webcgh.plot.ChromosomeIdeogramSize;
+import org.rti.webcgh.plot.GenomeFeatureMap;
 import org.rti.webcgh.plot.Grid;
 import org.rti.webcgh.plot.PlotBoundaries;
 import org.rti.webcgh.plot.PlotPanel;
 import org.rti.webcgh.plot.PlotType;
-import org.rti.webcgh.plot.Units;
+import org.rti.webcgh.plot.Warper;
+import org.rti.webcgh.units.BpUnits;
+import org.rti.webcgh.units.Direction;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 
 /**
  * Generates plots
@@ -246,7 +246,7 @@ public class PlotGenerator {
     // ============================================
     
     private GenomeInterval[] extractGenomeIntervals(GenomeIntervalDto[] dtos, 
-    		DataSet dataSet, Units units) {
+    		DataSet dataSet, BpUnits units) {
     	GenomeInterval[] intervals = null;
     	if (dtos == null || dtos.length < 1)
     		intervals = this.extractGenome(dataSet, units);
@@ -256,7 +256,7 @@ public class PlotGenerator {
     }
     
     
-    private GenomeInterval[] extractGenome(DataSet dataSet, Units units) {
+    private GenomeInterval[] extractGenome(DataSet dataSet, BpUnits units) {
     	SortedSet chromosomes = dataSet.chromosomeSet();
     	GenomeIntervalDto[] dtos = new GenomeIntervalDto[chromosomes.size()];
     	int p = 0;
@@ -269,7 +269,7 @@ public class PlotGenerator {
     	
     
     private GenomeInterval[] extractSubGenome(GenomeIntervalDto[] dtos, 
-    		DataSet dataSet, Units units) {
+    		DataSet dataSet, BpUnits units) {
     	assert dtos != null && dtos.length > 0;
     	List intervalList = new ArrayList();
     	SortedSet chromosomes = dataSet.chromosomeSet();

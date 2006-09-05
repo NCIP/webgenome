@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeInterval.java,v $
-$Revision: 1.4 $
-$Date: 2006-08-01 19:37:11 $
+$Revision: 1.5 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,8 +52,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
+import org.rti.webcgh.deprecated.Cacheable;
 import org.rti.webcgh.plot.PlotBoundaries;
-import org.rti.webcgh.service.Cacheable;
 
 /**
  * An interval within the genome

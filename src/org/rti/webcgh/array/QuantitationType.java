@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/QuantitationType.java,v $
-$Revision: 1.5 $
-$Date: 2006-07-21 20:06:30 $
+$Revision: 1.6 $
+$Date: 2006-09-05 14:06:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ package org.rti.webcgh.array;
 
 import java.io.Serializable;
 
-import org.rti.webcgh.service.Cacheable;
+import org.rti.webcgh.deprecated.Cacheable;
 import org.rti.webcgh.util.StringUtils;
 
 /**
