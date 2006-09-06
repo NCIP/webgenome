@@ -1,18 +1,16 @@
 /*
-
-$Source$
 $Revision$
 $Date$
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.domain;
@@ -57,9 +54,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -195,8 +190,6 @@ public class ChromosomeArrayData implements Serializable {
     /**
      * Add an array datum.
      * @param arrayDatum An array datum
-     * @throws IllegalArgumentException if given array datum
-     * is on a difference chromosome.
      */
     public final void add(final ArrayDatum arrayDatum) {
         if (!this.onChromosome(arrayDatum.getReporter())) {
@@ -214,7 +207,6 @@ public class ChromosomeArrayData implements Serializable {
      * @param from Left endpoint
      * @param to Right endpoint
      * @return Array data
-     * @throws IllegalArgumentException if <code>from > to </code>
      */
     public final List<ArrayDatum> getArrayData(
             final long from, final long to) {
@@ -230,7 +222,8 @@ public class ChromosomeArrayData implements Serializable {
         Reporter r2 = new Reporter(null, this.chromosome, to);
         ArrayDatum a1 = new ArrayDatum(Float.NaN, r1);
         ArrayDatum a2 = new ArrayDatum(Float.NaN, r2);
-        Comparator c = new ArrayDatum.ChromosomeLocationComparator();
+        Comparator<ArrayDatum> c =
+        	new ArrayDatum.ChromosomeLocationComparator();
         this.ensureSorted();
         int p = Collections.binarySearch(this.arrayData, a1, c);
         int q = Collections.binarySearch(this.arrayData, a2, c);
