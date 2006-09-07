@@ -94,3 +94,16 @@ CREATE TABLE bio_assay_2 (
 );
 CREATE SEQUENCE bio_assay_seq;
 
+--
+-- Cytoband
+--
+CREATE TABLE cytoband_2 (
+	id NUMBER(38) NOT NULL,
+	name VARCHAR(16),
+	start LONG,
+	end LONG,
+	stain VARCHAR(16),
+	PRIMARY KEY (id)
+);
+CREATE SEQUENCE cytoband_seq;
+

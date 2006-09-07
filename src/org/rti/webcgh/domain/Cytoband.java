@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-06 20:41:48 $
+$Revision: 1.2 $
+$Date: 2006-09-07 15:15:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ package org.rti.webcgh.domain;
  * Represents a cytoband on a cytological map.
  * @author dhall
  */
-public class Cytoband {
+public class Cytoband implements Comparable {
 
     // =================================
     //     Attributes
@@ -200,12 +200,55 @@ public class Cytoband {
         this.stain = stain;
     }
     
+    // ==========================
+    //    Comparable interface
+    // ==========================
+    
+    /**
+     * Comparison method.
+     * @param cytoband A cytoband to compare to this.
+     * @return
+     * <ul>
+     * 	<li>
+     * 		-1 : This to left of given cytoband.
+     * 	</li>
+     * 	<li>
+     * 		0 : This on top of given cytoband.
+     * 	</li>
+     * 	<li>
+     * 		1 : This to right of this given cytoband.
+     * 	</li>
+     * </ul>
+     */
+    public final int compareTo(final Object cytoband) {
+		int val = 0;
+		if (!(cytoband instanceof Cytoband)) {
+			throw new IllegalArgumentException(
+					"Argument must be of type Cytoband");
+		}
+		Cytoband c = (Cytoband) cytoband;
+		if (this.start < c.start) {
+			val = -1;
+		} else if (this.start == c.start) {
+			if (this.end < c.end) {
+				val = -1;
+			} else if (this.end == c.end) {
+				val = 0;
+			} else if (this.end > c.end) {
+				val = 1;
+			}
+		} else if (this.start > c.start) {
+			val = 1;
+		}
+		return val;
+	}
     
     // =================================
     //      Business methods
     // =================================
-    
-    /**
+
+
+	/**
      * Is cytoband in centromere?
      * @return T/F
      */

@@ -1,18 +1,16 @@
 /*
-
-$Source$
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-09-07 15:15:31 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,17 +38,18 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
-package org.rti.webcgh.plot;
+
+
+package org.rti.webcgh.units;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -58,31 +57,36 @@ import java.util.Map;
 
 
 /**
- * Size of chromosome ideogram
+ * Size of chromosome ideogram.
  */
-public class ChromosomeIdeogramSize {
+public final class ChromosomeIdeogramSize {
     
     // ========================================
     //         Constants
     // ========================================
 
     /**
-     * Small
+     * Small.
      */
-    public static final ChromosomeIdeogramSize SMALL = new ChromosomeIdeogramSize("S", 200.0 / 300000000.0);
+    public static final ChromosomeIdeogramSize SMALL =
+    	new ChromosomeIdeogramSize("S", 200.0 / 300000000.0);
     
     /**
-     * Medium
+     * Medium.
      */
-    public static final ChromosomeIdeogramSize MEDIUM = new ChromosomeIdeogramSize("M", 400.0 / 300000000.0);
+    public static final ChromosomeIdeogramSize MEDIUM =
+    	new ChromosomeIdeogramSize("M", 400.0 / 300000000.0);
     
     /**
-     * Large
+     * Large.
      */
-    public static final ChromosomeIdeogramSize LARGE = new ChromosomeIdeogramSize("L", 600.0 / 300000000.0);
+    public static final ChromosomeIdeogramSize LARGE =
+    	new ChromosomeIdeogramSize("L", 600.0 / 300000000.0);
     
     
-    private static final Map SIZE_INDEX = new HashMap();
+    /** Map of index sizes to names. */
+    private static final Map<String, ChromosomeIdeogramSize>
+    	SIZE_INDEX = new HashMap<String, ChromosomeIdeogramSize>();
     
     static {
         SIZE_INDEX.put(SMALL.name, SMALL);
@@ -95,7 +99,10 @@ public class ChromosomeIdeogramSize {
     //        Attributes
     // ============================================
     
+    /** Name of ideogram size. */
     private final String name;
+    
+    /** Number of pixels per base pair. */
     private final double pixelScale;
     
     
@@ -112,7 +119,13 @@ public class ChromosomeIdeogramSize {
     //       Constructor
     // ======================================
     
-    private ChromosomeIdeogramSize(String name, double pixelScale) {
+    /**
+     * Constructor.
+     * @param name Name of ideogram size
+     * @param pixelScale Number of pixels per base pair
+     */
+    private ChromosomeIdeogramSize(final String name,
+    		final double pixelScale) {
         this.name = name;
         this.pixelScale = pixelScale;
     }
@@ -123,12 +136,12 @@ public class ChromosomeIdeogramSize {
     // ==========================================
     
     /**
-     * Number of pixels that rendered
+     * Number of pixels that rendered.
      * @param bp Base pair length
      * @return Number of pixels
      */
-    public int pixels(long bp) {
-        return (int)((double)bp * pixelScale);
+    public int pixels(final long bp) {
+        return (int) ((double) bp * pixelScale);
     }
     
     
@@ -137,23 +150,24 @@ public class ChromosomeIdeogramSize {
     // ========================================
     
     /**
-     * Get chromosome ideogram size
+     * Get chromosome ideogram size.
      * @param name Size name
      * @return Chromosome ideogram size
      */
-    public static ChromosomeIdeogramSize getChromosomeIdeogramSize(String name) {
-        return (ChromosomeIdeogramSize)SIZE_INDEX.get(name);
+    public static ChromosomeIdeogramSize getChromosomeIdeogramSize(
+    		final String name) {
+        return SIZE_INDEX.get(name);
     }
     
     
     /**
-     * Get all sizes
+     * Get all sizes.
      * @return All chromosome ideogam sizes
      */
     public static ChromosomeIdeogramSize[] chromosomeIdeogramSizes() {
-        Collection sizeCol = SIZE_INDEX.values();
+        Collection<ChromosomeIdeogramSize> sizeCol = SIZE_INDEX.values();
         ChromosomeIdeogramSize[] sizes = new ChromosomeIdeogramSize[0];
-        sizes = (ChromosomeIdeogramSize[])sizeCol.toArray(sizes);
+        sizes = sizeCol.toArray(sizes);
         return sizes;
     }
 }

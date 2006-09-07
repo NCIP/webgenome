@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeIntervalFormatException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-09-07 15:15:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -80,8 +80,7 @@ public class GenomeIntervalFormatException extends WebcghApplicationException {
 	 * @param origThrowable Original throwable
 	 */
 	public GenomeIntervalFormatException(Throwable origThrowable) {
-		super();
-		nestedThrowable = origThrowable;
+		super(origThrowable);
 	}
 
 	/**
@@ -90,8 +89,7 @@ public class GenomeIntervalFormatException extends WebcghApplicationException {
 	 * @param origThrowable Original throwable
 	 */
 	public GenomeIntervalFormatException(String msg, Throwable origThrowable) {
-		super(msg);
-		nestedThrowable = origThrowable;
+		super(msg, origThrowable);
 	}
 
 }

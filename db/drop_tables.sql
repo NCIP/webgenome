@@ -1,6 +1,7 @@
 --
 -- Drop tables
 --
+DROP TABLE cytoband_2;
 DROP TABLE array_datum_2;
 DROP TABLE reporter_2;
 DROP TABLE chromosome_array_data_2;
@@ -13,6 +14,7 @@ DROP TABLE organism_2;
 --
 -- Drop sequences
 --
+DROP SEQUENCE cytoband_seq;
 DROP SEQUENCE array_datum_seq;
 DROP SEQUENCE reporter_seq;
 DROP SEQUENCE chromosome_array_data_seq;

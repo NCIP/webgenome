@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/core/ExtensionFilenameFilter.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-09-07 15:15:30 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,16 +38,17 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
+
+
 package org.rti.webcgh.core;
 
 import java.io.File;
@@ -58,12 +57,14 @@ import java.io.FilenameFilter;
 /**
  * File filter based on file extension.  Filter is case sensitive.
  */
-public class ExtensionFilenameFilter implements FilenameFilter {
+public final class ExtensionFilenameFilter implements FilenameFilter {
     
     
     // ==================================================================
     //                      Internal state variables
     // ==================================================================
+	
+	/** File extension. */
     private final String extension;
     
     
@@ -73,13 +74,15 @@ public class ExtensionFilenameFilter implements FilenameFilter {
     // ==================================================================
     
     /**
-     * Constructor
-     * @param extension File extension.  May or may not contain the '.' character.
-     * @throws IllegalArgumentException if <code>extension</code> is null or empty.
+     * Constructor.
+     * @param extension File extension.  May or may not contain the '.'
+     * character.
      */
-    public ExtensionFilenameFilter(String extension) {
-        if (extension == null || extension.length() < 1)
-            throw new IllegalArgumentException("Invalid file extension '" + extension + "'");
+    public ExtensionFilenameFilter(final String extension) {
+        if (extension == null || extension.length() < 1) {
+            throw new IllegalArgumentException("Invalid file extension '"
+            		+ extension + "'");
+        }
         this.extension = extension;
     }
     
@@ -95,12 +98,13 @@ public class ExtensionFilenameFilter implements FilenameFilter {
      * @return <code>true</code> if file name passes filter, <code>false</code>
      * otherwise.
      */
-    public boolean accept(File dir, String name) {
+    public boolean accept(final File dir, final String name) {
         boolean acceptable = false;
         if (name != null) {
 	        int index = name.indexOf(this.extension);
-	        if (index >= 0 && index == name.length() - extension.length())
+	        if (index >= 0 && index == name.length() - extension.length()) {
 	            acceptable = true;
+	        }
         }
         return acceptable;
     }

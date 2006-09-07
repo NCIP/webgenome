@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-09-07 15:15:31 $
 
 The Web CGH Software License, Version 1.0
@@ -48,51 +48,13 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-package org.rti.webcgh.service.authentication;
-
-import org.rti.webcgh.core.WebcghApplicationException;
-
+package org.rti.webcgh.service.plot;
 
 /**
- * Exception thrown when clients try to obtain data they
- * are not entitled to access. 
+ * Generates ideogram plots.
+ * @author dhall
+ *
  */
-public class AuthenticationException extends WebcghApplicationException {
-	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = (long) 1;
-	
-	/**
-	 * Constructor.
-	 */
-	public AuthenticationException() {
-		super();
-	}
-	
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 */
-	public AuthenticationException(final String msg) {
-		super(msg);
-	}
-	
-	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable
-	 */
-	public AuthenticationException(final Throwable origThrowable) {
-		super(origThrowable);
-	}
+public class IdeogramPlotPainter {
 
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 * @param origThrowable Original throwable
-	 */
-	public AuthenticationException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
 }

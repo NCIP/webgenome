@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analytic/DataSetInvalidationException.java,v $
-$Revision: 1.3 $
-$Date: 2006-05-26 17:13:59 $
+$Revision: 1.4 $
+$Date: 2006-09-07 15:15:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,8 +105,7 @@ public class DataSetInvalidationException extends WebcghApplicationException {
 	 * @param origThrowable Original throwable
 	 */
 	public DataSetInvalidationException(Throwable origThrowable) {
-		super();
-		nestedThrowable = origThrowable;
+		super(origThrowable);
 	}
 
 	/**
@@ -115,7 +114,6 @@ public class DataSetInvalidationException extends WebcghApplicationException {
 	 * @param origThrowable Original throwable
 	 */
 	public DataSetInvalidationException(String msg, Throwable origThrowable) {
-		super(msg);
-		nestedThrowable = origThrowable;
+		super(msg, origThrowable);
 	}
 }

@@ -59,9 +59,9 @@ import java.util.Map;
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.deprecated.ColorChooser;
-import org.rti.webcgh.plot.ChromosomeIdeogramSize;
 import org.rti.webcgh.plot.PlotType;
 import org.rti.webcgh.units.BpUnits;
+import org.rti.webcgh.units.ChromosomeIdeogramSize;
 
 /**
  * Parameters for a plot

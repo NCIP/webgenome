@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-06 20:41:48 $
+$Revision: 1.2 $
+$Date: 2006-09-07 15:15:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Represents a cytological map of a chromosome
@@ -70,7 +70,7 @@ public class CytologicalMap {
     private Long id = null;
     
     /** Cytobands. */
-    private List<Cytoband> cytobands = new ArrayList<Cytoband>();
+    private SortedSet<Cytoband> cytobands = new TreeSet<Cytoband>();
     
     /** Chromosome number. */
     private short chromosome = (short) -1;
@@ -169,7 +169,7 @@ public class CytologicalMap {
      * Get cytobands.
      * @return Returns cytobands.
      */
-    public final List<Cytoband> getCytobands() {
+    public final SortedSet<Cytoband> getCytobands() {
         return cytobands;
     }
     
@@ -178,7 +178,7 @@ public class CytologicalMap {
      * Set cytobands.
      * @param cytobands Cytobands.
      */
-    public final void setCytobands(final List<Cytoband> cytobands) {
+    public final void setCytobands(final SortedSet<Cytoband> cytobands) {
         this.cytobands = cytobands;
         for (Cytoband cytoband : cytobands) {
             if (cytoband.getEnd() > this.length) {

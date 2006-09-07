@@ -5,24 +5,17 @@
 
 <hibernate-mapping>
 
-	<class name="org.rti.webcgh.domain.Experiment" table="EXPERIMENT_2">
+	<class name="org.rti.webcgh.domain.Cytoband" table="CYTOBAND_2">
 	
 		<id name="id" column="ID">
 		    <generator class="increment"/>
 		</id>
 		
 		<property name="name"/>
+		<property name="start"/>
+		<property name="end"/>
+		<property name="stain"/>
 		
-		<set
-			name="bioAssays"
-			cascade="all"
-		>
-			<key
-				column="experiment_id"
-				not-null="true"
-			/>
-			<one-to-many class="org.rti.webcgh.domain.BioAssay"/>
-		</set>
 	</class>
 
 </hibernate-mapping>

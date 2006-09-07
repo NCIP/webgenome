@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 15:15:31 $
+$Revision: 1.1 $
+$Date: 2006-09-07 15:15:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,51 +48,46 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webcgh.service.dao;
 
-package org.rti.webcgh.service.authentication;
-
-import org.rti.webcgh.core.WebcghApplicationException;
-
+import org.rti.webcgh.domain.CytologicalMap;
+import org.rti.webcgh.domain.Organism;
 
 /**
- * Exception thrown when clients try to obtain data they
- * are not entitled to access. 
+ * Data access class for <code>CytologicalMap</code>.
+ * @author dhall
+ *
  */
-public class AuthenticationException extends WebcghApplicationException {
-	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = (long) 1;
+public interface CytologicalMapDao {
 	
 	/**
-	 * Constructor.
+	 * Save given map to persistent storage.
+	 * @param cytologicalMap Cytological map.
 	 */
-	public AuthenticationException() {
-		super();
-	}
+	void save(CytologicalMap cytologicalMap);
 	
 	/**
-	 * Constructor.
-	 * @param msg Message
+	 * Load cytological map from persistent storage.
+	 * @param id Primary key identifier of
+	 * cytological map.
+	 * @return Cytological map corresponding to
+	 * given id.  Throws an exception if a cytological
+	 * map is not available with given ID.
 	 */
-	public AuthenticationException(final String msg) {
-		super(msg);
-	}
+	CytologicalMap load(Long id);
 	
 	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable
+	 * Load cytological map from persistent storage.
+	 * @param organism An organism
+	 * @param chromosome Chromosome number
+	 * @return A cytological map or null if there
+	 * is no map from given organism and chromosome.
 	 */
-	public AuthenticationException(final Throwable origThrowable) {
-		super(origThrowable);
-	}
+	CytologicalMap load(Organism organism, short chromosome);
 
 	/**
-	 * Constructor.
-	 * @param msg Message
-	 * @param origThrowable Original throwable
+	 * Delete given cytological map from persistent storage.
+	 * @param cytologicalMap Cytological map to delete.
 	 */
-	public AuthenticationException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
+	void delete(CytologicalMap cytologicalMap);
 }

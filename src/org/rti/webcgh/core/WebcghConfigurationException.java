@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/core/WebcghConfigurationException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-09-07 15:15:29 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,53 +38,57 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.core;
 
 /**
- * Thrown when there is a problem with system configuration
+ * Thrown when there is a problem with system configuration.
  */
 public class WebcghConfigurationException extends WebcghRuntimeException {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = (long) 1;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public WebcghConfigurationException() {
 		super();
 	}
 
 	/**
-	 * Constructor
-	 * @param arg0 A message
+	 * Constructor.
+	 * @param message A message
 	 */
-	public WebcghConfigurationException(String arg0) {
-		super(arg0);
+	public WebcghConfigurationException(final String message) {
+		super(message);
 	}
 
 	/**
-	 * Constructor
-	 * @param arg0 Message
-	 * @param arg1 Original exception
+	 * Constructor.
+	 * @param message Message
+	 * @param throwable Original exception
 	 */
-	public WebcghConfigurationException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
+	public WebcghConfigurationException(final String message,
+			final Throwable throwable) {
+		super(message, throwable);
 	}
 
 	/**
-	 * @param arg0 Original exception
+	 * Constructor.
+	 * @param throwable Original exception
 	 */
-	public WebcghConfigurationException(Throwable arg0) {
-		super(arg0);
+	public WebcghConfigurationException(final Throwable throwable) {
+		super(throwable);
 	}
 
 }

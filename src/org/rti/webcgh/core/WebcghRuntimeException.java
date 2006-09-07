@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/core/WebcghRuntimeException.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Revision: 1.2 $
+$Date: 2006-09-07 15:15:29 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 
@@ -58,50 +55,59 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 /**
- * Unchecked exceptions
+ * Base class for all unchecked exceptions.
  */
 public class WebcghRuntimeException extends RuntimeException {
 	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = (long) 1;
+	
+	/** Divider between chained error messages. */
 	private static final String DIVIDER = "\n\n***** Nested throwable:\n\n";
 
+	/** Nested throwable. */
 	private Throwable nestedThrowable = null;
 
 
 	/**
-	 *  Constructor
+	 *  Constructor.
 	 */
 	public WebcghRuntimeException() {
 		super();
 	}
 
 	/**
-	 * @param arg0 Message
+	 * Constructor.
+	 * @param message Message
 	 */
-	public WebcghRuntimeException(String arg0) {
-		super(arg0);
+	public WebcghRuntimeException(final String message) {
+		super(message);
 	}
 
 	/**
-	 * @param arg0 Message
-	 * @param arg1 Original throwable
+	 * Constructor.
+	 * @param message Message
+	 * @param throwable Original throwable
 	 */
-	public WebcghRuntimeException(String arg0, Throwable arg1) {
-		super(arg0);
-		nestedThrowable = arg1;
+	public WebcghRuntimeException(final String message,
+			final Throwable throwable) {
+		super(message);
+		nestedThrowable = throwable;
 	}
 
 	/**
-	 * @param arg0 Original throwable
+	 * Constructor.
+	 * @param throwable Original throwable
 	 */
-	public WebcghRuntimeException(Throwable arg0) {
+	public WebcghRuntimeException(final Throwable throwable) {
 		super();
-		nestedThrowable = arg0;
+		nestedThrowable = throwable;
 	}
 
 	/**
-	 * Print stack trace
+	 * Print stack trace.
 	 */
-	public void printStackTrace() {
+	public final void printStackTrace() {
 		super.printStackTrace();
 		if (nestedThrowable != null) {
 			System.err.println(DIVIDER);
@@ -110,10 +116,10 @@ public class WebcghRuntimeException extends RuntimeException {
 	}
 
 	/**
-	 * Print stack trace
+	 * Print stack trace.
 	 * @param out Stream
 	 */
-	public void printStackTrace(PrintStream out) {
+	public final void printStackTrace(final PrintStream out) {
 		super.printStackTrace(out);
 		if (nestedThrowable != null) {
 			out.print(DIVIDER);
@@ -122,10 +128,10 @@ public class WebcghRuntimeException extends RuntimeException {
 	}
 
 	/**
-	 * Print stack trace
+	 * Print stack trace.
 	 * @param out Stream
 	 */
-	public void printStackTrace(PrintWriter out) {
+	public final void printStackTrace(final PrintWriter out) {
 		super.printStackTrace(out);
 		if (nestedThrowable != null) {
 			out.print(DIVIDER);
