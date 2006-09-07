@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/unit_test/PlotGeneratorTester.java,v $
-$Revision: 1.10 $
-$Date: 2006-08-03 21:52:18 $
+$Revision: 1.11 $
+$Date: 2006-09-07 18:54:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webcgh.array.GenomeLocationFactory;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.graph.PlotGenerator;
 import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.plot.PlotType;
+import org.rti.webcgh.graphics.PlotType;
 
 /**
  * Tester for PlotGenerator

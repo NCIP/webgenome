@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.2 $
+$Date: 2006-09-07 18:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,10 +65,13 @@ import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.Reporter;
-import org.rti.webcgh.drawing.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.io.DataFileManager;
-import org.rti.webcgh.plot.ScatterPlotParameters;
-import org.rti.webcgh.service.plot.SerializedScatterPlotPainter;
+import org.rti.webcgh.service.plot.ScatterPlotPainter;
+import org.rti.webcgh.service.plot.ScatterPlotParameters;
+import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
+import org.rti.webcgh.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 
@@ -89,7 +92,7 @@ public final class SerializedScatterPlotPainterTester extends TestCase {
 	 * path.
 	 */
 	private static final String TEMP_DIR_NAME =
-		"serialized_scatter_plot_painter_test_dir";
+		"scatter_plot_painter_test_dir";
 	
 	/**
 	 * Path to temporary directory for storing data files.
@@ -112,7 +115,13 @@ public final class SerializedScatterPlotPainterTester extends TestCase {
 	 * Number of array datum per chromosome in
 	 * serialized data tests.
 	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME = 5000;
+	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 5000;
+	
+	/**
+	 * Number of array datum per chromosome in
+	 * in-memory data tests.
+	 */
+	private static final int NUM_DATUM_PER_CHROMOSOME_IN_MEMORY = 50;
 	
     /** Minimum Y-axis value. */
     private static final float MIN_Y = (float) -2.0;
@@ -140,10 +149,10 @@ public final class SerializedScatterPlotPainterTester extends TestCase {
 
 	
 	/**
-	 * Test paingScatterPlot() method.
+	 * Test paintScatterPlot() method on serialized data.
 	 * @throws Exception if anything bad happens
 	 */
-	public void testPaintScatterPlot() throws Exception {
+	public void testPaintScatterPlotSerialized() throws Exception {
 		
 		// Instantiate data file manager
 		DataFileManager dataFileManager = new DataFileManager(TEMP_DIR_PATH);
@@ -153,7 +162,7 @@ public final class SerializedScatterPlotPainterTester extends TestCase {
         Collection<Experiment> experiments = new ArrayList<Experiment>();
         for (int i = 0; i < NUM_EXPERIMENTS; i++) {
         	Experiment exp = expGen.newDataSerializedExperiment(NUM_BIO_ASSAYS,
-	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME,
+	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_SERIALIZED,
 	        		dataFileManager);
 	        experiments.add(exp);
 	        for (BioAssay ba : exp.getBioAssays()) {
@@ -171,18 +180,87 @@ public final class SerializedScatterPlotPainterTester extends TestCase {
         params.setMinY(MIN_Y);
         params.setMaxY(MAX_Y);
         
-        // Create drawing canvas
+        // Create plotting panel
         RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+        PlotPanel panel = new PlotPanel(canvas);
+        
+        // Create chromosome array data getter
+        SerializedChromosomeArrayDataGetter cadg =
+        	new SerializedChromosomeArrayDataGetter();
+        cadg.setDataFileManager(dataFileManager);
         
         // Run method
-        SerializedScatterPlotPainter painter =
-        	new SerializedScatterPlotPainter();
-        painter.setDataFileManager(dataFileManager);
-        painter.paintScatterPlot(experiments, canvas, params, WIDTH, HEIGHT,
+        ScatterPlotPainter painter =
+        	new ScatterPlotPainter(cadg);
+        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
                 QuantitationType.LOG_2_RATIO);
         
+        // Adjust canvas properties
+        canvas.setOrigin(panel.topLeftPoint());
+        canvas.setWidth(panel.width());
+        canvas.setHeight(panel.height());
+        
         // Output graphics to file
-        String filePath = TEMP_DIR_PATH + "/plot.png";
+        String filePath = TEMP_DIR_PATH + "/plot-serialized.png";
+        BufferedImage img = canvas.toBufferedImage();
+        ImageIO.write(img, "png", new File(filePath));
+        
+        // Clean up
+        for (Experiment exp : experiments) {
+        	dataFileManager.deleteDataFiles(exp, true);
+        }
+	}
+	
+	
+	/**
+	 * Test paintScatterPlot() method on in-memory data.
+	 * @throws Exception if anything bad happens
+	 */
+	public void testPaintScatterPlotInMemory() throws Exception {
+		
+		// Create test experiments
+		ExperimentGenerator expGen = new ExperimentGenerator();
+        Collection<Experiment> experiments = new ArrayList<Experiment>();
+        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
+        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
+	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
+	        experiments.add(exp);
+	        for (BioAssay ba : exp.getBioAssays()) {
+	        	ba.setColor(Color.BLUE);
+	        }
+        }
+        
+        // Create plot parameters
+        ScatterPlotParameters params = new ScatterPlotParameters();
+        List<Reporter> reporters = expGen.getReporters();
+        params.setChromosome(reporters.get(0).getChromosome());
+        params.setStartLocation(reporters.get(0).getLocation());
+        params.setEndLocation(reporters.get(
+                reporters.size() - 1).getLocation());
+        params.setMinY(MIN_Y);
+        params.setMaxY(MAX_Y);
+        
+        // Create plotting panel
+        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+        PlotPanel panel = new PlotPanel(canvas);
+        
+        // Create chromosome array data getter
+        InMemoryChromosomeArrayDataGetter cadg =
+        	new InMemoryChromosomeArrayDataGetter();
+        
+        // Run method
+        ScatterPlotPainter painter =
+        	new ScatterPlotPainter(cadg);
+        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
+                QuantitationType.LOG_2_RATIO);
+        
+        // Adjust canvas properties
+        canvas.setOrigin(panel.topLeftPoint());
+        canvas.setWidth(panel.width());
+        canvas.setHeight(panel.height());
+        
+        // Output graphics to file
+        String filePath = TEMP_DIR_PATH + "/plot-in-memory.png";
         BufferedImage img = canvas.toBufferedImage();
         ImageIO.write(img, "png", new File(filePath));
 	}

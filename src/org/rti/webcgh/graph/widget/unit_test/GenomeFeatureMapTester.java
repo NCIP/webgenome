@@ -56,11 +56,11 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.plot.Caption;
-import org.rti.webcgh.plot.CentromereWarper;
-import org.rti.webcgh.plot.GenomeFeatureMap;
-import org.rti.webcgh.plot.PlotPanel;
-import org.rti.webcgh.plot.Warper;
+import org.rti.webcgh.graphics.util.CentromereWarper;
+import org.rti.webcgh.graphics.util.Warper;
+import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
@@ -87,7 +87,7 @@ public class GenomeFeatureMapTester extends TestCase {
 	 * @throws Exception
 	 */
 	public void testBasicHoriz() throws Exception {
-		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.HORIZONTAL);
+		GenomeFeaturePlot map = new GenomeFeaturePlot(100, 200, 400, Orientation.HORIZONTAL);
 		map.plotFeature(110, 120, "Feat 1", new URL("http://www.google.com"), true, 
 			Color.green);
 		map.plotFeatures(new long[] {150, 165, 180}, new long[] {151, 172, 190}, "Feat 2",
@@ -101,9 +101,9 @@ public class GenomeFeatureMapTester extends TestCase {
 	
 	public void testIdeogramPlot() throws Exception {
 		PlotPanel childPanel = this.panel.newChildPlotPanel();
-		GenomeFeatureMap map1 = new GenomeFeatureMap(0, 200, 400, Orientation.VERTICAL);
+		GenomeFeaturePlot map1 = new GenomeFeaturePlot(0, 200, 400, Orientation.VERTICAL);
 		map1.plotFeature(0, 200, "Feature 1", null, false, Color.blue);
-		GenomeFeatureMap map2 = new GenomeFeatureMap(0, 200, 400, Orientation.VERTICAL);
+		GenomeFeaturePlot map2 = new GenomeFeaturePlot(0, 200, 400, Orientation.VERTICAL);
 		map2.plotFeature(0, 200, "Feature 2", null, false, Color.blue);
 		Caption c1 = new Caption("Feature 1", Orientation.VERTICAL, false);
 		Caption c2 = new Caption("Feature 2", Orientation.VERTICAL, false);
@@ -125,7 +125,7 @@ public class GenomeFeatureMapTester extends TestCase {
 	 * @throws Exception
 	 */
 	public void testBasicVert() throws Exception {
-		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.VERTICAL);
+		GenomeFeaturePlot map = new GenomeFeaturePlot(100, 200, 400, Orientation.VERTICAL);
 		map.plotFeature(110, 120, "Feat 1", new URL("http://www.google.com"), true, 
 			Color.green);
 		map.plotFeatures(new long[] {150, 165, 180}, new long[] {151, 172, 190}, "Feat 2",
@@ -142,7 +142,7 @@ public class GenomeFeatureMapTester extends TestCase {
 	 * @throws Exception
 	 */
 	public void testChromosomeHoriz() throws Exception {
-		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.HORIZONTAL);
+		GenomeFeaturePlot map = new GenomeFeaturePlot(100, 200, 400, Orientation.HORIZONTAL);
 		Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(110), 
 			map.bpToPixel(150));
 		map.setWarper(warper);
@@ -176,7 +176,7 @@ public class GenomeFeatureMapTester extends TestCase {
 	 * @throws Exception
 	 */
 	public void testChromosomeVert() throws Exception {
-		GenomeFeatureMap map = new GenomeFeatureMap(100, 200, 400, Orientation.VERTICAL);
+		GenomeFeaturePlot map = new GenomeFeaturePlot(100, 200, 400, Orientation.VERTICAL);
 		Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(110), 
 			map.bpToPixel(150));
 		map.setWarper(warper);

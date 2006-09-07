@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Cytoband.java,v $
-$Revision: 1.5 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.6 $
+$Date: 2006-09-07 18:54:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
-import org.rti.webcgh.plot.GenomeFeatureMap;
+import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 
 /**
  * A band within a cytogenetic map
@@ -183,7 +183,7 @@ public class Cytoband {
      * @param map A map
      * @param colorMapper A color mapper
      */
-    public void graph(GenomeFeatureMap map, ColorMapper colorMapper) {
+    public void graph(GenomeFeaturePlot map, ColorMapper colorMapper) {
     	long startMb = this.start / 1000000;
     	long endMb = this.end / 1000000;
     	String mouseOver = this.name + " [" + startMb + "MB-" + endMb + "MB]";

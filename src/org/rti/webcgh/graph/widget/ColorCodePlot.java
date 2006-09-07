@@ -61,10 +61,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.units.Orientation;
 
 /**

@@ -61,9 +61,9 @@ import java.util.List;
 
 import org.rti.webcgh.array.QuantifiedInterval;
 import org.rti.webcgh.array.QuantifiedIntervals;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.plot.PlotElement;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.widget.PlotElement;
 
 
 /**

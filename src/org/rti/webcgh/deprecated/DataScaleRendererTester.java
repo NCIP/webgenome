@@ -53,8 +53,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.deprecated;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.SvgDrawingCanvas;
 import org.w3c.dom.Document;
 
 import junit.framework.TestCase;

@@ -55,9 +55,9 @@ package org.rti.webcgh.deprecated;
 
 import java.awt.Color;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.drawing.SvgDrawingCanvas;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.SvgDrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.w3c.dom.Document;
 
 import junit.framework.TestCase;

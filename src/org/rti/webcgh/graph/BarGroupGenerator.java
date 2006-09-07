@@ -57,8 +57,8 @@ import java.awt.Color;
 import java.util.List;
 
 import org.rti.webcgh.graph.widget.Bar;
-import org.rti.webcgh.plot.Caption;
-import org.rti.webcgh.plot.PlotPanel;
+import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;

@@ -61,14 +61,14 @@ import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.ExperimentIterator;
-import org.rti.webcgh.drawing.Cursor;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.Line;
-import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.drawing.Text;
 import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.plot.PlotElement;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.event.GraphicEvent;
+import org.rti.webcgh.graphics.primitive.Cursor;
+import org.rti.webcgh.graphics.primitive.Line;
+import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.primitive.Text;
+import org.rti.webcgh.graphics.widget.PlotElement;
 import org.rti.webcgh.units.HorizontalAlignment;
 
 /**

@@ -56,9 +56,9 @@ package org.rti.webcgh.graph.widget;
 import java.awt.Color;
 import java.awt.Point;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Curve;
-import org.rti.webcgh.plot.PlotElement;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Curve;
+import org.rti.webcgh.graphics.widget.PlotElement;
 import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.units.Orientation;
 

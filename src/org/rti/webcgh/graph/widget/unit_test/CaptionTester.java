@@ -57,7 +57,7 @@ import java.awt.Point;
 import junit.framework.TestCase;
 
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.plot.Caption;
+import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;

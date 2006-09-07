@@ -61,10 +61,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Line;
-import org.rti.webcgh.drawing.SvgDrawingCanvas;
-import org.rti.webcgh.plot.PlotPanel;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.SvgDrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Line;
+import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.util.IOUtils;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Document;

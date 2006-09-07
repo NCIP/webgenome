@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.2 $
+$Date: 2006-09-07 18:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,34 +59,50 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.QuantitationType;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Caption;
-import org.rti.webcgh.plot.Legend;
-import org.rti.webcgh.plot.PlotBoundaries;
-import org.rti.webcgh.plot.PlotPanel;
-import org.rti.webcgh.plot.ScatterPlot;
-import org.rti.webcgh.plot.ScatterPlotParameters;
+import org.rti.webcgh.graphics.PlotBoundaries;
+import org.rti.webcgh.graphics.widget.Axis;
+import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.graphics.widget.Legend;
+import org.rti.webcgh.graphics.widget.PlotPanel;
+import org.rti.webcgh.graphics.widget.ScatterPlot;
+import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 
 /**
- * Abstract base class for classes that paint scatter plots.
+ * Manages the painting scatter plots by getting
+ * data and assembling plot widgets.
  * @author dhall
  *
  */
-public abstract class ScatterPlotPainter {
-    
-    /** Padding around certain graphical elements in pixels. */
-    private static final int PADDING = 10;
-    
+public class ScatterPlotPainter {
+	
+	// ==============================
+	//      Attributes
+	// ==============================
+	
+	/** Chromosome array data getter. */
+	private final ChromosomeArrayDataGetter chromosomeArrayDataGetter;
+	
+	// ===============================
+	//    Constructors
+	// ===============================
+	
+	/**
+	 * Constructor.
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 */
+	public ScatterPlotPainter(
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
+	}
     
     /**
      * Paints a scatter plot on the given drawing canvas.
+     * @param panel Plot panel to add the scatter plot to
      * @param experiments Experiments to plot
-     * @param canvas Canvas upon which to paint
      * @param plotParameters Plotting parameters specified
      * by user
      * @param width Width of plot in pixels
@@ -94,16 +110,17 @@ public abstract class ScatterPlotPainter {
      * @param quantitationType Quantitation type
      * interval in base pairs
      */
-    public final void paintScatterPlot(final Collection<Experiment> experiments,
-            final DrawingCanvas canvas,
+    public final void paintScatterPlot(
+    		final PlotPanel panel,
+    		final Collection<Experiment> experiments,
             final ScatterPlotParameters plotParameters,
             final int width, final int height,
             final QuantitationType quantitationType) {
         
         // Check args
-        if (experiments == null || canvas == null) {
+        if (experiments == null || panel == null) {
             throw new IllegalArgumentException(
-                    "Experiments and canvas cannot be null");
+                    "Experiments and panel cannot be null");
         }
         if (plotParameters.getChromosome() < 1
                 || plotParameters.getStartLocation() < 0
@@ -123,16 +140,15 @@ public abstract class ScatterPlotPainter {
                     + plotParameters.getMaxY());
         }
         
-        PlotPanel panel = new PlotPanel(canvas);
-        
         // Paint plot
         List<ChromosomeArrayData> cads = new ArrayList<ChromosomeArrayData>();
         List<String> names = new ArrayList<String>();
         List<Color> colors = new ArrayList<Color>();
         for (Experiment experiment : experiments) {
             for (BioAssay ba : experiment.getBioAssays()) {
-                ChromosomeArrayData cad = this.getChromosomeArrayData(
-                        ba, plotParameters.getChromosome());
+                ChromosomeArrayData cad =
+                	this.chromosomeArrayDataGetter.getChromosomeArrayData(
+                			ba, plotParameters.getChromosome());
                 cads.add(cad);
                 names.add(ba.getName());
                 colors.add(ba.getColor());
@@ -176,25 +192,5 @@ public abstract class ScatterPlotPainter {
         Legend legend = new Legend(experiments, scatterPlot.width());
         panel.add(legend, HorizontalAlignment.LEFT_JUSTIFIED,
                 VerticalAlignment.BELOW);
-        
-        // Set dimensions of canvas
-        canvas.setOrigin(panel.topLeftPoint());
-        canvas.setWidth(panel.width());
-        canvas.setHeight(panel.height() + PADDING);
     }
-    
-    
-    // ================================
-    //        Abstract methods
-    // ================================
-    
-    /**
-     * Get chromosome array data associated with given
-     * bioassay and chromosome.
-     * @param bioAssay A bioassay
-     * @param chromosome Chromosome number
-     * @return Chromosome array data
-     */
-    protected abstract ChromosomeArrayData getChromosomeArrayData(
-            BioAssay bioAssay, short chromosome);
 }

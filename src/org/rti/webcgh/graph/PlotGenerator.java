@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.18 $
-$Date: 2006-09-07 15:15:30 $
+$Revision: 1.19 $
+$Date: 2006-09-07 18:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,24 +77,24 @@ import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.Rectangle;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
 import org.rti.webcgh.graph.widget.Background;
 import org.rti.webcgh.graph.widget.ChromosomeEndCap;
 import org.rti.webcgh.graph.widget.ColorCodePlot;
 import org.rti.webcgh.graph.widget.Legend;
 import org.rti.webcgh.graph.widget.ScatterPlot;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Caption;
-import org.rti.webcgh.plot.CentromereWarper;
-import org.rti.webcgh.plot.GenomeFeatureMap;
-import org.rti.webcgh.plot.Grid;
-import org.rti.webcgh.plot.PlotBoundaries;
-import org.rti.webcgh.plot.PlotPanel;
-import org.rti.webcgh.plot.PlotType;
-import org.rti.webcgh.plot.Warper;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.PlotBoundaries;
+import org.rti.webcgh.graphics.PlotType;
+import org.rti.webcgh.graphics.event.GraphicEvent;
+import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.util.CentromereWarper;
+import org.rti.webcgh.graphics.util.Warper;
+import org.rti.webcgh.graphics.widget.Axis;
+import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.Grid;
+import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
 import org.rti.webcgh.units.Direction;
@@ -516,7 +516,7 @@ public class PlotGenerator {
         if (cmap == null)
             throw new WebcghSystemException("Cannot find cytological map in embedded database");
         long mapEnd = (cmap.length() < interval.endBp())? cmap.length() : interval.endBp();
-        GenomeFeatureMap map = new GenomeFeatureMap(interval.startBp(), mapEnd, length, orientation);
+        GenomeFeaturePlot map = new GenomeFeaturePlot(interval.startBp(), mapEnd, length, orientation);
         Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(cmap.getCentromereStart()), 
                 map.bpToPixel(cmap.getCentromereEnd()));
         map.setWarper(warper);
@@ -555,7 +555,7 @@ public class PlotGenerator {
         int pixels = size.pixels(cmap.length());
         
         // Convert cytological map into a genome feature map, which can be graphed
-        GenomeFeatureMap map = new GenomeFeatureMap((long)0, cmap.length(), pixels, orientation);
+        GenomeFeaturePlot map = new GenomeFeaturePlot((long)0, cmap.length(), pixels, orientation);
         
         // Warp the ideogram at the centromere, so that ideogram has an
         // hourglass shape
@@ -617,7 +617,7 @@ public class PlotGenerator {
             ChromosomalAlterationIterator cai = exp.amplificationIterator();
             if (cai.hasNext()) {
             	PlotPanel ampPanel = idPanel.newChildPlotPanel();
-            	GenomeFeatureMap gfmap = new GenomeFeatureMap(0, cmap.length(), pixels, 
+            	GenomeFeaturePlot gfmap = new GenomeFeaturePlot(0, cmap.length(), pixels, 
             			orientation);
             	while (cai.hasNext()) {
             		ChromosomalAlteration alt = cai.next();
@@ -637,7 +637,7 @@ public class PlotGenerator {
             cai = exp.deletionIterator();
             if (cai.hasNext()) {
             	PlotPanel delPanel = idPanel.newChildPlotPanel();
-            	GenomeFeatureMap gfmap = new GenomeFeatureMap(0, cmap.length(), pixels, 
+            	GenomeFeaturePlot gfmap = new GenomeFeaturePlot(0, cmap.length(), pixels, 
             			Orientation.VERTICAL);
             	while (cai.hasNext()) {
             		ChromosomalAlteration alt = cai.next();

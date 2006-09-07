@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/CytologicalMap.java,v $
-$Revision: 1.5 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.6 $
+$Date: 2006-09-07 18:54:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,9 +56,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.rti.webcgh.plot.CentromereWarper;
-import org.rti.webcgh.plot.GenomeFeatureMap;
-import org.rti.webcgh.plot.Warper;
+import org.rti.webcgh.graphics.util.CentromereWarper;
+import org.rti.webcgh.graphics.util.Warper;
+import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 
 /**
  * Map of cytobands
@@ -224,7 +224,7 @@ public class CytologicalMap {
      * @param map A map
      * @param colorMapper A color mapper
      */
-    public void graph(GenomeFeatureMap map, ColorMapper colorMapper) {
+    public void graph(GenomeFeaturePlot map, ColorMapper colorMapper) {
     	for (Iterator it = this.cytobands.iterator(); it.hasNext();) {
     		Cytoband cytoband = (Cytoband)it.next();
     		cytoband.graph(map, colorMapper);

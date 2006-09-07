@@ -55,10 +55,10 @@ package org.rti.webcgh.graph.util;
 import java.awt.Color;
 import java.awt.Point;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Rectangle;
-import org.rti.webcgh.drawing.Text;
-import org.rti.webcgh.plot.PlotElement;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.primitive.Text;
+import org.rti.webcgh.graphics.widget.PlotElement;
 import org.rti.webcgh.units.HorizontalAlignment;
 
 /**

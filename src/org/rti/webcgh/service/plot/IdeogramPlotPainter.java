@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 15:15:31 $
+$Revision: 1.2 $
+$Date: 2006-09-07 18:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,30 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.domain.ChromosomeArrayData;
+
 /**
- * Generates ideogram plots.
+ * Abstract base class for generators of ideogram plots.
  * @author dhall
  *
  */
-public class IdeogramPlotPainter {
+public abstract class IdeogramPlotPainter {
+	
+	
 
+	
+    // ================================
+    //        Abstract methods
+    // ================================
+    
+    /**
+     * Get chromosome array data associated with given
+     * bioassay and chromosome.
+     * @param bioAssay A bioassay
+     * @param chromosome Chromosome number
+     * @return Chromosome array data
+     */
+    protected abstract ChromosomeArrayData getChromosomeArrayData(
+            BioAssay bioAssay, short chromosome);
 }

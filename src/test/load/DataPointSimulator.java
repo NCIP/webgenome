@@ -62,8 +62,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.drawing.Circle;
-import org.rti.webcgh.drawing.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.util.MathUtils;
 
 

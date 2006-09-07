@@ -55,9 +55,9 @@ package org.rti.webcgh.graph.widget.unit_test;
 import junit.framework.TestCase;
 
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.plot.Axis;
-import org.rti.webcgh.plot.Caption;
-import org.rti.webcgh.plot.PlotPanel;
+import org.rti.webcgh.graphics.widget.Axis;
+import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;

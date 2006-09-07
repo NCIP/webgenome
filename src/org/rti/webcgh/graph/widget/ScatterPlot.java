@@ -61,13 +61,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.rti.webcgh.drawing.DrawingCanvas;
-import org.rti.webcgh.drawing.Circle;
-import org.rti.webcgh.drawing.GraphicEvent;
-import org.rti.webcgh.drawing.Line;
-import org.rti.webcgh.drawing.Polyline;
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.plot.PlotBoundaries;
+import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.PlotBoundaries;
+import org.rti.webcgh.graphics.event.GraphicEvent;
+import org.rti.webcgh.graphics.primitive.Circle;
+import org.rti.webcgh.graphics.primitive.Line;
+import org.rti.webcgh.graphics.primitive.Polyline;
 
 /**
  * 
