@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.19 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.20 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,6 @@ import org.rti.webcgh.array.BioAssayIterator;
 import org.rti.webcgh.array.ChromosomalAlteration;
 import org.rti.webcgh.array.ChromosomalAlterationIterator;
 import org.rti.webcgh.array.Chromosome;
-import org.rti.webcgh.array.ClassPathPropertiesFileRgbHexidecimalColorMapper;
 import org.rti.webcgh.array.CytologicalMap;
 import org.rti.webcgh.array.DataSet;
 import org.rti.webcgh.array.Experiment;
@@ -89,6 +88,7 @@ import org.rti.webcgh.graphics.PlotType;
 import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.util.CentromereWarper;
+import org.rti.webcgh.graphics.util.ClassPathPropertiesFileRgbHexidecimalColorMapper;
 import org.rti.webcgh.graphics.util.Warper;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.Caption;

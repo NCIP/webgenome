@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/ClassPathPropertiesFileRgbHexidecimalColorMapper.java,v $
 $Revision: 1.1 $
-$Date: 2005-12-14 19:43:01 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,17 +38,18 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
-package org.rti.webcgh.array;
+
+
+package org.rti.webcgh.graphics.util;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -63,20 +62,26 @@ import org.rti.webcgh.util.ColorUtils;
 import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Implementation of ColorMapper interface.  Color mapping configurations are read
- * from a properties file on the classpath.  Colors are encoded as RGB
- * hexidecimal values (i.e. 'FF0066' or '#FF0066').
+ * Implementation of ColorMapper interface.  Color mapping configurations
+ * are read from a properties file on the classpath.  Colors are encoded
+ * as RGB hexidecimal values (i.e. 'FF0066' or '#FF0066').
  */
-public class ClassPathPropertiesFileRgbHexidecimalColorMapper implements ColorMapper {
+public final class ClassPathPropertiesFileRgbHexidecimalColorMapper
+	implements ColorMapper {
     
-    private static final Logger LOGGER = Logger.getLogger(ClassPathPropertiesFileRgbHexidecimalColorMapper.class);
+	/** Logger. */
+    private static final Logger LOGGER =
+    	Logger.getLogger(
+    			ClassPathPropertiesFileRgbHexidecimalColorMapper.class);
     
     
     // ===============================
     //     Attributes
     // ===============================
     
-    private final Map colorIndex = new HashMap();
+    /** Maps color names to colors. */
+    private final Map<String, Color> colorIndex =
+    	new HashMap<String, Color>();
     
     
     // ====================================
@@ -84,13 +89,14 @@ public class ClassPathPropertiesFileRgbHexidecimalColorMapper implements ColorMa
     // ====================================
     
     /**
-     * Constructor
+     * Constructor.
      * @param fileName Properties file name
      */
-    public ClassPathPropertiesFileRgbHexidecimalColorMapper(String fileName) {
+    public ClassPathPropertiesFileRgbHexidecimalColorMapper(
+    		final String fileName) {
         Properties props = SystemUtils.loadProperties(fileName);
         for (Iterator it = props.keySet().iterator(); it.hasNext();) {
-            String key = (String)it.next();
+            String key = (String) it.next();
             Color value = ColorUtils.getColor(props.getProperty(key));
             this.colorIndex.put(key, value);
         }
@@ -102,14 +108,15 @@ public class ClassPathPropertiesFileRgbHexidecimalColorMapper implements ColorMa
     // =====================================
     
     /**
-     * Get color associated with key
-     * @param key
+     * Get color associated with key.
+     * @param key A key
      * @return A color
      */
-    public Color getColor(Object key) {
-        Color color = (Color)colorIndex.get(key);
-        if (color == null)
+    public Color getColor(final Object key) {
+        Color color = colorIndex.get(key);
+        if (color == null) {
             LOGGER.warn("Color for '" + key.toString() + "' not found");
+        }
         return color;
     }
 

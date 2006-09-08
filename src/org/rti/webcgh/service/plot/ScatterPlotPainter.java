@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.3 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,14 +77,9 @@ import org.rti.webcgh.units.VerticalAlignment;
  * @author dhall
  *
  */
-public class ScatterPlotPainter {
+public class ScatterPlotPainter extends PlotPainter {
 	
-	// ==============================
-	//      Attributes
-	// ==============================
-	
-	/** Chromosome array data getter. */
-	private final ChromosomeArrayDataGetter chromosomeArrayDataGetter;
+
 	
 	// ===============================
 	//    Constructors
@@ -96,8 +91,12 @@ public class ScatterPlotPainter {
 	 */
 	public ScatterPlotPainter(
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
-		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
+		super(chromosomeArrayDataGetter);
 	}
+	
+	// =========================
+	//    Business methods
+	// =========================
     
     /**
      * Paints a scatter plot on the given drawing canvas.
@@ -147,7 +146,7 @@ public class ScatterPlotPainter {
         for (Experiment experiment : experiments) {
             for (BioAssay ba : experiment.getBioAssays()) {
                 ChromosomeArrayData cad =
-                	this.chromosomeArrayDataGetter.getChromosomeArrayData(
+                	this.getChromosomeArrayDataGetter().getChromosomeArrayData(
                 			ba, plotParameters.getChromosome());
                 cads.add(cad);
                 names.add(ba.getName());

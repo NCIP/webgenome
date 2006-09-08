@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/CytologicalMap.java,v $
-$Revision: 1.6 $
-$Date: 2006-09-07 18:54:54 $
+$Revision: 1.7 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.graphics.util.CentromereWarper;
+import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.util.Warper;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 

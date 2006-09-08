@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.1 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,12 +79,15 @@ import junit.framework.TestCase;
 
 
 /**
- * Tester for <code>SerializedScatterPlotPainter</code>.
+ * Tester for <code>ScatterPlotPainter</code>.
  * @author dhall
  *
  */
-public final class SerializedScatterPlotPainterTester extends TestCase {
+public final class ScatterPlotPainterTester extends TestCase {
 	
+	// ==========================
+	//      Constants
+	// ==========================
 	
 	/**
 	 * Name of temporary directory for storing
@@ -147,6 +150,10 @@ public final class SerializedScatterPlotPainterTester extends TestCase {
 		FileUtils.createDirectory(TEMP_DIR_PATH);
 	}
 
+	
+	// ============================
+	//     Test cases
+	// ============================
 	
 	/**
 	 * Test paintScatterPlot() method on serialized data.

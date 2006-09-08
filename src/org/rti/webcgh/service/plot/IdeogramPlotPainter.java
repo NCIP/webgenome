@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.3 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,30 +50,106 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
-import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.ChromosomeArrayData;
+import java.awt.Color;
+import java.util.Collection;
+
+import org.rti.webcgh.domain.Cytoband;
+import org.rti.webcgh.domain.CytologicalMap;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.graphics.util.ColorMapper;
+import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.PlotPanel;
+import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.units.Orientation;
+
 
 /**
- * Abstract base class for generators of ideogram plots.
+ * Generates ideogram plots by assembling and laying out
+ * the necessary widgets.
  * @author dhall
  *
  */
-public abstract class IdeogramPlotPainter {
+public class IdeogramPlotPainter extends PlotPainter {
+	
+	// ======================
+	//       Attributes
+	// ======================
+	
+	/**
+	 * Color mapper to map cytoband stain
+	 * intensities to colors.
+	 */
+	private final ColorMapper colorMapper;
+	
+	// ========================
+	//     Constructors
+	// ========================
+	
+	/**
+	 * Constructor.
+	 * @param chromosomeArrayDataGetter Chromosome array
+	 * data getter
+	 * @param colorMapper Color mapper to map cytoband stain
+	 * intensities to colors.
+	 */
+	public IdeogramPlotPainter(
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter,
+			final ColorMapper colorMapper) {
+		super(chromosomeArrayDataGetter);
+		this.colorMapper = colorMapper;
+	}
 	
 	
-
+	// =========================
+	//    Business methods
+	// =========================
 	
-    // ================================
-    //        Abstract methods
-    // ================================
-    
-    /**
-     * Get chromosome array data associated with given
-     * bioassay and chromosome.
-     * @param bioAssay A bioassay
-     * @param chromosome Chromosome number
-     * @return Chromosome array data
-     */
-    protected abstract ChromosomeArrayData getChromosomeArrayData(
-            BioAssay bioAssay, short chromosome);
+	/**
+	 * Paint ideogram plot on given plot panel.
+	 * @param panel Plot panel to paint on
+	 * @param experiments Experiments to plot
+	 * @param cytologicalMap Cytological map to plot
+	 * @param plotParameters Plot parameters
+	 */
+	public final void paintIdeogramPlot(
+			final PlotPanel panel,
+			final Collection<Experiment> experiments,
+			final CytologicalMap cytologicalMap,
+			final IdeogramPlotParameters plotParameters) {
+		
+		// Paint chromosome ideogram
+		this.paintChromosomeIdeogram(panel, cytologicalMap, plotParameters);
+	}
+	
+	
+	/**
+	 * Paint chromosome ideogram on given plot panel.
+	 * @param plotPanel Plot panel to paint on
+	 * @param cytologicalMap Cytological map to convert graphically
+	 * into an ideogram
+	 * @param plotParameters Plot parameters
+	 */
+	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
+			final CytologicalMap cytologicalMap,
+			final IdeogramPlotParameters plotParameters) {
+		
+		// Calculate height of ideogram
+		int height =
+			plotParameters.getIdeogramSize().pixels(cytologicalMap.length());
+		
+		// Instantiate genome feature plot
+		GenomeFeaturePlot plot = new GenomeFeaturePlot(1,
+				cytologicalMap.length(), height, Orientation.VERTICAL);
+		
+		// Add cytobands to plot
+		for (Cytoband c : cytologicalMap.getCytobands()) {
+			Color color = this.colorMapper.getColor(c.getStain());
+			plot.plotFeature(c.getStart(), c.getEnd(), c.getName(), null,
+					false, color);
+		}
+		
+		// Add genome feature plot
+		plotPanel.add(plot);
+	}
+			
 }

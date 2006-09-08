@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/Cytoband.java,v $
-$Revision: 1.6 $
-$Date: 2006-09-07 18:54:54 $
+$Revision: 1.7 $
+$Date: 2006-09-08 03:06:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.array;
 
+import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 
 /**
