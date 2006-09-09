@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,7 @@ import java.util.List;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graphics.event.GraphicEvent;
+import org.rti.webcgh.graphics.primitive.Arc;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.GraphicPrimitive;
 import org.rti.webcgh.graphics.primitive.Line;
@@ -74,6 +75,7 @@ import org.rti.webcgh.graphics.primitive.Polyline;
 import org.rti.webcgh.graphics.primitive.RasterText;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.primitive.Text;
+import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.units.HorizontalAlignment;
 
 /**
@@ -465,6 +467,26 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
                     t.getFontSize());
             graphics.setFont(newFont);
             graphics.drawString(t.getValue(), t.getX(), t.getY());
+        } else if (prim instanceof Arc) {
+        	Arc a = (Arc) prim;
+        	int x = a.getX() - a.getWidth() / 2;
+        	int y = a.getY() - a.getHeight() / 2;
+        	int startAngle = 0, arcAngle = 0;
+        	if (a.getDirection() == Direction.UP) {
+        		startAngle = 180;
+        		arcAngle = -180;
+        	} else if (a.getDirection() == Direction.DOWN) {
+        		startAngle = 180;
+        		arcAngle = 180;
+        	} else if (a.getDirection() == Direction.LEFT) {
+        		startAngle = 90;
+        		arcAngle = 180;
+        	} else if (a.getDirection() == Direction.RIGHT) {
+        		startAngle = 90;
+        		arcAngle = -180;
+        	}
+        	graphics.fillArc(x, y, a.getWidth(), a.getHeight(),
+        			startAngle, arcAngle);
         }
     }
 }

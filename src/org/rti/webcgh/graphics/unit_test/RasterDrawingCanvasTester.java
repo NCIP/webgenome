@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/unit_test/RasterDrawingCanvasTester.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.graphics.unit_test;
@@ -65,11 +62,13 @@ import javax.imageio.ImageIO;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Arc;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Polygon;
 import org.rti.webcgh.graphics.primitive.Polyline;
 import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 
@@ -134,6 +133,53 @@ public final class RasterDrawingCanvasTester extends TestCase {
     public void testCircle() {
         this.canvas.add(new Circle(100, 100, 20, Color.GREEN));
         this.outputCanvas("circle.png");
+    }
+    
+    
+    /**
+     * Test drawing a curve pointing up.
+     *
+     */
+    public void testArcUp() {
+    	this.canvas.add(new Arc(200, 200, 100, 100, Direction.UP, Color.GREEN));
+    	this.canvas.add(new Circle(200, 200, 5, Color.RED));
+    	this.outputCanvas("arc-up.png");
+    }
+    
+    
+    /**
+     * Test drawing a curve pointing down.
+     *
+     */
+    public void testArcDown() {
+    	this.canvas.add(new Arc(200, 200, 100, 100, Direction.DOWN,
+    			Color.GREEN));
+    	this.canvas.add(new Circle(200, 200, 5, Color.RED));
+    	this.outputCanvas("arc-down.png");
+    }
+    
+    
+    /**
+     * Test drawing a curve pointing left.
+     *
+     */
+    public void testArcLeft() {
+    	this.canvas.add(new Arc(200, 200, 100, 100, Direction.LEFT,
+    			Color.GREEN));
+    	this.canvas.add(new Circle(200, 200, 5, Color.RED));
+    	this.outputCanvas("arc-left.png");
+    }
+    
+    
+    /**
+     * Test drawing a curve pointing right.
+     *
+     */
+    public void testArcRight() {
+    	this.canvas.add(new Arc(200, 200, 100, 100, Direction.RIGHT,
+    			Color.GREEN));
+    	this.canvas.add(new Circle(200, 200, 5, Color.RED));
+    	this.outputCanvas("arc-right.png");
     }
     
     

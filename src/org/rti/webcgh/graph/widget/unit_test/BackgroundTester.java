@@ -57,7 +57,7 @@ import java.awt.Color;
 import junit.framework.TestCase;
 
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
-import org.rti.webcgh.graph.widget.Background;
+import org.rti.webcgh.graphics.widget.Background;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.VerticalAlignment;
 

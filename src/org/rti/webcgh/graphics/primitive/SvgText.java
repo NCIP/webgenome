@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/SvgText.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,8 @@ import org.rti.webcgh.units.HorizontalAlignment;
  */
 public final class SvgText extends Text {
 	
-	
+	/** Default color. */
+	private static final Color DEF_COLOR = Color.BLACK;
 
 	/**
 	 * Constructor.
@@ -78,7 +79,7 @@ public final class SvgText extends Text {
 	 * @param value Text value
 	 */
 	public SvgText(final String value) {
-		super(value);
+		super(value, DEF_COLOR);
 	}
 	
 

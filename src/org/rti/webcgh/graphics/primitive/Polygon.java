@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Polygon.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,8 +103,8 @@ public class Polygon extends GraphicPrimitive {
      * @param color Color
      */
     public Polygon(Point[] points, Color color) {
+    	super(color);
         this.setPoints(points);
-        this.color = color;
     }
     
     

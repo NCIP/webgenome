@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Circle.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,10 +76,10 @@ public class Circle extends GraphicPrimitive {
 	 * @param color Color
 	 */
 	public Circle(int x, int y, int radius, Color color) {
+		super(color);
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
-		this.color = color;
 	}
 
 	/**

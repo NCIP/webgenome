@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-08 03:06:50 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import javax.imageio.ImageIO;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
@@ -91,7 +92,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	// ===============================
 	
 	/** Height of centromere in native units. */
-	private static final long CENTROMERE_HEIGHT = 10;
+	private static final long CENTROMERE_HEIGHT = 10000000;
 	
 	/**
 	 * Name of temporary directory for storing
@@ -147,6 +148,9 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	 */
 	private static final int NUM_DATUM_PER_CHROMOSOME_IN_MEMORY = 50;
 	
+	/** Length of chromosome in base pairs. */
+	private static final long CHROM_LENGTH = 100000000;
+	
 	// ===================================
 	//     Test cases
 	// ===================================
@@ -158,7 +162,8 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	public void testPaintIdeogramPlot() throws Exception {
 		
 		// Create test experiments
-		ExperimentGenerator expGen = new ExperimentGenerator();
+		long gap = CHROM_LENGTH / NUM_DATUM_PER_CHROMOSOME_IN_MEMORY;
+		ExperimentGenerator expGen = new ExperimentGenerator(gap);
         Collection<Experiment> experiments = new ArrayList<Experiment>();
         for (int i = 0; i < NUM_EXPERIMENTS; i++) {
         	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
@@ -199,11 +204,16 @@ public final class IdeogramPlotPainterTester extends TestCase {
         	new IdeogramPlotPainter(cadg, colorMapper);
         
         // Create cytologial map
-        long centMid = (start + end) / 2;
+        long centMid = CHROM_LENGTH / 2;
         long centStart = centMid - CENTROMERE_HEIGHT / 2;
         long centEnd = centMid + CENTROMERE_HEIGHT / 2;
         CytologicalMap map =
         	new CytologicalMap(chromosome, centStart, centEnd);
+        map.addCytoband(new Cytoband("c1", 1, 10000000, "gpos33"));
+        map.addCytoband(new Cytoband("c2", 10000000, 30000000, "gpos66"));
+        map.addCytoband(new Cytoband("c3", 30000000, 40000000, "gpos50"));
+        map.addCytoband(new Cytoband("c4", 40000000, 90000000, "gpos66"));
+        map.addCytoband(new Cytoband("c5", 90000000, 100000000, "gpos100"));
         
         // Create plot
         painter.paintIdeogramPlot(panel, experiments, map, params);

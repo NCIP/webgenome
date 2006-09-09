@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Polyline.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -81,9 +81,10 @@ public class Polyline extends GraphicPrimitive {
 	
 	/**
 	 * Constructor.
-	 *
+	 * @param color Color of polyline.
 	 */
-	public Polyline() {
+	public Polyline(final Color color) {
+		super(color);
 		maxSize = Integer.MAX_VALUE;
 	}
 	
@@ -95,9 +96,8 @@ public class Polyline extends GraphicPrimitive {
 	 * @param color Color of line
 	 */
 	public Polyline(final int width, final Color color) {
-		this();
+		this(color);
 		this.width = width;
-		this.color = color;	
 	}
 	
 	
@@ -125,9 +125,9 @@ public class Polyline extends GraphicPrimitive {
 	 */
 	public Polyline(final int width, final int maxSize,
             final Color color) {
+		super(color);
 		this.width = width;
 		this.maxSize = maxSize;
-		this.color = color;
 	}
 	
 	

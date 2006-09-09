@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/GraphicPrimitive.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:51 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 
@@ -64,126 +61,239 @@ import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.event.GraphicEventResponse;
 
 /**
- * Abstract base class for primitive graphic objects
+ * Abstract base class for primitive graphic objects.
  */
 public abstract class GraphicPrimitive {
 	
+	/** Color of primitive. */
+	private Color color = Color.black;
 	
-	protected Color color = Color.black;
-	protected Hyperlink hyperlink = null;
-	protected String toolTipText = null;
-	protected List eventResponses = new ArrayList();
-	protected Cursor cursor = Cursor.NORMAL;
-	protected final Properties properties = new Properties();
+	/** Hyperlink associated with primitive. */
+	private Hyperlink hyperlink = null;
+	
+	/** Tool tip associated with primitive. */
+	private String toolTipText = null;
+	
+	/** Event responses associated with primitive. */
+	private List<GraphicEventResponse> eventResponses =
+		new ArrayList<GraphicEventResponse>();
+	
+	/** Cursor to display when pointer is over primitive. */
+	private Cursor cursor = Cursor.NORMAL;
+	
+	/** Configurable properties associated with primitive. */
+	private Properties properties = new Properties();
+	
+	
+	// =================================
+	//        Getters/setters
+	// =================================
 	
 	/**
-	 * Set property
-	 * @param name
-	 * @param value
+	 * Get configurable properties associated with
+	 * primitive.
+	 * @return Configurable properties associated with
+	 * primitive.
 	 */
-	public void setProperty(String name, String value) {
-		properties.setProperty(name, value);
-	}
-	
-	
-	public Properties getProperties() {
+	public final Properties getProperties() {
 		return this.properties;
 	}
 	
 	
+	/**
+	 * Get event responses associated with
+	 * graphic primitive.
+	 * @return Event responses associated with
+	 * graphic primitive.
+	 */
+	public final List getEventResponses() {
+		return eventResponses;
+	}
+
 
 	/**
-	 * @return Color of element
+	 * Set event responses associated with
+	 * graphic primitive.
+	 * @param eventResponses Event responses
+	 * associated with graphic primitive.
 	 */
-	public Color getColor() {
+	public final void setEventResponses(
+			final List<GraphicEventResponse> eventResponses) {
+		this.eventResponses = eventResponses;
+	}
+
+
+	/**
+	 * Set configurable properties associated with
+	 * primitive.
+	 * @param properties Configurable properties
+	 * associated with primitive.
+	 */
+	public final void setProperties(final Properties properties) {
+		this.properties = properties;
+	}
+
+
+	/**
+	 * Get color of graphic primitive.
+	 * @return Color of graphic primitive.
+	 */
+	public final Color getColor() {
 		return color;
 	}
 
+	
 	/**
-	 * @param color Color of element
+	 * Set color of graphic primitive.
+	 * @param color Color of graphic primitive.
 	 */
-	public void setColor(Color color) {
+	public final void setColor(final Color color) {
 		this.color = color;
 	}
 
-	/**
-	 * @return Hyperlink
-	 */
-	public URL getUrl() {
-		URL url = null;
-		if (hyperlink != null)
-			url = hyperlink.getUrl();
-		return url;
-	}
 
 	/**
-	 * @param url Hyperlink
+	 * Get text of tool tip associated with
+	 * graphic primitive.
+	 * @return Text of tool tip associated with
+	 * graphic primitive.
 	 */
-	public void setUrl(URL url) {
-		if (hyperlink == null)
-			hyperlink = new Hyperlink();
-		hyperlink.setUrl(url);
-	}
-
-	/**
-	 * @return Tool tip text
-	 */
-	public String getToolTipText() {
+	public final String getToolTipText() {
 		return toolTipText;
 	}
 
 	/**
-	 * @param string Tool tip text
+	 * Set text of tool tip associated with
+	 * graphic primitive.
+	 * @param string Text of tool tip associated with
+	 * graphic primitive.
 	 */
-	public void setToolTipText(String string) {
+	public final void setToolTipText(final String string) {
 		toolTipText = string;
 	}
 	
-	
 	/**
-	 * Add a response to an event
-	 * @param event An event
-	 * @param response A response
+	 * Get sytle of cursor for when pointer is over this
+	 * graphic primitive.
+	 * @return Sytle of cursor for when pointer is over this
+	 * graphic primitive. 
 	 */
-	public void addGraphicEventResponse(GraphicEvent event, String response) {
-		eventResponses.add(new GraphicEventResponse(event, response));
-	}
-	
-	
-	/**
-	 * Get responses to graphic events
-	 * @return Responses to graphic event
-	 */
-	public GraphicEventResponse[] getGraphicEventResponses() {
-		GraphicEventResponse[] responses = new GraphicEventResponse[0];
-		responses = (GraphicEventResponse[])eventResponses.toArray(responses);
-		return responses;
-	}
-
-	/**
-	 * @return Style of cursor (see public static variables) 
-	 */
-	public Cursor getCursor() {
+	public final Cursor getCursor() {
 		return cursor;
 	}
 
 	/**
-	 * @param c Style of cursor (see public static variables)
+	 * Set sytle of cursor for when pointer is over this
+	 * graphic primitive.
+	 * @param c Sytle of cursor for when pointer is over this
+	 * graphic primitive.
 	 */
-	public void setCursor(Cursor c) {
+	public final void setCursor(final Cursor c) {
 		cursor = c;
 	}
 
 	/**
-	 * @return Returns the hyperlink.
+	 * Get hyperlink associated with this graphic
+	 * primitive.
+	 * @return Returns the hyperlink associated with this graphic
+	 * primitive.
 	 */
-	public Hyperlink getHyperlink() {
+	public final Hyperlink getHyperlink() {
 		return hyperlink;
 	}
+	
+	
 	/**
-	 * @param hyperlink The hyperlink to set.
+	 * Set hyperlink associated with this graphic
+	 * primitive.
+	 * @param hyperlink Hyperlink associated with this graphic
+	 * primitive.
 	 */
-	public void setHyperlink(Hyperlink hyperlink) {
+	public final void setHyperlink(final Hyperlink hyperlink) {
 		this.hyperlink = hyperlink;
+	}
+	
+	
+	// ========================
+	//     Constructors
+	// ========================
+	
+	/**
+	 * Constructor.
+	 */
+	protected GraphicPrimitive() {
+		
+	}
+	
+	/**
+	 * Constructor.
+	 * @param color Color of this graphic primitive.
+	 */
+	protected GraphicPrimitive(final Color color) {
+		super();
+		this.color = color;
+	}
+	
+	// =========================
+	//     Business methods
+	// =========================
+
+
+	/**
+	 * Set a property to associate with this graphic
+	 * primitive.
+	 * @param name Name of property.
+	 * @param value Value of property.
+	 */
+	public final void setProperty(final String name, final String value) {
+		properties.setProperty(name, value);
+	}
+	
+	/**
+	 * Get URL of hyperlink associated with this graphic
+	 * primitive.
+	 * @return URL of hyperlink associated with this graphic
+	 * primitive.
+	 */
+	public final URL getUrl() {
+		URL url = null;
+		if (hyperlink != null) {
+			url = hyperlink.getUrl();
+		}
+		return url;
+	}
+
+	/**
+	 * Set URL of hyperlink associated with this graphic
+	 * primitive.
+	 * @param url URL of hyperlink associated with this graphic
+	 * primitive.
+	 */
+	public final void setUrl(final URL url) {
+		if (hyperlink == null) {
+			hyperlink = new Hyperlink();
+		}
+		hyperlink.setUrl(url);
+	}
+	
+	/**
+	 * Add a response to an event.
+	 * @param event An event
+	 * @param response A response
+	 */
+	public final void addGraphicEventResponse(
+			final GraphicEvent event, final String response) {
+		eventResponses.add(new GraphicEventResponse(event, response));
+	}
+	
+	// TODO: Rename to getEventResponsesAsArray
+	/**
+	 * Get responses to graphic events.
+	 * @return Responses to graphic event as an array
+	 */
+	public final GraphicEventResponse[] getGraphicEventResponses() {
+		GraphicEventResponse[] responses = new GraphicEventResponse[0];
+		responses = (GraphicEventResponse[]) eventResponses.toArray(responses);
+		return responses;
 	}
 }

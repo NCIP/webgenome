@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
@@ -51,28 +51,23 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics.widget.unit_test;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
 
-import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.DataContainingBioAssay;
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
-import org.rti.webcgh.graphics.widget.Legend;
+import org.rti.webcgh.graphics.widget.Background;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
 /**
- * Tester for <code>Legend</code>.
+ * Tester for <code>Background</code>.
  * @author dhall
  *
  */
-public final class LegendTester extends TestCase {
-    
-    
+public final class BackgroundTester extends TestCase {
+	
     /**
      * Name of directory holding graphic files produced
      * during tests.  The absolute path will be a
@@ -80,49 +75,24 @@ public final class LegendTester extends TestCase {
      * the file 'unit_test.properties' and this
      * constant.
      */
-    private static final String TEST_DIR_NAME = "legend-tester";
-    
-    
-    /** Width of legend in pixels. */
-    private static final int WIDTH = 400;
-
+    private static final String TEST_DIR_NAME = "background-tester";
     
     /**
-     * Test paint() method.
-     *
+     * Test that the background is being painted
+     * properly.
      */
     public void testPaint() {
-        RasterFileTestPlotPanel panel =
+    	RasterFileTestPlotPanel panel =
             new RasterFileTestPlotPanel(this.getPathToTestDir());
-        Collection<Experiment> experiments = new ArrayList<Experiment>();
-        Experiment exp1 = new Experiment("Experiment 1");
-        experiments.add(exp1);
-        Organism org = new Organism("", "");
-        BioAssay b1 = new DataContainingBioAssay("Bioassay 1", org);
-        BioAssay b2 = new DataContainingBioAssay("Bioassay 2", org);
-        BioAssay b3 = new DataContainingBioAssay("Bioassay 3", org);
-        BioAssay b4 = new DataContainingBioAssay("Bioassay 4", org);
-        BioAssay b5 = new DataContainingBioAssay("Bioassay 5", org);
-        b1.setColor(Color.BLACK);
-        b2.setColor(Color.BLUE);
-        b3.setColor(Color.RED);
-        b4.setColor(Color.GREEN);
-        b5.setColor(Color.YELLOW);
-        exp1.add(b1);
-        exp1.add(b2);
-        exp1.add(b3);
-        exp1.add(b4);
-        exp1.add(b5);
-        Experiment exp2 = new Experiment("Experiment 2");
-        BioAssay b6 = new DataContainingBioAssay("Bioassay 6", org);
-        b6.setColor(Color.GRAY);
-        exp2.add(b6);
-        experiments.add(exp2);
-        Legend legend = new Legend(experiments, WIDTH);
-        panel.add(legend);
-        panel.toPngFile("legend.png");
+    	Background bg1 = new Background(400, 200, Color.yellow);
+        panel.add(bg1, HorizontalAlignment.CENTERED,
+                VerticalAlignment.CENTERED);
+        Background bg2 = new Background(400, 200, Color.green);
+        panel.add(bg2, HorizontalAlignment.CENTERED,
+                VerticalAlignment.BELOW);
+        panel.toPngFile("background.png");
     }
-    
+
     
     /**
      * Get absolute path to directory that contains
@@ -135,7 +105,7 @@ public final class LegendTester extends TestCase {
         String masterTestDirPath =
             SystemUtils.getUnitTestProperty("temp.dir");
         String dirPath = masterTestDirPath + "/"
-            + LegendTester.TEST_DIR_NAME;
+            + TEST_DIR_NAME;
         FileUtils.createDirectory(dirPath);
         return dirPath;
     }

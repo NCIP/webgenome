@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Arc.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 
@@ -58,195 +55,195 @@ import java.awt.Color;
 
 import org.rti.webcgh.units.Direction;
 
+
 /**
- * An arc
+ * Represents an arc shape that point in four possible
+ * directions: up, down, left, and right.
  */
 public class Arc extends GraphicPrimitive {
-	
-	private int x1 = 0;
-	private int y1 = 0;
-	private int x2 = 0;
-	private int y2 = 0;
-	private int xRadius = 0;
-	private int yRadius = 0;
-	private int rotation = 0;
-	private Direction openingDir = Direction.UP;
-	private boolean largeArc = false;
-	private int lineWidth = 1;
-	
+
+	// ============================
+	//       Attributes
+	// ============================
 	
 	/**
-	 * Constructor
-	 * @param x1 X-coordinate of first end point
-	 * @param y1 Y-coordinate of first end point
-	 * @param x2 X-coordinate of second end point
-	 * @param y2 Y-coordinate of second end point
-	 * @param xRadius X-axis radius
-	 * @param yRadius Y-axis radius
-	 * @param rotation Degrees of rotation
-	 * @param openingDir Direction of opening
-	 * @param largeArc Large (>= 180 degrees) arc?
-	 * @param lineWidth Width of line
-	 * @param color Color of line
+	 * X-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
 	 */
-	public Arc
-	(
-		int x1, int y1, int x2, int y2, int xRadius, int yRadius, int rotation,
-		Direction openingDir, boolean largeArc, int lineWidth, Color color
-	) {
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
-		this.xRadius = xRadius;
-		this.yRadius = yRadius;
-		this.rotation = rotation;
-		this.openingDir = openingDir;
-		this.largeArc = largeArc;
-		this.lineWidth = lineWidth;
-		this.color = color;
-	}
-	
-
+	private int x = -1;
 	
 	/**
-	 * @return Large (>= 180 degrees) or small (< 180 degrees)?
+	 * Y-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
 	 */
-	public boolean isLargeArc() {
-		return largeArc;
+	private int y = -1;
+	
+	/**
+	 * Width of arc, defined as the Euclidian distance
+	 * in pixels between the two end points.
+	 */
+	private int width = -1;
+	
+	/**
+	 * Height of arc, defined as the Euclidian distance
+	 * in pixels between the point at the apogee and the orientation
+	 * point, i.e., the midpoint of a line connecting the two
+	 * ends of the arc.
+	 */
+	private int height = -1;
+	
+	/** Direction the arc points. */
+	private Direction direction = null;
+	
+	// =========================
+	//    Getters/setters
+	// =========================
+
+	/**
+	 * Get direction the arc points.
+	 * @return Direction the arc points.
+	 */
+	public final Direction getDirection() {
+		return direction;
 	}
 
 	/**
-	 * @return Width of line
+	 * Set direction the arc points.
+	 * @param direction Direction the arc points.
 	 */
-	public int getLineWidth() {
-		return lineWidth;
+	public final void setDirection(final Direction direction) {
+		this.direction = direction;
 	}
 
 	/**
-	 * @return Direction of opening
+	 * Get height of the arc.
+	 * The height of the arc is defined as the Euclidian distance
+	 * in pixels between the point at the apogee and the orientation
+	 * point, i.e., the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @return Height of the arc in pixels.
 	 */
-	public Direction getOpeningDir() {
-		return openingDir;
+	public final int getHeight() {
+		return height;
+	}
+
+	
+	/**
+	 * Set height of the arc.
+	 * The height of the arc is defined as the Euclidian distance
+	 * in pixels between the point at the apogee and the orientation
+	 * point, i.e., the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @param height Height of the arc in pixels.
+	 */
+	public final void setHeight(final int height) {
+		this.height = height;
 	}
 
 	/**
-	 * @return X-coordinate of first end point
+	 * Get width of arc, defined as the Euclidian distance
+	 * between the two end points.
+	 * @return Width of the arc in pixels.
 	 */
-	public int getX1() {
-		return x1;
+	public final int getWidth() {
+		return width;
 	}
 
+	
 	/**
-	 * @return X-coordinate of second end point
+	 * Set width of arc, defined as the Euclidian distance
+	 * between the two end points.
+	 * @param width Width of arc in pixels.
 	 */
-	public int getX2() {
-		return x2;
+	public final void setWidth(final int width) {
+		this.width = width;
 	}
 
+	
 	/**
-	 * @return X-axis radius
+	 * Get X-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @return X-coordinate of orientation point.
 	 */
-	public int getXRadius() {
-		return xRadius;
+	public final int getX() {
+		return x;
 	}
 
+	
 	/**
-	 * @return Y-coordinate of first end point
+	 * Set X-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @param x X-coordinate of orientation point.
 	 */
-	public int getY1() {
-		return y1;
+	public final void setX(final int x) {
+		this.x = x;
 	}
 
+	
 	/**
-	 * @return Y-coordinate of second end point
+	 * Get Y-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @return Y-coordinate of orientation point.
 	 */
-	public int getY2() {
-		return y2;
+	public final int getY() {
+		return y;
 	}
 
+	
 	/**
-	 * @return Y-axis radius
+	 * Set Y-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @param y Y-coordinate of orientation point.
 	 */
-	public int getYRadius() {
-		return yRadius;
+	public final void setY(final int y) {
+		this.y = y;
 	}
 
+	
+	// ============================
+	//      Constructors
+	// ============================
+	
 	/**
-	 * @param b Large (>= 180 degrees) or small (< 180 degrees)?
+	 * Constructor.
 	 */
-	public void setLargeArc(boolean b) {
-		largeArc = b;
+	public Arc() {
+		
 	}
-
+	
 	/**
-	 * @param i Width of line
+	 * Constructor.
+	 * @param x X-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @param y Y-coordinate of orientation point.  This point
+	 * is the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @param width Width of arc, defined as the Euclidian distance
+	 * in pixels between the two end points.
+	 * @param height Height of arc, defined as the Euclidian distance
+	 * in pixels between the point at the apogee and the orientation
+	 * point, i.e., the midpoint of a line connecting the two
+	 * ends of the arc.
+	 * @param direction Direction the arc points.
+	 * @param color Color of arc.
 	 */
-	public void setLineWidth(int i) {
-		lineWidth = i;
+	public Arc(final int x, final int y, final int width,
+			final int height, final Direction direction,
+			final Color color) {
+		super(color);
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.direction = direction;
 	}
-
-	/**
-	 * @param direction Direction of opening
-	 */
-	public void setOpeningDir(Direction direction) {
-		openingDir = direction;
-	}
-
-	/**
-	 * @param i X-coordinate of first end point
-	 */
-	public void setX1(int i) {
-		x1 = i;
-	}
-
-	/**
-	 * @param i X-coordinate of second end point
-	 */
-	public void setX2(int i) {
-		x2 = i;
-	}
-
-	/**
-	 * @param i X-axis radius
-	 */
-	public void setXRadius(int i) {
-		xRadius = i;
-	}
-
-	/**
-	 * @param i Y-coordinate of first end point
-	 */
-	public void setY1(int i) {
-		y1 = i;
-	}
-
-	/**
-	 * @param i Y-coordinate of second end point
-	 */
-	public void setY2(int i) {
-		y2 = i;
-	}
-
-	/**
-	 * @param i Y-axis radius
-	 */
-	public void setYRadius(int i) {
-		yRadius = i;
-	}
-
-	/**
-	 * @return Rotation in degrees
-	 */
-	public int getRotation() {
-		return rotation;
-	}
-
-	/**
-	 * @param i Rotation in degrees
-	 */
-	public void setRotation(int i) {
-		rotation = i;
-	}
-
+	
+	
 }

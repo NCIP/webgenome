@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-05 14:06:46 $
+$Revision: 1.4 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,8 +67,7 @@ public final class ExperimentGenerator {
 	// =======================
 	
 	/** Array datum generator. */
-	private ArrayDatumGenerator arrayDatumGenerator =
-		new ArrayDatumGenerator();
+	private ArrayDatumGenerator arrayDatumGenerator = null;
 	
 	
 	// =========================
@@ -79,7 +78,17 @@ public final class ExperimentGenerator {
 	 * Constructor.
 	 */
 	public ExperimentGenerator() {
-		
+		this.arrayDatumGenerator = new ArrayDatumGenerator();
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param gap Gap between generated reporters
+	 * in base pairs
+	 */
+	public ExperimentGenerator(final long gap) {
+		this.arrayDatumGenerator = new ArrayDatumGenerator(gap);
 	}
 	
 	
@@ -172,5 +181,15 @@ public final class ExperimentGenerator {
 	 */
 	public List<Reporter> getReporters() {
 		return this.arrayDatumGenerator.getReporters();
+	}
+	
+	
+	/**
+	 * Set gap between generated reporters.
+	 * @param gap Gap between generated reporters
+	 * in base pairs.
+	 */
+	public void setGap(final long gap) {
+		this.arrayDatumGenerator.setGap(gap);
 	}
 }

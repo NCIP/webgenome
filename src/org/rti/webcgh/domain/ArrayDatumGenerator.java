@@ -72,8 +72,8 @@ public final class ArrayDatumGenerator {
     //      Constants
     // =====================
     
-    /** Gap in base pairs between reporters. */
-    private static final long GAP = (long) 1000;
+	/** Default gap in base pairs between reporters. */
+    private static final long DEF_GAP = (long) 1000;
     
     /** Chromosome number of all generated data. */
     private static final short CHROMOSOME = (short) 1;
@@ -82,6 +82,9 @@ public final class ArrayDatumGenerator {
     //     Attributes
     // ========================
     
+    /** Gap in base pairs between reporters. */
+    private long gap = DEF_GAP;
+    
     /** Cached reporters. */
     private final List<Reporter> reporters = new ArrayList<Reporter>();
     
@@ -89,7 +92,30 @@ public final class ArrayDatumGenerator {
     private ListIterator<Reporter> reporterIterator =
         reporters.listIterator();
     
+    
+    // ============================
+    //       Getters/setters
+    // ============================
+    
     /**
+     * Get gap between reporters in base pairs.
+     * @return Get gap between reporters in base pairs.
+     */
+    public long getGap() {
+		return gap;
+	}
+
+
+    /**
+     * Set gap between reporters in base pairs.
+     * @param gap Gap between reporters in base pairs.
+     */
+	public void setGap(final long gap) {
+		this.gap = gap;
+	}
+
+
+	/**
      * Get all reporters generated since object was
      * instantiated.
      * @return Reporters
@@ -111,6 +137,15 @@ public final class ArrayDatumGenerator {
         
     }
     
+    
+    /**
+     * Constructor.
+     * @param gap Gap between generated reporters
+     * in base pairs.
+     */
+    public ArrayDatumGenerator(final long gap) {
+    	this.gap = gap;
+    }
     
     // ==================================
     //      Public methods
@@ -176,7 +211,7 @@ public final class ArrayDatumGenerator {
      */
     private Reporter newReporter() {
         String name = "Reporter" + (this.reporters.size() + 1);
-        long position = this.reporters.size() * GAP;
+        long position = this.reporters.size() * this.gap;
         return new Reporter(name, CHROMOSOME, position);
     }
 

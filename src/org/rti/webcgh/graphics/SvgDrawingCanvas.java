@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,7 +63,6 @@ import java.util.Properties;
 
 import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.event.GraphicEventResponse;
-import org.rti.webcgh.graphics.primitive.Arc;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Cursor;
 import org.rti.webcgh.graphics.primitive.Curve;
@@ -75,7 +74,6 @@ import org.rti.webcgh.graphics.primitive.Polyline;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.primitive.SvgText;
 import org.rti.webcgh.graphics.primitive.Text;
-import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.util.XmlUtils;
@@ -484,8 +482,6 @@ public final class SvgDrawingCanvas implements DrawingCanvas {
 				element = newPolylineElement((Polyline) graphic);
 			} else if (graphic instanceof Text) {
 				element = newTextElement((SvgText) graphic);
-			} else if (graphic instanceof Arc) {
-				element = newArcElement((Arc) graphic);
 			} else if (graphic instanceof Curve) {
 			    element = newCurveElement((Curve) graphic);
 			}
@@ -618,35 +614,6 @@ public final class SvgDrawingCanvas implements DrawingCanvas {
 				el.setAttribute("text-decoration", "underline");
 				el.setAttribute("stroke", rgb(HYPERLINK_COLOR));
 			}
-			return el;
-		}
-		
-		
-		/**
-		 * Create new arc element.
-		 * @param arc An arc
-		 * @return Arc element
-		 */
-		private Element newArcElement(final Arc arc) {
-			Element el = document.createElement("path");
-			int largeArc = 0;
-			if (arc.isLargeArc()) {
-				largeArc = 1;
-			}
-			int sweep = 1;
-			if (arc.getOpeningDir() == Direction.UP) {
-				sweep = 0;
-			}
-			String d =
-				"M " + arc.getX1() + ", " + arc.getY1() + " A "
-				+ arc.getXRadius() + ", " + arc.getYRadius()
-				+ " " + arc.getRotation()
-				+ " " + largeArc + " " + sweep + " " + arc.getX2()
-				+ ", " + arc.getY2();
-			el.setAttribute("d", d);
-			el.setAttribute("stroke", rgb(arc.getColor()));
-			el.setAttribute("stroke-width", String.valueOf(arc.getLineWidth()));
-			el.setAttribute("fill", "none");
 			return el;
 		}
 		

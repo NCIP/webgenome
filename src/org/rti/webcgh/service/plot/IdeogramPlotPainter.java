@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-08 03:06:50 $
+$Revision: 1.4 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,10 +56,14 @@ import java.util.Collection;
 import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ColorMapper;
+import org.rti.webcgh.graphics.util.Warper;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.units.ChromosomeIdeogramSize;
+import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
 
 
@@ -70,6 +74,16 @@ import org.rti.webcgh.units.Orientation;
  *
  */
 public class IdeogramPlotPainter extends PlotPainter {
+	
+	// ======================
+	//    Constants
+	// ======================
+	
+	/** Thickness of line that frames ideogram. */
+	private static final int FRAME_LINE_THICKNESS = 3;
+	
+	/** Color of line that frames ideogram. */
+	private static final Color FRAME_LINE_COLOR = Color.black; 
 	
 	// ======================
 	//       Attributes
@@ -134,12 +148,26 @@ public class IdeogramPlotPainter extends PlotPainter {
 			final IdeogramPlotParameters plotParameters) {
 		
 		// Calculate height of ideogram
+		ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
 		int height =
 			plotParameters.getIdeogramSize().pixels(cytologicalMap.length());
 		
 		// Instantiate genome feature plot
 		GenomeFeaturePlot plot = new GenomeFeaturePlot(1,
 				cytologicalMap.length(), height, Orientation.VERTICAL);
+		
+		// Add warper to give plot hourglass shape around centromere
+		int centStartPix = idSize.pixels(cytologicalMap.getCentromereStart());
+		int centEndPix = idSize.pixels(cytologicalMap.getCentromereEnd());
+		Warper warper = new CentromereWarper(plot.getFeatureHeight(),
+				centStartPix, centEndPix);
+		plot.setWarper(warper);
+		
+		// Add border frame around ideogram
+		plot.addFrame(Location.ABOVE, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
+		plot.addFrame(Location.BELOW, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
+		
+		// Add end caps
 		
 		// Add cytobands to plot
 		for (Cytoband c : cytologicalMap.getCytobands()) {

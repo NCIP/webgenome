@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Text.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 18:41:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,10 +79,12 @@ public abstract class Text extends GraphicPrimitive {
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param value Text value
+	 * @param color Color of text
 	 */
-	public Text(String value) {
+	public Text(String value, Color color) {
+		super(color);
 		this.value = value;
 	}
 	
@@ -97,12 +99,11 @@ public abstract class Text extends GraphicPrimitive {
 	 * @param color Color
 	 */
 	public Text(String value, int x, int y, int fontSize, HorizontalAlignment alignment, Color color) {
-		this(value);
+		this(value, color);
 		this.x = x;
 		this.y = y;
 		this.fontSize = fontSize;
 		this.alignment = alignment;
-		this.color = color;
 	}
 	
 	
