@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-09 20:09:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -485,7 +485,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
         		startAngle = 90;
         		arcAngle = -180;
         	}
-        	graphics.fillArc(x, y, a.getWidth(), a.getHeight(),
+        	graphics.drawArc(x, y, a.getWidth(), a.getHeight(),
         			startAngle, arcAngle);
         }
     }

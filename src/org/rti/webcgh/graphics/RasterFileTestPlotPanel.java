@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-09 20:09:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -272,6 +272,10 @@ public final class RasterFileTestPlotPanel extends PlotPanel {
      */
     public void toPngFile(final String fileName) {
         File file = new File(this.outputDirPath + "/" + fileName);
+        File dir = file.getParentFile();
+        if (!dir.exists()) {
+        	dir.mkdir();
+        }
         this.getDrawingCanvas().setWidth(this.width());
         this.getDrawingCanvas().setHeight(this.height());
         ((RasterDrawingCanvas) this.getDrawingCanvas()).
