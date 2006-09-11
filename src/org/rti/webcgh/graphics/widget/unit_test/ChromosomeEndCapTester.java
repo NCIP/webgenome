@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-09 20:09:48 $
+$Revision: 1.2 $
+$Date: 2006-09-11 18:36:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,8 +55,10 @@ import java.awt.Color;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.widget.Background;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
+import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 
 import junit.framework.TestCase;
@@ -83,11 +85,14 @@ public final class ChromosomeEndCapTester extends TestCase {
 	public void testUp() {
 		int width = 25;
 		int height = 100;
-		Background bg = new Background(width, height, Color.BLUE);
+		GenomeFeaturePlot plot = new GenomeFeaturePlot(0, 100000000, height,
+				Orientation.VERTICAL);
+		plot.setFeatureHeight(width);
+		plot.plotFeature(0, 10000000, "feat", null, false, Color.GRAY);
 		ChromosomeEndCap cap =
 			new ChromosomeEndCap(width, Color.RED, Direction.UP);
 		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel();
-		panel.add(bg);
+		panel.add(plot);
 		panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED,
 				VerticalAlignment.TOP_JUSTIFIED);
 		panel.toPngFile(OUTPUT_DIR_NAME + "/top.png");

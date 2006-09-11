@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-11 18:36:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,11 +70,15 @@ import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.util.
 	ClassPathPropertiesFileRgbHexidecimalColorMapper;
 import org.rti.webcgh.graphics.util.ColorMapper;
+import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.plot.IdeogramPlotPainter;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 
@@ -217,6 +221,12 @@ public final class IdeogramPlotPainterTester extends TestCase {
         
         // Create plot
         painter.paintIdeogramPlot(panel, experiments, map, params);
+        
+        // Add some additional reference widgets
+        panel.add(new Caption("Left", null, Orientation.HORIZONTAL, false),
+        		HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+        panel.add(new Caption("Right", null, Orientation.HORIZONTAL, false),
+        		HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
         
         // Adjust canvas properties
         canvas.setOrigin(panel.topLeftPoint());

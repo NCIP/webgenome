@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.5 $
+$Date: 2006-09-11 18:36:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,12 +59,16 @@ import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.util.Warper;
+import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
+import org.rti.webcgh.units.Direction;
+import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 
 
 /**
@@ -80,10 +84,10 @@ public class IdeogramPlotPainter extends PlotPainter {
 	// ======================
 	
 	/** Thickness of line that frames ideogram. */
-	private static final int FRAME_LINE_THICKNESS = 3;
+	private static final int FRAME_LINE_THICKNESS = 1;
 	
 	/** Color of line that frames ideogram. */
-	private static final Color FRAME_LINE_COLOR = Color.black; 
+	private static final Color FRAME_LINE_COLOR = Color.BLACK; 
 	
 	// ======================
 	//       Attributes
@@ -147,6 +151,9 @@ public class IdeogramPlotPainter extends PlotPainter {
 			final CytologicalMap cytologicalMap,
 			final IdeogramPlotParameters plotParameters) {
 		
+		// Create new plot panel to paint on
+		PlotPanel idPan = plotPanel.newChildPlotPanel();
+		
 		// Calculate height of ideogram
 		ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
 		int height =
@@ -163,12 +170,6 @@ public class IdeogramPlotPainter extends PlotPainter {
 				centStartPix, centEndPix);
 		plot.setWarper(warper);
 		
-		// Add border frame around ideogram
-		plot.addFrame(Location.ABOVE, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
-		plot.addFrame(Location.BELOW, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
-		
-		// Add end caps
-		
 		// Add cytobands to plot
 		for (Cytoband c : cytologicalMap.getCytobands()) {
 			Color color = this.colorMapper.getColor(c.getStain());
@@ -176,8 +177,26 @@ public class IdeogramPlotPainter extends PlotPainter {
 					false, color);
 		}
 		
+		// Add border frame around ideogram
+		plot.addFrame(Location.ABOVE, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
+		plot.addFrame(Location.BELOW, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
+		
 		// Add genome feature plot
-		plotPanel.add(plot);
+		idPan.add(plot);
+		
+		// Add end caps
+		int thickness = plot.getFeatureHeight();
+		ChromosomeEndCap topCap = new ChromosomeEndCap(thickness,
+				FRAME_LINE_COLOR, Direction.UP);
+		ChromosomeEndCap botCap = new ChromosomeEndCap(thickness,
+				FRAME_LINE_COLOR, Direction.DOWN);
+		idPan.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED,
+				VerticalAlignment.TOP_JUSTIFIED);
+		idPan.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED,
+				VerticalAlignment.BOTTOM_JUSTIFIED);
+		
+		// Add new panel to parent
+		plotPanel.add(idPan);
 	}
 			
 }

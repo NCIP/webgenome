@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Date: 2006-09-11 18:36:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,11 +67,11 @@ import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Tester for <code>GenomeFeatureMap</code>.
+ * Tester for <code>GenomeFeaturePlot</code>.
  * @author dhall
  *
  */
-public final class GenomeFeatureMapTester extends TestCase {
+public final class GenomeFeaturePlotTester extends TestCase {
 	
 	/**
 	 * Name of temporary directory for storing
