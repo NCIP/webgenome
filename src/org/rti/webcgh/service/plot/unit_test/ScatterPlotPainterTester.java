@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-08 03:06:50 $
+$Revision: 1.2 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
@@ -73,7 +72,6 @@ import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webcgh.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -103,7 +101,8 @@ public final class ScatterPlotPainterTester extends TestCase {
 	 * unit test temporary directory specified
 	 * by the property 'temp.dir' in 'unit_test.properties.'
 	 */
-	private static final String TEMP_DIR_PATH;
+	private static final String TEMP_DIR_PATH =
+		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
 	
 	/** Number of bioassays to generate in tests. */
 	private static final int NUM_BIO_ASSAYS = 2;
@@ -137,18 +136,6 @@ public final class ScatterPlotPainterTester extends TestCase {
     
     /** Height of plot in pixels. */
     private static final int HEIGHT = 500;
-	
-	// Initialize TEMP_DIR
-	static {
-		String tempDirParent =
-			SystemUtils.getUnitTestProperty("temp.dir");
-		if (tempDirParent == null) {
-			throw new WebcghSystemException(
-					"Unit test property 'temp.dir' must be set");
-		}
-		TEMP_DIR_PATH = tempDirParent + "/" + TEMP_DIR_NAME;
-		FileUtils.createDirectory(TEMP_DIR_PATH);
-	}
 
 	
 	// ============================

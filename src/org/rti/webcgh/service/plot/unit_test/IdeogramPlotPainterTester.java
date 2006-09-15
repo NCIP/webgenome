@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-11 18:36:50 $
+$Revision: 1.4 $
+$Date: 2006-09-15 21:21:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
@@ -80,7 +79,6 @@ import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -112,19 +110,8 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	 * unit test temporary directory specified
 	 * by the property 'temp.dir' in 'unit_test.properties.'
 	 */
-	private static final String TEMP_DIR_PATH;
-	
-	// Initialize TEMP_DIR
-	static {
-		String tempDirParent =
-			SystemUtils.getUnitTestProperty("temp.dir");
-		if (tempDirParent == null) {
-			throw new WebcghSystemException(
-					"Unit test property 'temp.dir' must be set");
-		}
-		TEMP_DIR_PATH = tempDirParent + "/" + TEMP_DIR_NAME;
-		FileUtils.createDirectory(TEMP_DIR_PATH);
-	}
+	private static final String TEMP_DIR_PATH =
+		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
 	
 	/** Path to file containing color mappings for cytobands. */
 	private static final String COLOR_MAPPING_FILE_PATH =
@@ -139,18 +126,9 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	
 	/** Number of experiments in tests. */
 	private static final int NUM_EXPERIMENTS = 2;
-	
-	/**
-	 * Number of array datum per chromosome in
-	 * serialized data tests.
-	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 5000;
-	
-	/**
-	 * Number of array datum per chromosome in
-	 * in-memory data tests.
-	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_IN_MEMORY = 50;
+		
+	/** Number of array datum per chromosome in. */
+	private static final int NUM_DATUM_PER_CHROMOSOME = 50;
 	
 	/** Length of chromosome in base pairs. */
 	private static final long CHROM_LENGTH = 100000000;
@@ -166,12 +144,12 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	public void testPaintIdeogramPlot() throws Exception {
 		
 		// Create test experiments
-		long gap = CHROM_LENGTH / NUM_DATUM_PER_CHROMOSOME_IN_MEMORY;
+		long gap = CHROM_LENGTH / NUM_DATUM_PER_CHROMOSOME;
 		ExperimentGenerator expGen = new ExperimentGenerator(gap);
         Collection<Experiment> experiments = new ArrayList<Experiment>();
         for (int i = 0; i < NUM_EXPERIMENTS; i++) {
         	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
-	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
+	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME);
 	        experiments.add(exp);
 	        for (BioAssay ba : exp.getBioAssays()) {
 	        	ba.setColor(Color.BLUE);

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,7 +63,6 @@ import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Test class for <code>Grid</code>.
@@ -91,7 +90,8 @@ public final class GridTester extends TestCase {
      */
     public void testHorizontal() {
         RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
+            new RasterFileTestPlotPanel(
+            		FileUtils.createUnitTestDirectory(TEST_DIR_NAME));
         Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL,
                 Location.LEFT_OF);
         Grid grid = axis.newGrid(400, 400, Color.white,
@@ -105,22 +105,4 @@ public final class GridTester extends TestCase {
                 VerticalAlignment.BOTTOM_JUSTIFIED);
         panel.toPngFile("horizontal.png");
     }
-    
-    
-    /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
-     */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + GridTester.TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
-    }
-
 }

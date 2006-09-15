@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.2 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,6 @@ import org.rti.webcgh.graphics.widget.Background;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -83,7 +82,8 @@ public final class BackgroundTester extends TestCase {
      */
     public void testPaint() {
     	RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
+            new RasterFileTestPlotPanel(
+            		FileUtils.createUnitTestDirectory(TEST_DIR_NAME));
     	Background bg1 = new Background(400, 200, Color.yellow);
         panel.add(bg1, HorizontalAlignment.CENTERED,
                 VerticalAlignment.CENTERED);
@@ -91,22 +91,5 @@ public final class BackgroundTester extends TestCase {
         panel.add(bg2, HorizontalAlignment.CENTERED,
                 VerticalAlignment.BELOW);
         panel.toPngFile("background.png");
-    }
-
-    
-    /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
-     */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
     }
 }

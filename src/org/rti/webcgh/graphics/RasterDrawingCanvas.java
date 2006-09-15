@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-09 20:09:48 $
+$Revision: 1.4 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -466,7 +466,36 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
             Font newFont = new Font(font.getFontName(), font.getStyle(),
                     t.getFontSize());
             graphics.setFont(newFont);
-            graphics.drawString(t.getValue(), t.getX(), t.getY());
+            AffineTransform transform = null;
+            if (t.getRotation() != 0) {
+            	transform =
+            		AffineTransform.getRotateInstance(t.getRotation(),
+            				t.getX(), t.getY());
+            	graphics.transform(transform);
+            }
+            int x = 0;
+            if (t.getAlignment() == HorizontalAlignment.LEFT_JUSTIFIED
+            		|| t.getAlignment() == HorizontalAlignment.LEFT_OF) {
+            	x = t.getX();
+            } else if (t.getAlignment()
+            		== HorizontalAlignment.RIGHT_JUSTIFIED
+            		|| t.getAlignment()
+            		== HorizontalAlignment.RIGHT_OF) {
+            	x = t.getX() - renderedWidth(t.getValue(), t.getFontSize());
+            } else if (t.getAlignment() == HorizontalAlignment.CENTERED
+            		|| t.getAlignment() == HorizontalAlignment.ON_ZERO) {
+            	x = t.getX()
+            	- renderedWidth(t.getValue(), t.getFontSize()) / 2;
+            }
+            graphics.drawString(t.getValue(), x, t.getY());
+            if (transform != null) {
+            	try {
+					graphics.transform(transform.createInverse());
+				} catch (NoninvertibleTransformException e) {
+					throw new WebcghSystemException(
+							"Error reversing affine transform", e);
+				}
+            }
         } else if (prim instanceof Arc) {
         	Arc a = (Arc) prim;
         	int x = a.getX() - a.getWidth() / 2;

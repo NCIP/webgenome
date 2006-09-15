@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-15 21:21:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,16 +52,13 @@ package org.rti.webcgh.graphics.unit_test;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
-
-import javax.imageio.ImageIO;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.io.GraphicFileUtils;
+import org.rti.webcgh.graphics.io.RasterGraphicFileType;
 import org.rti.webcgh.graphics.primitive.Arc;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Line;
@@ -82,16 +79,18 @@ import junit.framework.TestCase;
 public final class RasterDrawingCanvasTester extends TestCase {
     
     /** Name of directory holding test output files. */
-    private static final String TEST_DIR_NAME = "raster-drawing-canvas-tests";
+    private static final String TEST_DIR_NAME =
+    	"raster-drawing-canvas-tests";
+    
+    /** Directory where test output files will be written. */
+    private static final File TEST_DIR =
+    	FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
     
     /** Width in pixels of graphics generated during tests. */
     private static final int WIDTH = 500;
     
     /** Height in pixels of graphics generated during tests. */
     private static final int HEIGHT = 500;
-    
-    /** Directory holding test output files. */
-    private File testDir = null;
     
     /** A drawing canvas using in all tests. */
     private RasterDrawingCanvas canvas = null;
@@ -102,20 +101,13 @@ public final class RasterDrawingCanvasTester extends TestCase {
      *
      */
     public RasterDrawingCanvasTester() {
-        Properties props = SystemUtils.loadProperties(
-                "conf/unit_test.properties");
-        if (props == null) {
-            throw new WebcghSystemException(
-                    "Could not load unit test properties");
-        }
-        String testDirPath = props.getProperty("temp.dir");
+        String testDirPath = SystemUtils.getUnitTestProperty("temp.dir");
         if (testDirPath == null) {
             throw new WebcghSystemException("Property 'temp.dir' missing from "
                     + "'unit_test.properties' file");
         }
         String dirPath = testDirPath + "/" + TEST_DIR_NAME;
         FileUtils.createDirectory(dirPath);
-        this.testDir = new File(dirPath);
     }
     
     /**
@@ -132,7 +124,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
      */
     public void testCircle() {
         this.canvas.add(new Circle(100, 100, 20, Color.GREEN));
-        this.outputCanvas("circle.png");
+        GraphicFileUtils.write(TEST_DIR, "circle.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -143,7 +136,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
     public void testArcUp() {
     	this.canvas.add(new Arc(200, 200, 100, 100, Direction.UP, Color.GREEN));
     	this.canvas.add(new Circle(200, 200, 5, Color.RED));
-    	this.outputCanvas("arc-up.png");
+    	GraphicFileUtils.write(TEST_DIR, "arc-up.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -155,7 +149,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
     	this.canvas.add(new Arc(200, 200, 100, 100, Direction.DOWN,
     			Color.GREEN));
     	this.canvas.add(new Circle(200, 200, 5, Color.RED));
-    	this.outputCanvas("arc-down.png");
+    	GraphicFileUtils.write(TEST_DIR, "arc-down.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -167,7 +162,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
     	this.canvas.add(new Arc(200, 200, 100, 100, Direction.LEFT,
     			Color.GREEN));
     	this.canvas.add(new Circle(200, 200, 5, Color.RED));
-    	this.outputCanvas("arc-left.png");
+    	GraphicFileUtils.write(TEST_DIR, "arc-left.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -179,7 +175,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
     	this.canvas.add(new Arc(200, 200, 100, 100, Direction.RIGHT,
     			Color.GREEN));
     	this.canvas.add(new Circle(200, 200, 5, Color.RED));
-    	this.outputCanvas("arc-right.png");
+    	GraphicFileUtils.write(TEST_DIR, "arc-right.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -188,7 +185,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
      */
     public void testLine() {
         this.canvas.add(new Line(10, 10, 250, 250, 4, Color.RED));
-        this.outputCanvas("line.png");
+        GraphicFileUtils.write(TEST_DIR, "line.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     /**
@@ -197,7 +195,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
      */
     public void testRect() {
         this.canvas.add(new Rectangle(40, 40, 100, 100, Color.CYAN));
-        this.outputCanvas("rect.png");
+        GraphicFileUtils.write(TEST_DIR, "rect.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -211,7 +210,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
         p.add(100, 5);
         p.add(300, 250);
         this.canvas.add(p);
-        this.outputCanvas("polyline.png");
+        GraphicFileUtils.write(TEST_DIR, "polyline.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -224,7 +224,8 @@ public final class RasterDrawingCanvasTester extends TestCase {
                                    new Point(100, 200), new Point(20, 150)};
         Polygon p = new Polygon(points, Color.RED);
         this.canvas.add(p);
-        this.outputCanvas("polygon.png");
+        GraphicFileUtils.write(TEST_DIR, "polygon.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
     
     
@@ -243,23 +244,7 @@ public final class RasterDrawingCanvasTester extends TestCase {
         canvas2.add(r2);
         this.canvas.add(r1);
         this.canvas.add(canvas2, 100, 100);
-        this.outputCanvas("add.png");
-    }
-    
-    
-    /**
-     * Write canvas contents to given file name
-     * in test directory in PNG format.
-     * @param fileName Name of file (not full path)
-     * image to file
-     */
-    private void outputCanvas(final String fileName)  {
-        File file = new File(this.testDir + "/" + fileName);
-        BufferedImage img = this.canvas.toBufferedImage();
-        try {
-            ImageIO.write(img, "png", file);
-        } catch (IOException e) {
-            throw new WebcghSystemException("Error writing image to file", e);
-        }
+        GraphicFileUtils.write(TEST_DIR, "add.png",
+        		this.canvas.toBufferedImage(), RasterGraphicFileType.PNG);
     }
 }

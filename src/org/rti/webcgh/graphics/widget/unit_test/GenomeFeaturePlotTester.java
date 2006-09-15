@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-11 18:36:50 $
+$Revision: 1.2 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,13 +58,12 @@ import javax.imageio.ImageIO;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.io.GraphicFileUtils;
 import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Tester for <code>GenomeFeaturePlot</code>.
@@ -87,19 +86,9 @@ public final class GenomeFeaturePlotTester extends TestCase {
 	 * unit test temporary directory specified
 	 * by the property 'temp.dir' in 'unit_test.properties.'
 	 */
-	private static final String TEMP_DIR_PATH;
+	private static final String TEMP_DIR_PATH =
+		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
 	
-	// Initialize TEMP_DIR
-	static {
-		String tempDirParent =
-			SystemUtils.getUnitTestProperty("temp.dir");
-		if (tempDirParent == null) {
-			throw new WebcghSystemException(
-					"Unit test property 'temp.dir' must be set");
-		}
-		TEMP_DIR_PATH = tempDirParent + "/" + TEMP_DIR_NAME;
-		FileUtils.createDirectory(TEMP_DIR_PATH);
-	}
 	
 	/**
 	 * Create plot similar to a vertical ideogram.

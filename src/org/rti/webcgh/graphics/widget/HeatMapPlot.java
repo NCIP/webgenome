@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.2 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,10 +61,12 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.primitive.Text;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
+import org.rti.webcgh.units.HorizontalAlignment;
 
 
 /**
@@ -80,6 +82,19 @@ import org.rti.webcgh.units.ChromosomeIdeogramSize;
  *
  */
 public final class HeatMapPlot implements PlotElement {
+	
+	// =========================
+	//     Constants
+	// =========================
+	
+	/** Padding between plot features. */
+	private static final int PADDING = 5;
+	
+	/** Font size. */
+	private static final int FONT_SIZE = 10;
+	
+	/** Color of text. */
+	private static final Color TEXT_COLOR = Color.BLACK;
 
 	// ============================
 	//        Attributes
@@ -133,19 +148,42 @@ public final class HeatMapPlot implements PlotElement {
      * @param chromosomeArrayDataGetter Gets chromosome array data
      * from bioassays transparently without regard to where
      * data reside
+     * @param drawingCanvas A drawing canvas
      */
 	public HeatMapPlot(final Collection<Experiment> experiments,
 			final HeatMapColorFactory colorFactory,
 			final IdeogramPlotParameters plotParameters,
-			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter,
+			final DrawingCanvas drawingCanvas) {
 		super();
+		
+		// Make sure args okay
+		if (experiments == null) {
+			throw new IllegalArgumentException("Experiments cannot be null");
+		}
+		
+		// Set attributes
 		this.experiments = experiments;
 		this.colorFactory = colorFactory;
 		this.plotParameters = plotParameters;
 		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
+		
+		// Adjust reference coordinates
+		int longestString = 0;
+		for (Experiment exp : experiments) {
+			for (BioAssay ba : exp.getBioAssays()) {
+				int candidateLongest = drawingCanvas.renderedWidth(
+						ba.getName(), FONT_SIZE);
+				if (candidateLongest > longestString) {
+					longestString = candidateLongest;
+				}
+			}
+		}
+		this.trackMinY = PADDING + longestString;
 		this.maxX = (experiments.size() * 2 - 1)
 			* plotParameters.getTrackWidth();
-		this.maxY = plotParameters.getIdeogramSize().pixels(
+		this.maxY = this.trackMinY
+			+ plotParameters.getIdeogramSize().pixels(
 				Experiment.inferredChromosomeSize(experiments,
 						plotParameters.getChromosome()));
 	}
@@ -160,13 +198,14 @@ public final class HeatMapPlot implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(final DrawingCanvas canvas) {
-    	int x = 0;
+    	int x = this.minX;
     	for (Experiment exp : this.experiments) {
     		for (BioAssay ba : exp.getBioAssays()) {
     			ChromosomeArrayData cad =
     				this.chromosomeArrayDataGetter.getChromosomeArrayData(
     						ba, this.plotParameters.getChromosome());
     			this.paintTrack(canvas, x, cad);
+    			this.paintTrackLabel(canvas, x, ba.getName());
     			x += 2 * this.plotParameters.getTrackWidth();
     		}
     	}
@@ -205,13 +244,31 @@ public final class HeatMapPlot implements PlotElement {
 		    			end = (middle
 		    				+ dataList.get(i + 1).getReporter().getLocation());
 		    		}
-		    		int y = idSize.pixels(start);
-		    		int height = idSize.pixels(end) - y;
+		    		int y = this.trackMinY + idSize.pixels(start);
+		    		int height = this.trackMinY + idSize.pixels(end) - y;
 		    		Color c = this.colorFactory.getColor(value);
 		    		canvas.add(new Rectangle(x, y, trackWidth, height, c));
 	    		}
 	    	}
     	}
+    }
+    
+    
+    /**
+     * Paint label over data track.
+     * @param canvas Drawing canvas
+     * @param x X-coordinate of track
+     * @param label Label to paint
+     */
+    private void paintTrackLabel(final DrawingCanvas canvas,
+    		final int x, final String label) {
+    	int textX = x + this.plotParameters.getTrackWidth() / 2;
+    	int y = this.trackMinY - PADDING
+    		- canvas.renderedWidth(label, FONT_SIZE) / 2;
+    	Text text = canvas.newText(label, textX, y, FONT_SIZE,
+    			HorizontalAlignment.CENTERED, TEXT_COLOR);
+    	text.setRotation(1.5 * Math.PI);
+    	canvas.add(text);
     }
     
     

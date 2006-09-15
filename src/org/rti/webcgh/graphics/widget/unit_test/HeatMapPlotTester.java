@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.2 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,7 +63,6 @@ import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webcgh.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -112,7 +111,8 @@ public final class HeatMapPlotTester extends TestCase {
 		
 		// Instantiate plot panel
 		RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
+            new RasterFileTestPlotPanel(
+            		FileUtils.createUnitTestDirectory(TEST_DIR_NAME));
 		
 		// Create experiments
 		ExperimentGenerator gen = new ExperimentGenerator(GAP);
@@ -139,7 +139,8 @@ public final class HeatMapPlotTester extends TestCase {
 			new InMemoryChromosomeArrayDataGetter();
 		
 		// Plot data
-		HeatMapPlot plot = new HeatMapPlot(experiments, fac, params, getter);
+		HeatMapPlot plot = new HeatMapPlot(experiments, fac, params,
+				getter, panel.getDrawingCanvas());
 		panel.add(plot);
 		
 		// Generate PNG file
@@ -153,7 +154,8 @@ public final class HeatMapPlotTester extends TestCase {
 	 */
 	public void testPaintSerialized() {
 		
-		String testDirPath = this.getPathToTestDir();
+		String testDirPath = 
+    		FileUtils.createUnitTestDirectory(TEST_DIR_NAME).getAbsolutePath();
 		
 		// Instantiate plot panel
 		RasterFileTestPlotPanel panel =
@@ -186,7 +188,8 @@ public final class HeatMapPlotTester extends TestCase {
 		getter.setDataFileManager(mgr);
 		
 		// Plot data
-		HeatMapPlot plot = new HeatMapPlot(experiments, fac, params, getter);
+		HeatMapPlot plot = new HeatMapPlot(experiments, fac, params,
+				getter, panel.getDrawingCanvas());
 		panel.add(plot);
 		
 		// Generate PNG file
@@ -197,21 +200,4 @@ public final class HeatMapPlotTester extends TestCase {
 			mgr.deleteDataFiles(exp, true);
 		}
 	}
-
-	
-    /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
-     */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
-    }
 }

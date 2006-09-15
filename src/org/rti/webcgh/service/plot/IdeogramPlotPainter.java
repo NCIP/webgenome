@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.7 $
+$Date: 2006-09-15 21:21:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,9 +58,11 @@ import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ColorMapper;
+import org.rti.webcgh.graphics.util.HeatMapColorFactory;
 import org.rti.webcgh.graphics.util.Warper;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.HeatMapPlot;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
@@ -75,7 +77,6 @@ import org.rti.webcgh.units.VerticalAlignment;
  * Generates ideogram plots by assembling and laying out
  * the necessary widgets.
  * @author dhall
- *
  */
 public class IdeogramPlotPainter extends PlotPainter {
 	
@@ -87,7 +88,10 @@ public class IdeogramPlotPainter extends PlotPainter {
 	private static final int FRAME_LINE_THICKNESS = 1;
 	
 	/** Color of line that frames ideogram. */
-	private static final Color FRAME_LINE_COLOR = Color.BLACK; 
+	private static final Color FRAME_LINE_COLOR = Color.BLACK;
+	
+	/** Number of color bins. */
+	private static final int NUM_BINS = 16;
 	
 	// ======================
 	//       Attributes
@@ -144,7 +148,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 				height, idSize);
 		
 		// Add data tracks
-		this.paintDataTracks(experiments, height, plotParameters);
+		this.paintDataTracks(panel, experiments, height, plotParameters);
 	}
 	
 	
@@ -209,11 +213,21 @@ public class IdeogramPlotPainter extends PlotPainter {
 	
 	/**
 	 * Add data tracks to plot.
+	 * @param panel A plot panel
 	 * @param experiments Experiments to plot
 	 * @param height Height of data tracks
 	 * @param plotParameters Plot parameters
 	 */
-	private void paintDataTracks(final Collection<Experiment> experiments,
+	private void paintDataTracks(final PlotPanel panel,
+			final Collection<Experiment> experiments,
 			final int height, final IdeogramPlotParameters plotParameters) {
+		HeatMapColorFactory fac = new HeatMapColorFactory(
+				plotParameters.getMinSaturation(),
+				plotParameters.getMaxSaturation(), NUM_BINS);
+		HeatMapPlot plot = new HeatMapPlot(experiments, fac,
+				plotParameters, this.getChromosomeArrayDataGetter(),
+				panel.getDrawingCanvas());
+		panel.add(plot, HorizontalAlignment.RIGHT_OF,
+				VerticalAlignment.TOP_JUSTIFIED);
 	}
 }

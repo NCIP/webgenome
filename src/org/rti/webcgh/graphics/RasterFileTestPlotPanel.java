@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 20:09:48 $
+$Revision: 1.3 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -256,6 +256,16 @@ public final class RasterFileTestPlotPanel extends PlotPanel {
     public RasterFileTestPlotPanel(final String outputDirPath) {
         super(new RasterDrawingCanvas());
         this.outputDirPath = outputDirPath;
+    }
+    
+    
+    /**
+     * Constructor.
+     * @param outputDir Directory where
+     * output graphic files will be written
+     */
+    public RasterFileTestPlotPanel(final File outputDir) {
+    	this(outputDir.getAbsolutePath());
     }
 
     

@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/StringUtils.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.util;
@@ -58,12 +55,20 @@ import java.util.List;
 
 
 /**
- * Utility methods for Strings
+ * Utility methods for Strings.
  */
-public class StringUtils {
+public final class StringUtils {
+	
+	/**
+	 * Constructor.
+	 *
+	 */
+	private StringUtils() {
+		
+	}
 
 	/**
-	 * Compares two strings
+	 * Compares two strings with tolerance of nulls.
 	 * @param s1 A string
 	 * @param s2 Another string
 	 * @return 
@@ -73,19 +78,19 @@ public class StringUtils {
 	 *  <li>1 if s1 lexically greater than s2</li>
 	 * </ul>
 	 */
-	public static int compare(String s1, String s2) {
+	public static int compare(final String s1, final String s2) {
 		int value = 0;
-		if (s1 == null && s2 != null)
+		if (s1 == null && s2 != null) {
 			value = -1;
-		else if (s1 != null && s2 == null)
+		} else if (s1 != null && s2 == null) {
 			value = 1;
-		else if (s1 != null && s2 != null) {
-			if (s1.equals(s2))
+		} else if (s1 != null && s2 != null) {
+			if (s1.equals(s2)) {
 				value = 0;
-			else {
+			} else {
 				for (int i = 0; i < s1.length() && i < s2.length(); i++) {
-					int a = (int)s1.charAt(i);
-					int b = (int)s2.charAt(i);
+					int a = (int) s1.charAt(i);
+					int b = (int) s2.charAt(i);
 					if (a < b) {
 						value = -1;
 						break;
@@ -95,10 +100,11 @@ public class StringUtils {
 					}
 				}
 				if (value == 0) {
-					if (s1.length() < s2.length())
+					if (s1.length() < s2.length()) {
 						value = -1;
-					else if (s1.length() > s2.length())
+					} else if (s1.length() > s2.length()) {
 						value = 1;
+					}
 				}
 			}
 		}
@@ -106,86 +112,96 @@ public class StringUtils {
 	}
 
 	/**
-	 * Null tolerant string comparison
+	 * Null tolerant string equals operation.
 	 * @param s1 A string
 	 * @param s2 Another string
 	 * @return T/F
 	 */
-	public static boolean equal(String s1, String s2) {
+	public static boolean equal(final String s1, final String s2) {
 		boolean equal = true;
-		if (s1 == null && s2 != null)
+		if (s1 == null && s2 != null) {
 			equal = false;
-		else if (s1 != null && s2 == null)
+		} else if (s1 != null && s2 == null) {
 			equal = false;
-		else if (s1 != null && s2 != null)
+		} else if (s1 != null && s2 != null) {
 			equal = s1.equals(s2);
+		}
 		return equal;
 	}
 
 	/**
-	 * Remove line breaks from a string
-	 * @param S A string
+	 * Remove line breaks from a string.
+	 * @param str A string
 	 * @return Equivalent string without line breaks
 	 */
-	public static String removeLineBreaks(String S) {
+	public static String removeLineBreaks(final String str) {
 		StringBuffer buff = new StringBuffer();
-		for (int i = 0; i < S.length(); i++) {
-			char ch = S.charAt(i);
-			if (ch == '\n' || ch == '\r')
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			if (ch == '\n' || ch == '\r') {
 				continue;
+			}
 			buff.append(ch);
 		}
 		return buff.toString();
 	}
 
 	/**
-	 * Convert a string into a boolean primitive (i.e. {"true","yes"} -> true).
+	 * Convert a string into a boolean primitive
+	 * (i.e. {"true","yes"} -> true).
 	 * @param s A boolean string equivalent
 	 * @return A boolean value
 	 */
-	public static synchronized boolean toBoolean(String s) {
+	public static boolean toBoolean(final String s) {
 		String temp = s.toUpperCase();
-		return "TRUE".equals(temp) || "YES".equals(temp) || "ON".equals(temp);               
+		return "TRUE".equals(temp) || "YES".equals(temp)
+			|| "ON".equals(temp);               
 	}
 	
 	
 	/**
-	 * Split string into separate tokens
+	 * Split string into separate tokens.
 	 * @param str A string
 	 * @param delimiter Token delimiter
 	 * @return Array of tokens
 	 */
-	public static String[] split(String str, String delimiter) {
-	    List tokens = new ArrayList();
+	public static String[] split(final String str,
+			final String delimiter) {
+	    List<String> tokens = new ArrayList<String>();
 	    int p = 0;
 	    while (p < str.length()) {
 	        int q = str.indexOf(delimiter, p);
-	        if (q < 0)
+	        if (q < 0) {
 	            q = str.length();
-	        if (p == q)
+	        }
+	        if (p == q) {
 	            tokens.add("");
-	        else
+	        } else {
 	            tokens.add(str.substring(p, q).trim());
+	        }
 	        p = q + 1;
 	    }
 	    String[] tokenStr = new String[0];
-	    tokenStr = (String[])tokens.toArray(tokenStr);
+	    tokenStr = (String[]) tokens.toArray(tokenStr);
 	    return tokenStr;
 	}
 	
 	
 	
 	/**
-	 * Remove quotations from string
+	 * Remove quotations from string.
 	 * @param str A string
 	 * @param quoteChar Quote character
 	 * @return Unquoted string
 	 */
-	public static String removeQuotes(String str, char quoteChar) {
+	public static String removeQuotes(final String str,
+			final char quoteChar) {
 		String newStr = str;
 		int length = str.length();
-		if (str.charAt(0) == quoteChar && str.charAt(length - 1) == quoteChar)
+		if (str.charAt(0) == quoteChar
+				&& str.charAt(length - 1) == quoteChar) {
 			newStr = str.substring(1, length - 1);
+		}
 		return newStr;
 	}
 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,6 @@ import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.widget.Legend;
 import org.rti.webcgh.util.FileUtils;
-import org.rti.webcgh.util.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -93,7 +92,8 @@ public final class LegendTester extends TestCase {
      */
     public void testPaint() {
         RasterFileTestPlotPanel panel =
-            new RasterFileTestPlotPanel(this.getPathToTestDir());
+            new RasterFileTestPlotPanel(
+            		FileUtils.createUnitTestDirectory(TEST_DIR_NAME));
         Collection<Experiment> experiments = new ArrayList<Experiment>();
         Experiment exp1 = new Experiment("Experiment 1");
         experiments.add(exp1);
@@ -121,22 +121,5 @@ public final class LegendTester extends TestCase {
         Legend legend = new Legend(experiments, WIDTH);
         panel.add(legend);
         panel.toPngFile("legend.png");
-    }
-    
-    
-    /**
-     * Get absolute path to directory that contains
-     * test output files.  If necessary, method creates
-     * directory.
-     * @return Absolute path to directory that contains
-     * test output files
-     */
-    private String getPathToTestDir() {
-        String masterTestDirPath =
-            SystemUtils.getUnitTestProperty("temp.dir");
-        String dirPath = masterTestDirPath + "/"
-            + LegendTester.TEST_DIR_NAME;
-        FileUtils.createDirectory(dirPath);
-        return dirPath;
     }
 }

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-09-15 21:21:01 $
 
 The Web CGH Software License, Version 1.0
@@ -48,73 +48,52 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.graphics.primitive.unit_test;
-
-import java.awt.Color;
-import java.awt.Point;
-
-import org.rti.webcgh.deprecated.Line;
-import org.rti.webcgh.graphics.primitive.Polyline;
-
-import junit.framework.TestCase;
+package org.rti.webcgh.graphics.io;
 
 /**
- * Tester for <code>Polyline</code> class.
+ * Type of raster graphic file.
+ * @author dhall
+ *
  */
-public final class PolylineTester extends TestCase {
+public enum RasterGraphicFileType {
 	
-	/** A test point. */
-	private Point p1 = null;
+	/** PNG. */
+	PNG("png"),
 	
-	/** A test point. */
-	private Point p2 = null;
+	/** JPEG. */
+	JPEG("jpg"),
 	
-	/** A test point. */
-	private Point p3 = null;
+	/** GIF. */
+	GIF("gif");
 	
-	/** A test point. */
-	private Point p4 = null;
+	// =========================
+	//       Attributes
+	// =========================
 	
+	/** Name of file type. */
+	private final String name;
 	
-	/**
-	 * Setup method.
-	 */
-	public void setUp() {
-		p1 = new Point(5, 5);
-		p2 = new Point(10, 10);
-		p3 = new Point(15, 15);
-		p4 = new Point(20, 20);
-	}
-	
+	// =====================
+	//      Constructors
+	// =====================
 	
 	/**
-	 * Test add point.
+	 * Constructor.
+	 * @param name Name of file type.
 	 */
-	public void testAddPoint() {
-		Polyline poly = new Polyline(Color.BLACK);
-		poly.add(p1);
-		poly.add(p2);
-		poly.add(p3);
-		assertTrue(poly.getPoints().size() == 3);
+	private RasterGraphicFileType(final String name) {
+		this.name = name;
 	}
 	
+	// =======================
+	//     Methods
+	// =======================
 	
 	/**
-	 * Test add line.
+	 * Get name of file type.
+	 * @return Name of file type
 	 */
-	public void testAddLine() {
-		Line l1 = new Line(p1, p2);
-		Line l2 = new Line(p2, p3);
-		Line l3 = new Line(p3, p4);
-		Polyline poly1 = new Polyline(Color.BLACK);
-		poly1.add(l1);
-		poly1.add(l2);
-		assertTrue(poly1.getPoints().size() == 3);
-		Polyline poly2 = new Polyline(Color.BLACK);
-		poly2.add(l1);
-		poly2.add(l3);
-		assertTrue(poly2.getPoints().size() == 4);
+	public String getName() {
+		return this.name;
 	}
-	
-
 }
