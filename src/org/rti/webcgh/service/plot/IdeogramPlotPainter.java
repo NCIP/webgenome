@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-09-11 18:36:50 $
+$Revision: 1.6 $
+$Date: 2006-09-15 01:16:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -135,8 +135,16 @@ public class IdeogramPlotPainter extends PlotPainter {
 			final CytologicalMap cytologicalMap,
 			final IdeogramPlotParameters plotParameters) {
 		
+		// Calculate height of ideogram
+		ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
+		int height = idSize.pixels(cytologicalMap.length());
+		
 		// Paint chromosome ideogram
-		this.paintChromosomeIdeogram(panel, cytologicalMap, plotParameters);
+		this.paintChromosomeIdeogram(panel, cytologicalMap,
+				height, idSize);
+		
+		// Add data tracks
+		this.paintDataTracks(experiments, height, plotParameters);
 	}
 	
 	
@@ -145,19 +153,18 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * @param plotPanel Plot panel to paint on
 	 * @param cytologicalMap Cytological map to convert graphically
 	 * into an ideogram
-	 * @param plotParameters Plot parameters
+	 * @param height Height of ideogram in pixels.  This
+	 * does not include chromosome end caps, which are a fixed
+	 * height, but rather the height of the region that can be
+	 * plotted against.
+	 * @param idSize Chromosome ideogram size
 	 */
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
-			final IdeogramPlotParameters plotParameters) {
+			final int height, final ChromosomeIdeogramSize idSize) {
 		
 		// Create new plot panel to paint on
 		PlotPanel idPan = plotPanel.newChildPlotPanel();
-		
-		// Calculate height of ideogram
-		ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
-		int height =
-			plotParameters.getIdeogramSize().pixels(cytologicalMap.length());
 		
 		// Instantiate genome feature plot
 		GenomeFeaturePlot plot = new GenomeFeaturePlot(1,
@@ -199,4 +206,14 @@ public class IdeogramPlotPainter extends PlotPainter {
 		plotPanel.add(idPan);
 	}
 			
+	
+	/**
+	 * Add data tracks to plot.
+	 * @param experiments Experiments to plot
+	 * @param height Height of data tracks
+	 * @param plotParameters Plot parameters
+	 */
+	private void paintDataTracks(final Collection<Experiment> experiments,
+			final int height, final IdeogramPlotParameters plotParameters) {
+	}
 }

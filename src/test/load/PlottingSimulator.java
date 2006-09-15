@@ -1,18 +1,16 @@
 /*
-
-$Source$
 $Revision$
 $Date$
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,29 +38,24 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package test.load;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.ChromosomeArrayData;
-import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.graph.unit_test.SvgTestPanel;
@@ -70,6 +63,7 @@ import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.ScatterPlot;
 import org.rti.webcgh.io.DataFileManager;
 import org.rti.webcgh.io.SmdFormatException;
+import org.rti.webcgh.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
@@ -139,28 +133,23 @@ public final class PlottingSimulator {
         Experiment exp = mgr.convertSmdData(smdFile, new Organism());
         LOGGER.info("Finished serializing data");
         
+        // Create chromosome array data getter
+        SerializedChromosomeArrayDataGetter getter =
+        	new SerializedChromosomeArrayDataGetter();
+        getter.setDataFileManager(mgr);
+        
         // Create plots
         LOGGER.info("Creating plots");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
         SortedSet<Short> chromosomes = exp.getChromosomes();
+        Collection<Experiment> experiments = new ArrayList<Experiment>();
+        experiments.add(exp);
         for (Short chrom : chromosomes) {
             LOGGER.info("Creating plot of chromosome " + chrom);
             SvgTestPanel canvas = SvgTestPanel.newSvgTestPanel();
             canvas.setSvgDirectory(new File(outputDirPath));
-            List<ChromosomeArrayData> cads =
-                new ArrayList<ChromosomeArrayData>();
-            List<String> names = new ArrayList<String>();
-            List<Color> colors = new ArrayList<Color>();
-            for (BioAssay ba : exp.getBioAssays()) {
-                ChromosomeArrayData cad =
-                    mgr.loadChromosomeArrayData(
-                            (DataSerializedBioAssay) ba, chrom);
-                cads.add(cad);
-                names.add(ba.getName());
-                colors.add(Color.BLACK);
-            }
-            ScatterPlot plot = new ScatterPlot(cads, names, colors,
+            ScatterPlot plot = new ScatterPlot(experiments, chrom, getter,
                     PLOT_WIDTH, PLOT_HEIGHT, PLOT_BOUNDARIES);
             canvas.add(plot, HorizontalAlignment.CENTERED,
                     VerticalAlignment.CENTERED);

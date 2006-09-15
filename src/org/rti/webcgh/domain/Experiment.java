@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -238,5 +239,43 @@ public class Experiment implements Serializable {
             chroms.addAll(ba.getChromosomes());
         }
         return chroms;
+    }
+    
+    /**
+     * Get size of chromosome inferred from data.
+     * @param chromosome Chromosome number
+     * @return Size of chromosome inferred from data
+     */
+    public final long inferredChromosomeSize(final short chromosome) {
+    	long max = 0;
+    	for (BioAssay ba : this.bioAssays) {
+    		long candidateMax = ba.inferredChromosomeSize(chromosome);
+    		if (candidateMax > max) {
+    			max = candidateMax;
+    		}
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get size of chromosome inferred from data in given
+     * experiments.
+     * @param experiments Experiments
+     * @param chromosome Chromosome number
+     * @return Size of chromosome inferred from data in given
+     * experiments.
+     */
+    public static final long inferredChromosomeSize(
+    		final Collection<Experiment> experiments,
+    		final short chromosome) {
+    	long max = 0;
+    	for (Experiment exp : experiments) {
+    		long candidateMax = exp.inferredChromosomeSize(chromosome);
+    		if (candidateMax > max) {
+    			max = candidateMax;
+    		}
+    	}
+    	return max;
     }
 }

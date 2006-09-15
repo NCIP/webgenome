@@ -241,4 +241,11 @@ public abstract class BioAssay implements Serializable {
      * @return Chromosomes
      */
     public abstract SortedSet<Short> getChromosomes();
+    
+    /**
+     * Get size of chromosome implied by the data.
+     * @param chromosome Chromosome number
+     * @return Size of chromosome implied by data
+     */
+    public abstract long inferredChromosomeSize(short chromosome);
 }

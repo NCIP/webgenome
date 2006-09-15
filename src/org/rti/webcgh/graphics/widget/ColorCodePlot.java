@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-09-15 01:16:46 $
 
 The Web CGH Software License, Version 1.0
@@ -48,79 +48,14 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 package org.rti.webcgh.graphics.widget;
 
-import java.awt.Point;
-
-import org.rti.webcgh.graphics.DrawingCanvas;
-
 /**
- * A graphical element in a plot.
+ * Plots data in one dimension using color intensities
+ * to represent another dimension.
+ * @author dhall
+ *
  */
-public interface PlotElement {
-    
-    
-    /**
-     * Paint element.
-     * @param canvas A canvas
-     */
-    void paint(DrawingCanvas canvas);
-    
-    
-    /**
-     * Point at top left used to align with other plot elements.
-     * @return A point
-     */
-    Point topLeftAlignmentPoint();
-    
-    
-    /**
-     * Point at bottom left used to align with other plot elements.
-     * @return A point
-     */
-    Point bottomLeftAlignmentPoint();
-    
-    
-    /**
-     * Point at top right used to align with other plot elements.
-     * @return A point
-     */
-    Point topRightAlignmentPoint();
-    
-    
-    /**
-     * Point at bottom right used to align with other plot elements.
-     * @return A point
-     */
-    Point bottomRightAlignmentPoint();
-    
-    
-    /**
-     * Width in pixels.
-     * @return Width in pixels
-     */
-    int width();
-    
-    
-    /**
-     * Height in pixels.
-     * @return Height in pixels
-     */
-    int height();
-    
-    
-    /**
-     * Return point at top left of element.
-     * @return A point
-     */
-    Point topLeftPoint();
-    
-    
-    /**
-     * Move element.
-     * @param deltaX Number of pixels horizontally
-     * @param deltaY Number of pixels vertically
-     */
-    void move(int deltaX, int deltaY);
+public class ColorCodePlot {
+
 }

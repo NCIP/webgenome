@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-08 03:06:50 $
+$Revision: 1.4 $
+$Date: 2006-09-15 01:16:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,13 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
@@ -140,26 +135,14 @@ public class ScatterPlotPainter extends PlotPainter {
         }
         
         // Paint plot
-        List<ChromosomeArrayData> cads = new ArrayList<ChromosomeArrayData>();
-        List<String> names = new ArrayList<String>();
-        List<Color> colors = new ArrayList<Color>();
-        for (Experiment experiment : experiments) {
-            for (BioAssay ba : experiment.getBioAssays()) {
-                ChromosomeArrayData cad =
-                	this.getChromosomeArrayDataGetter().getChromosomeArrayData(
-                			ba, plotParameters.getChromosome());
-                cads.add(cad);
-                names.add(ba.getName());
-                colors.add(ba.getColor());
-            }
-        }
         PlotBoundaries pb = new PlotBoundaries(
                 (double) plotParameters.getStartLocation(),
                 (double) plotParameters.getMinY(),
                 (double) plotParameters.getEndLocation(),
                 (double) plotParameters.getMaxY());
         ScatterPlot scatterPlot =
-            new ScatterPlot(cads, names, colors, width, height, pb);
+            new ScatterPlot(experiments, plotParameters.getChromosome(),
+            		this.getChromosomeArrayDataGetter(), width, height, pb);
         panel.add(scatterPlot);
         
         // X-axis

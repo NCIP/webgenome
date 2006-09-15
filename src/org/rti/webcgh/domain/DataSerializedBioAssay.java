@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -83,6 +85,9 @@ public class DataSerializedBioAssay extends BioAssay {
      */
     private SortedMap<Short, String> chromosomeArrayDataFileIndex =
         new TreeMap<Short, String>();
+    
+    /** Maps chromosome numbers to inferred chromosome sizes. */
+    private Map<Short, Long> chromosomeSizes = new HashMap<Short, Long>();
     
     
     // ==============================
@@ -168,6 +173,17 @@ public class DataSerializedBioAssay extends BioAssay {
     }
     
     
+    /**
+     * Set inferred size of chromosome.
+     * @param chromosome Chromosome
+     * @param size Size
+     */
+    public final void setInferredChromosomeSize(
+    		final short chromosome, final long size) {
+    	this.chromosomeSizes.put(chromosome, size);
+    }
+    
+    
     // ==================================
     //    Implemented abstract methods
     // ==================================
@@ -180,6 +196,20 @@ public class DataSerializedBioAssay extends BioAssay {
     public final SortedSet<Short> getChromosomes() {
         return new TreeSet<Short>(
                 this.chromosomeArrayDataFileIndex.keySet());
+    }
+    
+    
+    /**
+     * Get size of chromosome implied by the data.
+     * @param chromosome Chromosome number
+     * @return Size of chromosome implied by data
+     */
+    public final long inferredChromosomeSize(final short chromosome) {
+    	long size = 0;
+    	if (this.chromosomeSizes.containsKey(chromosome)) {
+    		size = this.chromosomeSizes.get(chromosome);
+    	}
+    	return size;
     }
 
 }

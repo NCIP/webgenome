@@ -78,7 +78,7 @@ public class DataContainingBioAssay extends BioAssay {
     /** Map of chromosome number to associated chromosome array data. */
     private SortedMap<Short, ChromosomeArrayData> chromosomeArrayDataIndex =
         new TreeMap<Short, ChromosomeArrayData>();
-    
+        
     
     // ================================
     //     Getters/setters
@@ -103,6 +103,16 @@ public class DataContainingBioAssay extends BioAssay {
             final SortedMap<Short, ChromosomeArrayData>
             chromosomeArrayDataIndex) {
         this.chromosomeArrayDataIndex = chromosomeArrayDataIndex;
+    }
+    
+    /**
+     * Get chromosome array data from given chromosome.
+     * @param chromosome Chromosome number
+     * @return Chromosome array data
+     */
+    public final ChromosomeArrayData
+        getChromosomeArrayData(final short chromosome) {
+        return this.chromosomeArrayDataIndex.get(chromosome);
     }
     
     
@@ -139,15 +149,18 @@ public class DataContainingBioAssay extends BioAssay {
         return new TreeSet<Short>(this.chromosomeArrayDataIndex.keySet());
     }
     
-    
     /**
-     * Get chromosome array data from given chromosome.
+     * Get size of chromosome implied by the data.
      * @param chromosome Chromosome number
-     * @return Chromosome array data
+     * @return Size of chromosome implied by data
      */
-    public final ChromosomeArrayData
-        getChromosomeArrayData(final short chromosome) {
-        return this.chromosomeArrayDataIndex.get(chromosome);
+    public final long inferredChromosomeSize(final short chromosome) {
+    	long size = 0;
+    	ChromosomeArrayData cad = this.getChromosomeArrayData(chromosome);
+    	if (cad != null) {
+    		size = cad.inferredChromosomeSize();
+    	}
+    	return size;
     }
     
     

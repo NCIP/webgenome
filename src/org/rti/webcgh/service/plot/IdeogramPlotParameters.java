@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-15 01:16:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,16 +59,225 @@ import org.rti.webcgh.units.ChromosomeIdeogramSize;
  */
 public class IdeogramPlotParameters extends PlotParameters {
 	
+	// ==========================
+	//   Constants
+	// ==========================
+	
+	/**
+	 * Default minimum color saturation value.
+	 * Data values
+	 * less than or equal to <code>minSaturation</code>
+	 * will be mapped to
+	 * pure green (#00FF00) in the plot.
+	 */
+	public static final float DEF_MIN_SATURATION = (float) -1.0;
+	
+	/**
+	 * Default maximum color saturation value.
+	 * Data values
+	 * greater than or equal to <code>maxSaturation</code>
+	 * will be mapped to pure red
+	 * (#FF0000) in the plot.
+	 */
+	public static final float DEF_MAX_SATURATION = (float) 1.0;
+	
+	/**
+	 * Default minimum mask value.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 */
+	public static final float DEF_MIN_MASK = (float) Float.MAX_VALUE;
+	
+	/**
+	 * Default maximum mask value.
+	 * Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 */
+	public static final float DEF_MAX_MASK = (float) Float.MIN_VALUE;
+	
+	/** Default width of ideograms in pixels. */
+	public static final int DEF_IDEOGRAM_WIDTH = 20;
+	
+	/** Default width of data tracks. */
+	public static final int DEF_TRACK_WIDTH = 20;
+	
+	/** Default ideogram size. */
+	public static final ChromosomeIdeogramSize DEF_IDEOGRAM_SIZE =
+		ChromosomeIdeogramSize.MEDIUM;
+	
+	
 	// ============================
 	//     Attributes
 	// ============================
 	
-	/** Ideogram size. */
-	private ChromosomeIdeogramSize ideogramSize = null;
+	/** Ideogram size (length). */
+	private ChromosomeIdeogramSize ideogramSize = DEF_IDEOGRAM_SIZE;
+	
+	/** Width of ideogram in pixels. */
+	private int ideogramWidth = DEF_IDEOGRAM_WIDTH;
+	
+	/** Width of data tracks in pixels. */
+	private int trackWidth = DEF_TRACK_WIDTH;
+	
+	/**
+	 * Maximum color saturation value.  Data values
+	 * greater than or equal to this will be mapped to pure red
+	 * (#FF0000) in the plot.
+	 */
+	private float maxSaturation = DEF_MAX_SATURATION;
+	
+	/**
+	 * Minium color saturation value.  Data values
+	 * less than or equal to this will be mapped to
+	 * pure green (#00FF00) in the plot.
+	 */
+	private float minSaturation = DEF_MIN_SATURATION;
+	
+	/**
+	 * Minimum mask value.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 */
+	private float minMask = DEF_MIN_MASK;
+	
+	/**
+	 * Maximum mask value.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 */
+	private float maxMask = DEF_MAX_MASK;
+	
 	
 	// ============================
 	//       Getters/setters
 	// ============================
+
+	/**
+	 * Get width of ideograms in pixles.
+	 * @return Width of ideograms in pixels.
+	 */
+	public final int getIdeogramWidth() {
+		return ideogramWidth;
+	}
+
+
+	/**
+	 * Set width of ideograms in pixels.
+	 * @param ideogramWidth Width of ideograms in pixels.
+	 */
+	public final void setIdeogramWidth(final int ideogramWidth) {
+		this.ideogramWidth = ideogramWidth;
+	}
+
+
+	/**
+	 * Get width of data tracks in pixels.
+	 * @return Width of data tracks in pixels.
+	 */
+	public final int getTrackWidth() {
+		return trackWidth;
+	}
+
+
+	/**
+	 * Set width of data tracks in pixels.
+	 * @param trackWidth Width of data tracks in pixels.
+	 */
+	public final void setTrackWidth(final int trackWidth) {
+		this.trackWidth = trackWidth;
+	}
+
+
+	/**
+	 * Set maximum mask.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 * @return Maximum mask value
+	 */
+	public final float getMaxMask() {
+		return maxMask;
+	}
+
+	
+	/**
+	 * Set maximum mask.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 * @param maxMask Maximum mask
+	 */
+	public final void setMaxMask(final float maxMask) {
+		this.maxMask = maxMask;
+	}
+
+
+	/**
+	 * Get minimum mask.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 * @return Minimum mask
+	 */
+	public final float getMinMask() {
+		return minMask;
+	}
+
+
+	/**
+	 * Set minimum mask.  Values between
+	 * <code>minMask</code> and <code>maxMask</code>
+	 * are filtered out of plot.
+	 * @param minMask Minimum
+	 */
+	public final void setMinMask(final float minMask) {
+		this.minMask = minMask;
+	}
+
+
+	/**
+	 * Get maximum color saturation value.
+	 * Data values
+	 * greater than or equal to this will be mapped to pure red.
+	 * (#FF0000) in the plot.
+	 * @return Maximum color saturation value.
+	 */
+	public final float getMaxSaturation() {
+		return maxSaturation;
+	}
+
+	
+	/**
+	 * Set maximum color saturation value.
+	 * Data values
+	 * greater than or equal to this will be mapped to pure red.
+	 * @param maxSaturation Maximum color saturation value.
+	 */
+	public final void setMaxSaturation(final float maxSaturation) {
+		this.maxSaturation = maxSaturation;
+	}
+
+	
+	/**
+	 * Get minimum color saturation value.
+	 * Data values
+	 * less than or equal to this will be mapped to pure green.
+	 * (#00FF00) in the plot.
+	 * @return Minimum color saturation value.
+	 */
+	public final float getMinSaturation() {
+		return minSaturation;
+	}
+
+	
+	/**
+	 * Set minimum color saturation value.
+	 * Data values
+	 * less than or equal to this will be mapped to pure green.
+	 * (#00FF00) in the plot.
+	 * @param minSaturation Minimum color saturation value.
+	 */
+	public final void setMinSaturation(final float minSaturation) {
+		this.minSaturation = minSaturation;
+	}
 
 	/**
 	 * Get ideogram size.
@@ -97,20 +306,5 @@ public class IdeogramPlotParameters extends PlotParameters {
 	 */
 	public IdeogramPlotParameters() {
 		super();
-	}
-
-	
-	/**
-	 * Constructor.
-	 * @param chromosome Chromosome number
-	 * @param startLocation Start chromosome location of data to plot
-	 * @param endLocation End chromosome location of data to plot
-	 * @param ideogramSize Ideogram size
-	 */
-	public IdeogramPlotParameters(final short chromosome,
-			final long startLocation, final long endLocation,
-			final ChromosomeIdeogramSize ideogramSize) {
-		super(chromosome, startLocation, endLocation);
-		this.ideogramSize = ideogramSize;
 	}
 }

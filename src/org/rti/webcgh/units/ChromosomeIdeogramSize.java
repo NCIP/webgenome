@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 15:15:31 $
+$Revision: 1.2 $
+$Date: 2006-09-15 01:16:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -142,6 +142,14 @@ public final class ChromosomeIdeogramSize {
      */
     public int pixels(final long bp) {
         return (int) ((double) bp * pixelScale);
+    }
+    
+    /**
+     * Get scale of native units to pixels.
+     * @return Scale of native units to pixels
+     */
+    public double getPixelScale() {
+    	return this.pixelScale;
     }
     
     
