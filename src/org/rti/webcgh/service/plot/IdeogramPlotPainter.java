@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-09-15 21:21:02 $
+$Revision: 1.8 $
+$Date: 2006-09-16 02:58:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,10 +56,12 @@ import java.util.Collection;
 import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.graphics.primitive.Text;
 import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
 import org.rti.webcgh.graphics.util.Warper;
+import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 import org.rti.webcgh.graphics.widget.HeatMapPlot;
@@ -145,7 +147,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		
 		// Paint chromosome ideogram
 		this.paintChromosomeIdeogram(panel, cytologicalMap,
-				height, idSize);
+				height, idSize, "CHR " + plotParameters.getChromosome());
 		
 		// Add data tracks
 		this.paintDataTracks(panel, experiments, height, plotParameters);
@@ -165,7 +167,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 */
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
-			final int height, final ChromosomeIdeogramSize idSize) {
+			final int height, final ChromosomeIdeogramSize idSize,
+			final String chromosome) {
 		
 		// Create new plot panel to paint on
 		PlotPanel idPan = plotPanel.newChildPlotPanel();
@@ -205,6 +208,12 @@ public class IdeogramPlotPainter extends PlotPainter {
 				VerticalAlignment.TOP_JUSTIFIED);
 		idPan.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED,
 				VerticalAlignment.BOTTOM_JUSTIFIED);
+		
+		// Add chromosome number caption
+		Caption caption = new Caption(chromosome, null,
+				Orientation.HORIZONTAL, false);
+		idPan.add(caption, HorizontalAlignment.CENTERED,
+				VerticalAlignment.BELOW);
 		
 		// Add new panel to parent
 		plotPanel.add(idPan);
