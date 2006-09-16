@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-16 02:49:25 $
+$Revision: 1.4 $
+$Date: 2006-09-16 04:29:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -114,6 +114,9 @@ public final class HeatMapPlot implements PlotElement {
 	/** Experiments containing data to plot. */
 	private final Collection<Experiment> experiments;
 	
+	/** Chromosome number to plot. */
+	private final short chromosome;
+	
 	/** Factory for generating colors. */
     private final HeatMapColorFactory colorFactory;
     
@@ -156,6 +159,7 @@ public final class HeatMapPlot implements PlotElement {
     /**
      * Constructor.
      * @param experiments Experiments containg data to plot
+     * @param chromosome Chromosome number to plot
      * @param colorFactory Maps data values to colors
      * @param plotParameters Plot parameters supplied through
      * user input
@@ -165,6 +169,7 @@ public final class HeatMapPlot implements PlotElement {
      * @param drawingCanvas A drawing canvas
      */
 	public HeatMapPlot(final Collection<Experiment> experiments,
+			final short chromosome,
 			final HeatMapColorFactory colorFactory,
 			final IdeogramPlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter,
@@ -178,6 +183,7 @@ public final class HeatMapPlot implements PlotElement {
 		
 		// Set attributes
 		this.experiments = experiments;
+		this.chromosome = chromosome;
 		this.colorFactory = colorFactory;
 		this.plotParameters = plotParameters;
 		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
@@ -197,7 +203,7 @@ public final class HeatMapPlot implements PlotElement {
 		this.trackMaxY = this.trackMinY
 			+ plotParameters.getIdeogramSize().pixels(
 				Experiment.inferredChromosomeSize(experiments,
-						plotParameters.getChromosome()));
+						this.chromosome));
 		this.maxX = 0;
 		for (Iterator<Experiment> it = experiments.iterator();
 			it.hasNext();) {
@@ -302,17 +308,18 @@ public final class HeatMapPlot implements PlotElement {
     	
     	// Draw data tracks and bioassay labels
     	for (BioAssay ba : experiment.getBioAssays()) {
-    		this.paintTrack(canvas, trackX,
-    				this.chromosomeArrayDataGetter.
-    				getChromosomeArrayData(ba,
-    						this.plotParameters.getChromosome()));
-    		int textX = trackX + this.plotParameters.getTrackWidth() / 2;
-    		Text text = canvas.newText(ba.getName(), textX, textY,
-    				FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
-    				TEXT_COLOR);
-    		text.setRotation(LABEL_ROTATION);
-    		canvas.add(text);
-    		trackX += this.plotParameters.getTrackWidth() + PADDING;
+    		ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
+				getChromosomeArrayData(ba, this.chromosome);
+			if (cad != null) {
+	    		this.paintTrack(canvas, trackX, cad);
+	    		int textX = trackX + this.plotParameters.getTrackWidth() / 2;
+	    		Text text = canvas.newText(ba.getName(), textX, textY,
+	    				FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
+	    				TEXT_COLOR);
+	    		text.setRotation(LABEL_ROTATION);
+	    		canvas.add(text);
+	    		trackX += this.plotParameters.getTrackWidth() + PADDING;
+			}
     	}
     	
     	// Draw group label for entire experiment
@@ -346,7 +353,7 @@ public final class HeatMapPlot implements PlotElement {
      * Paint a single data track.
      * @param canvas Canvas
      * @param x X-coordinate of track
-     * @param chromosomeArrayData Data to paint
+     * @param chromosomeArrayData Chromosome array data
      */
     private void paintTrack(final DrawingCanvas canvas, final int x,
     		final ChromosomeArrayData chromosomeArrayData) {

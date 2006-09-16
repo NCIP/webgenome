@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-16 02:49:25 $
+$Revision: 1.4 $
+$Date: 2006-09-16 04:29:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,6 +73,9 @@ import junit.framework.TestCase;
  */
 public final class HeatMapPlotTester extends TestCase {
 	
+	/** Chromosome number. */
+	private static final short CHROMOSOME = (short) 1;
+	
 	/** Number of test experiments to generate. */
 	private static final int NUM_EXPERIMENTS = 2;
 	
@@ -125,9 +128,6 @@ public final class HeatMapPlotTester extends TestCase {
 		
 		// Create plot parameters
 		IdeogramPlotParameters params = new IdeogramPlotParameters();
-		params.setChromosome((short) 1);
-		params.setStartLocation(1);
-		params.setEndLocation(CHROM_SIZE);
 		
 		// Create heat map color code factory
 		HeatMapColorFactory fac = new HeatMapColorFactory(
@@ -139,7 +139,7 @@ public final class HeatMapPlotTester extends TestCase {
 			new InMemoryChromosomeArrayDataGetter();
 		
 		// Plot data
-		HeatMapPlot plot = new HeatMapPlot(experiments, fac, params,
+		HeatMapPlot plot = new HeatMapPlot(experiments, CHROMOSOME, fac, params,
 				getter, panel.getDrawingCanvas());
 		panel.add(plot);
 		
@@ -173,9 +173,6 @@ public final class HeatMapPlotTester extends TestCase {
 		
 		// Create plot parameters
 		IdeogramPlotParameters params = new IdeogramPlotParameters();
-		params.setChromosome((short) 1);
-		params.setStartLocation(1);
-		params.setEndLocation(CHROM_SIZE);
 		
 		// Create heat map color code factory
 		HeatMapColorFactory fac = new HeatMapColorFactory(
@@ -188,7 +185,7 @@ public final class HeatMapPlotTester extends TestCase {
 		getter.setDataFileManager(mgr);
 		
 		// Plot data
-		HeatMapPlot plot = new HeatMapPlot(experiments, fac, params,
+		HeatMapPlot plot = new HeatMapPlot(experiments, CHROMOSOME, fac, params,
 				getter, panel.getDrawingCanvas());
 		panel.add(plot);
 		

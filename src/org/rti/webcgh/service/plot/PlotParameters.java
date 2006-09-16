@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-16 04:30:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.units.BpUnits;
 
 
@@ -59,19 +63,17 @@ import org.rti.webcgh.units.BpUnits;
  *
  */
 public class PlotParameters {
+	
+	// =======================
+	//   Constants
+	// =======================
+	
+	/** Default number of plots per row. */
+	public static final int DEF_NUM_PLOTS_PER_ROW = 5;
     
     // ==========================
     //       Attributes
     // ==========================
-    
-    /** Chromosome number. */
-    private short chromosome = (short) -1;
-    
-    /** Left endpoint of chromosome interval to plot. */
-    private long startLocation = (long) -1;
-    
-    /** Right endpoint of chromosome interval to plot. */
-    private long endLocation = (long) -1;
     
     /**
      * Units for <code>startLocation</code>
@@ -79,12 +81,55 @@ public class PlotParameters {
      */
     private BpUnits units = BpUnits.BP;
     
+    /** Genome intervals to plot. */
+    private List<GenomeInterval> genomeIntervals =
+    	new ArrayList<GenomeInterval>();
+    
+    /** Number of plots in a row of plots. */
+    private int numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
     
     // ===========================
     //    Getters/setters
     // ===========================
 
     /**
+     * Get number of plots in a row of plots.
+     * @return Number of plots in a row of plots.
+     */
+    public final int getNumPlotsPerRow() {
+		return numPlotsPerRow;
+	}
+
+
+    /**
+     * Set number of plots in a row of plots.
+     * @param numPlotsPerRow Number of plots in a row of plots.
+     */
+	public final void setNumPlotsPerRow(final int numPlotsPerRow) {
+		this.numPlotsPerRow = numPlotsPerRow;
+	}
+
+
+	/**
+     * Get genome intervals to plot.
+     * @return Genome intervals to plot
+     */
+    public final List<GenomeInterval> getGenomeIntervals() {
+		return genomeIntervals;
+	}
+
+
+    /**
+     * Set genome intervals to plot.
+     * @param genomeIntervals Genome intervals to plot
+     */
+	public final void setGenomeIntervals(
+			final List<GenomeInterval> genomeIntervals) {
+		this.genomeIntervals = genomeIntervals;
+	}
+
+
+	/**
      * Get units of <code>startLocation</code>
      * and <code>endLocation</code> fields.
      * @return Units
@@ -104,61 +149,6 @@ public class PlotParameters {
         this.units = units;
     }
 
-    /**
-     * Get chromosome number.
-     * @return Chromosome number
-     */
-    public final short getChromosome() {
-        return chromosome;
-    }
-
-    /**
-     * Set chromosome number.
-     * @param chromosome Chromosome number
-     */
-    public final void setChromosome(final short chromosome) {
-        this.chromosome = chromosome;
-    }
-
-    /**
-     * Get right endpoint of chromosome interval
-     * to plot.
-     * @return Right endpoint of chromosome interval
-     * to plot
-     */
-    public final long getEndLocation() {
-        return endLocation;
-    }
-
-    /**
-     * Set right endpoint of chromosome interval
-     * to plot.
-     * @param endLocation Right endpoint of chromosome interval
-     * to plot
-     */
-    public final void setEndLocation(final long endLocation) {
-        this.endLocation = endLocation;
-    }
-
-    /**
-     * Get left endpoint of chromosome interval
-     * to plot.
-     * @return Left endpoint of chromosome interval
-     * to plot
-     */
-    public final long getStartLocation() {
-        return startLocation;
-    }
-
-    /**
-     * Set left endpoint of chromosome interval
-     * to plot.
-     * @param startLocation Left endpoint of chromosome interval
-     * to plot
-     */
-    public final void setStartLocation(final long startLocation) {
-        this.startLocation = startLocation;
-    }
     
     // ==================================
     //       Constructors
@@ -170,20 +160,17 @@ public class PlotParameters {
     public PlotParameters() {
         
     }
-
+    
+    
+    // ===========================
+    //     Business methods
+    // ===========================
     
     /**
-     * Constructor.
-     * @param chromosome Chromosome number
-     * @param startLocation Left endpoint of chromosome interval
-     * being plotted
-     * @param endLocation Right endpoint of chromosome interval
-     * being plotted
+     * Add genome interval.
+     * @param genomeInterval Genome interval to add
      */
-    public PlotParameters(final short chromosome, final long startLocation,
-            final long endLocation) {
-        this.chromosome = chromosome;
-        this.startLocation = startLocation;
-        this.endLocation = endLocation;
+    public final void add(final GenomeInterval genomeInterval) {
+    	this.genomeIntervals.add(genomeInterval);
     }
 }

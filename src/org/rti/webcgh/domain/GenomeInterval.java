@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-16 04:30:52 $
+$Revision: 1.1 $
+$Date: 2006-09-16 04:29:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,72 +48,111 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.plot;
+package org.rti.webcgh.domain;
 
 /**
- * Plot parameters specific to scatter plots.
+ * Represents a genome interval.
  * @author dhall
  *
  */
-public final class ScatterPlotParameters extends PlotParameters {
-    
-    // ============================
-    //      Attributes
-    // ============================
-    
-    /** Minimum Y-axis value specified by user. */
-    private float minY = Float.NaN;
+public class GenomeInterval {
 
-    /** Maximum Y-axis value specified by user. */
-    private float maxY = Float.NaN;
-    
-    // ==========================
-    //      Getters/setters
-    // ==========================
+	// =========================
+	//      Attributes
+	// =========================
+	
+	/** Chromosome number. */
+	private short chromosome = (short) -1;
+	
+	/** Chromosomal start location of interval in base pairs. */
+	private long startLocation = -1;
+	
+	/** Chromosomal end location of interval in base pairs. */
+	private long endLocation = -1;
+	
+	
+	// =========================
+	//     Getters/setters
+	// =========================
 
-    /**
-     * Get maximum Y-axis value specified by user.
-     * @return Maximum Y-axis value specified by user
-     */
-    public float getMaxY() {
-        return maxY;
-    }
+	/**
+	 * Get chromosome number.
+	 * @return Chromosome number
+	 */
+	public final short getChromosome() {
+		return chromosome;
+	}
 
-    
-    /**
-     * Set maximum Y-axis value specified by user.
-     * @param maxY Maximum Y-axis value specified by user
-     */
-    public void setMaxY(final float maxY) {
-        this.maxY = maxY;
-    }
+	/**
+	 * Set chromosome number.
+	 * @param chromosome Chromosome number
+	 */
+	public final void setChromosome(final short chromosome) {
+		this.chromosome = chromosome;
+	}
 
-    
-    /**
-     * Get minimum Y-axis value specified by user.
-     * @return Minimum Y-axis value specified by user
-     */
-    public float getMinY() {
-        return minY;
-    }
+	
+	/**
+	 * Get chromosomal end location of interval.
+	 * @return Chromosomal end location of interval.
+	 */
+	public final long getEndLocation() {
+		return endLocation;
+	}
 
-    
-    /**
-     * Set minimum Y-axis value specified by user.
-     * @param minY Minimum Y-axis value specified by user
-     */
-    public void setMinY(final float minY) {
-        this.minY = minY;
-    }
-    
-    // ==============================
-    //        Constructors
-    // ==============================
+	
+	/**
+	 * Set chromosomal end location of interval.
+	 * @param endLocation Chromosomal end location of interval.
+	 */
+	public final void setEndLocation(final long endLocation) {
+		this.endLocation = endLocation;
+	}
 
-    /**
-     * Constructor.
-     */
-    public ScatterPlotParameters() {
-        super();
-    }
+	
+	/**
+	 * Get chromosomal start location of interval.
+	 * @return Chromosomal start location of interval.
+	 */
+	public final long getStartLocation() {
+		return startLocation;
+	}
+
+	
+	/**
+	 * Set chromosomal start location of interval.
+	 * @param startLocation Chromosomal start location of interval.
+	 */
+	public final void setStartLocation(final long startLocation) {
+		this.startLocation = startLocation;
+	}
+	
+	
+	// ============================
+	//     Constructors
+	// ============================
+	
+	/**
+	 * Constructor.
+	 */
+	public GenomeInterval() {
+		
+	}
+
+
+	/**
+	 * Constructor.
+	 * @param chromosome Chromosome number
+	 * @param startLocation Chromosomal start location of interval
+	 * in base pairs
+	 * @param endLocation Chromosomal end location of interval
+	 * in base pairs
+	 */
+	public GenomeInterval(final short chromosome, final long startLocation,
+			final long endLocation) {
+		super();
+		this.chromosome = chromosome;
+		this.startLocation = startLocation;
+		this.endLocation = endLocation;
+	}
 }

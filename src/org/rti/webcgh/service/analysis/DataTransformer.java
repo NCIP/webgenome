@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:44 $
+$Revision: 1.2 $
+$Date: 2006-09-16 04:29:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,7 +101,8 @@ public abstract class DataTransformer {
     			+ "' operation on experiment '" + input.getName() + "'");
         String experimentName = input.getName() + " " + operation.getName();
         Experiment output =
-            new Experiment(experimentName, input.getQuantitationType());
+            new Experiment(experimentName, input.getOrganism(),
+            		input.getQuantitationType());
         this.perform(input, output, operation, true);
         LOGGER.info("Completed operation");
         return output;

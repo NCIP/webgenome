@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-15 21:21:02 $
+$Revision: 1.5 $
+$Date: 2006-09-16 04:30:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,16 +55,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.Cytoband;
-import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
-import org.rti.webcgh.domain.Reporter;
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.util.
 	ClassPathPropertiesFileRgbHexidecimalColorMapper;
@@ -93,9 +90,6 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	//     Constants
 	// ===============================
 	
-	/** Height of centromere in native units. */
-	private static final long CENTROMERE_HEIGHT = 10000000;
-	
 	/**
 	 * Name of temporary directory for storing
 	 * generated ata files.  This is not an absolute
@@ -122,7 +116,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	private static final int NUM_BIO_ASSAYS = 2;
 	
 	/** Number of chromosomes in tests. */
-	private static final int NUM_CHROMOSOMES = 2;
+	private static final int NUM_CHROMOSOMES = 1;
 	
 	/** Number of experiments in tests. */
 	private static final int NUM_EXPERIMENTS = 2;
@@ -132,6 +126,9 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	
 	/** Length of chromosome in base pairs. */
 	private static final long CHROM_LENGTH = 100000000;
+	
+	/** Number of cytobands. */
+	private static final int NUM_CYTOBANDS = 10;
 	
 	// ===================================
 	//     Test cases
@@ -158,14 +155,9 @@ public final class IdeogramPlotPainterTester extends TestCase {
         
         // Create plot parameters
         IdeogramPlotParameters params = new IdeogramPlotParameters();
-        List<Reporter> reporters = expGen.getReporters();
-        short chromosome = reporters.get(0).getChromosome();
-        long start = reporters.get(0).getLocation();
-        long end = reporters.get(
-                reporters.size() - 1).getLocation();
-        params.setChromosome(chromosome);
-        params.setStartLocation(start);
-        params.setEndLocation(end);
+        for (int i = 0; i < NUM_CHROMOSOMES; i++) {
+        	params.add(new GenomeInterval((short) i, 1, CHROM_LENGTH));
+        }
         params.setIdeogramSize(ChromosomeIdeogramSize.MEDIUM);
         
         // Create plotting panel
@@ -184,21 +176,14 @@ public final class IdeogramPlotPainterTester extends TestCase {
         // Instantiate ideogram plot painter
         IdeogramPlotPainter painter =
         	new IdeogramPlotPainter(cadg, colorMapper);
-        
-        // Create cytologial map
-        long centMid = CHROM_LENGTH / 2;
-        long centStart = centMid - CENTROMERE_HEIGHT / 2;
-        long centEnd = centMid + CENTROMERE_HEIGHT / 2;
-        CytologicalMap map =
-        	new CytologicalMap(chromosome, centStart, centEnd);
-        map.addCytoband(new Cytoband("c1", 1, 10000000, "gpos33"));
-        map.addCytoband(new Cytoband("c2", 10000000, 30000000, "gpos66"));
-        map.addCytoband(new Cytoband("c3", 30000000, 40000000, "gpos50"));
-        map.addCytoband(new Cytoband("c4", 40000000, 90000000, "gpos66"));
-        map.addCytoband(new Cytoband("c5", 90000000, 100000000, "gpos100"));
+       
+        // Create cytologial map DAO
+        CytologicalMapDaoImpl cDao =
+        	new CytologicalMapDaoImpl(CHROM_LENGTH, NUM_CYTOBANDS);
+        painter.setCytologicalMapDao(cDao);
         
         // Create plot
-        painter.paintIdeogramPlot(panel, experiments, map, params);
+        painter.paintIdeogramPlot(panel, experiments, params);
         
         // Add some additional reference widgets
         panel.add(new Caption("Left", null, Orientation.HORIZONTAL, false),

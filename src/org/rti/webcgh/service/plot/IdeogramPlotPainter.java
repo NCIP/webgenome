@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-09-16 02:58:44 $
+$Revision: 1.9 $
+$Date: 2006-09-16 04:30:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,8 @@ import java.util.Collection;
 import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.graphics.primitive.Text;
+import org.rti.webcgh.domain.GenomeInterval;
+import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
@@ -66,6 +67,7 @@ import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
 import org.rti.webcgh.graphics.widget.HeatMapPlot;
 import org.rti.webcgh.graphics.widget.PlotPanel;
+import org.rti.webcgh.service.dao.CytologicalMapDao;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
 import org.rti.webcgh.units.Direction;
@@ -105,6 +107,37 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 */
 	private final ColorMapper colorMapper;
 	
+	/** Cytologial map data access object.  Should be injected. */
+	private CytologicalMapDao cytologicalMapDao = null;
+	
+	
+	// ========================
+	//     Getters/setters
+	// ========================
+	
+	/**
+	 * Get cytological map data access object.
+	 * @return Cytological map data access object.
+	 */
+	public final CytologicalMapDao getCytologicalMapDao() {
+		return cytologicalMapDao;
+	}
+
+
+	/**
+	 * Set cytological map data access object.
+	 * This method should be used to inject this property
+	 * after instantiation.
+	 * @param cytologicalMapDao Cytological map data access object.
+	 */
+	public final void setCytologicalMapDao(
+			final CytologicalMapDao cytologicalMapDao) {
+		this.cytologicalMapDao = cytologicalMapDao;
+	}
+
+
+	
+	
 	// ========================
 	//     Constructors
 	// ========================
@@ -130,27 +163,71 @@ public class IdeogramPlotPainter extends PlotPainter {
 	
 	/**
 	 * Paint ideogram plot on given plot panel.
+	 * Can only plot data from one organism.
 	 * @param panel Plot panel to paint on
 	 * @param experiments Experiments to plot
-	 * @param cytologicalMap Cytological map to plot
 	 * @param plotParameters Plot parameters
 	 */
 	public final void paintIdeogramPlot(
 			final PlotPanel panel,
 			final Collection<Experiment> experiments,
-			final CytologicalMap cytologicalMap,
 			final IdeogramPlotParameters plotParameters) {
 		
-		// Calculate height of ideogram
-		ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
-		int height = idSize.pixels(cytologicalMap.length());
+		// Make sure arguments okay
+		if (experiments == null || experiments.size() < 1) {
+			throw new IllegalArgumentException("Experiments must be > 1");
+		}
 		
-		// Paint chromosome ideogram
-		this.paintChromosomeIdeogram(panel, cytologicalMap,
-				height, idSize, "CHR " + plotParameters.getChromosome());
+		// Get organism
+		Organism org = experiments.iterator().next().getOrganism();
+		for (Experiment exp : experiments) {
+			if (exp.getOrganism() != org) {
+				throw new IllegalArgumentException(
+						"Can only plot one organism as a time");
+			}
+		}
 		
-		// Add data tracks
-		this.paintDataTracks(panel, experiments, height, plotParameters);
+		int plotCount = 0;
+		int rowCount = 1;
+		PlotPanel child = panel.newChildPlotPanel();
+		for (GenomeInterval gi : plotParameters.getGenomeIntervals()) {
+			if (++plotCount >=  plotParameters.getNumPlotsPerRow()) {
+				VerticalAlignment va = null;
+				if (rowCount++ == 1) {
+					va = VerticalAlignment.TOP_JUSTIFIED;
+				} else {
+					va = VerticalAlignment.BELOW;
+				}
+				panel.add(child, HorizontalAlignment.LEFT_JUSTIFIED, va);
+				child = panel.newChildPlotPanel();
+				plotCount = 1;
+			}
+			
+			// Get cytological map
+			CytologicalMap cytologicalMap =
+				this.cytologicalMapDao.load(org, gi.getChromosome());
+			
+			// Calculate height of ideogram
+			ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
+			int height = idSize.pixels(cytologicalMap.length());
+			
+			// Paint chromosome ideogram
+			this.paintChromosomeIdeogram(child, cytologicalMap,
+					height, idSize, "CHR " + gi.getChromosome());
+			
+			// Add data tracks
+			this.paintDataTracks(child, experiments, gi.getChromosome(),
+					height, plotParameters);
+		}
+		
+		// Add final row
+		VerticalAlignment va = null;
+		if (rowCount == 1) {
+			va = VerticalAlignment.TOP_JUSTIFIED;
+		} else {
+			va = VerticalAlignment.BELOW;
+		}
+		panel.add(child, HorizontalAlignment.LEFT_JUSTIFIED, va);
 	}
 	
 	
@@ -164,6 +241,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * height, but rather the height of the region that can be
 	 * plotted against.
 	 * @param idSize Chromosome ideogram size
+	 * @param chromosome Chromosome name
 	 */
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
@@ -224,16 +302,17 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * Add data tracks to plot.
 	 * @param panel A plot panel
 	 * @param experiments Experiments to plot
+	 * @param chromosome Chromosome number
 	 * @param height Height of data tracks
 	 * @param plotParameters Plot parameters
 	 */
 	private void paintDataTracks(final PlotPanel panel,
-			final Collection<Experiment> experiments,
+			final Collection<Experiment> experiments, final short chromosome,
 			final int height, final IdeogramPlotParameters plotParameters) {
 		HeatMapColorFactory fac = new HeatMapColorFactory(
 				plotParameters.getMinSaturation(),
 				plotParameters.getMaxSaturation(), NUM_BINS);
-		HeatMapPlot plot = new HeatMapPlot(experiments, fac,
+		HeatMapPlot plot = new HeatMapPlot(experiments, chromosome, fac,
 				plotParameters, this.getChromosomeArrayDataGetter(),
 				panel.getDrawingCanvas());
 		panel.add(plot, HorizontalAlignment.RIGHT_OF,

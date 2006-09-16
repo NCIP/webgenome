@@ -87,13 +87,31 @@ public class Experiment implements Serializable {
     /** Quantitation type. */
     private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO;
     
+    /** Organism. */
+    private Organism organism = null;
+    
     
     // ===============================
     //     Getters/setters
     // ===============================
 
-    
     /**
+     * Get organism.
+     * @return Organism
+     */
+    public final Organism getOrganism() {
+		return organism;
+	}
+
+    /**
+     * Set organism.
+     * @param organism Organism
+     */
+	public final void setOrganism(final Organism organism) {
+		this.organism = organism;
+	}
+
+	/**
      * Get bioassays performed during experiment.
      * @return Bioassays
      */
@@ -182,9 +200,10 @@ public class Experiment implements Serializable {
     /**
      * Constructor.
      * @param name Name of experiment
+     * @param organism Organism
      * @param quantitationType Quantitation type
      */
-    public Experiment(final String name,
+    public Experiment(final String name, final Organism organism,
             final QuantitationType quantitationType) {
         this.name = name;
         this.quantitationType = quantitationType;
