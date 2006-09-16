@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-09-16 02:49:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webcgh.graphics.widget;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.domain.ArrayDatum;
@@ -60,6 +61,7 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.primitive.Text;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
@@ -95,6 +97,15 @@ public final class HeatMapPlot implements PlotElement {
 	
 	/** Color of text. */
 	private static final Color TEXT_COLOR = Color.BLACK;
+	
+	/** Rotation of data track labels in radians. */
+	private static final double LABEL_ROTATION = 1.5 * Math.PI;
+	
+	/** Width of bracket lines. */
+	private static final int LINE_WIDTH = 1;
+	
+	/** Color of bracket lines. */
+	private static final Color LINE_COLOR = Color.BLACK;
 
 	// ============================
 	//        Attributes
@@ -133,6 +144,9 @@ public final class HeatMapPlot implements PlotElement {
     
     /** Y-coordinate of tops of tracks. */
     private int trackMinY = 0;
+    
+    /** Y-coordinate of bottom of tracks. */
+    private int trackMaxY = 0;
   
     
     // ===============================
@@ -180,12 +194,75 @@ public final class HeatMapPlot implements PlotElement {
 			}
 		}
 		this.trackMinY = PADDING + longestString;
-		this.maxX = (experiments.size() * 2 - 1)
-			* plotParameters.getTrackWidth();
-		this.maxY = this.trackMinY
+		this.trackMaxY = this.trackMinY
 			+ plotParameters.getIdeogramSize().pixels(
 				Experiment.inferredChromosomeSize(experiments,
 						plotParameters.getChromosome()));
+		this.maxX = 0;
+		for (Iterator<Experiment> it = experiments.iterator();
+			it.hasNext();) {
+			Experiment exp = it.next();
+			maxX += this.renderedWidth(exp, drawingCanvas, plotParameters);
+			if (it.hasNext()) {
+				maxX += PADDING;
+			}
+		}
+		this.maxY = this.trackMaxY + PADDING + FONT_SIZE;
+	}
+	
+	
+	/**
+	 * Get rendered width of experiment.  This will be
+	 * the maximum of the experiment label and
+	 * data tracks.
+	 * @param exp Experiment that will be rendered
+	 * @param canvas Canvas experiment will be rendered on
+	 * @param plotParameters Plot parameters
+	 * @return Rendered width in pixels
+	 */
+	private int renderedWidth(final Experiment exp,
+			final DrawingCanvas canvas,
+			final IdeogramPlotParameters plotParameters) {
+		int width = 0;
+		int totalPaddingAroundBrackets = PADDING * 2;
+		
+		// Calculate width of experiment label
+		int textWidth = canvas.renderedWidth(exp.getName(), FONT_SIZE);
+		
+		// Calculate width of data tracks
+		int tracksWidth = this.tracksWidth(exp, plotParameters);
+		
+		// Take max
+		if (textWidth > tracksWidth) {
+			width = textWidth;
+			totalPaddingAroundBrackets = PADDING * 4;
+		} else {
+			width = tracksWidth;
+		}
+		
+		// Add padding to each side for brackets around experiment name.
+		width += totalPaddingAroundBrackets;
+		
+		return width;
+	}
+	
+	
+	/**
+	 * Get the width of rendered data tracks associated with
+	 * given experiment.
+	 * @param exp An experiment
+	 * @param plotParameters Plot parameters
+	 * @return Width of rendered data tracks in pixels
+	 */
+	private int tracksWidth(final Experiment exp,
+			final IdeogramPlotParameters plotParameters) {
+		int tracksWidth = 0;
+		int numBioAssays = exp.getBioAssays().size();
+		if (numBioAssays > 0) {
+			tracksWidth = numBioAssays * plotParameters.getTrackWidth()
+				+ (numBioAssays - 1) * PADDING;
+		}
+		return tracksWidth;
 	}
 	
 	
@@ -200,15 +277,68 @@ public final class HeatMapPlot implements PlotElement {
     public void paint(final DrawingCanvas canvas) {
     	int x = this.minX;
     	for (Experiment exp : this.experiments) {
-    		for (BioAssay ba : exp.getBioAssays()) {
-    			ChromosomeArrayData cad =
-    				this.chromosomeArrayDataGetter.getChromosomeArrayData(
-    						ba, this.plotParameters.getChromosome());
-    			this.paintTrack(canvas, x, cad);
-    			this.paintTrackLabel(canvas, x, ba.getName());
-    			x += 2 * this.plotParameters.getTrackWidth();
-    		}
+    		int endX = this.paint(canvas, exp, x);
+    		x = endX + PADDING;
     	}
+    }
+    
+    
+    /**
+     * Paint experiment.
+     * @param canvas A drawing canvas to paint on
+     * @param experiment Experiment to paint
+     * @param x Starting x-coordinate
+     * @return Ending x-coordinate
+     */
+    private int paint(final DrawingCanvas canvas,
+    		final Experiment experiment, final int x) {
+    	int startX = x;
+    	int endX = x + this.renderedWidth(experiment, canvas,
+    			this.plotParameters);
+    	int midX = (startX + endX) / 2;
+    	int trackX = midX
+    		- this.tracksWidth(experiment, this.plotParameters) / 2;
+    	int textY = this.trackMinY - PADDING;
+    	
+    	// Draw data tracks and bioassay labels
+    	for (BioAssay ba : experiment.getBioAssays()) {
+    		this.paintTrack(canvas, trackX,
+    				this.chromosomeArrayDataGetter.
+    				getChromosomeArrayData(ba,
+    						this.plotParameters.getChromosome()));
+    		int textX = trackX + this.plotParameters.getTrackWidth() / 2;
+    		Text text = canvas.newText(ba.getName(), textX, textY,
+    				FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
+    				TEXT_COLOR);
+    		text.setRotation(LABEL_ROTATION);
+    		canvas.add(text);
+    		trackX += this.plotParameters.getTrackWidth() + PADDING;
+    	}
+    	
+    	// Draw group label for entire experiment
+    	int textWidth =
+    		canvas.renderedWidth(experiment.getName(), FONT_SIZE);
+    	int textStartX = midX - textWidth / 2;
+    	int textEndX = textStartX + textWidth;
+    	textY = this.trackMaxY + PADDING + FONT_SIZE;
+    	Text text = canvas.newText(experiment.getName(), textStartX,
+    			textY, FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
+    			TEXT_COLOR);
+    	canvas.add(text);
+    	
+    	// Add bracket around group label
+    	int lineY1 = textY - FONT_SIZE / 2;
+    	int lineY2 = lineY1;
+    	canvas.add(new Line(startX, lineY1,
+    			textStartX - PADDING, lineY2, LINE_WIDTH, LINE_COLOR));
+    	canvas.add(new Line(textEndX + PADDING, lineY1,
+    			endX, lineY2, LINE_WIDTH, LINE_COLOR));
+    	lineY1 -= PADDING;
+    	canvas.add(new Line(startX, lineY1, startX, lineY2,
+    			LINE_WIDTH, LINE_COLOR));
+    	canvas.add(new Line(endX, lineY1, endX, lineY2,
+    			LINE_WIDTH, LINE_COLOR));
+    	return endX;
     }
     
     
@@ -227,7 +357,6 @@ public final class HeatMapPlot implements PlotElement {
 			this.plotParameters.getIdeogramSize();
     	int trackWidth = this.plotParameters.getTrackWidth();
     	if (n > 0) {
-	    	long chromEnd = dataList.get(n - 1).getReporter().getLocation();
 	    	for (int i = 0; i < n; i++) {
 	    		ArrayDatum datum = dataList.get(i);
 	    		float value = datum.getValue();
@@ -238,39 +367,25 @@ public final class HeatMapPlot implements PlotElement {
 		    		if (i > 0) {
 		    			start = (dataList.get(i - 1).getReporter().
 		    				getLocation() + middle) / 2;
+		    		} else {
+		    			start = middle;
 		    		}
-		    		long end = chromEnd;
+		    		long end = 0;
 		    		if (i < n - 1) {
 		    			end = (middle
-		    				+ dataList.get(i + 1).getReporter().getLocation());
+		    				+ dataList.get(i + 1).getReporter().getLocation())
+		    				/ 2;
+		    		} else {
+		    			end = middle;
 		    		}
 		    		int y = this.trackMinY + idSize.pixels(start);
-		    		int height = this.trackMinY + idSize.pixels(end) - y;
+		    		int height = idSize.pixels(end - start);
 		    		Color c = this.colorFactory.getColor(value);
 		    		canvas.add(new Rectangle(x, y, trackWidth, height, c));
 	    		}
 	    	}
     	}
     }
-    
-    
-    /**
-     * Paint label over data track.
-     * @param canvas Drawing canvas
-     * @param x X-coordinate of track
-     * @param label Label to paint
-     */
-    private void paintTrackLabel(final DrawingCanvas canvas,
-    		final int x, final String label) {
-    	int textX = x + this.plotParameters.getTrackWidth() / 2;
-    	int y = this.trackMinY - PADDING
-    		- canvas.renderedWidth(label, FONT_SIZE) / 2;
-    	Text text = canvas.newText(label, textX, y, FONT_SIZE,
-    			HorizontalAlignment.CENTERED, TEXT_COLOR);
-    	text.setRotation(1.5 * Math.PI);
-    	canvas.add(text);
-    }
-    
     
     /**
      * Point at top left used to align with other plot elements.

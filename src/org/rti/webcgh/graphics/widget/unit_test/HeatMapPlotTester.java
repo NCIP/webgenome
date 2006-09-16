@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-09-16 02:49:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,7 +77,7 @@ public final class HeatMapPlotTester extends TestCase {
 	private static final int NUM_EXPERIMENTS = 2;
 	
 	/** Number of bioassays per experiment to generate. */
-	private static final int NUM_BIO_ASSAYS = 2;
+	private static final int NUM_BIO_ASSAYS = 4;
 	
 	/** Number of chromosomes per bioassay to generate. */
 	private static final int NUM_CHROMOSOMES = 1;
