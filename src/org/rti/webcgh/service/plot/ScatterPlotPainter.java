@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.5 $
+$Date: 2006-09-17 20:27:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -111,68 +111,68 @@ public class ScatterPlotPainter extends PlotPainter {
             final int width, final int height,
             final QuantitationType quantitationType) {
         
-        // Check args
-        if (experiments == null || panel == null) {
-            throw new IllegalArgumentException(
-                    "Experiments and panel cannot be null");
-        }
-        if (plotParameters.getChromosome() < 1
-                || plotParameters.getStartLocation() < 0
-                || plotParameters.getEndLocation() < 0
-                || plotParameters.getEndLocation()
-                    < plotParameters.getStartLocation()) {
-            throw new IllegalArgumentException("Invalid genome interval: "
-                    + plotParameters.getChromosome() + ":"
-                    + plotParameters.getStartLocation() + "-"
-                    + plotParameters.getEndLocation());
-        }
-        if (!Float.isNaN(plotParameters.getMinY())
-                && !Float.isNaN(plotParameters.getMaxY())
-                && plotParameters.getMinY() > plotParameters.getMaxY()) {
-            throw new IllegalArgumentException("Invalid plot range: "
-                    + plotParameters.getMinY() + " - "
-                    + plotParameters.getMaxY());
-        }
-        
-        // Paint plot
-        PlotBoundaries pb = new PlotBoundaries(
-                (double) plotParameters.getStartLocation(),
-                (double) plotParameters.getMinY(),
-                (double) plotParameters.getEndLocation(),
-                (double) plotParameters.getMaxY());
-        ScatterPlot scatterPlot =
-            new ScatterPlot(experiments, plotParameters.getChromosome(),
-            		this.getChromosomeArrayDataGetter(), width, height, pb);
-        panel.add(scatterPlot);
-        
-        // X-axis
-        Axis xAxis = new Axis(plotParameters.getStartLocation(),
-                plotParameters.getEndLocation(), scatterPlot.width(),
-                Orientation.HORIZONTAL, Location.BELOW);
-        String captionText = "Chromosome " + plotParameters.getChromosome()
-            + " (" + plotParameters.getUnits().getName() + ")";
-        Caption xCaption = new Caption(captionText,
-                Orientation.HORIZONTAL, false);
-        panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED, true);
-        panel.add(xCaption, HorizontalAlignment.CENTERED,
-                VerticalAlignment.BELOW);
-        
-        // Y-axis
-        Axis yAxis = new Axis(plotParameters.getMinY(),
-                plotParameters.getMaxY(), scatterPlot.height(),
-                Orientation.VERTICAL, Location.LEFT_OF);
-        Caption yCaption = new Caption(
-                quantitationType.getName(),
-                Orientation.HORIZONTAL, true);
-        panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BOTTOM_JUSTIFIED);
-        panel.add(yCaption, HorizontalAlignment.LEFT_OF,
-                VerticalAlignment.CENTERED);
-        
-        // Legend
-        Legend legend = new Legend(experiments, scatterPlot.width());
-        panel.add(legend, HorizontalAlignment.LEFT_JUSTIFIED,
-                VerticalAlignment.BELOW);
+//        // Check args
+//        if (experiments == null || panel == null) {
+//            throw new IllegalArgumentException(
+//                    "Experiments and panel cannot be null");
+//        }
+//        if (plotParameters.getChromosome() < 1
+//                || plotParameters.getStartLocation() < 0
+//                || plotParameters.getEndLocation() < 0
+//                || plotParameters.getEndLocation()
+//                    < plotParameters.getStartLocation()) {
+//            throw new IllegalArgumentException("Invalid genome interval: "
+//                    + plotParameters.getChromosome() + ":"
+//                    + plotParameters.getStartLocation() + "-"
+//                    + plotParameters.getEndLocation());
+//        }
+//        if (!Float.isNaN(plotParameters.getMinY())
+//                && !Float.isNaN(plotParameters.getMaxY())
+//                && plotParameters.getMinY() > plotParameters.getMaxY()) {
+//            throw new IllegalArgumentException("Invalid plot range: "
+//                    + plotParameters.getMinY() + " - "
+//                    + plotParameters.getMaxY());
+//        }
+//        
+//        // Paint plot
+//        PlotBoundaries pb = new PlotBoundaries(
+//                (double) plotParameters.getStartLocation(),
+//                (double) plotParameters.getMinY(),
+//                (double) plotParameters.getEndLocation(),
+//                (double) plotParameters.getMaxY());
+//        ScatterPlot scatterPlot =
+//            new ScatterPlot(experiments, plotParameters.getChromosome(),
+//            		this.getChromosomeArrayDataGetter(), width, height, pb);
+//        panel.add(scatterPlot);
+//        
+//        // X-axis
+//        Axis xAxis = new Axis(plotParameters.getStartLocation(),
+//                plotParameters.getEndLocation(), scatterPlot.width(),
+//                Orientation.HORIZONTAL, Location.BELOW);
+//        String captionText = "Chromosome " + plotParameters.getChromosome()
+//            + " (" + plotParameters.getUnits().getName() + ")";
+//        Caption xCaption = new Caption(captionText,
+//                Orientation.HORIZONTAL, false);
+//        panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED,
+//                VerticalAlignment.BOTTOM_JUSTIFIED, true);
+//        panel.add(xCaption, HorizontalAlignment.CENTERED,
+//                VerticalAlignment.BELOW);
+//        
+//        // Y-axis
+//        Axis yAxis = new Axis(plotParameters.getMinY(),
+//                plotParameters.getMaxY(), scatterPlot.height(),
+//                Orientation.VERTICAL, Location.LEFT_OF);
+//        Caption yCaption = new Caption(
+//                quantitationType.getName(),
+//                Orientation.HORIZONTAL, true);
+//        panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
+//                VerticalAlignment.BOTTOM_JUSTIFIED);
+//        panel.add(yCaption, HorizontalAlignment.LEFT_OF,
+//                VerticalAlignment.CENTERED);
+//        
+//        // Legend
+//        Legend legend = new Legend(experiments, scatterPlot.width());
+//        panel.add(legend, HorizontalAlignment.LEFT_JUSTIFIED,
+//                VerticalAlignment.BELOW);
     }
 }

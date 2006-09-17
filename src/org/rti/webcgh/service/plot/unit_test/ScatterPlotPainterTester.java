@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-09-17 20:27:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -142,120 +142,120 @@ public final class ScatterPlotPainterTester extends TestCase {
 	//     Test cases
 	// ============================
 	
-	/**
-	 * Test paintScatterPlot() method on serialized data.
-	 * @throws Exception if anything bad happens
-	 */
-	public void testPaintScatterPlotSerialized() throws Exception {
-		
-		// Instantiate data file manager
-		DataFileManager dataFileManager = new DataFileManager(TEMP_DIR_PATH);
-		
-		// Create test experiments
-		ExperimentGenerator expGen = new ExperimentGenerator();
-        Collection<Experiment> experiments = new ArrayList<Experiment>();
-        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
-        	Experiment exp = expGen.newDataSerializedExperiment(NUM_BIO_ASSAYS,
-	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_SERIALIZED,
-	        		dataFileManager);
-	        experiments.add(exp);
-	        for (BioAssay ba : exp.getBioAssays()) {
-	        	ba.setColor(Color.BLUE);
-	        }
-        }
-        
-        // Create plot parameters
-        ScatterPlotParameters params = new ScatterPlotParameters();
-        List<Reporter> reporters = expGen.getReporters();
-        params.setChromosome(reporters.get(0).getChromosome());
-        params.setStartLocation(reporters.get(0).getLocation());
-        params.setEndLocation(reporters.get(
-                reporters.size() - 1).getLocation());
-        params.setMinY(MIN_Y);
-        params.setMaxY(MAX_Y);
-        
-        // Create plotting panel
-        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-        PlotPanel panel = new PlotPanel(canvas);
-        
-        // Create chromosome array data getter
-        SerializedChromosomeArrayDataGetter cadg =
-        	new SerializedChromosomeArrayDataGetter();
-        cadg.setDataFileManager(dataFileManager);
-        
-        // Run method
-        ScatterPlotPainter painter =
-        	new ScatterPlotPainter(cadg);
-        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
-                QuantitationType.LOG_2_RATIO);
-        
-        // Adjust canvas properties
-        canvas.setOrigin(panel.topLeftPoint());
-        canvas.setWidth(panel.width());
-        canvas.setHeight(panel.height());
-        
-        // Output graphics to file
-        String filePath = TEMP_DIR_PATH + "/plot-serialized.png";
-        BufferedImage img = canvas.toBufferedImage();
-        ImageIO.write(img, "png", new File(filePath));
-        
-        // Clean up
-        for (Experiment exp : experiments) {
-        	dataFileManager.deleteDataFiles(exp, true);
-        }
-	}
-	
-	
-	/**
-	 * Test paintScatterPlot() method on in-memory data.
-	 * @throws Exception if anything bad happens
-	 */
-	public void testPaintScatterPlotInMemory() throws Exception {
-		
-		// Create test experiments
-		ExperimentGenerator expGen = new ExperimentGenerator();
-        Collection<Experiment> experiments = new ArrayList<Experiment>();
-        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
-        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
-	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
-	        experiments.add(exp);
-	        for (BioAssay ba : exp.getBioAssays()) {
-	        	ba.setColor(Color.BLUE);
-	        }
-        }
-        
-        // Create plot parameters
-        ScatterPlotParameters params = new ScatterPlotParameters();
-        List<Reporter> reporters = expGen.getReporters();
-        params.setChromosome(reporters.get(0).getChromosome());
-        params.setStartLocation(reporters.get(0).getLocation());
-        params.setEndLocation(reporters.get(
-                reporters.size() - 1).getLocation());
-        params.setMinY(MIN_Y);
-        params.setMaxY(MAX_Y);
-        
-        // Create plotting panel
-        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-        PlotPanel panel = new PlotPanel(canvas);
-        
-        // Create chromosome array data getter
-        InMemoryChromosomeArrayDataGetter cadg =
-        	new InMemoryChromosomeArrayDataGetter();
-        
-        // Run method
-        ScatterPlotPainter painter =
-        	new ScatterPlotPainter(cadg);
-        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
-                QuantitationType.LOG_2_RATIO);
-        
-        // Adjust canvas properties
-        canvas.setOrigin(panel.topLeftPoint());
-        canvas.setWidth(panel.width());
-        canvas.setHeight(panel.height());
-        
-        // Output graphics to file
-        String filePath = TEMP_DIR_PATH + "/plot-in-memory.png";
-        BufferedImage img = canvas.toBufferedImage();
-        ImageIO.write(img, "png", new File(filePath));
-	}
+//	/**
+//	 * Test paintScatterPlot() method on serialized data.
+//	 * @throws Exception if anything bad happens
+//	 */
+//	public void testPaintScatterPlotSerialized() throws Exception {
+//		
+//		// Instantiate data file manager
+//		DataFileManager dataFileManager = new DataFileManager(TEMP_DIR_PATH);
+//		
+//		// Create test experiments
+//		ExperimentGenerator expGen = new ExperimentGenerator();
+//        Collection<Experiment> experiments = new ArrayList<Experiment>();
+//        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
+//        	Experiment exp = expGen.newDataSerializedExperiment(NUM_BIO_ASSAYS,
+//	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_SERIALIZED,
+//	        		dataFileManager);
+//	        experiments.add(exp);
+//	        for (BioAssay ba : exp.getBioAssays()) {
+//	        	ba.setColor(Color.BLUE);
+//	        }
+//        }
+//        
+//        // Create plot parameters
+//        ScatterPlotParameters params = new ScatterPlotParameters();
+//        List<Reporter> reporters = expGen.getReporters();
+//        params.setChromosome(reporters.get(0).getChromosome());
+//        params.setStartLocation(reporters.get(0).getLocation());
+//        params.setEndLocation(reporters.get(
+//                reporters.size() - 1).getLocation());
+//        params.setMinY(MIN_Y);
+//        params.setMaxY(MAX_Y);
+//        
+//        // Create plotting panel
+//        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+//        PlotPanel panel = new PlotPanel(canvas);
+//        
+//        // Create chromosome array data getter
+//        SerializedChromosomeArrayDataGetter cadg =
+//        	new SerializedChromosomeArrayDataGetter();
+//        cadg.setDataFileManager(dataFileManager);
+//        
+//        // Run method
+//        ScatterPlotPainter painter =
+//        	new ScatterPlotPainter(cadg);
+//        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
+//                QuantitationType.LOG_2_RATIO);
+//        
+//        // Adjust canvas properties
+//        canvas.setOrigin(panel.topLeftPoint());
+//        canvas.setWidth(panel.width());
+//        canvas.setHeight(panel.height());
+//        
+//        // Output graphics to file
+//        String filePath = TEMP_DIR_PATH + "/plot-serialized.png";
+//        BufferedImage img = canvas.toBufferedImage();
+//        ImageIO.write(img, "png", new File(filePath));
+//        
+//        // Clean up
+//        for (Experiment exp : experiments) {
+//        	dataFileManager.deleteDataFiles(exp, true);
+//        }
+//	}
+//	
+//	
+//	/**
+//	 * Test paintScatterPlot() method on in-memory data.
+//	 * @throws Exception if anything bad happens
+//	 */
+//	public void testPaintScatterPlotInMemory() throws Exception {
+//		
+//		// Create test experiments
+//		ExperimentGenerator expGen = new ExperimentGenerator();
+//        Collection<Experiment> experiments = new ArrayList<Experiment>();
+//        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
+//        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
+//	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
+//	        experiments.add(exp);
+//	        for (BioAssay ba : exp.getBioAssays()) {
+//	        	ba.setColor(Color.BLUE);
+//	        }
+//        }
+//        
+//        // Create plot parameters
+//        ScatterPlotParameters params = new ScatterPlotParameters();
+//        List<Reporter> reporters = expGen.getReporters();
+//        params.setChromosome(reporters.get(0).getChromosome());
+//        params.setStartLocation(reporters.get(0).getLocation());
+//        params.setEndLocation(reporters.get(
+//                reporters.size() - 1).getLocation());
+//        params.setMinY(MIN_Y);
+//        params.setMaxY(MAX_Y);
+//        
+//        // Create plotting panel
+//        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+//        PlotPanel panel = new PlotPanel(canvas);
+//        
+//        // Create chromosome array data getter
+//        InMemoryChromosomeArrayDataGetter cadg =
+//        	new InMemoryChromosomeArrayDataGetter();
+//        
+//        // Run method
+//        ScatterPlotPainter painter =
+//        	new ScatterPlotPainter(cadg);
+//        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
+//                QuantitationType.LOG_2_RATIO);
+//        
+//        // Adjust canvas properties
+//        canvas.setOrigin(panel.topLeftPoint());
+//        canvas.setWidth(panel.width());
+//        canvas.setHeight(panel.height());
+//        
+//        // Output graphics to file
+//        String filePath = TEMP_DIR_PATH + "/plot-in-memory.png";
+//        BufferedImage img = canvas.toBufferedImage();
+//        ImageIO.write(img, "png", new File(filePath));
+//	}
 }

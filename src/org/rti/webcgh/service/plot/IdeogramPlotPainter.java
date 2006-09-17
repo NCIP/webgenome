@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-09-16 04:30:09 $
+$Revision: 1.10 $
+$Date: 2006-09-17 20:27:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -189,7 +189,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		
 		int plotCount = 0;
 		int rowCount = 1;
-		PlotPanel child = panel.newChildPlotPanel();
+		PlotPanel row = panel.newChildPlotPanel();
 		for (GenomeInterval gi : plotParameters.getGenomeIntervals()) {
 			if (++plotCount >=  plotParameters.getNumPlotsPerRow()) {
 				VerticalAlignment va = null;
@@ -198,10 +198,11 @@ public class IdeogramPlotPainter extends PlotPainter {
 				} else {
 					va = VerticalAlignment.BELOW;
 				}
-				panel.add(child, HorizontalAlignment.LEFT_JUSTIFIED, va);
-				child = panel.newChildPlotPanel();
+				panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
+				row = panel.newChildPlotPanel();
 				plotCount = 1;
 			}
+			row.setName("row");
 			
 			// Get cytological map
 			CytologicalMap cytologicalMap =
@@ -212,12 +213,17 @@ public class IdeogramPlotPainter extends PlotPainter {
 			int height = idSize.pixels(cytologicalMap.length());
 			
 			// Paint chromosome ideogram
-			this.paintChromosomeIdeogram(child, cytologicalMap,
-					height, idSize, "CHR " + gi.getChromosome());
+			boolean makeReferenceElement = false;
+			if (plotCount == 1) {
+				makeReferenceElement = true;
+			}
+			this.paintChromosomeIdeogram(row, cytologicalMap,
+					height, idSize, "CHR " + gi.getChromosome(),
+					makeReferenceElement);
 			
 			// Add data tracks
-			this.paintDataTracks(child, experiments, gi.getChromosome(),
-					height, plotParameters);
+//			this.paintDataTracks(column, experiments, gi.getChromosome(),
+//					height, plotParameters);
 		}
 		
 		// Add final row
@@ -227,7 +233,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		} else {
 			va = VerticalAlignment.BELOW;
 		}
-		panel.add(child, HorizontalAlignment.LEFT_JUSTIFIED, va);
+		panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
 	}
 	
 	
@@ -242,14 +248,15 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * plotted against.
 	 * @param idSize Chromosome ideogram size
 	 * @param chromosome Chromosome name
+	 * @param makeReferenceElement Make this ideogram the
+	 * reference element for the given plot panel in terms
+	 * of layout?
 	 */
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
 			final int height, final ChromosomeIdeogramSize idSize,
-			final String chromosome) {
-		
-		// Create new plot panel to paint on
-		PlotPanel idPan = plotPanel.newChildPlotPanel();
+			final String chromosome, final boolean makeReferenceElement) {
+		PlotPanel idPanel = plotPanel.newChildPlotPanel();
 		
 		// Instantiate genome feature plot
 		GenomeFeaturePlot plot = new GenomeFeaturePlot(1,
@@ -274,7 +281,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		plot.addFrame(Location.BELOW, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
 		
 		// Add genome feature plot
-		idPan.add(plot);
+		idPanel.add(plot, true);
 		
 		// Add end caps
 		int thickness = plot.getFeatureHeight();
@@ -282,19 +289,24 @@ public class IdeogramPlotPainter extends PlotPainter {
 				FRAME_LINE_COLOR, Direction.UP);
 		ChromosomeEndCap botCap = new ChromosomeEndCap(thickness,
 				FRAME_LINE_COLOR, Direction.DOWN);
-		idPan.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED,
+		idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED,
 				VerticalAlignment.TOP_JUSTIFIED);
-		idPan.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED,
+		idPanel.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED,
 				VerticalAlignment.BOTTOM_JUSTIFIED);
 		
 		// Add chromosome number caption
 		Caption caption = new Caption(chromosome, null,
 				Orientation.HORIZONTAL, false);
-		idPan.add(caption, HorizontalAlignment.CENTERED,
+		idPanel.add(caption, HorizontalAlignment.CENTERED,
 				VerticalAlignment.BELOW);
 		
 		// Add new panel to parent
-		plotPanel.add(idPan);
+		if (makeReferenceElement) {
+			plotPanel.add(idPanel, true);
+		} else {
+			plotPanel.add(idPanel, HorizontalAlignment.RIGHT_OF,
+					VerticalAlignment.TOP_JUSTIFIED);
+		}
 	}
 			
 	

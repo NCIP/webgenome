@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-16 04:29:21 $
+$Revision: 1.5 $
+$Date: 2006-09-17 20:27:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -408,7 +408,7 @@ public final class HeatMapPlot implements PlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-    	return new Point(this.minX, this.maxY);
+    	return new Point(this.minX, this.trackMaxY);
     }
     
     
@@ -426,7 +426,7 @@ public final class HeatMapPlot implements PlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-    	return new Point(this.maxX, this.maxY);
+    	return new Point(this.maxX, this.trackMaxY);
     }
     
     

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-09-17 20:27:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics.widget;
 
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.rti.webcgh.graph.widget.EmptySpace;
 import org.rti.webcgh.graph.widget.ScalePlotElement;
@@ -104,11 +106,37 @@ public class PlotPanel implements ScalePlotElement {
     /** Drawing canvas that actually renderes widgets. */
     private DrawingCanvas drawingCanvas = null;
     
+    /** Name of plot panel.  This is used primarily in debugging. */
+    private String name = null;
+    
+    /** Nested plot elements. */
+    private Collection<PlotElement> elements =
+    	new ArrayList<PlotElement>();
     
     // =========================
     //    Getters/setters
     // =========================
     
+    /**
+     * Get name of plot panel.  Name is
+     * used primarily in debugging.
+     * @return Name of plot panel
+     */
+	public final String getName() {
+		return name;
+	}
+
+
+	/**
+	 * Set name of plot panel.  Name is
+     * used primarily in debugging.
+	 * @param name Name of plot panel
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
+
+
 	/**
      * @param padding The padding to set.
      */
@@ -261,29 +289,32 @@ public class PlotPanel implements ScalePlotElement {
      * @param deltaY Number of pixels vertically
      */
     public final void move(final int deltaX, final int deltaY) {
-    	if (this.bottomElement != null) {
-    		this.bottomElement.move(deltaX, deltaY);
-    		if (this.rightElement != this.bottomElement) {
-    			this.rightElement.move(deltaX, deltaY);
-            }
-    		if (this.topElement != this.bottomElement
-                    && this.topElement != this.rightElement) {
-    			this.topElement.move(deltaX, deltaY);
-            }
-    		if (this.leftElement != this.bottomElement
-                    && this.leftElement != this.rightElement
-                    && this.leftElement != this.topElement) {
-    			this.leftElement.move(deltaX, deltaY);
-            }
-    		this.zeroPoint.x += deltaX;
-    		this.zeroPoint.y += deltaY;
-    		if (this.referenceElement != null
-                    && this.referenceElement != this.bottomElement
-                    && this.referenceElement != this.rightElement
-                    && this.referenceElement != this.topElement
-    				&& this.referenceElement != this.leftElement) {
-    			this.referenceElement.move(deltaX, deltaY);
-            }
+//    	if (this.bottomElement != null) {
+//    		this.bottomElement.move(deltaX, deltaY);
+//    		if (this.rightElement != this.bottomElement) {
+//    			this.rightElement.move(deltaX, deltaY);
+//            }
+//    		if (this.topElement != this.bottomElement
+//                    && this.topElement != this.rightElement) {
+//    			this.topElement.move(deltaX, deltaY);
+//            }
+//    		if (this.leftElement != this.bottomElement
+//                    && this.leftElement != this.rightElement
+//                    && this.leftElement != this.topElement) {
+//    			this.leftElement.move(deltaX, deltaY);
+//            }
+//    		this.zeroPoint.x += deltaX;
+//    		this.zeroPoint.y += deltaY;
+//    		if (this.referenceElement != null
+//                    && this.referenceElement != this.bottomElement
+//                    && this.referenceElement != this.rightElement
+//                    && this.referenceElement != this.topElement
+//    				&& this.referenceElement != this.leftElement) {
+//    			this.referenceElement.move(deltaX, deltaY);
+//            }
+//    	}
+    	for (PlotElement e : this.elements) {
+    		e.move(deltaX, deltaY);
     	}
     }
     
@@ -333,6 +364,9 @@ public class PlotPanel implements ScalePlotElement {
         int deltaX = x;
         int deltaY = y;
         element.move(deltaX, deltaY);
+        
+        // Add to list of elements
+        this.elements.add(element);
         
         if (makeReferenceElement) {
         	this.referenceElement = element;
@@ -437,6 +471,19 @@ public class PlotPanel implements ScalePlotElement {
     public final void add(final PlotElement element) {
         this.add(element, HorizontalAlignment.CENTERED,
                 VerticalAlignment.CENTERED);
+    }
+    
+    
+    /**
+     * Add given widget centered relative to existing widgets.
+     * @param element Widget to add
+     * @param makeReferenceElement Make this element the reference
+     * for justifying subsequently added elements?
+     */
+    public final void add(final PlotElement element,
+    		final boolean makeReferenceElement) {
+        this.add(element, HorizontalAlignment.CENTERED,
+                VerticalAlignment.CENTERED, makeReferenceElement);
     }
     
     

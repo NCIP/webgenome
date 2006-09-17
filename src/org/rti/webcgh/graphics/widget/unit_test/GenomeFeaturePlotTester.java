@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-09-17 20:27:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,18 +51,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics.widget.unit_test;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
 import junit.framework.TestCase;
 
-import org.rti.webcgh.graphics.RasterDrawingCanvas;
-import org.rti.webcgh.graphics.io.GraphicFileUtils;
+import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.PlotPanel;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 
 /**
@@ -95,21 +93,48 @@ public final class GenomeFeaturePlotTester extends TestCase {
 	 * @throws Exception if anything bad happens
 	 */
 	public void testVerticalIdeogram() throws Exception {
-		GenomeFeaturePlot map = new GenomeFeaturePlot((long) 1,
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEMP_DIR_PATH);
+		PlotPanel row = panel.newChildPlotPanel();
+		
+		// Add first map
+		GenomeFeaturePlot map1 = new GenomeFeaturePlot((long) 1,
 				(long) 50, 400, Orientation.VERTICAL);
-		CentromereWarper warper =
-			new CentromereWarper(map.getFeatureHeight(), 200, 250);
-		map.setWarper(warper);
-		map.plotFeature(1, 10, null, null, false, Color.black);
-		map.plotFeature(10, 15, null, null, false, Color.gray);
-		map.plotFeature(15, 25, null, null, false, Color.darkGray);
-		map.plotFeature(25, 40, null, null, false, Color.black);
-		map.plotFeature(40, 50, null, null, false, Color.gray);
-		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-		map.paint(canvas);
-		String filePath = TEMP_DIR_PATH + "/vert_ideogram.png";
-        BufferedImage img = canvas.toBufferedImage();
-        ImageIO.write(img, "png", new File(filePath));
+		CentromereWarper warper1 =
+			new CentromereWarper(map1.getFeatureHeight(), 200, 250);
+		map1.setWarper(warper1);
+		map1.plotFeature(1, 10, null, null, false, Color.BLACK);
+		map1.plotFeature(10, 15, null, null, false, Color.GRAY);
+		map1.plotFeature(15, 25, null, null, false, Color.DARK_GRAY);
+		map1.plotFeature(25, 40, null, null, false, Color.BLACK);
+		map1.plotFeature(40, 50, null, null, false, Color.GRAY);
+		map1.addFrame(Location.ABOVE, 1, Color.BLACK);
+		map1.addFrame(Location.BELOW, 1, Color.BLACK);
+		PlotPanel mapPan1 = row.newChildPlotPanel();
+		mapPan1.add(map1, true);
+		row.add(mapPan1, true);
+		
+		// Add second map
+		GenomeFeaturePlot map2 = new GenomeFeaturePlot((long) 1,
+				(long) 30, 300, Orientation.VERTICAL);
+		CentromereWarper warper2 =
+			new CentromereWarper(map2.getFeatureHeight(), 100, 150);
+		map2.setWarper(warper2);
+		map2.plotFeature(1, 5, null, null, false, Color.GRAY);
+		map2.plotFeature(5, 15, null, null, false, Color.BLACK);
+		map2.plotFeature(15, 25, null, null, false, Color.GRAY);
+		map2.plotFeature(25, 30, null, null, false, Color.BLACK);
+		map2.addFrame(Location.ABOVE, 1, Color.BLACK);
+		map2.addFrame(Location.BELOW, 1, Color.BLACK);
+		PlotPanel mapPan2 = row.newChildPlotPanel();
+		mapPan2.add(map2, true);
+		row.add(mapPan2, HorizontalAlignment.RIGHT_OF,
+				VerticalAlignment.TOP_JUSTIFIED);
+		
+		panel.add(row);
+		
+		// Output graphic to file
+		panel.toPngFile("vert-ideogram.png");
 	}
 
 	
@@ -123,15 +148,14 @@ public final class GenomeFeaturePlotTester extends TestCase {
 		CentromereWarper warper =
 			new CentromereWarper(map.getFeatureHeight(), 200, 250);
 		map.setWarper(warper);
-		map.plotFeature(1, 10, null, null, false, Color.black);
-		map.plotFeature(10, 15, null, null, false, Color.gray);
-		map.plotFeature(15, 25, null, null, false, Color.darkGray);
-		map.plotFeature(25, 40, null, null, false, Color.black);
-		map.plotFeature(40, 50, null, null, false, Color.gray);
-		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-		map.paint(canvas);
-		String filePath = TEMP_DIR_PATH + "/horiz_ideogram.png";
-        BufferedImage img = canvas.toBufferedImage();
-        ImageIO.write(img, "png", new File(filePath));
+		map.plotFeature(1, 10, null, null, false, Color.BLACK);
+		map.plotFeature(10, 15, null, null, false, Color.GRAY);
+		map.plotFeature(15, 25, null, null, false, Color.DARK_GRAY);
+		map.plotFeature(25, 40, null, null, false, Color.BLACK);
+		map.plotFeature(40, 50, null, null, false, Color.GRAY);
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEMP_DIR_PATH);
+		panel.add(map);
+		panel.toPngFile("horiz-ideogram.png");
 	}
 }
