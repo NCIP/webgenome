@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -104,5 +104,4 @@ public final class RasterText extends Text {
        FontMetrics fm = graphics.getFontMetrics();
        return fm.stringWidth(this.getValue());
     }
-
 }

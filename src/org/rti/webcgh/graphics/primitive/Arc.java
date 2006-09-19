@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -246,4 +246,17 @@ public class Arc extends GraphicPrimitive {
 	}
 	
 	
+	// ==================================
+	//     Implemented abstract methods
+	// ==================================
+	
+	/**
+	 * Move graphic primitive.
+	 * @param deltaX Change in X-coordinates in pixels
+	 * @param deltaY Change in Y-coordinates in pixels
+	 */
+	public final void move(final int deltaX, final int deltaY) {
+		this.x += deltaX;
+		this.y += deltaY;
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.4 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -286,6 +286,7 @@ public final class RasterFileTestPlotPanel extends PlotPanel {
         if (!dir.exists()) {
         	dir.mkdir();
         }
+        this.paint(this.getDrawingCanvas());
         this.getDrawingCanvas().setWidth(this.width());
         this.getDrawingCanvas().setHeight(this.height());
         ((RasterDrawingCanvas) this.getDrawingCanvas()).

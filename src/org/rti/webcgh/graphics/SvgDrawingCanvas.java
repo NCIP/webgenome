@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,6 @@ import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.event.GraphicEventResponse;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Cursor;
-import org.rti.webcgh.graphics.primitive.Curve;
 import org.rti.webcgh.graphics.primitive.GraphicPrimitive;
 import org.rti.webcgh.graphics.primitive.Hyperlink;
 import org.rti.webcgh.graphics.primitive.Line;
@@ -75,7 +74,6 @@ import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.primitive.SvgText;
 import org.rti.webcgh.graphics.primitive.Text;
 import org.rti.webcgh.units.HorizontalAlignment;
-import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.util.XmlUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -444,9 +442,6 @@ public final class SvgDrawingCanvas implements DrawingCanvas {
 	    //        Constants
 	    // ================================
 	    
-		/** Bezier approximation. */
-	    private static final double BEZIER_APPROXIMATION = 1.25;
-		
 	    /** Hyperlink color. */
 		private static final Color HYPERLINK_COLOR = Color.blue;
 		
@@ -482,8 +477,6 @@ public final class SvgDrawingCanvas implements DrawingCanvas {
 				element = newPolylineElement((Polyline) graphic);
 			} else if (graphic instanceof Text) {
 				element = newTextElement((SvgText) graphic);
-			} else if (graphic instanceof Curve) {
-			    element = newCurveElement((Curve) graphic);
 			}
 			addProperties(element, graphic);
 			this.addGraphicEventResponse(element,
@@ -617,36 +610,6 @@ public final class SvgDrawingCanvas implements DrawingCanvas {
 			return el;
 		}
 		
-		
-		/**
-		 * Create new curve element.
-		 * @param curve A curve
-		 * @return New curve element
-		 */
-		private Element newCurveElement(final Curve curve) {
-		    Point controlPt1 = new Point(curve.getX1(), curve.getY1());
-		    Point controlPt2 = new Point(curve.getX2(), curve.getY2());
-		    int delta = (int) ((double) curve.getHeight()
-		    		* BEZIER_APPROXIMATION);
-		    if (curve.getOrientation() == Orientation.HORIZONTAL) {
-		        controlPt1.x += delta;
-		        controlPt2.x += delta;
-		    } else if (curve.getOrientation() == Orientation.VERTICAL) {
-		        controlPt1.y += delta;
-		        controlPt2.y += delta;
-		    }
-		    String d = "M" + curve.getX1() + "," + curve.getY1() + " "
-		    	+ "C" + controlPt1.x + "," + controlPt1.y + " "
-		    	+ controlPt2.x + "," + controlPt2.y + " "
-		    	+ curve.getX2() + "," + curve.getY2();
-		    Element el = document.createElement("path");
-		    el.setAttribute("d", d);
-		    el.setAttribute("stroke", rgb(curve.getColor()));
-			el.setAttribute("stroke-width", String.valueOf(
-					curve.getLineWidth()));
-			el.setAttribute("fill", "white");
-		    return el;
-		}
 
 		/**
 		 * Add hyperlink around element.

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/CytologicalMap.java,v $
-$Revision: 1.7 $
-$Date: 2006-09-08 03:06:50 $
+$Revision: 1.8 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -231,7 +231,7 @@ public class CytologicalMap {
     		cytoband.graph(map, colorMapper);
     	}
     	if (this.centromereStart >= 0 && this.centromereEnd >= 0) {
-	    	Warper warper = new CentromereWarper(map.getWidth(), 
+	    	Warper warper = new CentromereWarper(map.getLength(), 
 	    			(int)(this.centromereStart * map.getScale()), 
 					(int)(this.centromereEnd * map.getScale()));
 	    	map.setWarper(warper);

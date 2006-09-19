@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.7 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
+import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.util.
 	ClassPathPropertiesFileRgbHexidecimalColorMapper;
 import org.rti.webcgh.graphics.util.ColorMapper;
@@ -161,8 +162,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
         params.setIdeogramSize(ChromosomeIdeogramSize.MEDIUM);
         
         // Create plotting panel
-        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-        PlotPanel panel = new PlotPanel(canvas);
+        RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEMP_DIR_PATH);
         
         // Create chromosome array data getter
         InMemoryChromosomeArrayDataGetter cadg =
@@ -191,14 +191,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
         panel.add(new Caption("Right", null, Orientation.HORIZONTAL, false),
         		HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
         
-        // Adjust canvas properties
-        canvas.setOrigin(panel.topLeftPoint());
-        canvas.setWidth(panel.width());
-        canvas.setHeight(panel.height());
-        
         // Output graphics to file
-        String filePath = TEMP_DIR_PATH + "/plot-in-memory.png";
-        BufferedImage img = canvas.toBufferedImage();
-        ImageIO.write(img, "png", new File(filePath));
+        panel.toPngFile("plot-in-memory.png");
 	}
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.22 $
-$Date: 2006-09-09 20:09:48 $
+$Revision: 1.23 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -270,38 +270,39 @@ public class PlotGenerator {
     
     private GenomeInterval[] extractSubGenome(GenomeIntervalDto[] dtos, 
     		DataSet dataSet, BpUnits units) {
-    	assert dtos != null && dtos.length > 0;
-    	List intervalList = new ArrayList();
-    	SortedSet chromosomes = dataSet.chromosomeSet();
-    	for (int i = 0; i < dtos.length; i++) {
-    		GenomeIntervalDto dto = dtos[i];
-    		if (! dto.hasPositionInfo())
-    			dataSet.setEndPoints(dto);
-    		Chromosome chrom = null;
-    		for (Iterator it = chromosomes.iterator(); it.hasNext() && chrom == null;) {
-    			Chromosome tempChrom = (Chromosome)it.next();
-    			if (tempChrom.synonymous((short)dto.getChromosome()))
-    				chrom = tempChrom;
-    		}
-    		if (chrom == null) {
-    			
-    			// ------------------------->
-    			// TODO: Remove this code.  It was put in as a quick fix for a demo
-    			if (this.persistentDomainObjectMgr == null)
-    				chrom = new Chromosome(GenomeAssembly.DUMMY_GENOME_ASSEMBLY, (short)dto.getChromosome());
-    			// <------------------------
-    			else
-    				chrom = this.persistentDomainObjectMgr.getDefaultPersistentChromosome((short)dto.getChromosome());
-    		}
-    		if (chrom != null) {
-    			GenomeLocation start = new GenomeLocation(chrom, (long)dto.getStart());
-    			GenomeLocation end = new GenomeLocation(chrom, (long)dto.getEnd());
-    			intervalList.add(new GenomeInterval(start, end));
-    		}
-    	}
-    	GenomeInterval[] intervals = new GenomeInterval[0];
-    	intervals = (GenomeInterval[])intervalList.toArray(intervals);
-    	return intervals;
+    	return null;
+//    	assert dtos != null && dtos.length > 0;
+//    	List intervalList = new ArrayList();
+//    	SortedSet chromosomes = dataSet.chromosomeSet();
+//    	for (int i = 0; i < dtos.length; i++) {
+//    		GenomeIntervalDto dto = dtos[i];
+//    		if (! dto.hasPositionInfo())
+//    			dataSet.setEndPoints(dto);
+//    		Chromosome chrom = null;
+//    		for (Iterator it = chromosomes.iterator(); it.hasNext() && chrom == null;) {
+//    			Chromosome tempChrom = (Chromosome)it.next();
+//    			if (tempChrom.synonymous((short)dto.getChromosome()))
+//    				chrom = tempChrom;
+//    		}
+//    		if (chrom == null) {
+//    			
+//    			// ------------------------->
+//    			// TODO: Remove this code.  It was put in as a quick fix for a demo
+//    			if (this.persistentDomainObjectMgr == null)
+//    				chrom = new Chromosome(GenomeAssembly.DUMMY_GENOME_ASSEMBLY, (short)dto.getChromosome());
+//    			// <------------------------
+//    			else
+//    				chrom = this.persistentDomainObjectMgr.getDefaultPersistentChromosome((short)dto.getChromosome());
+//    		}
+//    		if (chrom != null) {
+//    			GenomeLocation start = new GenomeLocation(chrom, (long)dto.getStart());
+//    			GenomeLocation end = new GenomeLocation(chrom, (long)dto.getEnd());
+//    			intervalList.add(new GenomeInterval(start, end));
+//    		}
+//    	}
+//    	GenomeInterval[] intervals = new GenomeInterval[0];
+//    	intervals = (GenomeInterval[])intervalList.toArray(intervals);
+//    	return intervals;
     }
     
     private void createScatterPlot(DataSet dataSet, 
@@ -516,14 +517,14 @@ public class PlotGenerator {
         if (cmap == null)
             throw new WebcghSystemException("Cannot find cytological map in embedded database");
         long mapEnd = (cmap.length() < interval.endBp())? cmap.length() : interval.endBp();
-        GenomeFeaturePlot map = new GenomeFeaturePlot(interval.startBp(), mapEnd, length, orientation);
-        Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(cmap.getCentromereStart()), 
-                map.bpToPixel(cmap.getCentromereEnd()));
-        map.setWarper(warper);
-        map.addFrame(Location.ABOVE, this.ideogramFrameThickness, this.ideogramFrameColor);
-        map.addFrame(Location.BELOW, this.ideogramFrameThickness, this.ideogramFrameColor);
-        cmap.graph(map, new ClassPathPropertiesFileRgbHexidecimalColorMapper("conf/color-mappings.properties"));
-        panel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
+//        GenomeFeaturePlot map = new GenomeFeaturePlot(interval.startBp(), mapEnd, length, orientation);
+//        Warper warper = new CentromereWarper(map.getFeatureThickness(), map.bpToPixel(cmap.getCentromereStart()), 
+//                map.bpToPixel(cmap.getCentromereEnd()));
+//        map.setWarper(warper);
+//        map.addFrame(Location.ABOVE, this.ideogramFrameThickness, this.ideogramFrameColor);
+//        map.addFrame(Location.BELOW, this.ideogramFrameThickness, this.ideogramFrameColor);
+//        cmap.graph(map, new ClassPathPropertiesFileRgbHexidecimalColorMapper("conf/color-mappings.properties"));
+//        panel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BELOW);
     }
     
     
@@ -539,121 +540,121 @@ public class PlotGenerator {
     private void addIdeogram(PlotPanel panel, GenomeInterval interval, DataSet dataSet,
             ChromosomeIdeogramSize size, Orientation orientation, PlotParameters plotParameters) {
     	
-    	// Extract chromosome that will be graphed
-        Chromosome chromosome = interval.chromosome();
-        
-        // Create new plotting panel for ideogram and data tracks
-        PlotPanel idPanel = panel.newChildPlotPanel();
-        
-        // Retrieve cytological map from persistent storage.  The map provides
-        // the endpoints of chromosome features
-        CytologicalMap cmap = this.persistentDomainObjectMgr.getPersistentCytologicalMap(chromosome);
-        if (cmap == null)
-            throw new WebcghSystemException("Cannot find cytological map in embedded database");
-        
-        // Calculate the number of pixels of the ideogram
-        int pixels = size.pixels(cmap.length());
-        
-        // Convert cytological map into a genome feature map, which can be graphed
-        GenomeFeaturePlot map = new GenomeFeaturePlot((long)0, cmap.length(), pixels, orientation);
-        
-        // Warp the ideogram at the centromere, so that ideogram has an
-        // hourglass shape
-        Warper warper = new CentromereWarper(map.getFeatureHeight(), map.bpToPixel(cmap.getCentromereStart()), 
-                map.bpToPixel(cmap.getCentromereEnd()));
-        map.setWarper(warper);
+//    	// Extract chromosome that will be graphed
+//        Chromosome chromosome = interval.chromosome();
+//        
+//        // Create new plotting panel for ideogram and data tracks
+//        PlotPanel idPanel = panel.newChildPlotPanel();
+//        
+//        // Retrieve cytological map from persistent storage.  The map provides
+//        // the endpoints of chromosome features
+//        CytologicalMap cmap = this.persistentDomainObjectMgr.getPersistentCytologicalMap(chromosome);
+//        if (cmap == null)
+//            throw new WebcghSystemException("Cannot find cytological map in embedded database");
+//        
+//        // Calculate the number of pixels of the ideogram
+//        int pixels = size.pixels(cmap.length());
+//        
+//        // Convert cytological map into a genome feature map, which can be graphed
+//        GenomeFeaturePlot map = new GenomeFeaturePlot((long)0, cmap.length(), pixels, orientation);
+//        
+//        // Warp the ideogram at the centromere, so that ideogram has an
+//        // hourglass shape
+//        Warper warper = new CentromereWarper(map.getFeatureThickness(), map.bpToPixel(cmap.getCentromereStart()), 
+//                map.bpToPixel(cmap.getCentromereEnd()));
+//        map.setWarper(warper);
         
         // Add outline (i.e., frame) to ideogram
-        map.addFrame(Location.ABOVE, this.ideogramFrameThickness, this.ideogramFrameColor);
-        map.addFrame(Location.BELOW, this.ideogramFrameThickness, this.ideogramFrameColor);
-        
-        // Graph ideogram
-        cmap.graph(map, new ClassPathPropertiesFileRgbHexidecimalColorMapper("conf/color-mappings.properties"));
-        idPanel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        map.addFrame(Location.ABOVE, this.ideogramFrameThickness, this.ideogramFrameColor);
+//        map.addFrame(Location.BELOW, this.ideogramFrameThickness, this.ideogramFrameColor);
+//        
+//        // Graph ideogram
+//        cmap.graph(map, new ClassPathPropertiesFileRgbHexidecimalColorMapper("conf/color-mappings.properties"));
+//        idPanel.add(map, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
         
         // Add top and bottom rounded end caps to ideogram
-        ChromosomeEndCap topCap = new ChromosomeEndCap(map.getFeatureHeight(), this.ideogramFrameColor, Direction.UP);
-        ChromosomeEndCap botCap = new ChromosomeEndCap(map.getFeatureHeight(), this.ideogramFrameColor, Direction.DOWN);
-        idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
-        idPanel.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
-        
-        // Add caption to ideogram
-        Caption caption = new Caption("CHR " + chromosome.getNumber(), Orientation.HORIZONTAL, false);
-        idPanel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
-        
-        // Find minimum and maximum experimental values over genome interval
-        // specified by user
-        double minY = this.minY(dataSet, plotParameters);
-        double maxY = this.maxY(dataSet, plotParameters);
-        
-        // Iterate over bioassays and minimum common amplified and deleted
-        // regions (MCAR, MCDR) creating a data track for each one
-        for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();) {
-            Experiment exp = it.next();
-            
-            // Graph bioassays
-            for (BioAssayIterator bai = exp.bioAssayIterator(); bai.hasNext();) {
-                BioAssay bioAssay = bai.next();
-                
-                // Create new color coded plot for bioassay
-                PlotPanel baPanel = idPanel.newChildPlotPanel();
-	            ColorCodePlot plot = new ColorCodePlot(minY, maxY, this.numColorCodeBins, pixels, 
-	            		Orientation.VERTICAL, cmap.length());
-	            
-	            // Retrieve mask values.  All experimental values between
-	            // mask values will not show up in graph.
-	            plot.setMinMaskValue(plotParameters.getLowerMaskValue());
-	            plot.setMaxMaskValue(plotParameters.getUpperMaskValue());
-	            
-	            // Create graph
-	            bioAssay.graph(plot, interval.start, interval.end, null);
-	            baPanel.add(plot, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
-	            Caption bioAssayName = new Caption(bioAssay.getName(), Orientation.VERTICAL, false);
-	            baPanel.add(bioAssayName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-	            idPanel.add(baPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
-            }
-            
-            // Graph MCAR
-            ChromosomalAlterationIterator cai = exp.amplificationIterator();
-            if (cai.hasNext()) {
-            	PlotPanel ampPanel = idPanel.newChildPlotPanel();
-            	GenomeFeaturePlot gfmap = new GenomeFeaturePlot(0, cmap.length(), pixels, 
-            			orientation);
-            	while (cai.hasNext()) {
-            		ChromosomalAlteration alt = cai.next();
-            		if (alt.onChromosome(chromosome)) {
-            			String mouseover = alt.startBp()/1000000 + "MB-" + alt.endBp()/1000000 + "MB";
-	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), mouseover, null, false, 
-	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
-            		}
-            	}
-            	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
-            	Caption colName = new Caption("MCAR", Orientation.VERTICAL, false);
-            	ampPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-            	idPanel.add(ampPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
-            }
-            
-            // Graph MCDR
-            cai = exp.deletionIterator();
-            if (cai.hasNext()) {
-            	PlotPanel delPanel = idPanel.newChildPlotPanel();
-            	GenomeFeaturePlot gfmap = new GenomeFeaturePlot(0, cmap.length(), pixels, 
-            			Orientation.VERTICAL);
-            	while (cai.hasNext()) {
-            		ChromosomalAlteration alt = cai.next();
-            		if (alt.onChromosome(chromosome)) {
-            			String mouseover = alt.startBp()/1000000 + "MB-" + alt.endBp()/1000000 + "MB";
-	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), mouseover, null, false, 
-	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
-            		}
-            	}
-            	delPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
-            	Caption colName = new Caption("MCDR", Orientation.VERTICAL, false);
-            	delPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
-            	idPanel.add(delPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
-            }
-        }
-        panel.add(idPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+//        ChromosomeEndCap topCap = new ChromosomeEndCap(map.getFeatureThickness(), this.ideogramFrameColor, Direction.UP);
+//        ChromosomeEndCap botCap = new ChromosomeEndCap(map.getFeatureThickness(), this.ideogramFrameColor, Direction.DOWN);
+//        idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.TOP_JUSTIFIED);
+//        idPanel.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
+//        
+//        // Add caption to ideogram
+//        Caption caption = new Caption("CHR " + chromosome.getNumber(), Orientation.HORIZONTAL, false);
+//        idPanel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+//        
+//        // Find minimum and maximum experimental values over genome interval
+//        // specified by user
+//        double minY = this.minY(dataSet, plotParameters);
+//        double maxY = this.maxY(dataSet, plotParameters);
+//        
+//        // Iterate over bioassays and minimum common amplified and deleted
+//        // regions (MCAR, MCDR) creating a data track for each one
+//        for (ExperimentIterator it = dataSet.experimentIterator(); it.hasNext();) {
+//            Experiment exp = it.next();
+//            
+//            // Graph bioassays
+//            for (BioAssayIterator bai = exp.bioAssayIterator(); bai.hasNext();) {
+//                BioAssay bioAssay = bai.next();
+//                
+//                // Create new color coded plot for bioassay
+//                PlotPanel baPanel = idPanel.newChildPlotPanel();
+//	            ColorCodePlot plot = new ColorCodePlot(minY, maxY, this.numColorCodeBins, pixels, 
+//	            		Orientation.VERTICAL, cmap.length());
+//	            
+//	            // Retrieve mask values.  All experimental values between
+//	            // mask values will not show up in graph.
+//	            plot.setMinMaskValue(plotParameters.getLowerMaskValue());
+//	            plot.setMaxMaskValue(plotParameters.getUpperMaskValue());
+//	            
+//	            // Create graph
+//	            bioAssay.graph(plot, interval.start, interval.end, null);
+//	            baPanel.add(plot, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
+//	            Caption bioAssayName = new Caption(bioAssay.getName(), Orientation.VERTICAL, false);
+//	            baPanel.add(bioAssayName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
+//	            idPanel.add(baPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+//            }
+//            
+//            // Graph MCAR
+//            ChromosomalAlterationIterator cai = exp.amplificationIterator();
+//            if (cai.hasNext()) {
+//            	PlotPanel ampPanel = idPanel.newChildPlotPanel();
+//            	GenomeFeaturePlot gfmap = new GenomeFeaturePlot(0, cmap.length(), pixels, 
+//            			orientation);
+//            	while (cai.hasNext()) {
+//            		ChromosomalAlteration alt = cai.next();
+//            		if (alt.onChromosome(chromosome)) {
+//            			String mouseover = alt.startBp()/1000000 + "MB-" + alt.endBp()/1000000 + "MB";
+//	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), mouseover, null, false, 
+//	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+//            		}
+//            	}
+//            	ampPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
+//            	Caption colName = new Caption("MCAR", Orientation.VERTICAL, false);
+//            	ampPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
+//            	idPanel.add(ampPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+//            }
+//            
+//            // Graph MCDR
+//            cai = exp.deletionIterator();
+//            if (cai.hasNext()) {
+//            	PlotPanel delPanel = idPanel.newChildPlotPanel();
+//            	GenomeFeaturePlot gfmap = new GenomeFeaturePlot(0, cmap.length(), pixels, 
+//            			Orientation.VERTICAL);
+//            	while (cai.hasNext()) {
+//            		ChromosomalAlteration alt = cai.next();
+//            		if (alt.onChromosome(chromosome)) {
+//            			String mouseover = alt.startBp()/1000000 + "MB-" + alt.endBp()/1000000 + "MB";
+//	            		gfmap.plotFeature(alt.startBp(), alt.endBp(), mouseover, null, false, 
+//	            				PlotGenerator.CHROMOSOMAL_ALTERATION_COLOR);
+//            		}
+//            	}
+//            	delPanel.add(gfmap, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED, true);
+//            	Caption colName = new Caption("MCDR", Orientation.VERTICAL, false);
+//            	delPanel.add(colName, HorizontalAlignment.RIGHT_JUSTIFIED, VerticalAlignment.ABOVE);
+//            	idPanel.add(delPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
+//            }
+//        }
+//        panel.add(idPanel, HorizontalAlignment.RIGHT_OF, VerticalAlignment.TOP_JUSTIFIED);
     }
     
     

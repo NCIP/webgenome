@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Line.java,v $
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 
@@ -58,27 +55,37 @@ import java.awt.Color;
 
 
 /**
- * Represents a line
+ * Represents a line.
  */
 public class Line extends GraphicPrimitive {
 	
-	
+	/** X-coordinate of one end of line. */
 	private int x1 = 0;
+	
+	/** Y-coordinate of one end of line. */
 	private int y1 = 0;
+	
+	/** X-coordinate of other end of line. */
 	private int x2 = 0;
+	
+	/** Y-coordinate of other end of line. */
 	private int y2 = 0;
+	
+	/** Width of line (i.e., stroke). */
 	private int width = 2;
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 */
-	public Line() {}
+	public Line() {
+		
+	}
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param x1 X-coordinate of first end
 	 * @param y1 Y-coordinate of first end
 	 * @param x2 X-coordinate of second end
@@ -86,7 +93,8 @@ public class Line extends GraphicPrimitive {
 	 * @param width Width of line
 	 * @param color Color of line
 	 */
-	public Line(int x1, int y1, int x2, int y2, int width, Color color) {
+	public Line(final int x1, final int y1, final int x2,
+			final int y2, final int width, final Color color) {
 		super(color);
 		this.x1 = x1;
 		this.y1 = y1;
@@ -96,73 +104,99 @@ public class Line extends GraphicPrimitive {
 	}
 
 	/**
-	 * @return Width
+	 * Get width of line (i.e., stroke).
+	 * @return Width width of line in pixels
 	 */
-	public int getWidth() {
+	public final int getWidth() {
 		return width;
 	}
 
 	/**
+	 * Get X-coordinate of first endpoint.
 	 * @return X-coordinate of first endpoint
 	 */
-	public int getX1() {
+	public final int getX1() {
 		return x1;
 	}
 
 	/**
+	 * Get X-coordinate of second endpoint.
 	 * @return X-coordinate of second endpoint
 	 */
-	public int getX2() {
+	public final int getX2() {
 		return x2;
 	}
 
 	/**
+	 * Get Y-coordinate of first endpoint.
 	 * @return Y-coordinate of first endpoint
 	 */
-	public int getY1() {
+	public final int getY1() {
 		return y1;
 	}
 
 	/**
+	 * Get Y-coordinate of second endpoint.
 	 * @return Y-coordinate of second endpoint
 	 */
-	public int getY2() {
+	public final int getY2() {
 		return y2;
 	}
 
 	/**
-	 * @param i Width
+	 * Set width (i.e., stroke) of line.
+	 * @param i Width of line
 	 */
-	public void setWidth(int i) {
+	public final void setWidth(final int i) {
 		width = i;
 	}
 
 	/**
+	 * Set X-coordinate of first endpoint.
 	 * @param i X-coordinate of first endpoint
 	 */
-	public void setX1(int i) {
+	public final void setX1(final int i) {
 		x1 = i;
 	}
 
 	/**
+	 * Set X-coordinate of second endpoint.
 	 * @param i X-coordinate of second endpoint
 	 */
-	public void setX2(int i) {
+	public final void setX2(final int i) {
 		x2 = i;
 	}
 
 	/**
+	 * Set Y-coordinate of first endpoint.
 	 * @param i Y-coordinate of first endpoint
 	 */
-	public void setY1(int i) {
+	public final void setY1(final int i) {
 		y1 = i;
 	}
 
 	/**
+	 * Set Y-coordinate of second endpoint.
 	 * @param i Y-coordinate of second endpoint
 	 */
-	public void setY2(int i) {
+	public final void setY2(final int i) {
 		y2 = i;
 	}
 
+	
+	// ==================================
+	//     Implemented abstract methods
+	// ==================================
+	
+	/**
+	 * Move graphic primitive.
+	 * @param deltaX Change in X-coordinates in pixels
+	 * @param deltaY Change in Y-coordinates in pixels
+	 */
+	public final void move(final int deltaX, final int deltaY) {
+		this.x1 += deltaX;
+		this.y1 += deltaY;
+		this.x2 += deltaX;
+		this.y2 += deltaY;
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.5 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.primitive.Arc;
@@ -94,6 +95,10 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
     /** Type of buffered image. */
     public static final int IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
     
+    /** Logger. */
+    private static final Logger LOGGER =
+    	Logger.getLogger(RasterDrawingCanvas.class);
+    
     
     // =====================================
     //         Attributes
@@ -103,32 +108,13 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
     private final List<GraphicPrimitive> graphicPrimitives =
         new ArrayList<GraphicPrimitive>();
     
-    /** Nested drawing canvases to draw at rending time. */
-    private final List<RasterDrawingCanvas> drawingCanvases =
-        new ArrayList<RasterDrawingCanvas>();
-    
-    /**
-     * Affine transformation that enables the contained graphical
-     * elements to be translated (i.e., moved) or rotated.
-     */ 
-    private AffineTransform affineTransform =
-        new AffineTransform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0);
-    
     /** Width of plot in pixels. */
     private int width = 0;
     
     /** Height of plot in pixels. */
     private int height = 0;
-    
-    /** Origin of coordinate system for canvas. */
-    private Point origin = new Point(0, 0);
-    
-    
-    // =========================
-    //      Getters/setters
-    // =========================
-            
-    
+        
+        
     // =================================
     //      Constructors
     // =================================
@@ -154,6 +140,8 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
             throw new IllegalArgumentException(
                     "Graphic primitive cannot be null");
         }
+        LOGGER.debug("Adding graphic element of type "
+        		+ element.getClass().getName());
         this.graphicPrimitives.add(element);
     }
     
@@ -205,8 +193,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param canvas A canvas
      */
     public void add(final DrawingCanvas canvas) {
-        assert canvas instanceof RasterDrawingCanvas;
-        this.drawingCanvases.add((RasterDrawingCanvas) canvas);
+        
     }
     
     
@@ -217,23 +204,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param y Y-coordinate of insertion point
      */
     public void add(final DrawingCanvas canvas, final int x, final int y) {
-        assert canvas instanceof RasterDrawingCanvas;
-        this.drawingCanvases.add((RasterDrawingCanvas) canvas);
-        ((RasterDrawingCanvas) canvas).translateCoordinates(x, y);
-    }
-    
-    
-    /**
-     * Translate the location of this canvas by
-     * the amounts given by the arguments.
-     * @param deltaX Change in x-coordinate
-     * @param deltaY Change in y-coordinate
-     */
-    private void translateCoordinates(final int deltaX, final int deltaY) {
-        this.affineTransform.translate(deltaX, deltaY);
-        for (RasterDrawingCanvas canvas : this.drawingCanvases) {
-            canvas.translateCoordinates(deltaX, deltaY);
-        }
+        
     }
     
     
@@ -345,7 +316,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @param origin Origin on canvas coordinate system
      */
     public void setOrigin(final Point origin) {
-        this.origin = origin;
+        
     }
     
     
@@ -373,11 +344,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
         this.render(bg, graphics);
         
         // Render elements
-        AffineTransform oldTransform = this.affineTransform;
-        this.affineTransform = new AffineTransform(this.affineTransform);
-        this.affineTransform.translate(-this.origin.x, -this.origin.y);
         this.render(this, graphics);
-        this.affineTransform = oldTransform;
         return img;
     }
     
@@ -393,26 +360,8 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      */
     private void render(final RasterDrawingCanvas canvas,
             final Graphics2D graphics) {
-        
-        // Apply transformation
-        graphics.transform(canvas.affineTransform);
-        
-        // Render graphic primitives
         for (GraphicPrimitive prim : canvas.graphicPrimitives) {
             this.render(prim, graphics);
-        }
-        
-        // Render child canvases
-        for (RasterDrawingCanvas child : canvas.drawingCanvases) {
-            this.render(child, graphics);
-        }
-        
-        // Reverse the transformation
-        try {
-            graphics.transform(canvas.affineTransform.createInverse());
-        } catch (NoninvertibleTransformException e) {
-            throw new WebcghSystemException(
-                    "Could not invert affine transformation", e);
         }
     }
     

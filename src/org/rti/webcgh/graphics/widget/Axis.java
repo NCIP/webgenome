@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/widget/Axis.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,16 +38,17 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
+
+
 package org.rti.webcgh.graphics.widget;
 
 import java.awt.Color;
@@ -170,7 +169,7 @@ public final class Axis implements ScalePlotElement {
      * Multiplication factors used in calculating how many hatch marks
      * will fit on axis.
      */
-    private final float[] multipliers = {(float)5.0, (float)2.0, (float)1.0};
+    private final float[] multipliers = {(float) 5.0, (float) 2.0, (float) 1.0};
 
 
 	/**
@@ -266,7 +265,7 @@ public final class Axis implements ScalePlotElement {
     
     
     /**
-     * Constructor
+     * Constructor.
      * @param minValue Minimum value in native units
      * @param maxValue Maximum value in native units
      * @param length Length in pixels
@@ -517,12 +516,11 @@ public final class Axis implements ScalePlotElement {
 					float temp = this.multipliers[i] * power;
 				if (Math.ceil(range / temp) > maxNumTics) {
 					done = true;
-                }
-				else if (range / temp > 0) {
+                } else if (range / temp > 0) {
 					ticInterval = temp;
                 }
 		    }
-			power /= (float)10.0;
+			power /= (float) 10.0;
 		}
 		return (double) ticInterval;
 	}
@@ -532,44 +530,64 @@ public final class Axis implements ScalePlotElement {
 	 * Heuristically determine how many tic marks 
 	 * over given range could fit
 	 * on one text line of given width.
+	 * @param widthCalculator Width calculator
 	 * @param width Width of target text line
 	 * @param min Minimum value in range
 	 * @param max Maximum value in range
 	 * @param fontSize Font size
 	 * @return Number of tic marks
 	 */
-	private int maxNumTicsThatFitOnOneLine
-	(
-		RenderedWidthCalculator widthCalculator, int width, double min, double max, 
-		int fontSize
+	private int maxNumTicsThatFitOnOneLine(
+		final RenderedWidthCalculator widthCalculator,
+		final int width, final double min, final double max, 
+		final int fontSize
 	) {
-	    StringBuffer template = new StringBuffer(this.numberFormatter.format(max));
+	    StringBuffer template =
+	    	new StringBuffer(this.numberFormatter.format(max));
         int maxWidth = widthCalculator.renderedWidth(template.toString());
 	    for (int i = 0; i < this.multipliers.length; i++) {
-	        template = new StringBuffer(this.numberFormatter.format(max / this.multipliers[i]));
-	        int candidateMaxWidth = widthCalculator.renderedWidth(template.toString());
-	        if (candidateMaxWidth > maxWidth)
+	        template = new StringBuffer(
+	        		this.numberFormatter.format(max / this.multipliers[i]));
+	        int candidateMaxWidth =
+	        	widthCalculator.renderedWidth(template.toString());
+	        if (candidateMaxWidth > maxWidth) {
 	            maxWidth = candidateMaxWidth;
+	        }
 	    }
 		maxWidth += this.padding;
-		return (int)Math.floor((double)width / (double)maxWidth);
+		return (int) Math.floor((double) width / (double) maxWidth);
 	}
 	
 	
-	private int nativeUnitsToPixel(double value) {
-	    return (int)(((value - this.minValue) / this.range) * (double)this.length);
+	/**
+	 * Convert native units to pixel equivalents.
+	 * @param value Value to convert
+	 * @return Pixel equivalent of given native values
+	 */
+	private int nativeUnitsToPixel(final double value) {
+	    return (int) (((value - this.minValue) / this.range)
+	    		* (double) this.length);
 	}
 	
 	
-	private AxisTicMark newAxisTicMark(double value, boolean isMajor) {
+	/**
+	 * Create new axis tic mark.
+	 * @param value Value
+	 * @param isMajor Is a major tic mark?
+	 * @return A tic mark
+	 */
+	private AxisTicMark newAxisTicMark(final double value,
+			final boolean isMajor) {
 	    String label = this.numberFormatter.format(value);
 	    int pixel = this.nativeUnitsToPixel(value);
 	    Point point = null;
-	    if (this.orientation == Orientation.HORIZONTAL)
+	    if (this.orientation == Orientation.HORIZONTAL) {
 	        point = new Point(pixel, 0);
-	    else if (this.orientation == Orientation.VERTICAL)
+	    } else if (this.orientation == Orientation.VERTICAL) {
 	        point = new Point(0, length - pixel);
-	    AxisTicMark tic = new AxisTicMark(point, label, Orientation.opposite(this.orientation), 
+	    }
+	    AxisTicMark tic = new AxisTicMark(point, label,
+	    		Orientation.opposite(this.orientation), 
 	        this.positionTextRelativeToHatches);
 	    tic.setColor(this.color);
 	    tic.setFontSize(this.fontSize);
@@ -579,44 +597,77 @@ public final class Axis implements ScalePlotElement {
             tic.setLineThickness(this.minorHatchLineThickness);
         }
 	    tic.setPadding(this.padding);
-	    if (isMajor)
+	    if (isMajor) {
 	        tic.setLength(this.majorTicLength);
-	    else
+	    } else {
 	        tic.setLength(this.minorTicLength);
+	    }
 	    return tic;
 	}
 	
 	
-	private void adjustMinAndMax(AxisTicMark ticMark) {
-	    if (ticMark.minX() < this.minX)
+	/**
+	 * Adjust minimum and maximum values of entire axis.
+	 * @param ticMark A tic mark that may be
+	 * outside of the current min and max
+	 */
+	private void adjustMinAndMax(final AxisTicMark ticMark) {
+	    if (ticMark.minX() < this.minX) {
 	        this.minX = ticMark.minX();
-	    if (ticMark.maxX() > this.maxX)
+	    }
+	    if (ticMark.maxX() > this.maxX) {
 	        this.maxX = ticMark.maxX();
-	    if (ticMark.minY() < this.minY)
+	    }
+	    if (ticMark.minY() < this.minY) {
 	        this.minY = ticMark.minY();
-	    if (ticMark.maxY() > this.maxY)
+	    }
+	    if (ticMark.maxY() > this.maxY) {
 	        this.maxY = ticMark.maxY();
+	    }
 	}
 	
-	class RenderedWidthCalculator {
+	
+	/**
+	 * Helper class to compute widths.
+	 * @author dhall
+	 *
+	 */
+	final class RenderedWidthCalculator {
 		
-		PlotPanel panel = null;
-		DrawingCanvas canvas = null;
+		/** Plot panel. */
+		private PlotPanel panel = null;
 		
-		public RenderedWidthCalculator(PlotPanel panel) {
+		/** Drawing canvas used to determine text size. */
+		private DrawingCanvas canvas = null;
+		
+		/**
+		 * Constuctor.
+		 * @param panel Plot panel
+		 */
+		public RenderedWidthCalculator(final PlotPanel panel) {
 			this.panel = panel;
 		}
 		
-		public RenderedWidthCalculator(DrawingCanvas canvas) {
+		/**
+		 * Constructor.
+		 * @param canvas A drawing canvas
+		 */
+		public RenderedWidthCalculator(final DrawingCanvas canvas) {
 			this.canvas = canvas;
 		}
 		
-		public int renderedWidth(String text) {
+		/**
+		 * Get rendered width of text.
+		 * @param text Some text
+		 * @return Rendered width in pixels
+		 */
+		public int renderedWidth(final String text) {
 			int width = 0;
-			if (this.panel != null)
+			if (this.panel != null) {
 				width = this.panel.renderedWidth(text, fontSize);
-			else if (this.canvas != null)
+			} else if (this.canvas != null) {
 				width = this.canvas.renderedWidth(text, fontSize);
+			}
 			return width;
 		}
 	}
@@ -635,24 +686,29 @@ public final class Axis implements ScalePlotElement {
 	 */
 	public Point zeroPoint() {
 		Point p = null;
-		if (this.spansZero)
+		if (this.spansZero) {
 			p = new Point(this.zeroX, this.zeroY);
-		else
+		} else {
 			p = new Point(0, 0);
+		}
 		return p;
 	}
 	
 	
 	/**
-	 * Tic mark on a plot axis
+	 * Tic mark on a plot axis.
 	 */
-	static class AxisTicMark implements Serializable {
+	static final class AxisTicMark implements Serializable {
+		
+		/** Serial version ID. */
+		private static final long serialVersionUID = 1;
 	    
 	    
 	    // ===========================
 	    //    Static variables
 	    // ===========================
 	    
+		/** Color of hyperlinks. */
 	    private static final Color HYPERLINK_COLOR = Color.blue;
 		
 	    
@@ -660,27 +716,64 @@ public final class Axis implements ScalePlotElement {
 	    //        Attributes
 	    // ========================================
 	    
+	    /** Alignment point of tic mark. */
 	    private final Point alignmentPoint;
+	    
+	    /** Label of tic mark. */
 		private final String label;
+		
+		/** URL of hyperlink associated with tic mark. */
 		private final URL link;
+		
+		/** Orientation of axis. */
 		private final Orientation orientation;
+		
+		/** Orientation of tic mark. */
 		private final Location labelLocation;
 		
+		/** X-coordinate of first end of tic mark line. */
 		private int lineX1 = 0;
+		
+		/** Y-coordinate of first end of tic mark line. */
 		private int lineY1 = 0;
+		
+		/** X-coordinate of second end of tic mark line. */
 		private int lineX2 = 0;
+		
+		/** Y-coordinate of second end of tic mark line. */
 		private int lineY2 = 0;
+		
+		/** X-coordinate of tic mark label. */
 		private int textX = 0;
+		
+		/** Y-coordinate of tic mark label. */
 		private int textY = 0;
+		
+		/** Minimum X-coordinate in tic mark. */
 		private int minX = 0;
+		
+		/** Maximum X-coordinate in tic mark. */
 		private int maxX = 0;
+		
+		/** Minimum Y-coordinate in tic mark. */
 		private int minY = 0;
+		
+		/** Maximum Y-coordinate in tic mark. */
 		private int maxY = 0;
 		
+		/** Thicknes of tick mark line. */
 		private int lineThickness = 3;
+		
+		/** Length of tic mark line. */
 		private int length = 20;
+		
+		/** Font size of label. */
 		private int fontSize = 12;
+		
+		/** Padding between graphical elements. */
 		private int padding = 5;
+		
+		/** Color of graphical elements. */
 		private Color color = Color.black;
 		
 		
@@ -688,7 +781,7 @@ public final class Axis implements ScalePlotElement {
 	    /**
 	     * @param color The color to set.
 	     */
-	    public void setColor(Color color) {
+	    public void setColor(final Color color) {
 	        this.color = color;
 	    }
 	    
@@ -696,7 +789,7 @@ public final class Axis implements ScalePlotElement {
 	    /**
 	     * @param fontSize The fontSize to set.
 	     */
-	    public void setFontSize(int fontSize) {
+	    public void setFontSize(final int fontSize) {
 	        this.fontSize = fontSize;
 	    }
 	    
@@ -704,7 +797,7 @@ public final class Axis implements ScalePlotElement {
 	    /**
 	     * @param lineThickness The lineWidth to set.
 	     */
-	    public void setLineThickness(int lineThickness) {
+	    public void setLineThickness(final int lineThickness) {
 	        this.lineThickness = lineThickness;
 	    }
 	    
@@ -712,7 +805,7 @@ public final class Axis implements ScalePlotElement {
 	    /**
 	     * @param padding The padding to set.
 	     */
-	    public void setPadding(int padding) {
+	    public void setPadding(final int padding) {
 	        this.padding = padding;
 	    }
 	    
@@ -720,7 +813,7 @@ public final class Axis implements ScalePlotElement {
 	    /**
 	     * @param length The length to set.
 	     */
-	    public void setLength(int length) {
+	    public void setLength(final int length) {
 	        this.length = length;
 	    }
 	    
@@ -730,15 +823,17 @@ public final class Axis implements ScalePlotElement {
 		// =======================================
 		
 		/**
-		 * Constructor
+		 * Constructor.
 		 * @param alignmentPoint Alignment point
 		 * @param label Tic mark label
 		 * @param link Link associated with tic mark
 		 * @param orientation Orientation of tic mark
 		 * @param labelLocation Relative location of label to hatch mark
 		 */
-		public AxisTicMark(Point alignmentPoint, String label, URL link, Orientation orientation, 
-		    Location labelLocation) {
+		public AxisTicMark(final Point alignmentPoint,
+				final String label, final URL link,
+				final Orientation orientation, 
+				final Location labelLocation) {
 			this.alignmentPoint = alignmentPoint;
 			this.label = label;
 			this.link = link;
@@ -748,14 +843,15 @@ public final class Axis implements ScalePlotElement {
 		
 		
 		/**
-		 * Constructor
+		 * Constructor.
 		 * @param alignmentPoint Alignment point
 		 * @param label Tic mark label
 		 * @param orientation Orientation of tic mark
 		 * @param labelLocation Relative location of label to hatch mark
 		 */
-		public AxisTicMark(Point alignmentPoint, String label, Orientation orientation, 
-		    Location labelLocation) {
+		public AxisTicMark(final Point alignmentPoint,
+				final String label, final Orientation orientation, 
+				final Location labelLocation) {
 		    this(alignmentPoint, label, null, orientation, labelLocation);
 		}
 		
@@ -766,15 +862,17 @@ public final class Axis implements ScalePlotElement {
 		
 		
 		/**
-		 * Draw
+		 * Draw tic mark.
 		 * @param canvas A drawing canvas
 		 * @param drawLabel Draw label?
 		 */
-		public void paint(DrawingCanvas canvas, boolean drawLabel) {
+		public void paint(final DrawingCanvas canvas,
+				final boolean drawLabel) {
 		    this.setDrawingCoordinates(canvas);
 		    this.drawLine(canvas);
-		    if (drawLabel && this.label != null && this.label.length() > 0)
+		    if (drawLabel && this.label != null && this.label.length() > 0) {
 		        this.drawText(canvas);
+		    }
 		}
 		
 		
@@ -784,13 +882,15 @@ public final class Axis implements ScalePlotElement {
 		 * @param padding Padding that should be between given tic mark and this
 		 * @return T/F
 		 */
-		public boolean overlapsWith(AxisTicMark axisTicMark, int padding) {
-		    return this.overlapsHorizontally(axisTicMark, padding) && this.overlapsVertically(axisTicMark, padding);
+		public boolean overlapsWith(final AxisTicMark axisTicMark,
+				final int padding) {
+		    return this.overlapsHorizontally(axisTicMark, padding)
+		    	&& this.overlapsVertically(axisTicMark, padding);
 		}
 		
 		
 		/**
-		 * Get minimum X-coordinate
+		 * Get minimum X-coordinate.
 		 * @return Minimum X-coordinate
 		 */
 		public int minX() {
@@ -799,7 +899,7 @@ public final class Axis implements ScalePlotElement {
 		
 		
 		/**
-		 * Get maximum X-coordinate
+		 * Get maximum X-coordinate.
 		 * @return Maximum X-coordinate
 		 */
 		public int maxX() {
@@ -808,7 +908,7 @@ public final class Axis implements ScalePlotElement {
 		
 		
 		/**
-		 * Get minimum Y-coordinate
+		 * Get minimum Y-coordinate.
 		 * @return Minimum Y-coordinate
 		 */
 		public int minY() {
@@ -817,7 +917,7 @@ public final class Axis implements ScalePlotElement {
 		
 		
 		/**
-		 * Get maximum Y-coordinate
+		 * Get maximum Y-coordinate.
 		 * @return Maximum Y-coordinate
 		 */
 		public int maxY() {
@@ -830,7 +930,11 @@ public final class Axis implements ScalePlotElement {
 		// =============================
 		
 		
-		private void setDrawingCoordinates(DrawingCanvas canvas) {
+		/**
+		 * Set drawing coordinates of tic mark.
+		 * @param canvas Canvas that will be drawn upon
+		 */
+		private void setDrawingCoordinates(final DrawingCanvas canvas) {
 		    int textLength = 0;
 		    int textHeight = 0;
 		    int textPadding = 0;
@@ -857,12 +961,14 @@ public final class Axis implements ScalePlotElement {
 		            this.textX = this.lineX2 + textPadding;
 		            this.minX = this.lineX1;
 		            this.maxX = this.lineX2 + textPadding + textLength;
-		        } else
-		            throw new IllegalArgumentException("Illegal combination of orientation and label location");
-		    }
+		        } else {
+		            throw new IllegalArgumentException(
+		            		"Illegal combination of orientation "
+		            		+ "and label location");
+		        }
 		    
 		    // Vertical orientation
-		    else if (this.orientation == Orientation.VERTICAL) {
+		    } else if (this.orientation == Orientation.VERTICAL) {
 		        this.lineX1 = this.alignmentPoint.x;
 		        this.lineY1 = this.alignmentPoint.y - this.length / 2;
 		        this.lineX2 = this.lineX1;
@@ -878,20 +984,32 @@ public final class Axis implements ScalePlotElement {
 		            this.textY = this.lineY2 + textPadding + textHeight;
 		            this.minY = this.lineY1;
 		            this.maxY = this.lineY2 + textPadding + textHeight;
-		        } else
-		            throw new IllegalArgumentException("Illegal combination of orientation and label location");
+		        } else {
+		            throw new IllegalArgumentException(
+		            		"Illegal combination of orientation "
+		            		+ "and label location");
+		        }
 		    }
 		}
 		
 		
-		private void drawLine(DrawingCanvas canvas) {
-		    Line line = new Line(this.lineX1, this.lineY1, this.lineX2, this.lineY2,
+		/**
+		 * Draw tic mark line.
+		 * @param canvas A canvas
+		 */
+		private void drawLine(final DrawingCanvas canvas) {
+		    Line line = new Line(this.lineX1, this.lineY1, this.lineX2,
+		    		this.lineY2,
 		        this.lineThickness, this.color);
 		    canvas.add(line);
 		}
 		
 		
-		private void drawText(DrawingCanvas canvas) {
+		/**
+		 * Draw tic mark text.
+		 * @param canvas A canvas
+		 */
+		private void drawText(final DrawingCanvas canvas) {
 		    Text text = canvas.newText(this.label, this.textX, this.textY,
 		        this.fontSize, HorizontalAlignment.LEFT_JUSTIFIED, this.color);
 		    if (this.link != null) {
@@ -903,18 +1021,36 @@ public final class Axis implements ScalePlotElement {
 		}
 		
 		
-		private boolean overlapsHorizontally(AxisTicMark ticMark, int padding) {
-		    if (this.label == null || this.label.length() < 1 || ticMark.label == null || ticMark.label.length() < 1)
+		/**
+		 * Does given tic mark overlap horizontally with this?
+		 * @param ticMark A tic mark
+		 * @param padding Padding in pixels
+		 * @return T/F
+		 */
+		private boolean overlapsHorizontally(final AxisTicMark ticMark,
+				final int padding) {
+		    if (this.label == null || this.label.length() < 1
+		    		|| ticMark.label == null || ticMark.label.length() < 1) {
 		        return false;
+		    }
 		    int leftEdge = this.minX - padding;
 		    int rightEdge = this.maxX + padding;
 		    return leftEdge <= ticMark.maxX && rightEdge >= ticMark.minX;
 		}
 		
 		
-		private boolean overlapsVertically(AxisTicMark ticMark, int padding) {
-		    if (this.label == null || this.label.length() < 1 || ticMark.label == null || ticMark.label.length() < 1)
+		/**
+		 * Does given tic mark overlap vertically with this?
+		 * @param ticMark A tic mark
+		 * @param padding Padding in pixels
+		 * @return T/F
+		 */
+		private boolean overlapsVertically(final AxisTicMark ticMark,
+				final int padding) {
+		    if (this.label == null || this.label.length() < 1
+		    		|| ticMark.label == null || ticMark.label.length() < 1) {
 		        return false;
+		    }
 		    int topEdge = this.minY - padding;
 		    int bottomEdge = this.maxY + padding;
 		    return topEdge <= ticMark.maxY && bottomEdge >= ticMark.minY;

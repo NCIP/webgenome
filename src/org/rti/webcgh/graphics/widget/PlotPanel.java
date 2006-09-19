@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.4 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -109,9 +109,10 @@ public class PlotPanel implements ScalePlotElement {
     /** Name of plot panel.  This is used primarily in debugging. */
     private String name = null;
     
-    /** Nested plot elements. */
-    private Collection<PlotElement> elements =
+    /** Nested plot widgets. */
+    private Collection<PlotElement> nestedWidets =
     	new ArrayList<PlotElement>();
+   
     
     // =========================
     //    Getters/setters
@@ -177,7 +178,9 @@ public class PlotPanel implements ScalePlotElement {
      * @param canvas A canvas
      */
     public final void paint(final DrawingCanvas canvas) {
-        canvas.add(this.drawingCanvas);
+        for (PlotElement e : this.nestedWidets) {
+        	e.paint(canvas);
+        }
     }
     
     /**
@@ -289,31 +292,7 @@ public class PlotPanel implements ScalePlotElement {
      * @param deltaY Number of pixels vertically
      */
     public final void move(final int deltaX, final int deltaY) {
-//    	if (this.bottomElement != null) {
-//    		this.bottomElement.move(deltaX, deltaY);
-//    		if (this.rightElement != this.bottomElement) {
-//    			this.rightElement.move(deltaX, deltaY);
-//            }
-//    		if (this.topElement != this.bottomElement
-//                    && this.topElement != this.rightElement) {
-//    			this.topElement.move(deltaX, deltaY);
-//            }
-//    		if (this.leftElement != this.bottomElement
-//                    && this.leftElement != this.rightElement
-//                    && this.leftElement != this.topElement) {
-//    			this.leftElement.move(deltaX, deltaY);
-//            }
-//    		this.zeroPoint.x += deltaX;
-//    		this.zeroPoint.y += deltaY;
-//    		if (this.referenceElement != null
-//                    && this.referenceElement != this.bottomElement
-//                    && this.referenceElement != this.rightElement
-//                    && this.referenceElement != this.topElement
-//    				&& this.referenceElement != this.leftElement) {
-//    			this.referenceElement.move(deltaX, deltaY);
-//            }
-//    	}
-    	for (PlotElement e : this.elements) {
+    	for (PlotElement e : this.nestedWidets) {
     		e.move(deltaX, deltaY);
     	}
     }
@@ -354,19 +333,34 @@ public class PlotPanel implements ScalePlotElement {
             final HorizontalAlignment hAlign,
             final VerticalAlignment vAlign,
             final boolean makeReferenceElement) {
-        DrawingCanvas tile = this.drawingCanvas.newTile();
-        element.paint(tile);
+    	
+    	// Add element to list of nested widgets
+    	this.nestedWidets.add(element);
+    	
+    	// Compute the X and Y coordinates of new widget
         int x = computeInsertionXCoord(element, hAlign);
         int y = computeInsertionYCoord(element, vAlign);
-        this.drawingCanvas.add(tile, x, y);
         
         // Move element's points to parent's coordinate system
         int deltaX = x;
         int deltaY = y;
         element.move(deltaX, deltaY);
         
-        // Add to list of elements
-        this.elements.add(element);
+        // If X or Y coordinate less than O, adjust coordinates
+        // of all nexted elements so that they are all positive
+        if (x < 0 || y < 0) {
+        	deltaX = 0;
+        	deltaY = 0;
+        	if (x < 0) {
+        		deltaX = -x;
+        	}
+        	if (y < 0) {
+        		deltaY = -y;
+        	}
+        	for (PlotElement e : this.nestedWidets) {
+        		e.move(deltaX, deltaY);
+        	}
+        }
         
         if (makeReferenceElement) {
         	this.referenceElement = element;

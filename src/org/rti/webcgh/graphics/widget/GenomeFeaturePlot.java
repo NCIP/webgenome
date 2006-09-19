@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,19 +59,35 @@ import java.util.List;
 
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.GraphicPrimitive;
-import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Polygon;
 import org.rti.webcgh.graphics.primitive.Polyline;
-import org.rti.webcgh.graphics.primitive.Text;
 import org.rti.webcgh.graphics.util.Warper;
-import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
+
 
 /**
  * Map of genome features.
  */
 public class GenomeFeaturePlot implements PlotElement {
+	
+	
+	// ======================
+	//    Constants
+	// ======================
+	
+	// TODO: Uncomment out all of the text-related lines
+//	/** Size of font. */
+//	private static final int FONT_SIZE = 12;
+//	
+//	/** Color of text. */
+//	private static final Color TEXT_COLOR = Color.blue;
+//	
+//	/** Padding between graphical elements in pixels. */
+//	private static final int PADDING = 5;
+//	
+//	/** Thickness of lines in map. */
+//	private static final int LINE_THICKNESS = 2;
 	
 	
 	// ======================================
@@ -81,8 +97,11 @@ public class GenomeFeaturePlot implements PlotElement {
 	/** Starting position of map on chromosome. */
 	private final long chromosomeStart;
 	
-	/** Width of map in pixels. */
-	private final int width;
+	/**
+	 * Length of map in pixels. If horizontal, this is
+	 * the width.  If vertical, this is the height.
+	 */
+	private final int length;
 	
 	/** Scale of base pairs to pixels. */
 	private final double scale;
@@ -90,26 +109,18 @@ public class GenomeFeaturePlot implements PlotElement {
 	/** Orientation of graphically rendered map. */
 	private final Orientation orientation;
 	
-	/** Height of features in map. */
-	private int featureHeight = 26;
-	
-	/** Size of font. */
-	private int fontSize = 12;
-	
-	/** Color of text. */
-	private Color textColor = Color.blue;
-	
-	/** Padding between graphical elements in pixels. */
-	private int padding = 5;
+	/**
+	 * Thickness of features in map. If the orientation is
+	 * horizontal, this is the height.  If the orientation
+	 * is vertical, this is the width.
+	 */
+	private final int featureThickness;
 	
 	/**
 	 * Warper that gives certain maps, like
 	 * chromosome ideograms, an hourglass shape.
 	 */
 	private Warper warper = null;
-	
-	/** Thickness of lines in map. */
-	private int lineThickness = 2;
 	
 	/** Minimum X-coordinate in rendered map. */
 	private int minX = 0;
@@ -121,10 +132,31 @@ public class GenomeFeaturePlot implements PlotElement {
 	private int minY = 0;
 	
 	/** Maximum Y-coordinate in rendered map. */
-	private int maxY = this.featureHeight;
+	private int maxY = 0;
 	
-	/** Y-coordinate in vertical center of map. */
-	private int middleY = this.maxY / 2;
+	/**
+	 * Minimum X-coordinate of data track only,
+	 * i.e., without considering text.
+	 */
+	private int trackMinX = 0;
+	
+	/**
+	 * Maximum X-coordinate of data track only,
+	 * i.e., without considering text.
+	 */
+	private int trackMaxX = 0;
+	
+	/**
+	 * Minimum Y-coordinate of data track only,
+	 * i.e., without considering text.
+	 */
+	private int trackMinY = 0;
+	
+	/**
+	 * Maximum Y-coordinate of data track only,
+	 * i.e., without considering text.
+	 */
+	private int trackMaxY = 0;
 	
 	/**
 	 * Container to hold generated graphical
@@ -133,54 +165,17 @@ public class GenomeFeaturePlot implements PlotElement {
 	private final List<GraphicPrimitive>
 		graphicPrimitives = new ArrayList<GraphicPrimitive>();
 	
-	/**
-	 * Container to hold text labels
-	 * prior to rendering.
-	 */
-	private final List<Label> labels = new ArrayList<Label>();
+//	/**
+//	 * Container to hold text labels
+//	 * prior to rendering.
+//	 */
+//	private final List<Label> labels = new ArrayList<Label>();
+	
 	
 	
 	// ===================================
 	//       Getters/setters
 	// ===================================
-	
-	/**
-	 * Set height of plotted features.
-	 * @param featureHeight Height of ploted features in
-	 * pixels.
-	 */
-	public final void setFeatureHeight(final int featureHeight) {
-		this.featureHeight = featureHeight;
-		this.maxY = featureHeight;
-		this.middleY = this.maxY / 2;
-	}
-	
-	
-	/**
-	 * Set font size.
-	 * @param fontSize Font size
-	 */
-	public final void setFontSize(final int fontSize) {
-		this.fontSize = fontSize;
-	}
-	
-	
-	/**
-	 * Set padding between graphic elements.
-	 * @param padding Padding in pixels
-	 */
-	public final void setPadding(final int padding) {
-		this.padding = padding;
-	}
-	
-	
-	/**
-	 * Set color of text.
-	 * @param textColor Color of text
-	 */
-	public final void setTextColor(final Color textColor) {
-		this.textColor = textColor;
-	}
 	
 	
 	/**
@@ -194,61 +189,70 @@ public class GenomeFeaturePlot implements PlotElement {
 	
 	
 	/**
-	 * Set thickness of lines in plot.
-	 * @param lineThickness Line thickness in pixels
-	 */
-	public final void setLineThickness(final int lineThickness) {
-		this.lineThickness = lineThickness;
-	}
-	
-	
-	/**
-	 * Get height of mapped features.
-	 * @return Height of mapped features in pixels.
-	 */
-	public final int getFeatureHeight() {
-		return featureHeight;
-	}
-	
-	
-	/**
 	 * Get scale of base pairs to pixels.
 	 * @return Scale of base pairs to pixels.
 	 */
 	public final double getScale() {
-		return scale;
+		return this.scale;
 	}
 	
 	
 	/**
-	 * Get widht of rendered map.
-	 * @return Width in pixels.
+	 * Get length of map in pixels. If horizontal, this is
+	 * the width.  If vertical, this is the height.
+	 * @return Length in pixels.
 	 */
-	public final int getWidth() {
-		return width;
+	public final int getLength() {
+		return this.length;
 	}
 	
 	
 	// ================================
 	//     Constructors
 	// ================================
-	
+
+
 	/**
 	 * Constructor.
 	 * @param chromosomeStart Chromosome start point
 	 * @param chromosomeEnd Chromosome end point
-	 * @param width Width in pixels
+	 * @param length Length of map in pixels. If horizontal, this is
+	 * the width.  If vertical, this is the height.
 	 * @param orientation Orientation
+	 * @param featureThickness Thickness of features in map in pixels.
+	 * If the orientation is
+	 * horizontal, this is the height.  If the orientation
+	 * is vertical, this is the width.
 	 */
 	public GenomeFeaturePlot(final long chromosomeStart,
-			final long chromosomeEnd, final int width,
-			final Orientation orientation) {
+			final long chromosomeEnd, final int length,
+			final Orientation orientation,
+			final int featureThickness) {
 		this.chromosomeStart = chromosomeStart;
-		this.width = width;
-		this.maxX = width;
-		this.scale = (double) width
+		this.length = length;
+		this.scale = (double) length
 			/ (chromosomeEnd - chromosomeStart);
+		this.featureThickness = featureThickness;
 		this.orientation = orientation;
+		if (orientation == Orientation.HORIZONTAL) {
+			this.minX = 0;
+			this.minY = 0;
+			this.maxX = length;
+			this.maxY = featureThickness;
+			this.trackMinX = 0;
+			this.trackMinY = 0;
+			this.trackMaxX = length;
+			this.trackMaxY = featureThickness;
+		} else if (orientation == Orientation.VERTICAL) {
+			this.minX = 0;
+			this.minY = 0;
+			this.maxX = featureThickness;
+			this.maxY = length;
+			this.trackMinX = 0;
+			this.trackMinY = 0;
+			this.trackMaxX = featureThickness;
+			this.trackMaxY = length;
+		}
 	}
 	
 	
@@ -271,10 +275,14 @@ public class GenomeFeaturePlot implements PlotElement {
 		Polygon poly = this.newPolygon(start, end, color);
 		poly.setToolTipText(name);
 		this.graphicPrimitives.add(poly);
-		if (drawLabel) {
-			int textX = this.bpToPixel((start + end) / 2);
-			this.labels.add(new Label(textX, name, url));
-		}
+//		if (drawLabel) {
+//			int pix = this.bpToPixel((start + end) / 2);
+//			int x = 0, y = 0;
+//			if (this.orientation == Orientation.HORIZONTAL) {
+//				
+//			}
+//			this.labels.add(new Label(x, y, name, url));
+//		}
 	}
 	
 	
@@ -315,18 +323,21 @@ public class GenomeFeaturePlot implements PlotElement {
 			Polygon poly = this.newPolygon(starts[i], ends[i], color);
 			this.graphicPrimitives.add(poly);
 		}
-		int minX = this.bpToPixel(min);
-		int maxX = this.bpToPixel(max);
-		
-		// Draw connecting lines
-		this.graphicPrimitives.add(new Line(minX, this.middleY, maxX, 
-			this.middleY, this.lineThickness, color));
-		
-		// Draw text
-		if (drawLabel) {
-			int textX = (minX + maxX) / 2;
-			this.labels.add(new Label(textX, name, url));
-		}
+//		int minX = this.bpToPixel(min);
+//		int maxX = this.bpToPixel(max);
+//		
+//		// Draw connecting lines
+//		if (this.orientation == Orientation.HORIZONTAL) {
+//			int middleY = 
+//			this.graphicPrimitives.add(new Line(minX, this.middleY, maxX, 
+//				this.middleY, this.LINE_THICKNESS, color));
+//		}
+//		
+//		// Draw text
+//		if (drawLabel) {
+//			int textX = (minX + maxX) / 2;
+//			this.labels.add(new Label(textX, name, url));
+//		}
 	}
 	
 	
@@ -342,25 +353,25 @@ public class GenomeFeaturePlot implements PlotElement {
 		// Set line endpoints
 		int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 		if (location == Location.ABOVE) {
-			x1 = 0;
-			y1 = 0;
-			x2 = this.width;
-			y2 = 0;
+			x1 = this.trackMinX;
+			y1 = this.trackMinY;
+			x2 = this.trackMaxX;
+			y2 = this.trackMinY;
 		} else if (location == Location.BELOW) {
-			x1 = 0;
-			y1 = this.featureHeight;
-			x2 = this.width;
-			y2 = this.featureHeight;
+			x1 = this.trackMinX;
+			y1 = this.trackMaxY;
+			x2 = this.trackMaxX;
+			y2 = this.trackMaxY;
 		} else if (location == Location.LEFT_OF) {
-			x1 = 0;
-			y1 = 0;
-			x2 = 0;
-			y2 = this.maxY;
+			x1 = this.trackMinX;
+			y1 = this.trackMinY;
+			x2 = this.trackMinX;
+			y2 = this.trackMaxY;
 		} else if (location == Location.RIGHT_OF) {
-			x1 = this.width;
-			y1 = 0;
-			x2 = this.width;
-			y2 = this.maxY;
+			x1 = this.trackMaxX;
+			y1 = this.trackMinY;
+			x2 = this.trackMaxX;
+			y2 = this.trackMaxY;
 		}
 		Point[] points = new Point[] {new Point(x1, y1), new Point(x2, y2)};
 		
@@ -397,51 +408,40 @@ public class GenomeFeaturePlot implements PlotElement {
      * @param canvas A canvas
      */
     public final void paint(final DrawingCanvas canvas) {
-        if (this.orientation == Orientation.VERTICAL) {
-            this.transposeGraphicPrimitives();
-        }
-        
+
     	// Paint graphic primitives
     	for (GraphicPrimitive primitive : this.graphicPrimitives) {
     		canvas.add(primitive);
     	}
     	
     	// Paint labels
-    	int y = -this.padding;
-    	if (this.labels.size() > 0) {
-    		this.minY = -(this.padding + this.fontSize);
-    	}
-    	for (Label label : this.labels) {
-    		Text text = canvas.newText(label.textValue, label.x, y, 
-    		    this.fontSize, HorizontalAlignment.CENTERED, this.textColor);
-    		if (label.url != null) {
-    			text.setUrl(label.url);
-    		}
-    		if (this.orientation == Orientation.VERTICAL) {
-    		    DrawingCanvas tile = this.transposeText(canvas, text);
-    		    canvas.add(tile);
-    		} else {
-    		    canvas.add(text);
-    		}
-    		int textWidth = canvas.renderedWidth(label.textValue,
-    				this.fontSize);
-    		int startX = label.x - textWidth / 2;
-    		int endX = startX + textWidth;
-    		if (startX < this.minX) {
-    			this.minX = startX;
-    		}
-    		if (endX > this.maxX) {
-    			this.maxX = endX;
-    		}
-    	}
-    	
-    	if (this.orientation == Orientation.VERTICAL) {
-    	    this.transposeMinAndMax();
-    	}
-    	
-    	canvas.setOrigin(new Point(this.minX, this.minY));
-    	canvas.setWidth(this.width());
-    	canvas.setHeight(this.height());
+//    	int y = -this.PADDING;
+//    	if (this.labels.size() > 0) {
+//    		this.minY = -(this.PADDING + this.FONT_SIZE);
+//    	}
+//    	for (Label label : this.labels) {
+//    		Text text = canvas.newText(label.textValue, label.x, y, 
+//    		    this.FONT_SIZE, HorizontalAlignment.CENTERED, this.TEXT_COLOR);
+//    		if (label.url != null) {
+//    			text.setUrl(label.url);
+//    		}
+//    		if (this.orientation == Orientation.VERTICAL) {
+//    		    DrawingCanvas tile = this.transposeText(canvas, text);
+//    		    canvas.add(tile);
+//    		} else {
+//    		    canvas.add(text);
+//    		}
+//    		int textWidth = canvas.renderedWidth(label.textValue,
+//    				this.FONT_SIZE);
+//    		int startX = label.x - textWidth / 2;
+//    		int endX = startX + textWidth;
+//    		if (startX < this.minX) {
+//    			this.minX = startX;
+//    		}
+//    		if (endX > this.maxX) {
+//    			this.maxX = endX;
+//    		}
+//    	}
     }
     
     
@@ -450,7 +450,7 @@ public class GenomeFeaturePlot implements PlotElement {
      * @return A point
      */
     public final Point topLeftAlignmentPoint() {
-    	return new Point(this.minX, this.minY);
+    	return new Point(this.trackMinX, this.trackMinY);
     }
     
     
@@ -459,7 +459,7 @@ public class GenomeFeaturePlot implements PlotElement {
      * @return A point
      */
     public final Point bottomLeftAlignmentPoint() {
-    	return new Point(this.minX, this.maxY);
+    	return new Point(this.trackMinX, this.trackMaxY);
     }
     
     
@@ -468,7 +468,7 @@ public class GenomeFeaturePlot implements PlotElement {
      * @return A point
      */
     public final Point topRightAlignmentPoint() {
-    	return new Point(this.minX + this.width(), this.minY);
+    	return new Point(this.trackMaxX, this.trackMinY);
     }
     
     
@@ -477,7 +477,7 @@ public class GenomeFeaturePlot implements PlotElement {
      * @return A point
      */
     public final Point bottomRightAlignmentPoint() {
-    	return new Point(this.minX + this.width(), this.maxY);
+    	return new Point(this.trackMaxX, this.trackMaxY);
     }
     
     
@@ -518,6 +518,13 @@ public class GenomeFeaturePlot implements PlotElement {
     	this.maxY += deltaY;
     	this.minX += deltaX;
     	this.minY += deltaY;
+    	this.trackMinX += deltaX;
+    	this.trackMinY += deltaY;
+    	this.trackMaxX += deltaX;
+    	this.trackMaxY += deltaY;
+    	for (GraphicPrimitive p : this.graphicPrimitives) {
+    		p.move(deltaX, deltaY);
+    	}
     }
     
     // ==================================
@@ -539,13 +546,20 @@ public class GenomeFeaturePlot implements PlotElement {
     	assert start <= end;
     	
     	// Instantiate points
-    	int startX = this.bpToPixel(start);
-    	int endX = this.bpToPixel(end);
+    	int startPix = this.bpToPixel(start);
+    	int endPix = this.bpToPixel(end);
     	Point[] points = new Point[4];
-    	points[0] = new Point(startX, 0);
-    	points[1] = new Point(endX, 0);
-    	points[2] = new Point(endX, this.featureHeight);
-    	points[3] = new Point(startX, this.featureHeight);
+    	if (this.orientation == Orientation.HORIZONTAL) {
+	    	points[0] = new Point(startPix, 0);
+	    	points[1] = new Point(endPix, 0);
+	    	points[2] = new Point(endPix, this.featureThickness);
+	    	points[3] = new Point(startPix, this.featureThickness);
+    	} else if (this.orientation == Orientation.VERTICAL) {
+    		points[0] = new Point(0, startPix);
+	    	points[1] = new Point(0, endPix);
+	    	points[2] = new Point(this.featureThickness, endPix);
+	    	points[3] = new Point(this.featureThickness, startPix);
+    	}
     	
     	// Warp points
     	if (this.warper != null) {
@@ -554,122 +568,7 @@ public class GenomeFeaturePlot implements PlotElement {
     	
     	return new Polygon(points, color);
     }
-    
-    
-    /**
-     * Transpos graphic primitives from a horizontal
-     * to vertical orientation of map.
-     */
-    private void transposeGraphicPrimitives() {
-        for (GraphicPrimitive primitive : this.graphicPrimitives) {
-        	if (primitive instanceof Line) {
-        		Line line = (Line) primitive;
-        		this.transpose(line);
-        	} else if (primitive instanceof Polygon) {
-        		Polygon poly = (Polygon) primitive;
-        		this.transpose(poly);
-        	} else if (primitive instanceof Polyline) {
-        		Polyline poly = (Polyline) primitive;
-        		this.transpose(poly);
-        	}
-        }
-    }
-    
-    
-    /**
-     * Transpose given line from horizontal
-     * to vertical orientation.
-     * @param line A line
-     */
-    private void transpose(final Line line) {
-    	int x0 = 0, y0 = 0;
-    	
-    	// First end point
-    	x0 = line.getX1();
-    	y0 = line.getY1();
-    	line.setX1(this.featureHeight - y0);
-    	line.setY1(x0);
-    	
-    	// Second end point
-    	x0 = line.getX2();
-    	y0 = line.getY2();
-    	line.setX2(this.featureHeight - y0);
-    	line.setY2(x0);
-    }
-    
-    /**
-     * Tranpost given polygon from horizontal
-     * to vertical orientation.
-     * @param polygon Polygon to transpost
-     */
-    private void transpose(final Polygon polygon) {
-    	Point[] points = polygon.getPoints();
-    	for (int i = 0; i < points.length; i++) {
-    		this.transpose(points[i]);
-    	}
-    }
-    
-    /**
-     * Transpost given line from horizontal to
-     * vertical orientation.
-     * @param line Line to transpose
-     */
-    private void transpose(final Polyline line) {
-    	List<Point> points = line.getPoints();
-    	for (Point point : points) {
-    		this.transpose(point);
-    	}
-    }
-    
-    
-    /**
-     * Transpost given point from horizontal
-     * to vertical orientation.
-     * @param p Point to transpost
-     */
-    private void transpose(final Point p) {
-    	int x0 = p.x;
-    	int y0 = p.y;
-    	p.x = this.featureHeight - y0;
-    	p.y = x0;
-    }
-    
-    
-    /**
-     * Transpost minimum and maximum coordinate
-     * values from horizontal to vertical alignment.
-     */
-    private void transposeMinAndMax() {
-        this.minY = this.minX;
-        this.maxY = this.maxX;
-        if (this.labels.size() > 0) {
-        	this.minX = -(this.padding + this.fontSize);
-        }
-        this.maxX = this.featureHeight;
-    }
-    
-    
-    /**
-     * Transpost text from horizontal to vertical
-     * alignment.
-     * @param canvas A drawing canvas
-     * @param text Text to transpose
-     * @return Drawing canvas containing transposted
-     * text
-     */
-    private DrawingCanvas transposeText(final DrawingCanvas canvas,
-    		final Text text) {
-    	DrawingCanvas tile = canvas.newTile();
-    	int newX = -this.padding;
-    	int newY = this.width - (text.getX()
-    			+ canvas.renderedWidth(text.getValue(), this.fontSize));
-    	text.setX(newX);
-    	text.setY(newY);
-    	tile.add(text);
-    	tile.rotate(270, newX, newY);
-    	canvas.add(tile);
-        return tile;
-    }
+
     
     // ===================================
     //       Inner classes
@@ -687,6 +586,9 @@ public class GenomeFeaturePlot implements PlotElement {
     	
     	/** X-coordinate of middle of label. */
     	private int x = -1;
+    	
+//    	/** Y-coordinate of label */
+//    	private int y = -1;
     	
     	/** Text value of label. */
     	private String textValue = null;
@@ -753,6 +655,22 @@ public class GenomeFeaturePlot implements PlotElement {
 			this.x = x;
 		}
 
+//		/**
+//		 * Get Y-coordinate.
+//		 * @return Y-coordinate
+//		 */
+//		private int getY() {
+//			return y;
+//		}
+//
+//
+//		/**
+//		 * Set Y-coordinate.
+//		 * @param y Y-coordinate
+//		 */
+//		private void setY(final int y) {
+//			this.y = y;
+//		}
 		
     	// ===============================
     	//       Constructor
@@ -762,12 +680,14 @@ public class GenomeFeaturePlot implements PlotElement {
 		/**
     	 * Constructor.
     	 * @param x X-coordinate of label middle
+    	 * @param y Y-coordinate of label
     	 * @param textValue Label text value
     	 * @param url Label url
     	 */
-    	public Label(final int x, final String textValue,
+    	public Label(final int x, final int y, final String textValue,
     			final URL url) {
     		this.x = x;
+//    		this.y = y;
     		this.textValue = textValue;
     		this.url = url;
     	}

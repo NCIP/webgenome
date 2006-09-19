@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.2 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -139,5 +139,36 @@ public final class PlotPanelTester extends TestCase {
 		
 		// Output graphics to file
 		parent.toPngFile("nested_2.png");
+	}
+	
+	
+	/**
+	 * Test method that creates a series of
+	 * nested panels to make sure the resulting
+	 * graphical objects are rendered properly.
+	 * The depth of nesting is 3 levels.
+	 */
+	public void testNestedPanelsDepth3() {
+		
+		// Instantiate nested panels
+		RasterFileTestPlotPanel parent =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		PlotPanel child = parent.newChildPlotPanel();
+		PlotPanel grandChild1 = child.newChildPlotPanel();
+		PlotPanel grandChild2 = child.newChildPlotPanel();
+		
+		// Add background widgets to child panels such that
+		// they are top aligned and non-overlapping
+		grandChild1.add(new Background(WIDTH, HEIGHT, COLOR_1));
+		child.add(grandChild1, true);
+		grandChild2.add(new Background(WIDTH, HEIGHT, COLOR_2));
+		child.add(grandChild2, HorizontalAlignment.RIGHT_OF,
+				VerticalAlignment.TOP_JUSTIFIED);
+		
+		// Nest panels together
+		parent.add(child, true);
+		
+		// Output graphics to file
+		parent.toPngFile("nested_3.png");
 	}
 }

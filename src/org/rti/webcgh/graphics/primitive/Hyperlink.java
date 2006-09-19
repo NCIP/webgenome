@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Hyperlink.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.graphics.primitive;
@@ -56,62 +53,71 @@ package org.rti.webcgh.graphics.primitive;
 import java.net.URL;
 
 /**
- * Hyperlink properties
+ * Hyperlink properties.
  */
 public class Hyperlink {
 	
+	/** URL. */
 	private URL url = null;
+	
+	/** Target browser window name. */
 	private String targetWindow = null;
 	
 	
 	/**
-	 * @return Returns the targetWindow.
+	 * Get target browser window name.
+	 * @return Returns the target browser window name
 	 */
-	public String getTargetWindow() {
+	public final String getTargetWindow() {
 		return targetWindow;
 	}
 	/**
-	 * @param targetWindow The targetWindow to set.
+	 * Set the target browser window name.
+	 * @param targetWindow The target browser window name
 	 */
-	public void setTargetWindow(String targetWindow) {
+	public final void setTargetWindow(final String targetWindow) {
 		this.targetWindow = targetWindow;
 	}
 	/**
+	 * Get URL.
 	 * @return Returns the url.
 	 */
-	public URL getUrl() {
+	public final URL getUrl() {
 		return url;
 	}
 	/**
-	 * @param url The url to set.
+	 * Set URL.
+	 * @param url The URL
 	 */
-	public void setUrl(URL url) {
+	public final void setUrl(final URL url) {
 		this.url = url;
 	}
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 *
 	 */
-	public Hyperlink() {}
+	public Hyperlink() {
+		
+	}
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param url URL
 	 */
-	public Hyperlink(URL url) {
+	public Hyperlink(final URL url) {
 		this.url = url;
 	}
 	
 	
 	/**
-	 * Constructor
+	 * Constructor.
 	 * @param url URL
 	 * @param targetWindow Target window name
 	 */
-	public Hyperlink(URL url, String targetWindow) {
+	public Hyperlink(final URL url, final String targetWindow) {
 		this(url);
 		this.targetWindow = targetWindow;
 	}

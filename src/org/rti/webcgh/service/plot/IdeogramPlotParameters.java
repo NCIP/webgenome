@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -106,6 +106,9 @@ public class IdeogramPlotParameters extends PlotParameters {
 	public static final ChromosomeIdeogramSize DEF_IDEOGRAM_SIZE =
 		ChromosomeIdeogramSize.MEDIUM;
 	
+	/** Default ideogram thickness in pixels. */
+	public static final int DEF_IDEOGRAM_THICKNESS = 20;
+	
 	
 	// ============================
 	//     Attributes
@@ -148,10 +151,31 @@ public class IdeogramPlotParameters extends PlotParameters {
 	 */
 	private float maxMask = DEF_MAX_MASK;
 	
+	/** Ideogram thickness in pixels. */
+	private int ideogramThickness = DEF_IDEOGRAM_THICKNESS;
+	
 	
 	// ============================
 	//       Getters/setters
 	// ============================
+
+	/**
+	 * Get ideogram thickness in pixels.
+	 * @return Ideogram thickness in pixels.
+	 */
+	public final int getIdeogramThickness() {
+		return ideogramThickness;
+	}
+
+
+	/**
+	 * Set ideogram thickness.
+	 * @param ideogramThickness Ideogram thickness in pixels.
+	 */
+	public final void setIdeogramThickness(final int ideogramThickness) {
+		this.ideogramThickness = ideogramThickness;
+	}
+
 
 	/**
 	 * Get width of ideograms in pixles.

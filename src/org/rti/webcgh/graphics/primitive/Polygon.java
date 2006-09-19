@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/primitive/Polygon.java,v $
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,16 +38,17 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
+
+
 package org.rti.webcgh.graphics.primitive;
 
 import java.awt.Color;
@@ -58,10 +57,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.rti.webcgh.util.CollectionUtils;
 
 /**
- * A polygon
+ * A polygon.
  */
 public class Polygon extends GraphicPrimitive {
     
@@ -70,26 +68,30 @@ public class Polygon extends GraphicPrimitive {
     //      Attributes
     // ==============================
     
-    private List points = new ArrayList();
+	/** Points in polygon. */
+    private List<Point> points = new ArrayList<Point>();
     
     
     /**
-     * Set points
-     * @return Points
+     * Get points.
+     * @return Points in polygon.
      */
-    public Point[] getPoints() {
+    public final Point[] getPoints() {
     	Point[] newPoints = new Point[0];
-    	newPoints = (Point[])this.points.toArray(newPoints);
+    	newPoints = (Point[]) this.points.toArray(newPoints);
         return newPoints;
     }
     
     
     /**
-     * Get points
+     * Get points.
      * @param points Points
      */
-    public void setPoints(Point[] points) {
-        this.points = CollectionUtils.arrayToArrayList(points);
+    public final void setPoints(final Point[] points) {
+        this.points = new ArrayList<Point>();
+        for (int i = 0; i < points.length; i++) {
+        	this.points.add(points[i]);
+        }
     }
     
     
@@ -98,11 +100,11 @@ public class Polygon extends GraphicPrimitive {
     // ==================================
     
     /**
-     * Constructor
+     * Constructor.
      * @param points Points
      * @param color Color
      */
-    public Polygon(Point[] points, Color color) {
+    public Polygon(final Point[] points, final Color color) {
     	super(color);
         this.setPoints(points);
     }
@@ -114,20 +116,23 @@ public class Polygon extends GraphicPrimitive {
     // =================================================
     
     /**
-     * Add a point
+     * Add a point.
      * @param point A point
      */
-    public void addPoint(Point point) {
+    public final void addPoint(final Point point) {
         this.points.add(point);
     }
     
     
-    public String toPrettyString() {
+    /**
+     * Convert polygon to a pretty string for printing.
+     * @return Pretty string
+     */
+    public final String toPrettyString() {
     	StringBuffer buff = new StringBuffer("[");
     	if (this.points != null) {
-    		int count = 0;
     		for (Iterator it = this.points.iterator(); it.hasNext();) {
-    			Point point = (Point)it.next();
+    			Point point = (Point) it.next();
     			buff.append("(" + point.x + ", " + point.y + ")");
     		}
     	}
@@ -135,5 +140,19 @@ public class Polygon extends GraphicPrimitive {
     	return buff.toString();
     }
     
-
+	// ==================================
+	//     Implemented abstract methods
+	// ==================================
+	
+	/**
+	 * Move graphic primitive.
+	 * @param deltaX Change in X-coordinates in pixels
+	 * @param deltaY Change in Y-coordinates in pixels
+	 */
+	public final void move(final int deltaX, final int deltaY) {
+		for (Point p : this.points) {
+			p.x += deltaX;
+			p.y += deltaY;
+		}
+	}
 }

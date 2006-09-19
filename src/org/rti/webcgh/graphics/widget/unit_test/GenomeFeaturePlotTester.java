@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.4 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -87,6 +87,9 @@ public final class GenomeFeaturePlotTester extends TestCase {
 	private static final String TEMP_DIR_PATH =
 		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
 	
+	/** Thickness of plot in pixels. */
+	private static final int THICKNESS = 20;
+	
 	
 	/**
 	 * Create plot similar to a vertical ideogram.
@@ -95,13 +98,15 @@ public final class GenomeFeaturePlotTester extends TestCase {
 	public void testVerticalIdeogram() throws Exception {
 		RasterFileTestPlotPanel panel =
 			new RasterFileTestPlotPanel(TEMP_DIR_PATH);
+		panel.setName("panel");
 		PlotPanel row = panel.newChildPlotPanel();
+		row.setName("row");
 		
 		// Add first map
 		GenomeFeaturePlot map1 = new GenomeFeaturePlot((long) 1,
-				(long) 50, 400, Orientation.VERTICAL);
+				(long) 50, 400, Orientation.VERTICAL, THICKNESS);
 		CentromereWarper warper1 =
-			new CentromereWarper(map1.getFeatureHeight(), 200, 250);
+			new CentromereWarper(THICKNESS, 200, 250);
 		map1.setWarper(warper1);
 		map1.plotFeature(1, 10, null, null, false, Color.BLACK);
 		map1.plotFeature(10, 15, null, null, false, Color.GRAY);
@@ -111,14 +116,15 @@ public final class GenomeFeaturePlotTester extends TestCase {
 		map1.addFrame(Location.ABOVE, 1, Color.BLACK);
 		map1.addFrame(Location.BELOW, 1, Color.BLACK);
 		PlotPanel mapPan1 = row.newChildPlotPanel();
+		mapPan1.setName("mapPan1");
 		mapPan1.add(map1, true);
 		row.add(mapPan1, true);
 		
 		// Add second map
 		GenomeFeaturePlot map2 = new GenomeFeaturePlot((long) 1,
-				(long) 30, 300, Orientation.VERTICAL);
+				(long) 30, 300, Orientation.VERTICAL, THICKNESS);
 		CentromereWarper warper2 =
-			new CentromereWarper(map2.getFeatureHeight(), 100, 150);
+			new CentromereWarper(THICKNESS, 100, 150);
 		map2.setWarper(warper2);
 		map2.plotFeature(1, 5, null, null, false, Color.GRAY);
 		map2.plotFeature(5, 15, null, null, false, Color.BLACK);
@@ -127,6 +133,7 @@ public final class GenomeFeaturePlotTester extends TestCase {
 		map2.addFrame(Location.ABOVE, 1, Color.BLACK);
 		map2.addFrame(Location.BELOW, 1, Color.BLACK);
 		PlotPanel mapPan2 = row.newChildPlotPanel();
+		mapPan2.setName("mapPan2");
 		mapPan2.add(map2, true);
 		row.add(mapPan2, HorizontalAlignment.RIGHT_OF,
 				VerticalAlignment.TOP_JUSTIFIED);
@@ -144,9 +151,9 @@ public final class GenomeFeaturePlotTester extends TestCase {
 	 */
 	public void testHorizontalIdeogram() throws Exception {
 		GenomeFeaturePlot map = new GenomeFeaturePlot((long) 1,
-				(long) 50, 400, Orientation.HORIZONTAL);
+				(long) 50, 400, Orientation.HORIZONTAL, THICKNESS);
 		CentromereWarper warper =
-			new CentromereWarper(map.getFeatureHeight(), 200, 250);
+			new CentromereWarper(THICKNESS, 200, 250);
 		map.setWarper(warper);
 		map.plotFeature(1, 10, null, null, false, Color.BLACK);
 		map.plotFeature(10, 15, null, null, false, Color.GRAY);

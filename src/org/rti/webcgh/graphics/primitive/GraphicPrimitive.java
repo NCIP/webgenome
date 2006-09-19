@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-09 18:41:51 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -296,4 +296,15 @@ public abstract class GraphicPrimitive {
 		responses = (GraphicEventResponse[]) eventResponses.toArray(responses);
 		return responses;
 	}
+	
+	// ===============================
+	//       Abstract methods
+	// ===============================
+	
+	/**
+	 * Move graphic primitive.
+	 * @param deltaX Change in X-coordinates in pixels
+	 * @param deltaY Change in Y-coordinates in pixels
+	 */
+	public abstract void move(int deltaX, int deltaY);
 }

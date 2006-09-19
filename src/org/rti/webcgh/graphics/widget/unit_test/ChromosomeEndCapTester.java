@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-11 18:36:50 $
+$Revision: 1.3 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -86,8 +86,7 @@ public final class ChromosomeEndCapTester extends TestCase {
 		int width = 25;
 		int height = 100;
 		GenomeFeaturePlot plot = new GenomeFeaturePlot(0, 100000000, height,
-				Orientation.VERTICAL);
-		plot.setFeatureHeight(width);
+				Orientation.VERTICAL, 20);
 		plot.plotFeature(0, 10000000, "feat", null, false, Color.GRAY);
 		ChromosomeEndCap cap =
 			new ChromosomeEndCap(width, Color.RED, Direction.UP);

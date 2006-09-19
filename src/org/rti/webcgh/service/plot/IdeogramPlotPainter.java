@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.11 $
+$Date: 2006-09-19 02:09:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -96,6 +96,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 	
 	/** Number of color bins. */
 	private static final int NUM_BINS = 16;
+	
 	
 	// ======================
 	//       Attributes
@@ -218,7 +219,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 				makeReferenceElement = true;
 			}
 			this.paintChromosomeIdeogram(row, cytologicalMap,
-					height, idSize, "CHR " + gi.getChromosome(),
+					height, idSize, plotParameters.getIdeogramThickness(),
+					"CHR " + gi.getChromosome(),
 					makeReferenceElement);
 			
 			// Add data tracks
@@ -247,6 +249,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * height, but rather the height of the region that can be
 	 * plotted against.
 	 * @param idSize Chromosome ideogram size
+	 * @param ideogramThickness Ideogram thickness in pixels
 	 * @param chromosome Chromosome name
 	 * @param makeReferenceElement Make this ideogram the
 	 * reference element for the given plot panel in terms
@@ -255,17 +258,19 @@ public class IdeogramPlotPainter extends PlotPainter {
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
 			final int height, final ChromosomeIdeogramSize idSize,
+			final int ideogramThickness,
 			final String chromosome, final boolean makeReferenceElement) {
 		PlotPanel idPanel = plotPanel.newChildPlotPanel();
 		
 		// Instantiate genome feature plot
 		GenomeFeaturePlot plot = new GenomeFeaturePlot(1,
-				cytologicalMap.length(), height, Orientation.VERTICAL);
+				cytologicalMap.length(), height, Orientation.VERTICAL,
+				ideogramThickness);
 		
 		// Add warper to give plot hourglass shape around centromere
 		int centStartPix = idSize.pixels(cytologicalMap.getCentromereStart());
 		int centEndPix = idSize.pixels(cytologicalMap.getCentromereEnd());
-		Warper warper = new CentromereWarper(plot.getFeatureHeight(),
+		Warper warper = new CentromereWarper(ideogramThickness,
 				centStartPix, centEndPix);
 		plot.setWarper(warper);
 		
@@ -284,10 +289,9 @@ public class IdeogramPlotPainter extends PlotPainter {
 		idPanel.add(plot, true);
 		
 		// Add end caps
-		int thickness = plot.getFeatureHeight();
-		ChromosomeEndCap topCap = new ChromosomeEndCap(thickness,
+		ChromosomeEndCap topCap = new ChromosomeEndCap(ideogramThickness,
 				FRAME_LINE_COLOR, Direction.UP);
-		ChromosomeEndCap botCap = new ChromosomeEndCap(thickness,
+		ChromosomeEndCap botCap = new ChromosomeEndCap(ideogramThickness,
 				FRAME_LINE_COLOR, Direction.DOWN);
 		idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED,
 				VerticalAlignment.TOP_JUSTIFIED);
