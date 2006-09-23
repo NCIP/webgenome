@@ -99,6 +99,9 @@ public final class ArrayDatumGenerator {
     /** Chromosome number. */
     private short chromosome = DEF_CHROMOSOME;
     
+    /** Number of datum created for current chromosome. */
+    private int count = 0;
+    
     
     // ============================
     //       Getters/setters
@@ -121,6 +124,7 @@ public final class ArrayDatumGenerator {
 	public void setChromosome(final short chromosome) {
 		this.chromosome = chromosome;
 		this.reporterIterator = null;
+		this.count = 0;
 	}
 
 
@@ -192,6 +196,7 @@ public final class ArrayDatumGenerator {
         datum.setValue(this.randomFloat());
         datum.setError(this.randomFloat());
         datum.setReporter(this.getReporter());
+        this.count++;
         return datum;
     }
     
@@ -251,7 +256,7 @@ public final class ArrayDatumGenerator {
      */
     private Reporter newReporter() {
         String name = "Reporter" + (this.reporters.size() + 1);
-        long position = this.reporters.size() * this.gap;
+        long position = this.count * this.gap;
         return new Reporter(name, this.chromosome, position);
     }
 

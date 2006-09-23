@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-09 18:41:52 $
+$Revision: 1.5 $
+$Date: 2006-09-23 18:28:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,9 +121,9 @@ public final class ExperimentGenerator {
 			ba.setArray(array);
 			ba.setName("Bioassay " + i);
 			for (short j = 1; j <= numChromosomes; j++) {
+				this.arrayDatumGenerator.setChromosome(j);
 				for (int k = 0; k < numDatumPerChromosome; k++) {
 					ArrayDatum ad = this.arrayDatumGenerator.newArrayDatum();
-					ad.getReporter().setChromosome(j);
 					ba.add(ad);
 				}
 			}
@@ -162,9 +162,9 @@ public final class ExperimentGenerator {
 			ba.setName("Bioassay " + i);
 			for (short j = 1; j <= numChromosomes; j++) {
 				ChromosomeArrayData cad = new ChromosomeArrayData(j);
+				this.arrayDatumGenerator.setChromosome(j);
 				for (int k = 0; k < numDatumPerChromosome; k++) {
 					ArrayDatum ad = this.arrayDatumGenerator.newArrayDatum();
-					ad.getReporter().setChromosome(j);
 					cad.add(ad);
 				}
 				dataFileManager.saveChromosomeArrayData(ba, cad);

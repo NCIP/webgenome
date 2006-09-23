@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-09-23 05:02:23 $
+$Revision: 1.9 $
+$Date: 2006-09-23 18:28:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,7 +103,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	private static final int NUM_BIO_ASSAYS = 2;
 	
 	/** Number of chromosomes in tests. */
-	private static final int NUM_CHROMOSOMES = 2;
+	private static final int NUM_CHROMOSOMES = 5;
 	
 	/** Number of experiments in tests. */
 	private static final int NUM_EXPERIMENTS = 2;
@@ -146,6 +146,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
         	params.add(new GenomeInterval((short) i, 1, CHROM_LENGTH));
         }
         params.setIdeogramSize(ChromosomeIdeogramSize.MEDIUM);
+        params.setNumPlotsPerRow(2);
         
         // Create plotting panel
         RasterFileTestPlotPanel panel =

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-09-23 05:02:23 $
+$Revision: 1.13 $
+$Date: 2006-09-23 18:28:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -175,7 +175,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		int rowCount = 1;
 		PlotPanel row = panel.newChildPlotPanel();
 		for (GenomeInterval gi : plotParameters.getGenomeIntervals()) {
-			if (++plotCount >=  plotParameters.getNumPlotsPerRow()) {
+			if (plotCount++ >=  plotParameters.getNumPlotsPerRow()) {
 				VerticalAlignment va = null;
 				if (rowCount++ == 1) {
 					va = VerticalAlignment.TOP_JUSTIFIED;
