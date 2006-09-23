@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-11 18:36:50 $
+$Revision: 1.3 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,11 +72,14 @@ public class Caption implements PlotElement {
 	//       Attributes
 	// ===============================
 	
+	/** Drawing canvas caption will be rendered to. */
+	private final DrawingCanvas canvas;
+	
 	/** Font size. */
 	private int fontSize = 16;
 	
 	/** Text color. */
-	private Color color = Color.black;
+	private Color color = Color.BLACK;
 	
 	/** Horizontal alignment of the lines of text, if multiline. */
 	private HorizontalAlignment textAlignment =
@@ -156,14 +159,17 @@ public class Caption implements PlotElement {
 	 * @param url URL
 	 * @param orientation Orientation
 	 * @param breakLinesBetweenTokens Put line breaks between tokens
+	 * @param canvas Canvas caption will be rendered to
 	 */
 	public Caption(final String text, final URL url,
 			final Orientation orientation,
-			final boolean breakLinesBetweenTokens) {
+			final boolean breakLinesBetweenTokens, final DrawingCanvas canvas) {
 		this.text = text;
 		this.url = url;
 		this.orientation = orientation;
 		this.breakLinesBetweenTokens = breakLinesBetweenTokens;
+		this.canvas = canvas;
+		this.setMinAndMaxCoordinates();
 	}
 	
 	
@@ -172,13 +178,51 @@ public class Caption implements PlotElement {
 	 * @param text Text
 	 * @param orientation Orientation
 	 * @param breakLinesBetweenTokens Put line breaks between tokens
+	 * @param canvas Canvas caption will be rendered to
 	 */
 	public Caption(final String text, final Orientation orientation, 
-			final boolean breakLinesBetweenTokens) {
+			final boolean breakLinesBetweenTokens, final DrawingCanvas canvas) {
 		this.text = text;
 		this.url = null;
 		this.orientation = orientation;
 		this.breakLinesBetweenTokens = breakLinesBetweenTokens;
+		this.canvas = canvas;
+		this.setMinAndMaxCoordinates();
+	}
+	
+	
+	/**
+	 * Set min and max X and Y coordinates.
+	 */
+	private void setMinAndMaxCoordinates() {
+    	if (this.text == null || this.text.length() < 1) {
+    		return;
+    	}
+    	
+    	// Break text up into separate lines, if necessary
+    	List<String> textLines = new ArrayList<String>();
+    	if (this.breakLinesBetweenTokens) {
+    		StringTokenizer tok = new StringTokenizer(this.text);
+    		while (tok.hasMoreTokens()) {
+    			textLines.add(tok.nextToken());
+    		}
+    	} else {
+    		textLines.add(this.text);
+    	}
+    	
+    	// Find width of longest line
+    	int maxWidth = 0;
+    	for (String line : textLines) {
+    	    int candidateMax = this.canvas.renderedWidth(line, this.fontSize);
+    	    if (candidateMax > maxWidth) {
+    	    	maxWidth = candidateMax;
+    	    }
+    	}
+    	this.minX = 0;
+    	this.maxY = 0;
+    	this.maxX = maxWidth;
+    	this.maxY = textLines.size() * this.fontSize
+    		+ (textLines.size() - 1) * this.padding;
 	}
 	
 	
@@ -207,29 +251,11 @@ public class Caption implements PlotElement {
     	}
     	
     	// Initialize x and y coordinates
-    	int x = 0;
-    	int y = 0;
+    	int x = this.minX;
+    	int y = this.minY;
     	
     	// Paint text
     	for (String line : textLines) {
-    	    
-    	    // Adjust min and max X- and Y-coordinate
-    	    int startX = this.startX(x, line, canvas);
-    	    int endX = this.endX(x, line, canvas);
-    	    int startY = this.startY(y, line, canvas);
-    	    int endY = this.endY(y, line, canvas);
-    	    if (startX < this.minX) {
-    	        this.minX = startX;
-    	    }
-    	    if (endX > this.maxX) {
-    	        this.maxX = endX;
-    	    }
-    	    if (startY < this.minY) {
-    	        this.minY = startY;
-    	    }
-    	    if (endY > this.maxY) {
-    	        this.maxY = endY;
-    	    }
     	    
     	    // Draw line
     	    this.paintLine(line, x, y, canvas);
@@ -325,21 +351,19 @@ public class Caption implements PlotElement {
      * Compute starting X-coordinate for a line of text.
      * @param x Referece X-coordinate for line
      * @param line Line of text
-     * @param canvas Drawing canvas that will be painted on
      * @return Starting X-coordinate for a line of text.
      */
-    private int startX(final int x, final String line,
-    		final DrawingCanvas canvas) {
+    private int startX(final int x, final String line) {
         int startX = 0;
-        int width = canvas.renderedWidth(line, this.fontSize);
+        int width = this.canvas.renderedWidth(line, this.fontSize);
         if (this.orientation == Orientation.HORIZONTAL) {
             if (this.textAlignment == HorizontalAlignment.LEFT_JUSTIFIED) {
-                startX = 0;
+                startX = this.minX;
             } else if (this.textAlignment == HorizontalAlignment.CENTERED) {
-                startX = -width / 2;
+                startX = (this.maxX + this.minX) / 2 - width / 2;
             } else if (this.textAlignment
             		== HorizontalAlignment.RIGHT_JUSTIFIED) {
-                startX = -width;
+                startX = this.maxX - width;
             } else {
                 throw new IllegalArgumentException("Illegal text alignment");
             }
@@ -351,47 +375,16 @@ public class Caption implements PlotElement {
     
     
     /**
-     * Compute ending X-coordinate for a line of text.
-     * @param x Referece X-coordinate for line
-     * @param line Line of text
-     * @param canvas Drawing canvas that will be painted on
-     * @return Ending X-coordinate for a line of text.
-     */
-    private int endX(final int x, final String line,
-    		final DrawingCanvas canvas) {
-        int endX = 0;
-        int width = canvas.renderedWidth(line, this.fontSize);
-        if (this.orientation == Orientation.HORIZONTAL) {
-            if (this.textAlignment == HorizontalAlignment.LEFT_JUSTIFIED) {
-                endX = width;
-            } else if (this.textAlignment == HorizontalAlignment.CENTERED) {
-                endX = width / 2;
-            } else if (this.textAlignment
-            		== HorizontalAlignment.RIGHT_JUSTIFIED) {
-                endX = 0;
-            } else {
-                throw new IllegalArgumentException("Illegal text alignment");
-            }
-        } else if (this.orientation == Orientation.VERTICAL) {
-            endX = x;
-        }
-        return endX;
-    }
-    
-    
-    /**
      * Compute starting Y-coordinate for a line of text.
      * @param y Referece Y-coordinate for line
      * @param line Line of text
-     * @param canvas Drawing canvas that will be painted on
      * @return Starting Y-coordinate for a line of text.
      */
-    private int startY(final int y, final String line,
-    		final DrawingCanvas canvas) {
+    private int startY(final int y, final String line) {
         int startY = 0;
-        int width = canvas.renderedWidth(line, this.fontSize);
+        int width = this.canvas.renderedWidth(line, this.fontSize);
         if (this.orientation == Orientation.HORIZONTAL) {
-            startY = y - this.fontSize;
+            startY = y + this.fontSize;
         } else if (this.orientation == Orientation.VERTICAL) {
             if (this.textAlignment == HorizontalAlignment.LEFT_JUSTIFIED) {
                 startY = -width;
@@ -407,36 +400,7 @@ public class Caption implements PlotElement {
         return startY;
     }
     
-    
-    /**
-     * Compute ending Y-coordinate for a line of text.
-     * @param y Referece Y-coordinate for line
-     * @param line Line of text
-     * @param canvas Drawing canvas that will be painted on
-     * @return Ending Y-coordinate for a line of text.
-     */
-    private int endY(final int y, final String line,
-    		final DrawingCanvas canvas) {
-        int endY = 0;
-        int width = canvas.renderedWidth(line, this.fontSize);
-        if (this.orientation == Orientation.HORIZONTAL) {
-            endY = y;
-        } else if (this.orientation == Orientation.VERTICAL) {
-            if (this.textAlignment == HorizontalAlignment.LEFT_JUSTIFIED) {
-                endY = 0;
-            } else if (this.textAlignment == HorizontalAlignment.CENTERED) {
-                endY = width / 2;
-            } else if (this.textAlignment
-            		== HorizontalAlignment.RIGHT_JUSTIFIED) {
-                endY = width;
-            } else {
-                throw new IllegalArgumentException("Illegal text alignment");
-            }
-        }
-        return endY;
-    }
-    
-    
+
     /**
      * Get reference X-coordinate for next line of text.
      * @param x Reference X-coordinate for current line of text
@@ -448,7 +412,7 @@ public class Caption implements PlotElement {
     		final DrawingCanvas canvas) {
         int nextX = 0;
         if (this.orientation == Orientation.HORIZONTAL) {
-            nextX = 0;
+            nextX = this.minX;
         } else if (this.orientation == Orientation.VERTICAL) {
             nextX = x + this.padding + this.fontSize;
         }
@@ -469,7 +433,7 @@ public class Caption implements PlotElement {
         if (this.orientation == Orientation.HORIZONTAL) {
             nextY = y + this.padding + this.fontSize;
         } else if (this.orientation == Orientation.VERTICAL) {
-            nextY = 0;
+            nextY = this.minY;
         }
         return nextY;
     }
@@ -484,8 +448,10 @@ public class Caption implements PlotElement {
      */
     private void paintLine(final String line, final int x,
     		final int y, final DrawingCanvas drawingCanvas) {
-        Text text = drawingCanvas.newText(line, x, y, this.fontSize,
-        		this.textAlignment, this.color);
+    	int textX = this.startX(x, line);
+    	int textY = this.startY(y, line);
+        Text text = drawingCanvas.newText(line, textX, textY, this.fontSize,
+        		HorizontalAlignment.LEFT_JUSTIFIED, this.color);
         if (this.orientation == Orientation.VERTICAL) {
             text.setRotation(270);
         }

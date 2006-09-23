@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-22 02:39:17 $
+$Revision: 1.2 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,7 +79,7 @@ public class ChromosomeIdeogram implements PlotElement {
 	// ======================
 	
 	/** Thickness (i.e., stroke) in pixels of border around ideogram. */
-	private static final int BORDER_THICKNESS = 2;
+	private static final int BORDER_THICKNESS = 1;
 	
 	/** Color of border around plot. */
 	private static final Color BORDER_COLOR = Color.BLACK;
@@ -280,12 +280,12 @@ public class ChromosomeIdeogram implements PlotElement {
 	 */
 	private void addVertical(final Cytoband cytoband) {
 		
-		// Calculate X-coordinate reference points
-		int leftX = this.minX
-			+ (int) Math.ceil((double) BORDER_THICKNESS / 2.0) + 1;
-		int rightX = this.maxX
-			- (int) Math.ceil((double) BORDER_THICKNESS / 2.0);
+		// Calculate X-coordinate reference points and constants
+		int strokeMid = (int) Math.ceil(BORDER_THICKNESS / 2.0);
+		int leftX = this.minX + strokeMid + 1;
+		int rightX = this.maxX - strokeMid;
 		int midX = (leftX + rightX) / 2;
+		
 		
 		// Instantiate new polygon
 		Color c = this.colorMapper.getColor(cytoband.getStain());
@@ -298,7 +298,7 @@ public class ChromosomeIdeogram implements PlotElement {
 		// Create top left point and add to polygon
 		Point tl = new Point(leftX, topY);
 		if (topY > this.centStartPix && topY < this.centEndPix) {
-			tl.x += this.centromereCorrection(topY);
+			tl.x += this.centromereCorrection(topY) + strokeMid - 2;
 		}
 		p.addPoint(tl);
 		
@@ -311,7 +311,7 @@ public class ChromosomeIdeogram implements PlotElement {
 		// If line between top and bottom left point enters
 		// centromere, add inflection point
 		if (topY < this.centStartPix && bottomY > this.centStartPix) {
-			p.addPoint(leftX, this.centStartPix);
+			p.addPoint(leftX, this.centStartPix + strokeMid + 1);
 		}
 		
 		// If line between top and bottom left points crosses
@@ -339,7 +339,7 @@ public class ChromosomeIdeogram implements PlotElement {
 		// Create top right point
 		Point tr = new Point(rightX, topY);
 		if (topY > this.centStartPix && topY < this.centEndPix) {
-			tr.x -= this.centromereCorrection(topY);
+			tr.x -= this.centromereCorrection(topY) + strokeMid;
 		}
 		
 		// If line between bottom and top right points enters
@@ -357,7 +357,7 @@ public class ChromosomeIdeogram implements PlotElement {
 		// If line between bottom and top right points exits
 		// centromere, add inflection point
 		if (bottomY > this.centStartPix && topY < this.centStartPix) {
-			p.addPoint(rightX, this.centStartPix);
+			p.addPoint(rightX, this.centStartPix + strokeMid + 1);
 		}
 		
 		// Add top right point
@@ -392,8 +392,8 @@ public class ChromosomeIdeogram implements PlotElement {
 			correctedVal = (int) ((double) (val - this.centStartPix)
 					* this.centSlopeMagnitude);
 		} else {
-			correctedVal = -((int) ((double) (val - this.centMidPix)
-					* this.centSlopeMagnitude));
+			correctedVal = (int) ((double) (this.centEndPix - val)
+					* this.centSlopeMagnitude);
 		}
 		return correctedVal;
 	}

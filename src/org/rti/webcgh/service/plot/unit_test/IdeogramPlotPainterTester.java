@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.8 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,24 +51,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot.unit_test;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import javax.imageio.ImageIO;
 
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
 import org.rti.webcgh.domain.GenomeInterval;
-import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
-import org.rti.webcgh.graphics.util.
-	ClassPathPropertiesFileRgbHexidecimalColorMapper;
-import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.widget.Caption;
-import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.plot.IdeogramPlotPainter;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
@@ -107,11 +98,6 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	 */
 	private static final String TEMP_DIR_PATH =
 		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
-	
-	/** Path to file containing color mappings for cytobands. */
-	private static final String COLOR_MAPPING_FILE_PATH =
-		"org/rti/webcgh/service/plot/unit_test/"
-		+ "ideogram_plot_painter_test_files/color-mappings.properties";
 	
 	/** Number of bioassays to generate in tests. */
 	private static final int NUM_BIO_ASSAYS = 2;
@@ -162,20 +148,16 @@ public final class IdeogramPlotPainterTester extends TestCase {
         params.setIdeogramSize(ChromosomeIdeogramSize.MEDIUM);
         
         // Create plotting panel
-        RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEMP_DIR_PATH);
+        RasterFileTestPlotPanel panel =
+        	new RasterFileTestPlotPanel(TEMP_DIR_PATH);
         
         // Create chromosome array data getter
         InMemoryChromosomeArrayDataGetter cadg =
         	new InMemoryChromosomeArrayDataGetter();
         
-        // Instantiate color chooser
-        ColorMapper colorMapper = new
-        	ClassPathPropertiesFileRgbHexidecimalColorMapper(
-        			COLOR_MAPPING_FILE_PATH);
-        
         // Instantiate ideogram plot painter
         IdeogramPlotPainter painter =
-        	new IdeogramPlotPainter(cadg, colorMapper);
+        	new IdeogramPlotPainter(cadg);
        
         // Create cytologial map DAO
         CytologicalMapDaoImpl cDao =
@@ -186,9 +168,11 @@ public final class IdeogramPlotPainterTester extends TestCase {
         painter.paintIdeogramPlot(panel, experiments, params);
         
         // Add some additional reference widgets
-        panel.add(new Caption("Left", null, Orientation.HORIZONTAL, false),
+        panel.add(new Caption("Left", null, Orientation.HORIZONTAL, false,
+        		panel.getDrawingCanvas()),
         		HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-        panel.add(new Caption("Right", null, Orientation.HORIZONTAL, false),
+        panel.add(new Caption("Right", null, Orientation.HORIZONTAL, false,
+        		panel.getDrawingCanvas()),
         		HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
         
         // Output graphics to file

@@ -194,9 +194,9 @@ public class FrequencyGraphGenerator {
             QuantitationType quantitationType) {
         panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED, 
         		VerticalAlignment.BOTTOM_JUSTIFIED, true);
-        Caption caption = new Caption(quantitationType.getName(), 
-        		Orientation.HORIZONTAL, true);
-        panel.add(caption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+//        Caption caption = new Caption(quantitationType.getName(), 
+//        		Orientation.HORIZONTAL, true);
+//        panel.add(caption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
     }
     
     
@@ -244,10 +244,10 @@ public class FrequencyGraphGenerator {
     	// Add x-axis caption
     	String captionText = 
     	    "CHR " + genomeInterval.toPrettyString() + " (" + plotParameters.getXUnits().toPrettyString() + ")";
-    	Caption caption = new Caption(captionText, Orientation.HORIZONTAL, false);
-    	if (caption.width() > panel.width())
-    	    captionText = genomeInterval.toPrettyString();
-    	panel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+//    	Caption caption = new Caption(captionText, Orientation.HORIZONTAL, false);
+//    	if (caption.width() > panel.width())
+//    	    captionText = genomeInterval.toPrettyString();
+//    	panel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
     	
     	return panel;
     }

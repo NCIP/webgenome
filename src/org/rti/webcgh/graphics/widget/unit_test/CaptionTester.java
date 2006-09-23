@@ -1,5 +1,5 @@
 /*
-$Revision: 1.4 $
+$Revision: 1.1 $
 $Date: 2006-09-23 05:02:22 $
 
 The Web CGH Software License, Version 1.0
@@ -51,109 +51,100 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics.widget.unit_test;
 
 import java.awt.Color;
-
-import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
-import org.rti.webcgh.graphics.widget.Background;
-import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
-import org.rti.webcgh.graphics.widget.ChromosomeIdeogram;
-import org.rti.webcgh.units.Direction;
-import org.rti.webcgh.units.HorizontalAlignment;
-import org.rti.webcgh.units.Orientation;
-import org.rti.webcgh.units.VerticalAlignment;
+import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
+import org.rti.webcgh.graphics.widget.Background;
+import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.units.VerticalAlignment;
+import org.rti.webcgh.util.FileUtils;
+
 /**
- * Tester for <code>ChromosomeEndCap</code>.
+ * Tester for <code>Caption</code>.
  * @author dhall
  *
  */
-public final class ChromosomeEndCapTester extends TestCase {
-	
-	/**
-	 * Name of directory containing output test files.
-	 * The absolute path will be the concatenation
-	 * of the default <code>RasterFileTestPanel</code>
-	 * ouput directory and this.
-	 */
-	private static final String OUTPUT_DIR_NAME = "chromosome-end-cap";
-	
-	/**
-	 * Thickness of cap.  If horizontal, this is width.
-	 * If vertical, this is height.
-	 */
-	private static final int THICKNESS = 20;
+public final class CaptionTester extends TestCase {
 
 	/**
-	 * Test where cap is on top of a pseudo chromosome.
-	 *
+	 * Name of directory that will contain test output files.
+	 * The absolute path will be a subdirectory to the
+	 * main test directory defined by the property
+	 * 'temp.dir' in the file 'unit_test.properties.'
 	 */
-	public void testUp() {
-		int width = 25;
-		int height = 100;
-		ChromosomeIdeogram plot = new ChromosomeIdeogram(0, 100000000,
-				20000000, 30000000, height,
-				Orientation.VERTICAL, THICKNESS);
-		ChromosomeEndCap cap =
-			new ChromosomeEndCap(width, Color.RED, Direction.UP);
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel();
-		panel.add(plot);
-		panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED,
-				VerticalAlignment.TOP_JUSTIFIED);
-		panel.toPngFile(OUTPUT_DIR_NAME + "/top.png");
+	private static final String TEST_DIR_NAME = "caption-test";
+	
+	/** Directory that will hold test output files. */
+	private static final File TEST_DIR =
+		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+	
+	/** Width of background object in pixels. */
+	private static final int BG_WIDTH = 50;
+	
+	/** Height of background object in pixels. */
+	private static final int BG_HEIGHT = 50;
+	
+	/** Color of background object. */
+	private static final Color BG_COLOR = Color.PINK;
+	
+	/** Test text .*/
+	private static final String TEXT = "Yabadabadoo";
+	
+	/**
+	 * Test single caption above
+	 * a background object.
+	 */
+	public void testAbove() {
+		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+		panel.add(new Caption(TEXT, Orientation.HORIZONTAL, false,
+				panel.getDrawingCanvas()),
+				HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
+		panel.toPngFile("above.png");
 	}
 	
 	
 	/**
-	 * Test where cap is on bottom of a pseudo chromosome.
-	 *
+	 * Test single caption below
+	 * a background object.
 	 */
-	public void testBottom() {
-		int width = 25;
-		int height = 100;
-		Background bg = new Background(width, height, Color.BLUE);
-		ChromosomeEndCap cap =
-			new ChromosomeEndCap(width, Color.RED, Direction.DOWN);
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel();
-		panel.add(bg);
-		panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED,
-				VerticalAlignment.BOTTOM_JUSTIFIED);
-		panel.toPngFile(OUTPUT_DIR_NAME + "/bottom.png");
+	public void testBelow() {
+		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+		panel.add(new Caption(TEXT, Orientation.HORIZONTAL, false,
+				panel.getDrawingCanvas()),
+				HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+		panel.toPngFile("below.png");
 	}
 	
 	
 	/**
-	 * Test where cap is to the left of a pseudo chromosome.
-	 *
+	 * Test single caption left of
+	 * a background object.
 	 */
 	public void testLeft() {
-		int width = 100;
-		int height = 25;
-		Background bg = new Background(width, height, Color.BLUE);
-		ChromosomeEndCap cap =
-			new ChromosomeEndCap(height, Color.RED, Direction.LEFT);
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel();
-		panel.add(bg);
-		panel.add(cap, HorizontalAlignment.LEFT_JUSTIFIED,
-				VerticalAlignment.TOP_JUSTIFIED);
-		panel.toPngFile(OUTPUT_DIR_NAME + "/left.png");
+		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+		panel.add(new Caption(TEXT, Orientation.HORIZONTAL, false,
+				panel.getDrawingCanvas()),
+				HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+		panel.toPngFile("left.png");
 	}
 	
-	
 	/**
-	 * Test where cap is to the left of a pseudo chromosome.
-	 *
+	 * Test single caption right of
+	 * a background object.
 	 */
 	public void testRight() {
-		int width = 100;
-		int height = 25;
-		Background bg = new Background(width, height, Color.BLUE);
-		ChromosomeEndCap cap =
-			new ChromosomeEndCap(height, Color.RED, Direction.RIGHT);
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel();
-		panel.add(bg);
-		panel.add(cap, HorizontalAlignment.RIGHT_JUSTIFIED,
-				VerticalAlignment.TOP_JUSTIFIED);
-		panel.toPngFile(OUTPUT_DIR_NAME + "/right.png");
+		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+		panel.add(new Caption(TEXT, Orientation.HORIZONTAL, false,
+				panel.getDrawingCanvas()),
+				HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
+		panel.toPngFile("right.png");
 	}
 }

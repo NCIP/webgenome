@@ -221,8 +221,8 @@ public class BarGroupGenerator {
 			this.addBar(panel, point, scale);
 		
 		// Add caption
-		Caption caption = new Caption(captionText, Orientation.HORIZONTAL, false);
-		panel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);		
+//		Caption caption = new Caption(captionText, Orientation.HORIZONTAL, false);
+//		panel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);		
 	}
 	
 	
@@ -233,10 +233,10 @@ public class BarGroupGenerator {
 	private void addBar(PlotPanel panel, DataPoint dataPoint, double scale) {
 		PlotPanel child = panel.newChildPlotPanel();
 		Bar bar = new Bar(dataPoint, this.barColor, scale);
-		Caption label = new Caption(dataPoint.getLabel(), Orientation.VERTICAL, false);
-		label.setFontSize(this.barFontSize);
+//		Caption label = new Caption(dataPoint.getLabel(), Orientation.VERTICAL, false);
+//		label.setFontSize(this.barFontSize);
 		child.add(bar, HorizontalAlignment.CENTERED, VerticalAlignment.ON_ZERO);
-		child.add(label, HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
+//		child.add(label, HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
 		panel.add(child, HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
 	}
 

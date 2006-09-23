@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.6 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -468,5 +468,6 @@ public final class HeatMapPlot implements PlotElement {
     	this.minY += deltaY;
     	this.maxY += deltaY;
     	this.trackMinY += deltaY;
+    	this.trackMaxY += deltaY;
     }
 }

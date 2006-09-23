@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.23 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.24 $
+$Date: 2006-09-23 05:02:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,14 +85,12 @@ import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.PlotType;
 import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.primitive.Rectangle;
-import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ClassPathPropertiesFileRgbHexidecimalColorMapper;
-import org.rti.webcgh.graphics.util.Warper;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.Background;
 import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
-import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.ChromosomeIdeogram;
 import org.rti.webcgh.graphics.widget.Grid;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.BpUnits;
@@ -428,9 +426,9 @@ public class PlotGenerator {
             QuantitationType quantitationType) {
         panel.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED, 
         		VerticalAlignment.BOTTOM_JUSTIFIED, true);
-        Caption caption = new Caption(quantitationType.getName(), 
-        		Orientation.HORIZONTAL, true);
-        panel.add(caption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+//        Caption caption = new Caption(quantitationType.getName(), 
+//        		Orientation.HORIZONTAL, true);
+//        panel.add(caption, HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
     }
     
     
@@ -502,10 +500,10 @@ public class PlotGenerator {
     	// Add x-axis caption
     	String captionText = 
     	    "CHR " + genomeInterval.toPrettyString() + " (" + plotParameters.getXUnits().toPrettyString() + ")";
-    	Caption caption = new Caption(captionText, Orientation.HORIZONTAL, false);
-    	if (caption.width() > panel.width())
-    	    captionText = genomeInterval.toPrettyString();
-    	panel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+//    	Caption caption = new Caption(captionText, Orientation.HORIZONTAL, false);
+//    	if (caption.width() > panel.width())
+//    	    captionText = genomeInterval.toPrettyString();
+//    	panel.add(caption, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
     	
     	return panel;
     }

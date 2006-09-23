@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.4 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -168,6 +168,21 @@ public class Polyline extends GraphicPrimitive {
 		if (!this.isFull()) {
 			points.add(p);
 			success = true;
+		}
+		return success;
+	}
+	
+	
+	/**
+	 * Add points.
+	 * @param points Points to add
+	 * @return <code>true</code> if successful, <code>false</code>
+	 * otherwise
+	 */
+	public final boolean add(final Point[] points) {
+		boolean success = true;
+		for (int i = 0; i < points.length && success; i++) {
+			success = this.add(points[i]);
 		}
 		return success;
 	}

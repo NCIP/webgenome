@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/CytologicalMap.java,v $
-$Revision: 1.8 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.9 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,10 +56,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.rti.webcgh.graphics.util.CentromereWarper;
 import org.rti.webcgh.graphics.util.ColorMapper;
-import org.rti.webcgh.graphics.util.Warper;
-import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.ChromosomeIdeogram;
 
 /**
  * Map of cytobands
@@ -225,17 +223,17 @@ public class CytologicalMap {
      * @param map A map
      * @param colorMapper A color mapper
      */
-    public void graph(GenomeFeaturePlot map, ColorMapper colorMapper) {
+    public void graph(ChromosomeIdeogram map, ColorMapper colorMapper) {
     	for (Iterator it = this.cytobands.iterator(); it.hasNext();) {
     		Cytoband cytoband = (Cytoband)it.next();
     		cytoband.graph(map, colorMapper);
     	}
-    	if (this.centromereStart >= 0 && this.centromereEnd >= 0) {
-	    	Warper warper = new CentromereWarper(map.getLength(), 
-	    			(int)(this.centromereStart * map.getScale()), 
-					(int)(this.centromereEnd * map.getScale()));
-	    	map.setWarper(warper);
-    	}
+//    	if (this.centromereStart >= 0 && this.centromereEnd >= 0) {
+//	    	Warper warper = new CentromereWarper(map.getLength(), 
+//	    			(int)(this.centromereStart * map.getScale()), 
+//					(int)(this.centromereEnd * map.getScale()));
+//	    	map.setWarper(warper);
+//    	}
     }
 
     

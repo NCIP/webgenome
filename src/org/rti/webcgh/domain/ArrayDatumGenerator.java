@@ -51,8 +51,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 /**
  * This class is used primarily for load testing.  It generates
@@ -75,8 +79,8 @@ public final class ArrayDatumGenerator {
 	/** Default gap in base pairs between reporters. */
     private static final long DEF_GAP = (long) 1000;
     
-    /** Chromosome number of all generated data. */
-    private static final short CHROMOSOME = (short) 1;
+    /** Default chromosome number. */
+    private static final short DEF_CHROMOSOME = (short) 1;
     
     // ========================
     //     Attributes
@@ -86,18 +90,41 @@ public final class ArrayDatumGenerator {
     private long gap = DEF_GAP;
     
     /** Cached reporters. */
-    private final List<Reporter> reporters = new ArrayList<Reporter>();
+    private final Map<Short, List<Reporter>> reporters =
+    	new HashMap<Short, List<Reporter>>();
     
     /** Iterator over cached reporters. */
-    private ListIterator<Reporter> reporterIterator =
-        reporters.listIterator();
+    private ListIterator<Reporter> reporterIterator = null;
+    
+    /** Chromosome number. */
+    private short chromosome = DEF_CHROMOSOME;
     
     
     // ============================
     //       Getters/setters
     // ============================
     
+    
     /**
+     * Get current chromosome.
+     * @return Current chromosome
+     */
+    public short getChromosome() {
+		return chromosome;
+	}
+
+
+    /**
+     * Set current chromosome.
+     * @param chromosome Current chromosome
+     */
+	public void setChromosome(final short chromosome) {
+		this.chromosome = chromosome;
+		this.reporterIterator = null;
+	}
+
+
+	/**
      * Get gap between reporters in base pairs.
      * @return Get gap between reporters in base pairs.
      */
@@ -121,7 +148,12 @@ public final class ArrayDatumGenerator {
      * @return Reporters
      */
     public List<Reporter> getReporters() {
-        return reporters;
+        List<Reporter> r = new ArrayList<Reporter>();
+        for (Collection<Reporter> c : this.reporters.values()) {
+        	r.addAll(c);
+        }
+        Collections.sort(r);
+        return r;
     }
     
     
@@ -173,7 +205,7 @@ public final class ArrayDatumGenerator {
      * exists.
      */
     public void reset() {
-        this.reporterIterator = this.reporters.listIterator();
+        this.reporterIterator = null;
     }
     
     
@@ -194,6 +226,14 @@ public final class ArrayDatumGenerator {
      */
     private Reporter getReporter() {
         Reporter r = null;
+        if (this.reporterIterator == null) {
+        	List<Reporter> l = this.reporters.get(this.chromosome);
+        	if (l == null) {
+        		l = new ArrayList<Reporter>();
+        		this.reporters.put(this.chromosome, l);
+        	}
+        	this.reporterIterator = l.listIterator();
+        }
         if (!this.reporterIterator.hasNext()) {
             this.reporterIterator.add(this.newReporter());
             r = this.reporterIterator.previous();
@@ -212,7 +252,7 @@ public final class ArrayDatumGenerator {
     private Reporter newReporter() {
         String name = "Reporter" + (this.reporters.size() + 1);
         long position = this.reporters.size() * this.gap;
-        return new Reporter(name, CHROMOSOME, position);
+        return new Reporter(name, this.chromosome, position);
     }
 
 }

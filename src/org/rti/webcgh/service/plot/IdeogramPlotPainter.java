@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.12 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,13 +58,10 @@ import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.graphics.util.CentromereWarper;
-import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
-import org.rti.webcgh.graphics.util.Warper;
 import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
-import org.rti.webcgh.graphics.widget.GenomeFeaturePlot;
+import org.rti.webcgh.graphics.widget.ChromosomeIdeogram;
 import org.rti.webcgh.graphics.widget.HeatMapPlot;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.dao.CytologicalMapDao;
@@ -72,7 +69,6 @@ import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
 import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.units.HorizontalAlignment;
-import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 
@@ -88,9 +84,6 @@ public class IdeogramPlotPainter extends PlotPainter {
 	//    Constants
 	// ======================
 	
-	/** Thickness of line that frames ideogram. */
-	private static final int FRAME_LINE_THICKNESS = 1;
-	
 	/** Color of line that frames ideogram. */
 	private static final Color FRAME_LINE_COLOR = Color.BLACK;
 	
@@ -101,12 +94,6 @@ public class IdeogramPlotPainter extends PlotPainter {
 	// ======================
 	//       Attributes
 	// ======================
-	
-	/**
-	 * Color mapper to map cytoband stain
-	 * intensities to colors.
-	 */
-	private final ColorMapper colorMapper;
 	
 	/** Cytologial map data access object.  Should be injected. */
 	private CytologicalMapDao cytologicalMapDao = null;
@@ -147,14 +134,10 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * Constructor.
 	 * @param chromosomeArrayDataGetter Chromosome array
 	 * data getter
-	 * @param colorMapper Color mapper to map cytoband stain
-	 * intensities to colors.
 	 */
 	public IdeogramPlotPainter(
-			final ChromosomeArrayDataGetter chromosomeArrayDataGetter,
-			final ColorMapper colorMapper) {
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
 		super(chromosomeArrayDataGetter);
-		this.colorMapper = colorMapper;
 	}
 	
 	
@@ -224,8 +207,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 					makeReferenceElement);
 			
 			// Add data tracks
-//			this.paintDataTracks(column, experiments, gi.getChromosome(),
-//					height, plotParameters);
+			this.paintDataTracks(row, experiments, gi.getChromosome(),
+					height, plotParameters);
 		}
 		
 		// Add final row
@@ -263,27 +246,16 @@ public class IdeogramPlotPainter extends PlotPainter {
 		PlotPanel idPanel = plotPanel.newChildPlotPanel();
 		
 		// Instantiate genome feature plot
-		GenomeFeaturePlot plot = new GenomeFeaturePlot(1,
-				cytologicalMap.length(), height, Orientation.VERTICAL,
+		ChromosomeIdeogram plot = new ChromosomeIdeogram(1,
+				cytologicalMap.length(), cytologicalMap.getCentromereStart(),
+				cytologicalMap.getCentromereEnd(),
+				height, Orientation.VERTICAL,
 				ideogramThickness);
-		
-		// Add warper to give plot hourglass shape around centromere
-		int centStartPix = idSize.pixels(cytologicalMap.getCentromereStart());
-		int centEndPix = idSize.pixels(cytologicalMap.getCentromereEnd());
-		Warper warper = new CentromereWarper(ideogramThickness,
-				centStartPix, centEndPix);
-		plot.setWarper(warper);
 		
 		// Add cytobands to plot
 		for (Cytoband c : cytologicalMap.getCytobands()) {
-			Color color = this.colorMapper.getColor(c.getStain());
-			plot.plotFeature(c.getStart(), c.getEnd(), c.getName(), null,
-					false, color);
+			plot.add(c);
 		}
-		
-		// Add border frame around ideogram
-		plot.addFrame(Location.ABOVE, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
-		plot.addFrame(Location.BELOW, FRAME_LINE_THICKNESS, FRAME_LINE_COLOR);
 		
 		// Add genome feature plot
 		idPanel.add(plot, true);
@@ -300,7 +272,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		
 		// Add chromosome number caption
 		Caption caption = new Caption(chromosome, null,
-				Orientation.HORIZONTAL, false);
+				Orientation.HORIZONTAL, false, idPanel.getDrawingCanvas());
 		idPanel.add(caption, HorizontalAlignment.CENTERED,
 				VerticalAlignment.BELOW);
 		

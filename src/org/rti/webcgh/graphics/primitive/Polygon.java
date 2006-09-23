@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.4 $
+$Date: 2006-09-23 05:02:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -110,6 +110,13 @@ public class Polygon extends GraphicPrimitive {
     }
     
     
+    /**
+     * Constructor.
+     * @param color Color
+     */
+    public Polygon(final Color color) {
+    	super(color);
+    }
     
     // =================================================
     //        Public methods
@@ -121,6 +128,16 @@ public class Polygon extends GraphicPrimitive {
      */
     public final void addPoint(final Point point) {
         this.points.add(point);
+    }
+    
+    
+    /**
+     * Add a point.
+     * @param x X-coordinate of point
+     * @param y Y-coordinate of point
+     */
+    public final void addPoint(final int x, final int y) {
+    	this.addPoint(new Point(x, y));
     }
     
     

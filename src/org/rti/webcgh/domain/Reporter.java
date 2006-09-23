@@ -57,7 +57,7 @@ import java.io.Serializable;
  * @author dhall
  *
  */
-public class Reporter implements Serializable, Comparable {
+public class Reporter implements Serializable, Comparable<Reporter> {
 
     /** Serialized version ID. */
     private static final long serialVersionUID = (long) 1;
@@ -176,9 +176,7 @@ public class Reporter implements Serializable, Comparable {
     /**
      * Comparison method.  Sorts by chromosome number and
      * chromosome position.
-     * @param o An object.  This object must be of type
-     * <code>Reporter</code> or an IllegalArgumentException
-     * will be thrown.
+     * @param r A reporter
      * @return
      *  <ul>
      *      <li>-1 If this reporter has a lower number
@@ -191,12 +189,7 @@ public class Reporter implements Serializable, Comparable {
      *      than given reporter.
      *  </ul>
      */
-    public final int compareTo(final Object o) {
-        if (!(o instanceof Reporter)) {
-            throw new IllegalArgumentException(
-                    "Expecting object of type Reporter");
-        }
-        Reporter r = (Reporter) o;
+    public final int compareTo(final Reporter r) {
         int val = 0;
         if (this.chromosome < r.chromosome) {
             val = -1;
