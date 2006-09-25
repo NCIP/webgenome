@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.24 $
-$Date: 2006-09-23 05:02:22 $
+$Revision: 1.25 $
+$Date: 2006-09-25 22:04:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -313,7 +313,7 @@ public class PlotGenerator {
         
         // Create Y-axis
         Axis yAxis = new Axis(minY, maxY, plotParameters.getHeight(), 
-        		Orientation.VERTICAL, Location.LEFT_OF);
+        		Orientation.VERTICAL, Location.LEFT_OF, panel.getDrawingCanvas());
         
         // Create individual scatter plots
         int cols = (genomeIntervals.length < plotParameters.getPlotsPerRow()) ?
@@ -489,9 +489,9 @@ public class PlotGenerator {
     	panel.add(scatterPlot, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
     	
     	// Add x-axis
-    	Axis xAxis = plotBoundaries.newXAxis(width, VerticalAlignment.BOTTOM_JUSTIFIED);
-    	xAxis.setNumberFormatter(plotParameters.getXUnits().numberFormatter());
-    	panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED, true);
+//    	Axis xAxis = plotBoundaries.newXAxis(width, VerticalAlignment.BOTTOM_JUSTIFIED, panel.g);
+//    	xAxis.setNumberFormatter(plotParameters.getXUnits().numberFormatter());
+//    	panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED, true);
     	
     	// Add chromosome ideogram
     	if (plotParameters.isShowIdeogram())

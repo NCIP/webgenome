@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.3 $
+$Date: 2006-09-25 22:04:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,6 +73,17 @@ import org.rti.webcgh.units.Orientation;
  * A plot axis.
  */
 public final class Axis implements ScalePlotElement {
+	
+	// ==============================
+	//     Constants
+	// ==============================
+	
+    /**
+     * Multiplication factors used in calculating how many hatch marks
+     * will fit on axis.
+     */
+    private static final float[] MULTIPLIERS =
+    	{(float) 5.0, (float) 2.0, (float) 1.0};
     
 
     // =============================
@@ -86,7 +97,11 @@ public final class Axis implements ScalePlotElement {
     /** Maximum value on axis in the native units. */
     private final double maxValue;
     
-    /** Length of axis in pixels. */
+    /**
+     * Length of axis line in pixels. If orientation
+     * is horizontal, this is width. If vertical,
+     * this is height.
+     */
     private final int length;
     
     /** Color of axis. */
@@ -105,22 +120,30 @@ public final class Axis implements ScalePlotElement {
      */
     private int numMinorTicsBetweenMajorTics = 5;
     
-    /** Length of major tic marks in pixels. */
+    /**
+     * Length of major tic marks in pixels. If orientation
+     * is horizontal, this is height.  If vertical, this
+     * is width
+     */
     private int majorTicLength = 12;
     
-    /** Length of minor tic marks in pixels. */
+    /**
+     * Length of minor tic marks in pixels.  If orientation
+     * is horizontal, this is height.  If vertical, this
+     * is width
+     */
     private int minorTicLength = 8;
     
     /** Font size of major tic mark text labels. */
     private int fontSize = 12;
     
-    /** Thickness of main axis line in pixels. */
+    /** Thickness (i.e, stroke) of main axis line in pixels. */
     private int mainAxisLineThickness = 2;
     
-    /** Thickness of major hatch lines in pixels. */
+    /** Thickness (i.e, stroke) of major hatch lines in pixels. */
     private int majorHatchLineThickness = 2;
     
-    /** Thickness of minor hatch lines in pixels. */
+    /** Thickness (i.e, stroke) of minor hatch lines in pixels. */
     private int minorHatchLineThickness = 1;
     
     /** Padding between all graphical elements in pixels. */
@@ -147,30 +170,28 @@ public final class Axis implements ScalePlotElement {
     /** Y-axis coordinate of point representing '0' in the native units. */
     private int zeroY = 0;
     
-    /**
-     * Change in x-coordinate of canvas origin (i.e., top left point)
-     * that arises from one or more calls to move().
-     */
-    private int deltaX = 0;
-     
-     /**
-      * Change in y-coordinate of canvas origin (i.e., top left point)
-      * that arises from one or more calls to move().
-      */
-    private int deltaY = 0;
+    /** Minimum X-coordinate on main axis line. */
+    private int lineMinX = 0;
+    
+    /** Minimum Y-coordinate on main axis line. */
+    private int lineMinY = 0;
+    
+    /** Minimum X-coordinate on main axis line. */
+    private int lineMaxX = 0;
+    
+    /** Maximum Y-coordinate on main axis line. */
+    private int lineMaxY = 0;
       
     /** Indicator that axis spans the value '0' in the native units. */
     private final boolean spansZero;
     
     /** Range between minimum and maximum values in native units. */
     private final double range;
-    
-    /**
-     * Multiplication factors used in calculating how many hatch marks
-     * will fit on axis.
-     */
-    private final float[] multipliers = {(float) 5.0, (float) 2.0, (float) 1.0};
 
+    
+    // ============================
+    //     Getters/setters
+    // ============================
 
 	/**
      * Set number formatter used to render major hatch labels.
@@ -272,28 +293,140 @@ public final class Axis implements ScalePlotElement {
      * @param orientation Orientation
      * @param positionTextRelativeToHatches Position of hatch mark labels
      * relative to hatch marks
+     * @param canvas Canvas the axis will be rendered to
      */
     public Axis(final double minValue, final double maxValue,
             final int length, final Orientation orientation,
-            final Location positionTextRelativeToHatches) {
+            final Location positionTextRelativeToHatches,
+            final DrawingCanvas canvas) {
+    	
+    	// Set attributes not dependent on orientation and position
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.length = length;
         this.range = maxValue - minValue;
         this.orientation = orientation;
         this.positionTextRelativeToHatches = positionTextRelativeToHatches;
-        double scale = (double) length / (maxValue - minValue);
         this.spansZero = maxValue >= 0 && minValue <= 0;
+        this.minX = 0;
+        this.minY = 0;
+        
+        // Calculate common reference coordinates
+        int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
+                new RenderedWidthCalculator(canvas), 
+	    		this.length, this.minValue, this.maxValue, this.fontSize);
+        double majorTicInterval = this.computeTicInterval(
+                this.minValue, this.maxValue, maxNumMajorTics);
+        double startingMajorTic = this.computeStartTic(this.minValue,
+                majorTicInterval);
+        double endingMajorTic = this.computeEndTic(startingMajorTic,
+        		majorTicInterval);
+        
+        // Set attributes distinct for horizontal orientation
         if (orientation == Orientation.HORIZONTAL) {
-            this.maxX = length;
-            if (this.spansZero) {
-            	this.zeroX = (int) ((-minValue) * scale);
-            }
+        	
+        	// Calculate reference coordinates
+        	String ticStr = this.numberFormatter.format(startingMajorTic);
+        	int textWidth = canvas.renderedWidth(ticStr, this.fontSize);
+        	int relativeTextMinX = this.nativeUnitsToPixel(startingMajorTic)
+        		- textWidth / 2;
+        	ticStr = this.numberFormatter.format(startingMajorTic);
+        	textWidth = canvas.renderedWidth(ticStr, this.fontSize);
+        	int relativeTextMaxX = this.nativeUnitsToPixel(endingMajorTic)
+        		+ textWidth / 2;
+        	
+        	// Attributes that are same regardless of text location
+        	this.lineMinX = 0;
+        	this.lineMaxX = length;
+        	this.maxX = length;
+        	this.maxY = this.fontSize + this.padding + this.majorTicLength;
+        	if (this.spansZero) {
+        		this.zeroX = this.nativeUnitsToPixel(0.0);
+        	}
+        	if (relativeTextMinX < 0) {
+        		this.lineMinX -= relativeTextMinX;
+        		this.lineMaxX -= relativeTextMinX;
+        		this.maxX -= relativeTextMinX;
+        		if (this.spansZero) {
+        			this.zeroX -= relativeTextMinX;
+        		}
+        	}
+        	if (relativeTextMaxX > length) {
+        		this.maxX += relativeTextMaxX - length;
+        	}
+        	this.maxY = this.fontSize + this.padding + this.majorTicLength;
+        	
+        	// Text above
+        	if (positionTextRelativeToHatches == Location.ABOVE) {
+        		this.zeroY = this.maxY - this.majorTicLength / 2;
+        		
+        	// Text below
+        	} else if (positionTextRelativeToHatches == Location.BELOW) {
+        		this.zeroY = this.majorTicLength / 2;
+        		
+        	// Invalid text position
+        	} else {
+        		throw new IllegalArgumentException("Illegal combination of "
+        				+ "orientation and positionTextRelativeToHatches");
+        	}
+        	
+        	this.lineMinY = this.zeroY;
+    		this.lineMaxY = this.zeroY;
+        	
+        // Set attributes distinct for vertical orientation
         } else if (orientation == Orientation.VERTICAL) {
-            this.maxY = length;
-            if (this.spansZero) {
-            	this.zeroY = length - (int) ((-minValue) * scale);
-            }
+        	
+        	// Calculate reference coordinates
+        	int relativeTextMinY = length
+        		- this.nativeUnitsToPixel(startingMajorTic)
+        		- this.fontSize / 2;
+        	int relativeTextMaxY = length
+        		- this.nativeUnitsToPixel(endingMajorTic)
+        		+ this.fontSize / 2;
+        	int maxTextWidth = this.maxTextWidth(startingMajorTic,
+        			majorTicInterval, canvas);
+        	
+        	// Set attributes common to all text placements
+        	this.maxX = maxTextWidth + this.padding + this.majorTicLength;
+        	this.maxY = length;
+        	this.lineMinY = 0;
+        	this.lineMaxY = length;
+        	if (this.spansZero) {
+        		this.zeroY = this.nativeUnitsToPixel(0.0);
+        	}
+        	if (relativeTextMinY < 0) {
+        		this.maxY -= relativeTextMinY;
+        		this.lineMinY -= relativeTextMinY;
+        		this.lineMaxY -= relativeTextMinY;
+        	}
+        	if (this.spansZero) {
+        		this.zeroY -= relativeTextMinY;
+        	}
+        	if (relativeTextMaxY > length) {
+        		this.maxY += relativeTextMaxY - length;
+        	}
+        	
+        	// Text to left
+        	if (positionTextRelativeToHatches == Location.LEFT_OF) {
+        		this.zeroX = maxTextWidth + this.padding
+        			+ this.majorTicLength / 2;
+        		
+        	// Text to right
+        	} else if (positionTextRelativeToHatches == Location.RIGHT_OF) {
+        		this.zeroX = this.majorTicLength / 2;
+        		
+        	// Invalid text position
+        	} else {
+        		throw new IllegalArgumentException("Illegal combination of "
+        				+ "orientation and positionTextRelativeToHatches");
+        	}
+        	
+        	this.lineMinX = this.zeroX;
+        	this.lineMaxX = this.zeroX;
+        	
+        // Invalid orientation
+        } else {
+        	throw new IllegalArgumentException("Invalid orientation");
         }
     }
     
@@ -315,8 +448,10 @@ public final class Axis implements ScalePlotElement {
     	this.maxY += deltaY;
     	this.zeroX += deltaX;
     	this.zeroY += deltaY;
-    	this.deltaX += deltaX;
-    	this.deltaY += deltaY;
+    	this.lineMinX += deltaX;
+    	this.lineMinY += deltaY;
+    	this.lineMaxX += deltaX;
+    	this.lineMaxY += deltaY;
     }
     
     /**
@@ -327,13 +462,9 @@ public final class Axis implements ScalePlotElement {
         
         // Paint main axis line
         Line line = null;
-        if (this.orientation == Orientation.HORIZONTAL) {
-            line = new Line(0, 0, this.length, 0, this.mainAxisLineThickness,
-                    this.color);
-        } else if (this.orientation == Orientation.VERTICAL) {
-            line = new Line(0, 0, 0, this.length, this.mainAxisLineThickness,
-                    this.color);
-        }
+        line = new Line(this.lineMinX, this.lineMinY, this.lineMaxX,
+        		this.lineMaxY, this.mainAxisLineThickness,
+                this.color);
         canvas.add(line);
         
         // Set up for generating tic marks
@@ -355,7 +486,6 @@ public final class Axis implements ScalePlotElement {
             if (i >= this.minValue) {
                 AxisTicMark tic = this.newAxisTicMark(i, true);
                 tic.paint(canvas, true);
-                this.adjustMinAndMax(tic);
             }
             
             // Minor tic marks
@@ -364,7 +494,6 @@ public final class Axis implements ScalePlotElement {
                 if (j >= this.minValue && j <= this.maxValue) {
 	                AxisTicMark tic = this.newAxisTicMark(j, false);
 	                tic.paint(canvas, false);
-	                this.adjustMinAndMax(tic);
                 }
             }
         }
@@ -376,7 +505,7 @@ public final class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(this.deltaX, this.deltaY);
+        return new Point(this.lineMinX, this.lineMaxX);
     }
     
     
@@ -385,11 +514,7 @@ public final class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point bottomLeftAlignmentPoint() {
-    	int x = deltaX, y = this.deltaY;
-    	if (this.orientation == Orientation.VERTICAL) {
-    			y = this.deltaY + this.length;
-        }
-    	return new Point(x, y);
+    	return new Point(this.lineMinX, this.lineMaxY);
     }
     
     
@@ -398,11 +523,7 @@ public final class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point topRightAlignmentPoint() {
-    	int x = deltaX, y = deltaY;
-    	if (this.orientation == Orientation.HORIZONTAL) {
-    		x = this.deltaX + this.length;
-        }
-    	return new Point(x, y);
+    	return new Point(this.lineMaxX, this.lineMinY);
     }
     
     
@@ -411,7 +532,7 @@ public final class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point bottomRightAlignmentPoint() {
-    	return new Point(this.deltaX, this.deltaY);
+    	return new Point(this.lineMaxX, this.lineMaxY);
     }
     
     
@@ -490,6 +611,41 @@ public final class Axis implements ScalePlotElement {
 	    float intervalFloat = (float) interval;
 		return (double) (intervalFloat * Math.ceil(minFloat / intervalFloat));
 	}
+	
+	
+	/**
+	 * Calculate maximum width of axis labels text.
+	 * @param minMajorTic Value of minimum major tic mark.
+	 * @param interval Interval between major tic marks
+	 * @param canvas Drawing canvas where axis will be rendered
+	 * @return Maximum width of axis labels text in pixels
+	 */
+	private int maxTextWidth(final double minMajorTic, final double interval,
+			final DrawingCanvas canvas) {
+		int max = 0;
+		for (double d = minMajorTic; d <= this.maxValue; d += interval) {
+			String label = this.numberFormatter.format(d);
+			int candidateMax = canvas.renderedWidth(label, this.fontSize);
+			if (candidateMax > max) {
+				max = candidateMax;
+			}
+		}
+		return max;
+	}
+	
+	/**
+	 * Compute value of last major tic mark.
+	 * @param startTic Value of first major tic mark
+	 * @param interval Interval between major tic marks
+	 * @return Value of last major tic mark
+	 */
+	private double computeEndTic(final double startTic, final double interval) {
+		double endTic = startTic;
+		for (double i = startTic; i <= this.maxValue; i += interval) {
+			endTic = i;
+		}
+		return endTic;
+	}
 
 	/**
 	 * Compute the interval between tic marks.
@@ -512,8 +668,8 @@ public final class Axis implements ScalePlotElement {
                 / Math.log((float) 10.0)) + (float) 1.0);
 		boolean done = false;
 		while (!done) {
-		    for (int i = 0; i < this.multipliers.length && !done; i++) {
-					float temp = this.multipliers[i] * power;
+		    for (int i = 0; i < MULTIPLIERS.length && !done; i++) {
+					float temp = MULTIPLIERS[i] * power;
 				if (Math.ceil(range / temp) > maxNumTics) {
 					done = true;
                 } else if (range / temp > 0) {
@@ -545,9 +701,9 @@ public final class Axis implements ScalePlotElement {
 	    StringBuffer template =
 	    	new StringBuffer(this.numberFormatter.format(max));
         int maxWidth = widthCalculator.renderedWidth(template.toString());
-	    for (int i = 0; i < this.multipliers.length; i++) {
+	    for (int i = 0; i < MULTIPLIERS.length; i++) {
 	        template = new StringBuffer(
-	        		this.numberFormatter.format(max / this.multipliers[i]));
+	        		this.numberFormatter.format(max / MULTIPLIERS[i]));
 	        int candidateMaxWidth =
 	        	widthCalculator.renderedWidth(template.toString());
 	        if (candidateMaxWidth > maxWidth) {
@@ -582,13 +738,13 @@ public final class Axis implements ScalePlotElement {
 	    int pixel = this.nativeUnitsToPixel(value);
 	    Point point = null;
 	    if (this.orientation == Orientation.HORIZONTAL) {
-	        point = new Point(pixel, 0);
+	        point = new Point(pixel, this.lineMinY);
 	    } else if (this.orientation == Orientation.VERTICAL) {
-	        point = new Point(0, length - pixel);
+	        point = new Point(this.lineMinX, this.lineMaxY - pixel);
 	    }
 	    AxisTicMark tic = new AxisTicMark(point, label,
 	    		Orientation.opposite(this.orientation), 
-	        this.positionTextRelativeToHatches);
+	    		this.positionTextRelativeToHatches);
 	    tic.setColor(this.color);
 	    tic.setFontSize(this.fontSize);
         if (isMajor) {
@@ -605,28 +761,7 @@ public final class Axis implements ScalePlotElement {
 	    return tic;
 	}
 	
-	
-	/**
-	 * Adjust minimum and maximum values of entire axis.
-	 * @param ticMark A tic mark that may be
-	 * outside of the current min and max
-	 */
-	private void adjustMinAndMax(final AxisTicMark ticMark) {
-	    if (ticMark.minX() < this.minX) {
-	        this.minX = ticMark.minX();
-	    }
-	    if (ticMark.maxX() > this.maxX) {
-	        this.maxX = ticMark.maxX();
-	    }
-	    if (ticMark.minY() < this.minY) {
-	        this.minY = ticMark.minY();
-	    }
-	    if (ticMark.maxY() > this.maxY) {
-	        this.maxY = ticMark.maxY();
-	    }
-	}
-	
-	
+
 	/**
 	 * Helper class to compute widths.
 	 * @author dhall

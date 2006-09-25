@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.2 $
+$Date: 2006-09-25 22:04:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,11 +54,6 @@ package org.rti.webcgh.graphics;
 import java.awt.geom.Rectangle2D;
 
 import org.rti.webcgh.graph.DataPoint;
-import org.rti.webcgh.graphics.widget.Axis;
-import org.rti.webcgh.units.HorizontalAlignment;
-import org.rti.webcgh.units.Location;
-import org.rti.webcgh.units.Orientation;
-import org.rti.webcgh.units.VerticalAlignment;
 
 /**
  * Defines region over x- and y-axes that contains plot.
@@ -294,51 +289,6 @@ public class PlotBoundaries {
             this.moveDataPointToBorder(point2, slope);
         }
     }
-    
-    
-    /**
-     * Create new X-axis for this plot boundary.
-     * @param length Length of axis in pixels
-     * @param alignment Alignment of axis relative to 
-     * @return New axis
-     */
-    public final Axis newXAxis(final int length,
-            final VerticalAlignment alignment) {
-    	Location textLocation = null;
-    	if (alignment == VerticalAlignment.BOTTOM_JUSTIFIED) {
-    		textLocation = Location.BELOW;
-        } else if (alignment == VerticalAlignment.TOP_JUSTIFIED) {
-    		textLocation = Location.ABOVE;
-        } else {
-    		throw new IllegalArgumentException("Illegal alignment value");
-        }
-    	return new Axis(this.bottomLeftDataPoint.getValue1(),
-    			this.topRightDataPoint.getValue1(), length,
-                Orientation.HORIZONTAL, textLocation);
-    }
-    
-    
-    /**
-     * Create new Y-axis for this plot boundary.
-     * @param length Length of axis in pixels
-     * @param alignment Alignment of axis relative to 
-     * @return New axis
-     */
-    public final Axis newYAxis(final int length,
-            final HorizontalAlignment alignment) {
-    	Location textLocation = null;
-    	if (alignment == HorizontalAlignment.LEFT_JUSTIFIED) {
-    		textLocation = Location.LEFT_OF;
-        } else if (alignment == HorizontalAlignment.RIGHT_JUSTIFIED) {
-    		textLocation = Location.RIGHT_OF;
-        } else {
-    		throw new IllegalArgumentException("Illegal alignment value");
-        }
-    	return new Axis(this.bottomLeftDataPoint.getValue2(),
-    			this.topRightDataPoint.getValue2(), length,
-                Orientation.VERTICAL, textLocation);
-    }
-    
     
     /**
      * Union given plot boundary with this. (i.e. add additional

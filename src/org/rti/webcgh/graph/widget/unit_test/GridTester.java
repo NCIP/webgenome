@@ -88,7 +88,8 @@ public class GridTester extends TestCase {
      *
      */
     public void testHorizontal() {
-        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF);
+        Axis axis = new Axis(0, 10, 400, Orientation.VERTICAL, Location.LEFT_OF,
+        		this.panel.getDrawingCanvas());
         Grid grid = axis.newGrid(400, 400, Color.white, this.panel);
         Background background = new Background(400, 400, Color.yellow);
         PlotPanel childPanel = this.panel.newChildPlotPanel();
@@ -105,7 +106,8 @@ public class GridTester extends TestCase {
      *
      */
     public void testVertical() {
-        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW);
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL, Location.BELOW,
+        		this.panel.getDrawingCanvas());
         Grid grid = axis.newGrid(400, 400, Color.white, this.panel);
         Background background = new Background(400, 400, Color.yellow);
         PlotPanel childPanel = this.panel.newChildPlotPanel();

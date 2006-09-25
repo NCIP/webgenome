@@ -156,7 +156,7 @@ public class FrequencyGraphGenerator {
         
         // Create Y-axis
         Axis yAxis = new Axis(0, 1.0, plotParameters.getHeight(), 
-        		Orientation.VERTICAL, Location.LEFT_OF);
+        		Orientation.VERTICAL, Location.LEFT_OF, panel.getDrawingCanvas());
         
         // Create individual plots
         int cols = (genomeIntervals.length < plotParameters.getPlotsPerRow()) ?
@@ -237,9 +237,10 @@ public class FrequencyGraphGenerator {
     	panel.add(scatterPlot, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED);
     	
     	// Add x-axis
-    	Axis xAxis = plotBoundaries.newXAxis(width, VerticalAlignment.BOTTOM_JUSTIFIED);
-    	xAxis.setNumberFormatter(plotParameters.getXUnits().numberFormatter());
-    	panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED, true);
+//    	Axis xAxis = plotBoundaries.newXAxis(width, VerticalAlignment.BOTTOM_JUSTIFIED,
+//    			panel.getDrawingCanvas());
+//    	xAxis.setNumberFormatter(plotParameters.getXUnits().numberFormatter());
+//    	panel.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED, VerticalAlignment.BOTTOM_JUSTIFIED, true);
     	    	
     	// Add x-axis caption
     	String captionText = 

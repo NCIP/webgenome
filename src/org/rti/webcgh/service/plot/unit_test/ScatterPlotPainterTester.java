@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-17 20:27:33 $
+$Revision: 1.4 $
+$Date: 2006-09-25 22:04:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,26 +51,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot.unit_test;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.QuantitationType;
-import org.rti.webcgh.domain.Reporter;
-import org.rti.webcgh.graphics.RasterDrawingCanvas;
-import org.rti.webcgh.graphics.widget.PlotPanel;
-import org.rti.webcgh.io.DataFileManager;
+import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.service.plot.ScatterPlotPainter;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
-import org.rti.webcgh.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -113,18 +105,6 @@ public final class ScatterPlotPainterTester extends TestCase {
 	/** Number of experiments in tests. */
 	private static final int NUM_EXPERIMENTS = 2;
 	
-	/**
-	 * Number of array datum per chromosome in
-	 * serialized data tests.
-	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_SERIALIZED = 5000;
-	
-	/**
-	 * Number of array datum per chromosome in
-	 * in-memory data tests.
-	 */
-	private static final int NUM_DATUM_PER_CHROMOSOME_IN_MEMORY = 50;
-	
     /** Minimum Y-axis value. */
     private static final float MIN_Y = (float) -2.0;
     
@@ -136,6 +116,16 @@ public final class ScatterPlotPainterTester extends TestCase {
     
     /** Height of plot in pixels. */
     private static final int HEIGHT = 500;
+    
+    /** Gap between generated reporters. */
+    private static final long GAP = 1000000;
+    
+    /** Number of datum per chromosome. */
+    private static final int NUM_DATUM_PER_CHROMOSOME = 50;
+    
+    /** Length of generated chromosome. */
+    private static final long CHROM_LENGTH =
+    	GAP * NUM_DATUM_PER_CHROMOSOME;
 
 	
 	// ============================
@@ -153,10 +143,11 @@ public final class ScatterPlotPainterTester extends TestCase {
 //		
 //		// Create test experiments
 //		ExperimentGenerator expGen = new ExperimentGenerator();
+//		expGen.setGap(GAP);
 //        Collection<Experiment> experiments = new ArrayList<Experiment>();
 //        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
 //        	Experiment exp = expGen.newDataSerializedExperiment(NUM_BIO_ASSAYS,
-//	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_SERIALIZED,
+//	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME,
 //	        		dataFileManager);
 //	        experiments.add(exp);
 //	        for (BioAssay ba : exp.getBioAssays()) {
@@ -166,17 +157,15 @@ public final class ScatterPlotPainterTester extends TestCase {
 //        
 //        // Create plot parameters
 //        ScatterPlotParameters params = new ScatterPlotParameters();
-//        List<Reporter> reporters = expGen.getReporters();
-//        params.setChromosome(reporters.get(0).getChromosome());
-//        params.setStartLocation(reporters.get(0).getLocation());
-//        params.setEndLocation(reporters.get(
-//                reporters.size() - 1).getLocation());
+//        for (short i = 1; i <= NUM_CHROMOSOMES; i++) {
+//        	params.add(new GenomeInterval(i, (short) 1, CHROM_LENGTH));
+//        }
 //        params.setMinY(MIN_Y);
 //        params.setMaxY(MAX_Y);
 //        
 //        // Create plotting panel
-//        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-//        PlotPanel panel = new PlotPanel(canvas);
+//        RasterFileTestPlotPanel panel =
+//        	new RasterFileTestPlotPanel(TEMP_DIR_PATH);
 //        
 //        // Create chromosome array data getter
 //        SerializedChromosomeArrayDataGetter cadg =
@@ -189,15 +178,8 @@ public final class ScatterPlotPainterTester extends TestCase {
 //        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
 //                QuantitationType.LOG_2_RATIO);
 //        
-//        // Adjust canvas properties
-//        canvas.setOrigin(panel.topLeftPoint());
-//        canvas.setWidth(panel.width());
-//        canvas.setHeight(panel.height());
-//        
 //        // Output graphics to file
-//        String filePath = TEMP_DIR_PATH + "/plot-serialized.png";
-//        BufferedImage img = canvas.toBufferedImage();
-//        ImageIO.write(img, "png", new File(filePath));
+//        panel.toPngFile("plot-serialized.png");
 //        
 //        // Clean up
 //        for (Experiment exp : experiments) {
@@ -205,57 +187,49 @@ public final class ScatterPlotPainterTester extends TestCase {
 //        }
 //	}
 //	
-//	
-//	/**
-//	 * Test paintScatterPlot() method on in-memory data.
-//	 * @throws Exception if anything bad happens
-//	 */
-//	public void testPaintScatterPlotInMemory() throws Exception {
-//		
-//		// Create test experiments
-//		ExperimentGenerator expGen = new ExperimentGenerator();
-//        Collection<Experiment> experiments = new ArrayList<Experiment>();
-//        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
-//        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
-//	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME_IN_MEMORY);
-//	        experiments.add(exp);
-//	        for (BioAssay ba : exp.getBioAssays()) {
-//	        	ba.setColor(Color.BLUE);
-//	        }
-//        }
-//        
-//        // Create plot parameters
-//        ScatterPlotParameters params = new ScatterPlotParameters();
-//        List<Reporter> reporters = expGen.getReporters();
-//        params.setChromosome(reporters.get(0).getChromosome());
-//        params.setStartLocation(reporters.get(0).getLocation());
-//        params.setEndLocation(reporters.get(
-//                reporters.size() - 1).getLocation());
-//        params.setMinY(MIN_Y);
-//        params.setMaxY(MAX_Y);
-//        
-//        // Create plotting panel
-//        RasterDrawingCanvas canvas = new RasterDrawingCanvas();
-//        PlotPanel panel = new PlotPanel(canvas);
-//        
-//        // Create chromosome array data getter
-//        InMemoryChromosomeArrayDataGetter cadg =
-//        	new InMemoryChromosomeArrayDataGetter();
-//        
-//        // Run method
-//        ScatterPlotPainter painter =
-//        	new ScatterPlotPainter(cadg);
-//        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
-//                QuantitationType.LOG_2_RATIO);
-//        
-//        // Adjust canvas properties
-//        canvas.setOrigin(panel.topLeftPoint());
-//        canvas.setWidth(panel.width());
-//        canvas.setHeight(panel.height());
-//        
-//        // Output graphics to file
-//        String filePath = TEMP_DIR_PATH + "/plot-in-memory.png";
-//        BufferedImage img = canvas.toBufferedImage();
-//        ImageIO.write(img, "png", new File(filePath));
-//	}
+	
+	/**
+	 * Test paintScatterPlot() method on in-memory data.
+	 * @throws Exception if anything bad happens
+	 */
+	public void testPaintScatterPlotInMemory() throws Exception {
+		
+		// Create test experiments
+		ExperimentGenerator expGen = new ExperimentGenerator();
+		expGen.setGap(GAP);
+        Collection<Experiment> experiments = new ArrayList<Experiment>();
+        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
+        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
+	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME);
+	        experiments.add(exp);
+	        for (BioAssay ba : exp.getBioAssays()) {
+	        	ba.setColor(Color.BLUE);
+	        }
+        }
+        
+        // Create plot parameters
+        ScatterPlotParameters params = new ScatterPlotParameters();
+        for (short i = 1; i <= NUM_CHROMOSOMES; i++) {
+        	params.add(new GenomeInterval(i, (short) 1, CHROM_LENGTH));
+        }
+        params.setMinY(MIN_Y);
+        params.setMaxY(MAX_Y);
+        
+        // Create plotting panel
+        RasterFileTestPlotPanel panel =
+        	new RasterFileTestPlotPanel(TEMP_DIR_PATH);
+        
+        // Create chromosome array data getter
+        InMemoryChromosomeArrayDataGetter cadg =
+        	new InMemoryChromosomeArrayDataGetter();
+        
+        // Run method
+        ScatterPlotPainter painter =
+        	new ScatterPlotPainter(cadg);
+        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
+                QuantitationType.LOG_2_RATIO);
+        
+        // Output graphics to file
+        panel.toPngFile("plot-in-memory.png");
+	}
 }
