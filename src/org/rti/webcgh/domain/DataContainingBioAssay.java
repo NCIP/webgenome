@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.util.Collection;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -161,6 +162,88 @@ public class DataContainingBioAssay extends BioAssay {
     		size = cad.inferredChromosomeSize();
     	}
     	return size;
+    }
+    
+    
+    /**
+     * Get minimum value in the bioassay.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @return Minimum value in bioassay
+     */
+    public final float minValue() {
+    	float min = Float.NaN;
+    	for (ChromosomeArrayData cad : this.chromosomeArrayDataIndex.values()) {
+    		float candidateMin = cad.getMinValue();
+    		if (!Float.isNaN(candidateMin)) {
+	    		if (Float.isNaN(min) || min < candidateMin) {
+	    			min = candidateMin;
+	    		}
+    		}
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get maximum value in the bioassay.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @return Maximum value in bioassay
+     */
+    public final float maxValue() {
+    	float max = Float.NaN;
+    	for (ChromosomeArrayData cad : this.chromosomeArrayDataIndex.values()) {
+    		float candidateMax = cad.getMaxValue();
+    		if (Float.isNaN(max) || max > candidateMax) {
+    			max = candidateMax;
+    		}
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum value from the given chromosomes.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value from the given chromosomes
+     */
+    public final float minValue(final Collection<Short> chromosomes) {
+    	float min = Float.NaN;
+    	for (short chrom : chromosomes) {
+    		ChromosomeArrayData cad = this.chromosomeArrayDataIndex.get(chrom);
+    		if (cad != null) {
+    			float candidateMin = cad.getMinValue();
+    			if (Float.isNaN(min) || candidateMin < min) {
+    				min = candidateMin;
+    			}
+    		}
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get maximum value from the given chromosomes.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @param chromosomes Chromosome numbers
+     * @return Maximum value from the given chromosomes
+     */
+    public final float maxValue(final Collection<Short> chromosomes) {
+       	float max = Float.NaN;
+    	for (short chrom : chromosomes) {
+    		ChromosomeArrayData cad = this.chromosomeArrayDataIndex.get(chrom);
+    		if (cad != null) {
+    			float candidateMax = cad.getMaxValue();
+    			if (Float.isNaN(max) || candidateMax > max) {
+    				max = candidateMax;
+    			}
+    		}
+    	}
+    	return max;
     }
     
     

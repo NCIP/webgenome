@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.5 $
+$Date: 2006-09-26 21:10:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.service.plot.ScatterPlotPainter;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
+import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -100,17 +101,11 @@ public final class ScatterPlotPainterTester extends TestCase {
 	private static final int NUM_BIO_ASSAYS = 2;
 	
 	/** Number of chromosomes in tests. */
-	private static final int NUM_CHROMOSOMES = 2;
+	private static final int NUM_CHROMOSOMES = 3;
 	
 	/** Number of experiments in tests. */
 	private static final int NUM_EXPERIMENTS = 2;
 	
-    /** Minimum Y-axis value. */
-    private static final float MIN_Y = (float) -2.0;
-    
-    /** Maximum Y-axis value. */
-    private static final float MAX_Y = (float) 2.0;
-    
     /** Width of plot in pixels. */
     private static final int WIDTH = 500;
     
@@ -210,10 +205,12 @@ public final class ScatterPlotPainterTester extends TestCase {
         // Create plot parameters
         ScatterPlotParameters params = new ScatterPlotParameters();
         for (short i = 1; i <= NUM_CHROMOSOMES; i++) {
-        	params.add(new GenomeInterval(i, (short) 1, CHROM_LENGTH));
+        	params.add(new GenomeInterval(i, (short) 0, CHROM_LENGTH));
         }
-        params.setMinY(MIN_Y);
-        params.setMaxY(MAX_Y);
+        params.setMinY(Experiment.findMinValue(experiments));
+        params.setMaxY(Experiment.findMaxValue(experiments));
+        params.setUnits(BpUnits.KB);
+        params.setNumPlotsPerRow(2);
         
         // Create plotting panel
         RasterFileTestPlotPanel panel =

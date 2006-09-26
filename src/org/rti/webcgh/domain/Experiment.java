@@ -278,6 +278,218 @@ public class Experiment implements Serializable {
     
     
     /**
+     * Get minimum value.  This value is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public final float minValue() {
+    	float min = Float.NaN;
+    	for (BioAssay ba : this.bioAssays) {
+    		float candidateMin = ba.minValue();
+    		if (!Float.isNaN(candidateMin)) {
+    			if (Float.isNaN(min) || candidateMin < min) {
+    				min = candidateMin;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get maximum value.  This value is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @return Maximum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public final float maxValue() {
+    	float max = Float.NaN;
+    	for (BioAssay ba : this.bioAssays) {
+    		float candidateMax = ba.maxValue();
+    		if (!Float.isNaN(candidateMax)) {
+    			if (Float.isNaN(max) || candidateMax > max) {
+    				max = candidateMax;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum value for given chromosomes.
+     * This value is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value for given chromosomes or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public final float minValue(final Collection<Short> chromosomes) {
+    	float min = Float.NaN;
+    	for (BioAssay ba : this.bioAssays) {
+    		float candidateMin = ba.minValue(chromosomes);
+    		if (!Float.isNaN(candidateMin)) {
+    			if (Float.isNaN(min) || candidateMin < min) {
+    				min = candidateMin;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get maximum value for given chromosomes. 
+     * This value is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param chromosomes Chromosome numbers
+     * @return Maximum value for given chromosomes or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public final float maxValue(final Collection<Short> chromosomes) {
+    	float max = Float.NaN;
+    	for (BioAssay ba : this.bioAssays) {
+    		float candidateMax = ba.maxValue(chromosomes);
+    		if (!Float.isNaN(candidateMax)) {
+    			if (Float.isNaN(max) || candidateMax > max) {
+    				max = candidateMax;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get maximum value from given
+     * experiments.  This value is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @return Maximum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMaxValue(
+    		final Collection<Experiment> experiments) {
+    	Float max = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		float candidateMax = exp.maxValue();
+    		if (!Float.isNaN(candidateMax)) {
+    			if (Float.isNaN(max) || candidateMax > max) {
+    				max = candidateMax;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum value from given
+     * experiments.  This is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMinValue(
+    		final Collection<Experiment> experiments) {
+    	Float min = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		float candidateMin = exp.minValue();
+    		if (!Float.isNaN(candidateMin)) {
+    			if (Float.isNaN(min) || candidateMin < min) {
+    				min = candidateMin;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get minimum value from given
+     * experiments and chromosomes.  This is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMaxValue(
+    		final Collection<Experiment> experiments,
+    		final Collection<Short> chromosomes) {
+    	Float max = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		float candidateMax = exp.maxValue(chromosomes);
+    		if (!Float.isNaN(candidateMax)) {
+    			if (Float.isNaN(max) || candidateMax > max) {
+    				max = candidateMax;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum value from given
+     * experiments and chromosomes.  This is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMinValue(
+    		final Collection<Experiment> experiments,
+    		final Collection<Short> chromosomes) {
+    	Float min = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		float candidateMin = exp.minValue(chromosomes);
+    		if (!Float.isNaN(candidateMin)) {
+    			if (Float.isNaN(min) || candidateMin < min) {
+    				min = candidateMin;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
      * Get size of chromosome inferred from data in given
      * experiments.
      * @param experiments Experiments

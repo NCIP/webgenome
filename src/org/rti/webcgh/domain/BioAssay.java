@@ -52,6 +52,7 @@ package org.rti.webcgh.domain;
 
 import java.awt.Color;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.SortedSet;
 
 import org.rti.webcgh.util.StringUtils;
@@ -248,4 +249,41 @@ public abstract class BioAssay implements Serializable {
      * @return Size of chromosome implied by data
      */
     public abstract long inferredChromosomeSize(short chromosome);
+    
+    /**
+     * Get minimum value in the bioassay.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @return Minimum value in bioassay
+     */
+    public abstract float minValue();
+    
+    
+    /**
+     * Get maximum value in the bioassay.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @return Maximum value in bioassay
+     */
+    public abstract float maxValue();
+    
+    
+    /**
+     * Get minimum value from the given chromosomes.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value from the given chromosomes
+     */
+    public abstract float minValue(Collection<Short> chromosomes);
+    
+    
+    /**
+     * Get maximum value from the given chromosomes.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @param chromosomes Chromosome numbers
+     * @return Maximum value from the given chromosomes
+     */
+    public abstract float maxValue(Collection<Short> chromosomes);
 }

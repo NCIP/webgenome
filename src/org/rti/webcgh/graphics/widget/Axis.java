@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.4 $
+$Date: 2006-09-26 21:10:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -187,7 +187,7 @@ public final class Axis implements ScalePlotElement {
     
     /** Range between minimum and maximum values in native units. */
     private final double range;
-
+    
     
     // ============================
     //     Getters/setters
@@ -270,8 +270,7 @@ public final class Axis implements ScalePlotElement {
         this.minorHatchLineThickness = minorHatchLineThickness;
     }
 
-
-    /**
+	/**
      * Set padding between graphic elements.
      * @param padding Padding in pixels.
      */
@@ -330,7 +329,7 @@ public final class Axis implements ScalePlotElement {
         	int textWidth = canvas.renderedWidth(ticStr, this.fontSize);
         	int relativeTextMinX = this.nativeUnitsToPixel(startingMajorTic)
         		- textWidth / 2;
-        	ticStr = this.numberFormatter.format(startingMajorTic);
+        	ticStr = this.numberFormatter.format(endingMajorTic);
         	textWidth = canvas.renderedWidth(ticStr, this.fontSize);
         	int relativeTextMaxX = this.nativeUnitsToPixel(endingMajorTic)
         		+ textWidth / 2;
@@ -738,7 +737,7 @@ public final class Axis implements ScalePlotElement {
 	    int pixel = this.nativeUnitsToPixel(value);
 	    Point point = null;
 	    if (this.orientation == Orientation.HORIZONTAL) {
-	        point = new Point(pixel, this.lineMinY);
+	        point = new Point(this.lineMinX + pixel, this.lineMinY);
 	    } else if (this.orientation == Orientation.VERTICAL) {
 	        point = new Point(this.lineMinX, this.lineMaxY - pixel);
 	    }

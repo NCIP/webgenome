@@ -93,8 +93,46 @@ public class ChromosomeArrayData implements Serializable {
     /** Is <code>arrayData</code> attribute sorted? */
     private boolean sorted = false;
 
+    /**
+     * Minimum value.  This value is the sum of
+     * the value and error of some <code>ArrayDatum</code>
+     * object.
+     */
+    private float minValue = Float.NaN;
     
     /**
+     * Maximum value.  This value is the sum of
+     * the value and error of some <code>ArrayDatum</code>
+     * object.
+     */
+    private float maxValue = Float.NaN;
+    
+    // =================================
+    //    Getters/setters
+    // =================================
+    
+    /**
+     * Get maximum value.  This value is the sum of
+     * the value and error of some <code>ArrayDatum</code>
+     * object.
+     * @return Maximum value
+     */
+    public final float getMaxValue() {
+		return maxValue;
+	}
+
+    
+    /**
+     * Get minimum value.  This value is the sum of
+     * the value and error of some <code>ArrayDatum</code>
+     * object.
+     * @return Minimum value
+     */
+	public final float getMinValue() {
+		return minValue;
+	}
+
+	/**
      * Get identifier of bioassay data
      * to which this chromosome array data belongs.
      * @return Bioassay identifier
@@ -128,6 +166,9 @@ public class ChromosomeArrayData implements Serializable {
      */
     public final void setArrayData(final List<ArrayDatum> arrayData) {
         this.arrayData = arrayData;
+        for (ArrayDatum d : arrayData) {
+        	this.updateMinAndMax(d);
+        }
     }
 
     /**
@@ -198,6 +239,7 @@ public class ChromosomeArrayData implements Serializable {
         }
         this.arrayData.add(arrayDatum);
         this.sorted = false;
+        this.updateMinAndMax(arrayDatum);
     }
     
     
@@ -345,5 +387,33 @@ public class ChromosomeArrayData implements Serializable {
             }
         }
         return max;
+    }
+    
+    
+    /**
+     * Update <code>minValue</code> and
+     * <code>maxValue</code>.
+     * @param datum An array datum that may
+     * or may not contain the maximum or
+     * minimum value.
+     */
+    private void updateMinAndMax(final ArrayDatum datum) {
+    	if (!Float.isNaN(datum.getValue())) {
+    		float candidateMin = datum.getValue();
+    		float candidateMax = candidateMin;
+    		if (!Float.isNaN(datum.getError())) {
+    			float error = datum.getError();
+    			candidateMin -= error;
+    			candidateMax += error;
+    		}
+    		if (Float.isNaN(this.minValue)
+    				|| candidateMin < this.minValue) {
+    			this.minValue = candidateMin;
+    		}
+    		if (Float.isNaN(this.maxValue)
+    				|| candidateMax > this.maxValue) {
+    			this.maxValue = candidateMax;
+    		}
+    	}
     }
 }

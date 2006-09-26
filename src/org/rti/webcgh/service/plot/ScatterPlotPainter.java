@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.7 $
+$Date: 2006-09-26 21:10:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
@@ -131,6 +132,8 @@ public class ScatterPlotPainter extends PlotPainter {
         }
         
         // Paint plot
+        ScatterPlotSizer sizer =
+        	new ScatterPlotSizer(plotParameters, width, height);
 		int plotCount = 0;
 		int rowCount = 1;
 		PlotPanel row = panel.newChildPlotPanel();
@@ -154,7 +157,8 @@ public class ScatterPlotPainter extends PlotPainter {
 	                (double) plotParameters.getMaxY());
 	        ScatterPlot scatterPlot =
 	            new ScatterPlot(experiments, gi.getChromosome(),
-	            		this.getChromosomeArrayDataGetter(), width, height, pb);
+	            		this.getChromosomeArrayDataGetter(), sizer.width(gi),
+	            		sizer.height(), pb);
 	        
 	        // Y-axis
 	        if (plotCount == 1) {
@@ -171,25 +175,28 @@ public class ScatterPlotPainter extends PlotPainter {
 		                VerticalAlignment.CENTERED);
 	        }
 	        
-//	        PlotPanel col = row.newChildPlotPanel();
-//	        
-//	        // Add scatter plot
-//	        col.add(scatterPlot);
-//	        
-//	        // X-axis
-//	        Axis xAxis = new Axis(gi.getStartLocation(),
-//	                gi.getEndLocation(), scatterPlot.width(),
-//	                Orientation.HORIZONTAL, Location.BELOW);
-//	        String captionText = "Chromosome " + gi.getChromosome()
-//	            + " (" + plotParameters.getUnits().getName() + ")";
-//	        Caption xCaption = new Caption(captionText,
-//	                Orientation.HORIZONTAL, false, panel.getDrawingCanvas());
-//	        col.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-//	                VerticalAlignment.BOTTOM_JUSTIFIED, true);
-//	        col.add(xCaption, HorizontalAlignment.CENTERED,
-//	                VerticalAlignment.BELOW);
-//	        row.add(col, HorizontalAlignment.LEFT_OF,
-//	        		VerticalAlignment.TOP_JUSTIFIED);
+	        PlotPanel col = row.newChildPlotPanel();
+	        
+	        // Add scatter plot
+	        col.add(scatterPlot, true);
+	        
+	        // X-axis
+	        Axis xAxis = new Axis(gi.getStartLocation(),
+	                gi.getEndLocation(), scatterPlot.width(),
+	                Orientation.HORIZONTAL, Location.BELOW,
+	                col.getDrawingCanvas());
+	        String captionText = "Chromosome " + gi.getChromosome()
+	            + " (" + plotParameters.getUnits().getName() + ")";
+	        Caption xCaption = new Caption(captionText,
+	                Orientation.HORIZONTAL, false, panel.getDrawingCanvas());
+	        col.add(xAxis, HorizontalAlignment.LEFT_JUSTIFIED,
+	        		VerticalAlignment.BOTTOM_JUSTIFIED);
+	        col.add(xCaption, HorizontalAlignment.CENTERED,
+	                VerticalAlignment.BELOW);
+	        
+	        
+	        row.add(col, HorizontalAlignment.RIGHT_OF,
+	        		VerticalAlignment.BOTTOM_JUSTIFIED);
 		}
 		
 		// Add final row
@@ -203,7 +210,70 @@ public class ScatterPlotPainter extends PlotPainter {
 		
 		// Legend
         Legend legend = new Legend(experiments, width);
-        panel.add(legend, HorizontalAlignment.LEFT_JUSTIFIED,
+        panel.add(legend, HorizontalAlignment.CENTERED,
                 VerticalAlignment.BELOW);
+    }
+    
+    
+    /**
+     * Class that is responsible for calculating
+     * the width and height of scatter plot widgets.
+     * The constructor takes parameters <code>width</code> and
+     * <code>height</code>.  When there is only a single
+     * genome interval to plot, the dimensions of the
+     * single scatter plot widget are equal to these parameters.
+     * For multiple genome intervals, the sum of widths and
+     * heights of the individual scatter plot widgets are
+     * less than or equal to these parameters, respectively.
+     */
+    static final class ScatterPlotSizer {
+    	
+    	/** Scale of native units to pixels. */
+    	private final double scale;
+    	
+    	/** Height of all plots in pixels. */
+    	private final int height;
+    	
+    	/**
+    	 * Constructor.
+    	 * @param params Plot parameters
+    	 * @param totalWidth Total width of all plots in pixels
+    	 * @param totalHeight Total height of all plots in pixels
+    	 */
+    	public ScatterPlotSizer(final ScatterPlotParameters params,
+    			final int totalWidth, final int totalHeight) {
+    		List<GenomeInterval> intervals = params.getGenomeIntervals();
+    		int numRows = (int) Math.ceil((double) intervals.size()
+    				/ (double) params.getNumPlotsPerRow());
+    		this.height = totalHeight / numRows;
+    		long longestInterval = 0;
+    		for (GenomeInterval interval : intervals) {
+    			long candidateLongest = interval.getEndLocation()
+    				- interval.getStartLocation();
+    			if (candidateLongest > longestInterval) {
+    				longestInterval = candidateLongest;
+    			}
+    		}
+    		this.scale = (double) totalWidth / (double) longestInterval;
+    	}
+    	
+    	
+    	/**
+    	 * Get width for plot.
+    	 * @param interval Genome interval
+    	 * @return Width in pixels
+    	 */
+    	public int width(final GenomeInterval interval) {
+    		return (int) (this.scale * (interval.getEndLocation()
+    				- interval.getStartLocation()));
+    	}
+    	
+    	/**
+    	 * Get height for plot.
+    	 * @return Height in pixels.
+    	 */
+    	public int height() {
+    		return this.height;
+    	}
     }
 }

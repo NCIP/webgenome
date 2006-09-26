@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.3 $
+$Date: 2006-09-26 21:10:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -326,8 +326,6 @@ public final class ScatterPlot implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(final DrawingCanvas canvas) {
-        
-    	
         // Paint points and lines
         for (Experiment exp : this.experiments) {
             for (BioAssay bioAssay : exp.getBioAssays()) {
@@ -339,10 +337,8 @@ public final class ScatterPlot implements PlotElement {
 	            canvas.add(tile);
 	                
 	            // Points
-	            DrawingCanvas pointsTile = tile.newTile();
-	            tile.add(pointsTile);
-	            pointsTile.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
-	            this.paintPoints(cad, bioAssay.getColor(), pointsTile);
+	            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
+	            this.paintPoints(cad, bioAssay.getColor(), canvas);
 	            
 	            // Error bars
 	//            DrawingCanvas errorBarsTile = tile.newTile();
@@ -540,7 +536,7 @@ public final class ScatterPlot implements PlotElement {
      * @return Transposed x-coordinate in pixels
      */
     private int transposeX(final DataPoint dataPoint) {
-        return (int) ((double) width
+        return this.x + (int) ((double) width
                 * this.plotBoundaries.fractionalDistanceFromLeft(dataPoint));
     }
     
@@ -553,7 +549,7 @@ public final class ScatterPlot implements PlotElement {
      * @return Transposed y-coordinate in pixels
      */
     private int transposeY(final DataPoint dataPoint) {
-        return height - (int) ((double) height
+        return this.y + height - (int) ((double) height
                 * this.plotBoundaries.fractionalDistanceFromBottom(dataPoint));
     }
     

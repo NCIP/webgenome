@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -88,6 +89,20 @@ public class DataSerializedBioAssay extends BioAssay {
     
     /** Maps chromosome numbers to inferred chromosome sizes. */
     private Map<Short, Long> chromosomeSizes = new HashMap<Short, Long>();
+    
+    /**
+     * Maps chromosome numbers to minimum values.  These values
+     * are the sum of <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object.
+     */
+    private Map<Short, Float> minValues = new HashMap<Short, Float>();
+    
+    /**
+     * Maps chromosome numbers to minimum values.  These values
+     * are the sum of <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object.
+     */
+    private Map<Short, Float> maxValues = new HashMap<Short, Float>();
     
     
     // ==============================
@@ -159,28 +174,19 @@ public class DataSerializedBioAssay extends BioAssay {
     
     
     /**
-     * Set relative name of file (i.e., not absolute path)
-     * containing chromosome array data from this bioassay
-     * for the given chromosome.  Clients calling
-     * this method should know how to convert the relative
-     * file name into an absolute path.
-     * @param chromosome A chromosome number
+     * This methods registers a chromosome array data set.
+     * @param chromosomeArrayData Chromosome array data to register.
      * @param fileName Relative name of file, not absolute path.
+     * Client classes should know how to convert the relative
+     * file name into an absolute path.
      */
-    public final void setFileName(final short chromosome,
+    public final void registerChromosomeArrayData(
+    		final ChromosomeArrayData chromosomeArrayData,
             final String fileName) {
-        this.chromosomeArrayDataFileIndex.put(chromosome, fileName);
-    }
-    
-    
-    /**
-     * Set inferred size of chromosome.
-     * @param chromosome Chromosome
-     * @param size Size
-     */
-    public final void setInferredChromosomeSize(
-    		final short chromosome, final long size) {
-    	this.chromosomeSizes.put(chromosome, size);
+    	short chrom = chromosomeArrayData.getChromosome();
+        this.chromosomeArrayDataFileIndex.put(chrom, fileName);
+        this.minValues.put(chrom, chromosomeArrayData.getMinValue());
+        this.maxValues.put(chrom, chromosomeArrayData.getMaxValue());
     }
     
     
@@ -212,4 +218,86 @@ public class DataSerializedBioAssay extends BioAssay {
     	return size;
     }
 
+    /**
+     * Get minimum value in the bioassay.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @return Minimum value in bioassay
+     */
+    public final float minValue() {
+    	float min = Float.NaN;
+    	for (float candidateMin : this.minValues.values()) {
+    		if (!Float.isNaN(candidateMin)) {
+	    		if (Float.isNaN(candidateMin) || candidateMin < min) {
+	    			min = candidateMin;
+	    		}
+    		}
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get maximum value in the bioassay.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @return Maximum value in bioassay
+     */
+    public final float maxValue() {
+    	float max = Float.NaN;
+    	for (float candidateMax : this.maxValues.values()) {
+    		if (!Float.isNaN(candidateMax)) {
+	    		if (Float.isNaN(candidateMax) || candidateMax > max) {
+	    			max = candidateMax;
+	    		}
+    		}
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum value from the given chromosomes.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value from the given chromosomes
+     */
+    public final float minValue(final Collection<Short> chromosomes) {
+    	float min = Float.NaN;
+    	for (short chrom : chromosomes) {
+    		Float candidateMin = this.minValues.get(chrom);
+    		if (!Float.isNaN(candidateMin)) {
+	    		if (candidateMin != null) {
+	    			if (Float.isNaN(min) || candidateMin < min) {
+	    				min = candidateMin;
+	    			}
+	    		}
+    		}
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get maximum value from the given chromosomes.  This value will be
+     * the sum of <code>value</code> and <code>error</code>
+     * in some <code>ArrayDatum</code> object.
+     * @param chromosomes Chromosome numbers
+     * @return Maximum value from the given chromosomes
+     */
+    public final float maxValue(final Collection<Short> chromosomes) {
+    	float max = Float.NaN;
+    	for (short chrom : chromosomes) {
+    		Float candidateMax = this.maxValues.get(chrom);
+    		if (!Float.isNaN(candidateMax)) {
+	    		if (candidateMax != null) {
+	    			if (Float.isNaN(max) || candidateMax > max) {
+	    				max = candidateMax;
+	    			}
+	    		}
+    		}
+    	}
+    	return max;
+    }
 }

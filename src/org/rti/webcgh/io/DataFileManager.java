@@ -206,9 +206,7 @@ public final class DataFileManager {
                     it.remove();
                 }
                 long id = this.serializer.serialize(ada);
-                ba.setFileName(cad.getChromosome(), String.valueOf(id));
-                ba.setInferredChromosomeSize(cad.getChromosome(),
-                		cad.inferredChromosomeSize());
+                ba.registerChromosomeArrayData(cad, String.valueOf(id));
             }
         }
         LOGGER.info("Completed serialization of array data");
@@ -272,8 +270,6 @@ public final class DataFileManager {
     public void saveChromosomeArrayData(final DataSerializedBioAssay bioAssay,
             final ChromosomeArrayData chromosomeArrayData) {
     	short chromNum = chromosomeArrayData.getChromosome();
-    	bioAssay.setInferredChromosomeSize(chromNum,
-    			chromosomeArrayData.inferredChromosomeSize());
     	LOGGER.info("Serializing chromosome array data for "
     			+ bioAssay.getName() + " chromosome " + chromNum);
         Array array = bioAssay.getArray();
@@ -301,7 +297,7 @@ public final class DataFileManager {
                     ad.getError()));
         }
         long id = this.serializer.serialize(ada);
-        bioAssay.setFileName(chromosomeArrayData.getChromosome(),
+        bioAssay.registerChromosomeArrayData(chromosomeArrayData,
                 String.valueOf(id));
         LOGGER.info("Completed serialization of array data");
     }
