@@ -43,17 +43,6 @@ The tool enables users to:
 		version of <span class="logo">webGenome</span> will provide better support
 		for Mozilla (e.g. Firefox) and other common browsers.
 	</li>
-	<li class="documentationBody">
-		<b>Scalable Vector Graphics
-		(SVG) support</b>. Click 
-		<html:link action="/svgTest">
-			here 
-		</html:link>
-		to check if your browser supports SVG.  If not, Adobe offers
-		a free SVG browser plugin.  
-		[<html:link href="http://www.adobe.com/svg/viewer/install/main.html">Download</html:link> |
-		<html:link page="/svgInstall.do">Installation Instructions</html:link>]
-	</li>
 </ul>
 
 <h3 class="documentationHeader">Getting Started</h3>

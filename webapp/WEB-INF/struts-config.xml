@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "struts-config_1_1.dtd">
+
+<struts-config>
+
+	<!-- ====================================================== -->
+	<!--                    Form Beans                          -->
+	<!-- ====================================================== -->
+	
+<!--
+	<form-beans>
+	</form-beans>
+-->
+	
+	<!-- =========================================================== -->
+	<!--                   Exception handlers                        -->
+	<!-- =========================================================== -->
+	
+<!--
+	<global-exceptions>
+	</global-exceptions>
+-->
+	
+	<!-- ================================================= -->
+	<!--                   Actions                         -->
+	<!-- ================================================= -->
+	
+	<action-mappings>
+	
+	<!-- Home -->
+		<action
+				path="/home"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="home.page"/>
+				
+		<!-- ============ Shopping cart actions ========= -->
+		
+	<!-- Show cart -->
+		<action
+				path="/cart/showCart"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.show.cart"/>
+			
+	<!-- Set plot type -->
+		<action
+				path="/cart/selectPlotType"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.select.plot.type"/>
+		
+	<!-- Scatter plot parameters -->
+		<action
+				path="/cart/scatterPlotParams"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.scatter.plot.params"/>
+		
+	<!-- Ideogram plot parameters -->
+		<action
+				path="/cart/ideogramPlotParams"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.ideogram.plot.params"/>
+		
+	<!-- Bar plot parameters -->
+		<action
+				path="/cart/barPlotParams"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.bar.plot.params"/>
+		
+	<!-- Annotation plot parameters -->
+		<action
+				path="/cart/annotationPlotParams"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.annotation.plot.params"/>
+		
+	<!-- Frequency plot parameters -->
+		<action
+				path="/cart/frequencyPlotParams"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.frequency.plot.params"/>
+				
+	<!-- Set colors -->
+		<action
+				path="/cart/setColors"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.set.colors"/>
+				
+	<!-- Show plot -->
+		<action
+				path="/cart/showPlot"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.show.plot"/>
+				
+	<!-- Show jobs table -->
+		<action
+				path="/cart/showJobsTable"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.show.jobs.table"/>
+				
+	<!-- Set display names of experiments and bioassays -->
+		<action
+				path="/cart/setDisplayNames"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.set.display.names"/>
+				
+	<!-- File upload -->
+		<action
+				path="/cart/fileUpload"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.file.upload"/>
+				
+	<!-- Select analytic operation -->
+		<action
+				path="/cart/selectOperation"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.select.operation"/>
+				
+	<!-- Set analytic operation parameters -->
+		<action
+				path="/cart/operationParams"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.operation.params"/>
+			
+	</action-mappings>
+	
+	<!-- ==================================================== -->
+	<!--            Controller                                -->
+	<!-- ==================================================== -->
+
+<!--
+	<controller>
+	  <set-property property="processorClass"
+	      value="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
+	</controller>
+-->
+	
+	<!-- =========================================================== -->
+	<!--                  Plug-ins                                   -->
+	<!-- =========================================================== -->
+	
+<!-- Tiles -->
+	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+	    <set-property property="definitions-config"
+		                 value="/WEB-INF/tiles-config.xml" />
+	    <set-property property="moduleAware" value="true" />
+	    <set-property property="definitions-parser-validate" value="true" />
+	</plug-in>
+
+<!-- Spring -->
+<!--
+	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+	  <set-property property="contextConfigLocation"
+	      value="/WEB-INF/applicationContext.xml"/>
+	</plug-in>
+-->
+</struts-config>

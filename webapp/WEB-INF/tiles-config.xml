@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC
+          "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+          "tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+<!-- Default layout -->
+  	<definition name="def.layout" path="/WEB-INF/jsp/layout/main.jsp">
+
+  		<!-- Complete list of tiles variables -->
+	  	<put name="title" value="" />
+	  	<put name="selectedMenuItem" value="" />
+	  	<put name="content" value="" />
+	  	<put name="helpTopic" value="" />
+  	</definition>
+
+<!-- Home page -->  	
+  	<definition name="home.page" extends="def.layout" >
+	  	<put name="title" value="webGenome: Overview" />
+	  	<put name="selectedMenuItem" value="home" />
+	  	<put name="content" value="/WEB-INF/jsp/home.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+  	<!-- ================================ -->
+  	<!--   Shopping cart pages            -->
+  	<!-- ================================ -->
+  	
+<!-- Shopping cart template -->
+  	<definition name="cart.layout" extends="def.layout" >
+	  	<put name="selectedMenuItem" value="cart" />
+  	</definition>
+  	
+<!-- Show shopping cart -->
+  	<definition name="cart.show.cart" extends="cart.layout" >
+	  	<put name="title" value="webGenome: View shopping cart" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/showCart.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Select plot type -->
+  	<definition name="cart.select.plot.type" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Select plot type" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/selectPlotType.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Scatter plot parameters -->
+  	<definition name="cart.scatter.plot.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Scatter plot parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/scatterPlotParams.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Ideogram plot parameters -->
+  	<definition name="cart.ideogram.plot.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Ideogram plot parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/ideogramPlotParams.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Annotation plot parameters -->
+  	<definition name="cart.annotation.plot.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Annotation plot parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/annotationPlotParams.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Bar plot parameters -->
+  	<definition name="cart.bar.plot.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Bar plot parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/barPlotParams.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Frequency plot parameters -->
+  	<definition name="cart.frequency.plot.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Frequency plot parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/frequencyPlotParams.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Set colors -->
+  	<definition name="cart.set.colors" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Set colors" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/setColors.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Set display names -->
+  	<definition name="cart.set.display.names" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Set display names" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/setDisplayNames.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Show plot -->
+  	<definition name="cart.show.plot" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Plot" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/showPlot.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Show jobs table -->
+  	<definition name="cart.show.jobs.table" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Jobs table" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/showJobsTable.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- File upload -->
+  	<definition name="cart.file.upload" extends="cart.layout" >
+	  	<put name="title" value="webGenome: File upload" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/fileUpload.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Select analytic operation -->
+  	<definition name="cart.select.operation" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Select analytic operation" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/selectOperation.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Set analytic operation parameters -->
+  	<definition name="cart.operation.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Analytic operation parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/operationParams.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+</tiles-definitions>
