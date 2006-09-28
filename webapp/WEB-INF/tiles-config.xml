@@ -109,6 +109,13 @@
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
   	
+<!-- Show job details -->
+  	<definition name="cart.job.details" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Job details" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/jobDetails.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
 <!-- File upload -->
   	<definition name="cart.file.upload" extends="cart.layout" >
 	  	<put name="title" value="webGenome: File upload" />

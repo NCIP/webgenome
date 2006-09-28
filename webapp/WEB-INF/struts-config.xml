@@ -38,10 +38,9 @@
 		<!-- ============ Shopping cart actions ========= -->
 		
 	<!-- Show cart -->
-		<action
-				path="/cart/showCart"
-				type="org.apache.struts.actions.ForwardAction"
-				parameter="cart.show.cart"/>
+		<action path="/cart/showCart">
+			<forward name="success" path="cart.show.cart"/>
+		</action>
 			
 	<!-- Set plot type -->
 		<action
@@ -97,6 +96,12 @@
 				type="org.apache.struts.actions.ForwardAction"
 				parameter="cart.show.jobs.table"/>
 				
+	<!-- Job details -->
+		<action
+				path="/cart/jobDetails"
+				type="org.apache.struts.actions.ForwardAction"
+				parameter="cart.job.details"/>
+				
 	<!-- Set display names of experiments and bioassays -->
 		<action
 				path="/cart/setDisplayNames"
@@ -127,12 +132,11 @@
 	<!--            Controller                                -->
 	<!-- ==================================================== -->
 
-<!--
+<!-- Spring controller for Tiles -->
 	<controller>
 	  <set-property property="processorClass"
 	      value="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
 	</controller>
--->
 	
 	<!-- =========================================================== -->
 	<!--                  Plug-ins                                   -->
@@ -146,11 +150,9 @@
 	    <set-property property="definitions-parser-validate" value="true" />
 	</plug-in>
 
-<!-- Spring -->
-<!--
+<!-- Spring context loader -->
 	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
 	  <set-property property="contextConfigLocation"
 	      value="/WEB-INF/applicationContext.xml"/>
 	</plug-in>
--->
 </struts-config>
