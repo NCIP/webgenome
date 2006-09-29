@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-29 21:02:39 $
+$Revision: 1.2 $
+$Date: 2006-09-29 21:13:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,17 +61,17 @@ public final class MouseOverStripe {
     // =============================
     
     /**
-     * Start coordinate
+     * Start coordinate.
      */
     private int start = 0;
     
     /**
-     * End coordinate
+     * End coordinate.
      */
     private int end = 0;
     
     /**
-     * Stripe text
+     * Stripe text.
      */
     public String text = "";
 
@@ -82,16 +82,19 @@ public final class MouseOverStripe {
 	/**
      * Constructor.
      */
-    private MouseOverStripe() {
+    public MouseOverStripe() {
     	
     }
+    
+    
     /**
      * Constructor.
      * @param start Start coordinate
      * @param end End coordinate
      * @param text Stripe text
      */
-    private MouseOverStripe(int start, int end, String text) {
+    public MouseOverStripe(final int start, final int end,
+    		final String text) {
     	this.start = start;
     	this.end = end;
     	this.text = text;
@@ -110,7 +113,7 @@ public final class MouseOverStripe {
 	/**
 	 * @param end The end to set.
 	 */
-	public void setEnd(int end) {
+	public void setEnd(final int end) {
 		this.end = end;
 	}
 	/**
@@ -122,7 +125,7 @@ public final class MouseOverStripe {
 	/**
 	 * @param start The start to set.
 	 */
-	public void setStart(int start) {
+	public void setStart(final int start) {
 		this.start = start;
 	}
 	/**
@@ -134,7 +137,7 @@ public final class MouseOverStripe {
 	/**
 	 * @param text The text to set.
 	 */
-	public void setText(String text) {
+	public void setText(final String text) {
 		this.text = text;
 	}
 
