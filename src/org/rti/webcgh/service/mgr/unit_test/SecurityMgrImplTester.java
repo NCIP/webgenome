@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-02 21:45:42 $
 
 The Web CGH Software License, Version 1.0
@@ -48,40 +48,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.dao.hibernate.unit_test;
+package org.rti.webcgh.service.mgr.unit_test;
 
 import org.rti.webcgh.domain.Principal;
-import org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao;
+import org.rti.webcgh.service.mgr.AccountAlreadyExistsException;
+import org.rti.webcgh.service.mgr.SecurityMgrImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import junit.framework.TestCase;
 
 /**
- * Tester for <code>HibernatePrincipalDao</code>.
+ * Tester for <code>SecurityMgrImpl</code>.
  * @author dhall
  *
  */
-public final class HibernatePrincipalDaoTester extends TestCase {
+public final class SecurityMgrImplTester extends TestCase {
 
 	/**
 	 * Test all methods.
+	 * @throws Exception if something bad happens.
 	 */
-	public void testAllMethods() {
+	public void testAllMethods() throws Exception {
 		String name = "Name";
 		String password = "Password";
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        	"org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
-		HibernatePrincipalDao dao = (HibernatePrincipalDao)
-			ctx.getBean("principalDao");
-		Principal p1 = new Principal(name, password);
-		dao.save(p1);
-		Principal p2 = dao.load(name);
-		assertEquals(p1.getPassword(), p2.getPassword());
-		p2 = dao.load(name, password);
-		assertNotNull(p2);
-		dao.delete(p1);
-		p2 = dao.load(name);
-		assertNull(p2);
+        	"org/rti/webcgh/service/mgr/unit_test/beans.xml");
+		SecurityMgrImpl sm = (SecurityMgrImpl) ctx.getBean("securityMgr");
+		Principal p1 = sm.newAccount(name, password);
+		assertNotNull(p1);
+		try {
+			sm.newAccount(name, password);
+			fail();
+		} catch (AccountAlreadyExistsException e) {
+			assertTrue(true);
+		}
+		sm.delete(p1);
 	}
 }

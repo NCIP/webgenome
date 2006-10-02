@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-02 21:45:42 $
 
 The Web CGH Software License, Version 1.0
@@ -48,85 +48,118 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.dao.hibernate;
-
-import java.util.List;
+package org.rti.webcgh.service.mgr;
 
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.service.dao.PrincipalDao;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Implementation of <code>PrincipalDao</code> using
- * Hibernate.
+ * Concrete implementation of <code>SecurityMgr</code>
+ * using dependency injection.
  * @author dhall
  *
  */
-public final class HibernatePrincipalDao extends HibernateDaoSupport
-	implements PrincipalDao {
+public final class SecurityMgrImpl implements SecurityMgr {
 
-	/**
-	 * Persist given principal.
-	 * @param principal Principal to persist.
-	 */
-	public void save(final Principal principal) {
-		this.getHibernateTemplate().save(principal);
-	}
+	// =======================
+	//      Attributes
+	// =======================
 	
 	/**
-	 * Updated persisted data on given principal.
-	 * @param principal Principal whose persistent
-	 * data should be updated.
+	 * Data access object for principal data.
+	 * This property should be injected.
+	 */
+	private PrincipalDao principalDao = null;
+	
+	
+	// =======================
+	//     Getters/setters
+	// =======================
+	
+	/**
+	 * Set data access object for principal
+	 * data.
+	 * @return Data access object for principal
+	 * data.
+	 */
+	public PrincipalDao getPrincipalDao() {
+		return principalDao;
+	}
+
+
+	/**
+	 * Set data access object for principal
+	 * data.
+	 * @param principalDao Data access object for principal
+	 * data.
+	 */
+	public void setPrincipalDao(final PrincipalDao principalDao) {
+		this.principalDao = principalDao;
+	}
+
+
+	// ================================
+	//    Business methods
+	// ================================
+	
+	/**
+	 * Create a new user account with given user name
+	 * and password.
+	 * @param name User name
+	 * @param password Password
+	 * @return Principal object
+	 * @throws AccountAlreadyExistsException if an account
+	 * with the name given by principal already exists.
+	 */
+	public Principal newAccount(final String name, final String password)
+		throws AccountAlreadyExistsException {
+		if (name == null || name.length() < 1
+				|| password == null || password.length() < 1) {
+			throw new IllegalArgumentException(
+					"Both name and password must be non-null");
+		}
+		if (this.accountExists(name)) {
+			throw new AccountAlreadyExistsException("An account with name '"
+					+ name + "' already exists");
+		}
+		Principal p = new Principal(name, password);
+		this.principalDao.save(p);
+		return p;
+	}
+	
+	
+	/**
+	 * Determines if a user account associated with the
+	 * given name exists.
+	 * @param name User name
+	 * @return T/F
+	 */
+	public boolean accountExists(final String name) {
+		if (name == null || name.length() < 1) {
+			throw new IllegalArgumentException(
+					"Account name cannot be empty");
+		}
+		return this.principalDao.load(name) != null;
+	}
+	
+	
+	/**
+	 * Update, which is used primarily for changing password.
+	 * @param principal Principal whose persistent information
+	 * should be updated.
 	 */
 	public void update(final Principal principal) {
-		this.getHibernateTemplate().update(principal);
-	}
-
-	/**
-	 * Load principal with given name.
-	 * @param name Name of principal.
-	 * @return Principal with given name, or null
-	 * if no such principal exists.
-	 */
-	public Principal load(final String name) {
-		String query = "from Principal p where p.name = ?";
-		Object[] args = new Object[] {name};
-		Principal p = null;
-		List principals = this.getHibernateTemplate().find(query, args);
-		if (principals != null && principals.size() > 0) {
-			p = (Principal) principals.get(0);
-		}
-		return p;
+		this.principalDao.update(principal);
 	}
 	
 	
 	/**
-	 * Load principal with given name and password.
-	 * @param name Name of principal.
-	 * @param password Principal's password.
-	 * @return Principal with given name and password
-	 * or null if no such principal exists.
-	 */
-	public Principal load(final String name, final String password) {
-		String query = "from Principal p where p.name = ? "
-			+ "and p.password = ?";
-		Object[] args = new Object[] {name, password};
-		Principal p = null;
-		List principals = this.getHibernateTemplate().find(query, args);
-		if (principals != null && principals.size() > 0) {
-			p = (Principal) principals.get(0);
-		}
-		return p;
-	}
-	
-	
-	/**
-	 * Delete data from given principal from persistent
-	 * storage.
-	 * @param principal Principal whose information
-	 * should be removed from persistent storage.
+	 * Delete persistently stored information associated
+	 * with given principal.
+	 * @param principal Principal whose persistent infromation
+	 * should be deleted.
 	 */
 	public void delete(final Principal principal) {
-		this.getHibernateTemplate().delete(principal);
+		this.principalDao.delete(principal);
 	}
 }

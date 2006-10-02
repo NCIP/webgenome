@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-02 21:45:42 $
 
 The Web CGH Software License, Version 1.0
@@ -48,40 +48,56 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.dao.hibernate.unit_test;
+package org.rti.webcgh.service.mgr;
 
-import org.rti.webcgh.domain.Principal;
-import org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import junit.framework.TestCase;
+import org.rti.webcgh.core.WebcghApplicationException;
 
 /**
- * Tester for <code>HibernatePrincipalDao</code>.
+ * An exception that is thrown if the system tries to create
+ * a new user account and the account name already exists.
  * @author dhall
  *
  */
-public final class HibernatePrincipalDaoTester extends TestCase {
+public class AccountAlreadyExistsException extends
+	WebcghApplicationException {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = (long) 1;
 
 	/**
-	 * Test all methods.
+	 * Constructor.
 	 */
-	public void testAllMethods() {
-		String name = "Name";
-		String password = "Password";
-		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        	"org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
-		HibernatePrincipalDao dao = (HibernatePrincipalDao)
-			ctx.getBean("principalDao");
-		Principal p1 = new Principal(name, password);
-		dao.save(p1);
-		Principal p2 = dao.load(name);
-		assertEquals(p1.getPassword(), p2.getPassword());
-		p2 = dao.load(name, password);
-		assertNotNull(p2);
-		dao.delete(p1);
-		p2 = dao.load(name);
-		assertNull(p2);
+	public AccountAlreadyExistsException() {
+		super();
 	}
+
+	
+	/**
+	 * Constructor.
+	 * @param msg Message
+	 * @param origThrowable Original throwable
+	 */
+	public AccountAlreadyExistsException(final String msg,
+			final Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
+
+	
+	/**
+	 * Constructor.
+	 * @param msg Message.
+	 */
+	public AccountAlreadyExistsException(final String msg) {
+		super(msg);
+	}
+
+	
+	/**
+	 * Constructor.
+	 * @param origThrowable Original throwable.
+	 */
+	public AccountAlreadyExistsException(final Throwable origThrowable) {
+		super(origThrowable);
+	}
+
 }
