@@ -52,6 +52,7 @@ package org.rti.webcgh.domain;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -73,6 +74,9 @@ public class ShoppingCart implements Serializable {
     
     /** Experiments in shopping cart. */
     private Set<Experiment> experiments = new HashSet<Experiment>();
+    
+    /** Plots in shopping cart. */
+    private Set<Plot> plots = new HashSet<Plot>();
    
     /** User name associated with cart. */
     private String userName = null;
@@ -83,6 +87,22 @@ public class ShoppingCart implements Serializable {
     // =============================
 
     /**
+     * Get plots in cart.
+     * @return Plots in cart.
+     */
+    public final Set<Plot> getPlots() {
+		return plots;
+	}
+
+    /**
+     * Set plots in cart.
+     * @param plots Plots in cart.
+     */
+	public final void setPlots(final Set<Plot> plots) {
+		this.plots = plots;
+	}
+
+	/**
      * Get identifier used as a primary key in persitence.
      * @return Identifier
      */
@@ -170,5 +190,53 @@ public class ShoppingCart implements Serializable {
      */
     public final void remove(final Experiment experiment) {
         this.experiments.remove(experiment);
+    }
+    
+    
+    /**
+     * Add plot to cart.
+     * @param plot A plot.
+     */
+    public final void add(final Plot plot) {
+    	this.plots.add(plot);
+    }
+    
+    
+    /**
+     * Remove plot from cart.
+     * @param plot A plot.
+     */
+    public final void remove(final Plot plot) {
+    	this.plots.remove(plot);
+    }
+    
+    
+    /**
+     * Remove experiment with given id from cart.
+     * @param id Experiment primary key identifier.
+     */
+    public final void removeExperiment(final Long id) {
+    	Iterator<Experiment> it = this.experiments.iterator();
+    	while (it.hasNext()) {
+    		if (id.equals(it.next())) {
+    			it.remove();
+    			break;
+    		}
+    	}
+    }
+    
+    
+    /**
+     * Remove plot with given id from cart.
+     * @param id Plot primary key identifier.
+     */
+    public final void removePlot(final Long id) {
+    	Iterator<Plot> it = this.plots.iterator();
+    	while (it.hasNext()) {
+    		if (id.equals(it.next())) {
+    			it.remove();
+    			break;
+    		}
+    	}
     }
 }

@@ -1,3 +1,5 @@
+DELETE FROM principal;
+DELETE FROM cytoband_2;
 DELETE FROM array_datum_2;
 DELETE FROM reporter_2;
 DELETE FROM chromosome_array_data_2;

@@ -1,6 +1,7 @@
 --
 -- Drop tables
 --
+DROP TABLE principal;
 DROP TABLE cytoband_2;
 DROP TABLE array_datum_2;
 DROP TABLE reporter_2;

@@ -1,4 +1,14 @@
 --
+-- User
+--
+CREATE TABLE principal (
+    id NUMBER(38) NOT NULL,
+	name VARCHAR(48),
+	password VARCHAR(48),
+	PRIMARY KEY (id)
+);
+
+--
 -- Reporter
 --
 CREATE TABLE reporter_2 (
@@ -8,7 +18,6 @@ CREATE TABLE reporter_2 (
 	location LONG,
 	PRIMARY KEY (id)
 );
-CREATE SEQUENCE reporter_seq;
 
 --
 -- BioAssayData
@@ -17,7 +26,6 @@ CREATE TABLE bio_assay_data_2 (
 	id NUMBER(38) NOT NULL,
 	PRIMARY KEY (id)
 );
-CREATE SEQUENCE bio_assay_data_seq;
 
 --
 -- ChromosomeArrayData
@@ -29,7 +37,6 @@ CREATE TABLE chromosome_array_data_2 (
 	bio_assay_data_id NUMBER(38),
 	PRIMARY KEY (id)
 );
-CREATE SEQUENCE chromosome_array_data_seq;
 
 --
 -- ArrayDatum
@@ -44,7 +51,6 @@ CREATE TABLE array_datum_2 (
 	FOREIGN KEY (reporter_id) REFERENCES reporter_2 (id),
 	FOREIGN KEY (chromosome_array_data_id) REFERENCES chromosome_array_data_2 (id)
 );
-CREATE SEQUENCE array_datum_seq;
 
 --
 -- Organism
@@ -56,7 +62,6 @@ CREATE TABLE organism_2 (
 	PRIMARY KEY (id)
 );
 INSERT INTO organism_2 (id, genus, species) VALUES (1, 'Homo', 'sapiens');
-CREATE SEQUENCE organism_seq START WITH 2;
 
 --
 -- ShoppingCart
@@ -66,7 +71,6 @@ CREATE TABLE shopping_cart_2 (
 	user_name VARCHAR(128),
 	PRIMARY KEY (id)
 );
-CREATE SEQUENCE shopping_cart_seq;
 
 --
 -- Experiment
@@ -77,7 +81,6 @@ CREATE TABLE experiment_2 (
 	shopping_cart_id NUMBER(38),
 	PRIMARY KEY(id)
 );
-CREATE SEQUENCE experiment_seq;
 
 --
 -- BioAssay
@@ -92,7 +95,6 @@ CREATE TABLE bio_assay_2 (
 	FOREIGN KEY (organism_id) REFERENCES organism_2 (id),
 	FOREIGN KEY (experiment_id) REFERENCES experiment_2 (id)
 );
-CREATE SEQUENCE bio_assay_seq;
 
 --
 -- Cytoband
@@ -100,10 +102,8 @@ CREATE SEQUENCE bio_assay_seq;
 CREATE TABLE cytoband_2 (
 	id NUMBER(38) NOT NULL,
 	name VARCHAR(16),
-	start LONG,
-	end LONG,
+	start_loc NUMBER(38),
+	end_loc NUMBER(38),
 	stain VARCHAR(16),
 	PRIMARY KEY (id)
 );
-CREATE SEQUENCE cytoband_seq;
-

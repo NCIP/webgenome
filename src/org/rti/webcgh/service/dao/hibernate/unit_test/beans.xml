@@ -26,6 +26,7 @@
     	</property>
   	</bean>
   	
+  	<!--
   	<bean id="reporterDao" class="org.rti.webcgh.service.dao.hibernate.HibernateReporterDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
@@ -43,6 +44,11 @@
   	</bean>
   	
   	<bean id="shoppingCartDao" class="org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	-->
+  	
+  	<bean id="principalDao" class="org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 
