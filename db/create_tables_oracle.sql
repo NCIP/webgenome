@@ -73,6 +73,17 @@ CREATE TABLE shopping_cart_2 (
 );
 
 --
+-- Image
+--
+CREATE TABLE plot_2 (
+	id NUMBER(38) NOT NULL,
+	name VARCHAR(128),
+	shopping_cart_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart_2(id)
+);
+
+--
 -- Experiment
 --
 CREATE TABLE experiment_2 (

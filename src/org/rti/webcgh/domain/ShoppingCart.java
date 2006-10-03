@@ -218,7 +218,7 @@ public class ShoppingCart implements Serializable {
     public final void removeExperiment(final Long id) {
     	Iterator<Experiment> it = this.experiments.iterator();
     	while (it.hasNext()) {
-    		if (id.equals(it.next())) {
+    		if (id.equals(it.next().getId())) {
     			it.remove();
     			break;
     		}
@@ -233,7 +233,7 @@ public class ShoppingCart implements Serializable {
     public final void removePlot(final Long id) {
     	Iterator<Plot> it = this.plots.iterator();
     	while (it.hasNext()) {
-    		if (id.equals(it.next())) {
+    		if (id.equals(it.next().getId())) {
     			it.remove();
     			break;
     		}

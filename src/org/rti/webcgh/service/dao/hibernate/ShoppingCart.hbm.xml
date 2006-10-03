@@ -14,6 +14,17 @@
 		
 		<property name="userName" column="user_name"/>
 		
+		<set
+			name="plots"
+			cascade="all-delete-orphan"
+			lazy="false">
+			<key
+				column="shopping_cart_id"
+				not-null="true"
+			/>
+			<one-to-many class="org.rti.webcgh.domain.Plot"/>
+		</set>
+		
 	</class>
 
 </hibernate-mapping>
