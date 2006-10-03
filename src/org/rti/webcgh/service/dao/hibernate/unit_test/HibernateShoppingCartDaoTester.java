@@ -51,20 +51,35 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.dao.hibernate.unit_test;
 
 
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import junit.framework.TestCase;
 
 /**
  * Tester for <code>HibernateExperimentDao</code>.
  * @author dhall
  */
-public class HibernateShoppingCartDaoTester extends TestCase {
+public final class HibernateShoppingCartDaoTester extends TestCase {
     
     /**
-     * Test save(), update(), and delete() methods.
-     *
+     * Test all methods.
      */
-    public void testSaveUpdateAndDelete() {
-        
+    public void testAllMethods() {
+    	ApplicationContext ctx = new ClassPathXmlApplicationContext(
+    		"org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
+    	HibernateShoppingCartDao dao = (HibernateShoppingCartDao)
+    		ctx.getBean("shoppingCartDao");
+    	String user = "user";
+    	ShoppingCart c1 = new ShoppingCart(user);
+    	dao.save(c1);
+    	ShoppingCart c2 = dao.load(user);
+    	assertNotNull(c2);
+    	dao.delete(c1);
+    	c2 = dao.load(user);
+    	assertNull(c2);
     }
 
 }

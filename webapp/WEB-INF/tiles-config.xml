@@ -159,5 +159,19 @@
 	  	<put name="content" value="/WEB-INF/jsp/user/confirmLogin.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
+  	
+<!-- New account -->
+  	<definition name="user.new.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: New account" />
+	  	<put name="content" value="/WEB-INF/jsp/user/newAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Confirm account -->
+  	<definition name="user.confirm.new.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Account created" />
+	  	<put name="content" value="/WEB-INF/jsp/user/confirmNewAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
 
 </tiles-definitions>

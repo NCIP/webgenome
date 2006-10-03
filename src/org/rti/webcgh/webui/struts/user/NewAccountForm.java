@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-03 16:25:36 $
 
 The Web CGH Software License, Version 1.0
@@ -58,18 +58,19 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.webui.struts.BaseForm;
 
 /**
- * Form bean backing login screen.
+ * Form backing requests for user accounts.
  * @author dhall
  *
  */
-public class LoginForm extends BaseForm {
-
+public class NewAccountForm extends BaseForm {
+	
 	/** Version ID for serialization. */
 	private static final long serialVersionUID = 1;
 	
-	// =====================
-	//    Attributes
-	// =====================
+	
+	// ==============================
+	//       Attributes
+	// ==============================
 	
 	/** User name. */
 	private String name = "";
@@ -77,9 +78,13 @@ public class LoginForm extends BaseForm {
 	/** Password. */
 	private String password = "";
 	
-	// ===========================
-	//        Getters/setters
-	// ===========================
+	/** Password confirmation. */
+	private String confirmedPassword = "";
+
+	
+	// =============================
+	//      Getters/setters
+	// =============================
 	
 	/**
 	 * Get user name.
@@ -114,10 +119,29 @@ public class LoginForm extends BaseForm {
 		this.password = password;
 	}
 	
-	// ===============================
-	//       Overrides
-	// ===============================
+	
+	/**
+	 * Get password confirmation.
+	 * @return Password confirmation.
+	 */
+	public final String getConfirmedPassword() {
+		return confirmedPassword;
+	}
 
+
+	/**
+	 * Set password confirmation.
+	 * @param confirmedPassword Password confirmation.
+	 */
+	public final void setConfirmedPassword(final String confirmedPassword) {
+		this.confirmedPassword = confirmedPassword;
+	}
+
+	
+	// ==================================
+	//         Overrides
+	// ==================================
+	
 	/**
 	 * Reset state of this form.
 	 * @param actionMapping Action mapping
@@ -128,6 +152,7 @@ public class LoginForm extends BaseForm {
 			final HttpServletRequest request) {
 		this.name = "";
 		this.password = "";
+		this.confirmedPassword = "";
 	}
 
 	/**
@@ -152,9 +177,21 @@ public class LoginForm extends BaseForm {
 			e.add("password", new ActionError("invalid.field"));
 		}
 		
-		// Gloabl message
+		// Confirmed password
+		if (this.confirmedPassword == null
+				|| this.confirmedPassword.length() < 1) {
+			e.add("confirmedPassword", new ActionError("invalid.field"));
+		}
+		
+		// Global message
 		if (e.size() > 0) {
 			e.add("global", new ActionError("invalid.fields"));
+			
+		// Make sure passwords match
+		} else {
+			if (!this.password.equals(this.confirmedPassword)) {
+				e.add("global", new ActionError("password.mismatch"));
+			}
 		}
 		return e;
 	}

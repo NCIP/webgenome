@@ -10,9 +10,16 @@
 	<!-- ====================================================== -->
 	
 	<form-beans>
+	
+	<!-- Login form -->
 		<form-bean
 			name="login.form"
 			type="org.rti.webcgh.webui.struts.user.LoginForm"/>
+		
+	<!-- New account form -->	
+		<form-bean
+			name="new.account.form"
+			type="org.rti.webcgh.webui.struts.user.NewAccountForm"/>
 	</form-beans>
 
 	
@@ -135,22 +142,40 @@
 			path="/user/login"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.login"/>
-				
+	
+	<!-- Validate login credentials -->			
 		<action
 			path="/user/validateLogin"
 			name="login.form"
-			scope="session"
+			scope="request"
 			validate="true"
 			input="/user/login.do">
 			<forward name="success" path="user.confirm.login"/>
 			<forward name="failure" path="/user/login.do"/>
 		</action>
-				
+			
+	<!-- Confirm login -->	
 		<action
 			path="/user/confirmLogin"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.confirm.login"/>
 			
+	<!-- Create account -->
+		<action
+			path="/user/newAccount"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.new.account"/>
+			
+	<!-- Validate login credentials -->			
+		<action
+			path="/user/createAccount"
+			name="new.account.form"
+			scope="request"
+			validate="true"
+			input="/user/newAccount.do">
+			<forward name="success" path="user.confirm.new.account"/>
+			<forward name="failure" path="/user/newAccount.do"/>
+		</action>
 	</action-mappings>
 	
 	<!-- ==================================================== -->

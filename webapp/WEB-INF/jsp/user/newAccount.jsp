@@ -4,7 +4,7 @@
 
 <center>
 	<html:errors property="global"/>
-	<html:form action="/user/validateLogin">
+	<html:form action="/user/createAccount">
 	
 	<%-- User name --%>
 		<p>
@@ -18,13 +18,15 @@
 			Password: &nbsp;&nbsp; <html:password property="password"/>
 		</p>
 		
+	<%-- Password confirm --%>
+		<p>
+			<html:errors property="confirmedPassword"/>
+			Confirm password: &nbsp;&nbsp; <html:password property="confirmedPassword"/>
+		</p>
+		
 	<%-- Submit button --%>
 		<p>
 			<html:submit value="OK"/>
 		</p>
 	</html:form>
-	
-	<p>
-		<html:link action="/user/newAccount">Create Account</html:link>
-	</p>
 </center>

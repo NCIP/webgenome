@@ -47,9 +47,15 @@
 		class="org.rti.webcgh.webui.struts.user.LoginAction">
 		<property name="securityMgr"><ref bean="securityMgr"/></property>
 	</bean>
+	
+<!-- Create new account -->
+	<bean name="/user/createAccount"
+		class="org.rti.webcgh.webui.struts.user.CreateAccountAction">
+		<property name="securityMgr"><ref bean="securityMgr"/></property>
+	</bean>
 
 <!-- Show shopping cart -->
 	<bean name="/cart/showCart"
 		class="org.rti.webcgh.webui.struts.cart.ShowCartSetupAction"/>
-		
+				
 </beans>

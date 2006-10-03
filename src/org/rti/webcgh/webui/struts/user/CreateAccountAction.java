@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-03 16:25:36 $
 
 The Web CGH Software License, Version 1.0
@@ -51,111 +51,78 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.struts.user;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.webui.struts.BaseForm;
+import org.rti.webcgh.service.mgr.SecurityMgr;
+import org.rti.webcgh.webui.struts.BaseAction;
+
 
 /**
- * Form bean backing login screen.
+ * Creates a new user account.
  * @author dhall
  *
  */
-public class LoginForm extends BaseForm {
+public final class CreateAccountAction extends BaseAction {
 
-	/** Version ID for serialization. */
-	private static final long serialVersionUID = 1;
-	
-	// =====================
-	//    Attributes
-	// =====================
-	
-	/** User name. */
-	private String name = "";
-	
-	/** Password. */
-	private String password = "";
-	
-	// ===========================
-	//        Getters/setters
-	// ===========================
+	/** Account manager. This property should be injected. */
+	private SecurityMgr securityMgr = null;
 	
 	/**
-	 * Get user name.
-	 * @return User name.
+	 * Get account manager.
+	 * @return Account manager.
 	 */
-	public final String getName() {
-		return name;
+	public SecurityMgr getSecurityMgr() {
+		return securityMgr;
 	}
 
-	/**
-	 * Set user name.
-	 * @param name User name.
-	 */
-	public final void setName(final String name) {
-		this.name = name;
-	}
 
 	/**
-	 * Get password.
-	 * @return Password.
+	 * Set account manager.
+	 * @param securityMgr Security manager for user accounts.
 	 */
-	public final String getPassword() {
-		return password;
+	public void setSecurityMgr(final SecurityMgr securityMgr) {
+		this.securityMgr = securityMgr;
 	}
 
-	
-	/**
-	 * Set password.
-	 * @param password Password.
-	 */
-	public final void setPassword(final String password) {
-		this.password = password;
-	}
-	
-	// ===============================
-	//       Overrides
-	// ===============================
 
 	/**
-	 * Reset state of this form.
-	 * @param actionMapping Action mapping
-	 * @param request Servlet request
-	 */
-	@Override
-	public final void reset(final ActionMapping actionMapping,
-			final HttpServletRequest request) {
-		this.name = "";
-		this.password = "";
-	}
-
-	/**
-	 * Validate form contents.
-	 * @param actionMapping Action mapping
-	 * @param request Servlet request
-	 * @return Action errors.  This will be empty
-	 * if there are no errors.
-	 */
-	@Override
-	public final ActionErrors validate(final ActionMapping actionMapping,
-			final HttpServletRequest request) {
-		ActionErrors e = new ActionErrors();
-		
-		// Name
-		if (this.name == null || this.name.length() < 1) {
-			e.add("name", new ActionError("invalid.field"));
-		}
-		
-		// Password
-		if (this.password == null || this.password.length() < 1) {
-			e.add("password", new ActionError("invalid.field"));
-		}
-		
-		// Gloabl message
-		if (e.size() > 0) {
-			e.add("global", new ActionError("invalid.fields"));
-		}
-		return e;
-	}
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	NewAccountForm naf = (NewAccountForm) form;
+    	
+    	// See if there is already a user with the same account name
+    	if (this.securityMgr.accountExists(naf.getName())) {
+    		ActionErrors errors = new ActionErrors();
+    		errors.add("global", new ActionError("account.already.exists"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("failure");
+    	}
+    	
+    	// Create new account
+    	this.securityMgr.newAccount(naf.getName(), naf.getPassword());
+    	
+    	// Add new account name to request for downstream confirmation JSP
+    	request.setAttribute("account.name", naf.getName());
+    	
+        return mapping.findForward("success");
+    }
 }
