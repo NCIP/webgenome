@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-02 18:42:21 $
+$Revision: 1.2 $
+$Date: 2006-10-03 22:28:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,11 @@ package org.rti.webcgh.domain;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.rti.webcgh.webui.util.ClickBoxes;
+import org.rti.webcgh.webui.util.MouseOverStripe;
 
 /**
  * Represents a plot of data.  A plot is an
@@ -85,6 +89,22 @@ public class Plot implements Serializable {
      * know how to generate absolute paths.
      */
     private Map<String, String> imageFileMap = new HashMap<String, String>();
+    
+    /**
+     * Click boxes representing rectangular pixel regions
+     * within the plot.  Text values of the click boxes
+     * give the names of images that should be displayed
+     * when the user clicks in the regions.
+     */
+    private ClickBoxes clickBoxes = null;
+    
+    /**
+     * Mouse over stripes reprsenting rectangular
+     * pixel regions within the plot.  Text values
+     * of each strip gives mouseover text (reporter
+     * names).
+     */
+    private List<MouseOverStripe> mouseOverStripes = null;
     
     // ================================
     //       Getters/setters
@@ -148,10 +168,57 @@ public class Plot implements Serializable {
 	}
 	
 	
+	/**
+	 * Get click boxes representing rectangular pixel regions
+     * within the plot.  Text values of the click boxes
+     * give the names of images that should be displayed
+     * when the user clicks in the regions.
+	 * @return Click boxes
+	 */
+	public final ClickBoxes getClickBoxes() {
+		return clickBoxes;
+	}
+
+	
+	/**
+	 * Set click boxes representing rectangular pixel regions
+     * within the plot.  Text values of the click boxes
+     * give the names of images that should be displayed
+     * when the user clicks in the regions.
+	 * @param clickBoxes Click boxes
+	 */
+	public final void setClickBoxes(final ClickBoxes clickBoxes) {
+		this.clickBoxes = clickBoxes;
+	}
+
+	/**
+	 * Get mouse over stripes reprsenting rectangular
+     * pixel regions within the plot.  Text values
+     * of each strip gives mouseover text (reporter
+     * names).
+	 * @return Mouse over stripes.
+	 */
+	public final List<MouseOverStripe> getMouseOverStripes() {
+		return mouseOverStripes;
+	}
+
+	/**
+	 * Set mouse over stripes reprsenting rectangular
+     * pixel regions within the plot.  Text values
+     * of each strip gives mouseover text (reporter
+     * names).
+	 * @param mouseOverStripes Mouse over stripes
+	 */
+	public final void setMouseOverStripes(
+			final List<MouseOverStripe> mouseOverStripes) {
+		this.mouseOverStripes = mouseOverStripes;
+	}
+	
 	// ============================
 	//     Constructors
 	// ============================
 	
+
 	/**
 	 * Constructor.
 	 */
