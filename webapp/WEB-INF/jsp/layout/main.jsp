@@ -51,6 +51,23 @@
 				</html:link>
 			]&nbsp;&nbsp;
 			
+		<%-- Login --%>
+			[
+				<html:link action="/user/login">
+					Login
+				</html:link>
+			]&nbsp;&nbsp;
+			
+		<%-- Profile --%>
+			[
+				My Profile
+			]&nbsp;&nbsp;
+			
+		<%-- Logout --%>
+			[
+				Logout
+			]&nbsp;&nbsp;
+			
 		<%-- Help --%>
 			[Help]
 		</p>

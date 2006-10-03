@@ -3,6 +3,51 @@
 
 <beans>
 
+<!-- Data source -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>jdbc:oracle:thin:@rtilxs02.rti.org:1521:webgrtid</value></property>
+		<property name="username"><value>webg</value></property>
+		<property name="password"><value>webcgh9</value></property>
+	</bean>
+	
+<!-- Session factory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	<property name="mappingDirectoryLocations">
+	      	<list>
+        		<bean class="org.springframework.core.io.ClassPathResource">
+        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/service/dao/hibernate</value></constructor-arg>
+        		</bean>
+	      	</list>
+    	</property>
+    	<property name="hibernateProperties">
+      		<props>
+        		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+      		</props>
+    	</property>
+  	</bean>
+  	
+<!-- Principal DAO -->
+  	<bean id="principalDao" class="org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+
+<!-- Security manager -->
+	<bean id="securityMgr" class="org.rti.webcgh.service.mgr.SecurityMgrImpl">
+		<property name="principalDao"><ref bean="principalDao"/></property>
+	</bean>
+	
+	<!-- ========================================== -->
+	<!--        Action beans                        -->
+	<!-- ========================================== -->
+	
+<!-- Validate login -->
+	<bean name="/user/validateLogin"
+		class="org.rti.webcgh.webui.struts.user.LoginAction">
+		<property name="securityMgr"><ref bean="securityMgr"/></property>
+	</bean>
+
 <!-- Show shopping cart -->
 	<bean name="/cart/showCart"
 		class="org.rti.webcgh.webui.struts.cart.ShowCartSetupAction"/>

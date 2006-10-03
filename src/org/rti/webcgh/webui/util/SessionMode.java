@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-03 14:55:41 $
 
 The Web CGH Software License, Version 1.0
@@ -48,16 +48,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts;
-
-import org.apache.struts.action.Action;
-
+package org.rti.webcgh.webui.util;
 
 /**
- * Abstract base class for webGenome Struts actions.
+ * Mode of user session, which is either stand-alone
+ * or plotting client.
  * @author dhall
  *
  */
-public abstract class BaseAction extends Action {
+public enum SessionMode {
+	
+	/**
+	 * Indicates the user is using the system stand-alone.
+	 * In other words, they went directly to webGenome
+	 * and uploaded data.
+	 */
+	STAND_ALONE,
+	
+	/**
+	 * Indicates the users is using webGenome as a plotting
+	 * client for another application.
+	 */
+	CLIENT;
 
 }

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-03 14:55:41 $
 
 The Web CGH Software License, Version 1.0
@@ -48,58 +48,86 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.mgr;
+package org.rti.webcgh.webui.struts.user;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Principal;
+import org.rti.webcgh.service.mgr.SecurityMgr;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
+import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Manages user account related functions.
+ * Logs a user into the system.
  * @author dhall
  *
  */
-public interface SecurityMgr {
+public final class LoginAction extends BaseAction {
+	
+	/** Account manager. This property should be injected. */
+	private SecurityMgr securityMgr = null;
+	
+	/**
+	 * Get account manager.
+	 * @return Account manager.
+	 */
+	public SecurityMgr getSecurityMgr() {
+		return securityMgr;
+	}
+
 
 	/**
-	 * Create a new user account with given user name
-	 * and password.
-	 * @param name User name
-	 * @param password Password
-	 * @return Principal object
-	 * @throws AccountAlreadyExistsException if an account
-	 * with the name given by principal already exists.
+	 * Set account manager.
+	 * @param securityMgr Security manager for user accounts.
 	 */
-	Principal newAccount(String name, String password)
-		throws AccountAlreadyExistsException;
-	
+	public void setSecurityMgr(final SecurityMgr securityMgr) {
+		this.securityMgr = securityMgr;
+	}
+
+
 	/**
-	 * Determines if a user account associated with the
-	 * given name exists.
-	 * @param name User name
-	 * @return T/F
-	 */
-	boolean accountExists(String name);
-	
-	/**
-	 * Update, which is used primarily for changing password.
-	 * @param principal Principal whose persistent information
-	 * should be updated.
-	 */
-	void update(Principal principal);
-	
-	/**
-	 * Delete persistently stored information associated
-	 * with given principal.
-	 * @param principal Principal whose persistent infromation
-	 * should be deleted.
-	 */
-	void delete(Principal principal);
-	
-	/**
-	 * Login.
-	 * @param name User name.
-	 * @param password Password.
-	 * @return Principal object or null if no principal
-	 * exists with given user name and password.
-	 */
-	Principal logIn(String name, String password);
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	LoginForm lf = (LoginForm) form;
+    	
+    	// Get principal and cache in session
+    	Principal p = this.securityMgr.logIn(lf.getName(),
+    			lf.getPassword());
+    	if (p == null) {
+    		ActionErrors errors = new ActionErrors();
+    		errors.add("global", new ActionError("invalid.user"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("failure");
+    	}
+    	PageContext.setPrincipal(request, p);
+    	
+    	// Set session mode
+    	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
+    	
+    	// Get shopping cart
+    	// TODO: Get shopping cart and cache
+    	
+        return mapping.findForward("success");
+    }
 }

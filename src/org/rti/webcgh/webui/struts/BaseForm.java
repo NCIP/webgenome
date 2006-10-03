@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-03 14:55:41 $
 
 The Web CGH Software License, Version 1.0
@@ -50,14 +50,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts;
 
-import org.apache.struts.action.Action;
-
+import org.apache.struts.action.ActionForm;
 
 /**
- * Abstract base class for webGenome Struts actions.
+ * Abstract base class for all Struts forms.
  * @author dhall
  *
  */
-public abstract class BaseAction extends Action {
+public abstract class BaseForm extends ActionForm {
 
 }

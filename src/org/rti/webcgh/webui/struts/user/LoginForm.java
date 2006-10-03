@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-03 14:55:41 $
 
 The Web CGH Software License, Version 1.0
@@ -48,16 +48,107 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts;
+package org.rti.webcgh.webui.struts.user;
 
-import org.apache.struts.action.Action;
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.webui.struts.BaseForm;
 
 /**
- * Abstract base class for webGenome Struts actions.
+ * Form bean backing login screen.
  * @author dhall
  *
  */
-public abstract class BaseAction extends Action {
+public class LoginForm extends BaseForm {
 
+	/** Version ID for serialization. */
+	private static final long serialVersionUID = 1;
+	
+	// =====================
+	//    Attributes
+	// =====================
+	
+	/** User name. */
+	private String name = "";
+	
+	/** Password. */
+	private String password = "";
+	
+	// ===========================
+	//        Getters/setters
+	// ===========================
+	
+	/**
+	 * Get user name.
+	 * @return User name.
+	 */
+	public final String getName() {
+		return name;
+	}
+
+	/**
+	 * Set user name.
+	 * @param name User name.
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Get password.
+	 * @return Password.
+	 */
+	public final String getPassword() {
+		return password;
+	}
+
+	
+	/**
+	 * Set password.
+	 * @param password Password.
+	 */
+	public final void setPassword(final String password) {
+		this.password = password;
+	}
+	
+	// ===============================
+	//       Overrides
+	// ===============================
+
+	/**
+	 * Reset state of this form.
+	 * @param actionMapping Action mapping
+	 * @param request Servlet request
+	 */
+	@Override
+	public final void reset(final ActionMapping actionMapping,
+			final HttpServletRequest request) {
+		this.password = "";
+	}
+
+	/**
+	 * Validate form contents.
+	 * @param actionMapping Action mapping
+	 * @param request Servlet request
+	 * @return Action errors.  This will be empty
+	 * if there are no errors.
+	 */
+	@Override
+	public final ActionErrors validate(final ActionMapping actionMapping,
+			final HttpServletRequest request) {
+		ActionErrors e = new ActionErrors();
+		if (this.name == null || this.name.length() < 1) {
+			e.add("name", new ActionError("invalid.field"));
+		}
+		if (this.password == null || this.password.length() < 1) {
+			e.add("password", new ActionError("invalid.field"));
+		}
+		if (e.size() > 0) {
+			e.add("global", new ActionError("invalid.fields"));
+		}
+		return e;
+	}
 }

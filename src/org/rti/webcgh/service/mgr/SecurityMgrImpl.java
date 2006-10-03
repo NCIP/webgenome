@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-02 21:45:42 $
+$Revision: 1.2 $
+$Date: 2006-10-03 14:55:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -161,5 +161,18 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 */
 	public void delete(final Principal principal) {
 		this.principalDao.delete(principal);
+	}
+	
+	
+	/**
+	 * Login.
+	 * @param name User name.
+	 * @param password Password.
+	 * @return Principal object or null if no principal
+	 * exists with given user name and password.
+	 */
+	public Principal logIn(final String name,
+			final String password) {
+		return this.principalDao.load(name, password);
 	}
 }
