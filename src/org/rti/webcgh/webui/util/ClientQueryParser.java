@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/client/util/ClientQueryParser.java,v $
-$Revision: 1.2 $
-$Date: 2006-05-26 17:16:45 $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/ClientQueryParser.java,v $
+$Revision: 1.1 $
+$Date: 2006-10-05 03:59:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-package org.rti.webcgh.webui.client.util;
+package org.rti.webcgh.webui.util;
 
 import java.util.ArrayList;
 import java.util.List;
