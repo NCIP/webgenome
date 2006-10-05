@@ -63,6 +63,15 @@ public class Organism implements Serializable {
     private static final long serialVersionUID = (long) 1;
     
     
+    // ============================
+    //       Constants
+    // ============================
+    
+    /** Unknown organism. */
+    public static final Organism UNKNOWN_ORGANISM =
+    	new Organism("Unknown", "Unknown");
+    
+    
     // ======================================
     //         Attributes
     // ======================================

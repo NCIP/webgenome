@@ -52,6 +52,8 @@ package org.rti.webcgh.domain;
 
 import java.io.Serializable;
 
+import org.rti.webgenome.client.ReporterDTO;
+
 /**
  * Represents a microarray reporter (i.e., a probe).
  * @author dhall
@@ -167,6 +169,18 @@ public class Reporter implements Serializable, Comparable<Reporter> {
         this.name = name;
         this.chromosome = chromosome;
         this.location = location;
+    }
+    
+    
+    /**
+     * Constructor.
+     * @param dto Data transfer object.
+     */
+    public Reporter(final ReporterDTO dto) {
+    	this.chromosome = ChromosomeFormatter.chromosomeNumber(
+    			dto.getChromosome());
+    	this.location = dto.getChromosomeLocation();
+    	this.name = dto.getName();
     }
 
     // ==================================

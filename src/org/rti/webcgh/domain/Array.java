@@ -64,6 +64,13 @@ public class Array implements Serializable {
     /** Serialized version ID. */
     private static final long serialVersionUID = (long) 1;
     
+    // ===============================
+    //      Constants
+    // ===============================
+    
+    /** Unknown array. */
+    public static final Array UNKNOWN_ARRAY = new Array("Unknown");
+    
     // =================================
     //     Attributes
     // =================================

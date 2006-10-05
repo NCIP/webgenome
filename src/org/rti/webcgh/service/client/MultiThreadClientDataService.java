@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-05 03:59:45 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -167,9 +167,12 @@ public final class MultiThreadClientDataService
 			}
         }
         
-        // Construct result collection
-        
-        return null;
+        // Construct and return result collection
+        Collection<ExperimentDTO> dtos = new ArrayList<ExperimentDTO>();
+        for (ThreadQueryResult res : queryResults) {
+        	dtos.add(res.getExperiment());
+        }
+        return Experiment.newExperiments(dtos);
     }
     
     

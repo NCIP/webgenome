@@ -56,6 +56,9 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.rti.webgenome.client.BioAssayDTO;
+import org.rti.webgenome.client.BioAssayDatumDTO;
+
 /**
  * Concrete implementation of <code>BioAssay</code>
  * that includes data.  This class will be used
@@ -136,6 +139,37 @@ public class DataContainingBioAssay extends BioAssay {
      */
     public DataContainingBioAssay(final String name, final Organism organism) {
         super(name, organism);
+    }
+    
+    
+    /**
+     * Constructor.
+     * @param bioAssayDto Bioassay data transfer object.
+     */
+    public DataContainingBioAssay(final BioAssayDTO bioAssayDto) {
+    	if (bioAssayDto == null) {
+    		throw new IllegalArgumentException("BioAssayDTO is null");
+    	}
+    	if (bioAssayDto.getName() == null) {
+    		throw new IllegalArgumentException("BioAssayDTO.name is null");
+    	}
+    	this.setName(bioAssayDto.getName());
+    	this.setOrganism(Organism.UNKNOWN_ORGANISM);
+    	this.setArray(Array.UNKNOWN_ARRAY);
+    	this.add(bioAssayDto.getBioAssayData());
+    }
+    
+    
+    /**
+     * Add bioassay data from given data transfer objects.
+     * @param bioAssayData Bioassay data transfer objects.
+     */
+    private void add(final BioAssayDatumDTO[] bioAssayData) {
+    	if (bioAssayData != null) {
+    		for (int i = 0; i < bioAssayData.length; i++) {
+    			this.add(new ArrayDatum(bioAssayData[i]));
+    		}
+    	}
     }
     
     // =================================
@@ -276,4 +310,22 @@ public class DataContainingBioAssay extends BioAssay {
                 chromosomeArrayData.getChromosome(), chromosomeArrayData);
     }
 
+    
+    /**
+     * Add data from given data transfer object.
+     * @param bioAssayDto Bioassay data transfer object.
+     */
+    public final void addData(final BioAssayDTO bioAssayDto) {
+    	if (bioAssayDto == null) {
+    		throw new IllegalArgumentException("Bioassay DTO is null");
+    	}
+    	if (bioAssayDto.getName() == null) {
+    		throw new IllegalArgumentException("BioAssayDTO.name is null");
+    	}
+    	if (!this.getName().equals(bioAssayDto.getName())) {
+    		throw new IllegalArgumentException(
+    				"Cannot add data from data transfer object.  "
+    				+ "Bioassay names do not match.");
+    	}
+    }
 }

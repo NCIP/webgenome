@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,7 +59,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.util.StringUtils;
+import org.rti.webgenome.client.BioAssayDTO;
+import org.rti.webgenome.client.ExperimentDTO;
 
 /**
  * Represents a microarray experiment.  Essentially this class is
@@ -208,11 +212,96 @@ public class Experiment implements Serializable {
         this.name = name;
         this.quantitationType = quantitationType;
     }
+    
+    
+    /**
+     * Constructor.
+     * @param experimentDto Experiment data transfer object.
+     */
+    public Experiment(final ExperimentDTO experimentDto) {
+    	if (experimentDto.getExperimentID() == null) {
+    		throw new IllegalArgumentException(
+    				"ExperimentDTO.experimentId cannot be null");
+    	}
+    	this.name = experimentDto.getExperimentID();
+    	BioAssayDTO[] bioAssayDto = experimentDto.getBioAssays();
+    	this.add(bioAssayDto);
+    }
+    
+    
+    /**
+     * Add data from given data transfer objects.
+     * @param bioAssayDtos Bioassay data transfer objects.
+     */
+    private void add(final BioAssayDTO[] bioAssayDtos) {
+    	if (bioAssayDtos != null) {
+    		for (int i = 0; i < bioAssayDtos.length; i++) {
+    			BioAssayDTO dto = bioAssayDtos[i];
+    			String bioAssayName = dto.getName();
+    			if (bioAssayName == null) {
+    				throw new IllegalArgumentException(
+    						"BioAssayDTO.name cannot be null");
+    			}
+    			BioAssay ba = this.getBioAssayByName(bioAssayName);
+    			if (ba == null) {
+    				this.add(new DataContainingBioAssay(dto));
+    			} else {
+    				if (!(ba instanceof DataContainingBioAssay)) {
+        				throw new WebcghSystemException(
+        						"Cannot add BioAssayDTO data to a "
+        						+ "non-DataContainingBioAssay object");
+        			}
+    				((DataContainingBioAssay) ba).addData(dto);
+    			}
+    		}
+    	}
+    }
+    
+    
+    /**
+     * Get bioassay whose name matches the given name.
+     * @param bioAssayName Bioassay name
+     * @return A bioassay
+     */
+    private BioAssay getBioAssayByName(final String bioAssayName) {
+    	if (bioAssayName == null) {
+    		throw new IllegalArgumentException("Bioassay name is null");
+    	}
+    	BioAssay bioAssay = null;
+    	for (BioAssay ba : this.bioAssays) {
+    		if (bioAssayName.equals(ba.getName())) {
+    			bioAssay = ba;
+    			break;
+    		}
+    	}
+    	return bioAssay;
+    }
         
     
     // ====================================
     //        Business methods
     // ====================================
+    
+    
+    /**
+     * Add data from given data transfer object.
+     * @param experimentDto Experiment data transfer object.
+     */
+    public final void addData(final ExperimentDTO experimentDto) {
+    	if (experimentDto == null) {
+    		throw new IllegalArgumentException("ExperimentDTO cannot be null");
+    	}
+    	if (experimentDto.getExperimentID() == null) {
+    		throw new IllegalArgumentException(
+    				"ExperimentDTO.experimentId cannot be null");
+    	}
+    	if (!this.name.equals(experimentDto.getExperimentID())) {
+    		throw new IllegalArgumentException(
+    				"Trying to add data to different experiment.  "
+    				+ "Invalid experimentId");
+    	}
+    	this.add(experimentDto.getBioAssays());
+    }
     
     /**
      * Add a bioassay to this experiment.
@@ -508,5 +597,34 @@ public class Experiment implements Serializable {
     		}
     	}
     	return max;
+    }
+    
+    
+    /**
+     * Create new experiments from given data transfer objects.
+     * @param experimentDtos Experiment data transfer objects.
+     * @return Experiments
+     */
+    public static final Collection<Experiment> newExperiments(
+    		final Collection<ExperimentDTO> experimentDtos) {
+    	Collection<Experiment> experiments = new ArrayList<Experiment>();
+    	for (ExperimentDTO dto : experimentDtos) {
+    		boolean found = false;
+    		if (dto.getExperimentID() == null) {
+    			throw new IllegalArgumentException(
+    					"ExperimentDTO.experimentId property is null");
+    		}
+    		for (Experiment exp : experiments) {
+    			if (exp.getName().equals(dto.getExperimentID())) {
+    				exp.addData(dto);
+    				found = true;
+    				break;
+    			}
+    		}
+    		if (!found) {
+    			experiments.add(new Experiment(dto));
+    		}
+    	}
+    	return experiments;
     }
 }

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
@@ -48,67 +48,47 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.client;
+package org.rti.webcgh.domain;
 
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
- * Implementation of <code>BioAssayDatumDTO</code> used primarily
- * for testing.
+ * Handles 2-way translation between chromosome numbers
+ * and String equivalents.
  * @author dhall
  *
  */
-public class DefBioAssayDatumDTOImpl implements BioAssayDatumDTO {
+public final class ChromosomeFormatter {
 	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
-
-	/** Quantitation type. */
-    private String quantitationType = null;
-    
-    /** Reporter. */
-    private ReporterDTO reporter = null;
-    
-    /** Value. */
-    private Double value = null;
-    
-    
-    /**
-     * Constructor.
-     * @param value Value
-     * @param quantitationType Quantitation type
-     * @param reporter Reporter
-     */
-    public DefBioAssayDatumDTOImpl(final Double value, 
-    		final String quantitationType, final ReporterDTO reporter) {
-        this.value = value;
-        this.quantitationType = quantitationType;
-        this.reporter = reporter;
-    }
-    
-    /**
-     * Get quantitatio type.
-     * @return Quantitation type.
-     */
-    public final String getQuantitationType() {
-        return quantitationType;
-    }
-
-    
-    /**
-     * Get reporter.
-     * @return reporter.
-     */
-    public final ReporterDTO getReporter() {
-        return reporter;
-    }
-
-    
-    /**
-     * Get value.
-     * @return Value
-     */
-    public final Double getValue() {
-        return value;
-    }
-
+	/**
+	 * Constructor.
+	 *
+	 */
+	private ChromosomeFormatter() {
+		
+	}
+	
+	/**
+	 * Convert text-based representation of chromosome into
+	 * numeric.
+	 * @param chromosomeText Text-based representation of
+	 * chromosome.  This may be a text-based number, X, or Y.
+	 * @return Chromosome number.
+	 */
+	public static short chromosomeNumber(final String chromosomeText) {
+		short num = (short) -1;
+		if ("X".equalsIgnoreCase(chromosomeText)) {
+			num = 23;
+		} else if ("Y".equalsIgnoreCase(chromosomeText)) {
+			num = 24;
+		} else {
+			try {
+				num = Short.parseShort(chromosomeText);
+			} catch (NumberFormatException e) {
+				throw new WebcghSystemException("Unrecognized chromosome: '"
+						+ chromosomeText + "'");
+			}
+		}
+		return num;
+	}
 }

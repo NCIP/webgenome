@@ -35,7 +35,11 @@
 		<p align="center">
 		
 		<%-- Home --%>
-			[Home]&nbsp;&nbsp;
+			[
+				<html:link action="/home">
+					Home
+				</html:link>
+			]&nbsp;&nbsp;
 			
 		<%-- Shopping cart --%>
 			[

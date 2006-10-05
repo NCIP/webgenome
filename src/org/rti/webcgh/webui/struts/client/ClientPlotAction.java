@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-05 03:59:45 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.client;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,15 +59,13 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.array.ShoppingCart;
-import org.rti.webcgh.deprecated.Units;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.client.ClientDataService;
-import org.rti.webcgh.webui.plot.PlotParamsForm;
 import org.rti.webcgh.webui.struts.BaseAction;
-import org.rti.webcgh.webui.util.AttributeManager;
 import org.rti.webcgh.webui.util.ClientQueryParser;
+import org.rti.webcgh.webui.util.PageContext;
+import org.rti.webcgh.webui.util.SessionMode;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 
 /**
@@ -113,13 +113,22 @@ public final class ClientPlotAction extends BaseAction {
 		// Construct parameters for obtaining data through
 		// the client data service
         String clientID = request.getParameter("clientID");
-        String[] experimentIDs = ClientQueryParser.getExperimentIds(request);
+        String[] experimentIds = ClientQueryParser.getExperimentIds(request);
         BioAssayDataConstraints[] constraints =
         	ClientQueryParser.getBioAssayDataConstraints(request);
         
         // Retrieve data from client
+        Collection<Experiment> experiments = 
+        	this.clientDataService.getClientData(constraints,
+        			experimentIds, clientID);
         
         // Put data in shopping cart
+        ShoppingCart cart = new ShoppingCart();
+        PageContext.setShoppingCart(request, cart);
+        cart.add(experiments);
+        
+        // Set session mode
+        PageContext.setSessionMode(request, SessionMode.CLIENT);
         
 		return mapping.findForward("success");
 	}

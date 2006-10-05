@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webgenome/client/DefBioAssayDTOImpl.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webgenome.client;
@@ -56,19 +53,35 @@ package org.rti.webgenome.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Implementation of <code>BioAssayDTO</code> used primarily for
+ * testing.
+ * @author dhall
+ *
+ */
 public class DefBioAssayDTOImpl implements BioAssayDTO {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 1;
 
+	/** Bioassay name. */
     private String name = null;
+    
+    /** Bioassay identifier. */
     private String id = null;
-    private Collection bioAssayData = new ArrayList();
+    
+    /** Bioassay datum. */
+    private Collection<BioAssayDatumDTO> bioAssayData =
+    	new ArrayList<BioAssayDatumDTO>();
     
     /**
-     * Constructor
+     * Constructor.
      * @param name Name
      * @param id ID
-     * @param bioAssayData Initial array of BioAssayDatumDTO
+     * @param bioAssayDatumDTOArray Initial array of BioAssayDatumDTO
      */
-    public DefBioAssayDTOImpl(String name, String id, BioAssayDatumDTO[] bioAssayDatumDTOArray) {
+    public DefBioAssayDTOImpl(final String name, final String id,
+    		final BioAssayDatumDTO[] bioAssayDatumDTOArray) {
         this.name = name;
         this.id = id;
         for (int i = 0; i < bioAssayDatumDTOArray.length; i++) {
@@ -77,36 +90,36 @@ public class DefBioAssayDTOImpl implements BioAssayDTO {
     }
     
     /**
-     * Get ID
+     * Get ID.
      * @return String ID
      */
-    public String getID() {
+    public final String getID() {
         return id;
     }
 
     /**
-     * Get name
+     * Get name.
      * @return String Name
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
     /**
-     * Get BioAssayDatumDTO[] array
+     * Get BioAssayDatumDTO[] array.
      * @return BioAssayDatumDTO[] bioassay datum DTOs
      */
-    public BioAssayDatumDTO[] getBioAssayData() {
+    public final BioAssayDatumDTO[] getBioAssayData() {
         BioAssayDatumDTO[] dtos = new BioAssayDatumDTO[0];
         dtos = (BioAssayDatumDTO[]) this.bioAssayData.toArray(dtos);
         return dtos;
     }
     
     /**
-     * Add a BioAssayDatumDTO to this BioAssayDTO
-     * @param dto
+     * Add a BioAssayDatumDTO to this BioAssayDTO.
+     * @param dto Bioassay datum data transfer object
      */
-    public void add(BioAssayDatumDTO dto) {
+    public final void add(final BioAssayDatumDTO dto) {
         this.bioAssayData.add(dto);
     }
 

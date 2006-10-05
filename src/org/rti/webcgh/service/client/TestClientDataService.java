@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
@@ -48,67 +48,51 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.client;
+package org.rti.webcgh.service.client;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webgenome.client.BioAssayDataConstraints;
+import org.rti.webgenome.client.ExperimentDTO;
+import org.rti.webgenome.client.ExperimentDTOGenerator;
 
 /**
- * Implementation of <code>BioAssayDatumDTO</code> used primarily
- * for testing.
+ * Implementation of <code>ClientDataService</code>
+ * for testing.  All data returned are randomly
+ * generated values and positions.
  * @author dhall
  *
  */
-public class DefBioAssayDatumDTOImpl implements BioAssayDatumDTO {
+public class TestClientDataService implements ClientDataService {
 	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	/** Gap between generated reporters in base pairs. */
+	private static final long GAP = 100000;
+	
+	/** Number of bioassays per experiment generated. */
+	private static final int NUM_BIO_ASSAYS = 3;
+	
+	/** Experiment data transfer object generator. */
+	private final ExperimentDTOGenerator experimentDTOGenerator =
+		new ExperimentDTOGenerator(GAP, NUM_BIO_ASSAYS);
 
-	/** Quantitation type. */
-    private String quantitationType = null;
-    
-    /** Reporter. */
-    private ReporterDTO reporter = null;
-    
-    /** Value. */
-    private Double value = null;
-    
-    
-    /**
-     * Constructor.
-     * @param value Value
-     * @param quantitationType Quantitation type
-     * @param reporter Reporter
-     */
-    public DefBioAssayDatumDTOImpl(final Double value, 
-    		final String quantitationType, final ReporterDTO reporter) {
-        this.value = value;
-        this.quantitationType = quantitationType;
-        this.reporter = reporter;
+	/**
+	 * Generate random data with given experiment IDs and constraints.
+	 * @param constraints Query constraints
+	 * @param experimentIds Experiment identifiers
+	 * @param clientID Application client ID
+	 * @return Experiments from application client
+	 */
+    public final Collection<Experiment> getClientData(
+    		final BioAssayDataConstraints[] constraints,
+    		final String[] experimentIds, final String clientID) {
+    	Collection<Experiment> experiments = new ArrayList<Experiment>();
+    	for (int i = 0; i < experimentIds.length; i++) {
+    		ExperimentDTO dto = this.experimentDTOGenerator.newExperimentDTO(
+    				experimentIds[i], constraints);
+    		experiments.add(new Experiment(dto));
+    	}
+    	return experiments;
     }
-    
-    /**
-     * Get quantitatio type.
-     * @return Quantitation type.
-     */
-    public final String getQuantitationType() {
-        return quantitationType;
-    }
-
-    
-    /**
-     * Get reporter.
-     * @return reporter.
-     */
-    public final ReporterDTO getReporter() {
-        return reporter;
-    }
-
-    
-    /**
-     * Get value.
-     * @return Value
-     */
-    public final Double getValue() {
-        return value;
-    }
-
 }

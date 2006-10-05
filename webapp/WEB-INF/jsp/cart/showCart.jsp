@@ -1,4 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <h1 align="center">Shopping Cart</h1>
 
@@ -8,6 +10,20 @@
 	statistically processed experiments, and
 	generated plots.
 </p>
+
+<h2 align="center">Experiments</h2>
+<center>
+	<p>
+		<ul>
+			<logic:iterate name="shopping.cart" property="experiments"
+				id="experiment">
+				<li>
+					<bean:write name="experiment" property="name"/>
+				</li>
+			</logic:iterate>
+		</ul>
+	</p>
+</center>
 
 <p align="center">
 	<html:link action="/cart/selectPlotType">

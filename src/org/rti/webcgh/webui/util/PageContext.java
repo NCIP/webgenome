@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-03 14:55:41 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,9 +51,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.util;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.webui.SessionTimeoutException;
 
 /**
  * Provides access to objects cached as attributes in the request
@@ -101,10 +103,14 @@ public final class PageContext {
 	 * Get principal associated with current session.
 	 * @param request Servlet request
 	 * @return Principal associated with current session
+	 * @throws SessionTimeoutException If attribute not
+	 * found in session.
 	 */
-	public static Principal getPrincipal(final HttpServletRequest request) {
+	public static Principal getPrincipal(
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
 		return (Principal)
-			request.getSession().getAttribute(KEY_PRINCIPAL);
+			getSessionAttribute(request, KEY_PRINCIPAL);
 	}
 	
 	
@@ -125,10 +131,14 @@ public final class PageContext {
 	 * Get session mode.
 	 * @param request Servlet request.
 	 * @return Session mode of a particular session.
+	 * @throws SessionTimeoutException If attribute not
+	 * found in session.
 	 */
-	public static SessionMode getSessionMode(final HttpServletRequest request) {
+	public static SessionMode getSessionMode(
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
 		return (SessionMode)
-			request.getSession().getAttribute(KEY_SESSION_MODE);
+			getSessionAttribute(request, KEY_SESSION_MODE);
 	}
 	
 	
@@ -147,11 +157,14 @@ public final class PageContext {
 	 * Get shopping cart associated with session.
 	 * @param request Servlet request.
 	 * @return Shopping cart associated with session.
+	 * @throws SessionTimeoutException If attribute not
+	 * found in session.
 	 */
 	public static ShoppingCart getShoppingCart(
-			final HttpServletRequest request) {
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
 		return (ShoppingCart)
-			request.getSession().getAttribute(KEY_SHOPPING_CART);
+			getSessionAttribute(request, KEY_SHOPPING_CART);
 	}
 	
 	
@@ -163,5 +176,26 @@ public final class PageContext {
 	public static void setShoppingCart(final HttpServletRequest request,
 			final ShoppingCart shoppingCart) {
 		request.getSession().setAttribute(KEY_SHOPPING_CART, shoppingCart);
+	}
+	
+	/**
+	 * Get an attribute from session and throw a
+	 * <code>SessionExpired</code> exception if
+	 * attribute not found.
+	 * @param request Servlet request
+	 * @param attName Attribute name
+	 * @return A session attribute
+	 * @throws SessionTimeoutException If attribute not
+	 * found in session.
+	 */
+	private static Object getSessionAttribute(
+			final HttpServletRequest request, final String attName)
+	throws SessionTimeoutException {
+		HttpSession s = request.getSession();
+		Object obj = s.getAttribute(attName);
+		if (obj == null) {
+			throw new SessionTimeoutException("Session timed out");
+		}
+		return obj;
 	}
 }

@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/ClientQueryParser.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-05 03:59:41 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.webui.util;
@@ -57,117 +54,149 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 
 import org.rti.webcgh.core.InvalidClientQueryParametersException;
+import org.rti.webcgh.util.GenomeIntervalCoder;
+import org.rti.webcgh.util.GenomeIntervalFormatException;
 import org.rti.webgenome.client.BioAssayDataConstraints;
-import org.rti.webgenome.client.QuantitationTypes;
 
 /**
- * Parses query parameters given to webGenome by client
+ * Parses query parameters given to webGenome by client.
  */
-public class ClientQueryParser {
+public final class ClientQueryParser {
+	
+	/** Experiment IDs query parameters name. */
+	private static final String EXP_IDS_PARAM_NAME = "exptIDs";
+	
+	/** Genome intervals query parameter name. */
+	private static final String INTERVALS_PARAM_NAME = "intervals";
+	
+	/** Quantitation type parameter name. */
+	private static final String QTYPE_PARAM_NAME = "qType";
+	
+	/**
+	 * Constructor.
+	 */
+	private ClientQueryParser() {
+		
+	}
 
 	/**
-	 * Getter method for the experimentIDs
-	 * @return String[] Returns a String array of IDs of the experiments requested
+	 * Get experimentIDs.
+	 * @param request Servlet request
+	 * @return IDs of the experiments requested
 	 * @throws InvalidClientQueryParametersException
+	 * if experiment IDs are not coded propertly
+	 * in query parameters.
 	 */
-	public static String[] getExperimentIds(HttpServletRequest request) 
+	public static String[] getExperimentIds(
+			final HttpServletRequest request) 
 		throws InvalidClientQueryParametersException {
-        String clientID = request.getParameter("clientID");
-        String exptIDs = request.getParameter("exptIDs");
-        String intervals = request.getParameter("intervals");
-        
-        if (intervals == null || exptIDs == null || clientID == null) {
-            request.setAttribute("DATA", "Invalid Query String");
-            throw new InvalidClientQueryParametersException("Invalid query string to client");
+        String exptIDs = request.getParameter(EXP_IDS_PARAM_NAME);
+        if (exptIDs == null) {
+        	throw new InvalidClientQueryParametersException(
+        			"Missing HTTP query parameter: "
+        			+ EXP_IDS_PARAM_NAME);
         }
-        
-        List experimentIDs = ClientQueryParser.parseExptIDs(exptIDs);
-        
+        List<String> experimentIDs = new ArrayList<String>();
+        StringTokenizer tok = new StringTokenizer(exptIDs, ",");
+        if (!tok.hasMoreTokens()) {
+        	throw new InvalidClientQueryParametersException(
+        			"No experiment IDs specified");
+        }
+        while (tok.hasMoreTokens()) {
+        	String id = tok.nextToken();
+        	if (id.length() < 1) {
+        		throw new InvalidClientQueryParametersException(
+        				"Experiment IDs cannot be null string");
+        	}
+        	experimentIDs.add(id);
+        }
         String[] exptIDArray = new String[0];
         exptIDArray = (String[]) experimentIDs.toArray(exptIDArray);
         return exptIDArray;
 	}
 	
     /**
-     * Returns BioAssayConstraints object based on query string from request object
-     * @param request
-     * @return BioAssayDataConstraints constraints based on query string from request object
-     * @throws InvalidClientQueryParametersException
+     * Returns BioAssayConstraints object based on query string
+     * from request object.
+     * @param request Servlet request
+     * @return BioAssayDataConstraints constraints based
+     * on query string from request object
+     * @throws InvalidClientQueryParametersException if
+     * bioassay data constraints cannot be correctely parsed
+     * from query parameters.
      */
-    public static BioAssayDataConstraints[] getBioAssayDataConstraints(HttpServletRequest request)
+    public static BioAssayDataConstraints[] getBioAssayDataConstraints(
+    		final HttpServletRequest request)
     	throws InvalidClientQueryParametersException {
-        String clientID = request.getParameter("clientID");
-        String exptIDs = request.getParameter("exptIDs");
-        String intervals = request.getParameter("intervals");
-        
-        if (intervals == null || exptIDs == null || clientID == null) {
-            request.setAttribute("DATA", "Invalid Query String");
-            throw new InvalidClientQueryParametersException("Invalid query string to client");
-        }
-        
-        List constraints = ClientQueryParser.parseIntervals(intervals);
-
-        BioAssayDataConstraints[] constraintsArray = new BioAssayDataConstraints[0];
-        constraintsArray = (BioAssayDataConstraints[]) constraints.toArray(constraintsArray);
+    	String qType = request.getParameter(QTYPE_PARAM_NAME);
+    	if (qType == null) {
+    		throw new InvalidClientQueryParametersException(
+    				"Missing HTTP query parameter: "
+    				+ QTYPE_PARAM_NAME);
+    	}
+    	String intervals = request.getParameter(INTERVALS_PARAM_NAME);
+    	if (intervals == null) {
+    		throw new InvalidClientQueryParametersException(
+    				"Missing HTTP query parameter: "
+    				+ INTERVALS_PARAM_NAME);
+    	}
+        List<BioAssayDataConstraints> constraints =
+        	ClientQueryParser.parseIntervals(intervals, qType);
+        BioAssayDataConstraints[] constraintsArray =
+        	new BioAssayDataConstraints[0];
+        constraintsArray = (BioAssayDataConstraints[])
+        	constraints.toArray(constraintsArray);
         return constraintsArray;
     }
     
     
     /**
-     * Parses string containing experiment IDs into Strings
-     * @param exptIDs A comma seprated list of experiment IDs 
-     * @throws InvalidClientQueryParametersException 
+     * Creates bioassay data constraints from query parameter
+     * value.
+     * @param intervals Value of INTERVALS_PARAM_NAME query
+     * parameter
+     * @param qType Quantitation type
+     * @return Bioassay data constraints
+     * @throws InvalidClientQueryParametersException if
+     * valid bioassay data constraints cannot be parsed.
      */
-    private static List parseExptIDs(String exptIDs) throws InvalidClientQueryParametersException {
-    	List experimentIDs = new ArrayList();
-    	try {
-    		StringTokenizer exptTokenizer = new StringTokenizer(exptIDs, ",");
-    		while(exptTokenizer.hasMoreTokens()) {
-    			String exptID = exptTokenizer.nextToken();
-    			experimentIDs.add(exptID);
-    		}
-    	}
-    	catch (Exception e) {
-    		throw new InvalidClientQueryParametersException("Invalid query string to client", e);
-    	}
-    	return experimentIDs;
-    }
-    
-    /**
-     * Parses string containing intervals into GenomeInterval objects
-     * @param intervals A comma seprated list of intervals
-     * @throws InvalidClientQueryParametersException 
-     */
-    private static List parseIntervals(String intervals) throws InvalidClientQueryParametersException {
-    	List constraints = new ArrayList();
-    	try {
-	        StringTokenizer intervalTokenizer = new StringTokenizer(intervals, ",");
-	        while(intervalTokenizer.hasMoreTokens()) {
-	        	//parse chromosome, start location, and end location from the string
-	            String interval = intervalTokenizer.nextToken();
-	            int indexOfColon = interval.indexOf(':');
-	            String chromNumStr = interval.substring(0,indexOfColon);
-	            int indexOfDash = interval.indexOf('-');
-	            String start = interval.substring(indexOfColon+1, indexOfDash);
-	            String end = interval.substring(indexOfDash+1, interval.length());
-	            Long startNum = new Long(start);
-	            Long endNum = new Long(end);
-	
-	            //create constraint using info parsed from the parameters
-	            BioAssayDataConstraints constraint = new BioAssayDataConstraints();
-	            constraint.setChromosome(chromNumStr);
-	            constraint.setPositions(startNum, endNum);
-	            constraint.setQuantitationType(QuantitationTypes.COPY_NUMBER);
-	            
-	            constraints.add(constraint);
-	        }
-    	}
-    	catch (Exception e) {
-    		throw new InvalidClientQueryParametersException("Invalid query string to client", e);
-    	}
+    private static List<BioAssayDataConstraints> parseIntervals(
+    		final String intervals, final String qType)
+    throws InvalidClientQueryParametersException {
+    	List<BioAssayDataConstraints> constraints =
+    		new ArrayList<BioAssayDataConstraints>();
+        StringTokenizer intervalTokenizer =
+        	new StringTokenizer(intervals, ",");
+        while (intervalTokenizer.hasMoreTokens()) {
+            String interval = intervalTokenizer.nextToken();
+            short chromosome = (short) -1;
+            long start = -1, end = -2;
+            try {
+				chromosome =
+					GenomeIntervalCoder.parseChromosome(interval);
+				start = GenomeIntervalCoder.parseStart(interval);
+				end = GenomeIntervalCoder.parseEnd(interval);
+			} catch (GenomeIntervalFormatException e) {
+				throw new InvalidClientQueryParametersException(
+						"Invalid genome interval: " + interval);
+			}
+            if (chromosome < (short) 0 || start < 0
+            		|| end < 0) {
+            	throw new InvalidClientQueryParametersException(
+            			"Invalid genome interval: " + interval);
+            }
+
+            //create constraint using info parsed from the parameters
+            BioAssayDataConstraints constraint =
+            	new BioAssayDataConstraints();
+            constraint.setChromosome(String.valueOf(chromosome));
+            constraint.setPositions(start, end);
+            constraint.setQuantitationType(qType);
+            constraints.add(constraint);
+        }
     	
     	return constraints;
     }

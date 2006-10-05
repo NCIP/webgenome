@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webgenome/client/DefReporterDTOImpl.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webgenome.client;
@@ -56,61 +53,118 @@ package org.rti.webgenome.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class DefReporterDTOImpl implements ReporterDTO {
 
+/**
+ * Implementation of <code>ReporterDTO</code> used primarily for
+ * testing.
+ * @author dhall
+ *
+ */
+public class DefReporterDTOImpl implements ReporterDTO {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 1;
+
+	/** Reporter name. */
     private String name = null;
+    
+    /** Chromosome number. */
     private String chromosome = null;
+    
+    /** Chromosome location in base pairs. */
     private Long chromosomeLocation = null;
-    private Collection associatedGenes = new ArrayList();
-    private Collection annotations = new ArrayList();
+    
+    /** Associated genes. */
+    private Collection<String> associatedGenes = new ArrayList<String>();
+    
+    /** Annotations. */
+    private Collection<String> annotations = new ArrayList<String>();
+    
+    /** Is reporter selected? */
     private Boolean selected = null;
     
     /**
-     * Constructor 
+     * Constructor.
      * @param name Name
      * @param chromosome Chromsome
      * @param chromosomeLocation Chromsome Location
      */
-    public DefReporterDTOImpl(String name, String chromosome, Long chromosomeLocation) {
+    public DefReporterDTOImpl(final String name,
+    		final String chromosome, final Long chromosomeLocation) {
         this.name = name;
         this.chromosome = chromosome;
         this.chromosomeLocation = chromosomeLocation;
         this.selected = new Boolean(false);
     }
     
-    public String getName() {
+    /**
+     * Get reporter name.
+     * @return Reporter name.
+     */
+    public final String getName() {
         return name;
     }
 
-    public String getChromosome() {
+    /**
+     * Get chromosome number.
+     * @return Chromosome number.
+     */
+    public final String getChromosome() {
         return chromosome;
     }
 
-    public Long getChromosomeLocation() {
+    /**
+     * Get chromosome location of reporter.
+     * @return Chromosome location of reporter in base pairs.
+     */
+    public final Long getChromosomeLocation() {
         return chromosomeLocation;
     }
 
-    public String[] getAssociatedGenes() {
+    /**
+     * Get genes associated with reporter.
+     * @return Genese associated with reporter.
+     */
+    public final String[] getAssociatedGenes() {
         String[] names = new String[0];
         names = (String[]) this.associatedGenes.toArray(names);
         return names;
     }
 
-    public String[] getAnnotations() {
+    /**
+     * Get annotations associated with reporter.
+     * @return Annotations associated with reporter.
+     */
+    public final String[] getAnnotations() {
         String[] annotationsArray = new String[0];
-        annotationsArray = (String[]) this.annotations.toArray(annotationsArray);
+        annotationsArray = (String[])
+        	this.annotations.toArray(annotationsArray);
         return annotationsArray;
     }
 
-    public Boolean isSelected() {
+    /**
+     * Is reporter selected?
+     * @return T/F
+     */
+    public final Boolean isSelected() {
         return selected;
     }
     
-    public void addAssociatedGene(String associatedGene) {
+    
+    /**
+     * Add associated gene.
+     * @param associatedGene Associated gene name.
+     */
+    public final void addAssociatedGene(final String associatedGene) {
         this.associatedGenes.add(associatedGene);
     }
     
-    public void addAnnotation(String annotationStr) {
+    
+    /**
+     * Add associated annotation.
+     * @param annotationStr Annotation.
+     */
+    public final void addAnnotation(final String annotationStr) {
         this.annotations.add(annotationStr);
     }
 

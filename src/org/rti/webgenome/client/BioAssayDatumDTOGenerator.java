@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
@@ -50,65 +50,53 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.client;
 
-
 /**
- * Implementation of <code>BioAssayDatumDTO</code> used primarily
- * for testing.
+ * This class generates <code>BioAssayDatumDTO</code>
+ * objects for testing.
  * @author dhall
  *
  */
-public class DefBioAssayDatumDTOImpl implements BioAssayDatumDTO {
+public class BioAssayDatumDTOGenerator {
+
+	/** Gap in base pairs between generated reporters. */
+	private final long gap;
 	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
-
-	/** Quantitation type. */
-    private String quantitationType = null;
-    
-    /** Reporter. */
-    private ReporterDTO reporter = null;
-    
-    /** Value. */
-    private Double value = null;
-    
-    
-    /**
-     * Constructor.
-     * @param value Value
-     * @param quantitationType Quantitation type
-     * @param reporter Reporter
-     */
-    public DefBioAssayDatumDTOImpl(final Double value, 
-    		final String quantitationType, final ReporterDTO reporter) {
-        this.value = value;
-        this.quantitationType = quantitationType;
-        this.reporter = reporter;
-    }
-    
-    /**
-     * Get quantitatio type.
-     * @return Quantitation type.
-     */
-    public final String getQuantitationType() {
-        return quantitationType;
-    }
-
-    
-    /**
-     * Get reporter.
-     * @return reporter.
-     */
-    public final ReporterDTO getReporter() {
-        return reporter;
-    }
-
-    
-    /**
-     * Get value.
-     * @return Value
-     */
-    public final Double getValue() {
-        return value;
-    }
-
+	/**
+	 * Constructor.
+	 * @param gap Gap between generated reporter in
+	 * base pairs.
+	 */
+	public BioAssayDatumDTOGenerator(final long gap) {
+		this.gap = gap;
+	}
+	
+	/**
+	 * Generate new bioassay datum data transfer objects.
+	 * @param constraints Constraints
+	 * @return Bioassay datum data transfer objects
+	 */
+	public final BioAssayDatumDTO[] newBioAssayDatumDTOs(
+			final BioAssayDataConstraints[] constraints) {
+		int totalNum = 0;
+		for (int i = 0; i < constraints.length; i++) {
+			totalNum += (int) ((constraints[i].getEndPosition()
+				- constraints[i].getStartPosition()) / this.gap);
+		}
+		BioAssayDatumDTO[] dtos = new BioAssayDatumDTO[totalNum];
+		int p = 0;
+		for (int i = 0; i < constraints.length; i++) {
+			BioAssayDataConstraints constraint = constraints[i];
+			int num = (int) ((constraints[i].getEndPosition()
+					- constraints[i].getStartPosition()) / this.gap);
+			for (int j = 0; j < num && p < totalNum; j++) {
+				long pos = (long) i * this.gap + constraint.getStartPosition();
+				DefReporterDTOImpl r = new DefReporterDTOImpl(
+						String.valueOf(i), constraint.getChromosome(), pos);
+				double value = Math.random();
+				dtos[p++] = new DefBioAssayDatumDTOImpl(value,
+						constraint.getQuantitationType(), r);
+			}
+		}
+		return dtos;
+	}
 }

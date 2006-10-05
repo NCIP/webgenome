@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -181,6 +182,15 @@ public class ShoppingCart implements Serializable {
      */
     public final void add(final Experiment experiment) {
         this.experiments.add(experiment);
+    }
+    
+    
+    /**
+     * Add experiments to cart.
+     * @param experiments Experiments
+     */
+    public final void add(final Collection<Experiment> experiments) {
+    	this.experiments.addAll(experiments);
     }
     
     

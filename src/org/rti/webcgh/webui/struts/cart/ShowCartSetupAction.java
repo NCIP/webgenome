@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-27 22:22:56 $
+$Revision: 1.2 $
+$Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
  * This class sets up for a downstream
@@ -84,6 +86,13 @@ public final class ShowCartSetupAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+    	
+    	// Get shopping cart
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	
+    	// Add shopping cart to request
+    	request.setAttribute("shopping.cart", cart);
+    	
         return mapping.findForward("success");
     }
 }

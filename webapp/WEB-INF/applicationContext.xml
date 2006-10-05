@@ -38,6 +38,10 @@
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 	
+<!-- Client data service -->
+	<bean id="clientDataService"
+		class="org.rti.webcgh.service.client.TestClientDataService"/>
+	
 	<!-- ========================================== -->
 	<!--        Action beans                        -->
 	<!-- ========================================== -->
@@ -57,5 +61,13 @@
 <!-- Show shopping cart -->
 	<bean name="/cart/showCart"
 		class="org.rti.webcgh.webui.struts.cart.ShowCartSetupAction"/>
+		
+<!-- Client plot: entry point for application client -->
+	<bean name="/client/plot"
+		class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
+		<property name="clientDataService">
+			<ref bean="clientDataService"/>
+		</property>
+	</bean>
 				
 </beans>

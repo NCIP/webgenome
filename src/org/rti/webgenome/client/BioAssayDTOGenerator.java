@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
@@ -50,65 +50,44 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.client;
 
-
 /**
- * Implementation of <code>BioAssayDatumDTO</code> used primarily
+ * Generates <code>BioAssayDTO</code> objects
  * for testing.
  * @author dhall
  *
  */
-public class DefBioAssayDatumDTOImpl implements BioAssayDatumDTO {
+public class BioAssayDTOGenerator {
 	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	/** Bioassay datum DTO generator. */
+	private final BioAssayDatumDTOGenerator bioAssayDatumDtoGenerator;
+	
+	/** Count of objects generated since instantiation. */
+	private int bioAssayDTOCount = 0;
+	
+	
+	/**
+	 * Constructor.
+	 * @param gap Gap between generated reporters in base pairs.
+	 */
+	public BioAssayDTOGenerator(final long gap) {
+		this.bioAssayDatumDtoGenerator = new BioAssayDatumDTOGenerator(gap);
+	}
 
-	/** Quantitation type. */
-    private String quantitationType = null;
-    
-    /** Reporter. */
-    private ReporterDTO reporter = null;
-    
-    /** Value. */
-    private Double value = null;
-    
-    
-    /**
-     * Constructor.
-     * @param value Value
-     * @param quantitationType Quantitation type
-     * @param reporter Reporter
-     */
-    public DefBioAssayDatumDTOImpl(final Double value, 
-    		final String quantitationType, final ReporterDTO reporter) {
-        this.value = value;
-        this.quantitationType = quantitationType;
-        this.reporter = reporter;
-    }
-    
-    /**
-     * Get quantitatio type.
-     * @return Quantitation type.
-     */
-    public final String getQuantitationType() {
-        return quantitationType;
-    }
-
-    
-    /**
-     * Get reporter.
-     * @return reporter.
-     */
-    public final ReporterDTO getReporter() {
-        return reporter;
-    }
-
-    
-    /**
-     * Get value.
-     * @return Value
-     */
-    public final Double getValue() {
-        return value;
-    }
-
+	
+	/**
+	 * Generate a new bioassay data transfer object.
+	 * @param constraints Constraints.
+	 * @return A new bioassay data transfer object.
+	 */
+	public final BioAssayDTO newBioAssayDTO(
+			final BioAssayDataConstraints[] constraints) {
+		int bioAssayNum = ++this.bioAssayDTOCount;
+		String bioAssayName = "Bioassay " + bioAssayNum;
+		String bioAssayId = String.valueOf(bioAssayNum);
+		DefBioAssayDTOImpl dto = new DefBioAssayDTOImpl(bioAssayId,
+				bioAssayName,
+				this.bioAssayDatumDtoGenerator.newBioAssayDatumDTOs(
+						constraints));
+		return dto;
+	}
 }

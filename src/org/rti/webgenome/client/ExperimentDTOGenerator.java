@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-05 22:09:05 $
 
 The Web CGH Software License, Version 1.0
@@ -50,65 +50,45 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.client;
 
-
 /**
- * Implementation of <code>BioAssayDatumDTO</code> used primarily
- * for testing.
+ * Generates <code>ExperimentDTO</code> objects for testing.
  * @author dhall
  *
  */
-public class DefBioAssayDatumDTOImpl implements BioAssayDatumDTO {
+public class ExperimentDTOGenerator {
 	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	/** Bioassay data transfer object generator. */
+	private final BioAssayDTOGenerator bioAssayDTOGenerator;
+	
+	/** Number of bioassays per experiment. */
+	private final int numBioAssays;
+	
 
-	/** Quantitation type. */
-    private String quantitationType = null;
-    
-    /** Reporter. */
-    private ReporterDTO reporter = null;
-    
-    /** Value. */
-    private Double value = null;
-    
-    
-    /**
-     * Constructor.
-     * @param value Value
-     * @param quantitationType Quantitation type
-     * @param reporter Reporter
-     */
-    public DefBioAssayDatumDTOImpl(final Double value, 
-    		final String quantitationType, final ReporterDTO reporter) {
-        this.value = value;
-        this.quantitationType = quantitationType;
-        this.reporter = reporter;
-    }
-    
-    /**
-     * Get quantitatio type.
-     * @return Quantitation type.
-     */
-    public final String getQuantitationType() {
-        return quantitationType;
-    }
-
-    
-    /**
-     * Get reporter.
-     * @return reporter.
-     */
-    public final ReporterDTO getReporter() {
-        return reporter;
-    }
-
-    
-    /**
-     * Get value.
-     * @return Value
-     */
-    public final Double getValue() {
-        return value;
-    }
-
+	/**
+	 * Constructor.
+	 * @param gap Gap between generated reporters.
+	 * @param numBioAssays Number of bioassays generated per experiment.
+	 */
+	public ExperimentDTOGenerator(final long gap, final int numBioAssays) {
+		this.bioAssayDTOGenerator = new BioAssayDTOGenerator(gap);
+		this.numBioAssays = numBioAssays;
+	}
+	
+	
+	/**
+	 * Generate new experiment data transfer object.
+	 * @param experimentId Experiment ID.
+	 * @param constraints Constraints.
+	 * @return Experiment data transfer object
+	 */
+	public final ExperimentDTO newExperimentDTO(
+			final String experimentId,
+			final BioAssayDataConstraints[] constraints) {
+		BioAssayDTO[] bioAssayDtos = new BioAssayDTO[this.numBioAssays];
+		for (int i = 0; i < this.numBioAssays; i++) {
+			bioAssayDtos[i] =
+				this.bioAssayDTOGenerator.newBioAssayDTO(constraints);
+		}
+		return new DefExperimentDTOImpl(experimentId, bioAssayDtos);
+	}
 }

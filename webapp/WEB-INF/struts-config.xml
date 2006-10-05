@@ -176,7 +176,15 @@
 			<forward name="success" path="user.confirm.new.account"/>
 			<forward name="failure" path="/user/newAccount.do"/>
 		</action>
+		
+		<!-- ============= Client plotting actions ======== -->
+		
+		<action
+			path="/client/plot">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
 	</action-mappings>
+	
 	
 	<!-- ==================================================== -->
 	<!--            Controller                                -->

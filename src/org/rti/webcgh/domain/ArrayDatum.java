@@ -53,6 +53,8 @@ package org.rti.webcgh.domain;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import org.rti.webgenome.client.BioAssayDatumDTO;
+
 /**
  * Represents one data point from a microarray experiment.
  * @author dhall
@@ -195,6 +197,21 @@ public class ArrayDatum implements Serializable {
     public ArrayDatum(final float value, final Reporter reporter) {
         this(value, Float.NaN, reporter);
     }
+    
+    
+    /**
+     * Constructor.
+     * @param dto Data transfer object.
+     */
+    public ArrayDatum(final BioAssayDatumDTO dto) {
+    	this.value = dto.getValue().floatValue();
+    	this.reporter = new Reporter(dto.getReporter());
+    }
+    
+    
+    // ====================================
+    //      Helper classes
+    // ====================================
     
     
     /**
