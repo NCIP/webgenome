@@ -165,8 +165,7 @@ public final class DataFileManager {
         for (Reporter r : reporters) {
             if (cr == null || cr.getChromosome() != r.getChromosome()) {
                 if (cr != null) {
-                    long id = this.serializer.serialize(cr);
-                    String fileName = String.valueOf(id);
+                    String fileName = this.serializer.serialize(cr);
                     array.setChromosomeReportersFileName(cr.getChromosome(),
                             fileName);
                     this.chromosomeReportersCache.put(fileName, cr);
@@ -176,8 +175,7 @@ public final class DataFileManager {
             cr.add(r);
         }
         if (cr != null) {
-            long id = this.serializer.serialize(cr);
-            String fileName = String.valueOf(id);
+            String fileName = this.serializer.serialize(cr);
             array.setChromosomeReportersFileName(cr.getChromosome(),
                     fileName);
             this.chromosomeReportersCache.put(fileName, cr);
@@ -205,8 +203,8 @@ public final class DataFileManager {
                             ad.getError()));
                     it.remove();
                 }
-                long id = this.serializer.serialize(ada);
-                ba.registerChromosomeArrayData(cad, String.valueOf(id));
+                String fileName = this.serializer.serialize(ada);
+                ba.registerChromosomeArrayData(cad, fileName);
             }
         }
         LOGGER.info("Completed serialization of array data");
@@ -237,7 +235,7 @@ public final class DataFileManager {
         // Recover array datum attributes
         fname = bioAssay.getFileName(chromosome);
         ArrayDataAttributes ada = (ArrayDataAttributes)
-            this.serializer.deSerialize(new Long(fname));
+            this.serializer.deSerialize(fname);
         
         // Construct chromosome array data
         ChromosomeArrayData cad = new ChromosomeArrayData(chromosome);
@@ -284,8 +282,7 @@ public final class DataFileManager {
         	SortedSet<Reporter> reporters = chromosomeArrayData.getReporters();
         	ChromosomeReporters cr = new ChromosomeReporters(chromNum);
         	cr.setReporters(reporters);
-        	long id = this.serializer.serialize(cr);
-        	String fileName = String.valueOf(id);
+        	String fileName = this.serializer.serialize(cr);
         	array.setChromosomeReportersFileName(chromNum, fileName);
         	LOGGER.info("Completed serialization of reporters");
         }
@@ -296,9 +293,9 @@ public final class DataFileManager {
             ada.add(new ArrayDatumAttributes(ad.getValue(),
                     ad.getError()));
         }
-        long id = this.serializer.serialize(ada);
+        String fileName = this.serializer.serialize(ada);
         bioAssay.registerChromosomeArrayData(chromosomeArrayData,
-                String.valueOf(id));
+                fileName);
         LOGGER.info("Completed serialization of array data");
     }
     
@@ -322,7 +319,7 @@ public final class DataFileManager {
                        .keySet().iterator(); it.hasNext();) {
                    short chromosome = it.next();
                    String fname = dsba.getFileName(chromosome);
-                   this.serializer.decommissionObject(new Long(fname));
+                   this.serializer.decommissionObject(fname);
                    it.remove();
                }
             }
@@ -344,7 +341,7 @@ public final class DataFileManager {
             
             // Delete files
             for (String fname : fnames) {
-                this.serializer.decommissionObject(new Long(fname));
+                this.serializer.decommissionObject(fname);
             }
         }
     }
@@ -367,7 +364,7 @@ public final class DataFileManager {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
             cr = (ChromosomeReporters)
-                this.serializer.deSerialize(new Long(fileName));
+                this.serializer.deSerialize(fileName);
             this.chromosomeReportersCache.put(fileName, cr);
             LOGGER.info("Completed de-serialization");
             LOGGER.info("Elapsed time: "

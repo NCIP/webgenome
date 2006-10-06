@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-06 07:32:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,74 +48,89 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.io.unit_test;
+package org.rti.webcgh.io;
 
-import org.rti.webcgh.io.FileSerializer;
-import org.rti.webcgh.unit_test.UnitTestUtils;
+import java.io.File;
 
-import junit.framework.TestCase;
+import org.apache.log4j.Logger;
 
 /**
- * Tester for class <code>FileSerializer</code>.
+ * Generates a sequence of unique file names.  Generated file
+ * names are simply sequential long integers with
+ * a file name suffix. 
  */
-public final class FileSerializerTester extends TestCase {
+public class UniqueFileNameGenerator {
 	
-    /** Test directory path name. */
-	private String testDirName = null;
-    
-    /** File serializer. */
-	private FileSerializer fs = null;
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(UniqueFileNameGenerator.class);
 	
-    /**
-     * @overrides
-     */
-	public void setUp() {
-        this.testDirName = UnitTestUtils.newTestDirectory(
-                "/file_serializer_tester");
-		this.fs = new FileSerializer(this.testDirName);
-		this.fs.decommissionAllObjects();
+	/** Next object id in the sequence. */
+	private long nextInSequence = (long) 0;
+	
+	/** File extension. */
+	private final String fileExtension;
+	
+	/**
+	 * Constructor.
+     * @param directory Directory containing files.
+     * @param fileExtension File extension.
+	 */
+	public UniqueFileNameGenerator(final File directory,
+			final String fileExtension) {
+		this.fileExtension = fileExtension;
+		
+		// Set next in sequence
+		if (directory == null || !directory.isDirectory()) {
+			throw new IllegalArgumentException("'"
+                    + directory.getAbsolutePath()
+                    + "' is not a valid directory");
+        }
+		File[] files = directory.listFiles();
+		this.nextInSequence = (long) -1;
+		for (int i = 0; i < files.length; i++) {
+			long candidate = this.getFileNamePrefix(files[i]);
+			if (candidate >= 0 && candidate > this.nextInSequence) {
+				this.nextInSequence = candidate;
+            }
+		}
+		this.nextInSequence++;
+	}
+	
+	/**
+	 * Return next file name.
+	 * @return A file name.
+	 */
+	public final String next() {
+		long value = this.nextInSequence;
+		if (this.nextInSequence == Long.MAX_VALUE) {
+			this.nextInSequence = (long) 0;
+        } else {
+			this.nextInSequence++;
+        }
+		return value + this.fileExtension;
 	}
 	
 	
-    /**
-     * @overrides
-     */
-	public void tearDown() {
-		this.fs.decommissionAllObjects();
-	}
-	
-    
-    /**
-     * Test serialize and deserialize.
-     *
-     */
-	public void testSerializeAndDeserialize() {
-		String s1 = "Hello";
-		String s2 = "world!";
-		String oid1 = this.fs.serialize(s1);
-		String oid2 = this.fs.serialize(s2);
-		String s3 = (String) this.fs.deSerialize(oid1);
-		assertEquals(s1, s3);
-		s3 = (String) this.fs.deSerialize(oid2);
-		assertEquals(s2, s3);
-	}
-	
-    /**
-     * Test decomissioning.
-     *
-     */
-	public void testDecomission() {
-		String oid = this.fs.serialize("Hello");
-		assertEquals(0 + FileSerializer.FILE_EXTENSION, oid);
-		oid = this.fs.serialize("world!");
-		assertEquals("1" + FileSerializer.FILE_EXTENSION, oid);
-		this.fs.decommissionObject(oid);
-		FileSerializer fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again");
-		assertEquals(1 + FileSerializer.FILE_EXTENSION, oid);
-		fs2.decommissionAllObjects();
-		fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again again");
-		assertEquals(0 + FileSerializer.FILE_EXTENSION, oid);
+	/**
+	 * Get long format prefix of file name, i.e. everything upstream
+	 * of the file extension.
+	 * @param file A file
+	 * @return Long format file name prefix
+	 * or -1 if file name prefix is not numeric.
+	 */
+	private long getFileNamePrefix(final File file) {
+		long oid = (long) -1;
+		String fname = file.getName();
+		int p = fname.indexOf(fileExtension);
+		if (p >= 0) {
+			try {
+				oid = Long.parseLong(fname.substring(0, p));
+			} catch (NumberFormatException e) {
+	            LOGGER.warn("Data directory contains non-webGenonome file '"
+	                    + file.getName() + "'");
+	        }
+		}
+		return oid;
 	}
 }

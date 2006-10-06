@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/BioAssay.java,v $
-$Revision: 1.10 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.11 $
+$Date: 2006-10-06 07:32:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -123,7 +123,7 @@ public class BioAssay implements Cacheable {
     protected Serializer serializer = null;
     
     // Object identifiers used when bioassay data serialized to disk
-    protected long oid = -1;
+    protected String oid = null;
     
     
     /**
@@ -655,10 +655,10 @@ public class BioAssay implements Cacheable {
      */
     public void moveDataToMemory() {
     	if (this.bioAssayData == null) {
-    		if (this.oid >= 0) {
+    		if (this.oid != null) {
     			this.bioAssayData = (BioAssayData)this.serializer.deSerialize(this.oid);
     			this.serializer.decommissionObject(this.oid);
-    			this.oid = -1;
+    			this.oid = null;
     		} else
     			this.bioAssayData = new BioAssayData();
     	}

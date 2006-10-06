@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-06 07:32:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,74 +48,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.io.unit_test;
+package org.rti.webcgh.service.plot;
 
-import org.rti.webcgh.io.FileSerializer;
-import org.rti.webcgh.unit_test.UnitTestUtils;
+import java.util.Collection;
 
-import junit.framework.TestCase;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Plot;
 
 /**
- * Tester for class <code>FileSerializer</code>.
+ * Generates plots.
+ * @author dhall
+ *
  */
-public final class FileSerializerTester extends TestCase {
+public interface PlotGenerator {
 	
-    /** Test directory path name. */
-	private String testDirName = null;
-    
-    /** File serializer. */
-	private FileSerializer fs = null;
-	
-    /**
-     * @overrides
-     */
-	public void setUp() {
-        this.testDirName = UnitTestUtils.newTestDirectory(
-                "/file_serializer_tester");
-		this.fs = new FileSerializer(this.testDirName);
-		this.fs.decommissionAllObjects();
-	}
-	
-	
-    /**
-     * @overrides
-     */
-	public void tearDown() {
-		this.fs.decommissionAllObjects();
-	}
-	
-    
-    /**
-     * Test serialize and deserialize.
-     *
-     */
-	public void testSerializeAndDeserialize() {
-		String s1 = "Hello";
-		String s2 = "world!";
-		String oid1 = this.fs.serialize(s1);
-		String oid2 = this.fs.serialize(s2);
-		String s3 = (String) this.fs.deSerialize(oid1);
-		assertEquals(s1, s3);
-		s3 = (String) this.fs.deSerialize(oid2);
-		assertEquals(s2, s3);
-	}
-	
-    /**
-     * Test decomissioning.
-     *
-     */
-	public void testDecomission() {
-		String oid = this.fs.serialize("Hello");
-		assertEquals(0 + FileSerializer.FILE_EXTENSION, oid);
-		oid = this.fs.serialize("world!");
-		assertEquals("1" + FileSerializer.FILE_EXTENSION, oid);
-		this.fs.decommissionObject(oid);
-		FileSerializer fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again");
-		assertEquals(1 + FileSerializer.FILE_EXTENSION, oid);
-		fs2.decommissionAllObjects();
-		fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again again");
-		assertEquals(0 + FileSerializer.FILE_EXTENSION, oid);
-	}
+	/**
+	 * Create new plot.
+	 * @param experiments Experiments containing data to plot.
+	 * @param plotParameters Plot parameters.
+	 * @return A plot.
+	 */
+	Plot newPlot(Collection<Experiment> experiments,
+			PlotParameters plotParameters);
+
 }
