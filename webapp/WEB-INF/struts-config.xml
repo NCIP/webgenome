@@ -20,6 +20,11 @@
 		<form-bean
 			name="new.account.form"
 			type="org.rti.webcgh.webui.struts.user.NewAccountForm"/>
+			
+	<!-- Plot parameters form -->
+		<form-bean
+			name="plot.parameters.form"
+			type="org.rti.webcgh.webui.struts.cart.PlotParametersForm"/>
 	</form-beans>
 
 	
@@ -180,7 +185,9 @@
 		<!-- ============= Client plotting actions ======== -->
 		
 		<action
-			path="/client/plot">
+			path="/client/plot"
+			name="plot.parameters.form"
+			validate="false">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
 	</action-mappings>

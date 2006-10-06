@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/array/GenomeIntervalDto.java,v $
-$Revision: 1.4 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.5 $
+$Date: 2006-10-06 04:32:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,8 +58,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import org.rti.webcgh.domain.GenomeIntervalFormatException;
 import org.rti.webcgh.units.BpUnits;
-import org.rti.webcgh.util.GenomeIntervalFormatException;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 
 /**

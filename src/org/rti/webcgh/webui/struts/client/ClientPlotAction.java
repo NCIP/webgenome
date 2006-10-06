@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.3 $
+$Date: 2006-10-06 04:34:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.client.ClientDataService;
 import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.struts.cart.PlotParametersForm;
 import org.rti.webcgh.webui.util.ClientQueryParser;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
@@ -129,6 +130,10 @@ public final class ClientPlotAction extends BaseAction {
         
         // Set session mode
         PageContext.setSessionMode(request, SessionMode.CLIENT);
+        
+        // Initialize plot parameters form
+        PlotParametersForm pForm = (PlotParametersForm) form;
+        pForm.reset(mapping, request);
         
 		return mapping.findForward("success");
 	}

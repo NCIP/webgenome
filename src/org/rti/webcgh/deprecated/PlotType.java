@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-10-05 22:09:05 $
+$Date: 2006-10-06 04:34:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -47,53 +47,69 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package org.rti.webcgh.deprecated;
 
-package org.rti.webcgh.util;
-
-import org.rti.webcgh.core.WebcghApplicationException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Exception thrown when a genome interval is encoded improperly.
- * @see org.rti.webcgh.util.GenomeIntervalCoder.
- * @author dhall
+ * Enumeration of plot types.
  */
-public class GenomeIntervalFormatException
-	extends WebcghApplicationException {
-	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
-	
-	/**
-	 * Constructor.
-	 */
-	public GenomeIntervalFormatException() {
-		super();
-	}
-	
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 */
-	public GenomeIntervalFormatException(final String msg) {
-		super(msg);
-	}
-	
-	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable
-	 */
-	public GenomeIntervalFormatException(final Throwable origThrowable) {
-		super(origThrowable);
-	}
+public final class PlotType {
+    
+    
+    // =============================
+    //       Constants
+    // =============================
+    
+    /**
+     * Scatter plot.
+     */
+    public static final PlotType SCATTER_PLOT = new PlotType();
+    
+    /**
+     * Ideogram plot.
+     */
+    public static final PlotType IDEOGRAM_PLOT = new PlotType();
+    
+    /**
+     * Frequency plot.
+     */
+    public static final PlotType FREQUENCY_PLOT = new PlotType();
+    
+    /** Maps plot types to plot type names. */
+    private static final Map<String, PlotType> PLOT_TYPE_INDEX =
+    	new HashMap<String, PlotType>();
+    
+    static {
+        PLOT_TYPE_INDEX.put("scatter", SCATTER_PLOT);
+        PLOT_TYPE_INDEX.put("ideogram", IDEOGRAM_PLOT);
+        PLOT_TYPE_INDEX.put("frequency", FREQUENCY_PLOT);
+    }
+    
+    
+    // =========================================
+    //      Constructors
+    // =========================================
+    
+    /**
+     * Constructor.
+     */
+    private PlotType() {
+    	
+    }
+    
+    
+    // =================================
+    //     Static methods
+    // =================================
 
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 * @param origThrowable Original throwable
-	 */
-	public GenomeIntervalFormatException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
-
+    /**
+     * Get plot type.
+     * @param key Key
+     * @return Plot type
+     */
+    public static PlotType getPlotType(final String key) {
+        return PLOT_TYPE_INDEX.get(key);
+    }
 }

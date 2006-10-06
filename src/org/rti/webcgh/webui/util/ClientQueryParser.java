@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.3 $
+$Date: 2006-10-06 04:32:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,8 +57,8 @@ import java.util.StringTokenizer;
 import javax.servlet.http.HttpServletRequest;
 
 import org.rti.webcgh.core.InvalidClientQueryParametersException;
-import org.rti.webcgh.util.GenomeIntervalCoder;
-import org.rti.webcgh.util.GenomeIntervalFormatException;
+import org.rti.webcgh.domain.GenomeInterval;
+import org.rti.webcgh.domain.GenomeIntervalFormatException;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 
 /**
@@ -156,7 +156,7 @@ public final class ClientQueryParser {
     /**
      * Creates bioassay data constraints from query parameter
      * value.
-     * @param intervals Value of INTERVALS_PARAM_NAME query
+     * @param encodedIntervals Value of INTERVALS_PARAM_NAME query
      * parameter
      * @param qType Quantitation type
      * @return Bioassay data constraints
@@ -164,27 +164,21 @@ public final class ClientQueryParser {
      * valid bioassay data constraints cannot be parsed.
      */
     private static List<BioAssayDataConstraints> parseIntervals(
-    		final String intervals, final String qType)
+    		final String encodedIntervals, final String qType)
     throws InvalidClientQueryParametersException {
     	List<BioAssayDataConstraints> constraints =
     		new ArrayList<BioAssayDataConstraints>();
-        StringTokenizer intervalTokenizer =
-        	new StringTokenizer(intervals, ",");
-        while (intervalTokenizer.hasMoreTokens()) {
-            String interval = intervalTokenizer.nextToken();
-            short chromosome = (short) -1;
-            long start = -1, end = -2;
-            try {
-				chromosome =
-					GenomeIntervalCoder.parseChromosome(interval);
-				start = GenomeIntervalCoder.parseStart(interval);
-				end = GenomeIntervalCoder.parseEnd(interval);
-			} catch (GenomeIntervalFormatException e) {
-				throw new InvalidClientQueryParametersException(
-						"Invalid genome interval: " + interval);
-			}
-            if (chromosome < (short) 0 || start < 0
-            		|| end < 0) {
+        List<GenomeInterval> intervals = null;
+        try {
+			intervals = GenomeInterval.decode(encodedIntervals);
+		} catch (GenomeIntervalFormatException e) {
+			throw new InvalidClientQueryParametersException(
+					"Invalid genome intervals: " + encodedIntervals, e);
+		}
+        for (GenomeInterval interval : intervals) {
+            if (interval.getChromosome() < (short) 0
+            		|| interval.getStartLocation() < 0
+            		|| interval.getEndLocation() < 0) {
             	throw new InvalidClientQueryParametersException(
             			"Invalid genome interval: " + interval);
             }
@@ -192,8 +186,9 @@ public final class ClientQueryParser {
             //create constraint using info parsed from the parameters
             BioAssayDataConstraints constraint =
             	new BioAssayDataConstraints();
-            constraint.setChromosome(String.valueOf(chromosome));
-            constraint.setPositions(start, end);
+            constraint.setChromosome(String.valueOf(interval.getChromosome()));
+            constraint.setPositions(interval.getStartLocation(),
+            		interval.getEndLocation());
             constraint.setQuantitationType(qType);
             constraints.add(constraint);
         }

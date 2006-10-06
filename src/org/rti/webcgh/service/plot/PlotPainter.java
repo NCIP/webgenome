@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-08 03:06:50 $
+$Revision: 1.2 $
+$Date: 2006-10-06 04:35:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
  * @author dhall
  *
  */
-public class PlotPainter {
+public abstract class PlotPainter {
 	
 	// ==============================
 	//      Attributes

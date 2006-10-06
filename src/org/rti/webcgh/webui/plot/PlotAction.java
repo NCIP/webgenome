@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/plot/PlotAction.java,v $
-$Revision: 1.8 $
-$Date: 2006-09-07 18:54:53 $
+$Revision: 1.9 $
+$Date: 2006-10-06 04:34:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,10 +68,10 @@ import org.rti.webcgh.array.Experiment;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.ShoppingCart;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
+import org.rti.webcgh.deprecated.PlotType;
 import org.rti.webcgh.graph.FrequencyGraphGenerator;
 import org.rti.webcgh.graph.PlotGenerator;
 import org.rti.webcgh.graph.PlotParameters;
-import org.rti.webcgh.graphics.PlotType;
 import org.rti.webcgh.graphics.SvgDrawingCanvas;
 import org.rti.webcgh.webui.util.Attribute;
 import org.rti.webcgh.webui.util.AttributeManager;

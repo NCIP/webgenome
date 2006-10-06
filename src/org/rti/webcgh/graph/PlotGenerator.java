@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graph/PlotGenerator.java,v $
-$Revision: 1.25 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.26 $
+$Date: 2006-10-06 04:34:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,13 +76,13 @@ import org.rti.webcgh.array.GenomeLocation;
 import org.rti.webcgh.array.QuantitationType;
 import org.rti.webcgh.array.persistent.PersistentDomainObjectMgr;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.deprecated.PlotType;
 import org.rti.webcgh.graph.util.HeatMapColorFactory;
 import org.rti.webcgh.graph.widget.ColorCodePlot;
 import org.rti.webcgh.graph.widget.Legend;
 import org.rti.webcgh.graph.widget.ScatterPlot;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
-import org.rti.webcgh.graphics.PlotType;
 import org.rti.webcgh.graphics.event.GraphicEvent;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.util.ClassPathPropertiesFileRgbHexidecimalColorMapper;

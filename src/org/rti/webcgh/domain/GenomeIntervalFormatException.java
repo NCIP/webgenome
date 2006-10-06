@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-06 04:33:22 $
+$Revision: 1.1 $
+$Date: 2006-10-06 04:33:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,56 +48,52 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webcgh.domain;
 
-package org.rti.webcgh.util;
-
+import org.rti.webcgh.core.WebcghApplicationException;
 
 /**
- * Methods for user input validation.
+ * Exception thrown when a genome interval is encoded improperly.
+ * @see org.rti.webcgh.util.GenomeIntervalCoder.
+ * @author dhall
  */
-public final class ValidationUtils {
+public class GenomeIntervalFormatException
+	extends WebcghApplicationException {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 1;
 	
 	/**
 	 * Constructor.
 	 */
-	private ValidationUtils() {
-		
+	public GenomeIntervalFormatException() {
+		super();
 	}
-    
-    
-    /**
-     * Does given string represent a valid integer?
-     * @param str A string
-     * @return T/F
-     */
-    public static boolean validPositiveInteger(final String str) {
-        boolean isInteger = true;
-        for (int i = 0; i < str.length() && isInteger; i++) {
-            char c = str.charAt(i);
-            if (!(Character.isDigit(c) || c == '.')) {
-                isInteger = false;
-            }
-        }
-        return isInteger;
-    }
-    
-    
-    /**
-     * Does given string represent a valid number?
-     * @param str A string
-     * @return T/F
-     */
-    public static boolean validNumber(final String str) {
-    	if (str == null || str.length() < 1) {
-    		return false;
-    	}
-    	boolean isANum = true;
-    	for (int i = 0; i < str.length() && isANum; i++) {
-    		char c = str.charAt(i);
-    		if (!(c == '.' || Character.isDigit(c))) {
-    			isANum = false;
-    		}
-    	}
-    	return isANum;
-    }
+	
+	/**
+	 * Constructor.
+	 * @param msg Message
+	 */
+	public GenomeIntervalFormatException(final String msg) {
+		super(msg);
+	}
+	
+	/**
+	 * Constructor.
+	 * @param origThrowable Original throwable
+	 */
+	public GenomeIntervalFormatException(final Throwable origThrowable) {
+		super(origThrowable);
+	}
+
+	/**
+	 * Constructor.
+	 * @param msg Message
+	 * @param origThrowable Original throwable
+	 */
+	public GenomeIntervalFormatException(final String msg,
+			final Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
+
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-16 04:29:21 $
+$Revision: 1.2 $
+$Date: 2006-10-06 04:33:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,24 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+
 /**
  * Represents a genome interval.
  * @author dhall
  *
  */
 public class GenomeInterval {
+	
+	// ===========================
+	//      Constants
+	// ===========================
+	
+	/** Delimiter character between encoded genome intervals. */
+	private static final String DELIMITER = ",";
 
 	// =========================
 	//      Attributes
@@ -154,5 +166,134 @@ public class GenomeInterval {
 		this.chromosome = chromosome;
 		this.startLocation = startLocation;
 		this.endLocation = endLocation;
+	}
+	
+	
+	// =================================
+	//     Business methods
+	// =================================
+	
+	/**
+	 * Decode genome intervals encoded like '1:1000-2000;2:50-150'.
+	 * This string encodes two genome intervals.  The first
+	 * is chromosome 1 from position 1000 to 2000.  The positions
+	 * units may be base pairs or a larger multiple of base pairs.
+	 * @param encoding Encoded genome interval
+	 * @return Genome intervals
+	 * @throws GenomeIntervalFormatException if intervals are
+	 * not well-formed.
+	 */
+	public static final List<GenomeInterval> decode(final String encoding)
+	throws GenomeIntervalFormatException {
+		if (encoding == null) {
+			throw new IllegalArgumentException("Genome intervals are null");
+		}
+		GenomeIntervalCoder coder = new GenomeIntervalCoder();
+		List<GenomeInterval> intervals = new ArrayList<GenomeInterval>();
+		StringTokenizer tok = new StringTokenizer(encoding, DELIMITER);
+		while (tok.hasMoreTokens()) {
+			String token = tok.nextToken();
+			GenomeInterval interval = new GenomeInterval(
+					coder.parseChromosome(token), coder.parseStart(token), 
+					coder.parseEnd(token));
+			intervals.add(interval);
+		}
+		return intervals;
+	}
+	
+	
+	// ==============================
+	//      Helper classes
+	// ==============================
+	
+	/**
+	 * Parses fields out of individual genome interval
+	 * encodings like '1:100-200'.
+	 */
+	static final class GenomeIntervalCoder {
+		
+		/**
+		 * Parse chromosome number.
+		 * @param encoding Genome interval encoding.
+		 * @return Chromosome number of -1 if the
+		 * chromosome number cannot be extracted.
+		 * @throws GenomeIntervalFormatException if
+		 * chromosome number is not numeric.
+		 */
+		short parseChromosome(final String encoding)
+		throws GenomeIntervalFormatException {
+			short chrom = (short) -1;
+			int p = 0;
+			int q = encoding.indexOf(":");
+			if (q < 0) {
+				q = encoding.length();
+			}
+			if (p < q) {
+				String chromStr = encoding.substring(p, q).trim();
+				try {
+					chrom = Short.parseShort(chromStr);
+				} catch (NumberFormatException e) {
+					throw new GenomeIntervalFormatException(
+							"Invalid chromosome :" + chromStr);
+				}
+			}
+			return chrom;
+		}
+		
+		/**
+		 * Parse start location from given encoded genome interval.
+		 * @param encoding Encoded genome interval.
+		 * @return Start location or -1 if start location missing
+		 * but format valid.
+		 * @throws GenomeIntervalFormatException if format is
+		 * invalid.
+		 */
+		long parseStart(final String encoding)
+		throws GenomeIntervalFormatException {
+			long start = -1;
+			int p = encoding.indexOf(":");
+			int q = encoding.indexOf("-");
+			if (p >= 0 && q < 0) {
+			    throw new GenomeIntervalFormatException(
+			    		"Bad genome interval format");
+			}
+			if (p >= 0 && q >= 0 && p + 1 < q) {
+				String startStr = encoding.substring(p + 1, q).trim();
+				try {
+					start = Long.parseLong(startStr);
+				} catch (NumberFormatException e) {
+					throw new GenomeIntervalFormatException(
+							"Start position is not numeric: + startStr");
+				}
+			}
+			return start;
+		}
+		
+		
+		/**
+		 * Parse end position from given genome interval encoding.
+		 * @param encoding Genome interval encoding.
+		 * @return End position or -1 if end position missing
+		 * but interval is well-formed.
+		 * @throws GenomeIntervalFormatException if format is
+		 * invalid.
+		 */
+		long parseEnd(final String encoding)
+		throws GenomeIntervalFormatException {
+			long end = -2;
+			int p = encoding.indexOf("-");
+			int q = encoding.length();
+			if (p >= 0 && p + 1 < q) {
+				String endStr = encoding.substring(p + 1, q).trim();
+				try {
+					end = Long.parseLong(endStr);
+				} catch (NumberFormatException e) {
+					throw new GenomeIntervalFormatException(
+							"End position not numeric: " + endStr);
+				}
+			}	
+			return end;
+		}
+
 	}
 }

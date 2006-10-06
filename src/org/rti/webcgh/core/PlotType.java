@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-09-07 18:54:53 $
+$Date: 2006-10-06 04:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -47,69 +47,69 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.rti.webcgh.graphics;
+
+package org.rti.webcgh.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Enumeration of plot types.
+ * Plot type.
+ * @author dhall
+ *
  */
-public final class PlotType {
-    
-    
-    // =============================
-    //       Constants
-    // =============================
-    
-    /**
-     * Scatter plot.
-     */
-    public static final PlotType SCATTER_PLOT = new PlotType();
-    
-    /**
-     * Ideogram plot.
-     */
-    public static final PlotType IDEOGRAM_PLOT = new PlotType();
-    
-    /**
-     * Frequency plot.
-     */
-    public static final PlotType FREQUENCY_PLOT = new PlotType();
-    
-    /** Maps plot types to plot type names. */
-    private static final Map<String, PlotType> PLOT_TYPE_INDEX =
-    	new HashMap<String, PlotType>();
-    
-    static {
-        PLOT_TYPE_INDEX.put("scatter", SCATTER_PLOT);
-        PLOT_TYPE_INDEX.put("ideogram", IDEOGRAM_PLOT);
-        PLOT_TYPE_INDEX.put("frequency", FREQUENCY_PLOT);
-    }
-    
-    
-    // =========================================
-    //      Constructors
-    // =========================================
-    
-    /**
-     * Constructor.
-     */
-    private PlotType() {
-    	
-    }
-    
-    
-    // =================================
-    //     Static methods
-    // =================================
+public enum PlotType {
 
-    /**
-     * Get plot type.
-     * @param key Key
-     * @return Plot type
-     */
-    public static PlotType getPlotType(final String key) {
-        return PLOT_TYPE_INDEX.get(key);
-    }
+	/** Scatter plot. */
+	SCATTER("scatter"),
+	
+	/** Ideogram plot. */
+	IDEOGRAM("ideogram"),
+	
+	/** Annotation plot. */
+	ANNOTATION("annotation"),
+	
+	/** Bar plot. */
+	BAR("bar"),
+	
+	/** Frequency plot. */
+	FREQUENCY("frequency");
+	
+	/** Index of plot type names to plot type. */
+	private static final Map<String, PlotType> PLOT_TYPE_INDEX =
+		new HashMap<String, PlotType>();
+	
+	static {
+		for (PlotType type : PlotType.values()) {
+			PLOT_TYPE_INDEX.put(type.getName(), type);
+		}
+	}
+	
+	/** Plot type name. */
+	private final String name;
+	
+	/**
+	 * Constructor.
+	 * @param name Plot type name.
+	 */
+	private PlotType(final String name) {
+		this.name = name;
+	}
+	
+	/**
+	 * Get plot type name.
+	 * @return Plot type name.
+	 */
+	public String getName() {
+		return this.name;
+	}
+	
+	/**
+	 * Get plot type by name.
+	 * @param name Plot type name.
+	 * @return Plot type
+	 */
+	public static PlotType getPlotType(final String name) {
+		return PLOT_TYPE_INDEX.get(name);
+	}
 }
