@@ -33,8 +33,8 @@
 			destdir="${classes.dir}"
 			classpathref="class.path"
 			debug="true"
-			target="1.4"
-			source="1.4"
+			target="1.5"
+			source="1.5"
 			excludes="org/rti/webcgh/sandbox/**"
 		/>
 	</target>
