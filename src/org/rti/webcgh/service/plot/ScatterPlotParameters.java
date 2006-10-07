@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-16 04:30:52 $
+$Revision: 1.3 $
+$Date: 2006-10-07 15:58:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,11 +67,63 @@ public final class ScatterPlotParameters extends PlotParameters {
     /** Maximum Y-axis value specified by user. */
     private float maxY = Float.NaN;
     
+    /**
+     * Width of plot area in pixels.  Plot area
+     * does not include axes, legend, etc.
+     */
+    private int width = -1;
+    
+    /**
+     * Height of plot area in pixels.  Plot area
+     * does not include axes, legend, etc.
+     */
+    private int height = -1;
+    
     // ==========================
     //      Getters/setters
     // ==========================
 
     /**
+     * Get height of plot area in pixels.  Plot area
+     * does not include axes, legend, etc.
+     * @return Height of plot area in pixels.
+     */
+    public int getHeight() {
+		return height;
+	}
+
+
+    /**
+     * Set height of plot area in pixels.  Plot area
+     * does not include axes, legend, etc.
+     * @param height Height of plot area in pixels.
+     */
+	public void setHeight(final int height) {
+		this.height = height;
+	}
+
+
+    /**
+     * Get width of plot area in pixels.  Plot area
+     * does not include axes, legend, etc.
+     * @return Width of plot area in pixels.
+     */
+	public int getWidth() {
+		return width;
+	}
+
+
+    /**
+     * Set width of plot area in pixels.  Plot area
+     * does not include axes, legend, etc.
+     * @param width Width of plot area in pixels.
+     */
+	public void setWidth(final int width) {
+		this.width = width;
+	}
+
+
+	/**
      * Get maximum Y-axis value specified by user.
      * @return Maximum Y-axis value specified by user
      */

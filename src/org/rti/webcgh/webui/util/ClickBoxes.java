@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-03 20:43:19 $
+$Revision: 1.3 $
+$Date: 2006-10-07 15:58:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,9 +49,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.webui.util;
 
+import java.awt.Point;
+
 
 /**
- * Click boxes information.
+ * This class is used by the web tier to construct a map
+ * of event responses that is overlaid on a graphic.
+ * Clicking in a region of the graphic corresponding
+ * to an individual box, will invoke a Javascript event
+ * handler that does something with the text value in that
+ * box.
  */
 public final class ClickBoxes {
 
@@ -59,16 +66,19 @@ public final class ClickBoxes {
     // =============================
     //       Attributes
     // =============================
+	
+	/** Origin of click box region with respect to overall graphic. */
+	private Point origin = new Point(0, 0);
 
     /**
      * Individual box width.
      */
-    private int width = 0;
+    private int boxWidth = 0;
 
     /**
      * Individual box height.
      */
-    private int height = 0;
+    private int boxHeight = 0;
 
     /**
      * Two-dimensional array of click boxes,
@@ -76,9 +86,16 @@ public final class ClickBoxes {
      * Value is plot image key.
      */
     private String[][] clickBox;
+    
+    /** Width of entire click box region in pixels. */
+    private int width = 0;
+    
+    /** Height of entire click box region in pixels. */
+    private int height = 0;
 
 
-    // =========================================
+
+	// =========================================
     //      Constructors
     // =========================================
 	/**
@@ -89,20 +106,97 @@ public final class ClickBoxes {
     }
     /**
      * Constructor.
-     * @param width Box width
-     * @param height Box height
+     * @param boxWidth Box width in pixels
+     * @param boxHeight Box height in pixels
      * @param clickBox Array of click boxes
      */
-    public ClickBoxes(final int width, final int height, final String[][] clickBox) {
+    public ClickBoxes(final int boxWidth, final int boxHeight,
+    		final String[][] clickBox) {
+    	this.boxWidth = boxWidth;
+    	this.boxHeight = boxHeight;
+    	this.clickBox = clickBox;
+    }
+    
+    
+    /**
+     * Constructor.
+     * @param width Width of entire click box area in pixels.
+     * @param height Height of entire click box area in pixels.
+     * @param boxWidth Width of a single click box in pixels.
+     * @param boxHeight Height of a single click box in pixels.
+     */
+    public ClickBoxes(final int width, final int height, final int boxWidth,
+    		final int boxHeight) {
     	this.width = width;
     	this.height = height;
-    	this.clickBox = clickBox;
+    	this.boxWidth = boxWidth;
+    	this.boxHeight = boxHeight;
+    	int numRows = height / boxHeight;
+    	int numCols = width / boxWidth;
+    	this.clickBox = new String[numRows][numCols];
     }
 
 
     // =========================================
     //      Getters and Setters
     // =========================================
+    
+    /**
+     * SGet height of click boxes.
+     * @return Height in pixels.
+     */
+    public int getHeight() {
+		return height;
+	}
+    
+    
+    /**
+     * Set height of click boxes.
+     * @param height Height in pixels.
+     */
+	public void setHeight(final int height) {
+		this.height = height;
+	}
+	
+	
+	/**
+	 * Get origin of click boxes with regards to the
+	 * underlying graphic.
+	 * @return Origin of click boxes.
+	 */
+	public Point getOrigin() {
+		return origin;
+	}
+	
+	
+	
+	/**
+	 * Set origin of click boxes with regards to the
+	 * underlying graphic.
+	 * @param origin Origin of click boxes.
+	 */
+	public void setOrigin(final Point origin) {
+		this.origin = origin;
+	}
+	
+	
+	/**
+	 * Get width of click boxes.
+	 * @return Width of click boxes in pixels.
+	 */
+	public int getWidth() {
+		return width;
+	}
+	
+	
+	/**
+	 * Set width of click boxes.
+	 * @param width Width of click boxes in pixels.
+	 */
+	public void setWidth(final int width) {
+		this.width = width;
+	}
+    
     /**
 	 * @return Returns the clickBox.
 	 */
@@ -112,32 +206,79 @@ public final class ClickBoxes {
 	/**
 	 * @param clickBox The clickBox to set.
 	 */
-	public void setClickBox(String[][] clickBox) {
+	public void setClickBox(final String[][] clickBox) {
 		this.clickBox = clickBox;
 	}
 	/**
 	 * @return Returns the height.
 	 */
-	public int getHeight() {
-		return height;
+	public int getBoxHeight() {
+		return boxHeight;
 	}
 	/**
 	 * @param height The height to set.
 	 */
-	public void setHeight(int height) {
-		this.height = height;
+	public void setBoxHeight(final int height) {
+		this.boxHeight = height;
 	}
 	/**
 	 * @return Returns the width.
 	 */
-	public int getWidth() {
-		return width;
+	public int getBoxWidth() {
+		return boxWidth;
 	}
 	/**
 	 * @param width The width to set.
 	 */
-	public void setWidth(int width) {
-		this.width = width;
+	public void setBoxWidth(final int width) {
+		this.boxWidth = width;
 	}
 
+	
+	// ===================================
+	//       Business methods
+	// ===================================
+	
+	/**
+	 * Add click box text.
+	 * @param text Text to add
+	 * @param x X-coordinate of some point in the click boxes
+	 * @param y Y-coordinate of some point in the click boxes
+	 */
+	public void addClickBoxText(final String text, final int x, final int y) {
+		int row = this.getRow(y);
+		int col = this.getCol(x);
+		this.clickBox[row][col] = text;
+	}
+	
+	/**
+	 * Get click box text.
+	 * @param x X-coordinate of some point in the click boxes
+	 * @param y Y-coordinate of some point in the click boxes
+	 * @return Click box text
+	 */
+	public String getClickBoxText(final int x, final int y) {
+		int row = this.getRow(y);
+		int col = this.getCol(x);
+		return this.clickBox[row][col];
+	}
+	
+	/**
+	 * Get row that y-pixel value falls into.
+	 * @param y Y-pixel value
+	 * @return Row
+	 */
+	private int getRow(final int y) {
+		return (int) Math.floor((double) y / (double) this.boxHeight);
+	}
+	
+	
+	/**
+	 * Get column that x-pixel value false into.
+	 * @param x X-pixel value
+	 * @return Column
+	 */
+	private int getCol(final int x) {
+		return (int) Math.floor((double) x / (double) this.boxWidth);
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-09-23 18:28:38 $
+$Revision: 1.14 $
+$Date: 2006-10-07 15:58:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -145,22 +145,26 @@ public class IdeogramPlotPainter extends PlotPainter {
 	//    Business methods
 	// =========================
 	
-	/**
-	 * Paint ideogram plot on given plot panel.
-	 * Can only plot data from one organism.
-	 * @param panel Plot panel to paint on
-	 * @param experiments Experiments to plot
-	 * @param plotParameters Plot parameters
-	 */
-	public final void paintIdeogramPlot(
-			final PlotPanel panel,
-			final Collection<Experiment> experiments,
-			final IdeogramPlotParameters plotParameters) {
+    /**
+     * Paints a plot on the given plot panel.
+     * @param panel Plot panel to add the scatter plot to
+     * @param experiments Experiments to plot
+     * @param params Plotting parameters specified
+     * by user
+     */
+    public final void paintPlot(final PlotPanel panel,
+    		final Collection<Experiment> experiments,
+    		final PlotParameters params) {
 		
 		// Make sure arguments okay
 		if (experiments == null || experiments.size() < 1) {
 			throw new IllegalArgumentException("Experiments must be > 1");
 		}
+		if (!(params instanceof IdeogramPlotParameters)) {
+			throw new IllegalArgumentException(
+					"Expecting plot parameters of type IdeogramPlotParameters");
+		}
+		IdeogramPlotParameters plotParameters = (IdeogramPlotParameters) params;
 		
 		// Get organism
 		Organism org = experiments.iterator().next().getOrganism();

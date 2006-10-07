@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-09-26 21:10:38 $
+$Revision: 1.6 $
+$Date: 2006-10-07 15:58:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -211,6 +211,9 @@ public final class ScatterPlotPainterTester extends TestCase {
         params.setMaxY(Experiment.findMaxValue(experiments));
         params.setUnits(BpUnits.KB);
         params.setNumPlotsPerRow(2);
+        params.setWidth(WIDTH);
+        params.setHeight(HEIGHT);
+        params.setQuantitationType(QuantitationType.LOG_2_RATIO);
         
         // Create plotting panel
         RasterFileTestPlotPanel panel =
@@ -223,8 +226,7 @@ public final class ScatterPlotPainterTester extends TestCase {
         // Run method
         ScatterPlotPainter painter =
         	new ScatterPlotPainter(cadg);
-        painter.paintScatterPlot(panel, experiments, params, WIDTH, HEIGHT,
-                QuantitationType.LOG_2_RATIO);
+        painter.paintPlot(panel, experiments, params);
         
         // Output graphics to file
         panel.toPngFile("plot-in-memory.png");

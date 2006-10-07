@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-09-26 21:10:37 $
+$Revision: 1.8 $
+$Date: 2006-10-07 15:58:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
-import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.Caption;
@@ -67,6 +67,7 @@ import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
+import org.rti.webcgh.webui.util.ClickBoxes;
 
 /**
  * Manages the painting scatter plots by getting
@@ -96,28 +97,28 @@ public class ScatterPlotPainter extends PlotPainter {
 	// =========================
     
     /**
-     * Paints a scatter plot on the given drawing canvas.
+     * Paints a plot on the given plot panel.
      * @param panel Plot panel to add the scatter plot to
      * @param experiments Experiments to plot
-     * @param plotParameters Plotting parameters specified
+     * @param params Plotting parameters specified
      * by user
-     * @param width Width of plot in pixels
-     * @param height Height of plot in pixels
-     * @param quantitationType Quantitation type
-     * interval in base pairs
+     * @return Click boxes corresponding to all individual
+     * plotting areas.
      */
-    public final void paintScatterPlot(
-    		final PlotPanel panel,
+    public final Collection<ClickBoxes> paintPlot(final PlotPanel panel,
     		final Collection<Experiment> experiments,
-            final ScatterPlotParameters plotParameters,
-            final int width, final int height,
-            final QuantitationType quantitationType) {
+    		final PlotParameters params) {
         
         // Check args
+    	if (!(params instanceof ScatterPlotParameters)) {
+    		throw new IllegalArgumentException(
+    				"Plot parameters must be of type ScatterPlotParameters");
+    	}
         if (experiments == null || panel == null) {
             throw new IllegalArgumentException(
                     "Experiments and panel cannot be null");
         }
+        ScatterPlotParameters plotParameters = (ScatterPlotParameters) params;
         if (plotParameters.getGenomeIntervals() == null
         		|| plotParameters.getGenomeIntervals().size() < 1) {
         	throw new IllegalArgumentException(
@@ -132,8 +133,9 @@ public class ScatterPlotPainter extends PlotPainter {
         }
         
         // Paint plot
+        Collection<ScatterPlot> plots = new ArrayList<ScatterPlot>();
         ScatterPlotSizer sizer =
-        	new ScatterPlotSizer(plotParameters, width, height);
+        	new ScatterPlotSizer(plotParameters);
 		int plotCount = 0;
 		int rowCount = 1;
 		PlotPanel row = panel.newChildPlotPanel();
@@ -159,6 +161,7 @@ public class ScatterPlotPainter extends PlotPainter {
 	            new ScatterPlot(experiments, gi.getChromosome(),
 	            		this.getChromosomeArrayDataGetter(), sizer.width(gi),
 	            		sizer.height(), pb);
+	        plots.add(scatterPlot);
 	        
 	        // Y-axis
 	        if (plotCount == 1) {
@@ -167,7 +170,7 @@ public class ScatterPlotPainter extends PlotPainter {
 		                Orientation.VERTICAL, Location.LEFT_OF,
 		                panel.getDrawingCanvas());
 		        Caption yCaption = new Caption(
-		                quantitationType.getName(),
+		                plotParameters.getQuantitationType().getName(),
 		                Orientation.HORIZONTAL, true, panel.getDrawingCanvas());
 		        row.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
 		                VerticalAlignment.BOTTOM_JUSTIFIED);
@@ -209,9 +212,16 @@ public class ScatterPlotPainter extends PlotPainter {
 		panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
 		
 		// Legend
-        Legend legend = new Legend(experiments, width);
+        Legend legend = new Legend(experiments, plotParameters.getWidth());
         panel.add(legend, HorizontalAlignment.CENTERED,
                 VerticalAlignment.BELOW);
+        
+        // Gather up click boxes
+        Collection<ClickBoxes> boxes = new ArrayList<ClickBoxes>();
+        for (ScatterPlot plot : plots) {
+        	boxes.add(plot.getClickBoxes());
+        }
+        return boxes;
     }
     
     
@@ -237,15 +247,12 @@ public class ScatterPlotPainter extends PlotPainter {
     	/**
     	 * Constructor.
     	 * @param params Plot parameters
-    	 * @param totalWidth Total width of all plots in pixels
-    	 * @param totalHeight Total height of all plots in pixels
     	 */
-    	public ScatterPlotSizer(final ScatterPlotParameters params,
-    			final int totalWidth, final int totalHeight) {
+    	public ScatterPlotSizer(final ScatterPlotParameters params) {
     		List<GenomeInterval> intervals = params.getGenomeIntervals();
     		int numRows = (int) Math.ceil((double) intervals.size()
     				/ (double) params.getNumPlotsPerRow());
-    		this.height = totalHeight / numRows;
+    		this.height = params.getHeight() / numRows;
     		long longestInterval = 0;
     		for (GenomeInterval interval : intervals) {
     			long candidateLongest = interval.getEndLocation()
@@ -254,7 +261,7 @@ public class ScatterPlotPainter extends PlotPainter {
     				longestInterval = candidateLongest;
     			}
     		}
-    		this.scale = (double) totalWidth / (double) longestInterval;
+    		this.scale = (double) params.getWidth() / (double) longestInterval;
     	}
     	
     	

@@ -90,11 +90,32 @@ public abstract class BioAssay implements Serializable {
     /** Color of bioassay in plots. */
     private Color color = null;
     
+    /** Is bioassay selected? */
+    private boolean selected = false;
+    
     // ===============================
     //       Getters/setters
     // ===============================
     
     /**
+     * Is bioassay selected?
+     * @return T/F
+     */
+    public final boolean isSelected() {
+		return selected;
+	}
+
+
+    /**
+     * Set selection.
+     * @param selected Is bioassay selected?
+     */
+	public final void setSelected(final boolean selected) {
+		this.selected = selected;
+	}
+
+
+	/**
      * Get color used in plots.
      * @return Color used in plots
      */

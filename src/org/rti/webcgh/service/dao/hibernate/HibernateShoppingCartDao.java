@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.rti.webcgh.domain.ShoppingCart;
@@ -118,4 +119,16 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
         this.getHibernateTemplate().delete(shoppingCart);
     }
 
+    /**
+     * Get names of all image files in shopping
+     * cart.
+     * @return Names of all image files in shopping
+     * cart.
+     */
+    public Collection<String> getAllImageFileNames() {
+    	
+    	// TODO: Implement this
+    	
+    	return null;
+    }
 }

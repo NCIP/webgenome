@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-16 04:30:09 $
+$Revision: 1.3 $
+$Date: 2006-10-07 15:58:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.rti.webcgh.domain.GenomeInterval;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.units.BpUnits;
 
 
@@ -88,11 +89,33 @@ public class PlotParameters {
     /** Number of plots in a row of plots. */
     private int numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
     
+    /** Quantitation type to plot. */
+    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO;
+    
     // ===========================
     //    Getters/setters
     // ===========================
 
     /**
+     * Get quantitation type.
+     * @return Quantitation type.
+     */
+    public final QuantitationType getQuantitationType() {
+		return quantitationType;
+	}
+
+
+    /**
+     * Set quantitation type.
+     * @param quantitationType Quantitation type
+     */
+	public final void setQuantitationType(
+			final QuantitationType quantitationType) {
+		this.quantitationType = quantitationType;
+	}
+
+
+	/**
      * Get number of plots in a row of plots.
      * @return Number of plots in a row of plots.
      */

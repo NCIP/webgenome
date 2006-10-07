@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao;
 
+import java.util.Collection;
+
 import org.rti.webcgh.domain.ShoppingCart;
 
 /**
@@ -98,4 +100,11 @@ public interface ShoppingCartDao {
      */
     void delete(ShoppingCart shoppingCart);
 
+    /**
+     * Get names of all image files in shopping
+     * cart.
+     * @return Names of all image files in shopping
+     * cart.
+     */
+    Collection<String> getAllImageFileNames();
 }

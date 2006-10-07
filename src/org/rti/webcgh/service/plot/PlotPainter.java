@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-06 04:35:02 $
+$Revision: 1.3 $
+$Date: 2006-10-07 15:58:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,4 +94,20 @@ public abstract class PlotPainter {
 		super();
 		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
 	}
+	
+	
+	// ===============================
+	//    Abstract methods
+	// ===============================
+	
+//    /**
+//     * Paints a plot on the given plot panel.
+//     * @param panel Plot panel to add the scatter plot to
+//     * @param experiments Experiments to plot
+//     * @param plotParameters Plotting parameters specified
+//     * by user
+//     */
+//    abstract void paintPlot(PlotPanel panel,
+//            Collection<Experiment> experiments,
+//            PlotParameters plotParameters);
 }

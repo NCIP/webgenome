@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-26 21:10:38 $
+$Revision: 1.4 $
+$Date: 2006-10-07 15:58:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.webui.util.ClickBoxes;
 
 /**
  * A two dimensional plotting space that renders
@@ -79,17 +80,20 @@ public final class ScatterPlot implements PlotElement {
     /** Default radius of data point in pixels. */
     private static final int DEF_POINT_RADIUS = 3;
     
-    /** Default width of regression line in pixels. */
-    private static final int DEF_LINE_WIDTH = 2;
+    /** Radius of selected data points in pixels. */
+    private static final int SELECTED_POINT_RADIUS = 5;
     
-    /** Default length of error bar hatch lines in pixels. */
-    private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
-    
-    /**
-     * Default maximum number of constituent points in
-     * a regression line polyline.
-     */
-    private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
+//    /** Default width of regression line in pixels. */
+//    private static final int DEF_LINE_WIDTH = 2;
+//    
+//    /** Default length of error bar hatch lines in pixels. */
+//    private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
+//    
+//    /**
+//     * Default maximum number of constituent points in
+//     * a regression line polyline.
+//     */
+//    private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
     
     /**
      * Name of attribute that is used by an SVG <pre><g/></pre>
@@ -124,29 +128,6 @@ public final class ScatterPlot implements PlotElement {
      */
     private final ChromosomeArrayDataGetter chromosomeArrayDataGetter;
     
-    /** Radius of data point in pixels. */
-    private int pointRadius = ScatterPlot.DEF_POINT_RADIUS;
-    
-    /** Width (i.e., thickness) or regression line in pixels. */
-    private int lineWidth = ScatterPlot.DEF_LINE_WIDTH;
-    
-    /**
-     * Length of hatch mark at the top and bottom of error
-     * bars in pixels.
-     */
-    private int errorBarHatchLength = ScatterPlot.DEF_ERROR_BAR_HATCH_LENGTH;
-    
-    /**
-     * Maximum number of constituent points in
-     * an individual regression line polyline.
-     * The "regression" lines drawn by this
-     * plot are rendered by a set of polylines,
-     * instead of a single polyline.  This is
-     * because of limitations in SVG viewers,
-     * which may have maximum numbers of points
-     * in polylines. 
-     */
-    private int maxNumPointsInLine = ScatterPlot.DEF_MAX_NUM_POINTS_IN_LINE;
     
     /** Width of plot in pixels. */
     private final int width;
@@ -175,98 +156,20 @@ public final class ScatterPlot implements PlotElement {
 //     */
 //    private final DataPoint reusableDataPoint2 = new DataPoint();
     
-    // ================================
-    //      Getters/setters
-    // ================================
+    /** Click boxes used for providing interactivity using Javascript. */
+    private final ClickBoxes clickBoxes;
+    
+    
+    // =============================
+    //     Getters/setters
+    // =============================
     
     /**
-     * Get length of hatch mark at the top and bottom of error
-     * bars.
-     * @return Length of hatch mark at the top and bottom of error
-     * bars in pixels.
+     * Get click boxes.
+     * @return Click boxes
      */
-    public int getErrorBarHatchLength() {
-        return errorBarHatchLength;
-    }
-
-    
-    /**
-     * Set length of hatch mark at the top and bottom of error
-     * bars.
-     * @param errorBarHatchLength Length of hatch mark at the top
-     * and bottom of error bars in pixels.
-     */
-    public void setErrorBarHatchLength(final int errorBarHatchLength) {
-        this.errorBarHatchLength = errorBarHatchLength;
-    }
-
-    
-    /**
-     * Get width of regression line that is drawn between points.
-     * @return Width of line in pixels.
-     */
-    public int getLineWidth() {
-        return lineWidth;
-    }
-
-    
-    /**
-     * Set width of regression line drawn between points.
-     * @param lineWidth Width of line in pixels.
-     */
-    public void setLineWidth(final int lineWidth) {
-        this.lineWidth = lineWidth;
-    }
-
-    
-    /**
-     * Get maximum number of constituent points in
-     * an individual regression line polyline.
-     * The "regression" lines drawn by this
-     * plot are rendered by a set of polylines,
-     * instead of a single polyline.  This is
-     * because of limitations in SVG viewers,
-     * which may have maximum numbers of points
-     * in polylines.
-     * @return Maximum number of constituent points
-     * in an individual regression line polyline.
-     */
-    public int getMaxNumPointsInLine() {
-        return maxNumPointsInLine;
-    }
-
-    
-    /**
-     * Set maximum number of constituent points in
-     * an individual regression line polyline.
-     * The "regression" lines drawn by this
-     * plot are rendered by a set of polylines,
-     * instead of a single polyline.  This is
-     * because of limitations in SVG viewers,
-     * which may have maximum numbers of points
-     * in polylines.
-     * @param maxNumPointsInLine Maximum number of constituent points
-     * in an individual regression line polyline.
-     */
-    public void setMaxNumPointsInLine(final int maxNumPointsInLine) {
-        this.maxNumPointsInLine = maxNumPointsInLine;
-    }
-
-    /**
-     * Get radius of rendered data points.
-     * @return Radius of points in pixels.
-     */
-    public int getPointRadius() {
-        return pointRadius;
-    }
-
-    
-    /**
-     * Set radius of rendered data points.
-     * @param pointRadius Radius of points in pixels.
-     */
-    public void setPointRadius(final int pointRadius) {
-        this.pointRadius = pointRadius;
+    public ClickBoxes getClickBoxes() {
+    	return this.clickBoxes;
     }
     
     // ==============================
@@ -306,6 +209,8 @@ public final class ScatterPlot implements PlotElement {
         this.width = width;
         this.height = height;
         this.plotBoundaries = plotBoundaries;
+        this.clickBoxes = new ClickBoxes(width, height, DEF_POINT_RADIUS,
+        		DEF_POINT_RADIUS);
     }
 
 
@@ -329,6 +234,10 @@ public final class ScatterPlot implements PlotElement {
         // Paint points and lines
         for (Experiment exp : this.experiments) {
             for (BioAssay bioAssay : exp.getBioAssays()) {
+            	int pointRadius = DEF_POINT_RADIUS;
+            	if (bioAssay.isSelected()) {
+            		pointRadius = SELECTED_POINT_RADIUS;
+            	}
             	ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
             		getChromosomeArrayData(bioAssay, this.chromosome);
 	            DrawingCanvas tile = canvas.newTile();
@@ -338,7 +247,8 @@ public final class ScatterPlot implements PlotElement {
 	                
 	            // Points
 	            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
-	            this.paintPoints(cad, bioAssay.getColor(), canvas);
+	            this.paintPoints(cad, bioAssay.getColor(), canvas, pointRadius,
+	            		bioAssay.getName());
 	            
 	            // Error bars
 	//            DrawingCanvas errorBarsTile = tile.newTile();
@@ -365,11 +275,15 @@ public final class ScatterPlot implements PlotElement {
      * @param cad Chromosome array data
      * @param color Color of points
      * @param drawingCanvas A drawing canvas
+     * @param pointRadius Radius of data point in pixels
+     * @param bioAssayName Name of bioassay datum comes from
      */
     private void paintPoints(final ChromosomeArrayData cad, final Color color,
-            final DrawingCanvas drawingCanvas) {
+            final DrawingCanvas drawingCanvas, final int pointRadius,
+            final String bioAssayName) {
         for (ArrayDatum datum : cad.getArrayData()) {
-            this.paintPoint(datum, color, drawingCanvas);
+            this.paintPoint(datum, color, drawingCanvas, pointRadius,
+            		bioAssayName);
         }
     }
     
@@ -394,14 +308,27 @@ public final class ScatterPlot implements PlotElement {
      * @param datum An array datum
      * @param color A color
      * @param drawingCanvas A drawing canvas
+     * @param pointRadius Radius of data point
+     * @param bioAssayName Name of bioassay datum comes from
      */
     private void paintPoint(final ArrayDatum datum,
-            final Color color, final DrawingCanvas drawingCanvas) {
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int pointRadius, final String bioAssayName) {
         this.reusableDataPoint1.bulkSet(datum);
         int x = this.transposeX(this.reusableDataPoint1);
         int y = this.transposeY(this.reusableDataPoint1);
+        
+        // Create point
         this.drawPoint(x, y, color, datum.getReporter().getName(),
-                drawingCanvas);
+                drawingCanvas, pointRadius);
+        
+        // Add click box command
+        x -= this.x;
+        y -= this.y;
+        String command = this.clickBoxes.getClickBoxText(x, y);
+        if (command == null) {
+        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
+        }
     }
     
     
@@ -486,10 +413,12 @@ public final class ScatterPlot implements PlotElement {
      * @param color Color of point
      * @param label Mouseover label for point
      * @param drawingCanvas A drawing canvas
+     * @param pointRadius Radius of data point
      */
     private void drawPoint(final int x, final int y, final Color color,
-            final String label, final DrawingCanvas drawingCanvas) {
-        Circle circle = new Circle(x, y, this.pointRadius, color);
+            final String label, final DrawingCanvas drawingCanvas,
+            final int pointRadius) {
+        Circle circle = new Circle(x, y, pointRadius, color);
         //circle.setToolTipText(label);
         drawingCanvas.add(circle, false);
     }
@@ -615,5 +544,7 @@ public final class ScatterPlot implements PlotElement {
     public void move(final int deltaX, final int deltaY) {
         this.x += deltaX;
         this.y += deltaY;
+        this.clickBoxes.getOrigin().x += deltaX;
+        this.clickBoxes.getOrigin().y += deltaY;
     }
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-06 07:32:50 $
+$Revision: 1.2 $
+$Date: 2006-10-07 15:58:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.util.Collection;
 
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 
 /**
  * Generates plots.
@@ -66,9 +67,12 @@ public interface PlotGenerator {
 	 * Create new plot.
 	 * @param experiments Experiments containing data to plot.
 	 * @param plotParameters Plot parameters.
+	 * @param plotName Plot name
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
 	 * @return A plot.
 	 */
 	Plot newPlot(Collection<Experiment> experiments,
-			PlotParameters plotParameters);
+			PlotParameters plotParameters, String plotName,
+			ChromosomeArrayDataGetter chromosomeArrayDataGetter);
 
 }

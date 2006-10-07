@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-03 22:28:19 $
+$Revision: 1.3 $
+$Date: 2006-10-07 15:58:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +83,9 @@ public class Plot implements Serializable {
     /** Plot name. */
     private String name = null;
     
+    /** Name of default image files. */
+    private String defaultImageFileName = null;
+    
     /**
      * Map of image names to image file names. 
      * Note that file names are not absolute paths;
@@ -96,7 +100,7 @@ public class Plot implements Serializable {
      * give the names of images that should be displayed
      * when the user clicks in the regions.
      */
-    private ClickBoxes clickBoxes = null;
+    private Collection<ClickBoxes> clickBoxes = null;
     
     /**
      * Mouse over stripes reprsenting rectangular
@@ -124,6 +128,23 @@ public class Plot implements Serializable {
 	 */
 	public final void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * Get name of default image file.
+	 * @return Default image file name.
+	 */
+	public final String getDefaultImageFileName() {
+		return defaultImageFileName;
+	}
+
+	/**
+	 * Set name of default image file.
+	 * @param defaultImageFileName Default image file name.
+	 */
+	public final void setDefaultImageFileName(
+			final String defaultImageFileName) {
+		this.defaultImageFileName = defaultImageFileName;
 	}
 
 	/**
@@ -175,7 +196,7 @@ public class Plot implements Serializable {
      * when the user clicks in the regions.
 	 * @return Click boxes
 	 */
-	public final ClickBoxes getClickBoxes() {
+	public final Collection<ClickBoxes> getClickBoxes() {
 		return clickBoxes;
 	}
 
@@ -187,7 +208,7 @@ public class Plot implements Serializable {
      * when the user clicks in the regions.
 	 * @param clickBoxes Click boxes
 	 */
-	public final void setClickBoxes(final ClickBoxes clickBoxes) {
+	public final void setClickBoxes(final Collection<ClickBoxes> clickBoxes) {
 		this.clickBoxes = clickBoxes;
 	}
 

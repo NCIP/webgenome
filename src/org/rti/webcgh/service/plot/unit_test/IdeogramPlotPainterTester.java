@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-09-23 18:28:38 $
+$Revision: 1.10 $
+$Date: 2006-10-07 15:58:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -166,7 +166,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
         painter.setCytologicalMapDao(cDao);
         
         // Create plot
-        painter.paintIdeogramPlot(panel, experiments, params);
+        painter.paintPlot(panel, experiments, params);
         
         // Add some additional reference widgets
         panel.add(new Caption("Left", null, Orientation.HORIZONTAL, false,
