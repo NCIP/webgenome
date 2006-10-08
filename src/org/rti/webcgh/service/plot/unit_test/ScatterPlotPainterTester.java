@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-07 15:58:52 $
+$Revision: 1.7 $
+$Date: 2006-10-08 16:52:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -98,13 +98,13 @@ public final class ScatterPlotPainterTester extends TestCase {
 		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
 	
 	/** Number of bioassays to generate in tests. */
-	private static final int NUM_BIO_ASSAYS = 2;
+	private static final int NUM_BIO_ASSAYS = 3;
 	
 	/** Number of chromosomes in tests. */
-	private static final int NUM_CHROMOSOMES = 3;
+	private static final int NUM_CHROMOSOMES = 1;
 	
 	/** Number of experiments in tests. */
-	private static final int NUM_EXPERIMENTS = 2;
+	private static final int NUM_EXPERIMENTS = 3;
 	
     /** Width of plot in pixels. */
     private static final int WIDTH = 500;

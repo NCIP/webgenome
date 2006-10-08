@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-08 01:11:28 $
+$Revision: 1.5 $
+$Date: 2006-10-08 16:52:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.util;
 
 import java.awt.Point;
+import java.io.Serializable;
+
+import org.apache.log4j.Logger;
 
 
 /**
@@ -60,7 +63,13 @@ import java.awt.Point;
  * handler that does something with the text value in that
  * box.
  */
-public final class ClickBoxes {
+public final class ClickBoxes implements Serializable {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 1;
+	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(ClickBoxes.class);
 
 
     // =============================
@@ -68,55 +77,41 @@ public final class ClickBoxes {
     // =============================
 	
 	/** Origin of click box region with respect to overall graphic. */
-	private Point origin = new Point(0, 0);
+	private final Point origin = new Point(0, 0);
 
     /**
      * Individual box width.
      */
-    private int boxWidth = 0;
+    private final int boxWidth;
 
     /**
      * Individual box height.
      */
-    private int boxHeight = 0;
+    private final int boxHeight;
 
     /**
      * Two-dimensional array of click boxes,
      * Indexes represent x,y box position,
      * Value is plot image key.
      */
-    private String[][] clickBox;
+    private final String[][] clickBox;
     
     /** Width of entire click box region in pixels. */
-    private int width = 0;
+    private final int width;
     
     /** Height of entire click box region in pixels. */
-    private int height = 0;
-
+    private final int height;
+    
+    /** Number of rows in clickBox matrix. */
+    private final int numRows;
+    
+    /** Number of columns in clickBox matrix. */
+    private final int numCols;
 
 
 	// =========================================
     //      Constructors
     // =========================================
-	/**
-     * Constructor.
-     */
-    public ClickBoxes() {
-
-    }
-    /**
-     * Constructor.
-     * @param boxWidth Box width in pixels
-     * @param boxHeight Box height in pixels
-     * @param clickBox Array of click boxes
-     */
-    public ClickBoxes(final int boxWidth, final int boxHeight,
-    		final String[][] clickBox) {
-    	this.boxWidth = boxWidth;
-    	this.boxHeight = boxHeight;
-    	this.clickBox = clickBox;
-    }
-    
     
     /**
      * Constructor.
@@ -131,11 +126,13 @@ public final class ClickBoxes {
     	this.height = height;
     	this.boxWidth = boxWidth;
     	this.boxHeight = boxHeight;
-    	int numRows = height / boxHeight;
-    	int numCols = width / boxWidth;
-    	this.clickBox = new String[numRows][];
-    	for (int i = 0; i < numRows; i++) {
-    		clickBox[i] = new String[numCols];
+    	this.numRows = (int) Math.ceil((double) height
+    			/ (double) boxHeight) + 1;
+    	this.numCols = (int) Math.ceil((double) width
+    			/ (double) boxWidth) + 1;
+    	this.clickBox = new String[this.numRows][];
+    	for (int i = 0; i < this.numRows; i++) {
+    		clickBox[i] = new String[this.numCols];
     	}
     }
 
@@ -153,15 +150,6 @@ public final class ClickBoxes {
 	}
     
     
-    /**
-     * Set height of click boxes.
-     * @param height Height in pixels.
-     */
-	public void setHeight(final int height) {
-		this.height = height;
-	}
-	
-	
 	/**
 	 * Get origin of click boxes with regards to the
 	 * underlying graphic.
@@ -171,18 +159,7 @@ public final class ClickBoxes {
 		return origin;
 	}
 	
-	
-	
-	/**
-	 * Set origin of click boxes with regards to the
-	 * underlying graphic.
-	 * @param origin Origin of click boxes.
-	 */
-	public void setOrigin(final Point origin) {
-		this.origin = origin;
-	}
-	
-	
+		
 	/**
 	 * Get width of click boxes.
 	 * @return Width of click boxes in pixels.
@@ -192,49 +169,27 @@ public final class ClickBoxes {
 	}
 	
 	
-	/**
-	 * Set width of click boxes.
-	 * @param width Width of click boxes in pixels.
-	 */
-	public void setWidth(final int width) {
-		this.width = width;
-	}
-    
     /**
 	 * @return Returns the clickBox.
 	 */
 	public String[][] getClickBox() {
 		return clickBox;
 	}
-	/**
-	 * @param clickBox The clickBox to set.
-	 */
-	public void setClickBox(final String[][] clickBox) {
-		this.clickBox = clickBox;
-	}
+	
+	
 	/**
 	 * @return Returns the height.
 	 */
 	public int getBoxHeight() {
 		return boxHeight;
 	}
-	/**
-	 * @param height The height to set.
-	 */
-	public void setBoxHeight(final int height) {
-		this.boxHeight = height;
-	}
+
+	
 	/**
 	 * @return Returns the width.
 	 */
 	public int getBoxWidth() {
 		return boxWidth;
-	}
-	/**
-	 * @param width The width to set.
-	 */
-	public void setBoxWidth(final int width) {
-		this.boxWidth = width;
 	}
 
 	
@@ -249,9 +204,15 @@ public final class ClickBoxes {
 	 * @param y Y-coordinate of some point in the click boxes
 	 */
 	public void addClickBoxText(final String text, final int x, final int y) {
-		int row = this.getRow(y);
-		int col = this.getCol(x);
-		this.clickBox[row][col] = text;
+		int row = this.getRowNum(y);
+		int col = this.getColNum(x);
+		if (row < this.numRows && col < this.numCols) {
+			this.clickBox[row][col] = text;
+		} else {
+			LOGGER.warn("Cell (" + row + ", " + col
+					+ ") is outside the range of click boxes: ("
+					+ (this.numRows - 1) + ", " + (this.numCols - 1) + ")");
+		}
 	}
 	
 	/**
@@ -261,27 +222,35 @@ public final class ClickBoxes {
 	 * @return Click box text
 	 */
 	public String getClickBoxText(final int x, final int y) {
-		int row = this.getRow(y);
-		int col = this.getCol(x);
-		return this.clickBox[row][col];
+		String text = null;
+		int row = this.getRowNum(y);
+		int col = this.getColNum(x);
+		if (row < this.numRows && col < this.numCols) {
+			text = this.clickBox[row][col];
+		} else {
+			LOGGER.warn("Cell (" + row + ", " + col
+					+ ") is outside the range of click boxes: ("
+					+ (this.numRows - 1) + ", " + (this.numCols - 1) + ")");
+		}
+		return text;
 	}
 	
 	/**
-	 * Get row that y-pixel value falls into.
+	 * Get row number that y-pixel value falls into.
 	 * @param y Y-pixel value
 	 * @return Row
 	 */
-	private int getRow(final int y) {
+	private int getRowNum(final int y) {
 		return (int) Math.floor((double) y / (double) this.boxHeight);
 	}
 	
 	
 	/**
-	 * Get column that x-pixel value false into.
+	 * Get column number that x-pixel value false into.
 	 * @param x X-pixel value
 	 * @return Column
 	 */
-	private int getCol(final int x) {
+	private int getColNum(final int x) {
 		return (int) Math.floor((double) x / (double) this.boxWidth);
 	}
 }

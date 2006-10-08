@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-08 01:11:30 $
+$Revision: 1.6 $
+$Date: 2006-10-08 16:52:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Collection;
 
+//import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -72,6 +73,8 @@ import org.rti.webcgh.webui.util.ClickBoxes;
  *
  */
 public final class ScatterPlot implements PlotElement {
+	
+	//private static final Logger LOGGER = Logger.getLogger(ScatterPlot.class);
     
     // =============================
     //     Constants
@@ -325,10 +328,10 @@ public final class ScatterPlot implements PlotElement {
         // Add click box command
         x -= this.x;
         y -= this.y;
-//        String command = this.clickBoxes.getClickBoxText(x, y);
-//        if (command == null) {
-//        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
-//        }
+        String command = this.clickBoxes.getClickBoxText(x, y);
+        if (command == null) {
+        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
+        }
     }
     
     
