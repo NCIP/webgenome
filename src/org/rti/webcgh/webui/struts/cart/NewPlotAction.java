@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-08 01:11:27 $
 
 The Web CGH Software License, Version 1.0
@@ -48,47 +48,71 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts.user;
+package org.rti.webcgh.webui.struts.cart;
+
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.domain.Principal;
-import org.rti.webcgh.service.mgr.SecurityMgr;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.service.plot.PlotGenerator;
+import org.rti.webcgh.service.plot.PlotParameters;
+import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.service.util.IdGenerator;
+import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Logs a user into the system.
+ * Action that creates new plot.  If session mode is CLIENT,
+ * the plot is created by this action.  If mode is STAND_ALONE,
+ * then plot is created by a batch processing job.
  * @author dhall
  *
  */
-public final class LoginAction extends BaseAction {
+public final class NewPlotAction extends BaseAction {
 	
-	/** Account manager. This property should be injected. */
-	private SecurityMgr securityMgr = null;
+	/** Plot generator. */
+	private PlotGenerator plotGenerator = null;
+	
+	/** ID generator. */
+	private IdGenerator plotIdGenerator = null;
+	
+	/** Chromosome array data getter. */
+	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
 	
 	/**
-	 * Get account manager.
-	 * @return Account manager.
+	 * Set plot generator.
+	 * @param plotGenerator Plot generator.
 	 */
-	public SecurityMgr getSecurityMgr() {
-		return securityMgr;
+	public void setPlotGenerator(final PlotGenerator plotGenerator) {
+		this.plotGenerator = plotGenerator;
+	}
+	
+	
+	/**
+	 * Set ID generator.
+	 * @param idGenerator ID generator
+	 */
+	public void setPlotIdGenerator(final IdGenerator idGenerator) {
+		this.plotIdGenerator = idGenerator;
 	}
 
 
 	/**
-	 * Set account manager.
-	 * @param securityMgr Security manager for user accounts.
+	 * Set chromosome array data getter.
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
 	 */
-	public void setSecurityMgr(final SecurityMgr securityMgr) {
-		this.securityMgr = securityMgr;
+	public void setChromosomeArrayDataGetter(
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
 	}
 
 
@@ -109,24 +133,37 @@ public final class LoginAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
-    	LoginForm lf = (LoginForm) form;
     	
-    	// Get principal and cache in session
-    	Principal p = this.securityMgr.logIn(lf.getName(),
-    			lf.getPassword());
-    	if (p == null) {
-    		ActionErrors errors = new ActionErrors();
-    		errors.add("global", new ActionError("invalid.user"));
-    		this.saveErrors(request, errors);
-    		return mapping.findForward("failure");
+    	// Retrieve selected experiments form bean.
+    	// Note, this is not the form bean configured
+    	// for this action in struts-config.xml.
+    	SelectedExperimentsForm seForm =
+    		PageContext.getSelectedExperimentsForm(request, false);
+    	if (seForm == null) {
+    		throw new SessionTimeoutException(
+    				"Could not find selected experiments");
     	}
-    	PageContext.setPrincipal(request, p);
     	
-    	// Set session mode
-    	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
+    	// Get selected experiments
+    	Collection<Long> experimentIds = seForm.getSelectedExperimentIds();
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	Collection<Experiment> experiments = cart.getExperiments(experimentIds);
+    
+    	// Get plot parameters
+    	PlotParametersForm pForm = (PlotParametersForm) form;
+    	PlotParameters params = pForm.getPlotParameters();
     	
-    	// Get shopping cart
-    	// TODO: Complete this
+    	// Create plot
+    	SessionMode mode = PageContext.getSessionMode(request);
+    	Plot plot = null;
+    	if (mode == SessionMode.CLIENT) {
+    		Long plotId = this.plotIdGenerator.nextId();
+    		String plotName = plotId.toString();
+    		plot = this.plotGenerator.newPlot(experiments, params,
+    				plotName, this.chromosomeArrayDataGetter);
+    		cart.add(plot);
+    		request.setAttribute("plotId", plotId.toString());
+    	}
     	
         return mapping.findForward("success");
     }

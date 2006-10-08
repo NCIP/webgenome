@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-07 15:58:52 $
+$Revision: 1.5 $
+$Date: 2006-10-08 01:11:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -325,10 +325,10 @@ public final class ScatterPlot implements PlotElement {
         // Add click box command
         x -= this.x;
         y -= this.y;
-        String command = this.clickBoxes.getClickBoxText(x, y);
-        if (command == null) {
-        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
-        }
+//        String command = this.clickBoxes.getClickBoxText(x, y);
+//        if (command == null) {
+//        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
+//        }
     }
     
     

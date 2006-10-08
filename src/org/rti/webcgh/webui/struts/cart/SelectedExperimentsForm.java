@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-08 01:11:27 $
 
 The Web CGH Software License, Version 1.0
@@ -48,86 +48,91 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts.user;
+package org.rti.webcgh.webui.struts.cart;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.domain.Principal;
-import org.rti.webcgh.service.mgr.SecurityMgr;
-import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.webui.struts.BaseForm;
 import org.rti.webcgh.webui.util.PageContext;
-import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Logs a user into the system.
+ * Retrieves selected experiments from the request.
+ * This form is intended to be used in tandem with
+ * the custom tag ExperimentCheckBox, which creates
+ * checkboxes for selecting experiments.  The class
+ * is basically a struts map-backed form with
+ * special methods for experiment IDs.
  * @author dhall
  *
  */
-public final class LoginAction extends BaseAction {
+public class SelectedExperimentsForm extends BaseForm {
 	
-	/** Account manager. This property should be injected. */
-	private SecurityMgr securityMgr = null;
+	/** Text indicating a HTML textbox is checked. */
+	private static final String CHECKED = "checked";
 	
-	/**
-	 * Get account manager.
-	 * @return Account manager.
-	 */
-	public SecurityMgr getSecurityMgr() {
-		return securityMgr;
-	}
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 1;
 
-
-	/**
-	 * Set account manager.
-	 * @param securityMgr Security manager for user accounts.
-	 */
-	public void setSecurityMgr(final SecurityMgr securityMgr) {
-		this.securityMgr = securityMgr;
-	}
-
-
-	/**
-     * Execute action.
-     * @param mapping Routing information for downstream actions
-     * @param form Form data
-     * @param request Servlet request object
-     * @param response Servlet response object
-     * @return Identification of downstream action as configured in the
-     * struts-config.xml file
-     * @throws Exception All exceptions thrown by classes in
-     * the method are passed up to a registered exception
-     * handler configured in the struts-config.xml file
+	/** Maps form names to values. */
+    private Map<String, Object> values = new HashMap<String, Object>();
+    
+    
+    /**
+     * Set a value.
+     * @param key Key
+     * @param value Value
      */
-    public ActionForward execute(
-        final ActionMapping mapping, final ActionForm form,
-        final HttpServletRequest request,
-        final HttpServletResponse response
-    ) throws Exception {
-    	LoginForm lf = (LoginForm) form;
-    	
-    	// Get principal and cache in session
-    	Principal p = this.securityMgr.logIn(lf.getName(),
-    			lf.getPassword());
-    	if (p == null) {
-    		ActionErrors errors = new ActionErrors();
-    		errors.add("global", new ActionError("invalid.user"));
-    		this.saveErrors(request, errors);
-    		return mapping.findForward("failure");
+    public final void setValue(final String key, final Object value) {
+        this.values.put(key, value);
+    }
+    
+    
+    /**
+     * Get value.
+     * @param key Key
+     * @return A value
+     */
+    public final Object getValue(final String key) {
+        return this.values.get(key);
+    }
+	
+    
+    /**
+     * Get experiment IDs selected from upstream HTML form.
+     * @return Experiment IDs
+     */
+    public final Collection<Long> getSelectedExperimentIds() {
+    	Collection<Long> ids = new ArrayList<Long>();
+    	for (String key : this.values.keySet()) {
+    		if (key.indexOf(PageContext.EXPERIMENT_ID_PREFIX) == 0) {
+    			String idStr = key.substring(
+    					PageContext.EXPERIMENT_ID_PREFIX.length());
+    			long id = Long.parseLong(idStr);
+    			ids.add(id);
+    		}
     	}
-    	PageContext.setPrincipal(request, p);
-    	
-    	// Set session mode
-    	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
-    	
-    	// Get shopping cart
-    	// TODO: Complete this
-    	
-        return mapping.findForward("success");
+    	return ids;
+    }
+    
+    
+    /**
+     * Set selected experiment IDs.
+     * @param experiments Experiments
+     */
+    public final void setSelectedExperimentIds(
+    		final Collection<Experiment> experiments) {
+    	this.values.clear();
+    	for (Experiment exp : experiments) {
+    		if (exp.getId() == null) {
+    			throw new WebcghSystemException("Experiment ID is null");
+    		}
+    		String key = PageContext.EXPERIMENT_ID_PREFIX + exp.getId();
+    		this.values.put(key, CHECKED);
+    	}
     }
 }

@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-08 01:11:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,82 +48,82 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.domain;
+package org.rti.webcgh.webui.taglib;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.io.Writer;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.domain.Experiment;
+
 
 /**
- * Quantitation type for array experiment values.
+ * This custom tag created a text box that enables
+ * the user to select an experiment.  The tag expects
+ * that a bean with name defined by the property 'name'
+ * is available in some scope.  This bean should be
+ * of type experiment.  The name of the checkbox will
+ * be formed in part from the experiment ID.
  * @author dhall
  *
  */
-public final class QuantitationType implements Serializable {
-    
-    // =============================
-    //   Constants
-    // =============================
-    
-    /** Log2 ratio. */
-    public static final QuantitationType LOG_2_RATIO =
-        new QuantitationType("Log2 Ratio");
-    
-    /** Maps quantitation type names of quantitation types. */
-    private static final Map<String, QuantitationType> INDEX =
-    	new HashMap<String, QuantitationType>();
-    
-    static {
-    	INDEX.put(LOG_2_RATIO.getName(), LOG_2_RATIO);
-    }
-    
-    /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
-    
-    // =====================
-    //      Attributes
-    // =====================
-    
-    /** Name of quantitation type. */
-    private final String name;
-    
-    
-    // =======================
-    //     Getters/setters
-    // =======================
-    
-    /**
-     * Get name of quantitation type.
-     * @return Name of quantitation type
-     */
-    public String getName() {
-        return name;
-    }
-    
-    
-    // ==========================
-    //     Constructors
-    // ==========================
-    
-    /**
-     * Constructor.
-     * @param name Name of quantitation type
-     */
-    public QuantitationType(final String name) {
-        this.name = name;
-    }
-    
-    
-    // ============================
-    //    Business methods
-    // ============================
-    
-    /**
-     * Get quantitation type that corresponds to given name.
-     * @param name Name of quantitation type
-     * @return Quantitation type
-     */
-    public static QuantitationType getQuantitationType(final String name) {
-    	return INDEX.get(name);
-    }
+public class ExperimentCheckBoxTag extends TagSupport {
+	
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 1;
+	
+	/**
+	 * Name of some bean of type <code>Experiment</code>.
+	 */
+	private String name = null;
+	
+	
+	/**
+	 * Set name of bean of type <code>Experiment</code>.
+	 * @param name Name of bean.
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
+
+
+
+	/**
+	 * Do after start tag parsed.
+	 * @throws JspException if anything goes wrong.
+	 * @return Return value
+	 */
+	@Override
+	public final int doStartTag() throws JspException {
+		
+		// Make sure bean is in good form
+		if (name == null || name.length() < 1) {
+			throw new JspException("Tag attribute '"
+					+ name + "' missing or empty");
+		}
+		Experiment exp = (Experiment) pageContext.findAttribute(name);
+		if (exp == null || !(exp instanceof Experiment)) {
+			throw new JspException("Attribute with name 'name' is "
+					+ "null or not of type Experiment");
+		}
+		if (exp.getId() == null) {
+			throw new JspException("Experiment ID is null");
+		}
+		
+		// Write output
+		Writer out = pageContext.getOut();
+		String inputName =
+			org.rti.webcgh.webui.util.PageContext.EXPERIMENT_ID_PREFIX
+			+ exp.getId();
+		try {
+			out.write("<input type=\"checkbox\" name=\"" + inputName + "\">");
+			out.flush();
+		} catch (IOException e) {
+			throw new JspException("Error writing page output", e);
+		}
+		
+		return TagSupport.SKIP_BODY;
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-07 15:58:49 $
+$Revision: 1.2 $
+$Date: 2006-10-08 01:11:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,14 +51,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.widget.PlotPanel;
@@ -75,14 +75,8 @@ import org.rti.webcgh.webui.util.ClickBoxes;
  */
 public class PngPlotGenerator implements PlotGenerator {
 	
-	// ==============================
-	//      Constants
-	// ==============================
-	
-	/** Reference file used for finding absolute path to image directory. */
-	private static final String REF_FILE_NAME =
-		"ApplicationResources.properties";
-	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(PlotGenerator.class);
 	
 	// ============================
 	//      Attributes
@@ -112,19 +106,20 @@ public class PngPlotGenerator implements PlotGenerator {
 	
 	/**
 	 * Constructor.
-	 * @param imageSubContext Subcontext of image directory.
+	 * @param imageDirPath Absolute path to directory
+	 * where images will be written.
 	 * This should be the
 	 * directory off the root of the web tree.
 	 * @param shoppingCartDao Shopping cart data access object.
 	 */
-	public PngPlotGenerator(final String imageSubContext,
+	public PngPlotGenerator(final String imageDirPath,
 			final ShoppingCartDao shoppingCartDao) {
 		
 		// Get image directory
-		File imageDir = this.getImageDirectory(imageSubContext);
+		File imageDir = new File(imageDirPath);
 		if (!imageDir.exists() || !imageDir.isDirectory()) {
 			throw new WebcghSystemException("Invalid image directory: "
-					+ imageDir.getAbsolutePath());
+					+ imageDirPath);
 		}
 		
 		// Get image files to be preserved when image file manager
@@ -136,52 +131,6 @@ public class PngPlotGenerator implements PlotGenerator {
 		this.imageFileManager = new ImageFileManager(imageDir, imagesToSave);
 	}
 
-	
-	/**
-	 * Get directory containing image files.
-	 * @param imageSubContext Subcontext of image directory.
-	 * This should be the
-	 * directory off the root of the web tree.
-	 * @return Directory containing image files.
-	 */
-	private File getImageDirectory(final String imageSubContext) {
-		URL url = ClassLoader.getSystemResource(REF_FILE_NAME);
-		URI uri = null;
-		try {
-			uri = url.toURI();
-		} catch (URISyntaxException e) {
-			throw new WebcghSystemException(
-					"Cannot determine absolute path to image directory", e);
-		}
-		File refFile = new File(uri);
-		if (!refFile.exists()) {
-			throw new WebcghSystemException(
-					"Cannot determine absolute path to image directory.  "
-					+ "Reference file '" + REF_FILE_NAME
-					+ "' cannot be found.");
-		}
-		
-		// Now move up two levels to the root of the web tree
-		File parent = refFile.getParentFile();
-		if (parent == null || !parent.exists()) {
-			throw new WebcghSystemException("Cannot determine absolute "
-					+ "path to image directory.  Unable to find absolute "
-					+ "path to root of web tree.");
-		}
-		File grandParent = parent.getParentFile();
-		if (grandParent == null || !grandParent.exists()) {
-			throw new WebcghSystemException("Cannot determine absolute "
-					+ "path to image directory.  Unable to find absolute "
-					+ "path to root of web tree.");
-		}
-		
-		// We should be in the root of the web tree now.  Create
-		// image directory file.
-		String imageDirPath = grandParent.getAbsolutePath()
-			+ "/" + imageSubContext;
-		
-		return new File(imageDirPath);
-	}
 	
 	// ==================================
 	//      PlotGenerator interface
@@ -200,11 +149,40 @@ public class PngPlotGenerator implements PlotGenerator {
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
 		Plot plot = new Plot(plotName);
 		if (plotParameters instanceof ScatterPlotParameters) {
+			
+			// Set left and right endpoints of genome intervals
+			// in case user only specified chromosome locations
+			this.fixGenomeIntervals(plotParameters.getGenomeIntervals(),
+					experiments);
+			
 			this.newScatterPlot(plot, experiments,
 					(ScatterPlotParameters) plotParameters,
 					chromosomeArrayDataGetter);
 		}
 		return plot;
+	}
+	
+	/**
+	 * Fix genome intervals by setting chromosomal end points.  User may
+	 * have only specified chromosome numbers.  Endpoints are set
+	 * to 0 and the length of the chromosome inferred from the
+	 * experimental data (i.e., the position of the right-most
+	 * reporter).
+	 * @param intervals Genome intervals
+	 * @param experiments Experiments
+	 */
+	private void fixGenomeIntervals(final Collection<GenomeInterval> intervals,
+			final Collection<Experiment> experiments) {
+		for (GenomeInterval gi : intervals) {
+			if (gi.getStartLocation() < 0) {
+				gi.setStartLocation(0);
+			}
+			if (gi.getEndLocation() < 0) {
+				long end = Experiment.inferredChromosomeSize(experiments,
+						gi.getChromosome());
+				gi.setEndLocation(end);
+			}
+		}
 	}
 	
 	
@@ -219,33 +197,58 @@ public class PngPlotGenerator implements PlotGenerator {
 			final Collection<Experiment> experiments,
 			final ScatterPlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		LOGGER.info("Creating new scatter plot");
+		
+		// Make sure plot parameters are okay
+		Set<Short> chromosomes = GenomeInterval.getChromosomes(
+				plotParameters.getGenomeIntervals());
+		if (Float.isNaN(plotParameters.getMinY())) {
+			float min = Experiment.findMinValue(experiments, chromosomes);
+			plotParameters.setMinY(min);
+		}
+		if (Float.isNaN(plotParameters.getMaxY())) {
+			float max = Experiment.findMaxValue(experiments, chromosomes);
+			plotParameters.setMaxY(max);
+		}
 		
 		// Instantiate plot painter
 		ScatterPlotPainter painter =
 			new ScatterPlotPainter(chromosomeArrayDataGetter);
 		
 		// Create default plot image
+		LOGGER.info("Creating default plot image");
 		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
 		PlotPanel panel = new PlotPanel(canvas);
 		Collection<ClickBoxes> clickBoxes =
 			painter.paintPlot(panel, experiments, plotParameters);
+		panel.paint(canvas);
+		canvas.setWidth(panel.width());
+		canvas.setHeight(panel.height());
 		String imageFileName =
 			this.imageFileManager.saveImage(canvas.toBufferedImage());
 		plot.setDefaultImageFileName(imageFileName);
 		plot.setClickBoxes(clickBoxes);
+		LOGGER.info("Completed default plot image");
 		
 		// Create images of each bioassay selected
 		for (Experiment exp : experiments) {
 			for (BioAssay ba : exp.getBioAssays()) {
+				LOGGER.info("Creating image with bioassay "
+						+ ba.getName() + "hilighted");
 				ba.setSelected(true);
 				canvas = new RasterDrawingCanvas();
 				panel = new PlotPanel(canvas);
 				painter.paintPlot(panel, experiments, plotParameters);
+				panel.paint(canvas);
+				canvas.setWidth(panel.width());
+				canvas.setHeight(panel.height());
 				imageFileName =
 					this.imageFileManager.saveImage(canvas.toBufferedImage());
 				plot.addImageFile(imageFileName, imageFileName);
 				ba.setSelected(false);
+				LOGGER.info("Completed hilighted plot image");
 			}
 		}
+		LOGGER.info("Completed scatter plot");
 	}
 }

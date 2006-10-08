@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-08 01:11:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,82 +48,26 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.domain;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+package org.rti.webcgh.service.util;
 
 /**
- * Quantitation type for array experiment values.
+ * Utility class for generating unique identifier
+ * for objects that are not persisted, but still
+ * have an identifier fields that must be unique.
  * @author dhall
  *
  */
-public final class QuantitationType implements Serializable {
-    
-    // =============================
-    //   Constants
-    // =============================
-    
-    /** Log2 ratio. */
-    public static final QuantitationType LOG_2_RATIO =
-        new QuantitationType("Log2 Ratio");
-    
-    /** Maps quantitation type names of quantitation types. */
-    private static final Map<String, QuantitationType> INDEX =
-    	new HashMap<String, QuantitationType>();
-    
-    static {
-    	INDEX.put(LOG_2_RATIO.getName(), LOG_2_RATIO);
-    }
-    
-    /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
-    
-    // =====================
-    //      Attributes
-    // =====================
-    
-    /** Name of quantitation type. */
-    private final String name;
-    
-    
-    // =======================
-    //     Getters/setters
-    // =======================
-    
-    /**
-     * Get name of quantitation type.
-     * @return Name of quantitation type
-     */
-    public String getName() {
-        return name;
-    }
-    
-    
-    // ==========================
-    //     Constructors
-    // ==========================
-    
-    /**
-     * Constructor.
-     * @param name Name of quantitation type
-     */
-    public QuantitationType(final String name) {
-        this.name = name;
-    }
-    
-    
-    // ============================
-    //    Business methods
-    // ============================
-    
-    /**
-     * Get quantitation type that corresponds to given name.
-     * @param name Name of quantitation type
-     * @return Quantitation type
-     */
-    public static QuantitationType getQuantitationType(final String name) {
-    	return INDEX.get(name);
-    }
+public class IdGenerator {
+	
+	/** Next available ID value. */
+	private long nextValue = 1;
+	
+	/**
+	 * Get next ID.
+	 * @return Next id
+	 */
+	public final Long nextId() {
+		return this.nextValue++;
+	}
+
 }

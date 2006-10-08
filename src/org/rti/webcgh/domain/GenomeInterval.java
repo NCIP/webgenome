@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-06 04:33:47 $
+$Revision: 1.3 $
+$Date: 2006-10-08 01:11:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 
@@ -199,6 +202,24 @@ public class GenomeInterval {
 			intervals.add(interval);
 		}
 		return intervals;
+	}
+	
+	
+	/**
+	 * Get set of chromosomes from given collection.
+	 * @param intervals Genome intervals
+	 * @return Chromosomes
+	 */
+	public static final Set<Short> getChromosomes(
+			final Collection<GenomeInterval> intervals) {
+		if (intervals == null) {
+			throw new IllegalArgumentException("Intervals null");
+		}
+		Set<Short> chromosomes = new HashSet<Short>();
+		for (GenomeInterval gi : intervals) {
+			chromosomes.add(gi.getChromosome());
+		}
+		return chromosomes;
 	}
 	
 	

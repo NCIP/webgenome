@@ -25,6 +25,11 @@
 		<form-bean
 			name="plot.parameters.form"
 			type="org.rti.webcgh.webui.struts.cart.PlotParametersForm"/>
+			
+	<!-- Selected experiments form -->
+		<form-bean
+			name="selected.experiments.form"
+			type="org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm"/>
 	</form-beans>
 
 	
@@ -98,6 +103,15 @@
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.set.colors"/>
 				
+	<!-- New plot -->
+		<action
+			path="/cart/newPlot"
+			name="plot.parameters.form"
+			validate="false">
+			<forward name="success" path="/cart/showPlot.do"/>
+		</action>
+			
+	
 	<!-- Show plot -->
 		<action
 			path="/cart/showPlot"
@@ -188,7 +202,7 @@
 			path="/client/plot"
 			name="plot.parameters.form"
 			validate="false">
-			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="success" path="/cart/newPlot.do"/>
 		</action>
 	</action-mappings>
 	

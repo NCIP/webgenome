@@ -12,7 +12,7 @@
 	[<html:link action="/cart/showJobsTable">
 		Stand-alone mode forward
 	</html:link>]
-	[<html:link action="/cart/showPlot">
+	[<html:link action="/cart/newPlot">
 		Client mode forward
 	</html:link>]
 </p>

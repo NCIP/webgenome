@@ -3,12 +3,32 @@
 
 <beans>
 
+	<!-- ======================================================= -->
+	<!--   Import configurable values from 'webcgh.properties'   -->
+	<!-- ======================================================= -->
+	
+	<bean
+		id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<bean class="org.springframework.core.io.ClassPathResource">
+				<constructor-arg type="java.lang.String">
+					<value>conf/webcgh.properties</value>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- =========================================== -->
+	<!--      Data access beans                      -->
+	<!-- =========================================== -->
+	
 <!-- Data source -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
-		<property name="url"><value>jdbc:oracle:thin:@rtilxs02.rti.org:1521:webgrtid</value></property>
-		<property name="username"><value>webg</value></property>
-		<property name="password"><value>webcgh9</value></property>
+		<property name="url"><value>${db.url}</value></property>
+		<property name="username"><value>${db.user.name}</value></property>
+		<property name="password"><value>${db.password}</value></property>
 	</bean>
 	
 <!-- Session factory -->
@@ -32,6 +52,16 @@
   	<bean id="principalDao" class="org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
+  	
+<!-- Shopping cart DAO -->
+  	<bean id="shoppingCartDao"
+  		class="org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<!-- =================================== -->
+  	<!--      Service beans                  -->
+  	<!-- =================================== -->
 
 <!-- Security manager -->
 	<bean id="securityMgr" class="org.rti.webcgh.service.mgr.SecurityMgrImpl">
@@ -41,6 +71,31 @@
 <!-- Client data service -->
 	<bean id="clientDataService"
 		class="org.rti.webcgh.service.client.TestClientDataService"/>
+		
+<!-- In-memory chromosome array data getter -->
+	<bean id="inMemoryChromosomeArrayDataGetter"
+		class="org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter"/>
+		
+<!-- ID generator for plots not persisted and, hence, not given
+	 IDs by the DAO tier. -->
+	<bean id="plotIdGenerator"
+		class="org.rti.webcgh.service.util.IdGenerator"/>
+		
+<!-- ID generator for experiments not persisted and, hence, not given
+	 IDs by the DAO tier. -->
+	<bean id="experimentIdGenerator"
+		class="org.rti.webcgh.service.util.IdGenerator"/>
+		
+<!-- Plot generator -->
+	<bean id="plotGenerator"
+		class="org.rti.webcgh.service.plot.PngPlotGenerator">
+		<constructor-arg type="java.lang.String">
+			<value>${image.dir.path}</value>
+		</constructor-arg>
+		<constructor-arg type="org.rti.webcgh.service.dao.ShoppingCartDao">
+			<ref bean="shoppingCartDao"/>
+		</constructor-arg>
+	</bean>
 	
 	<!-- ========================================== -->
 	<!--        Action beans                        -->
@@ -67,6 +122,23 @@
 		class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
 		<property name="clientDataService">
 			<ref bean="clientDataService"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
+		</property>
+	</bean>
+	
+<!-- New plot -->
+	<bean name="/cart/newPlot"
+		class="org.rti.webcgh.webui.struts.cart.NewPlotAction">
+		<property name="plotGenerator">
+			<ref bean="plotGenerator"/>
+		</property>
+		<property name="plotIdGenerator">
+			<ref bean="plotIdGenerator"/>
+		</property>
+		<property name="chromosomeArrayDataGetter">
+			<ref bean="inMemoryChromosomeArrayDataGetter"/>
 		</property>
 	</bean>
 				

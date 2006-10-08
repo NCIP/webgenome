@@ -51,10 +51,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
  * Represents an on-line data shopping cart.
@@ -248,5 +251,31 @@ public class ShoppingCart implements Serializable {
     			break;
     		}
     	}
+    }
+    
+    
+    /**
+     * Get experiments with given IDs.
+     * @param ids Experiment IDs
+     * @return Experiments
+     */
+    public final Collection<Experiment> getExperiments(
+    		final Collection<Long> ids) {
+    	Collection<Experiment> experiments = new ArrayList<Experiment>();
+    	for (Long id : ids) {
+    		Experiment exp = null;
+    		for (Experiment source : this.experiments) {
+    			if (id.equals(source.getId())) {
+    				exp = source;
+    				break;
+    			}
+    		}
+    		if (exp == null) {
+    			throw new WebcghSystemException("Experiment '"
+    					+ id + "' not in shopping cart");
+    		}
+    		experiments.add(exp);
+    	}
+    	return experiments;
     }
 }

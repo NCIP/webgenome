@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-07 15:58:51 $
+$Revision: 1.4 $
+$Date: 2006-10-08 01:11:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -133,7 +133,10 @@ public final class ClickBoxes {
     	this.boxHeight = boxHeight;
     	int numRows = height / boxHeight;
     	int numCols = width / boxWidth;
-    	this.clickBox = new String[numRows][numCols];
+    	this.clickBox = new String[numRows][];
+    	for (int i = 0; i < numRows; i++) {
+    		clickBox[i] = new String[numCols];
+    	}
     }
 
 

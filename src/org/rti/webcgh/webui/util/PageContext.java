@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.3 $
+$Date: 2006-10-08 01:11:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import javax.servlet.http.HttpSession;
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.webui.SessionTimeoutException;
+import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
 
 /**
  * Provides access to objects cached as attributes in the request
@@ -81,6 +82,19 @@ public final class PageContext {
 	
 	/** Key for shopping cart associated with session. */
 	private static final String KEY_SHOPPING_CART = "key.shopping.cart";
+	
+	/**
+	 * Selected experiments form.
+	 * 
+	 * NOTE: THE VALUE OF THIS VARIABLES MUST BE EQUAL TO THE
+	 * NAME OF A FORM BEAN OF TYPE <code>SelectedExperimentsForm</code>
+	 * IN struts-config.xml.
+	 */
+	private static final String KEY_SELECTED_EXPERIMENTS_FORM =
+		"selected.experiments.form";
+	
+	/** Prefix for experiment IDs used in HTML form elements. */
+	public static final String EXPERIMENT_ID_PREFIX = "exp_";
 	
 	
 	// ==========================
@@ -176,6 +190,36 @@ public final class PageContext {
 	public static void setShoppingCart(final HttpServletRequest request,
 			final ShoppingCart shoppingCart) {
 		request.getSession().setAttribute(KEY_SHOPPING_CART, shoppingCart);
+	}
+	
+	/**
+	 * Get selected experiments form.
+	 * @param request Servlet request
+	 * @param createIfMissing Create a new form if there is not
+	 * one associated with session.
+	 * @return Selected experiments form
+	 */
+	public static SelectedExperimentsForm getSelectedExperimentsForm(
+			final HttpServletRequest request, final boolean createIfMissing) {
+		SelectedExperimentsForm form = (SelectedExperimentsForm)
+			request.getSession().getAttribute(KEY_SELECTED_EXPERIMENTS_FORM);
+		if (form == null && createIfMissing) {
+			form = new SelectedExperimentsForm();
+			setSelectedExperimentsForm(request, form);
+		}
+		return form;
+	}
+	
+	
+	/**
+	 * Set selected experiments form.
+	 * @param request Servlet request
+	 * @param form Selected experiments form.
+	 */
+	public static void setSelectedExperimentsForm(
+			final HttpServletRequest request,
+			final SelectedExperimentsForm form) {
+		request.getSession().setAttribute(KEY_SELECTED_EXPERIMENTS_FORM, form);
 	}
 	
 	/**

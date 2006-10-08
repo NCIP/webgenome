@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-06 04:33:02 $
+$Revision: 1.2 $
+$Date: 2006-10-08 01:11:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.GenomeIntervalFormatException;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.units.BpUnits;
@@ -93,6 +94,16 @@ public class PlotParametersForm extends BaseForm {
 	/** Default plots per row. */
 	private static final String DEF_NUM_PLOTS_PER_ROW = "4";
 	
+	/** Default plot width. */
+	private static final String DEF_WIDTH = "600";
+	
+	/** Default plot height. */
+	private static final String DEF_HEIGHT = "400";
+	
+	/** Default quantitation type. */
+	private static final String DEF_QUANTITATION_TYPE =
+		QuantitationType.LOG_2_RATIO.getName();
+	
 	// ===========================
 	//     Attributes
 	// ===========================
@@ -124,6 +135,15 @@ public class PlotParametersForm extends BaseForm {
 	/** Maximum Y-axis value. */
 	private String maxY = "";
 	
+	/** Width of plot in pixels. */
+	private String width = DEF_WIDTH;
+	
+	/** Height of plot in pixels. */
+	private String height = DEF_HEIGHT;
+	
+	/** Quantitation type. */
+	private String quantitationType = DEF_QUANTITATION_TYPE;
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -150,6 +170,24 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	public final void setGenomeIntervals(final String genomeIntervals) {
 		this.genomeIntervals = genomeIntervals;
+	}
+	
+	
+	/**
+	 * Get quantitation type.
+	 * @return Quantitation type.
+	 */
+	public final String getQuantitationType() {
+		return quantitationType;
+	}
+
+
+	/**
+	 * Set quantitation type.
+	 * @param quantitationType Quantitation type.
+	 */
+	public final void setQuantitationType(final String quantitationType) {
+		this.quantitationType = quantitationType;
 	}
 
 	/**
@@ -215,6 +253,39 @@ public class PlotParametersForm extends BaseForm {
 	public final void setPlotType(final String plotType) {
 		this.plotType = plotType;
 	}
+	
+
+	/**
+	 * Get plot height.
+	 * @return Height in pixels.
+	 */
+	public final String getHeight() {
+		return height;
+	}
+
+	/**
+	 * Set plot height.
+	 * @param height Height in pixels.
+	 */
+	public final void setHeight(final String height) {
+		this.height = height;
+	}
+
+	/**
+	 * Get plot width.
+	 * @return Width in pixels.
+	 */
+	public final String getWidth() {
+		return width;
+	}
+
+	/**
+	 * Set plot width.
+	 * @param width Width in pixels.
+	 */
+	public final void setWidth(final String width) {
+		this.width = width;
+	}
 
 	/**
 	 * Get base pair units.
@@ -250,6 +321,8 @@ public class PlotParametersForm extends BaseForm {
 		this.numPlotPerRow = DEF_NUM_PLOTS_PER_ROW;
 		this.minY = "";
 		this.maxY = "";
+		this.width = DEF_WIDTH;
+		this.height = DEF_HEIGHT;
 	}
 
 	/**
@@ -347,6 +420,10 @@ public class PlotParametersForm extends BaseForm {
 			}
 			((ScatterPlotParameters) p).setMinY(minYFloat);
 			((ScatterPlotParameters) p).setMaxY(maxYFloat);
+			((ScatterPlotParameters) p).setWidth(
+					Integer.parseInt(this.width));
+			((ScatterPlotParameters) p).setHeight(
+					Integer.parseInt(this.height));
 		}
 		
 		// Common attributes
@@ -360,6 +437,8 @@ public class PlotParametersForm extends BaseForm {
 			}
 			p.setNumPlotsPerRow(Integer.parseInt(this.numPlotPerRow));
 			p.setUnits(BpUnits.getUnits(this.units));
+			p.setQuantitationType(QuantitationType.getQuantitationType(
+					this.quantitationType));
 		}
 		
 		return p;

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-06 04:34:12 $
+$Revision: 1.4 $
+$Date: 2006-10-08 01:11:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,8 +62,10 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.client.ClientDataService;
+import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.struts.cart.PlotParametersForm;
+import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
 import org.rti.webcgh.webui.util.ClientQueryParser;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
@@ -82,6 +84,9 @@ public final class ClientPlotAction extends BaseAction {
 	
 	/** Client data service. This property should be injected. */
     private ClientDataService clientDataService = null;
+    
+    /** Experiment ID generator. */
+    private IdGenerator experimentIdGenerator = null;
 
 
     /**
@@ -91,6 +96,15 @@ public final class ClientPlotAction extends BaseAction {
     public void setClientDataService(
     		final ClientDataService clientDataService) {
 		this.clientDataService = clientDataService;
+	}
+
+
+    /**
+     * Set ID generator.
+     * @param idGenerator ID generator.
+     */
+	public void setExperimentIdGenerator(final IdGenerator idGenerator) {
+		this.experimentIdGenerator = idGenerator;
 	}
 
 
@@ -123,6 +137,11 @@ public final class ClientPlotAction extends BaseAction {
         	this.clientDataService.getClientData(constraints,
         			experimentIds, clientID);
         
+        // Give each experiment a unique ID
+        for (Experiment exp : experiments) {
+        	exp.setId(this.experimentIdGenerator.nextId());
+        }
+        
         // Put data in shopping cart
         ShoppingCart cart = new ShoppingCart();
         PageContext.setShoppingCart(request, cart);
@@ -134,6 +153,11 @@ public final class ClientPlotAction extends BaseAction {
         // Initialize plot parameters form
         PlotParametersForm pForm = (PlotParametersForm) form;
         pForm.reset(mapping, request);
+        
+        // Set selected experiments form
+        SelectedExperimentsForm sef =
+        	PageContext.getSelectedExperimentsForm(request, true);
+        sef.setSelectedExperimentIds(experiments);
         
 		return mapping.findForward("success");
 	}
