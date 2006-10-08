@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-07 15:58:52 $
+$Revision: 1.4 $
+$Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -271,5 +272,17 @@ public class Plot implements Serializable {
 	public final void addImageFile(final String imageName,
 			final String fileName) {
 		this.imageFileMap.put(imageName, fileName);
+	}
+	
+	
+	/**
+	 * Get names of all image files associated with plot.
+	 * @return Names of all image files associated with plot.
+	 */
+	public final Collection<String> getAllImageFileNames() {
+		Collection<String> names = new ArrayList<String>();
+		names.add(this.defaultImageFileName);
+		names.addAll(this.imageFileMap.keySet());
+		return names;
 	}
 }

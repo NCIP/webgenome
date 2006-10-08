@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.io.ImageFileManager;
 
 /**
  * Represents an on-line data shopping cart.
@@ -85,6 +86,12 @@ public class ShoppingCart implements Serializable {
     /** User name associated with cart. */
     private String userName = null;
     
+    /**
+     * Image file manager.  If this propery is not null,
+     * then when a shopping cart instance is finalized,
+     * it will delete associated image files.
+     */
+    private ImageFileManager imageFileManager;
     
     // =============================
     //     Getters/setters
@@ -153,17 +160,36 @@ public class ShoppingCart implements Serializable {
     public final void setUserName(final String userName) {
         this.userName = userName;
     }
+    
+    /**
+     * Get image file manager.
+     * @return Image file manager.
+     */
+    public final ImageFileManager getImageFileManager() {
+		return imageFileManager;
+	}
 
+    
+    /**
+     * Set image file manager.  If this property is set,
+     * then associated image files will be deleted when
+     * a shopping cart instance is finalized.
+     * @param imageFileManager Image file manager.
+     */
+	public final void setImageFileManager(
+			final ImageFileManager imageFileManager) {
+		this.imageFileManager = imageFileManager;
+	}
     
     // ================================
     //      Constructors
     // ================================
-    
-    /**
-     * Default constructor.
+
+	/**
+     * Constructor.
      */
     public ShoppingCart() {
-        
+
     }
     
     /**
@@ -278,4 +304,41 @@ public class ShoppingCart implements Serializable {
     	}
     	return experiments;
     }
+    
+    
+    /**
+     * Get plot with given ID.
+     * @param plotId Plot ID.
+     * @return Plot
+     */
+    public final Plot getPlot(final Long plotId) {
+    	Plot plot = null;
+    	for (Plot p : this.plots) {
+    		if (plotId.equals(p.getId())) {
+    			plot = p;
+    			break;
+    		}
+    	}
+    	return plot;
+    }
+
+    
+    // ============================
+    //      Overrides
+    // ============================
+    
+    /**
+     * Finalize object.
+     * @throws Throwable if anything bad happens.
+     */
+	@Override
+	protected final void finalize() throws Throwable {
+		if (this.imageFileManager != null) {
+			for (Plot p : this.plots) {
+				for (String name : p.getAllImageFileNames()) {
+					this.imageFileManager.deleteImageFile(name);
+				}
+			}
+		}
+	}
 }

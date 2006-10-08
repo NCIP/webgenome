@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
@@ -48,16 +48,87 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts;
+package org.rti.webcgh.webui.taglib;
 
-import org.apache.struts.action.Action;
+import java.io.IOException;
+import java.io.Writer;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Abstract base class for webGenome Struts actions.
+ * Tag that generates HTML text to display
+ * the initial plot image defined in class <code>Plot</code>.
+ * This tage expects an attribute 'name' that gives
+ * the name of a bean in some scope of type <code>Plot</code>.
  * @author dhall
  *
  */
-public abstract class BaseAction extends Action {
+public class ShowPlotTag extends TagSupport {
 	
+	/** Sub-context of directory containing plot images. */
+	private static final String SUB_CONTEXT =
+		SystemUtils.getApplicationProperty("image.sub.context"); 
+	
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 1;
+	
+	/**
+	 * Name of some bean of type <code>Plot</code>.
+	 */
+	private String name = null;
+	
+	/**
+	 * Set name of bean of type <code>Plot</code>.
+	 * @param name Name of bean.
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
+
+
+	/**
+	 * Do after start tag parsed.
+	 * @throws JspException if anything goes wrong.
+	 * @return Return value
+	 */
+	@Override
+	public final int doStartTag() throws JspException {
+		
+		// Make sure bean is in good form
+		if (this.name == null || this.name.length() < 1) {
+			throw new JspException("Tag attribute '"
+					+ this.name + "' missing or empty");
+		}
+		Object obj = pageContext.findAttribute(this.name);
+		if (obj == null) {
+			throw new JspException("Bean '" + this.name + "' is null");
+		}
+		if (!(obj instanceof Plot)) {
+			throw new JspException("Bean '" + this.name
+					+ "' is not of type Plot");
+		}
+		Plot plot = (Plot) obj;
+		String fName = plot.getDefaultImageFileName();
+		if (fName == null) {
+			throw new JspException("Default file name missing");
+		}
+		
+		// Write output
+		String imagePath = ((HttpServletRequest)
+				this.pageContext.getRequest()).getContextPath()
+				+ SUB_CONTEXT + "/" + fName;
+		Writer out = this.pageContext.getOut();
+		try {
+			out.write("<img src=\"" + imagePath + "\">");
+		} catch (IOException e) {
+			throw new JspException("Error writing to JSP output");
+		}
+		
+		return TagSupport.SKIP_BODY;
+	}
 }

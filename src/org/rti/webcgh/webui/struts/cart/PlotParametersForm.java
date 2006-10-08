@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 01:11:27 $
+$Revision: 1.3 $
+$Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -98,7 +98,7 @@ public class PlotParametersForm extends BaseForm {
 	private static final String DEF_WIDTH = "600";
 	
 	/** Default plot height. */
-	private static final String DEF_HEIGHT = "400";
+	private static final String DEF_HEIGHT = "250";
 	
 	/** Default quantitation type. */
 	private static final String DEF_QUANTITATION_TYPE =

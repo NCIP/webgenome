@@ -11,6 +11,27 @@
       <name>experimentCheckBox</name>
       <tagclass>org.rti.webcgh.webui.taglib.ExperimentCheckBoxTag</tagclass>
       <bodycontent>empty</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+<!-- Show plot -->
+   <tag>
+      <name>showPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ShowPlotTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
    </tag>
    
 </taglib>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-08 01:11:27 $
+$Revision: 1.2 $
+$Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -99,15 +99,20 @@ public class ExperimentCheckBoxTag extends TagSupport {
 	public final int doStartTag() throws JspException {
 		
 		// Make sure bean is in good form
-		if (name == null || name.length() < 1) {
+		if (this.name == null || this.name.length() < 1) {
 			throw new JspException("Tag attribute '"
-					+ name + "' missing or empty");
+					+ this.name + "' missing or empty");
 		}
-		Experiment exp = (Experiment) pageContext.findAttribute(name);
-		if (exp == null || !(exp instanceof Experiment)) {
-			throw new JspException("Attribute with name 'name' is "
-					+ "null or not of type Experiment");
+		Object obj = pageContext.findAttribute(this.name);
+		if (obj == null) {
+			throw new JspException("Cannot find bean named '"
+					+ this.name + "'");
 		}
+		if (!(obj instanceof Experiment)) {
+			throw new JspException("Bean '" + this.name + "' is "
+					+ "not of type Experiment");
+		}
+		Experiment exp = (Experiment) obj;
 		if (exp.getId() == null) {
 			throw new JspException("Experiment ID is null");
 		}

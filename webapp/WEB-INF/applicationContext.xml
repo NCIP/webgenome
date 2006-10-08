@@ -86,15 +86,23 @@
 	<bean id="experimentIdGenerator"
 		class="org.rti.webcgh.service.util.IdGenerator"/>
 		
-<!-- Plot generator -->
-	<bean id="plotGenerator"
-		class="org.rti.webcgh.service.plot.PngPlotGenerator">
+<!-- Image file manager -->
+	<bean id="imageFileManager"
+		class="org.rti.webcgh.io.ImageFileManager">
 		<constructor-arg type="java.lang.String">
 			<value>${image.dir.path}</value>
 		</constructor-arg>
 		<constructor-arg type="org.rti.webcgh.service.dao.ShoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</constructor-arg>
+	</bean>
+		
+<!-- Plot generator -->
+	<bean id="plotGenerator"
+		class="org.rti.webcgh.service.plot.PngPlotGenerator">
+		<property name="imageFileManager">
+			<ref bean="imageFileManager"/>
+		</property>
 	</bean>
 	
 	<!-- ========================================== -->
@@ -126,6 +134,9 @@
 		<property name="experimentIdGenerator">
 			<ref bean="experimentIdGenerator"/>
 		</property>
+		<property name="imageFileManager">
+			<ref bean="imageFileManager"/>
+		</property>
 	</bean>
 	
 <!-- New plot -->
@@ -142,4 +153,6 @@
 		</property>
 	</bean>
 				
+	<bean name="/cart/showPlot"
+		class="org.rti.webcgh.webui.struts.cart.ShowPlotSetupAction"/>
 </beans>

@@ -1,5 +1,7 @@
+<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+
 <h1 align="center">Display Plot</h1>
 
 <p align="center">
-	This page will display a plot.
+	<webcgh:showPlot name="plot"/>
 </p>

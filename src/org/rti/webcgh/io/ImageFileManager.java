@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-06 07:32:49 $
+$Revision: 1.2 $
+$Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,13 +53,16 @@ package org.rti.webcgh.io;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.service.dao.ShoppingCartDao;
 
 /**
  * Manages image files containing plot images.  All images
@@ -68,13 +71,20 @@ import org.rti.webcgh.core.WebcghSystemException;
  * @author dhall
  *
  */
-public class ImageFileManager {
+public class ImageFileManager implements Serializable {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 1;
 	
 	/** File extension. */
 	private static final String FILE_EXTENSION = ".png";
 	
 	/** Image type. */
 	private static final String IMAGE_TYPE = "png";
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(ImageFileManager.class);
 
 	// =============================
 	//         Attributes
@@ -112,37 +122,53 @@ public class ImageFileManager {
 	
 	/**
 	 * Constructor.
-	 * @param directory Directory containing image files.
-	 * @param filesToSave Names of files to save. Note, these
-	 * should not be absolute paths.  Upon startup,
-	 * all files in the given directory except these will be
-	 * deleted.
+	 * @param directoryPath Path to directory containing image files.
+	 * @param shoppingCartDao Shopping cart data access object.
 	 */
-	public ImageFileManager(final File directory,
-			final Collection<String> filesToSave) {
+	public ImageFileManager(final String directoryPath,
+			final ShoppingCartDao shoppingCartDao) {
 		
 		// Make sure args okay
-		if (directory == null || !directory.exists()
-				|| !directory.isDirectory()) {
+		if (directoryPath == null) {
+			throw new IllegalArgumentException("Invalid directory");
+		}
+		File directory = new File(directoryPath);
+		if (!directory.exists() || !directory.isDirectory()) {
 			throw new IllegalArgumentException("Invalid directory");
 		}
 		
-		// Purge files not in save list
-		if (filesToSave != null) {
-			File[] files = directory.listFiles();
-			Set<String> fileSet = new HashSet<String>(filesToSave);
-			for (int i = 0; i < files.length; i++) {
-				File file = files[i];
-				if (!fileSet.contains(file.getName())) {
-					file.delete();
-				}
-			}
-		}
+		// Purge directory of unused image files
+		Collection<String> filesToSave = shoppingCartDao.getAllImageFileNames();
+		this.purge(filesToSave, directory);
 		
 		// Initialize properties
 		this.directory = directory;
 		this.fileNameGenerator =
 			new UniqueFileNameGenerator(directory, FILE_EXTENSION);
+	}
+	
+	
+	/**
+	 * Purge directory of unused image files.
+	 * @param filesToSave Files to save in purge.
+	 * @param directory Directory containing files.
+	 */
+	private void purge(final Collection<String> filesToSave,
+			final File directory) {
+		Set<String> fileSet = new HashSet<String>();
+		if (filesToSave != null) {
+			fileSet.addAll(filesToSave);
+		}
+		File[] files = directory.listFiles();
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (!fileSet.contains(file.getName())) {
+				if (!file.delete()) {
+					LOGGER.warn("Unable to delete file '"
+							+ file.getAbsolutePath() + "'");
+				}
+			}
+		}
 	}
 	
 	
@@ -163,5 +189,22 @@ public class ImageFileManager {
 			throw new WebcghSystemException("Error writing image to file", e);
 		}
 		return fileName;
+	}
+	
+	
+	/**
+	 * Delete image file.
+	 * @param fileName Image file name
+	 */
+	public final void deleteImageFile(final String fileName) {
+		String path = this.directory.getAbsolutePath() + "/" + fileName;
+		File file = new File(path);
+		if (!file.exists()) {
+			throw new WebcghSystemException("File '" + path
+					+ "' does not exist");
+		}
+		if (!file.delete()) {
+			LOGGER.warn("Unable to delete file '" + path + "'");
+		}
 	}
 }

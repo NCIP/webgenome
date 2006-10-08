@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-08 01:11:28 $
+$Revision: 1.5 $
+$Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.io.ImageFileManager;
 import org.rti.webcgh.service.client.ClientDataService;
 import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.struts.BaseAction;
@@ -87,9 +88,22 @@ public final class ClientPlotAction extends BaseAction {
     
     /** Experiment ID generator. */
     private IdGenerator experimentIdGenerator = null;
+    
+    /** Image file manager. */
+    private ImageFileManager imageFileManager = null;
 
 
     /**
+     * Set image file manager.
+     * @param imageFileManager Image file manager.
+     */
+    public void setImageFileManager(
+    		final ImageFileManager imageFileManager) {
+		this.imageFileManager = imageFileManager;
+	}
+
+
+	/**
      * Set the client data service.
      * @param clientDataService Client data service
      */
@@ -146,6 +160,11 @@ public final class ClientPlotAction extends BaseAction {
         ShoppingCart cart = new ShoppingCart();
         PageContext.setShoppingCart(request, cart);
         cart.add(experiments);
+        
+        // Set image file manager property of shopping cart
+        // so that image files will be deleted when the users
+        // session ends
+        cart.setImageFileManager(this.imageFileManager);
         
         // Set session mode
         PageContext.setSessionMode(request, SessionMode.CLIENT);

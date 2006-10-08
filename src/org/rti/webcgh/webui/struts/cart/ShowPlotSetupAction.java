@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
@@ -48,16 +48,61 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts;
+package org.rti.webcgh.webui.struts.cart;
 
-import org.apache.struts.action.Action;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
- * Abstract base class for webGenome Struts actions.
+ * Setup action for displaying a plot.
  * @author dhall
  *
  */
-public abstract class BaseAction extends Action {
+public final class ShowPlotSetupAction extends BaseAction {
 	
+	/**
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Retrieve plot ID.  Look first at parameters, then request
+    	Long plotId = null;
+    	String plotIdStr = request.getParameter("plotId");
+    	if (plotIdStr != null) {
+    		plotId = Long.parseLong(plotIdStr);
+    	} else {
+    		plotId = (Long) request.getAttribute("plotId");
+    	}
+    	
+    	// Retrieve plot from shopping cart
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	Plot plot = cart.getPlot(plotId);
+    	
+    	// Attache plot to request
+    	request.setAttribute("plot", plot);
+    	
+    	return mapping.findForward("success");
+    }
+
 }

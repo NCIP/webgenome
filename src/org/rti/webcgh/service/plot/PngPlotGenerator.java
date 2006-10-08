@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 01:11:30 $
+$Revision: 1.3 $
+$Date: 2006-10-08 21:51:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
@@ -63,7 +61,6 @@ import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.io.ImageFileManager;
-import org.rti.webcgh.service.dao.ShoppingCartDao;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.webui.util.ClickBoxes;
 
@@ -83,7 +80,21 @@ public class PngPlotGenerator implements PlotGenerator {
 	// ============================
 	
 	/** Image file manager. */
-	private final ImageFileManager imageFileManager;
+	private ImageFileManager imageFileManager;
+	
+	
+	// =========================
+	//      Setters
+	// =========================
+	
+	/**
+	 * Set image file manager.
+	 * @param imageFileManager Image file manager
+	 */
+	public final void setImageFileManager(
+			final ImageFileManager imageFileManager) {
+		this.imageFileManager = imageFileManager;
+	}
 	
 	
 	// ===========================
@@ -92,45 +103,11 @@ public class PngPlotGenerator implements PlotGenerator {
 	
 	/**
 	 * Constructor.
-	 * @param imageDir Directory containing image files.
 	 */
-	public PngPlotGenerator(final File imageDir) {
-		if (imageDir == null || !imageDir.exists()
-				|| !imageDir.isDirectory()) {
-			throw new IllegalArgumentException("Image directory '"
-					+ imageDir.getAbsolutePath() + "' not valid");
-		}
-		this.imageFileManager = new ImageFileManager(imageDir);
+	public PngPlotGenerator() {
+		
 	}
 	
-	
-	/**
-	 * Constructor.
-	 * @param imageDirPath Absolute path to directory
-	 * where images will be written.
-	 * This should be the
-	 * directory off the root of the web tree.
-	 * @param shoppingCartDao Shopping cart data access object.
-	 */
-	public PngPlotGenerator(final String imageDirPath,
-			final ShoppingCartDao shoppingCartDao) {
-		
-		// Get image directory
-		File imageDir = new File(imageDirPath);
-		if (!imageDir.exists() || !imageDir.isDirectory()) {
-			throw new WebcghSystemException("Invalid image directory: "
-					+ imageDirPath);
-		}
-		
-		// Get image files to be preserved when image file manager
-		// is initialized
-		Collection<String> imagesToSave =
-			shoppingCartDao.getAllImageFileNames();
-		
-		// Initialize the image file manager
-		this.imageFileManager = new ImageFileManager(imageDir, imagesToSave);
-	}
-
 	
 	// ==================================
 	//      PlotGenerator interface

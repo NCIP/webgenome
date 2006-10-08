@@ -111,12 +111,11 @@
 			<forward name="success" path="/cart/showPlot.do"/>
 		</action>
 			
-	
 	<!-- Show plot -->
 		<action
-			path="/cart/showPlot"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.show.plot"/>
+			path="/cart/showPlot">
+			<forward name="success" path="cart.show.plot"/>
+		</action>
 				
 	<!-- Show jobs table -->
 		<action
