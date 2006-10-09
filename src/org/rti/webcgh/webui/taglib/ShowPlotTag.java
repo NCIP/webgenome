@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.2 $
+$Date: 2006-10-09 00:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -124,7 +124,12 @@ public class ShowPlotTag extends TagSupport {
 				+ SUB_CONTEXT + "/" + fName;
 		Writer out = this.pageContext.getOut();
 		try {
-			out.write("<img src=\"" + imagePath + "\">");
+			out.write(
+					"<img "
+					+ "src=\"" + imagePath + "\" "
+					+ "width=\"" + plot.getWidth() + "\""
+					+ "height=\"" + plot.getHeight() + "\""
+					+ ">");
 		} catch (IOException e) {
 			throw new JspException("Error writing to JSP output");
 		}

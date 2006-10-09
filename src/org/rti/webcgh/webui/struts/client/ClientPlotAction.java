@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.6 $
+$Date: 2006-10-09 00:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,10 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.io.ImageFileManager;
 import org.rti.webcgh.service.client.ClientDataService;
 import org.rti.webcgh.service.util.IdGenerator;
@@ -151,9 +153,13 @@ public final class ClientPlotAction extends BaseAction {
         	this.clientDataService.getClientData(constraints,
         			experimentIds, clientID);
         
-        // Give each experiment a unique ID
+        // Give each experiment a unique ID and each bioassay a color
+        ColorChooser colorChooser = new ColorChooser();
         for (Experiment exp : experiments) {
         	exp.setId(this.experimentIdGenerator.nextId());
+        	for (BioAssay ba : exp.getBioAssays()) {
+        		ba.setColor(colorChooser.nextColor());
+        	}
         }
         
         // Put data in shopping cart

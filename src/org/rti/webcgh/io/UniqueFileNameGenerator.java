@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-06 07:32:50 $
+$Revision: 1.2 $
+$Date: 2006-10-09 00:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,15 +51,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.io;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
 /**
- * Generates a sequence of unique file names.  Generated file
- * names are simply sequential long integers with
- * a file name suffix. 
+ * Generates a sequence of unique file names.
  */
-public class UniqueFileNameGenerator {
+public class UniqueFileNameGenerator implements Serializable {
+	
+	/** Serial version ID. */
+	private static final long serialVersionUID = 1;
 	
 	/** Logger. */
 	private static final Logger LOGGER =
@@ -108,7 +111,8 @@ public class UniqueFileNameGenerator {
         } else {
 			this.nextInSequence++;
         }
-		return value + this.fileExtension;
+		Date date = new Date();
+		return date.getTime() + value + this.fileExtension;
 	}
 	
 	

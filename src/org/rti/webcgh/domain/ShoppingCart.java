@@ -247,6 +247,11 @@ public class ShoppingCart implements Serializable {
      */
     public final void remove(final Plot plot) {
     	this.plots.remove(plot);
+    	if (this.imageFileManager != null) {
+    		for (String fName : plot.getAllImageFileNames()) {
+    			this.imageFileManager.deleteImageFile(fName);
+    		}
+    	}
     }
     
     

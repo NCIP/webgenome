@@ -58,8 +58,8 @@ import java.util.Map;
 
 import org.rti.webcgh.array.BioAssay;
 import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.deprecated.ColorChooser;
 import org.rti.webcgh.deprecated.PlotType;
+import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
 

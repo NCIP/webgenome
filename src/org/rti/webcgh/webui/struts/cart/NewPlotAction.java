@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.3 $
+$Date: 2006-10-09 00:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -158,7 +158,7 @@ public final class NewPlotAction extends BaseAction {
     	Plot plot = null;
     	if (mode == SessionMode.CLIENT) {
     		Long plotId = this.plotIdGenerator.nextId();
-    		String plotName = plotId.toString();
+    		String plotName = "Plot " + plotId.toString();
     		plot = this.plotGenerator.newPlot(experiments, params,
     				plotName, this.chromosomeArrayDataGetter);
     		plot.setId(plotId);

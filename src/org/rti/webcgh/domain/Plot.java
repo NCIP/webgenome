@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.5 $
+$Date: 2006-10-09 00:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -111,6 +111,12 @@ public class Plot implements Serializable {
      */
     private List<MouseOverStripe> mouseOverStripes = null;
     
+    /** Width of entire plot image in pixels. */
+    private int width = 0;
+    
+    /** Height of entire plot image in pixels. */
+    private int height = 0;
+    
     // ================================
     //       Getters/setters
     // ================================
@@ -129,6 +135,38 @@ public class Plot implements Serializable {
 	 */
 	public final void setId(final Long id) {
 		this.id = id;
+	}
+
+	/**
+	 * Get height of entire plot image in pixels.
+	 * @return Height of entire plot image in pixels.
+	 */
+	public final int getHeight() {
+		return height;
+	}
+
+	/**
+	 * Set height of entire plot image.
+	 * @param height Height in pixels.
+	 */
+	public final void setHeight(final int height) {
+		this.height = height;
+	}
+
+	/**
+	 * Get width of entire plot image in pixels.
+	 * @return Height of entire plot image in pixels.
+	 */
+	public final int getWidth() {
+		return width;
+	}
+
+	/**
+	 * Set width of entire plot image.
+	 * @param width Width of entire plot image in pixels.
+	 */
+	public final void setWidth(final int width) {
+		this.width = width;
 	}
 
 	/**

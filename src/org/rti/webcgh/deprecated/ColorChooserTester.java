@@ -58,6 +58,7 @@ import java.awt.Color;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.SvgDrawingCanvas;
 import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.util.ColorChooser;
 import org.w3c.dom.Document;
 
 import junit.framework.TestCase;

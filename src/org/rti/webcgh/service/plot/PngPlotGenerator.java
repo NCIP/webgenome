@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.4 $
+$Date: 2006-10-09 00:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -201,6 +201,8 @@ public class PngPlotGenerator implements PlotGenerator {
 		panel.paint(canvas);
 		canvas.setWidth(panel.width());
 		canvas.setHeight(panel.height());
+		plot.setWidth(panel.width());
+		plot.setHeight(panel.height());
 		String imageFileName =
 			this.imageFileManager.saveImage(canvas.toBufferedImage());
 		plot.setDefaultImageFileName(imageFileName);
