@@ -221,5 +221,35 @@ public class Reporter implements Serializable, Comparable<Reporter> {
         return val;
     }
     
+    // ==============================
+    //    Overrides
+    // ==============================
     
+    /**
+     * Equals method.  This methods is consistent
+     * with compareTo() for all pairs of reporter
+     * objects.
+     * @param obj Comparison object
+     * @return T/F
+     */
+	@Override
+	public final boolean equals(final Object obj) {
+		boolean equal = false;
+		if (obj instanceof Reporter) {
+			equal = this.compareTo((Reporter) obj) == 0;
+		}
+		return equal;
+	}
+
+	/**
+	 * Hash code.
+	 * @return Hash code.
+	 */
+	@Override
+	public final int hashCode() {
+		return (String.valueOf(this.chromosome)
+				+ String.valueOf(this.location)).hashCode();
+	}
+	
+	
 }

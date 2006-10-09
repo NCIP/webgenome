@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.6 $
+$Date: 2006-10-09 03:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,11 +55,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.rti.webcgh.webui.util.ClickBoxes;
-import org.rti.webcgh.webui.util.MouseOverStripe;
+import org.rti.webcgh.webui.util.MouseOverStripes;
 
 /**
  * Represents a plot of data.  A plot is an
@@ -109,7 +108,7 @@ public class Plot implements Serializable {
      * of each strip gives mouseover text (reporter
      * names).
      */
-    private List<MouseOverStripe> mouseOverStripes = null;
+    private Collection<MouseOverStripes> mouseOverStripes = null;
     
     /** Width of entire plot image in pixels. */
     private int width = 0;
@@ -258,7 +257,7 @@ public class Plot implements Serializable {
      * names).
 	 * @return Mouse over stripes.
 	 */
-	public final List<MouseOverStripe> getMouseOverStripes() {
+	public final Collection<MouseOverStripes> getMouseOverStripes() {
 		return mouseOverStripes;
 	}
 
@@ -270,7 +269,7 @@ public class Plot implements Serializable {
 	 * @param mouseOverStripes Mouse over stripes
 	 */
 	public final void setMouseOverStripes(
-			final List<MouseOverStripe> mouseOverStripes) {
+			final Collection<MouseOverStripes> mouseOverStripes) {
 		this.mouseOverStripes = mouseOverStripes;
 	}
 	

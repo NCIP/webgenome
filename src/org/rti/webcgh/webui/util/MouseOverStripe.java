@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-03 20:43:19 $
+$Revision: 1.4 $
+$Date: 2006-10-09 03:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.util;
 
 
+
 /**
  * MouseOver Stripe information.
  */
@@ -61,12 +62,16 @@ public final class MouseOverStripe {
     // =============================
 
     /**
-     * Start coordinate.
+     * Start coordinate.  This may be an
+     * X- or Y-coordinate, depending on the
+     * orientation of the container <code>MouseOverStripes</code>.
      */
     private int start = 0;
 
     /**
-     * End coordinate.
+     * End coordinate.  This may be an
+     * X- or Y-coordinate, depending on the
+     * orientation of the container <code>MouseOverStripes</code>.
      */
     private int end = 0;
 
@@ -74,7 +79,7 @@ public final class MouseOverStripe {
      * Stripe text.
      */
     private String text = "";
-
+    
 
     // =========================================
     //      Constructors
@@ -101,41 +106,65 @@ public final class MouseOverStripe {
     // =========================================
     //      Getters and Setters
     // =========================================
+    
     /**
+     * Get end coordinate.  This may be an
+     * X- or Y-coordinate, depending on the
+     * orientation of the container <code>MouseOverStripes</code>.
 	 * @return Returns the end.
 	 */
 	public int getEnd() {
 		return end;
 	}
+	
+	
 	/**
+	 * Set end coordinate.  This may be an
+     * X- or Y-coordinate, depending on the
+     * orientation of the container <code>MouseOverStripes</code>.
 	 * @param end The end to set.
 	 */
-	public void setEnd(int end) {
+	public void setEnd(final int end) {
 		this.end = end;
 	}
+	
+	
 	/**
+	 * Get start coordinate.  This may be an
+     * X- or Y-coordinate, depending on the
+     * orientation of the container <code>MouseOverStripes</code>.
 	 * @return Returns the start.
 	 */
 	public int getStart() {
 		return start;
 	}
+	
+	
 	/**
+	 * Set start coordinate.  This may be an
+     * X- or Y-coordinate, depending on the
+     * orientation of the container <code>MouseOverStripes</code>.
 	 * @param start The start to set.
 	 */
-	public void setStart(int start) {
+	public void setStart(final int start) {
 		this.start = start;
 	}
+	
+	
 	/**
+	 * Get text value.
 	 * @return Returns the text.
 	 */
 	public String getText() {
 		return text;
 	}
+	
+	
 	/**
+	 * Set text value.
 	 * @param text The text to set.
 	 */
-	public void setText(String text) {
+	public void setText(final String text) {
 		this.text = text;
 	}
-
 }

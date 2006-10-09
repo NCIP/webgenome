@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-08 16:52:40 $
+$Revision: 1.7 $
+$Date: 2006-10-09 03:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,18 +53,24 @@ package org.rti.webcgh.graphics.widget;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Collection;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 //import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.webui.util.ClickBoxes;
+import org.rti.webcgh.webui.util.MouseOverStripe;
+import org.rti.webcgh.webui.util.MouseOverStripes;
 
 /**
  * A two dimensional plotting space that renders
@@ -162,12 +168,26 @@ public final class ScatterPlot implements PlotElement {
     /** Click boxes used for providing interactivity using Javascript. */
     private final ClickBoxes clickBoxes;
     
+    /**
+     * Mouseover stripes used for providing interactivity
+     * using Javascript.
+     */
+    private final MouseOverStripes mouseOverStripes;
+    
     
     // =============================
     //     Getters/setters
     // =============================
     
     /**
+     * Get mouseover stripes.
+     * @return Mouseover stripes.
+     */
+    public MouseOverStripes getMouseOverStripes() {
+		return mouseOverStripes;
+	}
+
+	/**
      * Get click boxes.
      * @return Click boxes
      */
@@ -214,6 +234,8 @@ public final class ScatterPlot implements PlotElement {
         this.plotBoundaries = plotBoundaries;
         this.clickBoxes = new ClickBoxes(width, height, DEF_POINT_RADIUS,
         		DEF_POINT_RADIUS);
+        this.mouseOverStripes = new MouseOverStripes(
+        		Orientation.HORIZONTAL, width, height);
     }
 
 
@@ -234,6 +256,8 @@ public final class ScatterPlot implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(final DrawingCanvas canvas) {
+    	SortedSet<Reporter> reporters = new TreeSet<Reporter>();
+    	
         // Paint points and lines
         for (Experiment exp : this.experiments) {
             for (BioAssay bioAssay : exp.getBioAssays()) {
@@ -251,7 +275,7 @@ public final class ScatterPlot implements PlotElement {
 	            // Points
 	            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
 	            this.paintPoints(cad, bioAssay.getColor(), canvas, pointRadius,
-	            		bioAssay.getName());
+	            		bioAssay.getName(), reporters);
 	            
 	            // Error bars
 	//            DrawingCanvas errorBarsTile = tile.newTile();
@@ -271,6 +295,43 @@ public final class ScatterPlot implements PlotElement {
 	//            this.paintLines(cad, color, linesTile);
 	        }
         }
+        
+        // Initialize mouseover stripes
+        this.initializeMouseOverStripes(reporters);
+    }
+    
+    
+    /**
+     * Initialize mouseover stripes.
+     * @param reporters Reporters
+     */
+    private void initializeMouseOverStripes(
+    		final SortedSet<Reporter> reporters) {
+    	this.mouseOverStripes.getOrigin().x = this.x;
+    	this.mouseOverStripes.getOrigin().y = this.y;
+    	if (reporters.size() > 0) {
+	    	MouseOverStripe lastStripe = null;
+	    	Reporter lastReporter = null;
+	    	for (Reporter currentReporter : reporters) {
+	    		long currentStartBp = 0;
+	    		if (lastReporter != null) {
+	    			currentStartBp = (currentReporter.getLocation()
+	    					+ lastReporter.getLocation()) / 2;
+	    		}
+	    		int currentStartPix = (int)
+	    			(this.plotBoundaries.fractionalDistanceFromLeft(
+	    					currentStartBp) * (double) this.width);
+	    		MouseOverStripe currentStripe = new MouseOverStripe();
+	    		currentStripe.setText(currentReporter.getName());
+	    		currentStripe.setStart(currentStartPix);
+	    		if (lastStripe != null) {
+	    			lastStripe.setEnd(currentStartPix - 1);
+	    		}
+	    		lastStripe = currentStripe;
+	    		lastReporter = currentReporter;
+	    	}
+	    	lastStripe.setEnd(this.width);
+    	}
     }
     
     /**
@@ -280,13 +341,16 @@ public final class ScatterPlot implements PlotElement {
      * @param drawingCanvas A drawing canvas
      * @param pointRadius Radius of data point in pixels
      * @param bioAssayName Name of bioassay datum comes from
+     * @param reporters Sorted set of reporters
      */
     private void paintPoints(final ChromosomeArrayData cad, final Color color,
             final DrawingCanvas drawingCanvas, final int pointRadius,
-            final String bioAssayName) {
+            final String bioAssayName,
+            final SortedSet<Reporter> reporters) {
         for (ArrayDatum datum : cad.getArrayData()) {
             this.paintPoint(datum, color, drawingCanvas, pointRadius,
             		bioAssayName);
+            reporters.add(datum.getReporter());
         }
     }
     
@@ -549,5 +613,7 @@ public final class ScatterPlot implements PlotElement {
         this.y += deltaY;
         this.clickBoxes.getOrigin().x += deltaX;
         this.clickBoxes.getOrigin().y += deltaY;
+        this.mouseOverStripes.getOrigin().x += deltaX;
+        this.mouseOverStripes.getOrigin().y += deltaY;
     }
 }

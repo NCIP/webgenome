@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.5 $
+$Date: 2006-10-09 03:06:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.io.ImageFileManager;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
-import org.rti.webcgh.webui.util.ClickBoxes;
+import org.rti.webcgh.webui.util.EventHandlerGraphicBoundaries;
 
 /**
  * Implementation of <code>PlotGenerator</code> that generates
@@ -196,7 +196,7 @@ public class PngPlotGenerator implements PlotGenerator {
 		LOGGER.info("Creating default plot image");
 		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
 		PlotPanel panel = new PlotPanel(canvas);
-		Collection<ClickBoxes> clickBoxes =
+		EventHandlerGraphicBoundaries boundaries =
 			painter.paintPlot(panel, experiments, plotParameters);
 		panel.paint(canvas);
 		canvas.setWidth(panel.width());
@@ -206,7 +206,8 @@ public class PngPlotGenerator implements PlotGenerator {
 		String imageFileName =
 			this.imageFileManager.saveImage(canvas.toBufferedImage());
 		plot.setDefaultImageFileName(imageFileName);
-		plot.setClickBoxes(clickBoxes);
+		plot.setClickBoxes(boundaries.getClickBoxes());
+		plot.setMouseOverStripes(boundaries.getMouseOverStripes());
 		LOGGER.info("Completed default plot image");
 		
 		// Create images of each bioassay selected

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-07 15:58:49 $
+$Revision: 1.9 $
+$Date: 2006-10-09 03:06:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,6 +68,8 @@ import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.webui.util.ClickBoxes;
+import org.rti.webcgh.webui.util.EventHandlerGraphicBoundaries;
+import org.rti.webcgh.webui.util.MouseOverStripes;
 
 /**
  * Manages the painting scatter plots by getting
@@ -105,7 +107,8 @@ public class ScatterPlotPainter extends PlotPainter {
      * @return Click boxes corresponding to all individual
      * plotting areas.
      */
-    public final Collection<ClickBoxes> paintPlot(final PlotPanel panel,
+    public final EventHandlerGraphicBoundaries paintPlot(
+    		final PlotPanel panel,
     		final Collection<Experiment> experiments,
     		final PlotParameters params) {
         
@@ -216,12 +219,15 @@ public class ScatterPlotPainter extends PlotPainter {
         panel.add(legend, HorizontalAlignment.CENTERED,
                 VerticalAlignment.BELOW);
         
-        // Gather up click boxes
+        // Gather up click boxes and mouseover stripes
         Collection<ClickBoxes> boxes = new ArrayList<ClickBoxes>();
+        Collection<MouseOverStripes> stripes =
+        	new ArrayList<MouseOverStripes>();
         for (ScatterPlot plot : plots) {
         	boxes.add(plot.getClickBoxes());
+        	stripes.add(plot.getMouseOverStripes());
         }
-        return boxes;
+        return new EventHandlerGraphicBoundaries(stripes, boxes);
     }
     
     

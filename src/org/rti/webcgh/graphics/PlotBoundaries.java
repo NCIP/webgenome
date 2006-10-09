@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.3 $
+$Date: 2006-10-09 03:06:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -197,6 +197,18 @@ public class PlotBoundaries {
     
     
     /**
+     * Get fractional distance from left edge of plot.
+     * @param value A value
+     * @return Fractional distance from left edge of plot
+     * (i.e. over range 0 - 1.0)
+     */
+    public final double fractionalDistanceFromLeft(final double value) {
+        return (value
+                - this.bottomLeftDataPoint.getValue1()) / this.deltaX;
+    }
+    
+    
+    /**
      * Get fractional distance from bottom edge of plot.
      * @param dataPoint A data point
      * @return Fractional distance from bottom edge of plot
@@ -332,6 +344,24 @@ public class PlotBoundaries {
     	if (tRight.getValue2() > this.topRightDataPoint.getValue2()) {
     		this.topRightDataPoint.setValue2(tRight.getValue2());
         }
+    }
+    
+    
+    /**
+     * Get minimum value1.
+     * @return Minimum value1
+     */
+    public final double getMinValue1() {
+    	return this.bottomLeftDataPoint.getValue1();
+    }
+    
+    
+    /**
+     * Get maximum value1.
+     * @return Maximum value1
+     */
+    public final double getMaxValue1() {
+    	return this.bottomRightDataPoint.getValue1();
     }
     
     
