@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-09 05:10:15 $
+$Revision: 1.1 $
+$Date: 2006-10-09 05:10:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,53 +48,82 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-package org.rti.webcgh.util;
+package org.rti.webcgh.webui.taglib;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.io.Writer;
+
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.util.ColorUtils;
 
 /**
- * Utility methods for manipulating colors.
+ * Outputs color of bioassay in hexadecimal RGB
+ * form.  Tag expects an attribute 'name' that is
+ * the name of a bean of type <code>BioAssay</code>.
+ * @author dhall
+ *
  */
-public final class ColorUtils {
-    
-	/**
-	 * Constructor.
-	 */
-    private ColorUtils() {
-    	
-    }
+public class BioAssayColorTag extends TagSupport {
 	
-    /**
-     * Converts RGB hexidecimal encoding into a color.
-     * @param rgbHexEncoding RGB hexidecimal encoding
-     * @return A color
-     */
-    public static Color getColor(final String rgbHexEncoding) {
-    	String encoding = rgbHexEncoding;
-        if (encoding.charAt(0) == '#') {
-            encoding = rgbHexEncoding.substring(1);
-        }
-        if (encoding.length() != 6) {
-            throw new IllegalArgumentException(
-            		"Color must be of form '#0011FF' or '0011FF'");
-        }
-        int r = Integer.parseInt(encoding.substring(0, 2), 16);
-        int g = Integer.parseInt(encoding.substring(2, 4), 16);
-        int b = Integer.parseInt(encoding.substring(4, 6), 16);
-        return new Color(r, g, b);
-    }
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 1;
+	
+	/**
+	 * Name of some bean of type <code>Experiment</code>.
+	 */
+	private String name = null;
+	
+	
+	/**
+	 * Set name of bean of type <code>Experiment</code>.
+	 * @param name Name of bean.
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
 
-    
-    /**
-     * Convert given color into RGB hexidecimal encoding.
-     * @param color Color
-     * @return RGB hexidecimal encoding of color--e.g., #FFCC22.
-     */
-    public static String toRgbHexEncoding(final Color color) {
-    	return "#"
-    		+ Integer.toHexString(color.getRed())
-    		+ Integer.toHexString(color.getGreen())
-    		+ Integer.toHexString(color.getBlue());
-    }
+
+	/**
+	 * Do after start tag parsed.
+	 * @throws JspException if anything goes wrong.
+	 * @return Return value
+	 */
+	@Override
+	public final int doStartTag() throws JspException {
+		
+		// Make sure bean is in good form
+		if (this.name == null || this.name.length() < 1) {
+			throw new JspException("Tag attribute '"
+					+ this.name + "' missing or empty");
+		}
+		Object obj = pageContext.findAttribute(this.name);
+		if (obj == null) {
+			throw new JspException("Cannot find bean named '"
+					+ this.name + "'");
+		}
+		if (!(obj instanceof BioAssay)) {
+			throw new JspException("Bean '" + this.name + "' is "
+					+ "not of type Experiment");
+		}
+		BioAssay ba = (BioAssay) obj;
+		Color c = ba.getColor();
+		if (c == null) {
+			throw new JspException("Bioassay '" + ba.getName()
+					+ "' does not have a color");
+		}
+		
+		// Generate output
+		String colorEncoding = ColorUtils.toRgbHexEncoding(c);
+		Writer out = this.pageContext.getOut();
+		try {
+			out.write(colorEncoding);
+		} catch (IOException e) {
+			throw new JspException("Error writing to JSP page");
+		}
+		return TagSupport.SKIP_BODY;
+	}
 }

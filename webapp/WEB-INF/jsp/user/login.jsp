@@ -4,7 +4,7 @@
 
 <center>
 	<html:errors property="global"/>
-	<html:form action="/user/validateLogin">
+	<html:form action="/user/validateLogin" focus="name">
 	
 	<%-- User name --%>
 		<p>

@@ -20,10 +20,23 @@
 			id="experiment">
 			<webcgh:experimentCheckBox name="experiment"/>
 			<bean:write name="experiment" property="name"/>
+			<logic:iterate name="experiment" property="bioAssays"
+				id="bioAssay">
+				<table><tr>
+					<td bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
+						&nbsp;&nbsp;&nbsp;
+					</td>
+					<td>
+						<bean:write name="bioAssay" property="name"/>
+					</td>
+				</table>
+			</logic:iterate>
 			<br>
 		</logic:iterate>
 	</p>
 </center>
+
+<hr>
 
 <%-- Plots --%>
 <h2 align="center">Plots</h2>
@@ -31,11 +44,16 @@
 	<p>
 		<logic:iterate name="shopping.cart" property="plots"
 			id="plot">
-			<bean:write name="plot" property="name"/>
+			<html:link action="/cart/showPlot" paramId="plotId"
+				paramName="plot" paramProperty="id">
+				<bean:write name="plot" property="name"/>
+			</html:link>
 			<br>
 		</logic:iterate>
 	</p>
 </center>
+
+<hr>
 
 <p align="center">
 	<html:link action="/cart/selectPlotType">

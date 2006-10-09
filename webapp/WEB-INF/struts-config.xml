@@ -160,6 +160,12 @@
 			path="/user/login"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.login"/>
+			
+	<!-- Logout -->
+		<action
+			path="/user/logout">
+			<forward name="success" path="/user/login.do"/>
+		</action>
 	
 	<!-- Validate login credentials -->			
 		<action

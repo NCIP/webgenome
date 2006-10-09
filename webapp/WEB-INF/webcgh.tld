@@ -34,4 +34,47 @@
 	  </attribute>
    </tag>
    
+<!-- Show body content only if user is logged in and in stand alone
+     mode -->
+   <tag>
+      <name>onlyIfLoggedInAndStandAloneMode</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfLoggedInAndStandAloneModeTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
+<!-- Show body content only if there is a shopping cart associated
+     with the session -->
+   <tag>
+      <name>onlyIfShoppingCartExists</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfShoppingCartExistsTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
+<!-- Show body content only if user is logged in -->
+   <tag>
+      <name>onlyIfUserLoggedIn</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfUserLoggedInTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
+<!-- Show body content only if user is logged out -->
+   <tag>
+      <name>onlyIfUserLoggedOut</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfUserLoggedOutTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
+<!-- Print bioassay color -->
+   <tag>
+      <name>bioAssayColor</name>
+      <tagclass>org.rti.webcgh.webui.taglib.BioAssayColorTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
 </taglib>

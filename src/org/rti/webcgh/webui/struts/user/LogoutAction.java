@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-09 05:10:15 $
 
 The Web CGH Software License, Version 1.0
@@ -48,53 +48,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webcgh.webui.struts.user;
 
-package org.rti.webcgh.util;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import java.awt.Color;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Utility methods for manipulating colors.
+ * Logs user out.
+ * @author dhall
+ *
  */
-public final class ColorUtils {
-    
-	/**
-	 * Constructor.
-	 */
-    private ColorUtils() {
-    	
-    }
-	
-    /**
-     * Converts RGB hexidecimal encoding into a color.
-     * @param rgbHexEncoding RGB hexidecimal encoding
-     * @return A color
-     */
-    public static Color getColor(final String rgbHexEncoding) {
-    	String encoding = rgbHexEncoding;
-        if (encoding.charAt(0) == '#') {
-            encoding = rgbHexEncoding.substring(1);
-        }
-        if (encoding.length() != 6) {
-            throw new IllegalArgumentException(
-            		"Color must be of form '#0011FF' or '0011FF'");
-        }
-        int r = Integer.parseInt(encoding.substring(0, 2), 16);
-        int g = Integer.parseInt(encoding.substring(2, 4), 16);
-        int b = Integer.parseInt(encoding.substring(4, 6), 16);
-        return new Color(r, g, b);
-    }
+public final class LogoutAction extends BaseAction {
 
-    
-    /**
-     * Convert given color into RGB hexidecimal encoding.
-     * @param color Color
-     * @return RGB hexidecimal encoding of color--e.g., #FFCC22.
+	/**
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
      */
-    public static String toRgbHexEncoding(final Color color) {
-    	return "#"
-    		+ Integer.toHexString(color.getRed())
-    		+ Integer.toHexString(color.getGreen())
-    		+ Integer.toHexString(color.getBlue());
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	request.getSession().invalidate();
+    	return mapping.findForward("success");
     }
 }

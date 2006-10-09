@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 01:11:27 $
+$Revision: 1.3 $
+$Date: 2006-10-09 05:10:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Principal;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.mgr.SecurityMgr;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
@@ -126,7 +127,9 @@ public final class LoginAction extends BaseAction {
     	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
     	
     	// Get shopping cart
-    	// TODO: Complete this
+    	// TODO: Add DAO
+    	ShoppingCart cart = new ShoppingCart(p.getName());
+    	PageContext.setShoppingCart(request, cart);
     	
         return mapping.findForward("success");
     }

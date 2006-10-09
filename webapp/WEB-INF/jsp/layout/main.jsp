@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
+<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
 
 <tiles:importAttribute name="selectedMenuItem" scope="request"/>
 <tiles:importAttribute name="helpTopic" scope="request"/>
@@ -42,35 +43,47 @@
 			]&nbsp;&nbsp;
 			
 		<%-- Shopping cart --%>
-			[
-				<html:link action="/cart/showCart">
-					Shopping Cart
-				</html:link>
-			]&nbsp;&nbsp;
+			<webcgh:onlyIfShoppingCartExists>
+				[
+					<html:link action="/cart/showCart">
+						Shopping Cart
+					</html:link>
+				]&nbsp;&nbsp;
+			</webcgh:onlyIfShoppingCartExists>
 			
 		<%-- Jobs table --%>
-			[
-				<html:link action="/cart/showJobsTable">
-					Jobs Table
-				</html:link>
-			]&nbsp;&nbsp;
+			<webcgh:onlyIfLoggedInAndStandAloneMode>
+				[
+					<html:link action="/cart/showJobsTable">
+						Jobs Table
+					</html:link>
+				]&nbsp;&nbsp;
+			</webcgh:onlyIfLoggedInAndStandAloneMode>
 			
 		<%-- Login --%>
-			[
-				<html:link action="/user/login">
-					Login
-				</html:link>
-			]&nbsp;&nbsp;
+			<webcgh:onlyIfUserLoggedOut>
+				[
+					<html:link action="/user/login">
+						Login
+					</html:link>
+				]&nbsp;&nbsp;
+			</webcgh:onlyIfUserLoggedOut>
 			
 		<%-- Profile --%>
-			[
-				My Profile
-			]&nbsp;&nbsp;
+			<webcgh:onlyIfUserLoggedIn>
+				[
+					My Profile
+				]&nbsp;&nbsp;
+			</webcgh:onlyIfUserLoggedIn>
 			
 		<%-- Logout --%>
-			[
-				Logout
-			]&nbsp;&nbsp;
+			<webcgh:onlyIfUserLoggedIn>
+				[
+					<html:link action="/user/logout">
+						Logout
+					</html:link>
+				]&nbsp;&nbsp;
+			</webcgh:onlyIfUserLoggedIn>
 			
 		<%-- Help --%>
 			[Help]

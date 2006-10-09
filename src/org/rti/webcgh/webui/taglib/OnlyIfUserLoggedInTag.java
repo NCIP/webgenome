@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-09 05:10:15 $
+$Revision: 1.1 $
+$Date: 2006-10-09 05:10:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,53 +48,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webcgh.webui.taglib;
 
-package org.rti.webcgh.util;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
-import java.awt.Color;
+import org.rti.webcgh.webui.SessionTimeoutException;
 
 /**
- * Utility methods for manipulating colors.
+ * Contents of tag evaluated only if the user is logged in.
+ * @author dhall
  */
-public final class ColorUtils {
-    
-	/**
-	 * Constructor.
-	 */
-    private ColorUtils() {
-    	
-    }
-	
-    /**
-     * Converts RGB hexidecimal encoding into a color.
-     * @param rgbHexEncoding RGB hexidecimal encoding
-     * @return A color
-     */
-    public static Color getColor(final String rgbHexEncoding) {
-    	String encoding = rgbHexEncoding;
-        if (encoding.charAt(0) == '#') {
-            encoding = rgbHexEncoding.substring(1);
-        }
-        if (encoding.length() != 6) {
-            throw new IllegalArgumentException(
-            		"Color must be of form '#0011FF' or '0011FF'");
-        }
-        int r = Integer.parseInt(encoding.substring(0, 2), 16);
-        int g = Integer.parseInt(encoding.substring(2, 4), 16);
-        int b = Integer.parseInt(encoding.substring(4, 6), 16);
-        return new Color(r, g, b);
-    }
+public class OnlyIfUserLoggedInTag extends TagSupport {
 
-    
-    /**
-     * Convert given color into RGB hexidecimal encoding.
-     * @param color Color
-     * @return RGB hexidecimal encoding of color--e.g., #FFCC22.
-     */
-    public static String toRgbHexEncoding(final Color color) {
-    	return "#"
-    		+ Integer.toHexString(color.getRed())
-    		+ Integer.toHexString(color.getGreen())
-    		+ Integer.toHexString(color.getBlue());
-    }
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 1;
+	
+	
+	/**
+	 * Do after start tag parsed.
+	 * @throws JspException if anything goes wrong.
+	 * @return Return value
+	 */
+	@Override
+	public final int doStartTag() throws JspException {
+		int rVal = TagSupport.SKIP_BODY;
+		try {
+			if (org.rti.webcgh.webui.util.PageContext.getPrincipal(
+					(HttpServletRequest) pageContext.getRequest())
+					!= null) {
+				rVal = TagSupport.EVAL_BODY_INCLUDE;
+			}
+		} catch (SessionTimeoutException e) {
+			rVal = TagSupport.SKIP_BODY;
+		}
+		return rVal;
+	}
 }

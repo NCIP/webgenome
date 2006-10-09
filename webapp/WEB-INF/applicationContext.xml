@@ -115,6 +115,10 @@
 		<property name="securityMgr"><ref bean="securityMgr"/></property>
 	</bean>
 	
+<!-- Logout -->
+	<bean name="/user/logout"
+		class="org.rti.webcgh.webui.struts.user.LogoutAction"/>
+	
 <!-- Create new account -->
 	<bean name="/user/createAccount"
 		class="org.rti.webcgh.webui.struts.user.CreateAccountAction">
