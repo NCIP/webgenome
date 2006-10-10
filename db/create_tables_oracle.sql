@@ -118,3 +118,34 @@ CREATE TABLE cytoband_2 (
 	stain VARCHAR(16),
 	PRIMARY KEY (id)
 );
+
+--
+-- Processing Job
+--
+CREATE TABLE processing_job (
+    job_id           NUMBER(38) NOT NULL,
+    request_id       VARCHAR2(50) NULL,
+    user_id          VARCHAR2(100) NOT NULL,   
+    type             VARCHAR2(128) NULL,
+    percent_complete NUMBER(4) NULL,
+    created_dt       DATE NULL,
+    modified_dt      DATE NULL,
+    job_properties   VARCHAR2(500) NULL
+
+    PRIMARY KEY (job_id)
+);
+
+--
+-- Processing Job Status
+--
+CREATE TABLE processing_job_status (
+    status_id     NUMBER(38) NOT NULL,
+    job_id        NUMBER(38) NOT NULL,
+    status        VARCHAR2(50) NOT NULL,
+    datetime      TIMESTAMP NULL,
+    created_dt    DATE NULL,
+    modified_dt   DATE NULL,
+
+    PRIMARY KEY   (status_id),
+    FOREIGN KEY   (job_id) REFERENCES processing_job (job_id)
+);
