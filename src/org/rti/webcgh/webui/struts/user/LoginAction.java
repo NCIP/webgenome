@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-09 05:10:14 $
+$Revision: 1.4 $
+$Date: 2006-10-10 19:01:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webcgh.webui.struts.user;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -61,6 +62,7 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.mgr.SecurityMgr;
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
@@ -71,6 +73,9 @@ import org.rti.webcgh.webui.util.SessionMode;
  *
  */
 public final class LoginAction extends BaseAction {
+    
+    /** Logger class instance */
+    private static Logger logger = Logger.getLogger(LoginAction.class.getName());
 	
 	/** Account manager. This property should be injected. */
 	private SecurityMgr securityMgr = null;
@@ -123,8 +128,15 @@ public final class LoginAction extends BaseAction {
     	}
     	PageContext.setPrincipal(request, p);
     	
-    	// Set session mode
-    	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
+    	// Set session mode - depending on whether its set to true in the
+        // webcgh.properties file.
+        SessionMode sessionMode =
+            SystemUtils.isApplicationPropertySetToTrue( "operating-mode.standalone" ) ?
+            SessionMode.STAND_ALONE : SessionMode.CLIENT ;
+        PageContext.setSessionMode(request, sessionMode );
+        
+        logger.debug( "User '" + p.getName() + "' logged in - interacting in " +
+                      PageContext.getSessionMode(request) + " mode" ) ;
     	
     	// Get shopping cart
     	// TODO: Add DAO
