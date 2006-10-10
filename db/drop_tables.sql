@@ -12,3 +12,5 @@ DROP TABLE experiment_2;
 DROP TABLE plot_2;
 DROP TABLE shopping_cart_2;
 DROP TABLE organism_2;
+DROP TABLE processing_job_status;
+DROP TABLE processing_job;
