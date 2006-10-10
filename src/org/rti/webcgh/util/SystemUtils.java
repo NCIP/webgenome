@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.4 $
+$Date: 2006-10-10 19:03:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -124,6 +124,20 @@ public final class SystemUtils {
     	return (String) props.get(key);
     }
     
+    /**
+     * Get a system property and determine whether it is set to either 'yes' or 'true'
+     * (case insensitive).
+     * @param key
+     * @return true, if the property exists and is set to yes or true, false otherwise. 
+     */
+    public static synchronized boolean isApplicationPropertySetToTrue (
+            final String key ) {
+        String propertySetting = getApplicationProperty ( key ) ;
+        return propertySetting != null &&
+             ( "true".equalsIgnoreCase( propertySetting ) ||
+               "yes".equalsIgnoreCase ( propertySetting ) ) ;
+    }
+    
     
     /**
      * Load properties from a file.
@@ -158,7 +172,6 @@ public final class SystemUtils {
         }
         return prop;
     }
-    
     
     /**
      * Get specified unit test property.
