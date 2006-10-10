@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.3 $
+$Date: 2006-10-10 20:10:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -134,6 +134,8 @@ public class ImageFileManager implements Serializable {
 		}
 		File directory = new File(directoryPath);
 		if (!directory.exists() || !directory.isDirectory()) {
+            LOGGER.error ( "Directory Path specified doesnt' exist or isn't a directory. " +
+                           "Directory Path: [" + directoryPath + "]" ) ;
 			throw new IllegalArgumentException("Invalid directory");
 		}
 		
