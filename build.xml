@@ -41,10 +41,19 @@
 	
 	<!-- Run unit tests -->
 	<target name="unit" depends="compile">
+
 		<echo>Creating directory for JUnit reports</echo>
 		<property name="junit.output.dir" value="${junit.report.dir}/temp"/>
 		<mkdir dir="${junit.report.dir}"/>
 		<mkdir dir="${junit.output.dir}"/>
+        
+        <echo>Copying xml and properties files to build directory - ${classes.dir}</echo>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" includes="**/*.xml"/>
+        </copy>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" includes="**/*.properties"/>
+        </copy>
 		
 		<echo>Performing tests</echo>
 		<junit>
