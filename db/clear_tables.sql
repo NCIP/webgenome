@@ -8,3 +8,5 @@ DELETE FROM bio_assay_2;
 DELETE FROM experiment_2;
 DELETE FROM plot_2;
 DELETE FROM shopping_cart_2;
+DELETE FROM processing_job_status;
+DELETE FROM processing_job;
