@@ -39,6 +39,10 @@
         		<bean class="org.springframework.core.io.ClassPathResource">
         			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/service/dao/hibernate</value></constructor-arg>
         		</bean>
+                <!-- Standalone Mode - Hibernate Mappings Location: -->
+                <bean class="org.springframework.core.io.ClassPathResource">
+                    <constructor-arg type="java.lang.String"><value>org/rti/webcgh/standalone/dao/hibernate</value></constructor-arg>
+                </bean>
 	      	</list>
     	</property>
     	<property name="hibernateProperties">
@@ -58,6 +62,13 @@
   		class="org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
+    
+<!-- Processing Job DAO (Standalone Mode) -->
+    <bean id="processingJobDao"
+        class="org.rti.webcgh.standalone.dao.hibernate.ProcessingJobDaoImpl">
+        <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+    </bean>
+
   	
   	<!-- =================================== -->
   	<!--      Service beans                  -->
