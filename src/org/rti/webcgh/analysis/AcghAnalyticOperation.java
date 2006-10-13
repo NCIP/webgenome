@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analysis/AcghAnalyticOperation.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-13 20:33:54 $
+$Revision: 1.2 $
+$Date: 2006-10-13 20:40:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ package org.rti.webcgh.analysis;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.analytic.AcghData;
-import org.rti.webcgh.service.AcghService;
+import org.rti.webcgh.service.analysis.AcghService;
 
 
 /**
