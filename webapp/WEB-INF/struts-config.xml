@@ -65,6 +65,11 @@
 		<action path="/cart/removeExperiment">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
+		
+	<!-- Remove plot -->
+		<action path="/cart/removePlot">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
 			
 	<!-- Set plot type -->
 		<action

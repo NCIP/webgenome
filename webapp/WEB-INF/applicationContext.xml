@@ -144,6 +144,14 @@
 	<bean name="/cart/removeExperiment"
 		class="org.rti.webcgh.webui.struts.cart.RemoveExperimentAction"/>
 		
+<!-- Remove plot from cart -->
+	<bean name="/cart/removePlot"
+		class="org.rti.webcgh.webui.struts.cart.RemovePlotAction">
+		<property name="imageFileManager">
+			<ref bean="imageFileManager"/>
+		</property>
+	</bean>
+		
 <!-- Client plot: entry point for application client -->
 	<bean name="/client/plot"
 		class="org.rti.webcgh.webui.struts.client.ClientPlotAction">

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-16 20:25:18 $
+$Revision: 1.1 $
+$Date: 2006-10-16 20:25:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,16 +56,32 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.io.ImageFileManager;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 
 /**
- * Action to remove an experiment from the shopping cart.
+ * Action to remove plot from shopping cart.
  * @author dhall
  *
  */
-public final class RemoveExperimentAction extends BaseAction {
+public final class RemovePlotAction extends BaseAction {
+	
+	/** Image file manager. */
+	private ImageFileManager imageFileManager = null;
+	
+	/**
+	 * Set image file manager.
+	 * @param imageFileManager Image file manager
+	 */
+	public void setImageFileManager(
+			final ImageFileManager imageFileManager) {
+		this.imageFileManager = imageFileManager;
+	}
+
+
 
 	/**
      * Execute action.
@@ -88,11 +104,19 @@ public final class RemoveExperimentAction extends BaseAction {
     	// Get shopping cart
     	ShoppingCart cart = PageContext.getShoppingCart(request);
     	
-    	// Get ID of experiment to remove
+    	// Get ID of plot to remove
     	long id = Long.parseLong(request.getParameter("id"));
     	
-    	// Remove experiment
-    	cart.removeExperiment(id);
+    	// Retrieve plot
+    	Plot plot = cart.getPlot(id);
+    	
+    	// Remove plot
+    	cart.removePlot(id);
+    	
+    	// Get rid of image files
+    	for (String fileName : plot.getAllImageFileNames()) {
+    		this.imageFileManager.deleteImageFile(fileName);
+    	}
     	
     	// TODO: Stand-alone specific actions
     	

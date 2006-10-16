@@ -13,7 +13,6 @@
 </p>
 
 <%-- Experiments --%>
-<h2 align="center">Experiments</h2>
 <center>
 	<table border="1">
 		<tr>
@@ -56,18 +55,34 @@
 <hr>
 
 <%-- Plots --%>
-<h2 align="center">Plots</h2>
 <center>
-	<p>
+	<table border="1">
+		<tr>
+			<td>Plot Name</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		</tr>
 		<logic:iterate name="shopping.cart" property="plots"
 			id="plot">
-			<html:link action="/cart/showPlot" paramId="plotId"
-				paramName="plot" paramProperty="id">
-				<bean:write name="plot" property="name"/>
-			</html:link>
-			<br>
+			<tr>
+				<td>
+					<bean:write name="plot" property="name"/>
+				</td>
+				<td>
+					<html:link action="/cart/showPlot" paramId="plotId"
+						paramName="plot" paramProperty="id">
+						Show
+					</html:link>
+				</td>
+				<td>
+					<html:link action="/cart/removePlot" paramId="id"
+						paramName="plot" paramProperty="id">
+						Remove
+					</html:link>
+				</td>
+			</tr>
 		</logic:iterate>
-	</p>
+	</table>
 </center>
 
 <hr>
