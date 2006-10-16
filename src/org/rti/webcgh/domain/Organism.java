@@ -52,6 +52,8 @@ package org.rti.webcgh.domain;
 
 import java.io.Serializable;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Represents an organism.
  * @author dhall
@@ -60,7 +62,8 @@ import java.io.Serializable;
 public class Organism implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     
     // ============================

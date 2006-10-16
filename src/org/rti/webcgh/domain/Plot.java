@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-09 03:06:23 $
+$Revision: 1.7 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.util.ClickBoxes;
 import org.rti.webcgh.webui.util.MouseOverStripes;
 
@@ -71,7 +72,8 @@ import org.rti.webcgh.webui.util.MouseOverStripes;
 public class Plot implements Serializable {
 	
 	/** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // =============================
     //      Attributes

@@ -54,6 +54,8 @@ import java.io.Serializable;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Aggregation of all reporters originating from the
  * same chromosome from a particular microarray chip.
@@ -63,7 +65,8 @@ import java.util.TreeSet;
 public class ChromosomeReporters implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ==============================
     //        Attributes

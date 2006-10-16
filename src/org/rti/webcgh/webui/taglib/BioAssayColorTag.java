@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-09 05:10:13 $
+$Revision: 1.2 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.util.ColorUtils;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Outputs color of bioassay in hexadecimal RGB
@@ -70,7 +71,8 @@ import org.rti.webcgh.util.ColorUtils;
 public class BioAssayColorTag extends TagSupport {
 	
 	/** Serlialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Name of some bean of type <code>Experiment</code>.

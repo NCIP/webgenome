@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.3 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Generates a sequence of unique file names.
@@ -62,7 +63,8 @@ import org.apache.log4j.Logger;
 public class UniqueFileNameGenerator implements Serializable {
 	
 	/** Serial version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/** Logger. */
 	private static final Logger LOGGER =

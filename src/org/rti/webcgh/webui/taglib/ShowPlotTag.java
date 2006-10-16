@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.3 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,7 +75,8 @@ public class ShowPlotTag extends TagSupport {
 		SystemUtils.getApplicationProperty("image.sub.context"); 
 	
 	/** Serlialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Name of some bean of type <code>Plot</code>.

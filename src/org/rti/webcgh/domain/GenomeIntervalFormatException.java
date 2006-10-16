@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-06 04:33:52 $
+$Revision: 1.2 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Exception thrown when a genome interval is encoded improperly.
@@ -61,7 +62,8 @@ public class GenomeIntervalFormatException
 	extends WebcghApplicationException {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Constructor.

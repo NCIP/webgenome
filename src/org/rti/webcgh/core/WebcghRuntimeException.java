@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 15:15:29 $
+$Revision: 1.3 $
+$Date: 2006-10-16 20:06:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,13 +54,16 @@ package org.rti.webcgh.core;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Base class for all unchecked exceptions.
  */
 public class WebcghRuntimeException extends RuntimeException {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = (long) 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/** Divider between chained error messages. */
 	private static final String DIVIDER = "\n\n***** Nested throwable:\n\n";

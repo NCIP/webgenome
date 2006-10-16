@@ -59,6 +59,7 @@ import java.util.Set;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.io.ImageFileManager;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Represents an on-line data shopping cart.
@@ -68,7 +69,8 @@ import org.rti.webcgh.io.ImageFileManager;
 public class ShoppingCart implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ====================================
     //       Attributes

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-08 01:11:27 $
+$Revision: 1.2 $
+$Date: 2006-10-16 20:06:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.Map;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.struts.BaseForm;
 import org.rti.webcgh.webui.util.PageContext;
 
@@ -76,7 +77,8 @@ public class SelectedExperimentsForm extends BaseForm {
 	private static final String CHECKED = "checked";
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
 	/** Maps form names to values. */
     private Map<String, Object> values = new HashMap<String, Object>();

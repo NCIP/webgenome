@@ -52,6 +52,7 @@ package org.rti.webcgh.domain;
 
 import java.io.Serializable;
 
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webgenome.client.ReporterDTO;
 
 /**
@@ -62,7 +63,8 @@ import org.rti.webgenome.client.ReporterDTO;
 public class Reporter implements Serializable, Comparable<Reporter> {
 
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     
     // ======================================

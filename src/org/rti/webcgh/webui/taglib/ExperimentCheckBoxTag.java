@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.4 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -72,7 +73,8 @@ import org.rti.webcgh.domain.Experiment;
 public class ExperimentCheckBoxTag extends TagSupport {
 	
 	/** Serlialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Name of some bean of type <code>Experiment</code>.

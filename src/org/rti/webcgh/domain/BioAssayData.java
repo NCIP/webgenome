@@ -57,6 +57,8 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.rti.webcgh.util.SystemUtils;
+
 
 /**
  * Aggregate of all data from a bioassay (i.e., a single micorarray
@@ -67,7 +69,8 @@ import java.util.TreeMap;
 public class BioAssayData implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // =====================================
     //         Attributes

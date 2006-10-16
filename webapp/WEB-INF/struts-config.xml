@@ -60,6 +60,11 @@
 		<action path="/cart/showCart">
 			<forward name="success" path="cart.show.cart"/>
 		</action>
+		
+	<!-- Remove experiment -->
+		<action path="/cart/removeExperiment">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
 			
 	<!-- Set plot type -->
 		<action

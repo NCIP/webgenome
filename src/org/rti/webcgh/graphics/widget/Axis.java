@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-26 21:10:37 $
+$Revision: 1.5 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webcgh.graphics.primitive.Text;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -835,7 +836,8 @@ public final class Axis implements ScalePlotElement {
 	static final class AxisTicMark implements Serializable {
 		
 		/** Serial version ID. */
-		private static final long serialVersionUID = 1;
+		private static final long serialVersionUID = 
+			SystemUtils.getLongApplicationProperty("serial.version.uid");
 	    
 	    
 	    // ===========================

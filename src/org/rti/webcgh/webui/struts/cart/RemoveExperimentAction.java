@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-16 20:06:58 $
+$Revision: 1.1 $
+$Date: 2006-10-16 20:06:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,55 +48,52 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.client;
+package org.rti.webcgh.webui.struts.cart;
 
-import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.util.SystemUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
- * Exception thrown if an error occurs while getting data
- * from an application client.
+ * Action to remove an experiment from the shopping cart.
  * @author dhall
  *
  */
-public class ClientDataServiceException extends WebcghSystemException {
-	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 
-		SystemUtils.getLongApplicationProperty("serial.version.uid");
+public final class RemoveExperimentAction extends BaseAction {
 
 	/**
-	 * Constructor.
-	 */
-	public ClientDataServiceException() {
-		super();
-	}
-
-	/**
-	 * Constructor.
-	 * @param msg Message.
-	 * @param origThrowable Original throwable.
-	 */
-	public ClientDataServiceException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
-
-	/**
-	 * Constructor.
-	 * @param msg Message.
-	 */
-	public ClientDataServiceException(final String msg) {
-		super(msg);
-	}
-
-	
-	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable.
-	 */
-	public ClientDataServiceException(final Throwable origThrowable) {
-		super(origThrowable);
-	}
-
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Get shopping cart
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	
+    	// Get ID of experiment to remove
+    	long id = Long.parseLong(request.getParameter("id"));
+    	
+    	// Remove experiment
+    	cart.removeExperiment(id);
+    	
+        return mapping.findForward("success");
+    }
 }

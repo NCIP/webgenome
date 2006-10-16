@@ -58,6 +58,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Concrete implementation of <code>BioAssay</code> where
  * associated data are serialized to file.  This class
@@ -70,7 +72,8 @@ import java.util.TreeSet;
 public class DataSerializedBioAssay extends BioAssay {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ==============================
     //     Attributes

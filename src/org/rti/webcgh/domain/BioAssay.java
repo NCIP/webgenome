@@ -56,6 +56,7 @@ import java.util.Collection;
 import java.util.SortedSet;
 
 import org.rti.webcgh.util.StringUtils;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -68,7 +69,8 @@ import org.rti.webcgh.util.StringUtils;
 public abstract class BioAssay implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
 
     // =====================================

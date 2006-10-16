@@ -61,6 +61,7 @@ import java.util.TreeSet;
 
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.util.StringUtils;
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.ExperimentDTO;
 
@@ -73,7 +74,8 @@ import org.rti.webgenome.client.ExperimentDTO;
 public class Experiment implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ======================================
     //         Attributes

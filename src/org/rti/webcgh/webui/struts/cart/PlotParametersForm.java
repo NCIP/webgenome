@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.4 $
+$Date: 2006-10-16 20:06:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,7 @@ import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.units.BpUnits;
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.util.ValidationUtils;
 import org.rti.webcgh.webui.struts.BaseForm;
 
@@ -76,7 +77,8 @@ import org.rti.webcgh.webui.struts.BaseForm;
 public class PlotParametersForm extends BaseForm {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	// ===========================
 	//      Constants

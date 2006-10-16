@@ -53,6 +53,7 @@ package org.rti.webcgh.domain;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webgenome.client.BioAssayDatumDTO;
 
 /**
@@ -63,7 +64,8 @@ import org.rti.webgenome.client.BioAssayDatumDTO;
 public class ArrayDatum implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     
     // ================================

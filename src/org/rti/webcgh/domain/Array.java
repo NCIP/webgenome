@@ -54,6 +54,8 @@ import java.io.Serializable;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Represents a physical microarray device.
  * @author dhall
@@ -62,7 +64,8 @@ import java.util.TreeMap;
 public class Array implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ===============================
     //      Constants

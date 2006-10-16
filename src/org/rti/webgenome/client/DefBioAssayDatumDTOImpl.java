@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.4 $
+$Date: 2006-10-16 20:06:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.client;
 
+import org.rti.webcgh.util.SystemUtils;
+
 
 /**
  * Implementation of <code>BioAssayDatumDTO</code> used primarily
@@ -60,7 +62,8 @@ package org.rti.webgenome.client;
 public class DefBioAssayDatumDTOImpl implements BioAssayDatumDTO {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID =
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
 	/** Quantitation type. */
     private String quantitationType = null;

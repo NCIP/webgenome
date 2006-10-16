@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 15:15:31 $
+$Revision: 1.3 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.authentication;
 
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -61,7 +62,8 @@ import org.rti.webcgh.core.WebcghApplicationException;
 public class AuthenticationException extends WebcghApplicationException {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = (long) 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Constructor.

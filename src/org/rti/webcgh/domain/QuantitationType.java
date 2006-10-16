@@ -54,6 +54,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Quantitation type for array experiment values.
  * @author dhall
@@ -78,7 +80,8 @@ public final class QuantitationType implements Serializable {
     }
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // =====================
     //      Attributes

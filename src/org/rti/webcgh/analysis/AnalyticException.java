@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.analysis;
 
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Exceptions thrown when performing an analytic operation.
@@ -58,7 +59,8 @@ import org.rti.webcgh.core.WebcghApplicationException;
 public class AnalyticException extends WebcghApplicationException {
 	
     /** Serialized verion ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
 	/**
 	 * Constructor.

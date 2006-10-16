@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-09 05:10:14 $
+$Revision: 1.2 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.SessionTimeoutException;
 
 /**
@@ -63,7 +64,8 @@ import org.rti.webcgh.webui.SessionTimeoutException;
 public class OnlyIfUserLoggedOutTag extends TagSupport {
 
 	/** Serlialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	
 	/**

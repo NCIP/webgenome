@@ -58,6 +58,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Aggregation of <code>ArrayDatum</code> objects from same chromosome.
  * @author dhall
@@ -66,7 +68,8 @@ import java.util.TreeSet;
 public class ChromosomeArrayData implements Serializable {
     
     /** Serialized version ID. */
-    private static final long serialVersionUID = (long) 1;
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ======================================
     //         Attributes

@@ -73,6 +73,7 @@ import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.util.StopWatch;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -389,7 +390,8 @@ public final class DataFileManager {
     static class ArrayDataAttributes implements Serializable {
         
         /** Serialized version ID. */
-        private static final long serialVersionUID = (long) 1;
+        private static final long serialVersionUID = 
+    		SystemUtils.getLongApplicationProperty("serial.version.uid");
         
         // =============================
         //        Attributes

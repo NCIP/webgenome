@@ -15,25 +15,42 @@
 <%-- Experiments --%>
 <h2 align="center">Experiments</h2>
 <center>
-	<p>
+	<table border="1">
+		<tr>
+			<td>Experiment</td>
+			<td>Bioassays</td>
+			<td>&nbsp;</td>
+		</tr>
 		<logic:iterate name="shopping.cart" property="experiments"
 			id="experiment">
-			<webcgh:experimentCheckBox name="experiment"/>
-			<bean:write name="experiment" property="name"/>
-			<logic:iterate name="experiment" property="bioAssays"
-				id="bioAssay">
-				<table><tr>
-					<td bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
-						&nbsp;&nbsp;&nbsp;
-					</td>
-					<td>
-						<bean:write name="bioAssay" property="name"/>
-					</td>
-				</table>
-			</logic:iterate>
-			<br>
+			<tr>
+				<td>
+					<webcgh:experimentCheckBox name="experiment"/>
+					<bean:write name="experiment" property="name"/>
+				</td>
+				<td>
+					<logic:iterate name="experiment" property="bioAssays"
+						id="bioAssay">
+						<table><tr>
+							<td bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
+								&nbsp;&nbsp;&nbsp;
+							</td>
+							<td>
+								<bean:write name="bioAssay" property="name"/>
+							</td>
+						</table>
+					</logic:iterate>
+				</td>
+				<td>
+					<html:link action="/cart/removeExperiment"
+						paramName="experiment" paramProperty="id"
+						paramId="id">
+						Remove
+					</html:link>
+				</td>
+			</tr>
 		</logic:iterate>
-	</p>
+	</table>
 </center>
 
 <hr>

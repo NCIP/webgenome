@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-10 19:03:23 $
+$Revision: 1.5 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,7 +105,7 @@ public final class SystemUtils {
      * Get system properties.
      * @return System properties
      */
-    public static synchronized Properties getApplicationProperties() {
+    public static Properties getApplicationProperties() {
     	if (applicationProperties == null) {
     		applicationProperties = loadProperties(SYS_PROPS_FILE);
         }
@@ -118,24 +118,36 @@ public final class SystemUtils {
      * @param key Name of property
      * @return System property
      */
-    public static synchronized String getApplicationProperty(
+    public static String getApplicationProperty(
             final String key) {
     	Properties props = getApplicationProperties();
     	return (String) props.get(key);
     }
     
     /**
-     * Get a system property and determine whether it is set to either 'yes' or 'true'
-     * (case insensitive).
-     * @param key
-     * @return true, if the property exists and is set to yes or true, false otherwise. 
+     * Get long integer format application property defined by
+     * the given key. 
+     * @param key Property name.
+     * @return Long integer format application property.
      */
-    public static synchronized boolean isApplicationPropertySetToTrue (
-            final String key ) {
-        String propertySetting = getApplicationProperty ( key ) ;
-        return propertySetting != null &&
-             ( "true".equalsIgnoreCase( propertySetting ) ||
-               "yes".equalsIgnoreCase ( propertySetting ) ) ;
+    public static long getLongApplicationProperty(final String key) {
+    	return Long.parseLong(getApplicationProperty(key));
+    }
+    
+    /**
+     * Get a system property and determine whether it is set
+     * to either 'yes' or 'true'
+     * (case insensitive).
+     * @param key Property name
+     * @return true, if the property exists and
+     * is set to yes or true, false otherwise. 
+     */
+    public static boolean isApplicationPropertySetToTrue(
+            final String key) {
+        String propertySetting = getApplicationProperty(key);
+        return propertySetting != null
+             && ("true".equalsIgnoreCase(propertySetting)
+               || "yes".equalsIgnoreCase(propertySetting));
     }
     
     
@@ -144,7 +156,7 @@ public final class SystemUtils {
      * @param fname File name
      * @return Properties
      */
-    public static synchronized Properties loadProperties(
+    public static Properties loadProperties(
             final String fname) {
     	Properties props = new Properties();
 		try {

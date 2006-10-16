@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-10 20:10:25 $
+$Revision: 1.4 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.service.dao.ShoppingCartDao;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
  * Manages image files containing plot images.  All images
@@ -74,7 +75,8 @@ import org.rti.webcgh.service.dao.ShoppingCartDao;
 public class ImageFileManager implements Serializable {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/** File extension. */
 	private static final String FILE_EXTENSION = ".png";
@@ -134,8 +136,9 @@ public class ImageFileManager implements Serializable {
 		}
 		File directory = new File(directoryPath);
 		if (!directory.exists() || !directory.isDirectory()) {
-            LOGGER.error ( "Directory Path specified doesnt' exist or isn't a directory. " +
-                           "Directory Path: [" + directoryPath + "]" ) ;
+            LOGGER.error("Directory Path specified doesnt' exist "
+            		+ "or isn't a directory. "
+            		+ "Directory Path: [" + directoryPath + "]");
 			throw new IllegalArgumentException("Invalid directory");
 		}
 		

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-08 16:52:40 $
+$Revision: 1.6 $
+$Date: 2006-10-16 20:06:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ import java.awt.Point;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -66,7 +67,8 @@ import org.apache.log4j.Logger;
 public final class ClickBoxes implements Serializable {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(ClickBoxes.class);

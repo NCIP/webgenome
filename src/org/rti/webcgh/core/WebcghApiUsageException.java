@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.core;
 
+import org.rti.webcgh.util.SystemUtils;
+
 
 /**
  * Exception that is thrown if there is an invalid use
@@ -60,7 +62,8 @@ package org.rti.webcgh.core;
 public class WebcghApiUsageException extends RuntimeException {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = (long) 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Constructor.

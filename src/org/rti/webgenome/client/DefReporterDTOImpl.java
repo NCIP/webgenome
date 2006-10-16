@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.3 $
+$Date: 2006-10-16 20:06:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,8 @@ package org.rti.webgenome.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.rti.webcgh.util.SystemUtils;
+
 
 /**
  * Implementation of <code>ReporterDTO</code> used primarily for
@@ -63,7 +65,8 @@ import java.util.Collection;
 public class DefReporterDTOImpl implements ReporterDTO {
 	
 	/** Serialized version ID. */
-	private static final long serialVersionUID = 1;
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
 	/** Reporter name. */
     private String name = null;
