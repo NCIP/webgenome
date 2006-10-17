@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.2 $
+$Date: 2006-10-17 22:49:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics.util;
 
 import java.awt.Color;
+
+import org.rti.webcgh.util.ColorUtils;
 
 /**
  * Used to choose a series of unique colors.
@@ -185,4 +187,33 @@ public class ColorChooser {
 		return 6 * componentValueSequence.length;
 	}
 
+	
+	/**
+	 * Get matrix of available colors in hexidecimal RGB format.
+	 * This method is intended
+	 * to be called during the creation of a color
+	 * selector web page.
+	 * @return Matrix of available colors.
+	 */
+	public static final String[][] getWebColorPalette() {
+		ColorChooser cc = new ColorChooser();
+		double numColors = (double) cc.maxNumColors();
+		int numRows = (int) Math.ceil(Math.sqrt(numColors));
+		int numCols = (int) Math.floor(Math.sqrt(numColors));
+		String[][] palette = new String[numRows][];
+		int count = 0;
+		for (int i = 0; i < numRows; i++) {
+			palette[i] = new String[numCols];
+			for (int j = 0; j < numCols; j++) {
+				String color = null;
+				if (count++ < numColors) {
+					color = ColorUtils.toRgbHexEncoding(cc.nextColor());
+				} else {
+					color = "#FFFFFF";
+				}
+				palette[i][j] = color;
+			}
+		}
+		return palette;
+	}
 }

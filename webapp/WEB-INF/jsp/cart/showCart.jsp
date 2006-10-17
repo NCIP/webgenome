@@ -5,6 +5,19 @@
 
 <%@ page import="org.rti.webcgh.domain.Experiment" %>
 
+<script language="Javascript">
+	function colorChooser(bioAssayId) {
+		var url = "<html:rewrite page="/cart/colorChooser.do"/>"
+			+ "?id=" + bioAssayId;
+		window.open(
+			url,
+			"_blank", 
+			"width=200, height=250, menubar=no, status=no, scrollbars=no, "
+			+ "resizable=no, toolbar=no, location=no, directories=no"
+		);
+	}
+</script>
+
 <h1 align="center">Shopping Cart</h1>
 
 <p align="center">
@@ -28,9 +41,6 @@
 			id="experiment">
 			<tr>
 				<td>
-					<%--
-					<webcgh:experimentCheckBox name="experiment"/>
-					--%>
 					<%
 						Experiment exp = (Experiment)
 							pageContext.findAttribute("experiment");
@@ -48,6 +58,11 @@
 							</td>
 							<td>
 								<bean:write name="bioAssay" property="name"/>
+								&nbsp;&nbsp;&nbsp;
+								[<a href="#"
+									onclick="colorChooser('<bean:write name="bioAssay" property="id"/>')">
+										Change Color
+								</a>]
 							</td>
 						</table>
 					</logic:iterate>
@@ -130,4 +145,5 @@
 	<html:link action="/cart/fileUpload">
 		Upload Data File
 	</html:link>
+	<br>
 </p>

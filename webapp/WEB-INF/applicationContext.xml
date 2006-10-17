@@ -92,9 +92,9 @@
 	<bean id="plotIdGenerator"
 		class="org.rti.webcgh.service.util.IdGenerator"/>
 		
-<!-- ID generator for experiments not persisted and, hence, not given
+<!-- ID generator for bioassays not persisted and, hence, not given
 	 IDs by the DAO tier. -->
-	<bean id="experimentIdGenerator"
+	<bean id="bioAssayIdGenerator"
 		class="org.rti.webcgh.service.util.IdGenerator"/>
 		
 <!-- Image file manager -->
@@ -158,15 +158,20 @@
 			<ref bean="imageFileManager"/>
 		</property>
 	</bean>
+	
+<!-- Color chooser -->
+	<bean name="/cart/colorChooser"
+		class="org.rti.webcgh.webui.struts.cart.ColorChooserSetupAction"/>
+		
+<!-- Change bioassay color -->
+	<bean name="/cart/changeBioAssayColor"
+		class="org.rti.webcgh.webui.struts.cart.ChangeBioAssayColorAction"/>
 		
 <!-- Client plot: entry point for application client -->
 	<bean name="/client/plot"
 		class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
 		<property name="clientDataService">
 			<ref bean="clientDataService"/>
-		</property>
-		<property name="experimentIdGenerator">
-			<ref bean="experimentIdGenerator"/>
 		</property>
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>

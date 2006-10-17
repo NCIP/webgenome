@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-17 22:49:33 $
 
 The Web CGH Software License, Version 1.0
@@ -48,68 +48,59 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-package org.rti.webcgh.util;
+package org.rti.webcgh.webui.struts.cart;
 
 import java.awt.Color;
 
-/**
- * Utility methods for manipulating colors.
- */
-public final class ColorUtils {
-	
-	/**
-	 * Constructor.
-	 */
-    private ColorUtils() {
-    	
-    }
-	
-    /**
-     * Converts RGB hexidecimal encoding into a color.
-     * @param rgbHexEncoding RGB hexidecimal encoding
-     * @return A color
-     */
-    public static Color getColor(final String rgbHexEncoding) {
-    	String encoding = rgbHexEncoding;
-        if (encoding.charAt(0) == '#') {
-            encoding = rgbHexEncoding.substring(1);
-        }
-        if (encoding.length() != 6) {
-            throw new IllegalArgumentException(
-            		"Color must be of form '#0011FF' or '0011FF'");
-        }
-        int r = Integer.parseInt(encoding.substring(0, 2), 16);
-        int g = Integer.parseInt(encoding.substring(2, 4), 16);
-        int b = Integer.parseInt(encoding.substring(4, 6), 16);
-        return new Color(r, g, b);
-    }
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-    
-    /**
-     * Convert given color into RGB hexidecimal encoding.
-     * @param color Color
-     * @return RGB hexidecimal encoding of color--e.g., #FFCC22.
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.util.ColorUtils;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
+
+/**
+ * Change color of a bioassay.
+ * @author dhall
+ *
+ */
+public final class ChangeBioAssayColorAction extends BaseAction {
+
+	/**
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
      */
-    public static String toRgbHexEncoding(final Color color) {
-    	return "#"
-    		+ leftPad(Integer.toHexString(color.getRed()), 2)
-    		+ leftPad(Integer.toHexString(color.getGreen()), 2)
-    		+ leftPad(Integer.toHexString(color.getBlue()), 2);
-    }
-    
-    /**
-     * Left pad given number string with zeros.
-     * @param numStr String format number
-     * @param numDigits Number of digits field should be
-     * @return Left padded numeric string
-     */
-    private static String leftPad(final String numStr, final int numDigits) {
-    	StringBuffer buff = new StringBuffer(numStr);
-    	int delta = numDigits - numStr.length();
-    	for (int i = 0; i < delta; i++) {
-    		buff.insert(0, '0');
-    	}
-    	return buff.toString();
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Retrieve shopping cart
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	
+    	// Retrieve bioassay id and color
+    	Long id = Long.parseLong(request.getParameter("id"));
+    	String colorStr = request.getParameter("color");
+    	Color color = ColorUtils.getColor(colorStr);
+    	
+    	// Change bioassay color
+    	BioAssay ba = cart.getBioAssay(id);
+    	ba.setColor(color);
+    	
+    	return mapping.findForward("success");
     }
 }

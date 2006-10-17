@@ -328,6 +328,30 @@ public class ShoppingCart implements Serializable {
     	}
     	return plot;
     }
+    
+    
+    /**
+     * Get bioassay with given ID.
+     * @param id Bioassay ID
+     * @return A bioassay
+     */
+    public final BioAssay getBioAssay(final Long id) {
+    	if (id == null) {
+    		throw new IllegalArgumentException("Bioassay ID is null");
+    	}
+    	BioAssay bioAssay = null;
+    	for (Iterator<Experiment> it = this.experiments.iterator();
+    		it.hasNext() && bioAssay == null;) {
+    		Experiment exp = it.next();
+    		for (BioAssay ba : exp.getBioAssays()) {
+    			if (id.equals(ba.getId())) {
+    				bioAssay = ba;
+    				break;
+    			}
+    		}
+    	}
+    	return bioAssay;
+    }
 
     
     // ============================

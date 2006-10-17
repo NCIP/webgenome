@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-09 00:02:17 $
+$Revision: 1.7 $
+$Date: 2006-10-17 22:49:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -89,7 +89,10 @@ public final class ClientPlotAction extends BaseAction {
     private ClientDataService clientDataService = null;
     
     /** Experiment ID generator. */
-    private IdGenerator experimentIdGenerator = null;
+    private IdGenerator experimentIdGenerator = new IdGenerator();
+    
+    /** Bioassay ID generator. */
+    private IdGenerator bioAssayIdGenerator = new IdGenerator();
     
     /** Image file manager. */
     private ImageFileManager imageFileManager = null;
@@ -112,15 +115,6 @@ public final class ClientPlotAction extends BaseAction {
     public void setClientDataService(
     		final ClientDataService clientDataService) {
 		this.clientDataService = clientDataService;
-	}
-
-
-    /**
-     * Set ID generator.
-     * @param idGenerator ID generator.
-     */
-	public void setExperimentIdGenerator(final IdGenerator idGenerator) {
-		this.experimentIdGenerator = idGenerator;
 	}
 
 
@@ -159,6 +153,7 @@ public final class ClientPlotAction extends BaseAction {
         	exp.setId(this.experimentIdGenerator.nextId());
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
+        		ba.setId(this.bioAssayIdGenerator.nextId());
         	}
         }
         

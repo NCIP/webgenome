@@ -169,6 +169,16 @@
 			path="/cart/operationParams"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.operation.params"/>
+			
+		<action
+			path="/cart/colorChooser">
+			<forward name="success" path="/WEB-INF/jsp/cart/colorChooser.jsp"/>
+		</action>
+		
+		<action
+			path="/cart/changeBioAssayColor">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
 				
 		<!-- ========= Account management actions ========= -->
 		
