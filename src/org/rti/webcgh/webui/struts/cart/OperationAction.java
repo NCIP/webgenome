@@ -1,5 +1,5 @@
 /*
-$Revision: 1.4 $
+$Revision: 1.1 $
 $Date: 2006-10-17 03:16:26 $
 
 The Web CGH Software License, Version 1.0
@@ -50,71 +50,24 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.Plot;
-import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.service.plot.PlotGenerator;
-import org.rti.webcgh.service.plot.PlotParameters;
-import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
-import org.rti.webcgh.service.util.IdGenerator;
-import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
-import org.rti.webcgh.webui.util.PageContext;
-import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Action that creates new plot.  If session mode is CLIENT,
- * the plot is created by this action.  If mode is STAND_ALONE,
- * then plot is created by a batch processing job.
+ * Determines which operation a use has selected
+ * to perform on selected experiments and forwards
+ * to the appropriate action.  Possible operations
+ * are creating a new plot and performing an analytic
+ * operation on data.
  * @author dhall
  *
  */
-public final class NewPlotAction extends BaseAction {
-	
-	/** Plot generator. */
-	private PlotGenerator plotGenerator = null;
-	
-	/** ID generator. */
-	private IdGenerator plotIdGenerator = null;
-	
-	/** Chromosome array data getter. */
-	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
-	
-	/**
-	 * Set plot generator.
-	 * @param plotGenerator Plot generator.
-	 */
-	public void setPlotGenerator(final PlotGenerator plotGenerator) {
-		this.plotGenerator = plotGenerator;
-	}
-	
-	
-	/**
-	 * Set ID generator.
-	 * @param idGenerator ID generator
-	 */
-	public void setPlotIdGenerator(final IdGenerator idGenerator) {
-		this.plotIdGenerator = idGenerator;
-	}
-
-
-	/**
-	 * Set chromosome array data getter.
-	 * @param chromosomeArrayDataGetter Chromosome array data getter
-	 */
-	public void setChromosomeArrayDataGetter(
-			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
-		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
-	}
-
+public final class OperationAction extends BaseAction {
 
 	/**
      * Execute action.
@@ -134,37 +87,18 @@ public final class NewPlotAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Retrieve selected experiments form bean.
-    	// Note, this is not the form bean configured
-    	// for this action in struts-config.xml.
-    	SelectedExperimentsForm seForm =
-    		PageContext.getSelectedExperimentsForm(request, false);
-    	if (seForm == null) {
-    		throw new SessionTimeoutException(
-    				"Could not find selected experiments");
+    	// Recover which operation the user has selected
+    	SelectedExperimentsForm seForm = (SelectedExperimentsForm) form;
+    	String operation = seForm.getOperation();
+    	
+    	// Determine forward
+    	ActionForward forward = null;
+    	if ("plot".equals(operation)) {
+    		forward = mapping.findForward("plot");
+    	} else if ("analysis".equals(operation)) {
+    		forward = mapping.findForward("analysis");
     	}
     	
-    	// Get selected experiments
-    	Collection<Long> experimentIds = seForm.getSelectedExperimentIds();
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
-    	Collection<Experiment> experiments = cart.getExperiments(experimentIds);
-    
-    	// Get plot parameters
-    	PlotParametersForm pForm = (PlotParametersForm) form;
-    	PlotParameters params = pForm.getPlotParameters();
-    	
-    	// Create plot
-    	SessionMode mode = PageContext.getSessionMode(request);
-    	Plot plot = null;
-    	if (mode == SessionMode.CLIENT) {
-    		Long plotId = this.plotIdGenerator.nextId();
-    		plot = this.plotGenerator.newPlot(experiments, params,
-    				pForm.getName(), this.chromosomeArrayDataGetter);
-    		plot.setId(plotId);
-    		cart.add(plot);
-    		request.setAttribute("plotId", plotId);
-    	}
-    	
-        return mapping.findForward("success");
+    	return forward;
     }
 }

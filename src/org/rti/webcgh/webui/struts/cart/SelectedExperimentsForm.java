@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-16 20:06:57 $
+$Revision: 1.3 $
+$Date: 2006-10-17 03:16:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.util.SystemUtils;
@@ -62,30 +67,52 @@ import org.rti.webcgh.webui.struts.BaseForm;
 import org.rti.webcgh.webui.util.PageContext;
 
 /**
- * Retrieves selected experiments from the request.
- * This form is intended to be used in tandem with
- * the custom tag ExperimentCheckBox, which creates
- * checkboxes for selecting experiments.  The class
- * is basically a struts map-backed form with
- * special methods for experiment IDs.
+ * This form is intended to be used to record
+ * selected experiments and some action to be performed
+ * on the experiments.  The list of possible experiments
+ * is dynamic, so this form uses a map to back selected
+ * experiments.
  * @author dhall
  *
  */
 public class SelectedExperimentsForm extends BaseForm {
 	
+	// ==============================
+	//    Constants
+	// ==============================
+	
+	/** Default data operation. */
+	private static final String DEF_OPERATION = "plot";
+	
 	/** Text indicating a HTML textbox is checked. */
-	private static final String CHECKED = "checked";
+	private static final String CHECKED = "on";
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	// ==============================
+	//         Attributes
+	// ==============================
+	
 
-	/** Maps form names to values. */
+	/** Map backing dynamic fields. */
     private Map<String, Object> values = new HashMap<String, Object>();
     
+    /**
+     * Operation selected by user.  Possible values are
+     * 'plot' and 'analysis.'
+     */
+    private String operation = DEF_OPERATION;
+    
+    
+    // ===============================
+    //      Getters/setters
+    // ===============================
     
     /**
-     * Set a value.
+     * Setter used for dynamic form fields, i.e., experiment
+     * IDs.
      * @param key Key
      * @param value Value
      */
@@ -95,7 +122,8 @@ public class SelectedExperimentsForm extends BaseForm {
     
     
     /**
-     * Get value.
+     * Getter used for dynamic form fields, i.e., experiment
+     * IDs.
      * @param key Key
      * @return A value
      */
@@ -103,8 +131,32 @@ public class SelectedExperimentsForm extends BaseForm {
         return this.values.get(key);
     }
 	
-    
     /**
+     * Get operation to be performed on selected
+     * experiments.
+     * @return Operation
+     */
+    public final String getOperation() {
+		return operation;
+	}
+
+
+    /**
+     * Set operation to be performed on selected
+     * experiments.
+     * @param operation Operation
+     */
+	public final void setOperation(final String operation) {
+		this.operation = operation;
+	}
+	
+	
+    // ==============================
+    //      Business methods
+    // ==============================
+
+
+	/**
      * Get experiment IDs selected from upstream HTML form.
      * @return Experiment IDs
      */
@@ -137,4 +189,37 @@ public class SelectedExperimentsForm extends BaseForm {
     		this.values.put(key, CHECKED);
     	}
     }
+    
+    
+    // ================================
+    //       Overrides
+    // ================================
+    
+    /**
+     * Reset form.
+     * @param actionMapping Action mappings
+     * @param request Servlet request
+     */
+	@Override
+	public final void reset(final ActionMapping actionMapping,
+			final HttpServletRequest request) {
+		this.values.clear();
+	}
+
+
+	/**
+	 * Validate form fields.
+	 * @param actionMappings Action mappings.
+	 * @param request Servlet request.
+	 * @return Action errors
+	 */
+	@Override
+	public final ActionErrors validate(final ActionMapping actionMappings,
+			final HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		if (this.values.size() < 1) {
+			errors.add("global", new ActionError("no.experiments.selected"));
+		}
+		return errors;
+	}
 }

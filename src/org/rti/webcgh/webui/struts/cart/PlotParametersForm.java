@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-16 20:06:57 $
+$Revision: 1.5 $
+$Date: 2006-10-17 03:16:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -106,6 +106,9 @@ public class PlotParametersForm extends BaseForm {
 	private static final String DEF_QUANTITATION_TYPE =
 		QuantitationType.LOG_2_RATIO.getName();
 	
+	/** Plot namer. */
+	private static final PlotNamer PLOT_NAMER = new PlotNamer();
+	
 	// ===========================
 	//     Attributes
 	// ===========================
@@ -146,6 +149,9 @@ public class PlotParametersForm extends BaseForm {
 	/** Quantitation type. */
 	private String quantitationType = DEF_QUANTITATION_TYPE;
 	
+	/** Plot name. */
+	private String name = PLOT_NAMER.nextName();
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -175,6 +181,23 @@ public class PlotParametersForm extends BaseForm {
 	}
 	
 	
+	/**
+	 * Get plot name.
+	 * @return Plot name.
+	 */
+	public final String getName() {
+		return name;
+	}
+
+	
+	/**
+	 * Set plot name.
+	 * @param name Plot name.
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
+
 	/**
 	 * Get quantitation type.
 	 * @return Quantitation type.
@@ -325,6 +348,7 @@ public class PlotParametersForm extends BaseForm {
 		this.maxY = "";
 		this.width = DEF_WIDTH;
 		this.height = DEF_HEIGHT;
+		this.name = PLOT_NAMER.nextName();
 	}
 
 	/**
@@ -337,6 +361,11 @@ public class PlotParametersForm extends BaseForm {
 	public final ActionErrors validate(final ActionMapping actionMappings,
 			final HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
+		
+		// Plot name
+		if (this.name == null || this.name.length() < 1) {
+			errors.add("name", new ActionError("invalid.field"));
+		}
 		
 		// genomeIntervals
 		if (this.genomeIntervals != null && this.genomeIntervals.length() > 0) {
@@ -444,5 +473,25 @@ public class PlotParametersForm extends BaseForm {
 		}
 		
 		return p;
+	}
+	
+	
+	/**
+	 * Helper class for naming plots.
+	 * @author dhall
+	 *
+	 */
+	static final class PlotNamer {
+		
+		/** Counter used in plot names. */
+		private long count = 1;
+		
+		/**
+		 * Generate next plot name.
+		 * @return Plot name
+		 */
+		String nextName() {
+			return "Plot " + (count++);
+		}
 	}
 }

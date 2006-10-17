@@ -13,7 +13,9 @@
 </p>
 
 <%-- Experiments --%>
+<html:form action="/cart/operation">
 <center>
+	<html:errors property="global"/>
 	<table border="1">
 		<tr>
 			<td>Experiment</td>
@@ -24,7 +26,10 @@
 			id="experiment">
 			<tr>
 				<td>
+					<%--
 					<webcgh:experimentCheckBox name="experiment"/>
+					--%>
+					<html:checkbox property="value(exp_<% experiment.getId() %>)"/>
 					<bean:write name="experiment" property="name"/>
 				</td>
 				<td>
@@ -50,7 +55,22 @@
 			</tr>
 		</logic:iterate>
 	</table>
+	
+	<p>
+		<html:radio property="operation" value="plot"/>
+		New Plot
+		
+		&nbsp;&nbsp;
+		
+		<html:radio property="operation" value="analysis"/>
+		Perform Analytic Operation
+		
+		&nbsp;&nbsp;
+		
+		<html:submit value="GO"/>
+	</p>
 </center>
+</html:form>
 
 <hr>
 
@@ -88,10 +108,6 @@
 <hr>
 
 <p align="center">
-	<html:link action="/cart/selectPlotType">
-		New Plot
-	</html:link>
-	<br>
 	<html:link action="/cart/selectOperation">
 		Run Analytic Operation
 	</html:link>

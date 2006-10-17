@@ -140,6 +140,9 @@
 	<bean name="/cart/showCart"
 		class="org.rti.webcgh.webui.struts.cart.ShowCartSetupAction"/>
 		
+	<bean name="/cart/operation"
+		class="org.rti.webcgh.webui.struts.cart.OperationAction"/>
+		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"
 		class="org.rti.webcgh.webui.struts.cart.RemoveExperimentAction"/>
