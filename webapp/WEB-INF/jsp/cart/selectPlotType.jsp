@@ -2,29 +2,29 @@
 
 <h1 align="center">Select Plot Type</h1>
 
-<p align="center">
-	This page should display a list of plot types
-	enabling the user to select one.
-</p>
+<center>
 
-<p align="center">
-	<html:link action="/cart/scatterPlotParams">
+<%--
+	Form to select plot type.  The value of each radio
+	button input must be equivalent to the name of
+	some plot type defined in org.rti.webcgh.core.PlotType.
+--%>
+	<html:form action="/cart/routeToPlotParametersPage">
+	
+	<%-- Scatter plot --%>
+		<html:radio property="plotType" value="scatter"/>
 		Scatter Plot
-	</html:link>
-	<br>
-	<html:link action="/cart/ideogramPlotParams">
+		
+		<br>
+		
+	<%-- Ideogram plot --%>
+		<html:radio property="plotType" value="ideogram"/>
 		Ideogram Plot
-	</html:link>
-	<br>
-	<html:link action="/cart/barPlotParams">
-		Bar Plot
-	</html:link>
-	<br>
-	<html:link action="/cart/annotationPlotParams">
-		Annotation Plot
-	</html:link>
-	<br>
-	<html:link action="/cart/frequencyPlotParams">
-		Frequency Plot
-	</html:link>
-</p>
+		
+		<br>
+		
+		<p>
+			<html:submit value="OK"/>
+		</p>
+	</html:form>
+</center>

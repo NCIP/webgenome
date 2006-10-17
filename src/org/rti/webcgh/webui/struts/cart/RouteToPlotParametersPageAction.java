@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-10-17 03:16:26 $
+$Date: 2006-10-17 18:47:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,16 +59,16 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Determines which operation a use has selected
- * to perform on selected experiments and forwards
- * to the appropriate action.  Possible operations
- * are creating a new plot and performing an analytic
- * operation on data.
+ * Routes a request to one of several pages
+ * that enable the user to input plotting
+ * parameters.  Routing is based on selected
+ * plot type.
  * @author dhall
  *
  */
-public final class OperationAction extends BaseAction {
+public final class RouteToPlotParametersPageAction extends BaseAction {
 
+	
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -87,16 +87,14 @@ public final class OperationAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Recover which operation the user has selected
-    	SelectedExperimentsForm seForm = (SelectedExperimentsForm) form;
-    	String operation = seForm.getOperation();
+    	// Recover type of plot from form
+    	PlotParametersForm pForm = (PlotParametersForm) form;
+    	String plotType = pForm.getPlotType();
     	
     	// Determine forward
     	ActionForward forward = null;
-    	if ("plot".equals(operation)) {
-    		forward = mapping.findForward("plot");
-    	} else if ("analysis".equals(operation)) {
-    		forward = mapping.findForward("analysis");
+    	if ("scatter".equals(plotType))	 {
+    		forward = mapping.findForward("scatter");
     	}
     	
     	return forward;

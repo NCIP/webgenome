@@ -140,8 +140,12 @@
 	<bean name="/cart/showCart"
 		class="org.rti.webcgh.webui.struts.cart.ShowCartSetupAction"/>
 		
-	<bean name="/cart/operation"
-		class="org.rti.webcgh.webui.struts.cart.OperationAction"/>
+<!-- Route to operation page -->
+	<bean name="/cart/routeToOperationPage"
+		class="org.rti.webcgh.webui.struts.cart.RouteToOperationPageAction"/>
+		
+	<bean name="/cart/routeToPlotParametersPage"
+		class="org.rti.webcgh.webui.struts.cart.RouteToPlotParametersPageAction"/>
 		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"

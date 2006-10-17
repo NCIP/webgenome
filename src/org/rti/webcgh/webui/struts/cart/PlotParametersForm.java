@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-17 03:16:26 $
+$Revision: 1.6 $
+$Date: 2006-10-17 18:47:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -104,7 +104,7 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Default quantitation type. */
 	private static final String DEF_QUANTITATION_TYPE =
-		QuantitationType.LOG_2_RATIO.getName();
+		QuantitationType.LOG_2_RATIO.getId();
 	
 	/** Plot namer. */
 	private static final PlotNamer PLOT_NAMER = new PlotNamer();
@@ -132,7 +132,7 @@ public class PlotParametersForm extends BaseForm {
 	 * interval is specified, each will be plotted in
 	 * a separate graph within the same graphics file.
 	 */
-	private String numPlotPerRow = DEF_NUM_PLOTS_PER_ROW;
+	private String numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
 
 	/** Minimum Y-axis value. */
 	private String minY = "";
@@ -251,16 +251,16 @@ public class PlotParametersForm extends BaseForm {
 	 * Get number of plots per row.
 	 * @return Number of plots per row.
 	 */
-	public final String getNumPlotPerRow() {
-		return numPlotPerRow;
+	public final String getNumPlotsPerRow() {
+		return numPlotsPerRow;
 	}
 
 	/**
 	 * Set number of plots per row.
 	 * @param numPlotPerRow Number of plots per row.
 	 */
-	public final void setNumPlotPerRow(final String numPlotPerRow) {
-		this.numPlotPerRow = numPlotPerRow;
+	public final void setNumPlotsPerRow(final String numPlotPerRow) {
+		this.numPlotsPerRow = numPlotPerRow;
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class PlotParametersForm extends BaseForm {
 		this.plotType = DEF_PLOT_TYPE;
 		this.genomeIntervals = DEF_GENOME_INTERVALS;
 		this.units = DEF_UNITS;
-		this.numPlotPerRow = DEF_NUM_PLOTS_PER_ROW;
+		this.numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
 		this.minY = "";
 		this.maxY = "";
 		this.width = DEF_WIDTH;
@@ -388,7 +388,7 @@ public class PlotParametersForm extends BaseForm {
 		}
 		
 		// numPlotsPerRow
-		if (!ValidationUtils.validNumber(this.numPlotPerRow)) {
+		if (!ValidationUtils.validNumber(this.numPlotsPerRow)) {
 			errors.add("numPlotsPerRow", new ActionError("invalid.field"));
 		}
 		
@@ -466,7 +466,7 @@ public class PlotParametersForm extends BaseForm {
 				throw new WebcghSystemException(
 						"Error extracting plot parameters", e);
 			}
-			p.setNumPlotsPerRow(Integer.parseInt(this.numPlotPerRow));
+			p.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
 			p.setUnits(BpUnits.getUnits(this.units));
 			p.setQuantitationType(QuantitationType.getQuantitationType(
 					this.quantitationType));

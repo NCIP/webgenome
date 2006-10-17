@@ -3,6 +3,8 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
 
+<%@ page import="org.rti.webcgh.domain.Experiment" %>
+
 <h1 align="center">Shopping Cart</h1>
 
 <p align="center">
@@ -13,7 +15,7 @@
 </p>
 
 <%-- Experiments --%>
-<html:form action="/cart/operation">
+<html:form action="/cart/routeToOperationPage">
 <center>
 	<html:errors property="global"/>
 	<table border="1">
@@ -29,7 +31,12 @@
 					<%--
 					<webcgh:experimentCheckBox name="experiment"/>
 					--%>
-					<html:checkbox property="value(exp_<% experiment.getId() %>)"/>
+					<%
+						Experiment exp = (Experiment)
+							pageContext.findAttribute("experiment");
+						String propName = "value(exp_" + exp.getId() + ")";
+					%>
+					<html:checkbox property="<%= propName %>"/>
 					<bean:write name="experiment" property="name"/>
 				</td>
 				<td>

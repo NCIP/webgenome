@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-17 18:47:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,97 +48,57 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.domain;
+package org.rti.webcgh.webui.struts.cart;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.rti.webcgh.util.SystemUtils;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Quantitation type for array experiment values.
+ * Determines which operation a use has selected
+ * to perform on selected experiments and forwards
+ * to the appropriate action.  Possible operations
+ * are creating a new plot and performing an analytic
+ * operation on data.
  * @author dhall
  *
  */
-public final class QuantitationType implements Serializable {
-    
-    // =============================
-    //   Constants
-    // =============================
-    
-    /** Log2 ratio. */
-    public static final QuantitationType LOG_2_RATIO =
-        new QuantitationType("log2ratio", "Log2 Ratio");
-    
-    /** Maps quantitation type names of quantitation types. */
-    private static final Map<String, QuantitationType> INDEX =
-    	new HashMap<String, QuantitationType>();
-    
-    static {
-    	INDEX.put(LOG_2_RATIO.getId(), LOG_2_RATIO);
-    }
-    
-    /** Serialized version ID. */
-    private static final long serialVersionUID = 
-		SystemUtils.getLongApplicationProperty("serial.version.uid");
-    
-    // =====================
-    //      Attributes
-    // =====================
-    
-    /** Name of quantitation type. */
-    private final String name;
-    
-    /** Identifier. */
-    private final String id;
-    
-    // =======================
-    //     Getters/setters
-    // =======================
-    
-    /**
-     * Get name of quantitation type.
-     * @return Name of quantitation type
+public final class RouteToOperationPageAction extends BaseAction {
+
+	/**
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
      */
-    public String getName() {
-        return this.name;
-    }
-    
-    /**
-     * Get identifier.
-     * @return Identifier.
-     */
-    public String getId() {
-    	return this.id;
-    }
-    
-    
-    // ==========================
-    //     Constructors
-    // ==========================
-    
-    /**
-     * Constructor.
-     * @param id Identifier
-     * @param name Name of quantitation type
-     */
-    public QuantitationType(final String id, final String name) {
-    	this.id = id;
-        this.name = name;
-    }
-    
-    
-    // ============================
-    //    Business methods
-    // ============================
-    
-    /**
-     * Get quantitation type that corresponds to given name.
-     * @param name Name of quantitation type
-     * @return Quantitation type
-     */
-    public static QuantitationType getQuantitationType(final String name) {
-    	return INDEX.get(name);
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Recover which operation the user has selected
+    	SelectedExperimentsForm seForm = (SelectedExperimentsForm) form;
+    	String operation = seForm.getOperation();
+    	
+    	// Determine forward
+    	ActionForward forward = null;
+    	if ("plot".equals(operation)) {
+    		forward = mapping.findForward("plot");
+    	} else if ("analysis".equals(operation)) {
+    		forward = mapping.findForward("analysis");
+    	}
+    	
+    	return forward;
     }
 }

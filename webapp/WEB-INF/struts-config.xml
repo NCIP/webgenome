@@ -73,20 +73,23 @@
 		
 	<!-- Perform some operation on selected experiments -->
 		<action
-			path="/cart/operation"
+			path="/cart/routeToOperationPage"
 			name="selected.experiments.form"
 			scope="session"
 			validate="true"
 			input="/cart/showCart.do">
 			<forward name="plot" path="cart.select.plot.type"/>
 		</action>
-			
-	<!-- Scatter plot parameters -->
-		<action
-			path="/cart/scatterPlotParams"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.scatter.plot.params"/>
 		
+	<!-- Route user to a plot parameters page -->
+		<action
+			path="/cart/routeToPlotParametersPage"
+			name="plot.parameters.form"
+			scope="session"
+			validate="false">
+			<forward name="scatter" path="cart.scatter.plot.params"/>
+		</action>
+			
 	<!-- Ideogram plot parameters -->
 		<action
 			path="/cart/ideogramPlotParams"
