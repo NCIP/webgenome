@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-18 17:59:24 $
+$Revision: 1.8 $
+$Date: 2006-10-18 20:46:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -333,25 +333,6 @@ public class PlotParametersForm extends BaseForm {
 	// ===================================
 
 	/**
-	 * Reset form values.
-	 * @param actionMappings Action mappings
-	 * @param request Servlet request
-	 */
-	@Override
-	public final void reset(final ActionMapping actionMappings,
-			final HttpServletRequest request) {
-		this.plotType = DEF_PLOT_TYPE;
-		this.genomeIntervals = DEF_GENOME_INTERVALS;
-		this.units = DEF_UNITS;
-		this.numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
-		this.minY = "";
-		this.maxY = "";
-		this.width = DEF_WIDTH;
-		this.height = DEF_HEIGHT;
-		this.name = PLOT_NAMER.nextName();
-	}
-
-	/**
 	 * Validate form fields.
 	 * @param actionMappings Action mappings.
 	 * @param request Servlet request.
@@ -431,6 +412,21 @@ public class PlotParametersForm extends BaseForm {
 	// ====================================
 	
 	/**
+	 * Initialize form values.
+	 */
+	public final void init() {
+		this.plotType = DEF_PLOT_TYPE;
+		this.genomeIntervals = DEF_GENOME_INTERVALS;
+		this.units = DEF_UNITS;
+		this.numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
+		this.minY = "";
+		this.maxY = "";
+		this.width = DEF_WIDTH;
+		this.height = DEF_HEIGHT;
+		this.name = PLOT_NAMER.nextName();
+	}
+	
+	/**
 	 * Extract plot parameters.
 	 * @return Plot parameters
 	 */
@@ -466,6 +462,7 @@ public class PlotParametersForm extends BaseForm {
 				throw new WebcghSystemException(
 						"Error extracting plot parameters", e);
 			}
+			p.setPlotName(this.name);
 			p.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
 			p.setUnits(BpUnits.getUnits(this.units));
 			p.setQuantitationType(QuantitationType.getQuantitationType(
@@ -489,6 +486,7 @@ public class PlotParametersForm extends BaseForm {
 			String.valueOf(plotParameters.getNumPlotsPerRow());
 		this.quantitationType = plotParameters.getQuantitationType().getId();
 		this.units = plotParameters.getUnits().getName();
+		this.name = plotParameters.getPlotName();
 		
 		// Scatter plot parameters
 		if (plotParameters instanceof ScatterPlotParameters) {

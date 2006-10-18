@@ -144,7 +144,12 @@
 	<bean name="/cart/routeToOperationPage"
 		class="org.rti.webcgh.webui.struts.cart.RouteToOperationPageAction"/>
 		
+<!-- Route to specific plot parameters page -->
 	<bean name="/cart/routeToPlotParametersPage"
+		class="org.rti.webcgh.webui.struts.cart.RouteToPlotParametersPageAction"/>
+		
+<!-- Route to specific change plot parameters page -->
+	<bean name="/cart/routeToChangePlotParametersPage"
 		class="org.rti.webcgh.webui.struts.cart.RouteToPlotParametersPageAction"/>
 		
 <!-- Remove experiment from cart -->
@@ -196,6 +201,11 @@
 		</property>
 	</bean>
 				
+<!-- Show plot -->
 	<bean name="/cart/showPlot"
 		class="org.rti.webcgh.webui.struts.cart.ShowPlotSetupAction"/>
+		
+<!-- View/change plot parameters -->
+	<bean name="/cart/changeParameters"
+		class="org.rti.webcgh.webui.struts.cart.SetPlotParametersAction"/>
 </beans>

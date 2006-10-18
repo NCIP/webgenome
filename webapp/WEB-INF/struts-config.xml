@@ -202,6 +202,24 @@
 			input="/cart/nameChooser.do">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
+		
+	<!-- View/change plot parameters -->
+		<action
+			path="/cart/changeParameters"
+			name="plot.parameters.form"
+			validate="false"
+			scope="session">
+			<forward name="success" path="/cart/routeToChangePlotParametersPage.do"/>
+		</action>
+		
+	<!-- Route user to a plot parameters page for changing parameters -->
+		<action
+			path="/cart/routeToChangePlotParametersPage"
+			name="plot.parameters.form"
+			scope="session"
+			validate="false">
+			<forward name="scatter" path="cart.scatter.plot.change.params"/>
+		</action>
 				
 		<!-- ========= Account management actions ========= -->
 		

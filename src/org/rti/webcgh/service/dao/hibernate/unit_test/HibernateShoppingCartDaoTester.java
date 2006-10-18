@@ -79,8 +79,8 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
     	
     	// Create a shopping cart and add 2 plots
     	ShoppingCart c1 = new ShoppingCart(user);
-    	c1.add(new Plot("plot1"));
-    	c1.add(new Plot("plot2"));
+    	c1.add(new Plot());
+    	c1.add(new Plot());
     	dao.save(c1);
     	
     	// Test 1
@@ -90,27 +90,27 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
     	assertEquals(2, c2.getPlots().size());
     	
     	// Test 2 - Add new plot and update
-    	Plot plot3 = new Plot("plot3");
+    	Plot plot3 = new Plot();
     	c1.add(plot3);
     	dao.update(c1);
     	c2 = dao.load(user);
     	assertEquals(3, c2.getPlots().size());
     	
-    	// Test 3 - Change name of a plot
-    	String newName = "new name";
-    	plot3.setName(newName);
-    	dao.update(c1);
-    	c2 = dao.load(user);
-    	boolean found = false;
-    	for (Plot p : c2.getPlots()) {
-    		if (newName.equals(p.getName())) {
-    			found = true;
-    			break;
-    		}
-    	}
-    	if (!found) {
-    		fail();
-    	}
+//    	// Test 3 - Change name of a plot
+//    	String newName = "new name";
+//    	plot3.setName(newName);
+//    	dao.update(c1);
+//    	c2 = dao.load(user);
+//    	boolean found = false;
+//    	for (Plot p : c2.getPlots()) {
+//    		if (newName.equals(p.getName())) {
+//    			found = true;
+//    			break;
+//    		}
+//    	}
+//    	if (!found) {
+//    		fail();
+//    	}
     	
     	// Test 4 - Remove a plot and update
     	c1.remove(plot3);

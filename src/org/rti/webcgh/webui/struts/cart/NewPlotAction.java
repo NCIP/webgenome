@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-17 03:16:26 $
+$Revision: 1.5 $
+$Date: 2006-10-18 20:46:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,9 +71,13 @@ import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Action that creates new plot.  If session mode is CLIENT,
- * the plot is created by this action.  If mode is STAND_ALONE,
- * then plot is created by a batch processing job.
+ * Action that creates a plot.  This action may be called
+ * to generate a new <code>Plot</code> instance.  It may
+ * also be called to update a <code>Plot</code> instance
+ * with new parameter values--i.e, replot.
+ * If session mode is CLIENT,
+ * then plotting is driven by this action.  If mode is STAND_ALONE,
+ * then plotting is driven by a batch processing job.
  * @author dhall
  *
  */
@@ -134,34 +138,57 @@ public final class NewPlotAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Retrieve selected experiments form bean.
-    	// Note, this is not the form bean configured
-    	// for this action in struts-config.xml.
-    	SelectedExperimentsForm seForm =
-    		PageContext.getSelectedExperimentsForm(request, false);
-    	if (seForm == null) {
-    		throw new SessionTimeoutException(
-    				"Could not find selected experiments");
-    	}
-    	
-    	// Get selected experiments
-    	Collection<Long> experimentIds = seForm.getSelectedExperimentIds();
     	ShoppingCart cart = PageContext.getShoppingCart(request);
-    	Collection<Experiment> experiments = cart.getExperiments(experimentIds);
-    
+    	boolean update = false;
+    	Plot plot = null;
+    	
+    	// Get experiments to plot.  If this action is
+    	// invoked to create a new <code>Plot</code> instance,
+    	// the experiment IDs come from a form.  If it is invoked
+    	// to update an existing plot, the experiments are obtained
+    	// from the plot instance.
+    	Collection<Long> experimentIds = null;
+	    if (request.getParameter("id") == null) {
+	    	
+	    	// Retrieve selected experiments form bean.
+	    	// Note, this is not the form bean configured
+	    	// for this action in struts-config.xml.
+	    	SelectedExperimentsForm seForm =
+	    		PageContext.getSelectedExperimentsForm(request, false);
+	    	if (seForm == null) {
+	    		throw new SessionTimeoutException(
+	    				"Could not find selected experiments");
+	    	}
+	    	
+	    	// Get selected experiments
+	    	experimentIds = seForm.getSelectedExperimentIds();
+	    } else {
+	    	update = true;
+	    	Long id = Long.parseLong(request.getParameter("id"));
+	    	plot = cart.getPlot(id);
+	    	experimentIds = plot.getExperimentIds();
+	    }
+	    
     	// Get plot parameters
     	PlotParametersForm pForm = (PlotParametersForm) form;
     	PlotParameters params = pForm.getPlotParameters();
     	
     	// Create plot
     	SessionMode mode = PageContext.getSessionMode(request);
-    	Plot plot = null;
+    	Collection<Experiment> experiments = cart.getExperiments(experimentIds);
+    	Long plotId = null;
     	if (mode == SessionMode.CLIENT) {
-    		Long plotId = this.plotIdGenerator.nextId();
-    		plot = this.plotGenerator.newPlot(experiments, params,
-    				pForm.getName(), this.chromosomeArrayDataGetter);
-    		plot.setId(plotId);
-    		cart.add(plot);
+    		if (update) {
+    			this.plotGenerator.replot(plot, experiments, params,
+    					this.chromosomeArrayDataGetter);
+    			plotId = plot.getId();
+    		} else {
+	    		plotId = this.plotIdGenerator.nextId();
+	    		plot = this.plotGenerator.newPlot(experiments, params,
+	    				this.chromosomeArrayDataGetter);
+	    		plot.setId(plotId);
+	    		cart.add(plot);
+    		}
     		request.setAttribute("plotId", plotId);
     	}
     	

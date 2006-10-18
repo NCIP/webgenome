@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-18 17:59:24 $
+$Revision: 1.9 $
+$Date: 2006-10-18 20:46:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -83,9 +83,6 @@ public class Plot implements Serializable {
     /** Primary key identifier for persistence. */
     private Long id = null;
     
-    /** Plot name. */
-    private String name = null;
-    
     /** Name of default image files. */
     private String defaultImageFileName = null;
     
@@ -122,6 +119,9 @@ public class Plot implements Serializable {
     /** Plot parameters. */
     private PlotParameters plotParameters = null;
     
+    /** IDs of experiments in plot. */
+    private Collection<Long> experimentIds = new ArrayList<Long>();
+    
     // ================================
     //       Getters/setters
     // ================================
@@ -143,6 +143,22 @@ public class Plot implements Serializable {
 	}
 
 	
+	/**
+	 * Get IDs of experiments in plot.
+	 * @return Experiment IDs
+	 */
+	public final Collection<Long> getExperimentIds() {
+		return experimentIds;
+	}
+
+	/**
+	 * Set IDs of experiments in plot.
+	 * @param experimentIds Experiment IDs
+	 */
+	public final void setExperimentIds(final Collection<Long> experimentIds) {
+		this.experimentIds = experimentIds;
+	}
+
 	/**
 	 * Get plot parameters used in creation of plot.
 	 * @return Plot parameters.
@@ -235,24 +251,6 @@ public class Plot implements Serializable {
 	}
 
 	/**
-	 * Get name of plot.
-	 * @return Plot name.
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	
-	/**
-	 * Set name of plot.
-	 * @param name Plot name.
-	 */
-	public final void setName(final String name) {
-		this.name = name;
-	}
-	
-	
-	/**
 	 * Get click boxes representing rectangular pixel regions
      * within the plot.  Text values of the click boxes
      * give the names of images that should be displayed
@@ -311,15 +309,6 @@ public class Plot implements Serializable {
 	}
 	
 	
-	/**
-	 * Constructor.
-	 * @param name Name of plot.
-	 */
-	public Plot(final String name) {
-		this.name = name;
-	}
-	
-	
 	// ===================================
 	//        Business methods
 	// ===================================
@@ -346,5 +335,14 @@ public class Plot implements Serializable {
 		names.add(this.defaultImageFileName);
 		names.addAll(this.imageFileMap.keySet());
 		return names;
+	}
+	
+	
+	/**
+	 * Add experiment ID.
+	 * @param id Experiment ID.
+	 */
+	public final void addExperimentId(final Long id) {
+		this.experimentIds.add(id);
 	}
 }

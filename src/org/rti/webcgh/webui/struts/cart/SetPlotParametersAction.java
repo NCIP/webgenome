@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-18 20:46:16 $
+$Revision: 1.1 $
+$Date: 2006-10-18 20:46:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,40 +48,61 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.plot;
+package org.rti.webcgh.webui.struts.cart;
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.rti.webcgh.domain.Experiment;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Plot;
-import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.service.plot.PlotParameters;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
- * Generates plots.
+ * Sets properties of <code>PlotParameters</code> bean
+ * from parameters associated with a given plot.
  * @author dhall
  *
  */
-public interface PlotGenerator {
+public final class SetPlotParametersAction extends BaseAction {
 	
 	/**
-	 * Create new plot.
-	 * @param experiments Experiments containing data to plot.
-	 * @param plotParameters Plot parameters.
-	 * @param chromosomeArrayDataGetter Chromosome array data getter
-	 * @return A plot.
-	 */
-	Plot newPlot(Collection<Experiment> experiments,
-			PlotParameters plotParameters,
-			ChromosomeArrayDataGetter chromosomeArrayDataGetter);
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Get shopping cart
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	
+    	// Get form bean
+    	PlotParametersForm ppf = (PlotParametersForm) form;
+    	
+    	// Get plot parameters
+    	Long plotId = Long.parseLong(request.getParameter("id"));
+    	Plot plot = cart.getPlot(plotId);
+    	PlotParameters params = plot.getPlotParameters();
+    	
+    	// Bulk set form bean properties
+    	ppf.bulkSet(params);
+    	
+    	return mapping.findForward("success");
+    }
 
-	/**
-	 * Replot data.
-	 * @param plot Plot to redo.
-	 * @param experiments Experiments containing data to plot.
-	 * @param plotParameters Plot parameters.
-	 * @param chromosomeArrayDataGetter Chromosome array data getter
-	 */
-	void replot(Plot plot, Collection<Experiment> experiments,
-			PlotParameters plotParameters,
-			ChromosomeArrayDataGetter chromosomeArrayDataGetter);
 }

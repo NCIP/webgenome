@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-18 17:59:24 $
+$Revision: 1.5 $
+$Date: 2006-10-18 20:46:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -232,7 +232,8 @@ public class GenomeInterval {
 	 * @return Encoded genome interval
 	 */
 	private static String encode(final GenomeInterval interval) {
-		StringBuffer buff = new StringBuffer(interval.chromosome);
+		StringBuffer buff =
+			new StringBuffer(String.valueOf(interval.chromosome));
 		if (interval.getStartLocation() >= 0
 				&& interval.getEndLocation() >= 0) {
 			buff.append(":" + interval.getStartLocation()

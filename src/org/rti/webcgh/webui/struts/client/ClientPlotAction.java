@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-17 22:49:33 $
+$Revision: 1.8 $
+$Date: 2006-10-18 20:46:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -172,7 +172,7 @@ public final class ClientPlotAction extends BaseAction {
         
         // Initialize plot parameters form
         PlotParametersForm pForm = (PlotParametersForm) form;
-        pForm.reset(mapping, request);
+        pForm.init();
         
         // Set selected experiments form
         SelectedExperimentsForm sef =

@@ -131,7 +131,7 @@
 			id="plot">
 			<tr>
 				<td>
-					<bean:write name="plot" property="name"/>
+					<bean:write name="plot" property="plotParameters.plotName"/>
 					[<a href="#"
 						onclick="nameChange('<bean:write name="plot" property="id"/>', 'plot')">
 							Change Name

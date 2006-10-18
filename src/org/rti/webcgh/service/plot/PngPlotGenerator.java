@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-18 17:59:23 $
+$Revision: 1.7 $
+$Date: 2006-10-18 20:46:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -117,15 +117,17 @@ public class PngPlotGenerator implements PlotGenerator {
 	 * Create new plot.
 	 * @param experiments Experiments containing data to plot.
 	 * @param plotParameters Plot parameters.
-	 * @param plotName Plot name
 	 * @param chromosomeArrayDataGetter Chromosome array data getter
 	 * @return A plot.
 	 */
 	public final Plot newPlot(final Collection<Experiment> experiments,
-			final PlotParameters plotParameters, final String plotName,
+			final PlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
-		Plot plot = new Plot(plotName);
+		Plot plot = new Plot();
 		plot.setPlotParameters(plotParameters);
+		for (Experiment exp : experiments) {
+			plot.addExperimentId(exp.getId());
+		}
 		if (plotParameters instanceof ScatterPlotParameters) {
 			
 			// Set left and right endpoints of genome intervals

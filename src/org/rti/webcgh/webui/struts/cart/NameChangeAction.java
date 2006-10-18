@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-18 17:59:24 $
+$Revision: 1.2 $
+$Date: 2006-10-18 20:46:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -108,7 +108,7 @@ public final class NameChangeAction extends BaseAction {
     		ba.setName(name);
     	} else if ("plot".equals(type)) {
     		Plot plot = cart.getPlot(id);
-    		plot.setName(name);
+    		plot.getPlotParameters().setPlotName(name);
     	}
     	
     	return mapping.findForward("success");

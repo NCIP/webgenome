@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-07 15:58:49 $
+$Revision: 1.4 $
+$Date: 2006-10-18 20:46:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -92,6 +92,9 @@ public class PlotParameters {
     /** Quantitation type to plot. */
     private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO;
     
+    /** Plot name. */
+    private String plotName = null;
+    
     // ===========================
     //    Getters/setters
     // ===========================
@@ -112,6 +115,24 @@ public class PlotParameters {
 	public final void setQuantitationType(
 			final QuantitationType quantitationType) {
 		this.quantitationType = quantitationType;
+	}
+
+
+	/**
+	 * Get plot name.
+	 * @return Plot name.
+	 */
+	public final String getPlotName() {
+		return plotName;
+	}
+
+
+	/**
+	 * Set plot name.
+	 * @param plotName Plot name.
+	 */
+	public final void setPlotName(final String plotName) {
+		this.plotName = plotName;
 	}
 
 
