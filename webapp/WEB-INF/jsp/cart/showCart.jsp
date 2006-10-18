@@ -6,6 +6,8 @@
 <%@ page import="org.rti.webcgh.domain.Experiment" %>
 
 <script language="Javascript">
+
+	// Open window to choose bioassay color
 	function colorChooser(bioAssayId) {
 		var url = "<html:rewrite page="/cart/colorChooser.do"/>"
 			+ "?id=" + bioAssayId;
@@ -13,6 +15,18 @@
 			url,
 			"_blank", 
 			"width=200, height=250, menubar=no, status=no, scrollbars=no, "
+			+ "resizable=no, toolbar=no, location=no, directories=no"
+		);
+	}
+	
+	// Open window to set bioassay name
+	function nameChange(id, type) {
+		var url = "<html:rewrite page="/cart/nameChooser.do"/>"
+			+ "?id=" + id + "&type=" + type;
+		window.open(
+			url,
+			"_blank", 
+			"width=400, height=100, menubar=no, status=no, scrollbars=no, "
 			+ "resizable=no, toolbar=no, location=no, directories=no"
 		);
 	}
@@ -35,7 +49,7 @@
 		<tr>
 			<td>Experiment</td>
 			<td>Bioassays</td>
-			<td>&nbsp;</td>
+			<td>Actions</td>
 		</tr>
 		<logic:iterate name="shopping.cart" property="experiments"
 			id="experiment">
@@ -48,6 +62,10 @@
 					%>
 					<html:checkbox property="<%= propName %>"/>
 					<bean:write name="experiment" property="name"/>
+					[<a href="#"
+						onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')">
+							Change Name
+					</a>]
 				</td>
 				<td>
 					<logic:iterate name="experiment" property="bioAssays"
@@ -62,6 +80,11 @@
 								[<a href="#"
 									onclick="colorChooser('<bean:write name="bioAssay" property="id"/>')">
 										Change Color
+								</a>]
+								&nbsp;
+								[<a href="#"
+									onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')">
+										Change Name
 								</a>]
 							</td>
 						</table>
@@ -109,6 +132,10 @@
 			<tr>
 				<td>
 					<bean:write name="plot" property="name"/>
+					[<a href="#"
+						onclick="nameChange('<bean:write name="plot" property="id"/>', 'plot')">
+							Change Name
+					</a>]
 				</td>
 				<td>
 					<html:link action="/cart/showPlot" paramId="plotId"

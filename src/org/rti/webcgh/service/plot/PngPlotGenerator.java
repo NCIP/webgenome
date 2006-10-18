@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-09 03:06:22 $
+$Revision: 1.6 $
+$Date: 2006-10-18 17:59:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -125,6 +125,7 @@ public class PngPlotGenerator implements PlotGenerator {
 			final PlotParameters plotParameters, final String plotName,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
 		Plot plot = new Plot(plotName);
+		plot.setPlotParameters(plotParameters);
 		if (plotParameters instanceof ScatterPlotParameters) {
 			
 			// Set left and right endpoints of genome intervals
@@ -160,6 +161,31 @@ public class PngPlotGenerator implements PlotGenerator {
 				gi.setEndLocation(end);
 			}
 		}
+	}
+	
+	
+	/**
+	 * Replot data.
+	 * @param plot Plot to redo.
+	 * @param experiments Experiments containing data to plot.
+	 * @param plotParameters Plot parameters.
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 */
+	public final void replot(final Plot plot,
+			final Collection<Experiment> experiments,
+			final PlotParameters plotParameters,
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		
+		// Get rid of image files
+		for (String fname : plot.getAllImageFileNames()) {
+			this.imageFileManager.deleteImageFile(fname);
+		}
+		plot.getImageFileMap().clear();
+		
+		// Replot
+		this.newScatterPlot(plot, experiments,
+				(ScatterPlotParameters) plotParameters,
+				chromosomeArrayDataGetter);
 	}
 	
 	

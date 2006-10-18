@@ -30,6 +30,11 @@
 		<form-bean
 			name="selected.experiments.form"
 			type="org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm"/>
+			
+	<!-- Name change form -->
+		<form-bean
+			name="name.change.form"
+			type="org.rti.webcgh.webui.struts.cart.NameChangeForm"/>
 	</form-beans>
 
 	
@@ -170,13 +175,31 @@
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.operation.params"/>
 			
+	<!-- Show color chooser -->
 		<action
 			path="/cart/colorChooser">
 			<forward name="success" path="/WEB-INF/jsp/cart/colorChooser.jsp"/>
 		</action>
 		
+	<!-- Change color of bioassay -->
 		<action
 			path="/cart/changeBioAssayColor">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
+		
+	<!-- Show name chooser -->
+		<action
+			path="/cart/nameChooser"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="/WEB-INF/jsp/cart/nameChooser.jsp"/>
+		
+	<!-- Change name of experiment, bioassay, or plot -->
+		<action
+			path="/cart/nameChange"
+			name="name.change.form"
+			validate="true"
+			scope="request"
+			input="/cart/nameChooser.do">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
 				

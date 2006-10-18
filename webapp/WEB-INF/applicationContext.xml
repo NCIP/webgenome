@@ -167,6 +167,10 @@
 	<bean name="/cart/changeBioAssayColor"
 		class="org.rti.webcgh.webui.struts.cart.ChangeBioAssayColorAction"/>
 		
+<!-- Change name of experiment, bioassay, or plot -->
+	<bean name="/cart/nameChange"
+		class="org.rti.webcgh.webui.struts.cart.NameChangeAction"/>
+		
 <!-- Client plot: entry point for application client -->
 	<bean name="/client/plot"
 		class="org.rti.webcgh.webui.struts.client.ClientPlotAction">

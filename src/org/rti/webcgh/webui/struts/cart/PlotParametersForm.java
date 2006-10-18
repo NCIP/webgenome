@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-17 18:47:38 $
+$Revision: 1.7 $
+$Date: 2006-10-18 17:59:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -473,6 +473,31 @@ public class PlotParametersForm extends BaseForm {
 		}
 		
 		return p;
+	}
+	
+	
+	/**
+	 * Bulk set properties using properties of given plot parameters.
+	 * @param plotParameters Plot parameters
+	 */
+	public final void bulkSet(final PlotParameters plotParameters) {
+		
+		// Common attributes
+		this.genomeIntervals = GenomeInterval.encode(
+				plotParameters.getGenomeIntervals());
+		this.numPlotsPerRow =
+			String.valueOf(plotParameters.getNumPlotsPerRow());
+		this.quantitationType = plotParameters.getQuantitationType().getId();
+		this.units = plotParameters.getUnits().getName();
+		
+		// Scatter plot parameters
+		if (plotParameters instanceof ScatterPlotParameters) {
+			ScatterPlotParameters spp = (ScatterPlotParameters) plotParameters;
+			this.height = String.valueOf(spp.getHeight());
+			this.width = String.valueOf(spp.getWidth());
+			this.minY = String.valueOf(spp.getMinY());
+			this.maxY = String.valueOf(spp.getMaxY());
+		}
 	}
 	
 	

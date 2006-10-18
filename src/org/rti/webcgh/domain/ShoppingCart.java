@@ -331,6 +331,25 @@ public class ShoppingCart implements Serializable {
     
     
     /**
+     * Get experiment with given ID.
+     * @param id Experiment ID
+     * @return An experiment
+     */
+    public final Experiment getExperiment(final Long id) {
+    	if (id == null) {
+    		throw new IllegalArgumentException("Experiment ID is null");
+    	}
+    	Experiment experiment = null;
+    	for (Experiment exp : this.experiments) {
+    		if (id.equals(exp.getId())) {
+    			experiment = exp;
+    			break;
+    		}
+    	}
+    	return experiment;
+    }
+    
+    /**
      * Get bioassay with given ID.
      * @param id Bioassay ID
      * @return A bioassay

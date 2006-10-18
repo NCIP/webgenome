@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-08 01:11:28 $
+$Revision: 1.4 $
+$Date: 2006-10-18 17:59:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -204,6 +204,42 @@ public class GenomeInterval {
 		return intervals;
 	}
 	
+	
+	/**
+	 * Encode list of genome intervals as a string.
+	 * @param intervals Genome intervals
+	 * @return Encoded genome intervals
+	 */
+	public static final String encode(final List<GenomeInterval> intervals) {
+		if (intervals == null) {
+			throw new IllegalArgumentException("Genome intervals are null");
+		}
+		StringBuffer buffer = new StringBuffer();
+		int count = 0;
+		for (GenomeInterval i : intervals) {
+			if (count++ > 0) {
+				buffer.append(DELIMITER);
+			}
+			buffer.append(encode(i));
+		}
+		return buffer.toString();
+	}
+	
+	
+	/**
+	 * Encode a genome interval as a string of form 1:100-200.
+	 * @param interval Genome interval to encode
+	 * @return Encoded genome interval
+	 */
+	private static String encode(final GenomeInterval interval) {
+		StringBuffer buff = new StringBuffer(interval.chromosome);
+		if (interval.getStartLocation() >= 0
+				&& interval.getEndLocation() >= 0) {
+			buff.append(":" + interval.getStartLocation()
+					+ "-" + interval.getEndLocation());
+		}
+		return buff.toString();
+	}
 	
 	/**
 	 * Get set of chromosomes from given collection.

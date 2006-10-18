@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-16 20:06:58 $
+$Revision: 1.8 $
+$Date: 2006-10-18 17:59:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.util.ClickBoxes;
 import org.rti.webcgh.webui.util.MouseOverStripes;
@@ -118,6 +119,9 @@ public class Plot implements Serializable {
     /** Height of entire plot image in pixels. */
     private int height = 0;
     
+    /** Plot parameters. */
+    private PlotParameters plotParameters = null;
+    
     // ================================
     //       Getters/setters
     // ================================
@@ -136,6 +140,25 @@ public class Plot implements Serializable {
 	 */
 	public final void setId(final Long id) {
 		this.id = id;
+	}
+
+	
+	/**
+	 * Get plot parameters used in creation of plot.
+	 * @return Plot parameters.
+	 */
+	public final PlotParameters getPlotParameters() {
+		return plotParameters;
+	}
+
+
+	/**
+	 * Set plot parameters used in creation of plot.
+	 * @param plotParameters Plot parameters
+	 */
+	public final void setPlotParameters(
+			final PlotParameters plotParameters) {
+		this.plotParameters = plotParameters;
 	}
 
 	/**

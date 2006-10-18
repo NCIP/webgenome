@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-16 20:06:57 $
+$Revision: 1.4 $
+$Date: 2006-10-18 17:59:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,11 +79,11 @@ public class DefBioAssayDTOImpl implements BioAssayDTO {
     
     /**
      * Constructor.
-     * @param name Name
      * @param id ID
+     * @param name Name
      * @param bioAssayDatumDTOArray Initial array of BioAssayDatumDTO
      */
-    public DefBioAssayDTOImpl(final String name, final String id,
+    public DefBioAssayDTOImpl(final String id, final String name, 
     		final BioAssayDatumDTO[] bioAssayDatumDTOArray) {
         this.name = name;
         this.id = id;
