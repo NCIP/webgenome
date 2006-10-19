@@ -273,6 +273,17 @@ public class ShoppingCart implements Serializable {
     
     
     /**
+     * Remove experiments with given IDs.
+     * @param ids Experiment IDs.
+     */
+    public final void removeExperiments(final Collection<Long> ids) {
+    	for (Long id : ids) {
+    		this.removeExperiment(id);
+    	}
+    }
+    
+    
+    /**
      * Remove plot with given id from cart.
      * @param id Plot primary key identifier.
      */

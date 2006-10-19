@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-18 20:46:24 $
+$Revision: 1.8 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -177,6 +177,7 @@ public class PngPlotGenerator implements PlotGenerator {
 			final Collection<Experiment> experiments,
 			final PlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		plot.setPlotParameters(plotParameters);
 		
 		// Get rid of image files
 		for (String fname : plot.getAllImageFileNames()) {

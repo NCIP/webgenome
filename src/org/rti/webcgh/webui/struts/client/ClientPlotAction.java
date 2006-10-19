@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-18 20:46:35 $
+$Revision: 1.9 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -135,9 +135,12 @@ public final class ClientPlotAction extends BaseAction {
     		final HttpServletResponse response) throws Exception {
 		LOGGER.info("Starting ClientPlotAction");
 		
+		// Cache client ID in session
+		String clientID = request.getParameter("clientID");
+		PageContext.setClientId(request, clientID);
+		
 		// Construct parameters for obtaining data through
 		// the client data service
-        String clientID = request.getParameter("clientID");
         String[] experimentIds = ClientQueryParser.getExperimentIds(request);
         BioAssayDataConstraints[] constraints =
         	ClientQueryParser.getBioAssayDataConstraints(request);

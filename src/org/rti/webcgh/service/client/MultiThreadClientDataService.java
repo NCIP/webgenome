@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.3 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,6 +173,19 @@ public final class MultiThreadClientDataService
         	dtos.add(res.getExperiment());
         }
         return Experiment.newExperiments(dtos);
+    }
+    
+    
+    /**
+     * Add data to given experiments.
+     * @param experiments Experiments
+     * @param constraints Query constraints
+     * @param clientId Application client ID
+     */
+    public void addData(final Collection<Experiment> experiments,
+    		final BioAssayDataConstraints[] constraints,
+    		final String clientId) {
+    	// TODO: Implement this
     }
     
     

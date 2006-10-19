@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-18 17:59:24 $
+$Revision: 1.5 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -107,8 +107,25 @@ public class DefBioAssayDTOImpl implements BioAssayDTO {
     public final String getName() {
         return name;
     }
+    
 
     /**
+     * Set ID.
+     * @param id ID
+     */
+	public final void setId(final String id) {
+		this.id = id;
+	}
+
+	/**
+	 * Set name.
+	 * @param name Name
+	 */
+	public final void setName(final String name) {
+		this.name = name;
+	}
+
+	/**
      * Get BioAssayDatumDTO[] array.
      * @return BioAssayDatumDTO[] bioassay datum DTOs
      */

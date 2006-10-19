@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-18 20:46:35 $
+$Revision: 1.6 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webgenome.client.BioAssayDataConstraints;
 
 
 /**
@@ -175,6 +178,50 @@ public class GenomeInterval {
 	// =================================
 	//     Business methods
 	// =================================
+	
+	
+	/**
+	 * Get bioassay data contraints.  This method will be used to
+	 * convert a genome interval into an object that can be used
+	 * to query client applications for data.
+	 * @return Bioassay data constraints.
+	 * @throws WebcghApplicationException If endpoints of this
+	 * interval are not defined.
+	 */
+	public final BioAssayDataConstraints getBioAssayDataConstraints()
+	throws WebcghApplicationException {
+		if (this.startLocation < 0 || this.endLocation < 0) {
+			throw new WebcghApplicationException(
+					"Endpoints of genome interval must be specified");
+		}
+		BioAssayDataConstraints c = new BioAssayDataConstraints();
+		c.setChromosome(String.valueOf(this.chromosome));
+		c.setPositions(this.startLocation, this.endLocation);
+		return c;
+	}
+	
+	
+	/**
+	 * Convert genome intervals into an array of bioassay data constraints.
+	 * This method will be used to
+	 * convert genome intervals into objects that can be used
+	 * to query client applications for data.
+	 * @param genomeIntervals Genome intervals
+	 * @return Bioassay data constraints
+	 * @throws WebcghApplicationException If any of the bioassay data
+	 * constraints does not have defined endpoints.
+	 */
+	public static final BioAssayDataConstraints[] getBioAssayDataConstraints(
+			final Collection<GenomeInterval> genomeIntervals)
+	throws WebcghApplicationException {
+		BioAssayDataConstraints[] c =
+			new BioAssayDataConstraints[genomeIntervals.size()];
+		int i = 0;
+		for (GenomeInterval gi : genomeIntervals) {
+			c[i++] = gi.getBioAssayDataConstraints();
+		}
+		return c;
+	}
 	
 	/**
 	 * Decode genome intervals encoded like '1:1000-2000;2:50-150'.

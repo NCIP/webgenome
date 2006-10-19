@@ -199,6 +199,9 @@
 		<property name="chromosomeArrayDataGetter">
 			<ref bean="inMemoryChromosomeArrayDataGetter"/>
 		</property>
+		<property name="clientDataService">
+			<ref bean="clientDataService"/>
+		</property>
 	</bean>
 				
 <!-- Show plot -->

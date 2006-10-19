@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-05 22:09:05 $
+$Revision: 1.2 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -88,6 +88,22 @@ public class BioAssayDTOGenerator {
 				bioAssayName,
 				this.bioAssayDatumDtoGenerator.newBioAssayDatumDTOs(
 						constraints));
+		return dto;
+	}
+	
+	
+	/**
+	 * Generate a new bioassay data transfer object.
+	 * @param name Bioassay name
+	 * @param constraints Constraints.
+	 * @return A new bioassay data transfer object.
+	 */
+	public final BioAssayDTO newBioAssayDTO(
+			final String name,
+			final BioAssayDataConstraints[] constraints) {
+		DefBioAssayDTOImpl dto = (DefBioAssayDTOImpl)
+			this.newBioAssayDTO(constraints);
+		dto.setName(name);
 		return dto;
 	}
 }

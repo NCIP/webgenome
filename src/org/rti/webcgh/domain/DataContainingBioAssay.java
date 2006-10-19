@@ -327,5 +327,6 @@ public class DataContainingBioAssay extends BioAssay {
     				"Cannot add data from data transfer object.  "
     				+ "Bioassay names do not match.");
     	}
+    	this.add(bioAssayDto.getBioAssayData());
     }
 }

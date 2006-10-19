@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 03:59:45 $
+$Revision: 1.3 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,7 +69,17 @@ public interface ClientDataService {
 	 * @return Experiments from application client
 	 */
     Collection<Experiment> getClientData(
-    		final BioAssayDataConstraints[] constraints,
-    		final String[] experimentIds, final String clientID);
+    		BioAssayDataConstraints[] constraints,
+    		String[] experimentIds, String clientID);
+    
+    /**
+     * Add data to given experiments.
+     * @param experiments Experiments
+     * @param constraints Query constraints
+     * @param clientId Application client ID
+     */
+    void addData(Collection<Experiment> experiments,
+    		BioAssayDataConstraints[] constraints,
+    		String clientId);
     
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-18 20:46:35 $
+$Revision: 1.6 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.service.client.ClientDataService;
 import org.rti.webcgh.service.plot.PlotGenerator;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
@@ -69,6 +71,7 @@ import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
+import org.rti.webgenome.client.BioAssayDataConstraints;
 
 /**
  * Action that creates a plot.  This action may be called
@@ -91,6 +94,18 @@ public final class NewPlotAction extends BaseAction {
 	
 	/** Chromosome array data getter. */
 	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
+	
+	/** Client data service. */
+    private ClientDataService clientDataService = null;
+    
+	/**
+     * Set the client data service.
+     * @param clientDataService Client data service
+     */
+    public void setClientDataService(
+    		final ClientDataService clientDataService) {
+		this.clientDataService = clientDataService;
+	}
 	
 	/**
 	 * Set plot generator.
@@ -138,16 +153,21 @@ public final class NewPlotAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
+    	// Setup
     	ShoppingCart cart = PageContext.getShoppingCart(request);
-    	boolean update = false;
     	Plot plot = null;
+    	PlotParametersForm pForm = (PlotParametersForm) form;
+    	PlotParameters params = pForm.getPlotParameters();
+    	SessionMode mode = PageContext.getSessionMode(request);
     	
     	// Get experiments to plot.  If this action is
     	// invoked to create a new <code>Plot</code> instance,
     	// the experiment IDs come from a form.  If it is invoked
-    	// to update an existing plot, the experiments are obtained
+    	// to update an existing plot (i.e., re-plot),
+    	// the experiments are obtained
     	// from the plot instance.
-    	Collection<Long> experimentIds = null;
+    	boolean isAReplot = false;
+    	Collection<Experiment> experiments = null;
 	    if (request.getParameter("id") == null) {
 	    	
 	    	// Retrieve selected experiments form bean.
@@ -161,24 +181,36 @@ public final class NewPlotAction extends BaseAction {
 	    	}
 	    	
 	    	// Get selected experiments
-	    	experimentIds = seForm.getSelectedExperimentIds();
+	    	Collection<Long> experimentIds = seForm.getSelectedExperimentIds();
+	    	experiments = cart.getExperiments(experimentIds);
 	    } else {
-	    	update = true;
-	    	Long id = Long.parseLong(request.getParameter("id"));
-	    	plot = cart.getPlot(id);
-	    	experimentIds = plot.getExperimentIds();
+	    	isAReplot = true;
+	    	
+	    	// Get experiment names, which are actually IDs to
+	    	// the client application
+	    	Long plotId = Long.parseLong(request.getParameter("id"));
+	    	plot = cart.getPlot(plotId);
+	    	Collection<Long> experimentIds = plot.getExperimentIds();
+	    	experiments = cart.getExperiments(experimentIds);
+	    	
+	    	// If client mode, get data from requested genome intervals
+	    	// from client and put in shopping cart
+	    	if (mode == SessionMode.CLIENT) {
+		    	String clientId = PageContext.getClientId(request);
+		    	Collection<GenomeInterval> genomeIntervals =
+		    		params.getGenomeIntervals();
+		    	BioAssayDataConstraints[] constraints =
+		    		GenomeInterval.getBioAssayDataConstraints(genomeIntervals);
+		    	this.clientDataService.addData(experiments,
+		    			constraints, clientId);
+	    	}
+	    	cart.add(experiments);
 	    }
-	    
-    	// Get plot parameters
-    	PlotParametersForm pForm = (PlotParametersForm) form;
-    	PlotParameters params = pForm.getPlotParameters();
     	
     	// Create plot
-    	SessionMode mode = PageContext.getSessionMode(request);
-    	Collection<Experiment> experiments = cart.getExperiments(experimentIds);
     	Long plotId = null;
     	if (mode == SessionMode.CLIENT) {
-    		if (update) {
+    		if (isAReplot) {
     			this.plotGenerator.replot(plot, experiments, params,
     					this.chromosomeArrayDataGetter);
     			plotId = plot.getId();

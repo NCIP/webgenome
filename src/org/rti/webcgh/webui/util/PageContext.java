@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-08 01:11:28 $
+$Revision: 1.4 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -92,6 +92,9 @@ public final class PageContext {
 	 */
 	private static final String KEY_SELECTED_EXPERIMENTS_FORM =
 		"selected.experiments.form";
+	
+	/** Key for ID of client application. */
+	private static final String KEY_CLIENT_ID = "key.client.id";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -190,6 +193,30 @@ public final class PageContext {
 	public static void setShoppingCart(final HttpServletRequest request,
 			final ShoppingCart shoppingCart) {
 		request.getSession().setAttribute(KEY_SHOPPING_CART, shoppingCart);
+	}
+	
+	
+	/**
+	 * Get ID of client application.
+	 * @param request Servlet request.
+	 * @return ID of client application.
+	 * @throws SessionTimeoutException if attribute not found in
+	 * the session.
+	 */
+	public static String getClientId(final HttpServletRequest request)
+	throws SessionTimeoutException {
+		return (String) getSessionAttribute(request, KEY_CLIENT_ID);
+	}
+	
+	
+	/**
+	 * Set ID of client application.
+	 * @param request Servlet request
+	 * @param clientId ID of client application.
+	 */
+	public static void setClientId(final HttpServletRequest request,
+			final String clientId) {
+		request.getSession().setAttribute(KEY_CLIENT_ID, clientId);
 	}
 	
 	/**

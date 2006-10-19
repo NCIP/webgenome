@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 16:52:40 $
+$Revision: 1.3 $
+$Date: 2006-10-19 03:55:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,11 @@ package org.rti.webcgh.service.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webgenome.client.BioAssayDTO;
+import org.rti.webgenome.client.BioAssayDTOGenerator;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.ExperimentDTO;
 import org.rti.webgenome.client.ExperimentDTOGenerator;
@@ -76,6 +80,10 @@ public class TestClientDataService implements ClientDataService {
 	/** Experiment data transfer object generator. */
 	private final ExperimentDTOGenerator experimentDTOGenerator =
 		new ExperimentDTOGenerator(GAP, NUM_BIO_ASSAYS);
+	
+	/** Bioassay data transfer object generator. */
+	private final BioAssayDTOGenerator bioAssayDtoGenerator =
+		new BioAssayDTOGenerator(GAP);
 
 	/**
 	 * Generate random data with given experiment IDs and constraints.
@@ -94,5 +102,29 @@ public class TestClientDataService implements ClientDataService {
     		experiments.add(new Experiment(dto));
     	}
     	return experiments;
+    }
+    
+    
+    /**
+     * Add data to given experiments.
+     * @param experiments Experiments
+     * @param constraints Query constraints
+     * @param clientId Application client ID
+     */
+    public final void addData(final Collection<Experiment> experiments,
+    		final BioAssayDataConstraints[] constraints,
+    		final String clientId) {
+    	for (Experiment exp : experiments) {
+    		for (BioAssay ba : exp.getBioAssays()) {
+    			if (!(ba instanceof DataContainingBioAssay)) {
+    				throw new IllegalArgumentException(
+    					"Expecting BioAssay of type DataContainingBioAssay");
+    			}
+    			BioAssayDTO dto =
+    				this.bioAssayDtoGenerator.newBioAssayDTO(ba.getName(),
+    						constraints);
+    			((DataContainingBioAssay) ba).addData(dto);
+    		}
+    	}
     }
 }
