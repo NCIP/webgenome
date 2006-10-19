@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-09 03:06:23 $
+$Revision: 1.8 $
+$Date: 2006-10-19 04:30:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webcgh.graphics.widget;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -267,33 +268,36 @@ public final class ScatterPlot implements PlotElement {
             	}
             	ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
             		getChromosomeArrayData(bioAssay, this.chromosome);
-	            DrawingCanvas tile = canvas.newTile();
-	            tile.setAttribute(GRP_ATT_NAME, bioAssay.getName());
-	            tile.setLineWidth(1);
-	            canvas.add(tile);
-	                
-	            // Points
-	            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
-	            this.paintPoints(cad, bioAssay.getColor(), canvas, pointRadius,
-	            		bioAssay.getName(), reporters);
-	            
-	            // Error bars
-	//            DrawingCanvas errorBarsTile = tile.newTile();
-	//            tile.add(errorBarsTile);
-	//            errorBarsTile.setAttribute(GRP_ATT_NAME,
-	//            	ERROR_BARS_GRP_ATT_VALUE);
-	//            this.paintErrorBars(cad, color, errorBarsTile);
-	//        
-	//            // Lines
-	//            DrawingCanvas linesTile = tile.newTile();
-	//            tile.add(linesTile);
-	//            linesTile.setAttribute(GRP_ATT_NAME, LINES_GRP_ATT_VALUE);
-	//            String command = "highlight('" + name + "')";
-	//            linesTile.addGraphicEventResponse(
-	//            	GraphicEvent.mouseClickEvent,
-	//                    command);
-	//            this.paintLines(cad, color, linesTile);
-	        }
+            	if (cad != null) {
+		            DrawingCanvas tile = canvas.newTile();
+		            tile.setAttribute(GRP_ATT_NAME, bioAssay.getName());
+		            tile.setLineWidth(1);
+		            canvas.add(tile);
+		                
+		            // Points
+		            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
+		            this.paintPoints(cad, bioAssay.getColor(), canvas,
+		            		pointRadius,
+		            		bioAssay.getName(), reporters);
+		            
+		            // Error bars
+		//            DrawingCanvas errorBarsTile = tile.newTile();
+		//            tile.add(errorBarsTile);
+		//            errorBarsTile.setAttribute(GRP_ATT_NAME,
+		//            	ERROR_BARS_GRP_ATT_VALUE);
+		//            this.paintErrorBars(cad, color, errorBarsTile);
+		//        
+		//            // Lines
+		//            DrawingCanvas linesTile = tile.newTile();
+		//            tile.add(linesTile);
+		//            linesTile.setAttribute(GRP_ATT_NAME, LINES_GRP_ATT_VALUE);
+		//            String command = "highlight('" + name + "')";
+		//            linesTile.addGraphicEventResponse(
+		//            	GraphicEvent.mouseClickEvent,
+		//                    command);
+		//            this.paintLines(cad, color, linesTile);
+		        }
+            }
         }
         
         // Initialize mouseover stripes
@@ -347,11 +351,14 @@ public final class ScatterPlot implements PlotElement {
             final DrawingCanvas drawingCanvas, final int pointRadius,
             final String bioAssayName,
             final SortedSet<Reporter> reporters) {
-        for (ArrayDatum datum : cad.getArrayData()) {
-            this.paintPoint(datum, color, drawingCanvas, pointRadius,
-            		bioAssayName);
-            reporters.add(datum.getReporter());
-        }
+    	List<ArrayDatum> arrayData = cad.getArrayData();
+    	if (arrayData != null) {
+	        for (ArrayDatum datum : cad.getArrayData()) {
+	            this.paintPoint(datum, color, drawingCanvas, pointRadius,
+	            		bioAssayName);
+	            reporters.add(datum.getReporter());
+	        }
+    	}
     }
     
     

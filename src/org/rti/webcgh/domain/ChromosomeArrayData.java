@@ -88,14 +88,12 @@ public class ChromosomeArrayData implements Serializable {
     private Long bioAssayDataId = null;
     
     /** Array data from chromosome. This list is kept sorted. */
-    private List<ArrayDatum> arrayData = new ArrayList<ArrayDatum>();
+    private SortedSet<ArrayDatum> arrayData = new TreeSet<ArrayDatum>(
+    		new ArrayDatum.ChromosomeLocationComparator());
     
     /** Chromosome number. */
     private short chromosome = -1;
     
-    /** Is <code>arrayData</code> attribute sorted? */
-    private boolean sorted = false;
-
     /**
      * Minimum value.  This value is the sum of
      * the value and error of some <code>ArrayDatum</code>
@@ -159,8 +157,7 @@ public class ChromosomeArrayData implements Serializable {
      * @return Array data
      */
     public final List<ArrayDatum> getArrayData() {
-        this.ensureSorted();
-        return arrayData;
+        return new ArrayList<ArrayDatum>(this.arrayData);
     }
 
     /**
@@ -168,9 +165,8 @@ public class ChromosomeArrayData implements Serializable {
      * @param arrayData Array data
      */
     public final void setArrayData(final List<ArrayDatum> arrayData) {
-        this.arrayData = arrayData;
-        for (ArrayDatum d : arrayData) {
-        	this.updateMinAndMax(d);
+        for (ArrayDatum ad : arrayData) {
+        	this.add(ad);
         }
     }
 
@@ -241,7 +237,6 @@ public class ChromosomeArrayData implements Serializable {
                     "Array datum not on same chromosome");
         }
         this.arrayData.add(arrayDatum);
-        this.sorted = false;
         this.updateMinAndMax(arrayDatum);
     }
     
@@ -269,9 +264,10 @@ public class ChromosomeArrayData implements Serializable {
         ArrayDatum a2 = new ArrayDatum(Float.NaN, r2);
         Comparator<ArrayDatum> c =
         	new ArrayDatum.ChromosomeLocationComparator();
-        this.ensureSorted();
-        int p = Collections.binarySearch(this.arrayData, a1, c);
-        int q = Collections.binarySearch(this.arrayData, a2, c);
+        List<ArrayDatum> arrayDataList =
+        	new ArrayList<ArrayDatum>(this.arrayData);
+        int p = Collections.binarySearch(arrayDataList, a1, c);
+        int q = Collections.binarySearch(arrayDataList, a2, c);
         if (p < 0) {
             p = -p - 1;
         }
@@ -283,7 +279,7 @@ public class ChromosomeArrayData implements Serializable {
         // Fill set to be returned
         List<ArrayDatum> included = new ArrayList<ArrayDatum>();
         for (int i = p; i <= q; i++) {
-            included.add(this.arrayData.get(i));
+            included.add(arrayDataList.get(i));
         }
         
         return included;
@@ -314,19 +310,6 @@ public class ChromosomeArrayData implements Serializable {
     
     
     /**
-     * Ensure data are sorted on chromosome position.
-     *
-     */
-    private void ensureSorted() {
-        if (!this.sorted) {
-            Collections.sort(this.arrayData,
-                    new ArrayDatum.ChromosomeLocationComparator());
-            this.sorted = true;
-        }
-    }
-    
-    
-    /**
      * Get inferred chromosome size.  This will be equal to
      * the position of the rightmost reporter.
      * @return Inferred chromosome size
@@ -335,7 +318,7 @@ public class ChromosomeArrayData implements Serializable {
         long size = (long) 0;
         int n = this.arrayData.size();
         if (n > 0) {
-            size = this.arrayData.get(n - 1).getReporter().getLocation();
+        	size = this.arrayData.last().getReporter().getLocation();
         }
         return size;
     }
