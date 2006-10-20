@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-20 03:01:24 $
+$Revision: 1.2 $
+$Date: 2006-10-20 23:36:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,7 +62,11 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.UserConfigurableProperty;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
  * Setup for JSP that enables user to set analytic operation.
@@ -92,6 +97,7 @@ public final class AnalysisParamsSetupAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
     	
     	// Get key of analytic operation
     	AnalyticOperationParametersForm aForm =
@@ -107,6 +113,20 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	List<UserConfigurableProperty> props =
     		op.getUserConfigurableProperties();
     	request.setAttribute("props", props);
+    	
+    	// Get selected experiments and attach to request.
+    	// First, retrieve selected experiments form bean.
+    	// Note, this is not the form bean configured
+    	// for this action in struts-config.xml.
+    	SelectedExperimentsForm seForm =
+    		PageContext.getSelectedExperimentsForm(request, false);
+    	if (seForm == null) {
+    		throw new SessionTimeoutException(
+    				"Could not find selected experiments");
+    	}
+    	Collection<Long> ids = seForm.getSelectedExperimentIds();
+    	Collection<Experiment> experiments = cart.getExperiments(ids);
+    	request.setAttribute("experiments", experiments);
     	
     	return mapping.findForward("success");
     }
