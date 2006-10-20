@@ -90,4 +90,10 @@ public interface UserConfigurableProperty {
 	 * @return A clone of this object.
 	 */
 	UserConfigurableProperty createClone();
+	
+	/**
+	 * Get current value of property in string format.
+	 * @return Current value of property.
+	 */
+	String getCurrentValue();
 }

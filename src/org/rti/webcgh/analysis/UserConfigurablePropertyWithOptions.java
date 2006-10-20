@@ -117,10 +117,11 @@ extends AbstractUserConfigurableProperty {
      * actual property within a <code>AnalyticOperation</code>
      * @param displayName Name of property displayed to
      * users
+     * @param currentValue Current value of property
      */
     public UserConfigurablePropertyWithOptions(final String name,
-            final String displayName) {
-        super(name, displayName);
+            final String displayName, final String currentValue) {
+        super(name, displayName, currentValue);
     }
     
     
@@ -133,10 +134,13 @@ extends AbstractUserConfigurableProperty {
      * @param options Map of options.  Map keys represent
      * coded option values.  Map values represent option
      * display names.
+     * @param currentValue Current value of property
      */
     public UserConfigurablePropertyWithOptions(final String name,
-            final String displayName, final Map<String, String> options) {
-        this(name, displayName);
+            final String displayName,
+            final Map<String, String> options,
+            final String currentValue) {
+        this(name, displayName, currentValue);
         this.options = options;
     }
     
@@ -168,7 +172,7 @@ extends AbstractUserConfigurableProperty {
 	public final UserConfigurableProperty createClone() {
 		UserConfigurablePropertyWithOptions clone =
 			new UserConfigurablePropertyWithOptions(this.getName(),
-					this.getDisplayName());
+					this.getDisplayName(), this.getCurrentValue());
 		clone.setOptions(this.getOptions());
 		return clone;
 	}

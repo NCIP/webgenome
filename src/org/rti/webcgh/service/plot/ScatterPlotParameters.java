@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-07 15:58:47 $
+$Revision: 1.4 $
+$Date: 2006-10-20 19:09:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,21 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.io.Serializable;
+
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Plot parameters specific to scatter plots.
  * @author dhall
  *
  */
-public final class ScatterPlotParameters extends PlotParameters {
+public final class ScatterPlotParameters
+extends PlotParameters implements Serializable {
+	
+	/** Serialized version ID. */
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     // ============================
     //      Attributes

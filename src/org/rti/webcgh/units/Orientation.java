@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:44 $
+$Revision: 1.2 $
+$Date: 2006-10-20 19:09:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,11 +51,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.units;
 
+import java.io.Serializable;
+
+import org.rti.webcgh.util.SystemUtils;
+
 /**
  * Represents orientation of some graphic element.
  */
-public final class Orientation {
+public final class Orientation implements Serializable {
 	
+	/** Serialized version ID. */
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	/**
 	 * Constructor.

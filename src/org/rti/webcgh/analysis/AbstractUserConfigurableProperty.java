@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-20 03:01:15 $
+$Revision: 1.2 $
+$Date: 2006-10-20 19:09:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,6 +75,10 @@ implements UserConfigurableProperty {
     private String displayName = null;
     
     
+    /** Current value of property. */
+    private String currentValue = null;
+    
+    
     // ========================================
     //     UserConfigurableProperty interface
     // ========================================
@@ -115,6 +119,14 @@ implements UserConfigurableProperty {
 	 * @return A clone of this object.
 	 */
 	public abstract UserConfigurableProperty createClone();
+	
+	/**
+	 * Get current value of property in string format.
+	 * @return Current value of property.
+	 */
+	public final String getCurrentValue() {
+		return this.currentValue;
+	}
     
     // ============================
     //    Additional setters
@@ -129,6 +141,15 @@ implements UserConfigurableProperty {
      */
     public final void setName(final String name) {
         this.name = name;
+    }
+    
+    
+    /**
+     * Set current value of property.
+     * @param currentValue Current value in string format.
+     */
+    public final void setCurrentValue(final String currentValue) {
+    	this.currentValue = currentValue;
     }
     
     
@@ -150,10 +171,12 @@ implements UserConfigurableProperty {
      * actual property within a <code>AnalyticOperation</code>
      * @param displayName Name of property displayed to
      * users
+     * @param currentValue Current value of property
      */
     public AbstractUserConfigurableProperty(final String name,
-            final String displayName) {
+            final String displayName, final String currentValue) {
         this.name = name;
         this.displayName = displayName;
+        this.currentValue = currentValue;
     }
 }

@@ -77,4 +77,18 @@
 		<rtexprvalue>true</rtexprvalue>
 	  </attribute>
    </tag>
+   
+<!-- Create HTML input element for a user configurable property -->
+   <tag>
+      <name>userConfigurablePropertyInput</name>
+      <tagclass>org.rti.webcgh.webui.taglib.UserConfigurablePropertyInputTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>name</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
 </taglib>

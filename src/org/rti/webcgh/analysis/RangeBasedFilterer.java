@@ -187,8 +187,18 @@ public final class RangeBasedFilterer implements
     public List<UserConfigurableProperty> getUserConfigurableProperties() {
        List<UserConfigurableProperty> props =
            new ArrayList<UserConfigurableProperty>();
-       props.add(new SimpleUserConfigurableProperty("min", "Lower bound"));
-       props.add(new SimpleUserConfigurableProperty("max", "Upper bound"));
+       String currentMin = "";
+       if (!Float.isNaN(this.min) && !Float.isInfinite(this.min)) {
+    	   currentMin = String.valueOf(this.min);
+       }
+       String currentMax = "";
+       if (!Float.isNaN(this.max) && !Float.isInfinite(this.max)) {
+    	   currentMax = String.valueOf(this.max);
+       }
+       props.add(new SimpleUserConfigurableProperty("min",
+    		   "Lower bound", currentMin));
+       props.add(new SimpleUserConfigurableProperty("max",
+    		   "Upper bound", currentMax));
        return props;
     }
     

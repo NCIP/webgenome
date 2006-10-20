@@ -201,7 +201,7 @@ implements ScalarToScalarAnalyticOperation {
        List<UserConfigurableProperty> props =
            new ArrayList<UserConfigurableProperty>();
        props.add(new SimpleUserConfigurableProperty("windowSize",
-    		   "Window size"));
+    		   "Window size", String.valueOf(this.windowSize)));
        return props;
     }
     

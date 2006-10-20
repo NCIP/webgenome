@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-20 03:01:15 $
+$Revision: 1.2 $
+$Date: 2006-10-20 19:09:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,10 +73,11 @@ extends AbstractUserConfigurableProperty {
 	 * Constructor.
 	 * @param name Name
 	 * @param displayName Name displayed to users
+	 * @param currentValue Current value of property
 	 */
 	public SimpleUserConfigurableProperty(final String name,
-			final String displayName) {
-		super(name, displayName);
+			final String displayName, final String currentValue) {
+		super(name, displayName, currentValue);
 	}
 
 	/**
@@ -86,7 +87,7 @@ extends AbstractUserConfigurableProperty {
 	public final UserConfigurableProperty createClone() {
 		SimpleUserConfigurableProperty prop =
 			new SimpleUserConfigurableProperty(this.getName(),
-					this.getDisplayName());
+					this.getDisplayName(), this.getCurrentValue());
 		return prop;
 	}
 }

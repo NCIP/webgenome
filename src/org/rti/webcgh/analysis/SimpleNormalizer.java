@@ -257,7 +257,8 @@ public abstract class SimpleNormalizer {
        List<UserConfigurableProperty> props =
            new ArrayList<UserConfigurableProperty>();
        UserConfigurablePropertyWithOptions prop = new
-           UserConfigurablePropertyWithOptions("operation", "Mean/Median");
+           UserConfigurablePropertyWithOptions("operation",
+        		   "Mean/Median", String.valueOf(this.operation));
        prop.addOption(String.valueOf(MEAN), "Mean");
        prop.addOption(String.valueOf(MEDIAN), "Median");
        props.add(prop);
