@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-20 03:01:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,25 +48,67 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.webui.struts.cart;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.AnalyticOperationFactory;
+import org.rti.webcgh.analysis.UserConfigurableProperty;
+import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Performs "simple" normalization, subtracting
- * either mean or median value of bioassay
- * from all values to bring to mean or median,
- * respectively, to 0.  Intended to be used
- * to normalize all data from a single bioassay.
+ * Setup for JSP that enables user to set analytic operation.
+ * parameters
  * @author dhall
  *
  */
-public final class SimpleBioAssayNormalizer extends SimpleNormalizer
-    implements StatefulBioAssayAnalyticOperation {
-    
-    /**
-     * Get name of operation.
-     * @return Name of operation
+public final class AnalysisParamsSetupAction extends BaseAction {
+	
+	/** Analytic operation factory. */
+	private final AnalyticOperationFactory analyticOperationFactory =
+		new AnalyticOperationFactory();
+	
+	/**
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
      */
-    public String getName() {
-        return "Simple bioassay-based normalization";
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Get key of analytic operation
+    	AnalyticOperationParametersForm aForm =
+    		(AnalyticOperationParametersForm) form;
+    	String opKey = aForm.getOperationKey();
+    	
+    	// Get instance of analytic operation
+    	AnalyticOperation op =
+    		this.analyticOperationFactory.newAnalyticOperation(opKey);
+    	
+    	// Get user configurable parameter characteristics and
+    	// attach to request
+    	List<UserConfigurableProperty> props =
+    		op.getUserConfigurableProperties();
+    	request.setAttribute("props", props);
+    	
+    	return mapping.findForward("success");
     }
+
 }

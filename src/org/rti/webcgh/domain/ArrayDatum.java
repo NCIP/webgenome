@@ -223,7 +223,11 @@ public class ArrayDatum implements Serializable {
      *
      */
     public static class ChromosomeLocationComparator
-    implements Comparator<ArrayDatum> {
+    implements Comparator<ArrayDatum>, Serializable {
+    	
+    	/** Serialized version ID. */
+        private static final long serialVersionUID = 
+    		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
         /**
          * Compare method.

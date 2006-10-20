@@ -35,6 +35,10 @@
 		<form-bean
 			name="name.change.form"
 			type="org.rti.webcgh.webui.struts.cart.NameChangeForm"/>
+			
+		<form-bean
+			name="analytic.operation.params.form"
+			type="org.rti.webcgh.webui.struts.cart.AnalyticOperationParametersForm"/>
 	</form-beans>
 
 	
@@ -84,6 +88,17 @@
 			validate="true"
 			input="/cart/showCart.do">
 			<forward name="plot" path="cart.select.plot.type"/>
+			<forward name="analysis" path="/cart/selectAnalysis.do"/>
+		</action>
+		
+	<!-- Select analytic operation -->
+		<action
+			path="/cart/selectAnalysis"
+			name="selected.experiments.form"
+			scope="session"
+			validate="true"
+			input="/cart/showCart.do">
+			<forward name="success" path="cart.select.analysis"/>
 		</action>
 		
 	<!-- Route user to a plot parameters page -->
@@ -118,12 +133,6 @@
 			path="/cart/frequencyPlotParams"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.frequency.plot.params"/>
-				
-	<!-- Set colors -->
-		<action
-			path="/cart/setColors"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.set.colors"/>
 				
 	<!-- New plot -->
 		<action
@@ -163,17 +172,13 @@
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.file.upload"/>
 				
-	<!-- Select analytic operation -->
-		<action
-			path="/cart/selectOperation"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.select.operation"/>
-				
 	<!-- Set analytic operation parameters -->
 		<action
-			path="/cart/operationParams"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.operation.params"/>
+			path="/cart/analysisParams"
+			name="analytic.operation.params.form"
+			validate="false">
+			<forward name="success" path="cart.analysis.params"/>
+		</action>
 			
 	<!-- Show color chooser -->
 		<action

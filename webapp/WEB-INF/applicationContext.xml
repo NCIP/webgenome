@@ -152,6 +152,14 @@
 	<bean name="/cart/routeToChangePlotParametersPage"
 		class="org.rti.webcgh.webui.struts.cart.RouteToPlotParametersPageAction"/>
 		
+<!-- Select analytic operation -->
+	<bean name="/cart/selectAnalysis"
+		class="org.rti.webcgh.webui.struts.cart.SelectAnalysisSetupAction"/>
+		
+<!-- Set analytic operation parameters -->
+	<bean name="/cart/analysisParams"
+		class="org.rti.webcgh.webui.struts.cart.AnalysisParamsSetupAction"/>
+		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"
 		class="org.rti.webcgh.webui.struts.cart.RemoveExperimentAction"/>

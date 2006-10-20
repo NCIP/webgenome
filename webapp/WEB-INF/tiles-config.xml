@@ -131,16 +131,16 @@
   	</definition>
   	
 <!-- Select analytic operation -->
-  	<definition name="cart.select.operation" extends="cart.layout" >
+  	<definition name="cart.select.analysis" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Select analytic operation" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/selectOperation.jsp" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/selectAnalysis.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
   	
 <!-- Set analytic operation parameters -->
-  	<definition name="cart.operation.params" extends="cart.layout" >
+  	<definition name="cart.analysis.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Analytic operation parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/operationParams.jsp" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/analysisParams.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
   	

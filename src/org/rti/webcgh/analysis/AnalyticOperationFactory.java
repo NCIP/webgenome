@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-20 03:01:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,23 +50,69 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.rti.webcgh.core.WebcghSystemException;
+
 /**
- * Performs "simple" normalization, subtracting
- * either mean or median value of bioassay
- * from all values to bring to mean or median,
- * respectively, to 0.  Intended to be used
- * to normalize all data from a single bioassay.
+ * Factory for <code>AnalyticOperation</code> objects.
  * @author dhall
  *
  */
-public final class SimpleBioAssayNormalizer extends SimpleNormalizer
-    implements StatefulBioAssayAnalyticOperation {
-    
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    public String getName() {
-        return "Simple bioassay-based normalization";
-    }
+public class AnalyticOperationFactory {
+
+	/** Index of keys to analytic operation classes. */
+	private Map<String, Class> operationIndex =
+		new HashMap<String, Class>();
+	
+	
+	/**
+	 * Constructor.
+	 */
+	public AnalyticOperationFactory() {
+		this.operationIndex.put("1", AcghAnalyticOperation.class);
+		this.operationIndex.put("2", Averager.class);
+		this.operationIndex.put("3", RangeBasedFilterer.class);
+		this.operationIndex.put("4", SimpleBioAssayNormalizer.class);
+		this.operationIndex.put("5", SimpleExperimentNormalizer.class);
+		this.operationIndex.put("6", SlidingWindowSmoother.class);
+	}
+	
+	
+	/**
+	 * Get map of analytic operation keys and names.
+	 * @return Map of analytic operation keys and names.
+	 */
+	public final Map<String, String> getOperationKeysAndNames() {
+		Map<String, String> map = new HashMap<String, String>();
+		for (String key : this.operationIndex.keySet()) {
+			AnalyticOperation op = this.newAnalyticOperation(key);
+			String name = op.getName();
+			map.put(key, name);
+		}
+		return map;
+	}
+	
+	
+	/**
+	 * Create new analytic operation whose key matches the given key.
+	 * @param key Key of analytic operation.
+	 * @return An analytic operation.
+	 */
+	public final AnalyticOperation newAnalyticOperation(final String key) {
+		Class c = this.operationIndex.get(key);
+		if (c == null) {
+			throw new WebcghSystemException(
+					"Analytic operation with key '" + key + "' not found");
+		}
+		AnalyticOperation op = null;
+		try {
+			op = (AnalyticOperation) c.newInstance();
+		} catch (Exception e) {
+			throw new WebcghSystemException(
+					"Error instantiating analytic operation", e);
+		}
+		return op;
+	}
 }

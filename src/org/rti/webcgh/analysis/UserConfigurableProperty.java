@@ -1,18 +1,16 @@
 /*
-
-$Source$
 $Revision$
 $Date$
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,111 +38,56 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.analysis;
 
 /**
- * Represents some property of an <code>AnalyticOperation</code>
+ * Represents a property of an
+ * <code>AnalyticOperation</code>
  * that can be configured by the user at run time.
  * @author dhall
  *
  */
-public class UserConfigurableProperty {
-    
-    
-    // ===============================
-    //      Attributes
-    // ===============================
-    
-    /**
-     * Name of property.  Corresponds to property name
-     * of an <code>AnalyticOperation</code>.
-     */
-    private String name = null;
-    
-    /** Name of property that would be displayed to users. */
-    private String displayName = null;
-    
-    
-    // ============================
-    //     Getters/setters
-    // ============================
-    
-    /**
-     * Set name of property that is displayed to users.
-     * @param displayName Name of property that is displayed
-     * to users
-     */
-    public final void setDisplayName(final String displayName) {
-        this.displayName = displayName;
-    }
+public interface UserConfigurableProperty {
 
-    /**
-     * Set name of the property.  This should
-     * correspond to the actual property
-     * in an <code>AnalyticOperation</code>
-     * class.
-     * @param name Name of configurable property
-     */
-    public final void setName(final String name) {
-        this.name = name;
-    }
-
-
-    /**
-     * Get name of the property.  This should
-     * correspond to the actual property
-     * in an <code>AnalyticOperation</code>
-     * class.
-     * @return Name of configurable property
-     */
-    public final String getName() {
-        return this.name;
-    }
-    
-    
-    /**
-     * Get name of property that would actually
-     * be displayed to the user.
-     * @return Display name of property
-     */
-    public final String getDisplayName() {
-        return this.displayName;
-    }
-    
-    
-    // ============================
-    //      Constructors
-    // ============================
-    
-    /**
-     * Constructor.
-     */
-    public UserConfigurableProperty() {
-        
-    }
-    
-    
-    /**
-     * Constructor.
-     * @param name Name of property that corresponds to the
-     * actual property within a <code>AnalyticOperation</code>
-     * @param displayName Name of property displayed to
-     * users
-     */
-    public UserConfigurableProperty(final String name,
-            final String displayName) {
-        this.name = name;
-        this.displayName = displayName;
-    }
+	/**
+	 * Get name of property.
+	 * @return Name of property.
+	 */
+	String getName();
+	
+	/**
+	 * Set name of property.
+	 * @param name Name of property.
+	 */
+	void setName(String name);
+	
+	/**
+	 * Get name that should be displayed to users.
+	 * @return Name that should be displayed to users.
+	 */
+	String getDisplayName();
+	
+	
+	/**
+	 * Set name that should be displayed to users.
+	 * @param displayName Name that should be displayed
+	 * to users.
+	 */
+	void setDisplayName(String displayName);
+	
+	/**
+	 * Create a clone of this object.
+	 * @return A clone of this object.
+	 */
+	UserConfigurableProperty createClone();
 }

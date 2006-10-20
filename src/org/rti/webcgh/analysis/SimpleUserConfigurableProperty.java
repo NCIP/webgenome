@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-20 03:01:15 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,22 +51,42 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.analysis;
 
 /**
- * Performs "simple" normalization, subtracting
- * either mean or median value of bioassay
- * from all values to bring to mean or median,
- * respectively, to 0.  Intended to be used
- * to normalize all data from a single bioassay.
+ * A user configurable property with no business methods
+ * beyond what is defined in <code>UserConfigurableProperty</code>
+ * except getters and setters.
  * @author dhall
  *
  */
-public final class SimpleBioAssayNormalizer extends SimpleNormalizer
-    implements StatefulBioAssayAnalyticOperation {
-    
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    public String getName() {
-        return "Simple bioassay-based normalization";
-    }
+public class SimpleUserConfigurableProperty
+extends AbstractUserConfigurableProperty {
+	
+	
+	/**
+	 * Constructor.
+	 */
+	public SimpleUserConfigurableProperty() {
+		
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param name Name
+	 * @param displayName Name displayed to users
+	 */
+	public SimpleUserConfigurableProperty(final String name,
+			final String displayName) {
+		super(name, displayName);
+	}
+
+	/**
+	 * Create a clone of this object.
+	 * @return A clone of this object.
+	 */
+	public final UserConfigurableProperty createClone() {
+		SimpleUserConfigurableProperty prop =
+			new SimpleUserConfigurableProperty(this.getName(),
+					this.getDisplayName());
+		return prop;
+	}
 }

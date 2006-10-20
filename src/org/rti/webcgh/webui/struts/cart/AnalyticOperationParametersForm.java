@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-20 03:01:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,25 +48,78 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.webui.struts.cart;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.rti.webcgh.util.SystemUtils;
+import org.rti.webcgh.webui.struts.BaseForm;
 
 /**
- * Performs "simple" normalization, subtracting
- * either mean or median value of bioassay
- * from all values to bring to mean or median,
- * respectively, to 0.  Intended to be used
- * to normalize all data from a single bioassay.
+ * Form for capturing user-inputted configurable parameters
+ * for an analytic operation.
  * @author dhall
  *
  */
-public final class SimpleBioAssayNormalizer extends SimpleNormalizer
-    implements StatefulBioAssayAnalyticOperation {
-    
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    public String getName() {
-        return "Simple bioassay-based normalization";
-    }
+public class AnalyticOperationParametersForm extends BaseForm {
+
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	// =====================================
+	//      Attributes
+	// =====================================
+	
+	/** Analytic operation key. */
+	private String operationKey = "";
+	
+	/**
+	 * Map containing user-input configurable parameter
+	 * name-value pairs.
+	 */ 
+	private Map<String, Object> params = new HashMap<String, Object>();
+	
+	
+	// ==================================
+	//     Getters/setters
+	// ==================================
+	
+	/**
+	 * Get analytic operation key.
+	 * @return Analytic operation key.
+	 */
+	public final String getOperationKey() {
+		return operationKey;
+	}
+
+	
+	/**
+	 * Set analytic operation key.
+	 * @param operationKey Analytic operation key.
+	 */
+	public final void setOperationKey(final String operationKey) {
+		this.operationKey = operationKey;
+	}
+	
+	
+	/**
+	 * Set configurable parameter name and value.
+	 * @param name Name of configurable parameter.
+	 * @param value Value of configurable parameter.
+	 */
+	public final void setParamValue(final String name, final Object value) {
+		this.params.put(name, value);
+	}
+	
+	
+	/**
+	 * Get configurable parameter name and value.
+	 * @param name Name of configurable parameter.
+	 * @return Value of configurable parameter.
+	 */
+	public final Object getParamValue(final String name) {
+		return this.params.get(name);
+	}
 }

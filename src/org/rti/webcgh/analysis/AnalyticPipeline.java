@@ -1,18 +1,16 @@
 /*
-
-$Source$
 $Revision$
 $Date$
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webcgh.analysis;
@@ -112,6 +109,54 @@ public class AnalyticPipeline implements AnalyticOperation {
      */
     public final void setName(final String name) {
         this.name = name;
+    }
+    
+    // =================================
+    //   AnalyticOperation interface
+    // =================================
+    /**
+     * Get user configurable properties.
+     * @return User configurable properties
+     */
+    public final List<UserConfigurableProperty>getUserConfigurableProperties() {
+    	List<UserConfigurableProperty> props =
+    		new ArrayList<UserConfigurableProperty>();
+    	int count = 0;
+    	for (AnalyticOperation op : this.operations) {
+    		for (UserConfigurableProperty prop
+    				: op.getUserConfigurableProperties()) {
+    			UserConfigurableProperty newProp = prop.createClone();
+    			String newName = count + "_" + prop.getName();
+    			String newDisplayName = "Step " + count + " "
+    				+ op.getName() + ": " + prop.getDisplayName();
+    			newProp.setName(newName);
+    			newProp.setDisplayName(newDisplayName);
+    		}
+    		count++;
+    	}
+    	return props;
+    }
+    
+    
+    /**
+     * Set some property of the operation.  The name of this
+     * property should correspond to one of user configurable
+     * property names.
+     * @param name Name of property to set.
+     * @param value Value of property.
+     */
+    public final void setProperty(final String name, final String value) {
+    	
+    	// Parse operation number from name
+    	int p = name.indexOf('_');
+    	int opNum = Integer.parseInt(name.substring(0, p));
+    	
+    	// Parse name of propery with regard to operation
+    	String opPropName = name.substring(p + 1);
+    	
+    	// Set property of operation
+    	AnalyticOperation op = this.operations.get(opNum);
+    	op.setProperty(opPropName, value);
     }
     
     
