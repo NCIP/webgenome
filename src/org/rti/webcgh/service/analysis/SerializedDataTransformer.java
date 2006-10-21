@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:44 $
+$Revision: 1.2 $
+$Date: 2006-10-21 21:04:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.io.DataFileManager;
+import org.rti.webcgh.service.io.DataFileManager;
 import org.rti.webcgh.service.util.ChromosomeArrayDataIterator;
 
 /**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-16 20:25:16 $
+$Revision: 1.2 $
+$Date: 2006-10-21 21:04:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.io.ImageFileManager;
+import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-09-23 18:28:38 $
+$Revision: 1.6 $
+$Date: 2006-10-21 21:04:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,7 @@ package org.rti.webcgh.domain;
 
 import java.util.List;
 
-import org.rti.webcgh.io.DataFileManager;
+import org.rti.webcgh.service.io.DataFileManager;
 
 /**
  * Class that generates <code>Experiment</code>

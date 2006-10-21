@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/struts/admin/LoadArrayAction.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:32:00 $
+$Revision: 1.2 $
+$Date: 2006-10-21 21:04:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,8 +63,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.rti.webcgh.etl.AnnotationColumnMapping;
-import org.rti.webcgh.etl.ArrayEtlManager;
+import org.rti.webcgh.deprecated.etl.AnnotationColumnMapping;
+import org.rti.webcgh.deprecated.etl.ArrayEtlManager;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
 
 

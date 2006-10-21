@@ -63,8 +63,8 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.io.DataFileManager;
-import org.rti.webcgh.io.SmdFormatException;
+import org.rti.webcgh.service.io.DataFileManager;
+import org.rti.webcgh.service.io.SmdFormatException;
 import org.rti.webcgh.util.FileUtils;
 
 

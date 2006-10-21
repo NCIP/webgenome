@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.2 $
+$Date: 2006-10-21 21:04:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,8 +57,8 @@ import org.rti.webcgh.analysis.SlidingWindowSmoother;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
-import org.rti.webcgh.io.DataFileManager;
 import org.rti.webcgh.service.analysis.SerializedDataTransformer;
+import org.rti.webcgh.service.io.DataFileManager;
 import org.rti.webcgh.util.FileUtils;
 import org.rti.webcgh.util.SystemUtils;
 

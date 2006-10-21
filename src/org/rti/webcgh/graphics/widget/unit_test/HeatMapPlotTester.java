@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-16 04:29:21 $
+$Revision: 1.5 $
+$Date: 2006-10-21 21:04:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import org.rti.webcgh.domain.ExperimentGenerator;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
 import org.rti.webcgh.graphics.widget.HeatMapPlot;
-import org.rti.webcgh.io.DataFileManager;
+import org.rti.webcgh.service.io.DataFileManager;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webcgh.service.util.SerializedChromosomeArrayDataGetter;

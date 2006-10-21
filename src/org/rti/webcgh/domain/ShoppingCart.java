@@ -58,7 +58,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.io.ImageFileManager;
+import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.util.SystemUtils;
 
 /**

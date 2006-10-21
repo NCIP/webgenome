@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/struts/admin/ShowSkySetupAction.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:32:20 $
+$Revision: 1.2 $
+$Date: 2006-10-21 21:04:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.deprecated.array.Experiment;
-import org.rti.webcgh.etl.EsiEtlManager;
+import org.rti.webcgh.deprecated.etl.EsiEtlManager;
 import org.rti.webcgh.util.CollectionUtils;
 import org.rti.webcgh.webui.util.AdminSessionUtils;
 

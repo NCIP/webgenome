@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.9 $
+$Date: 2006-10-21 21:04:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.widget.PlotPanel;
-import org.rti.webcgh.io.ImageFileManager;
+import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.webui.util.EventHandlerGraphicBoundaries;
 

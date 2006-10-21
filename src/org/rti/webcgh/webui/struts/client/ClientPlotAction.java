@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-21 04:45:14 $
+$Revision: 1.11 $
+$Date: 2006-10-21 21:04:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,8 +63,8 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
-import org.rti.webcgh.io.ImageFileManager;
 import org.rti.webcgh.service.client.ClientDataService;
+import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.struts.cart.PlotParametersForm;
