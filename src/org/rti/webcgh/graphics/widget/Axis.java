@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-16 20:06:58 $
+$Revision: 1.6 $
+$Date: 2006-10-21 05:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,9 +56,9 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.net.URL;
 
-import org.rti.webcgh.graph.util.NumberFormatter;
-import org.rti.webcgh.graph.util.RealNumberFormatter;
-import org.rti.webcgh.graph.widget.ScalePlotElement;
+import org.rti.webcgh.deprecated.graph.NumberFormatter;
+import org.rti.webcgh.deprecated.graph.RealNumberFormatter;
+import org.rti.webcgh.deprecated.graph.ScalePlotElement;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.Cursor;
 import org.rti.webcgh.graphics.primitive.Hyperlink;

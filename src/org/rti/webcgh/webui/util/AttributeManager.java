@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/util/AttributeManager.java,v $
-$Revision: 1.2 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.3 $
+$Date: 2006-10-21 05:34:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,9 +55,8 @@ package org.rti.webcgh.webui.util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.rti.webcgh.array.GenomeIntervalDto;
-import org.rti.webcgh.array.ReporterMappingStagingArea;
-import org.rti.webcgh.array.ShoppingCart;
+import org.rti.webcgh.deprecated.array.GenomeIntervalDto;
+import org.rti.webcgh.deprecated.array.ShoppingCart;
 import org.rti.webcgh.service.authentication.UserProfile;
 
 /**
@@ -128,28 +127,6 @@ public class AttributeManager {
             session.setAttribute(SHOPPING_CART, cart);
         }
         return cart;
-    }
-    
-    
-    /**
-     * Set the probe mapping staging area
-     * @param request Request
-     * @param area Probe mapping staging area
-     */
-    public static void setProbeMappingStagingArea(HttpServletRequest request, ReporterMappingStagingArea area) {
-        HttpSession session = request.getSession();
-        session.setAttribute(REPORTER_MAPPING_STAGING_AREA, area);
-    }
-    
-    
-    /**
-     * Get the probe mapping staging area
-     * @param request Request
-     * @return Probe mapping staging area
-     */
-    public static ReporterMappingStagingArea getProbeMappingStagingArea(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        return (ReporterMappingStagingArea)session.getAttribute(REPORTER_MAPPING_STAGING_AREA);
     }
     
     

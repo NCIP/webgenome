@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.5 $
+$Date: 2006-10-21 05:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,8 +54,8 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.rti.webcgh.graph.widget.EmptySpace;
-import org.rti.webcgh.graph.widget.ScalePlotElement;
+import org.rti.webcgh.deprecated.graph.EmptySpace;
+import org.rti.webcgh.deprecated.graph.ScalePlotElement;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;

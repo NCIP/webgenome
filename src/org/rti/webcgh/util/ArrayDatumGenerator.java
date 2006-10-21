@@ -56,9 +56,9 @@ package org.rti.webcgh.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.ArrayDatumFactory;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.ArrayDatumFactory;
 
 /**
  * This class should normally be used only for unit testing.

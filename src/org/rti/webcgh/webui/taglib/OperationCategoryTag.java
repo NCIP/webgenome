@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/OperationCategoryTag.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-10-21 05:34:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,10 +60,10 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.analytic.AnalyticOperation;
-import org.rti.webcgh.analytic.DataFilterOperation;
-import org.rti.webcgh.analytic.NormalizationOperation;
-import org.rti.webcgh.analytic.SummaryStatisticOperation;
+import org.rti.webcgh.deprecated.analytic.AnalyticOperation;
+import org.rti.webcgh.deprecated.analytic.DataFilterOperation;
+import org.rti.webcgh.deprecated.analytic.NormalizationOperation;
+import org.rti.webcgh.deprecated.analytic.SummaryStatisticOperation;
 
 /**
  * Custom tag for displaying category of an analytical operation.

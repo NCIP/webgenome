@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/ArrayDatumFileReader.java,v $
-$Revision: 1.1 $
-$Date: 2006-04-25 16:28:26 $
+$Revision: 1.2 $
+$Date: 2006-10-21 05:32:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,8 +57,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.GenomeAssembly;
 
 
 /**

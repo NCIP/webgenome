@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-19 04:30:58 $
+$Revision: 1.9 $
+$Date: 2006-10-21 05:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,12 +58,12 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 //import org.apache.log4j.Logger;
+import org.rti.webcgh.deprecated.graph.DataPoint;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Reporter;
-import org.rti.webcgh.graph.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;

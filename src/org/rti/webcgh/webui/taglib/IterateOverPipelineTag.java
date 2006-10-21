@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/IterateOverPipelineTag.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-10-21 05:34:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,8 +62,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.analytic.AnalyticOperation;
-import org.rti.webcgh.analytic.AnalyticPipeline;
+import org.rti.webcgh.deprecated.analytic.AnalyticOperation;
 
 /**
  * Iterates over operations in an <code>AnalyticPipeline</code>
@@ -143,23 +142,23 @@ public class IterateOverPipelineTag extends BodyTagSupport {
 		    LOGGER.error(msg);
 			throw new JspException(msg);
 		}
-		if (! (obj instanceof AnalyticPipeline)) {
-		    String msg = "Bean '" + name + "' not of type AnalyticPipeline";
-		    LOGGER.error(msg);
-			throw new JspException(msg);
-		}
-		AnalyticPipeline pipe = (AnalyticPipeline)obj;
+//		if (! (obj instanceof AnalyticPipeline)) {
+//		    String msg = "Bean '" + name + "' not of type AnalyticPipeline";
+//		    LOGGER.error(msg);
+//			throw new JspException(msg);
+//		}
+//		AnalyticPipeline pipe = (AnalyticPipeline)obj;
 
 		// Do not iterate if operation contains no operations
-		List ops = pipe.getOperations();
-		if (ops == null || ops.size() < 1)
-			return SKIP_BODY;
-			
-		// Set state
-		readOnly = pipe.isReadOnly();
-		iterator = ops.iterator();
-		currentOperation = (AnalyticOperation)iterator.next();
-		count++;
+//		List ops = pipe.getOperations();
+//		if (ops == null || ops.size() < 1)
+//			return SKIP_BODY;
+//			
+//		// Set state
+//		readOnly = pipe.isReadOnly();
+//		iterator = ops.iterator();
+//		currentOperation = (AnalyticOperation)iterator.next();
+//		count++;
 
 		return EVAL_BODY_AGAIN;
 	}

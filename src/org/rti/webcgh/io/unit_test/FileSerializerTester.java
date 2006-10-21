@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.io.unit_test;
 
 import org.rti.webcgh.io.FileSerializer;
-import org.rti.webcgh.unit_test.UnitTestUtils;
+import org.rti.webcgh.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/GenomeNavigationTag.java,v $
-$Revision: 1.3 $
-$Date: 2006-09-05 14:06:44 $
+$Revision: 1.4 $
+$Date: 2006-10-21 05:34:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,11 +64,10 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.array.GenomeIntervalDto;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.deprecated.array.GenomeIntervalDto;
 import org.rti.webcgh.units.BpUnits;
-import org.rti.webcgh.webui.plot.PlotParamsForm;
-import org.rti.webcgh.webui.util.WebUtils;
+import org.rti.webcgh.webui.struts.cart.PlotParametersForm;
 
 /**
  * Displays genome navigation buttons
@@ -123,7 +122,7 @@ public class GenomeNavigationTag extends TagSupport {
 	 */
 	public int doStartTag() throws JspException {
 		try {
-			PlotParamsForm form = (PlotParamsForm)
+			PlotParametersForm form = (PlotParametersForm)
 				pageContext.findAttribute(name);
 			if (form == null) {
 			    String msg = "Unable to find bean '" + name + "' in any scope";
@@ -153,7 +152,7 @@ public class GenomeNavigationTag extends TagSupport {
 			Collection exclusions = new ArrayList();
 			exclusions.add("startPoint");
 			exclusions.add("endPoint");
-			String params = WebUtils.paramListFromProps(form, exclusions);
+			String params = null; // WebUtils.paramListFromProps(form, exclusions);
 				
 			// Rightward navigation buttons
 			if (startPoint - bigStep > 0.0)

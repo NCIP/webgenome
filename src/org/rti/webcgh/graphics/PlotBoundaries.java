@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-09 03:06:23 $
+$Revision: 1.4 $
+$Date: 2006-10-21 05:35:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,7 @@ package org.rti.webcgh.graphics;
 
 import java.awt.geom.Rectangle2D;
 
-import org.rti.webcgh.graph.DataPoint;
+import org.rti.webcgh.deprecated.graph.DataPoint;
 
 /**
  * Defines region over x- and y-axes that contains plot.

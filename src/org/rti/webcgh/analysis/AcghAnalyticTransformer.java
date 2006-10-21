@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-20 03:01:24 $
+$Revision: 1.3 $
+$Date: 2006-10-21 05:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,7 @@ package org.rti.webcgh.analysis;
 
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.rti.webcgh.analytic.AcghData;
+import org.rti.webcgh.deprecated.analytic.AcghData;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.ArrayDatum;
 

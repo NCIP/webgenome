@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdFpDataStream.java,v $
-$Revision: 1.9 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.10 $
+$Date: 2006-10-21 05:32:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,10 +58,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import org.rti.webcgh.array.*;
 import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.deprecated.DomainObjectFactory;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.BioAssay;
+import org.rti.webcgh.deprecated.array.BioAssayData;
+import org.rti.webcgh.deprecated.array.Chromosome;
+import org.rti.webcgh.deprecated.array.Experiment;
+import org.rti.webcgh.deprecated.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.GenomeLocation;
+import org.rti.webcgh.deprecated.array.Quantitation;
+import org.rti.webcgh.deprecated.array.QuantitationType;
+import org.rti.webcgh.deprecated.array.Reporter;
+import org.rti.webcgh.deprecated.array.ReporterMapping;
 
 /**
  * <p>Convert a stream of floating point SMD (Stanford Microarray Database) data into data objects.</p>

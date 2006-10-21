@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/util/DownloadUtil.java,v $
-$Revision: 1.1 $
-$Date: 2005-12-14 19:43:02 $
+$Revision: 1.2 $
+$Date: 2006-10-21 05:34:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,10 +61,10 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.rti.webcgh.array.GenomeFeature;
-import org.rti.webcgh.array.GenomeFeatureIterator;
-import org.rti.webcgh.array.GenomeFeatureSearchResults;
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.deprecated.array.GenomeFeature;
+import org.rti.webcgh.deprecated.array.GenomeFeatureIterator;
+import org.rti.webcgh.deprecated.array.GenomeFeatureSearchResults;
 
 
 /**

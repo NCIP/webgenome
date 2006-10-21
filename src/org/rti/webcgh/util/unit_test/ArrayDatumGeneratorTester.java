@@ -55,7 +55,7 @@ package org.rti.webcgh.util.unit_test;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
 import org.rti.webcgh.util.ArrayDatumGenerator;
 
 /**

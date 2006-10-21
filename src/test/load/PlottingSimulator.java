@@ -58,7 +58,6 @@ import java.util.SortedSet;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.graph.unit_test.SvgTestPanel;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.ScatterPlot;
 import org.rti.webcgh.io.DataFileManager;
@@ -147,14 +146,14 @@ public final class PlottingSimulator {
         experiments.add(exp);
         for (Short chrom : chromosomes) {
             LOGGER.info("Creating plot of chromosome " + chrom);
-            SvgTestPanel canvas = SvgTestPanel.newSvgTestPanel();
-            canvas.setSvgDirectory(new File(outputDirPath));
-            ScatterPlot plot = new ScatterPlot(experiments, chrom, getter,
-                    PLOT_WIDTH, PLOT_HEIGHT, PLOT_BOUNDARIES);
-            canvas.add(plot, HorizontalAlignment.CENTERED,
-                    VerticalAlignment.CENTERED);
-            String fname = chrom + ".svg";
-            canvas.toSvgFile(fname);
+//            SvgTestPanel canvas = SvgTestPanel.newSvgTestPanel();
+//            canvas.setSvgDirectory(new File(outputDirPath));
+//            ScatterPlot plot = new ScatterPlot(experiments, chrom, getter,
+//                    PLOT_WIDTH, PLOT_HEIGHT, PLOT_BOUNDARIES);
+//            canvas.add(plot, HorizontalAlignment.CENTERED,
+//                    VerticalAlignment.CENTERED);
+//            String fname = chrom + ".svg";
+//            canvas.toSvgFile(fname);
             LOGGER.info("Finished creating plot of chromosome " + chrom);
         }
         LOGGER.info("Completed plotting");

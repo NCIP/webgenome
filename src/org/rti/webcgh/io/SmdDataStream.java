@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/SmdDataStream.java,v $
-$Revision: 1.5 $
-$Date: 2006-06-13 13:49:11 $
+$Revision: 1.6 $
+$Date: 2006-10-21 05:32:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,9 +56,9 @@ package org.rti.webcgh.io;
 
 import java.io.InputStream;
 
-import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.Experiment;
+import org.rti.webcgh.deprecated.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.QuantitationType;
 
 public interface SmdDataStream {
     

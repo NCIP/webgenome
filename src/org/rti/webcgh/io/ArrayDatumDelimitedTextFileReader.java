@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/ArrayDatumDelimitedTextFileReader.java,v $
-$Revision: 1.3 $
-$Date: 2006-09-05 14:06:45 $
+$Revision: 1.4 $
+$Date: 2006-10-21 05:32:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,15 +59,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.Chromosome;
-import org.rti.webcgh.array.GenomeAssembly;
-import org.rti.webcgh.array.GenomeLocation;
-import org.rti.webcgh.array.Quantitation;
-import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.array.Reporter;
-import org.rti.webcgh.array.ReporterMapping;
 import org.rti.webcgh.deprecated.DomainObjectFactory;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.Chromosome;
+import org.rti.webcgh.deprecated.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.GenomeLocation;
+import org.rti.webcgh.deprecated.array.Quantitation;
+import org.rti.webcgh.deprecated.array.QuantitationType;
+import org.rti.webcgh.deprecated.array.Reporter;
+import org.rti.webcgh.deprecated.array.ReporterMapping;
 
 /**
  * Reads array data from delimited text files files

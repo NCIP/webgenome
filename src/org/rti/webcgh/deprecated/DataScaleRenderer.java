@@ -57,7 +57,7 @@ import java.awt.Color;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
-import org.rti.webcgh.graph.util.HeatMapColorFactory;
+import org.rti.webcgh.deprecated.graph.HeatMapColorFactory;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.primitive.Text;

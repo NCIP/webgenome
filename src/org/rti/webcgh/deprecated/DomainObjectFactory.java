@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/DomainObjectFactory.java,v $
-$Revision: 1.1 $
-$Date: 2006-09-05 14:06:44 $
+$Revision: 1.2 $
+$Date: 2006-10-21 05:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,20 +53,20 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.deprecated;
 
-import org.rti.webcgh.array.Array;
-import org.rti.webcgh.array.ArrayDatum;
-import org.rti.webcgh.array.BioAssay;
-import org.rti.webcgh.array.BioAssayType;
-import org.rti.webcgh.array.Chromosome;
-import org.rti.webcgh.array.Experiment;
-import org.rti.webcgh.array.GenomeAssembly;
-import org.rti.webcgh.array.GenomeLocation;
-import org.rti.webcgh.array.Organism;
-import org.rti.webcgh.array.Quantitation;
-import org.rti.webcgh.array.QuantitationType;
-import org.rti.webcgh.array.Reporter;
-import org.rti.webcgh.array.ReporterMapping;
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.deprecated.array.Array;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.BioAssay;
+import org.rti.webcgh.deprecated.array.BioAssayType;
+import org.rti.webcgh.deprecated.array.Chromosome;
+import org.rti.webcgh.deprecated.array.Experiment;
+import org.rti.webcgh.deprecated.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.GenomeLocation;
+import org.rti.webcgh.deprecated.array.Organism;
+import org.rti.webcgh.deprecated.array.Quantitation;
+import org.rti.webcgh.deprecated.array.QuantitationType;
+import org.rti.webcgh.deprecated.array.Reporter;
+import org.rti.webcgh.deprecated.array.ReporterMapping;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDatumDTO;
 import org.rti.webgenome.client.ExperimentDTO;

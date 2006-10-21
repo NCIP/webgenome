@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/io/unit_test/SmdFpDataStreamTester.java,v $
-$Revision: 1.3 $
-$Date: 2006-06-14 18:58:26 $
+$Revision: 1.4 $
+$Date: 2006-10-21 05:34:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,16 @@ import java.io.*;
 import java.util.List;
 
 import org.rti.webcgh.io.SmdFpDataStream;
-import org.rti.webcgh.array.*;
+import org.rti.webcgh.deprecated.array.ArrayDatum;
+import org.rti.webcgh.deprecated.array.BioAssay;
+import org.rti.webcgh.deprecated.array.BioAssayData;
+import org.rti.webcgh.deprecated.array.Chromosome;
+import org.rti.webcgh.deprecated.array.Experiment;
+import org.rti.webcgh.deprecated.array.GenomeAssembly;
+import org.rti.webcgh.deprecated.array.GenomeLocation;
+import org.rti.webcgh.deprecated.array.QuantitationType;
+import org.rti.webcgh.deprecated.array.Reporter;
+import org.rti.webcgh.deprecated.array.ReporterMapping;
 
 public class SmdFpDataStreamTester extends TestCase {
 

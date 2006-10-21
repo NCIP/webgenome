@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/util/unit_test/ClientDataServiceTester.java,v $
-$Revision: 1.3 $
-$Date: 2006-10-05 03:59:45 $
+$Revision: 1.4 $
+$Date: 2006-10-21 05:35:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ package org.rti.webcgh.service.util.unit_test;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.rti.webcgh.array.Experiment;
+import org.rti.webcgh.deprecated.array.Experiment;
 import org.rti.webcgh.service.client.MultiThreadClientDataService;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.QuantitationTypes;
