@@ -95,7 +95,7 @@ public class Experiment implements Serializable {
     
     /** Organism. */
     private Organism organism = null;
-    
+        
     // ===============================
     //     Getters/setters
     // ===============================

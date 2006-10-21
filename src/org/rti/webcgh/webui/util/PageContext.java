@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.5 $
+$Date: 2006-10-21 04:45:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import javax.servlet.http.HttpSession;
 
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
 
@@ -95,6 +96,9 @@ public final class PageContext {
 	
 	/** Key for ID of client application. */
 	private static final String KEY_CLIENT_ID = "key.client.id";
+	
+	/** Key of color chooser. */
+	private static final String KEY_COLOR_CHOOSER = "key.color.chooser";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -247,6 +251,33 @@ public final class PageContext {
 			final HttpServletRequest request,
 			final SelectedExperimentsForm form) {
 		request.getSession().setAttribute(KEY_SELECTED_EXPERIMENTS_FORM, form);
+	}
+	
+	
+	/**
+	 * Get color chooser from session.
+	 * @param request Servlet request
+	 * @param createIfMissing Create if missing from session
+	 * @return Color chooser
+	 * @throws SessionTimeoutException if session has timed
+	 * out and cannot find color chooser.
+	 */
+	public static ColorChooser getColorChooser(
+			final HttpServletRequest request,
+			final boolean createIfMissing)
+	throws SessionTimeoutException {
+		HttpSession s = request.getSession();
+		ColorChooser cc = (ColorChooser)
+			s.getAttribute(KEY_COLOR_CHOOSER);
+		if (cc == null) {
+			if (createIfMissing) {
+				cc = new ColorChooser();
+				s.setAttribute(KEY_COLOR_CHOOSER, cc);
+			} else {
+				throw new SessionTimeoutException("Session timed out");
+			}
+		}
+		return cc;
 	}
 	
 	/**

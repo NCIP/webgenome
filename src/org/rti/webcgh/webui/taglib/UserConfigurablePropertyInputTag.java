@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-20 19:09:11 $
+$Revision: 1.2 $
+$Date: 2006-10-21 04:45:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -78,6 +78,13 @@ public final class UserConfigurablePropertyInputTag extends TagSupport {
 	/** Name of a bean of type <code>UserConfigurableProperty</code>. */
 	private String name = null;
 	
+	/**
+	 * Prefix prepended to input name so that downstream actions
+	 * can determine which query parameters denote user
+	 * configurable properties.
+	 */
+	private String prefix = "";
+	
 	
 	/**
 	 * Set name of a bean of type
@@ -86,6 +93,17 @@ public final class UserConfigurablePropertyInputTag extends TagSupport {
 	 */
 	public void setName(final String name) {
 		this.name = name;
+	}
+
+
+	/**
+	 * Set prefix prepended to input name so that downstream actions
+	 * can determine which query parameters denote user
+	 * configurable properties.
+	 * @param prefix Prefix
+	 */
+	public void setPrefix(final String prefix) {
+		this.prefix = prefix;
 	}
 
 
@@ -116,12 +134,13 @@ public final class UserConfigurablePropertyInputTag extends TagSupport {
 		// Create input
 		Writer out = pageContext.getOut();
 		try {
+			String propName = this.prefix + prop.getName();
 			if (prop instanceof SimpleUserConfigurableProperty) {
 				out.write("<input type=\"text\" name=\""
-						+ prop.getName() + "\" value=\""
+						+ propName + "\" value=\""
 						+ prop.getCurrentValue() + "\">");
 			} else if (prop instanceof UserConfigurablePropertyWithOptions) {
-				out.write("<select name=\"" + prop.getName() + "\">");
+				out.write("<select name=\"" + propName + "\">");
 				Map<String, String> opMap = (
 						(UserConfigurablePropertyWithOptions) prop)
 						.getOptions();

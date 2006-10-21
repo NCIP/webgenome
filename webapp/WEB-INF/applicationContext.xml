@@ -97,6 +97,11 @@
 	<bean id="bioAssayIdGenerator"
 		class="org.rti.webcgh.service.util.IdGenerator"/>
 		
+<!-- ID generator for experiments not persisted and, hence, not given
+	 IDs by the DAO tier. -->
+	<bean id="experimentIdGenerator"
+		class="org.rti.webcgh.service.util.IdGenerator"/>
+		
 <!-- Image file manager -->
 	<bean id="imageFileManager"
 		class="org.rti.webcgh.io.ImageFileManager">
@@ -160,6 +165,17 @@
 	<bean name="/cart/analysisParams"
 		class="org.rti.webcgh.webui.struts.cart.AnalysisParamsSetupAction"/>
 		
+<!-- Perform analytic operation -->
+	<bean name="/cart/analysis"
+		class="org.rti.webcgh.webui.struts.cart.AnalysisAction">
+		<property name="bioAssayIdGenerator">
+			<ref bean="bioAssayIdGenerator"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
+		</property>
+	</bean>
+		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"
 		class="org.rti.webcgh.webui.struts.cart.RemoveExperimentAction"/>
@@ -192,6 +208,12 @@
 		</property>
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>
+		</property>
+		<property name="bioAssayIdGenerator">
+			<ref bean="bioAssayIdGenerator"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
 		</property>
 	</bean>
 	

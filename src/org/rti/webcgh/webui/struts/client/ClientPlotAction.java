@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.10 $
+$Date: 2006-10-21 04:45:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -89,10 +89,10 @@ public final class ClientPlotAction extends BaseAction {
     private ClientDataService clientDataService = null;
     
     /** Experiment ID generator. */
-    private IdGenerator experimentIdGenerator = new IdGenerator();
+    private IdGenerator experimentIdGenerator = null;
     
     /** Bioassay ID generator. */
-    private IdGenerator bioAssayIdGenerator = new IdGenerator();
+    private IdGenerator bioAssayIdGenerator = null;
     
     /** Image file manager. */
     private ImageFileManager imageFileManager = null;
@@ -115,6 +115,26 @@ public final class ClientPlotAction extends BaseAction {
     public void setClientDataService(
     		final ClientDataService clientDataService) {
 		this.clientDataService = clientDataService;
+	}
+
+
+    /**
+     * Set bioassay ID generator.
+     * @param bioAssayIdGenerator ID generator
+     */
+	public void setBioAssayIdGenerator(
+			final IdGenerator bioAssayIdGenerator) {
+		this.bioAssayIdGenerator = bioAssayIdGenerator;
+	}
+
+
+	/**
+	 * Set experiment ID generator.
+	 * @param experimentIdGenerator ID generator
+	 */
+	public void setExperimentIdGenerator(
+			final IdGenerator experimentIdGenerator) {
+		this.experimentIdGenerator = experimentIdGenerator;
 	}
 
 
@@ -151,7 +171,8 @@ public final class ClientPlotAction extends BaseAction {
         			experimentIds, clientID);
         
         // Give each experiment a unique ID and each bioassay a color
-        ColorChooser colorChooser = new ColorChooser();
+        ColorChooser colorChooser = PageContext.getColorChooser(
+        		request, true);
         for (Experiment exp : experiments) {
         	exp.setId(this.experimentIdGenerator.nextId());
         	for (BioAssay ba : exp.getBioAssays()) {

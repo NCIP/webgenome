@@ -95,6 +95,14 @@ public abstract class BioAssay implements Serializable {
     /** Is bioassay selected? */
     private boolean selected = false;
     
+    /**
+     * If this bioassay is derived from
+     * another through an analytic operation,
+     * this property gives the ID of the parent
+     * bioassay.
+     */
+    private Long parentBioAssayId = null;
+    
     // ===============================
     //       Getters/setters
     // ===============================
@@ -114,6 +122,33 @@ public abstract class BioAssay implements Serializable {
      */
 	public final void setSelected(final boolean selected) {
 		this.selected = selected;
+	}
+
+
+	/**
+	 * Get ID of parent bioassay.
+	 * If this bioassay is derived from
+     * another through an analytic operation,
+     * this property gives the ID of the parent
+     * bioassay.
+	 * @return ID of parent bioassay.
+	 */
+	public final Long getParentBioAssayId() {
+		return parentBioAssayId;
+	}
+
+
+	/**
+	 * Set ID of parent bioassay.
+	 * If this bioassay is derived from
+     * another through an analytic operation,
+     * this property gives the ID of the parent
+     * bioassay.
+	 * @param parentBioAssayId ID of parent bioassay
+	 */
+	public final void setParentBioAssayId(
+			final Long parentBioAssayId) {
+		this.parentBioAssayId = parentBioAssayId;
 	}
 
 

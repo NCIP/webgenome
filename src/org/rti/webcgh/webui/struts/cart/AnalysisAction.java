@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-21 04:45:14 $
 
 The Web CGH Software License, Version 1.0
@@ -51,7 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.struts.cart;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,25 +63,60 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
-import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
-import org.rti.webcgh.analysis.UserConfigurableProperty;
+import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
+import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.graphics.util.ColorChooser;
+import org.rti.webcgh.service.analysis.InMemoryDataTransformer;
+import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
+import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Setup for JSP that enables user to set analytic operation.
- * parameters
+ * Performs analytic operation on selected experiments.
+ * If session is client-mode, this action drives the analytic
+ * operation.  If stand-alone mode, the analytic operation is
+ * driven by a batch process.
  * @author dhall
  *
  */
-public final class AnalysisParamsSetupAction extends BaseAction {
-	
+public final class AnalysisAction extends BaseAction {
+
 	/** Analytic operation factory. */
 	private final AnalyticOperationFactory analyticOperationFactory =
 		new AnalyticOperationFactory();
+	
+	/** Data transformer. */
+	private final InMemoryDataTransformer inMemoryDataTransformer =
+		new InMemoryDataTransformer();
+	
+    /** Experiment ID generator. */
+    private IdGenerator experimentIdGenerator = null;
+    
+    /** Bioassay ID generator. */
+    private IdGenerator bioAssayIdGenerator = null;
+    
+    /**
+     * Set bioassay ID generator.
+     * @param bioAssayIdGenerator ID generator
+     */
+	public void setBioAssayIdGenerator(
+			final IdGenerator bioAssayIdGenerator) {
+		this.bioAssayIdGenerator = bioAssayIdGenerator;
+	}
+
+
+	/**
+	 * Set experiment ID generator.
+	 * @param experimentIdGenerator ID generator
+	 */
+	public void setExperimentIdGenerator(
+			final IdGenerator experimentIdGenerator) {
+		this.experimentIdGenerator = experimentIdGenerator;
+	}
 	
 	/**
      * Execute action.
@@ -99,25 +135,49 @@ public final class AnalysisParamsSetupAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+    	
+    	// Get shopping cart
     	ShoppingCart cart = PageContext.getShoppingCart(request);
     	
-    	// Get key of analytic operation
+    	// Generate analytic operation
     	AnalyticOperationParametersForm aForm =
     		(AnalyticOperationParametersForm) form;
-    	String opKey = aForm.getOperationKey();
+    	AnalyticOperation op = this.analyticOperationFactory.
+    		newAnalyticOperation(aForm.getOperationKey());
     	
-    	// Get instance of analytic operation
-    	AnalyticOperation op =
-    		this.analyticOperationFactory.newAnalyticOperation(opKey);
+    	// Set user configurable analytic operation properties
+    	Map paramMap = request.getParameterMap();
+    	for (Object paramNameObj : paramMap.keySet()) {
+    		String paramName = (String) paramNameObj;
+    		if (paramName.indexOf("prop_") == 0) {
+    			String propName = paramName.substring("prop_".length());
+    			String propValue = request.getParameter(paramName);
+    			op.setProperty(propName, propValue);
+    		}
+    	}
     	
-    	// Get user configurable parameter characteristics and
-    	// attach to request
-    	List<UserConfigurableProperty> props =
-    		op.getUserConfigurableProperties();
-    	request.setAttribute("props", props);
+    	// Construct map of input bioassay and experiment
+    	// IDs to corresponding output bioassay and
+    	// experiment names
+    	Map<Long, String> outputBioAssayNames =
+    		new HashMap<Long, String>();
+    	Map<Long, String> outputExperimentNames =
+    		new HashMap<Long, String>();
+    	for (Object paramNameObj : paramMap.keySet()) {
+    		String paramName = (String) paramNameObj;
+    		String paramValue = request.getParameter(paramName);
+    		if (paramName.indexOf("eo_") == 0) {
+    			Long experimentId = Long.parseLong(
+    					paramName.substring("eo_".length()));
+    			outputExperimentNames.put(experimentId, paramValue);
+    		} else if (paramName.indexOf("bo_") == 0) {
+    			Long bioAssayId = Long.parseLong(
+    					paramName.substring("bo_".length()));
+    			outputBioAssayNames.put(bioAssayId, paramValue);
+    		}
+    	}
     	
-    	// Get selected experiments and attach to request.
-    	// First, retrieve selected experiments form bean.
+    	// Retrieve selected experiments form bean.
     	// Note, this is not the form bean configured
     	// for this action in struts-config.xml.
     	SelectedExperimentsForm seForm =
@@ -127,19 +187,47 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     				"Could not find selected experiments");
     	}
     	Collection<Long> ids = seForm.getSelectedExperimentIds();
-    	Collection<Experiment> experiments = cart.getExperiments(ids);
-    	request.setAttribute("experiments", experiments);
     	
-    	// Determine if there will be a single bioassay or multiple
-    	// produced per experiment and set an attribute
-    	if (op instanceof ListToScalarAnalyticOperation
-    			|| (op instanceof AnalyticPipeline
-    				&& ((AnalyticPipeline) op).
-    				producesSingleBioAssayPerExperiment())) {
-    		request.setAttribute("singleBioAssay", "true");
+    	// Perform operation if in client mode and put in cart
+    	SessionMode mode = PageContext.getSessionMode(request);
+    	ColorChooser colorChooser = PageContext.getColorChooser(
+    			request, true);
+    	if (mode == SessionMode.CLIENT) {
+    		Collection<Experiment> experiments = cart.getExperiments(ids);
+    		for (Experiment input : experiments) {
+    			Experiment output =
+    				this.inMemoryDataTransformer.perform(input, op);
+    			output.setId(this.experimentIdGenerator.nextId());
+    			for (BioAssay ba : output.getBioAssays()) {
+    				ba.setId(this.bioAssayIdGenerator.nextId());
+    				ba.setColor(colorChooser.nextColor());
+    			}
+    			cart.add(output);
+    			String expName = outputExperimentNames.get(input.getId());
+    			if (expName != null) {
+    				output.setName(expName);
+    			}
+    			if (op instanceof ScalarToScalarAnalyticOperation
+    					|| (op instanceof AnalyticPipeline
+    							&& ((AnalyticPipeline) op).
+    							producesSingleBioAssayPerExperiment())) {
+    				for (BioAssay ba : output.getBioAssays()) {
+    					String bioAssayName =
+    						outputBioAssayNames.get(
+    								ba.getParentBioAssayId());
+    					if (bioAssayName != null) {
+    						ba.setName(bioAssayName);
+    					}
+    				}
+    			} else {
+    				Collection<BioAssay> bioAssays = output.getBioAssays();
+    				if (bioAssays.size() > 0) {
+    					bioAssays.iterator().next().setName(expName);
+    				}
+    			}
+    		}
     	}
     	
     	return mapping.findForward("success");
     }
-
 }

@@ -179,6 +179,14 @@
 			validate="false">
 			<forward name="success" path="cart.analysis.params"/>
 		</action>
+		
+	<!-- Perform analytic operation -->
+		<action
+			path="/cart/analysis"
+			name="analytic.operation.params.form"
+			validate="false">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
 			
 	<!-- Show color chooser -->
 		<action

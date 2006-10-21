@@ -226,4 +226,20 @@ public class AnalyticPipeline implements AnalyticOperation {
     public final void removeAt(final int index) {
         this.operations.remove(index);
     }
+    
+    
+    /**
+     * Does pipeline produce a single bioassay per experiment?
+     * @return T/F
+     */
+    public final boolean producesSingleBioAssayPerExperiment() {
+    	boolean single = false;
+    	for (AnalyticOperation op : this.operations) {
+    		if (op instanceof ListToScalarAnalyticOperation) {
+    			single = true;
+    			break;
+    		}
+    	}
+    	return single;
+    }
 }

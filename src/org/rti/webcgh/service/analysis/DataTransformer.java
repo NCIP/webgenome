@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-16 04:29:21 $
+$Revision: 1.3 $
+$Date: 2006-10-21 04:45:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,7 +103,7 @@ public abstract class DataTransformer {
         Experiment output =
             new Experiment(experimentName, input.getOrganism(),
             		input.getQuantitationType());
-        this.perform(input, output, operation, true);
+        this.perform(input, output, operation);
         LOGGER.info("Completed operation");
         return output;
     }
@@ -115,18 +115,17 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output experiment
      * @param operation Opeation to perform
-     * @param renameBioAssays Rename bioassays?
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final AnalyticOperation operation, final boolean renameBioAssays)
+            final AnalyticOperation operation)
     throws AnalyticException {
         if (operation instanceof ScalarToScalarAnalyticOperation) {
             this.perform(input, output,
-                    (ScalarToScalarAnalyticOperation) operation, true);
+                    (ScalarToScalarAnalyticOperation) operation);
         } else if (operation instanceof ListToScalarAnalyticOperation) {
             this.perform(input, output,
-                    (ListToScalarAnalyticOperation) operation, true);
+                    (ListToScalarAnalyticOperation) operation);
         } else if (operation instanceof AnalyticPipeline) {
             this.perform(input, output, (AnalyticPipeline) operation);
         }
@@ -140,12 +139,10 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output data
      * @param operation Operation to perform
-     * @param renameBioAssays Rename bioassays?
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ScalarToScalarAnalyticOperation operation,
-            final boolean renameBioAssays)
+            final ScalarToScalarAnalyticOperation operation)
         throws AnalyticException {
         if (operation instanceof StatefulExperimentAnalyticOperation) {
             ((StatefulExperimentAnalyticOperation) operation).resetState();
@@ -155,11 +152,8 @@ public abstract class DataTransformer {
                 ((StatefulBioAssayAnalyticOperation) operation).resetState();
             }
             BioAssay newBa = this.clone(ba);
+            newBa.setParentBioAssayId(ba.getId());
             output.add(newBa);
-            if (renameBioAssays) {
-                String newName = ba.getName() + " " + operation.getName();
-                newBa.setName(newName);
-            }
             ChromosomeArrayDataIterator it =
             	this.getChromosomeArrayDataIterator(ba);
             while (it.hasNext()) {
@@ -179,22 +173,16 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output data
      * @param operation Operation to perform
-     * @param renameBioAssays Rename bioassays?
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ListToScalarAnalyticOperation operation,
-            final boolean renameBioAssays)
+            final ListToScalarAnalyticOperation operation)
         throws AnalyticException {
         if (input.getBioAssays().size() < 1) {
             throw new IllegalArgumentException(
                     "Cannot perform operation on empty data set");
         }
         BioAssay bioAssay = this.clone(input.getBioAssays().iterator().next());
-        if (renameBioAssays) {
-            String bioAssayName = input.getName() + " " + operation.getName();
-            bioAssay.setName(bioAssayName);
-        }
         output.add(bioAssay);
         for (Short chromosome : input.getChromosomes()) {
             List<ChromosomeArrayData> cad =
@@ -229,7 +217,7 @@ public abstract class DataTransformer {
         for (int i = 0; i < ops.size(); i++) {
             AnalyticOperation op = ops.get(i);
             if (i == ops.size() - 1) {
-                this.perform(intermediateIn, output, op, false);
+                this.perform(intermediateIn, output, op);
             } else {
                 intermediateOut = this.perform(intermediateIn, op);
             }
