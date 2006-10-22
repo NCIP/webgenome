@@ -5,8 +5,10 @@ CREATE TABLE principal (
     id NUMBER(38) NOT NULL,
 	name VARCHAR(48),
 	password VARCHAR(48),
+	admin CHAR(1),
 	PRIMARY KEY (id)
 );
+INSERT INTO principal (id, name, password, admin) values (1, 'admin', 'cureforcancer', 'T');
 
 --
 -- Reporter

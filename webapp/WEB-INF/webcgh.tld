@@ -57,6 +57,13 @@
       <bodycontent>JSP</bodycontent>
    </tag>
    
+<!-- Show body content only if user is logged in as admin -->
+   <tag>
+      <name>onlyIfAdmin</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfAdminTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
 <!-- Show body content only if user is logged out -->
    <tag>
       <name>onlyIfUserLoggedOut</name>

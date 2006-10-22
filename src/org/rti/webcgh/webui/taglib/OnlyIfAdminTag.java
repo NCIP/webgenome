@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-22 04:26:08 $
 
 The Web CGH Software License, Version 1.0
@@ -48,124 +48,48 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.domain;
+package org.rti.webcgh.webui.taglib;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.domain.Principal;
+import org.rti.webcgh.util.SystemUtils;
+import org.rti.webcgh.webui.SessionTimeoutException;
 
 /**
- * Represents a user of the system.
+ * Displays body of tag only if the user is logged
+ * in as an administrator.
  * @author dhall
  *
  */
-public class Principal {
-	
-	// ======================
-	//      Attributes
-	// ======================
-	
-	/** Identifier used as primary key for persistence. */
-	private Long id = null;
-
-	/** User name. */
-	private String name = null;
-	
-	/** Password. */
-	private String password = null;
-
-	/** Is user an administrator? */
-	private boolean admin = false;
-	
-	// ==========================
-	//     Getters/setters
-	// ==========================
-	
-	/**
-	 * Get ID used as primary key for persistence.
-	 * @return ID used as primary key for persistence.
-	 */
-	public final Long getId() {
-		return id;
-	}
-
-	
-	/**
-	 * Set ID used as primary key for persistence.
-	 * @param id ID used as primary key for persistence.
-	 */
-	public final void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
-	 * Is use an admin?
-	 * @return T/F
-	 */
-	public final boolean isAdmin() {
-		return admin;
-	}
-
-
-	/**
-	 * Sets whether a user is an admin.
-	 * @param admin Is user an admin?
-	 */
-	public final void setAdmin(final boolean admin) {
-		this.admin = admin;
-	}
-
-
-	/**
-	 * Get use name.
-	 * @return User name.
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	/**
-	 * Set user name.
-	 * @param name User name.
-	 */
-	public final void setName(final String name) {
-		this.name = name;
-	}
-
-	
-	/**
-	 * Get password.
-	 * @return Password.
-	 */
-	public final String getPassword() {
-		return password;
-	}
-
-	
-	/**
-	 * Set password.
-	 * @param password Password.
-	 */
-	public final void setPassword(final String password) {
-		this.password = password;
-	}
+public class OnlyIfAdminTag extends TagSupport {
 	
 	
-	// =========================
-	//     Constructors
-	// =========================
-	
-	/**
-	 * Constructor.
-	 */
-	public Principal() {
-		
-	}
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	
 	/**
-	 * Constructor.
-	 * @param name User name.
-	 * @param password Password.
+	 * Do after start tag parsed.
+	 * @throws JspException if anything goes wrong.
+	 * @return Return value
 	 */
-	public Principal(final String name, final String password) {
-		this.name = name;
-		this.password = password;
+	@Override
+	public final int doStartTag() throws JspException {
+		int rVal = TagSupport.SKIP_BODY;
+		try {
+			Principal principal =
+				org.rti.webcgh.webui.util.PageContext.getPrincipal(
+					(HttpServletRequest) pageContext.getRequest());
+			if (principal.isAdmin()) {
+				rVal = TagSupport.EVAL_BODY_INCLUDE;
+			}
+		} catch (SessionTimeoutException e) {
+			rVal = TagSupport.SKIP_BODY;
+		}
+		return rVal;
 	}
 }

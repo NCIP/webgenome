@@ -42,6 +42,14 @@
 				</html:link>
 			]&nbsp;&nbsp;
 			
+		<%-- Admin --%>
+			
+			<webcgh:onlyIfAdmin>
+				[
+					Admin
+				]
+			</webcgh:onlyIfAdmin>
+			
 		<%-- Shopping cart --%>
 			<webcgh:onlyIfShoppingCartExists>
 				[

@@ -104,7 +104,7 @@
 		
 <!-- Image file manager -->
 	<bean id="imageFileManager"
-		class="org.rti.webcgh.io.ImageFileManager">
+		class="org.rti.webcgh.service.io.ImageFileManager">
 		<constructor-arg type="java.lang.String">
 			<value>${image.dir.path}</value>
 		</constructor-arg>
