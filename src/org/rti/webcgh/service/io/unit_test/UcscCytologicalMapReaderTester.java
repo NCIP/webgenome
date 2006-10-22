@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-22 03:20:46 $
 
 The Web CGH Software License, Version 1.0
@@ -51,87 +51,52 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.io.unit_test;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Collection;
+import java.util.Iterator;
+
+import org.rti.webcgh.domain.CytologicalMap;
+import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.service.io.UcscCytologicalMapReader;
+import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
 
-import org.rti.webcgh.domain.ChromosomeArrayData;
-import org.rti.webcgh.domain.DataSerializedBioAssay;
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.service.io.DataFileManager;
-import org.rti.webcgh.service.io.SmdFormatException;
-import org.rti.webcgh.util.FileUtils;
-
 /**
- * Tester for <code>DataFileManager</code>.
+ * Tester for <code>UcscCytologicalMapReader</code>.
  * @author dhall
  *
  */
-public final class DataFileManagerTester extends TestCase {
-    
-    /** Name of temporary directory used for testing. */
-    private static final String TEMP_DIR_NAME = "data_file_manager_temp";
-    
-    /**
-     * Path (relative to classpath) to directory containing
-     * test files.
-     */
-    private static final String TEST_DIRECTORY =
-        "org/rti/webcgh/io/unit_test/data_file_manager_test_files";
-    
-    
-    /**
-     * Test all methods on small file.
-     * @throws Exception if there is any problem
-     */
-    public void testAllMethodsOnSmallFile() throws Exception {
-        this.runAllMethods("small-smd.csv");
-    }
-    
-    
-    /**
-     * Test all methods on medium large file.
-     * @throws Exception if there is any problem
-     */
-    public void testAllMethodsOnMediumLargeFile() throws Exception {
-        this.runAllMethods("medium-large-smd.csv");
-    }
-    
-    
-    /**
-     * Test all methods on large file.
-     * @throws Exception if there is any problem
-     */
-    public void testAllMethodsOnLargeFile() throws Exception {
-        this.runAllMethods("large-smd.csv");
-    }
-    
-    
-    
-    /**
-     * Run all methods on given file.
-     * @param fname Name of file
-     * @throws SmdFormatException If file is not in proper SMD
-     * (Standord Microarray Database) format
-     */
-    private void runAllMethods(final String fname)
-    throws SmdFormatException {
-        
-        // Save data
-        Organism org = new Organism();
-        File testFile = FileUtils.getFile(TEST_DIRECTORY, fname);
-        File tempDir = FileUtils.createUnitTestDirectory(TEMP_DIR_NAME);
-        DataFileManager mgr = new DataFileManager(tempDir.getAbsolutePath());
-        Experiment exp = mgr.convertSmdData(testFile, org);
-        
-        // Recover some data
-        DataSerializedBioAssay ba = (DataSerializedBioAssay)
-        	exp.getBioAssays().iterator().next();
-        short chromosome = (short) 1;
-        ChromosomeArrayData cad = mgr.loadChromosomeArrayData(ba, chromosome);
-        assertNotNull(cad);
-        
-        // Delete all data
-        mgr.deleteDataFiles(exp, true);
-    }
+public final class UcscCytologicalMapReaderTester extends TestCase {
+	
+	/**
+	 * Classpath-relative path to directory containing
+	 * test files.
+	 */
+	private static final String TEST_DIR_PATH =
+		"org/rti/webcgh/service/io/unit_test/"
+		+ "ucsc_cytological_map_reader_test_files";
+
+	/**
+	 * Test read() method.
+	 * @throws Exception if anything bad happens.
+	 */
+	public void testRead() throws Exception {
+		File file = FileUtils.getFile(TEST_DIR_PATH, "small.txt");
+		Reader in = new FileReader(file);
+		UcscCytologicalMapReader r = new UcscCytologicalMapReader(
+				Organism.UNKNOWN_ORGANISM);
+		Collection<CytologicalMap> maps = r.read(in);
+		assertNotNull(maps);
+		assertEquals(2, maps.size());
+		Iterator<CytologicalMap> it = maps.iterator();
+		CytologicalMap map = it.next();
+		assertEquals(23, map.getChromosome());
+		assertEquals(56600000, map.getCentromereStart());
+		assertEquals(65000000, map.getCentromereEnd());
+		assertEquals(19, map.getCytobands().size());
+		map = it.next();
+		assertEquals(10, map.getChromosome());
+	}
 }

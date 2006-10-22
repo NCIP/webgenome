@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-21 21:04:56 $
+$Revision: 1.2 $
+$Date: 2006-10-22 03:20:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,14 +51,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.io.unit_test;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssayData;
 import org.rti.webcgh.service.io.SmdFileReader;
+import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
 
@@ -82,7 +80,7 @@ public final class SmdFileReaderTester extends TestCase {
      * @throws Exception if something crashes.
      */
     public void testGetBioAssayNames() throws Exception {
-        File file = this.getFile("normal.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
         SmdFileReader reader = new SmdFileReader(file);
         List<String> bioAssayNames = reader.getBioAssayNames();
         assertEquals(2, bioAssayNames.size());
@@ -96,7 +94,7 @@ public final class SmdFileReaderTester extends TestCase {
      * @throws Exception if something bad happens
      */
     public void testGetBioAssayData() throws Exception {
-        File file = this.getFile("normal.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
         SmdFileReader reader = new SmdFileReader(file);
         
         // First bioassay
@@ -137,7 +135,7 @@ public final class SmdFileReaderTester extends TestCase {
      * @throws Exception if something bad happens
      */
     public void testGetBioAssayDataKb() throws Exception {
-        File file = this.getFile("normal-kb.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "normal-kb.csv");
         SmdFileReader reader = new SmdFileReader(file);
         
         // First bioassay
@@ -178,7 +176,8 @@ public final class SmdFileReaderTester extends TestCase {
      * @throws Exception if something bad happens
      */
     public void testGetBioAssayDataMissingReporterData() throws Exception {
-        File file = this.getFile("missing_reporter_data.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY,
+    			"missing_reporter_data.csv");
         SmdFileReader reader = new SmdFileReader(file);
         
         // First bioassay
@@ -218,7 +217,7 @@ public final class SmdFileReaderTester extends TestCase {
      * @throws Exception if something bad happens
      */
     public void testGetBioAssayDataMissingValues() throws Exception {
-        File file = this.getFile("missing_values.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "missing_values.csv");
         SmdFileReader reader = new SmdFileReader(file);
         
         // First bioassay
@@ -249,25 +248,5 @@ public final class SmdFileReaderTester extends TestCase {
         assertEquals(2, aData.size());
         assertEquals((float) -0.4, aData.get(0).getValue());
         assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
-    }
-    
-    /**
-     * Helper method to get file of given name from
-     * test directory.
-     * @param relativeName Relative name of file.  Does not
-     * include absoluate path.
-     * @return A file
-     */
-    private File getFile(final String relativeName) {
-        String absoluteName = TEST_DIRECTORY + "/" + relativeName;
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
-        URL url = loader.getResource(absoluteName);
-        File file = null;
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new WebcghSystemException("Error finding test file");
-        }
-        return file;
     }
 }

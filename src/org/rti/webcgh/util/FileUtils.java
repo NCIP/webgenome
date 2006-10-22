@@ -51,6 +51,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.util;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
  * Class containing utility methods for manipulating
@@ -113,5 +117,28 @@ public final class FileUtils {
     	String parentPath = SystemUtils.getUnitTestProperty("temp.dir");
     	String dirPath = parentPath + "/" + dirName;
     	return createDirectory(dirPath);
+    }
+    
+    
+    /**
+     * Get file with given name and given directory.
+     * @param directoryPath Classpath-relative path to
+     * directory.
+     * @param fileName File name.
+     * @return A file.
+     */
+    public static File getFile(final String directoryPath,
+    		final String fileName) {
+        String absoluteName = directoryPath + "/" + fileName;
+        ClassLoader loader = ClassLoader.getSystemClassLoader();
+        URL url = loader.getResource(absoluteName);
+        File file = null;
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            throw new WebcghSystemException("Error finding file '"
+            		+ absoluteName + "'");
+        }
+        return file;
     }
 }

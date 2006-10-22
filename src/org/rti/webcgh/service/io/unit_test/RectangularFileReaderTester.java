@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-21 21:04:56 $
+$Revision: 1.2 $
+$Date: 2006-10-22 03:20:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,12 +51,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.io.unit_test;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
-import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.service.io.RectangularFileReader;
+import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
 
@@ -83,7 +81,7 @@ public final class RectangularFileReaderTester extends TestCase {
      *
      */
     public void testGetHeadingsCsv() {
-        File file = this.getFile("normal.csv");
+        File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
         RectangularFileReader reader = new RectangularFileReader(file);
         List<String> headings = reader.getColumnHeadings();
         assertEquals(3, headings.size());
@@ -95,7 +93,7 @@ public final class RectangularFileReaderTester extends TestCase {
      *
      */
     public void testGetHeadingsTxt() {
-        File file = this.getFile("normal.txt");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.txt");
         RectangularFileReader reader = new RectangularFileReader(file);
         reader.setDelimiter('\t');
         List<String> headings = reader.getColumnHeadings();
@@ -110,7 +108,7 @@ public final class RectangularFileReaderTester extends TestCase {
      *
      */
     public void testGetColumnCsvEmptyFields() {
-        File file = this.getFile("empty_fields.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "empty_fields.csv");
         RectangularFileReader reader = new RectangularFileReader(file);
         
         // First column
@@ -145,7 +143,7 @@ public final class RectangularFileReaderTester extends TestCase {
      *
      */
     public void testGetColumnTxtEmptyFields() {
-        File file = this.getFile("empty_fields.txt");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "empty_fields.txt");
         RectangularFileReader reader = new RectangularFileReader(file);
         reader.setDelimiter('\t');
         
@@ -181,7 +179,7 @@ public final class RectangularFileReaderTester extends TestCase {
      *
      */
     public void testGetColumnCsvTruncated() {
-        File file = this.getFile("truncated.csv");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "truncated.csv");
         RectangularFileReader reader = new RectangularFileReader(file);
         
         // First column
@@ -216,7 +214,7 @@ public final class RectangularFileReaderTester extends TestCase {
      *
      */
     public void testGetColumnTxtTruncated() {
-        File file = this.getFile("truncated.txt");
+    	File file = FileUtils.getFile(TEST_DIRECTORY, "truncated.txt");
         RectangularFileReader reader = new RectangularFileReader(file);
         reader.setDelimiter('\t');
         
@@ -244,26 +242,4 @@ public final class RectangularFileReaderTester extends TestCase {
         assertEquals("", col.get(2));
         assertEquals("c4", col.get(3));
     }
-    
-    
-    /**
-     * Helper method to get file of given name from
-     * test directory.
-     * @param relativeName Relative name of file.  Does not
-     * include absoluate path.
-     * @return A file
-     */
-    private File getFile(final String relativeName) {
-        String absoluteName = TEST_DIRECTORY + "/" + relativeName;
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
-        URL url = loader.getResource(absoluteName);
-        File file = null;
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new WebcghSystemException("Error finding test file");
-        }
-        return file;
-    }
-
 }
