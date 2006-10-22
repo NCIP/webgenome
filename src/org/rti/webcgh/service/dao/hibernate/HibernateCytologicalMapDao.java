@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-22 02:06:09 $
 
 The Web CGH Software License, Version 1.0
@@ -48,42 +48,35 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.plot.unit_test;
+package org.rti.webcgh.service.dao.hibernate;
 
-import org.rti.webcgh.domain.Cytoband;
+import java.util.List;
+
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.service.dao.CytologicalMapDao;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Test implementation of <code>CytologicalMapDao</code>.
+ * Implementation of <code>CytologicalMapDao</code> using
+ * Hibernate.
  * @author dhall
+ *
  */
-public final class CytologicalMapDaoImpl implements CytologicalMapDao {
-	
-	/** Default chromosome. */
-	private static final short DEF_CHROMOSOME = (short) 1;
-	
-	/** Height of centromere in native units. */
-	private static final long CENTROMERE_HEIGHT = 10000000;
+public final class HibernateCytologicalMapDao
+extends HibernateDaoSupport implements CytologicalMapDao {
 
-	/** Cytological map that gets returned every time. */
-	private CytologicalMap map = null;
-	
-	// ===================================
-	//     CytologicalMapDao interface
-	// ===================================
 	
 	/**
-	 * Does nothing in this implementation.
+	 * Save given map to persistent storage.
 	 * @param cytologicalMap Cytological map.
 	 */
 	public void save(final CytologicalMap cytologicalMap) {
-		
+		this.getHibernateTemplate().save(cytologicalMap);
 	}
 	
 	/**
-	 * Returns a dummy cytological map.
+	 * Load cytological map from persistent storage.
 	 * @param id Primary key identifier of
 	 * cytological map.
 	 * @return Cytological map corresponding to
@@ -91,11 +84,12 @@ public final class CytologicalMapDaoImpl implements CytologicalMapDao {
 	 * map is not available with given ID.
 	 */
 	public CytologicalMap load(final Long id) {
-		return this.map;
+		return (CytologicalMap)
+			this.getHibernateTemplate().load(CytologicalMap.class, id);
 	}
 	
 	/**
-	 * Returns a dummy cytological map.
+	 * Load cytological map from persistent storage.
 	 * @param organism An organism
 	 * @param chromosome Chromosome number
 	 * @return A cytological map or null if there
@@ -103,41 +97,22 @@ public final class CytologicalMapDaoImpl implements CytologicalMapDao {
 	 */
 	public CytologicalMap load(final Organism organism,
 			final short chromosome) {
-		this.map.setChromosome(chromosome);
-		return this.map;
+		String query = "from CytologicalMap m "
+			+ "where m.organism = ? and m.chromosome = ?";
+		Object[] args = new Object[] {organism, chromosome};
+		List maps = this.getHibernateTemplate().find(query, args);
+		CytologicalMap map = null;
+		if (maps.size() > 0) {
+			map = (CytologicalMap) maps.get(0);
+		}
+		return map;
 	}
 
 	/**
-	 * Does nothing in this implementation.
+	 * Delete given cytological map from persistent storage.
 	 * @param cytologicalMap Cytological map to delete.
 	 */
 	public void delete(final CytologicalMap cytologicalMap) {
-		
-	}
-	
-	
-	// ==============================
-	//     Constructor
-	// ==============================
-	
-	/**
-	 * Constructor.
-	 * @param size Size of chromosome
-	 * @param numCytobands Number of cytobands
-	 */
-	public CytologicalMapDaoImpl(final long size, final int numCytobands) {
-        long centMid = size / 2;
-        long centStart = centMid - CENTROMERE_HEIGHT / 2;
-        long centEnd = centMid + CENTROMERE_HEIGHT / 2;
-        this.map =
-        	new CytologicalMap(DEF_CHROMOSOME, centStart, centEnd, null);
-        String[] stains = {"gpos33", "gpos66", "gpos50", "gpos100"};
-        long cytobandSize = size / numCytobands;
-        for (int i = 0; i < numCytobands; i++) {
-        	Cytoband c = new Cytoband("c",
-        			i * cytobandSize, (i + 1) * cytobandSize,
-        			stains[i % stains.length]);
-        	map.addCytoband(c);
-        }
+		this.getHibernateTemplate().delete(cytologicalMap);
 	}
 }

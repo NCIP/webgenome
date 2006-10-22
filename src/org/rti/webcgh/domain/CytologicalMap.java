@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-07 15:15:31 $
+$Revision: 1.3 $
+$Date: 2006-10-22 02:06:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -222,12 +222,15 @@ public class CytologicalMap {
      * @param chromosome Chromosome number
      * @param centromereStart Centromere start point
      * @param centromereEnd Centromere end point
+     * @param organism Organism
      */
     public CytologicalMap(final short chromosome,
-    		final long centromereStart, final long centromereEnd) {
+    		final long centromereStart, final long centromereEnd,
+    		final Organism organism) {
         this(chromosome);
         this.centromereStart = centromereStart;
         this.centromereEnd = centromereEnd;
+        this.organism = organism;
     }
     
     

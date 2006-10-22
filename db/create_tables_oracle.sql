@@ -108,6 +108,19 @@ CREATE TABLE bio_assay_2 (
 );
 
 --
+-- CytologicalMap
+--
+CREATE TABLE cytological_map_2 (
+	id NUMBER(38) NOT NULL,
+	chromosome INT,
+	centromere_start NUMBER(38),
+	centromere_end NUMBER(38),
+	organism_id number(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (organism_id) REFERENCES organism_2(id)
+);
+
+--
 -- Cytoband
 --
 CREATE TABLE cytoband_2 (
@@ -116,7 +129,9 @@ CREATE TABLE cytoband_2 (
 	start_loc NUMBER(38),
 	end_loc NUMBER(38),
 	stain VARCHAR(16),
-	PRIMARY KEY (id)
+	cytological_map_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (cytological_map_id) REFERENCES cytological_map_2(id)
 );
 
 --

@@ -3,6 +3,7 @@
 --
 DROP TABLE principal;
 DROP TABLE cytoband_2;
+DROP TABLE cytological_map_2;
 DROP TABLE array_datum_2;
 DROP TABLE reporter_2;
 DROP TABLE chromosome_array_data_2;

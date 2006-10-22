@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-22 02:06:09 $
 
 The Web CGH Software License, Version 1.0
@@ -48,96 +48,57 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.plot.unit_test;
+package org.rti.webcgh.service.dao.hibernate.unit_test;
+import junit.framework.TestCase;
 
 import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.service.dao.CytologicalMapDao;
+import org.rti.webcgh.service.dao.hibernate.HibernateCytologicalMapDao;
+import org.rti.webcgh.service.dao.hibernate.HibernateOrganismDao;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Test implementation of <code>CytologicalMapDao</code>.
+ * Tester for <code>HibernateCytologicalMapDao</code>.
  * @author dhall
+ *
  */
-public final class CytologicalMapDaoImpl implements CytologicalMapDao {
-	
-	/** Default chromosome. */
-	private static final short DEF_CHROMOSOME = (short) 1;
-	
-	/** Height of centromere in native units. */
-	private static final long CENTROMERE_HEIGHT = 10000000;
+public final class HibernateCytologicalMapDaoTester extends TestCase {
 
-	/** Cytological map that gets returned every time. */
-	private CytologicalMap map = null;
-	
-	// ===================================
-	//     CytologicalMapDao interface
-	// ===================================
 	
 	/**
-	 * Does nothing in this implementation.
-	 * @param cytologicalMap Cytological map.
+	 * Test all methods.
 	 */
-	public void save(final CytologicalMap cytologicalMap) {
+	public void testAll() {
 		
-	}
-	
-	/**
-	 * Returns a dummy cytological map.
-	 * @param id Primary key identifier of
-	 * cytological map.
-	 * @return Cytological map corresponding to
-	 * given id.  Throws an exception if a cytological
-	 * map is not available with given ID.
-	 */
-	public CytologicalMap load(final Long id) {
-		return this.map;
-	}
-	
-	/**
-	 * Returns a dummy cytological map.
-	 * @param organism An organism
-	 * @param chromosome Chromosome number
-	 * @return A cytological map or null if there
-	 * is no map from given organism and chromosome.
-	 */
-	public CytologicalMap load(final Organism organism,
-			final short chromosome) {
-		this.map.setChromosome(chromosome);
-		return this.map;
-	}
-
-	/**
-	 * Does nothing in this implementation.
-	 * @param cytologicalMap Cytological map to delete.
-	 */
-	public void delete(final CytologicalMap cytologicalMap) {
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
+		HibernateCytologicalMapDao dao = (HibernateCytologicalMapDao)
+			ctx.getBean("cytologicalMapDao");
+		HibernateOrganismDao oDao = (HibernateOrganismDao)
+			ctx.getBean("organismDao");
 		
-	}
-	
-	
-	// ==============================
-	//     Constructor
-	// ==============================
-	
-	/**
-	 * Constructor.
-	 * @param size Size of chromosome
-	 * @param numCytobands Number of cytobands
-	 */
-	public CytologicalMapDaoImpl(final long size, final int numCytobands) {
-        long centMid = size / 2;
-        long centStart = centMid - CENTROMERE_HEIGHT / 2;
-        long centEnd = centMid + CENTROMERE_HEIGHT / 2;
-        this.map =
-        	new CytologicalMap(DEF_CHROMOSOME, centStart, centEnd, null);
-        String[] stains = {"gpos33", "gpos66", "gpos50", "gpos100"};
-        long cytobandSize = size / numCytobands;
-        for (int i = 0; i < numCytobands; i++) {
-        	Cytoband c = new Cytoband("c",
-        			i * cytobandSize, (i + 1) * cytobandSize,
-        			stains[i % stains.length]);
-        	map.addCytoband(c);
-        }
+		// Instantiate test object
+		Organism org = oDao.loadDefault();
+		short chromosome = (short) 1;
+		CytologicalMap map = new CytologicalMap(chromosome,
+				100, 200, org);
+		map.addCytoband(new Cytoband("1", 1, 10, "stain1"));
+		map.addCytoband(new Cytoband("2", 300, 400, "stain2"));
+		
+		// Save
+		dao.save(map);
+		
+		// Retrieve
+		CytologicalMap map2 = dao.load(org, chromosome);
+		assertNotNull(map2);
+		assertEquals(2, map2.getCytobands().size());
+		
+		// Delete
+		dao.delete(map);
+		map2 = dao.load(org, chromosome);
+		assertNull(map2);
 	}
 }

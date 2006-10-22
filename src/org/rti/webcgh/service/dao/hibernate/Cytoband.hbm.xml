@@ -13,8 +13,8 @@
 		</id>
 		
 		<property name="name"/>
-		<property name="start"/>
-		<property name="end"/>
+		<property name="start" column="start_loc"/>
+		<property name="end" column="end_loc"/>
 		<property name="stain"/>
 		
 	</class>
