@@ -46,7 +46,9 @@
 			
 			<webcgh:onlyIfAdmin>
 				[
+					<html:link action="/admin/home">
 					Admin
+					</html:link>
 				]
 			</webcgh:onlyIfAdmin>
 			

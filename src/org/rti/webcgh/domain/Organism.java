@@ -158,4 +158,17 @@ public class Organism implements Serializable {
         this.genus = genus;
         this.species = species;
     }
+    
+    
+    // ===============================
+    //     Other business methods
+    // ===============================
+    
+    /**
+     * Get display name.
+     * @return Display name
+     */
+    public final String getDisplayName() {
+    	return this.genus + " " + this.species;
+    }
 }

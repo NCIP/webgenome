@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-22 02:06:09 $
+$Revision: 1.3 $
+$Date: 2006-10-23 02:20:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,6 +49,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 package org.rti.webcgh.service.plot.unit_test;
+
+import java.util.List;
 
 import org.rti.webcgh.domain.Cytoband;
 import org.rti.webcgh.domain.CytologicalMap;
@@ -112,6 +114,25 @@ public final class CytologicalMapDaoImpl implements CytologicalMapDao {
 	 * @param cytologicalMap Cytological map to delete.
 	 */
 	public void delete(final CytologicalMap cytologicalMap) {
+		
+	}
+	
+	
+	/**
+	 * Load all.  Does nothing in this implementations.
+	 * @return Always returns null.
+	 */
+	public List<CytologicalMap> loadAll() {
+		return null;
+	}
+	
+	
+	/**
+	 * Delete all cytological maps from given organism.
+	 * Does nothhing in this implementation.
+	 * @param organism Organism.
+	 */
+	public void deleteAll(final Organism organism) {
 		
 	}
 	

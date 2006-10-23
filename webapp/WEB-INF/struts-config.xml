@@ -36,9 +36,14 @@
 			name="name.change.form"
 			type="org.rti.webcgh.webui.struts.cart.NameChangeForm"/>
 			
+	<!-- Analytic operation parameters form -->
 		<form-bean
 			name="analytic.operation.params.form"
 			type="org.rti.webcgh.webui.struts.cart.AnalyticOperationParametersForm"/>
+			
+		<form-bean
+			name="cytobands.form"
+			type="org.rti.webcgh.webui.struts.admin.CytobandsForm"/>
 	</form-beans>
 
 	
@@ -289,6 +294,35 @@
 			name="plot.parameters.form"
 			validate="false">
 			<forward name="success" path="/cart/newPlot.do"/>
+		</action>
+		
+		<!-- ============ Administration actions ======== -->
+		
+	<!-- Admin home -->
+		<action
+			path="/admin/home"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="admin.home"/>
+		
+	<!-- Load cytobands form -->
+		<action
+			path="/admin/loadCytobandsForm">
+			<forward name="success" path="admin.load.cytobands"/>
+		</action>
+			
+	<!-- Load cytobands -->
+		<action
+			path="/admin/loadCytobands"
+			name="cytobands.form"
+			scope="request"
+			validate="true"
+			input="/admin/loadCytobandsForm.do">
+			<forward name="success" path="/admin/loadCytobandsForm.do"/>
+		</action>
+		
+		<action
+			path="/admin/deleteCytobands">
+			<forward name="success" path="/admin/loadCytobandsForm.do"/>
 		</action>
 	</action-mappings>
 	

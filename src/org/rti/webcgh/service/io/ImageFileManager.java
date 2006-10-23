@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-21 21:04:56 $
+$Revision: 1.2 $
+$Date: 2006-10-23 02:20:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -112,7 +112,8 @@ public class ImageFileManager implements Serializable {
 		// Make sure args okay
 		if (directory == null || !directory.exists()
 				|| !directory.isDirectory()) {
-			throw new IllegalArgumentException("Invalid directory");
+			throw new IllegalArgumentException("Invalid directory '"
+					+ directory.getAbsolutePath() + "'");
 		}
 		
 		// Initialize properties
@@ -132,14 +133,15 @@ public class ImageFileManager implements Serializable {
 		
 		// Make sure args okay
 		if (directoryPath == null) {
-			throw new IllegalArgumentException("Invalid directory");
+			throw new IllegalArgumentException("Invalid directory 'null'");
 		}
 		File directory = new File(directoryPath);
 		if (!directory.exists() || !directory.isDirectory()) {
             LOGGER.error("Directory Path specified doesnt' exist "
             		+ "or isn't a directory. "
             		+ "Directory Path: [" + directoryPath + "]");
-			throw new IllegalArgumentException("Invalid directory");
+			throw new IllegalArgumentException("Invalid directory '"
+					+ directoryPath + "'");
 		}
 		
 		// Purge directory of unused image files

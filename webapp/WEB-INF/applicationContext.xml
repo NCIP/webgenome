@@ -68,7 +68,18 @@
         class="org.rti.webcgh.standalone.dao.hibernate.ProcessingJobDaoImpl">
         <property name="sessionFactory"><ref bean="sessionFactory"/></property>
     </bean>
+    
+<!-- Organism DAO -->
+    <bean id="organismDao"
+    	class="org.rti.webcgh.service.dao.hibernate.HibernateOrganismDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
 
+<!-- Cytological map DAO -->
+	<bean id="cytologicalMapDao"
+		class="org.rti.webcgh.service.dao.hibernate.HibernateCytologicalMapDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
   	
   	<!-- =================================== -->
   	<!--      Service beans                  -->
@@ -241,4 +252,37 @@
 <!-- View/change plot parameters -->
 	<bean name="/cart/changeParameters"
 		class="org.rti.webcgh.webui.struts.cart.SetPlotParametersAction"/>
+		
+<!-- Load cytobands form -->
+	<bean name="/admin/loadCytobandsForm"
+		class="org.rti.webcgh.webui.struts.admin.LoadCytobandsFormSetupAction">
+		<property name="organismDao">
+			<ref bean="organismDao"/>
+		</property>
+		<property name="cytologicalMapDao">
+			<ref bean="cytologicalMapDao"/>
+		</property>
+	</bean>
+		
+<!-- Load cytobands -->
+	<bean name="/admin/loadCytobands"
+		class="org.rti.webcgh.webui.struts.admin.LoadCytobandsAction">
+		<property name="organismDao">
+			<ref bean="organismDao"/>
+		</property>
+		<property name="cytologicalMapDao">
+			<ref bean="cytologicalMapDao"/>
+		</property>
+	</bean>
+	
+<!-- Delete cytobands -->
+	<bean name="/admin/deleteCytobands"
+		class="org.rti.webcgh.webui.struts.admin.DeleteCytobandsAction">
+		<property name="organismDao">
+			<ref bean="organismDao"/>
+		</property>
+		<property name="cytologicalMapDao">
+			<ref bean="cytologicalMapDao"/>
+		</property>
+	</bean>
 </beans>

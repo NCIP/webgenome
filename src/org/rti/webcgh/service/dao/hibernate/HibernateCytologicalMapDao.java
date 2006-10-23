@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-22 02:06:09 $
+$Revision: 1.2 $
+$Date: 2006-10-23 02:20:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.domain.CytologicalMap;
@@ -114,5 +116,31 @@ extends HibernateDaoSupport implements CytologicalMapDao {
 	 */
 	public void delete(final CytologicalMap cytologicalMap) {
 		this.getHibernateTemplate().delete(cytologicalMap);
+	}
+	
+	
+	/**
+	 * Load all cytological maps.
+	 * @return All cytological maps.
+	 */
+	public List<CytologicalMap> loadAll() {
+		List all = this.getHibernateTemplate().loadAll(CytologicalMap.class);
+		List<CytologicalMap> checked = new ArrayList<CytologicalMap>();
+		for (Iterator it = all.iterator(); it.hasNext();) {
+			checked.add((CytologicalMap) it.next());
+		}
+		return checked;
+	}
+	
+	
+	/**
+	 * Delete all cytological maps from given organism.
+	 * @param organism Organism.
+	 */
+	public void deleteAll(final Organism organism) {
+		String query = "from CytologicalMap m where m.organism = ?";
+		Object[] args = new Object[] {organism};
+		List maps = this.getHibernateTemplate().find(query, args);
+		this.getHibernateTemplate().deleteAll(maps);
 	}
 }

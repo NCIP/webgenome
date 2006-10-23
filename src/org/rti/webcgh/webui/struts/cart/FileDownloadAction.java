@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-23 02:20:38 $
+$Revision: 1.1 $
+$Date: 2006-10-23 02:20:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,79 +48,79 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts.admin;
 
+package org.rti.webcgh.webui.struts.cart;
+
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.service.dao.CytologicalMapDao;
-import org.rti.webcgh.service.dao.OrganismDao;
-import org.rti.webcgh.webui.struts.BaseAction;
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionForm;
+
+import org.rti.webcgh.deprecated.array.GenomeFeatureSearchResults;
+import org.rti.webcgh.util.DownloadUtil;
+import org.rti.webcgh.webui.util.Attribute;
+
 
 /**
- * Delete cytobands.
- * @author dhall
- *
+ * Action for downloading files.
  */
-public final class DeleteCytobandsAction extends BaseAction {
-	
-	/** Organism data access object. */
-	private OrganismDao organismDao = null;
-	
-	/** Cytological map data access object. */
-	private CytologicalMapDao cytologicalMapDao = null;
-	
+public final class FileDownloadAction extends Action {
 	
 	/**
-	 * Set cytological map data access object.
-	 * @param cytologicalMapDao Cytological map data access object.
+	 * Performs action of retrieving group properties.  These are then
+	 * associated with the servlet request object.
+	 *
+	 * @param mapping Routing information for downstream actions
+	 * @param form Data from calling form
+	 * @param request Servlet request object
+	 * @param response Servlet response object
+	 * @return Identification of downstream action as configured in the
+	 * struts-config.xml file
+	 * @throws Exception if something crashes.
 	 */
-	public void setCytologicalMapDao(
-			final CytologicalMapDao cytologicalMapDao) {
-		this.cytologicalMapDao = cytologicalMapDao;
-	}
-
-
-	/**
-	 * Set organism data access object.
-	 * @param organismDao Organims data access object.
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
+	public ActionForward execute(
+		final ActionMapping mapping, final ActionForm form,
+		final HttpServletRequest request,
+		final HttpServletResponse response
+	) throws Exception {
+		HttpSession session = request.getSession();
+		String dtype = request.getParameter(Attribute.DOWNLOAD_TYPE);
+		String atype = request.getParameter(Attribute.ANNOTATION_TYPE);
+		if ("annotation".equals(dtype)) {
+			doAnnotation(session, response, atype);
+		}
+		return mapping.findForward("success");	
 	}
 	
 	/**
-     * Execute action.
-     * @param mapping Routing information for downstream actions
-     * @param form Form data
-     * @param request Servlet request object
-     * @param response Servlet response object
-     * @return Identification of downstream action as configured in the
-     * struts-config.xml file
-     * @throws Exception All exceptions thrown by classes in
-     * the method are passed up to a registered exception
-     * handler configured in the struts-config.xml file
-     */
-    public ActionForward execute(
-        final ActionMapping mapping, final ActionForm form,
-        final HttpServletRequest request,
-        final HttpServletResponse response
-    ) throws Exception {
-    	
-    	// Get organism ID
-    	Long orgId = Long.parseLong(request.getParameter("organismId"));
-    	
-    	// Get organism
-    	Organism org = this.organismDao.load(orgId);
-    	
-    	// Remove maps
-    	this.cytologicalMapDao.deleteAll(org);
-    	
-    	return mapping.findForward("success");
-    }
-
+	 * Create Excel file from a collection of features.
+	 * @param session HttpSession
+	 * @param response HttpServletResponse
+	 * @param type Annotation type
+	 * @throws Exception if something crashes.
+	 */
+	private void doAnnotation(final HttpSession session,
+			final HttpServletResponse response, final String type) 
+		throws Exception {
+		  ServletOutputStream sos = response.getOutputStream();
+		  GenomeFeatureSearchResults[] maps = 
+		      (GenomeFeatureSearchResults[]) session.getAttribute(
+		    		  Attribute.ANNOTATION_REPORT);
+    
+		  response.setHeader("Content-Disposition", "attachment; filename="
+				  + "annotation.xls");
+		  response.setHeader("Pragma", "Public");        
+		  response.setContentType("appilication/vnd.ms-excel");        
+     
+		  int bytes = DownloadUtil.annotation2Excel(maps, type, sos);   
+		  response.setContentLength(bytes);
+    
+		  sos.flush(); 
+		  sos.close();  
+	}	
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-07 15:15:30 $
+$Revision: 1.2 $
+$Date: 2006-10-23 02:20:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao;
 
+import java.util.List;
+
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Organism;
 
@@ -90,4 +92,16 @@ public interface CytologicalMapDao {
 	 * @param cytologicalMap Cytological map to delete.
 	 */
 	void delete(CytologicalMap cytologicalMap);
+	
+	/**
+	 * Load all cytological maps.
+	 * @return All cytological maps.
+	 */
+	List<CytologicalMap> loadAll();
+	
+	/**
+	 * Delete all cytological maps from given organism.
+	 * @param organism Organism.
+	 */
+	void deleteAll(Organism organism);
 }

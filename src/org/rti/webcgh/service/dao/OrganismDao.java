@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao;
 
+import java.util.List;
+
 import org.rti.webcgh.domain.Organism;
 
 /**
@@ -99,4 +101,10 @@ public interface OrganismDao {
      */
     void delete(Organism organism);
 
+    
+    /**
+     * Load all organisms.
+     * @return All organisms.
+     */
+    List<Organism> loadAll();
 }

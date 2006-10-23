@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-23 02:20:38 $
 
 The Web CGH Software License, Version 1.0
@@ -50,23 +50,29 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.admin;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.service.dao.CytologicalMapDao;
 import org.rti.webcgh.service.dao.OrganismDao;
 import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Delete cytobands.
+ * Setup action for JSP that shows currently uploaded cytological maps
+ * and enables the user to upload files containing cytobands.
  * @author dhall
  *
  */
-public final class DeleteCytobandsAction extends BaseAction {
+public final class LoadCytobandsFormSetupAction extends BaseAction {
 	
 	/** Organism data access object. */
 	private OrganismDao organismDao = null;
@@ -92,7 +98,8 @@ public final class DeleteCytobandsAction extends BaseAction {
 	public void setOrganismDao(final OrganismDao organismDao) {
 		this.organismDao = organismDao;
 	}
-	
+
+
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -111,16 +118,18 @@ public final class DeleteCytobandsAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Get organism ID
-    	Long orgId = Long.parseLong(request.getParameter("organismId"));
+    	// Get all organisms and attach to request
+    	List<Organism> organisms = this.organismDao.loadAll();
+    	request.setAttribute("organisms",  organisms);
     	
-    	// Get organism
-    	Organism org = this.organismDao.load(orgId);
-    	
-    	// Remove maps
-    	this.cytologicalMapDao.deleteAll(org);
+    	// Get all organisms containing cytological maps and attach to request
+    	List<CytologicalMap> cytologicalMaps = this.cytologicalMapDao.loadAll();
+    	Set<Organism> organismsWithMap = new HashSet<Organism>();
+    	for (CytologicalMap map : cytologicalMaps) {
+    		organismsWithMap.add(map.getOrganism());
+    	}
+    	request.setAttribute("organismsWithMap", organismsWithMap);
     	
     	return mapping.findForward("success");
     }
-
 }

@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.core.WebcghSystemException;
@@ -135,4 +137,17 @@ public final class HibernateOrganismDao extends HibernateDaoSupport
         this.getHibernateTemplate().delete(organism);
     }
 
+    
+    /**
+     * Load all organisms.
+     * @return All organisms.
+     */
+    public List<Organism> loadAll() {
+    	List allOrgs = this.getHibernateTemplate().loadAll(Organism.class);
+    	List<Organism> checkedAllOrgs = new ArrayList<Organism>();
+    	for (Iterator it = allOrgs.iterator(); it.hasNext();) {
+    		checkedAllOrgs.add((Organism) it.next());
+    	}
+    	return checkedAllOrgs;
+    }
 }

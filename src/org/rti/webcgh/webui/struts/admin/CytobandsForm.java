@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-23 02:20:39 $
+$Revision: 1.1 $
+$Date: 2006-10-23 02:20:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,51 +48,101 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui;
+package org.rti.webcgh.webui.struts.admin;
 
-import org.rti.webcgh.core.WebcghApplicationException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
 import org.rti.webcgh.util.SystemUtils;
+import org.rti.webcgh.webui.struts.BaseForm;
 
 /**
- * Exceptions thrown when an business rule has been violated.
+ * For for uploading cytoband data.
+ * @author dhall
+ *
  */
-public class SessionTimeoutException extends WebcghApplicationException {
+public class CytobandsForm extends BaseForm {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	// ============================
+	//     Attributes
+	// ============================
 
-	/**
-	 * Constructor.
-	 */
-	public SessionTimeoutException() {
-		super();
-	}
+	/** Form file for uploading cytobands. */
+	private FormFile cytobandFormFile = null;
+	
+	/** Organism ID. */
+	private String organismId = null;
+	
+	// ============================
+	//      Getters/setters
+	// ============================
 	
 	/**
-	 * Constructor.
-	 * @param msg Message
+	 * Get form file for uploading cytobands.
+	 * @return Form file for uploading cytobands.
 	 */
-	public SessionTimeoutException(final String msg) {
-		super(msg);
+	public final FormFile getCytobandFormFile() {
+		return cytobandFormFile;
+	}
+
+	/**
+	 * Set form file for uploading cytobands.
+	 * @param cytobandFormFile Form file for uploading cytobands.
+	 */
+	public final void setCytobandFormFile(final FormFile cytobandFormFile) {
+		this.cytobandFormFile = cytobandFormFile;
+	}
+
+	/**
+	 * Get organism ID.
+	 * @return Organism ID.
+	 */
+	public final String getOrganismId() {
+		return organismId;
+	}
+
+	/**
+	 * Set organism ID.
+	 * @param organismId Organism ID
+	 */
+	public final void setOrganismId(final String organismId) {
+		this.organismId = organismId;
 	}
 	
+	
+	// ====================================
+	//      Overrides
+	// ====================================
+	
 	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable
+	 * Validate form fields.
+	 * @param actionMappings Action mappings.
+	 * @param request Servlet request.
+	 * @return Action errors
 	 */
-	public SessionTimeoutException(final Throwable origThrowable) {
-		super(origThrowable);
+	@Override
+	public final ActionErrors validate(final ActionMapping actionMappings,
+			final HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		
+		// cytobandFormFile
+		String fname = this.cytobandFormFile.getFileName();
+		if (fname == null || fname.length() < 1) {
+			errors.add("cytobandFormFile", new ActionError("invalid.field"));
+		}
+		
+		// Global message
+		if (errors.size() > 0) {
+			errors.add("global", new ActionError("invalid.fields"));
+		}
+		
+		return errors;
 	}
-
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 * @param origThrowable Original throwable
-	 */
-	public SessionTimeoutException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
-
 }

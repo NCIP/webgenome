@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-23 02:20:39 $
 
 The Web CGH Software License, Version 1.0
@@ -47,52 +47,58 @@ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package org.rti.webcgh.webui.struts;
 
-package org.rti.webcgh.webui;
 
-import org.rti.webcgh.core.WebcghApplicationException;
-import org.rti.webcgh.util.SystemUtils;
+import org.apache.struts.action.ExceptionHandler;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.config.ExceptionConfig;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.rti.webcgh.webui.util.Attribute;
 
 /**
- * Exceptions thrown when an business rule has been violated.
+ * Handles exceptions within Struts framework.
  */
-public class SessionTimeoutException extends WebcghApplicationException {
+public final class WebcghExceptionHandler extends ExceptionHandler {
 	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 
-		SystemUtils.getLongApplicationProperty("serial.version.uid");
-
-	/**
-	 * Constructor.
-	 */
-	public SessionTimeoutException() {
-		super();
-	}
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(ExceptionHandler.class.getName());
+	
 	
 	/**
-	 * Constructor.
-	 * @param msg Message
+	 * Called when an exception has been thrown during the
+	 * response to a request within a Struts action.
+	 * @param ex Exception
+	 * @param ae Exception configuration
+	 * @param mapping Mapping of String tags to Struts action handlers
+	 * @param formInstance Instance of Struts form class
+	 * @param request Servlet request object
+	 * @param response Servlet response object
+	 * @return Forward
+	 * @throws ServletException If something crashes.
 	 */
-	public SessionTimeoutException(final String msg) {
-		super(msg);
-	}
-	
-	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable
-	 */
-	public SessionTimeoutException(final Throwable origThrowable) {
-		super(origThrowable);
-	}
-
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 * @param origThrowable Original throwable
-	 */
-	public SessionTimeoutException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
-
+	public ActionForward execute(
+		final Exception ex, final ExceptionConfig ae,
+		final ActionMapping mapping,
+		final ActionForm formInstance,
+		final HttpServletRequest request,
+		final HttpServletResponse response
+	  ) throws ServletException {
+	  	
+	  	// Attach exception to request
+	  	request.setAttribute(Attribute.EXCEPTION, ex);
+	  	
+	  	// Log exception
+	  	LOGGER.error(ex, ex);
+	  	
+	  	return super.execute(ex, ae, mapping, formInstance, request, response);
+	  }
 }
