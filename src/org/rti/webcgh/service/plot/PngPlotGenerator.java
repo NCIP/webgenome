@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-21 21:04:56 $
+$Revision: 1.10 $
+$Date: 2006-10-24 01:41:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.widget.PlotPanel;
+import org.rti.webcgh.service.dao.CytologicalMapDao;
 import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.webui.util.EventHandlerGraphicBoundaries;
@@ -80,7 +81,10 @@ public class PngPlotGenerator implements PlotGenerator {
 	// ============================
 	
 	/** Image file manager. */
-	private ImageFileManager imageFileManager;
+	private ImageFileManager imageFileManager = null;
+	
+	/** Cytlogical map data access object. */
+	private CytologicalMapDao cytologicalMapDao = null;
 	
 	
 	// =========================
@@ -97,10 +101,21 @@ public class PngPlotGenerator implements PlotGenerator {
 	}
 	
 	
+	/**
+	 * Set cytological map data access object.
+	 * @param cytologicalMapDao Cytological map data access object.
+	 */
+	public final void setCytologicalMapDao(
+			final CytologicalMapDao cytologicalMapDao) {
+		this.cytologicalMapDao = cytologicalMapDao;
+	}
+	
 	// ===========================
 	//       Constructors
 	// ===========================
 	
+
+
 	/**
 	 * Constructor.
 	 */
@@ -137,6 +152,10 @@ public class PngPlotGenerator implements PlotGenerator {
 			
 			this.newScatterPlot(plot, experiments,
 					(ScatterPlotParameters) plotParameters,
+					chromosomeArrayDataGetter);
+		} else if (plotParameters instanceof IdeogramPlotParameters) {
+			this.newIdeogramPlot(plot, experiments,
+					(IdeogramPlotParameters) plotParameters,
 					chromosomeArrayDataGetter);
 		}
 		return plot;
@@ -186,9 +205,15 @@ public class PngPlotGenerator implements PlotGenerator {
 		plot.getImageFileMap().clear();
 		
 		// Replot
-		this.newScatterPlot(plot, experiments,
-				(ScatterPlotParameters) plotParameters,
-				chromosomeArrayDataGetter);
+		if (plotParameters instanceof ScatterPlotParameters) {
+			this.newScatterPlot(plot, experiments,
+					(ScatterPlotParameters) plotParameters,
+					chromosomeArrayDataGetter);
+		} else if (plotParameters instanceof IdeogramPlotParameters) {
+			this.newIdeogramPlot(plot, experiments,
+					(IdeogramPlotParameters) plotParameters,
+					chromosomeArrayDataGetter); 
+		}
 	}
 	
 	
@@ -259,5 +284,49 @@ public class PngPlotGenerator implements PlotGenerator {
 			}
 		}
 		LOGGER.info("Completed scatter plot");
+	}
+	
+	
+	/**
+	 * Create new ideogram plot.
+	 * @param plot Plot
+	 * @param experiments Experiments to plot
+	 * @param plotParameters Plot parameters
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 */
+	private void newIdeogramPlot(final Plot plot, 
+			final Collection<Experiment> experiments,
+			final IdeogramPlotParameters plotParameters,
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		
+		// Make sure plot parameters okay
+		Set<Short> chromosomes = GenomeInterval.getChromosomes(
+				plotParameters.getGenomeIntervals());
+		if (Float.isNaN(plotParameters.getMinSaturation())) {
+			float min = Experiment.findMinValue(experiments, chromosomes);
+			plotParameters.setMinSaturation(min);
+		}
+		if (Float.isNaN(plotParameters.getMaxSaturation())) {
+			float max = Experiment.findMaxValue(experiments, chromosomes);
+			plotParameters.setMaxSaturation(max);
+		}
+		
+		// Instantiate plot painter
+		IdeogramPlotPainter painter =
+			new IdeogramPlotPainter(chromosomeArrayDataGetter);
+		painter.setCytologicalMapDao(this.cytologicalMapDao);
+		
+		// Create plot image
+		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+		PlotPanel panel = new PlotPanel(canvas);
+		painter.paintPlot(panel, experiments, plotParameters);
+		panel.paint(canvas);
+		canvas.setWidth(panel.width());
+		canvas.setHeight(panel.height());
+		plot.setWidth(panel.width());
+		plot.setHeight(panel.height());
+		String imageFileName =
+			this.imageFileManager.saveImage(canvas.toBufferedImage());
+		plot.setDefaultImageFileName(imageFileName);
 	}
 }

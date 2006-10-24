@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-10-24 01:41:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -203,6 +203,17 @@ public final class StringUtils {
 			newStr = str.substring(1, length - 1);
 		}
 		return newStr;
+	}
+	
+	
+	/**
+	 * Determine if given string is empty--i.e., null
+	 * or length < 1.
+	 * @param str A string
+	 * @return T/F
+	 */
+	public static boolean isEmpty(final String str) {
+		return str == null || str.length() < 1;
 	}
 
 }

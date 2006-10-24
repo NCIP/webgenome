@@ -2,17 +2,155 @@
 
 <h1 align="center">Ideogram Plot Parameters</h1>
 
-<p align="center">
-	This page will contain fields enabling the user
-	to set ideogram plot parameters.
-</p>
-
-<p align="center">
-	Create Plot
-	[<html:link action="/cart/showJobsTable">
-		Stand-alone mode forward
-	</html:link>]
-	[<html:link action="/cart/showPlot">
-		Client mode forward
-	</html:link>]
-</p>
+<center>
+<html:form action="/cart/newPlot">
+	
+	<table border="1">
+	
+	<%-- Plot name --%>
+		<tr>
+			<td>
+				Plot Name
+			</td>
+			<td>
+				<html:text property="name"/>
+			</td>
+		</tr>
+	
+	<%-- Genome intervals --%>
+		<tr>
+			<td>
+				Genome Intervals
+			</td>
+			<td>
+				<html:text property="genomeIntervals"/>
+			</td>
+		</tr>
+		
+	<%--
+	Genome interval units.  Note that option values
+	must correspond to units defined in org.rti.webcgh.units.BpUnits.
+	--%>
+		<tr>
+			<td>
+				Genome Interval Units
+			</td>
+			<td>
+				<html:select property="units">
+					<html:option value="BP">BP</html:option>
+					<html:option value="KB">KB</html:option>
+					<html:option value="MB">MB</html:option>
+				</html:select>
+			</td>
+		</tr>
+		
+	<%--
+	Quantitation type.  Note that option values
+	must correspond to typs defined in org.rti.webcgh.domain.QuantitationType.
+	--%>
+		<tr>
+			<td>
+				Quantitation Type
+			</td>
+			<td>
+				<html:select property="quantitationType">
+					<html:option value="log2ratio">Log2 Ratio</html:option>
+					<html:option value="loh">LOH</html:option>
+				</html:select>
+			</td>
+		</tr>
+		
+	<%-- Number of plots per row --%>
+		<tr>
+			<td>
+				Number of plots per row
+			</td>
+			<td>
+				<html:text property="numPlotsPerRow"/>
+			</td>
+		</tr>
+		
+	<%--
+	Ideogram size.  Note that values must correspond to
+	ChromosomeIdeogramSize.
+	--%>
+		<tr>
+			<td>
+				Ideogram size
+			</td>
+			<td>
+				<html:select property="ideogramSize">
+					<html:option value="S"/>
+					<html:option value="M"/>
+					<html:option value="L"/>
+				</html:select>
+			</td>
+		</tr>
+		
+	<%-- Ideogram width --%>
+		<tr>
+			<td>
+				Ideogram width
+			</td>
+			<td>
+				<html:text property="ideogramThickness"/>
+			</td>
+		</tr>
+		
+	<%-- Minimum data mask --%>
+		<tr>
+			<td>
+				Minimum data mask
+			</td>
+			<td>
+				<html:text property="minMask"/>
+			</td>
+		</tr>
+		
+	<%-- Maximum data mask --%>
+		<tr>
+			<td>
+				Maximum data mask
+			</td>
+			<td>
+				<html:text property="maxMask"/>
+			</td>
+		</tr>
+		
+	<%-- Minimum saturation --%>
+		<tr>
+			<td>
+				Minimum saturation
+			</td>
+			<td>
+				<html:text property="minSaturation"/>
+			</td>
+		</tr>
+		
+	<%-- Maximum saturation --%>
+		<tr>
+			<td>
+				Maximum saturation
+			</td>
+			<td>
+				<html:text property="maxSaturation"/>
+			</td>
+		</tr>
+		
+	<%-- Data track width --%>
+		<tr>
+			<td>
+				Data track width
+			</td>
+			<td>
+				<html:text property="trackWidth"/>
+			</td>
+		</tr>
+		
+	</table>
+	
+	<p>
+		<html:submit value="OK"/>
+	</p>
+</html:form>
+</center>

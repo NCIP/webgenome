@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.4 $
+$Date: 2006-10-24 01:41:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -96,9 +96,6 @@ public class IdeogramPlotParameters extends PlotParameters {
 	 */
 	public static final float DEF_MAX_MASK = (float) Float.MIN_VALUE;
 	
-	/** Default width of ideograms in pixels. */
-	public static final int DEF_IDEOGRAM_WIDTH = 20;
-	
 	/** Default width of data tracks. */
 	public static final int DEF_TRACK_WIDTH = 20;
 	
@@ -116,9 +113,6 @@ public class IdeogramPlotParameters extends PlotParameters {
 	
 	/** Ideogram size (length). */
 	private ChromosomeIdeogramSize ideogramSize = DEF_IDEOGRAM_SIZE;
-	
-	/** Width of ideogram in pixels. */
-	private int ideogramWidth = DEF_IDEOGRAM_WIDTH;
 	
 	/** Width of data tracks in pixels. */
 	private int trackWidth = DEF_TRACK_WIDTH;
@@ -174,24 +168,6 @@ public class IdeogramPlotParameters extends PlotParameters {
 	 */
 	public final void setIdeogramThickness(final int ideogramThickness) {
 		this.ideogramThickness = ideogramThickness;
-	}
-
-
-	/**
-	 * Get width of ideograms in pixles.
-	 * @return Width of ideograms in pixels.
-	 */
-	public final int getIdeogramWidth() {
-		return ideogramWidth;
-	}
-
-
-	/**
-	 * Set width of ideograms in pixels.
-	 * @param ideogramWidth Width of ideograms in pixels.
-	 */
-	public final void setIdeogramWidth(final int ideogramWidth) {
-		this.ideogramWidth = ideogramWidth;
 	}
 
 

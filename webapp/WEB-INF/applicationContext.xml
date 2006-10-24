@@ -130,6 +130,9 @@
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>
 		</property>
+		<property name="cytologicalMapDao">
+			<ref bean="cytologicalMapDao"/>
+		</property>
 	</bean>
 	
 	<!-- ========================================== -->
@@ -225,6 +228,9 @@
 		</property>
 		<property name="experimentIdGenerator">
 			<ref bean="experimentIdGenerator"/>
+		</property>
+		<property name="organismDao">
+			<ref bean="organismDao"/>
 		</property>
 	</bean>
 	

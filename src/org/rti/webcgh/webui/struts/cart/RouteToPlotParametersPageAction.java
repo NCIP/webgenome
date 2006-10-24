@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-17 18:47:38 $
+$Revision: 1.2 $
+$Date: 2006-10-24 01:41:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -95,6 +95,8 @@ public final class RouteToPlotParametersPageAction extends BaseAction {
     	ActionForward forward = null;
     	if ("scatter".equals(plotType))	 {
     		forward = mapping.findForward("scatter");
+    	} else if ("ideogram".equals(plotType)) {
+    		forward = mapping.findForward("ideogram");
     	}
     	
     	return forward;

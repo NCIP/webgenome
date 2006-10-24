@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-10-21 21:04:56 $
+$Revision: 1.12 $
+$Date: 2006-10-24 01:41:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,9 +61,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.service.client.ClientDataService;
+import org.rti.webcgh.service.dao.OrganismDao;
 import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.struts.BaseAction;
@@ -96,6 +98,9 @@ public final class ClientPlotAction extends BaseAction {
     
     /** Image file manager. */
     private ImageFileManager imageFileManager = null;
+    
+    /** Organism data access object. */
+    private OrganismDao organismDao = null;
 
 
     /**
@@ -105,6 +110,15 @@ public final class ClientPlotAction extends BaseAction {
     public void setImageFileManager(
     		final ImageFileManager imageFileManager) {
 		this.imageFileManager = imageFileManager;
+	}
+
+
+    /**
+     * Set organism data access object.
+     * @param organismDao Organism data access object
+     */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
 	}
 
 
@@ -170,11 +184,17 @@ public final class ClientPlotAction extends BaseAction {
         	this.clientDataService.getClientData(constraints,
         			experimentIds, clientID);
         
-        // Give each experiment a unique ID and each bioassay a color
+        // TODO: In the future the organism should come from the
+        // client queyr string
+        
+        // Give each experiment a unique ID and default
+        // organism.  Give each bioassay a color
         ColorChooser colorChooser = PageContext.getColorChooser(
         		request, true);
+        Organism org = this.organismDao.loadDefault();
         for (Experiment exp : experiments) {
         	exp.setId(this.experimentIdGenerator.nextId());
+        	exp.setOrganism(org);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
         		ba.setId(this.bioAssayIdGenerator.nextId());

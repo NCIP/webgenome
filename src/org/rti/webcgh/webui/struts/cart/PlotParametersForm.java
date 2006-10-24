@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-18 20:46:26 $
+$Revision: 1.9 $
+$Date: 2006-10-24 01:41:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,9 +62,12 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.GenomeIntervalFormatException;
 import org.rti.webcgh.domain.QuantitationType;
+import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.units.BpUnits;
+import org.rti.webcgh.units.ChromosomeIdeogramSize;
+import org.rti.webcgh.util.StringUtils;
 import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.util.ValidationUtils;
 import org.rti.webcgh.webui.struts.BaseForm;
@@ -151,6 +154,32 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Plot name. */
 	private String name = PLOT_NAMER.nextName();
+	
+	/** Ideogram size. */
+	private String ideogramSize =
+		IdeogramPlotParameters.DEF_IDEOGRAM_SIZE.getName();
+	
+	/** Width of ideogram plot data tracks. */
+	private String trackWidth =
+		String.valueOf(IdeogramPlotParameters.DEF_TRACK_WIDTH);
+	
+	/** Ideogram plot minimum saturation. */
+	private String minSaturation = String.valueOf(
+			IdeogramPlotParameters.DEF_MIN_SATURATION);
+	
+	/** Maximum saturation. */
+	private String maxSaturation = String.valueOf(
+			IdeogramPlotParameters.DEF_MAX_SATURATION);
+	
+	/** Minimum data mask value for ideogram plot. */
+	private String minMask = "";
+	
+	/** Maximum data mask value for ideogram plot. */
+	private String maxMask = "";
+	
+	/** Ideogram thickness. */
+	private String ideogramThickness =
+		String.valueOf(IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 	
 	// ================================
 	//      Getters/setters
@@ -328,6 +357,129 @@ public class PlotParametersForm extends BaseForm {
 		this.units = units;
 	}
 	
+	
+	/**
+	 * Get ideogram size.
+	 * @return Ideogram size
+	 */
+	public final String getIdeogramSize() {
+		return ideogramSize;
+	}
+
+	/**
+	 * Set ideogram size.
+	 * @param ideogramSize Ideogram size
+	 */
+	public final void setIdeogramSize(final String ideogramSize) {
+		this.ideogramSize = ideogramSize;
+	}
+
+	/**
+	 * Get thickness of ideogram.
+	 * @return Ideogram thickness.
+	 */
+	public final String getIdeogramThickness() {
+		return ideogramThickness;
+	}
+
+	
+	/**
+	 * Set ideogram thickness.
+	 * @param ideogramThickness Ideogram thickness.
+	 */
+	public final void setIdeogramThickness(
+			final String ideogramThickness) {
+		this.ideogramThickness = ideogramThickness;
+	}
+
+	/**
+	 * Get maximum data mask value.
+	 * @return Maximum data mask value.
+	 */
+	public final String getMaxMask() {
+		return maxMask;
+	}
+
+	
+	/**
+	 * Set maximum data mask value.
+	 * @param maxMask Maximum data mask value.
+	 */
+	public final void setMaxMask(final String maxMask) {
+		this.maxMask = maxMask;
+	}
+
+	/**
+	 * Get maximum saturation value for color coding plots.
+	 * @return Maximum saturation value.
+	 */
+	public final String getMaxSaturation() {
+		return maxSaturation;
+	}
+
+	
+	/**
+	 * Set maximum saturation value for color coding plots.
+	 * @param maxSaturation Maximum saturation value.
+	 */
+	public final void setMaxSaturation(final String maxSaturation) {
+		this.maxSaturation = maxSaturation;
+	}
+
+	/**
+	 * Get minimum data mask value.
+	 * @return Minimum data maks value.
+	 */
+	public final String getMinMask() {
+		return minMask;
+	}
+
+	
+	/**
+	 * Set minimum data mask value.
+	 * @param minMask Minimum data mask value.
+	 */
+	public final void setMinMask(final String minMask) {
+		this.minMask = minMask;
+	}
+
+	
+	/**
+	 * Get minimum saturation value for color coding plots.
+	 * @return Minimum saturation value.
+	 */
+	public final String getMinSaturation() {
+		return minSaturation;
+	}
+
+	
+	/**
+	 * Set minimum saturation value for color coding plots.
+	 * @param minSaturation Minimum saturation value.
+	 */
+	public final void setMinSaturation(final String minSaturation) {
+		this.minSaturation = minSaturation;
+	}
+
+	
+	/**
+	 * Get width of data tracks.
+	 * @return Data track width.
+	 */
+	public final String getTrackWidth() {
+		return trackWidth;
+	}
+
+	
+	/**
+	 * Set data track width.
+	 * @param trackWidth Data track width.
+	 */
+	public final void setTrackWidth(final String trackWidth) {
+		this.trackWidth = trackWidth;
+	}
+	
+	
 	// ===================================
 	//       Overrides
 	// ===================================
@@ -342,6 +494,29 @@ public class PlotParametersForm extends BaseForm {
 	public final ActionErrors validate(final ActionMapping actionMappings,
 			final HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
+		
+		// Fields common to all plot types
+		this.validateCommonFields(errors);
+		
+		// Scatter plot-specific fields
+		this.validateScatterPlotFields(errors);
+		
+		// Ideogram plot-specific fields
+		this.validateIdeogramPlotFields(errors);
+		
+		if (errors.size() > 0) {
+			errors.add("global", new ActionError("invalid.fields"));
+		}
+		
+		return errors;
+	}
+	
+	
+	/**
+	 * Validate fields common to all plot types.
+	 * @param errors Action errors.
+	 */
+	private void validateCommonFields(final ActionErrors errors) {
 		
 		// Plot name
 		if (this.name == null || this.name.length() < 1) {
@@ -372,6 +547,15 @@ public class PlotParametersForm extends BaseForm {
 		if (!ValidationUtils.validNumber(this.numPlotsPerRow)) {
 			errors.add("numPlotsPerRow", new ActionError("invalid.field"));
 		}
+	}
+	
+	
+	/**
+	 * Validate scatter plot-specific fields.
+	 * @param errors Action errors
+	 */
+	private void validateScatterPlotFields(
+			final ActionErrors errors) {
 		
 		// minY and maxY
 		boolean validateRelationship = true;
@@ -398,12 +582,62 @@ public class PlotParametersForm extends BaseForm {
 			}
 		}
 		
-		// Global error
-		if (errors.size() > 0) {
-			errors.add("global", new ActionError("invalid.fields"));
+		// width
+		if (!ValidationUtils.validNumber(this.width)) {
+			errors.add("width", new ActionError("invalid.field"));
 		}
 		
-		return errors;
+		// height
+		if (!ValidationUtils.validNumber(this.height)) {
+			errors.add("height", new ActionError("invalid.field"));
+		}
+	}
+	
+	
+	/**
+	 * Validate ideogram plot-specific fields.
+	 * @param errors Action errors
+	 */
+	private void validateIdeogramPlotFields(
+			final ActionErrors errors) {
+		
+		// trackWidth
+		if (!ValidationUtils.validNumber(this.trackWidth)) {
+			errors.add("trackWidth", new ActionError("invalid.field"));
+		}
+		
+		// minSaturation
+		if (!StringUtils.isEmpty(this.minSaturation)) {
+			if (!ValidationUtils.validNumber(this.minSaturation)) {
+				errors.add("minSaturation", new ActionError("invalid.field"));
+			}
+		}
+		
+		// maxSaturation
+		if (!StringUtils.isEmpty(this.minSaturation)) {
+			if (!ValidationUtils.validNumber(this.minSaturation)) {
+				errors.add("minSaturation", new ActionError("invalid.field"));
+			}
+		}
+		
+		// minMask
+		if (!StringUtils.isEmpty(this.minMask)) {
+			if (!ValidationUtils.validNumber(this.minMask)) {
+				errors.add("minMask", new ActionError("invalid.field"));
+			}
+		}
+		
+		// maxMask
+		if (!StringUtils.isEmpty(this.maxMask)) {
+			if (!ValidationUtils.validNumber(this.maxMask)) {
+				errors.add("maxMask", new ActionError("invalid.field"));
+			}
+		}
+		
+		// ideogramThickness
+		if (!ValidationUtils.validNumber(this.ideogramThickness)) {
+			errors.add("ideogramThickness", new ActionError("invalid.field"));
+		}
 	}
 
 	
@@ -424,6 +658,16 @@ public class PlotParametersForm extends BaseForm {
 		this.width = DEF_WIDTH;
 		this.height = DEF_HEIGHT;
 		this.name = PLOT_NAMER.nextName();
+		this.ideogramSize = String.valueOf(
+				IdeogramPlotParameters.DEF_IDEOGRAM_SIZE);
+		this.ideogramThickness = String.valueOf(
+				IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
+		this.maxMask = "";
+		this.maxSaturation = String.valueOf(
+				IdeogramPlotParameters.DEF_MAX_SATURATION);
+		this.minMask = String.valueOf(IdeogramPlotParameters.DEF_MIN_MASK);
+		this.minSaturation = String.valueOf(
+				IdeogramPlotParameters.DEF_MIN_SATURATION);
 	}
 	
 	/**
@@ -437,39 +681,83 @@ public class PlotParametersForm extends BaseForm {
 		// Scatter plot
 		if (type == PlotType.SCATTER) {
 			p = new ScatterPlotParameters();
-			float minYFloat = Float.NaN;
-			if (this.minY != null && this.minY.length() > 0) {
-				minYFloat = Float.parseFloat(this.minY);
-			}
-			float maxYFloat = Float.NaN;
-			if (this.maxY != null && this.maxY.length() > 0) {
-				maxYFloat = Float.parseFloat(this.maxY);
-			}
-			((ScatterPlotParameters) p).setMinY(minYFloat);
-			((ScatterPlotParameters) p).setMaxY(maxYFloat);
-			((ScatterPlotParameters) p).setWidth(
-					Integer.parseInt(this.width));
-			((ScatterPlotParameters) p).setHeight(
-					Integer.parseInt(this.height));
+			this.setScatterPlotParameters((ScatterPlotParameters) p);
+		} else if (type == PlotType.IDEOGRAM) {
+			p = new IdeogramPlotParameters();
+			this.setIdeogramPlotParameters((IdeogramPlotParameters) p);
 		}
 		
 		// Common attributes
 		if (p != null) {
-			try {
-				p.setGenomeIntervals(GenomeInterval.decode(
-						this.genomeIntervals));
-			} catch (GenomeIntervalFormatException e) {
-				throw new WebcghSystemException(
-						"Error extracting plot parameters", e);
-			}
-			p.setPlotName(this.name);
-			p.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
-			p.setUnits(BpUnits.getUnits(this.units));
-			p.setQuantitationType(QuantitationType.getQuantitationType(
-					this.quantitationType));
+			this.setCommonParameters(p);
 		}
 		
 		return p;
+	}
+	
+	
+	/**
+	 * Set plot parameters common to all plot types.
+	 * @param params Plot parameters
+	 */
+	private void setCommonParameters(final PlotParameters params) {
+		try {
+			params.setGenomeIntervals(GenomeInterval.decode(
+					this.genomeIntervals));
+		} catch (GenomeIntervalFormatException e) {
+			throw new WebcghSystemException(
+					"Error extracting plot parameters", e);
+		}
+		params.setPlotName(this.name);
+		params.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
+		params.setUnits(BpUnits.getUnits(this.units));
+		params.setQuantitationType(QuantitationType.getQuantitationType(
+				this.quantitationType));
+	}
+	
+	
+	/**
+	 * Initialize scatter plot parameters.
+	 * @param params Plot parameters
+	 */
+	private void setScatterPlotParameters(final ScatterPlotParameters params) {
+		float minYFloat = Float.NaN;
+		if (this.minY != null && this.minY.length() > 0) {
+			minYFloat = Float.parseFloat(this.minY);
+			params.setMinY(minYFloat);
+		}
+		float maxYFloat = Float.NaN;
+		if (this.maxY != null && this.maxY.length() > 0) {
+			maxYFloat = Float.parseFloat(this.maxY);
+			params.setMaxY(maxYFloat);
+		}
+		params.setWidth(Integer.parseInt(this.width));
+		params.setHeight(Integer.parseInt(this.height));
+	}
+	
+	
+	/**
+	 * Initialize ideogram plot parameters.
+	 * @param params Plot parameters
+	 */
+	private void setIdeogramPlotParameters(
+			final IdeogramPlotParameters params) {
+		params.setIdeogramSize(
+				ChromosomeIdeogramSize.getChromosomeIdeogramSize(
+						this.ideogramSize));
+		params.setIdeogramThickness(Integer.parseInt(this.ideogramThickness));
+		if (!StringUtils.isEmpty(this.maxMask)) {
+			params.setMaxMask(Float.parseFloat(this.maxMask));
+		}
+		if (!StringUtils.isEmpty(this.maxSaturation)) {
+			params.setMaxSaturation(Float.parseFloat(this.maxSaturation));
+		}
+		if (!StringUtils.isEmpty(this.minMask)) {
+			params.setMinMask(Float.parseFloat(this.minMask));
+		}
+		if (!StringUtils.isEmpty(this.minSaturation)) {
+			params.setMinSaturation(Float.parseFloat(this.minSaturation));
+		}
 	}
 	
 	
