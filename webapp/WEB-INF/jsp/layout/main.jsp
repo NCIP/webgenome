@@ -126,7 +126,7 @@
 	<%-- Right portion of UI and footer --%>
 		<tr>
 			<td align="right" valign="top" background="<html:rewrite page="/images/ui-footer-side-tile.gif"/>"><img src="<html:rewrite page="/images/ui-footer-left.gif"/>" width="9" height="39" border="0"></td>
-			<td height="26" align="center" valign="center" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" height="39" border="0">
+			<td height="39" align="center" valign="center" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" border="0">
 				<span class="footer">
 					Copyright &copy; RTI International, 2005-2006. All rights reserved.
 				</span>
