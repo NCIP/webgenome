@@ -6,7 +6,7 @@
 
 <html:form action="/cart/analysisParams">
 <center>
-<table>
+<table class="noBorder">
 <logic:iterate name="opIndex" id="op">
 	<tr><td>
 		<html:radio property="operationKey" idName="op" value="key"/>

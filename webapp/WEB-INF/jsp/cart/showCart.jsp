@@ -38,11 +38,11 @@
 <html:form action="/cart/routeToOperationPage">
 <center>
 	<html:errors property="global"/>
-	<table border="1">
+	<table class="table">
 		<tr>
-			<td>Experiment</td>
-			<td>Bioassays</td>
-			<td>Actions</td>
+			<th>Experiment</th>
+			<th>Bioassays</th>
+			<th>Actions</th>
 		</tr>
 		<logic:iterate name="shopping.cart" property="experiments"
 			id="experiment">
@@ -63,7 +63,7 @@
 				<td>
 					<logic:iterate name="experiment" property="bioAssays"
 						id="bioAssay">
-						<table><tr>
+						<table class="noBorder"><tr>
 							<td bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
 								&nbsp;&nbsp;&nbsp;
 							</td>
@@ -114,11 +114,10 @@
 
 <%-- Plots --%>
 <center>
-	<table border="1">
+	<table class="table">
 		<tr>
-			<td>Plot Name</td>
-			<td>&nbsp;</td>
-			<td>&nbsp;</td>
+			<th>Plot Name</th>
+			<th colspan="2">Actions</th>
 		</tr>
 		<logic:iterate name="shopping.cart" property="plots"
 			id="plot">

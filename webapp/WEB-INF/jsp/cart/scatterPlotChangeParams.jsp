@@ -7,7 +7,7 @@
 
 	<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
 	
-	<table border="1">
+	<table class="noBorder">
 	
 	<%-- Plot name --%>
 		<tr>

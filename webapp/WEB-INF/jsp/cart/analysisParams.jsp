@@ -144,10 +144,10 @@
 	=============================================================
 	--%>
 	
-	<table border="1">
+	<table class="noBorder">
 		<tr>
-			<td>Input Name</td>
-			<td>Output Name</td>
+			<th>Input Name</th>
+			<th>Output Name</th>
 		</tr>
 		<logic:iterate name="experiments" id="experiment">
 			<tr>

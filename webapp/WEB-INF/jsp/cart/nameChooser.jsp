@@ -1,6 +1,11 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+
+<%-- Style sheet --%>
+	<link href="<html:rewrite page="/webcgh.css"/>"
+		rel="stylesheet" type="text/css" />
+
+<br>
 
 <center>
 <html:form action="/cart/nameChange" target="mainwindow"
@@ -15,7 +20,7 @@
 	<p>
 		<html:submit value="OK"/>
 		&nbsp;&nbsp;&nbsp;
-		<input type="button" value="Cancel">
+		<input type="button" value="Cancel" onclick="window.close()">
 	</p>
 </html:form>
 </center>

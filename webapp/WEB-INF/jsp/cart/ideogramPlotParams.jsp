@@ -5,7 +5,7 @@
 <center>
 <html:form action="/cart/newPlot">
 	
-	<table border="1">
+	<table class="noBorder">
 	
 	<%-- Plot name --%>
 		<tr>

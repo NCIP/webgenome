@@ -6,10 +6,9 @@
 
 <h2 align="center">Uploaded Cytobands</h2>
 <center>
-<table border="1">
+<table class="table">
 <tr>
-<td>Organism</td>
-<td>&nbsp;</td>
+<th colspan="2">Organism</th>
 </tr>
 <logic:iterate name="organismsWithMap" id="org">
 	<tr>

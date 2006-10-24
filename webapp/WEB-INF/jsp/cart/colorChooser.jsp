@@ -1,5 +1,9 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
+<%-- Style sheet --%>
+	<link href="<html:rewrite page="/webcgh.css"/>"
+		rel="stylesheet" type="text/css" />
+
 <script language="Javascript">
 	function setColor(color) {
 		var td = document.getElementById("selectedColor");
@@ -21,6 +25,8 @@
 	}
 </script>
 
+<br>
+
 <center>
 <table border="0" cellpadding="0" cellspacing="0">
 	<%
@@ -31,9 +37,9 @@
 			<%
 			for (int j = 0; j < palette[i].length; j++) {
 			%>
-				<td bgcolor="<%= palette[i][j] %>"
+				<td width="25" height="25" bgcolor="<%= palette[i][j] %>"
 					onclick="setColor('<%= palette[i][j] %>')">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="<html:rewrite page="/images/spacer.gif"/>" width="1" height="1" border="0">
 				</td>
 			<%
 			}
@@ -46,9 +52,8 @@
 </table>
 
 <p>
-<table width="50" id="selectedColor" border="0" bgcolor="<%= palette[0][0] %>">
-	<tr><td>&nbsp;</td></tr>
-	<tr><td>&nbsp;</td></tr>
+<table id="selectedColor" border="0" cellpadding="0" cellspacing="0" bgcolor="<%= palette[0][0] %>">
+	<tr><td width="50" height="30"><img src="<html:rewrite page="/images/spacer.gif"/>" width="1" height="1" border="0"></td></tr>
 </table>
 </p>
 
