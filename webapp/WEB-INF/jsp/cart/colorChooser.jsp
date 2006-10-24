@@ -51,11 +51,11 @@
 
 </table>
 
-<p>
+<br>
 <table id="selectedColor" border="0" cellpadding="0" cellspacing="0" bgcolor="<%= palette[0][0] %>">
-	<tr><td width="50" height="30"><img src="<html:rewrite page="/images/spacer.gif"/>" width="1" height="1" border="0"></td></tr>
+	<tr><td width="50" height="25"><img src="<html:rewrite page="/images/spacer.gif"/>" width="1" height="1" border="0"></td></tr>
 </table>
-</p>
+<br>
 
 <p>
 	<input type="button" value="OK" onclick="onOk()">
