@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-20 19:09:11 $
+$Revision: 1.5 $
+$Date: 2006-10-24 23:00:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -176,5 +176,18 @@ extends PlotParameters implements Serializable {
      */
     public ScatterPlotParameters() {
         super();
+    }
+    
+    
+    /**
+     * Constructor.
+     * @param params Scatter plot parameters.
+     */
+    public ScatterPlotParameters(final ScatterPlotParameters params) {
+    	super(params);
+    	this.height = params.height;
+    	this.width = params.width;
+    	this.maxY = params.maxY;
+    	this.minY = params.minY;
     }
 }

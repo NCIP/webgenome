@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2006-10-24 23:00:42 $
 
 The Web CGH Software License, Version 1.0
@@ -48,60 +48,29 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 package org.rti.webcgh.util;
 
-
 /**
- * Methods for user input validation.
+ * Utilities for dealing with numbers.
+ * @author dhall
+ *
  */
-public final class ValidationUtils {
-	
+public final class NumericUtils {
+
 	/**
 	 * Constructor.
 	 */
-	private ValidationUtils() {
+	private NumericUtils() {
 		
 	}
-    
-    
-    /**
-     * Does given string represent a valid integer?
-     * @param str A string
-     * @return T/F
-     */
-    public static boolean validPositiveInteger(final String str) {
-        boolean isInteger = true;
-        for (int i = 0; i < str.length() && isInteger; i++) {
-            char c = str.charAt(i);
-            if (!(Character.isDigit(c) || c == '.')) {
-                isInteger = false;
-            }
-        }
-        return isInteger;
-    }
-    
-    
-    /**
-     * Does given string represent a valid number?
-     * @param str A string
-     * @return T/F
-     */
-    public static boolean validNumber(final String str) {
-    	if (str == null || str.length() < 1) {
-    		return false;
-    	}
-    	boolean isANum = true;
-    	int i = 0;
-    	if (str.charAt(0) == '-') {
-    		i = 1;
-    	}
-    	for (; i < str.length() && isANum; i++) {
-    		char c = str.charAt(i);
-    		if (!(c == '.' || Character.isDigit(c))) {
-    			isANum = false;
-    		}
-    	}
-    	return isANum;
-    }
+	
+	
+	/**
+	 * Is given number real--i.e., not infinite or NaN?
+	 * @param num Number to check
+	 * @return T/F
+	 */
+	public static boolean isReal(final float num) {
+		return !Float.isInfinite(num) && !Float.isNaN(num);
+	}
 }

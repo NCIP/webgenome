@@ -167,10 +167,6 @@
 	<bean name="/cart/routeToPlotParametersPage"
 		class="org.rti.webcgh.webui.struts.cart.RouteToPlotParametersPageAction"/>
 		
-<!-- Route to specific change plot parameters page -->
-	<bean name="/cart/routeToChangePlotParametersPage"
-		class="org.rti.webcgh.webui.struts.cart.RouteToPlotParametersPageAction"/>
-		
 <!-- Select analytic operation -->
 	<bean name="/cart/selectAnalysis"
 		class="org.rti.webcgh.webui.struts.cart.SelectAnalysisSetupAction"/>

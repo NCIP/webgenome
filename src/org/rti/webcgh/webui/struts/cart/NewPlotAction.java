@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.7 $
+$Date: 2006-10-24 23:00:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -204,7 +204,6 @@ public final class NewPlotAction extends BaseAction {
 		    	this.clientDataService.addData(experiments,
 		    			constraints, clientId);
 	    	}
-	    	cart.add(experiments);
 	    }
     	
     	// Create plot

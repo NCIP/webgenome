@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-24 01:41:08 $
+$Revision: 1.11 $
+$Date: 2006-10-24 23:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -138,27 +138,89 @@ public class PngPlotGenerator implements PlotGenerator {
 	public final Plot newPlot(final Collection<Experiment> experiments,
 			final PlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		
+		// Initialize new plot
 		Plot plot = new Plot();
 		plot.setPlotParameters(plotParameters);
 		for (Experiment exp : experiments) {
 			plot.addExperimentId(exp.getId());
 		}
+		
+		// Provide missing plot parameters not supplied by user
+		// by derivation or using defaults
+		PlotParameters completeParams =
+			this.deriveMissingPlotParameters(plotParameters, experiments);
+		
+		// Scatter plot
 		if (plotParameters instanceof ScatterPlotParameters) {
-			
-			// Set left and right endpoints of genome intervals
-			// in case user only specified chromosome locations
-			this.fixGenomeIntervals(plotParameters.getGenomeIntervals(),
-					experiments);
-			
 			this.newScatterPlot(plot, experiments,
-					(ScatterPlotParameters) plotParameters,
+					(ScatterPlotParameters) completeParams,
 					chromosomeArrayDataGetter);
+			
+		// Ideogram plot
 		} else if (plotParameters instanceof IdeogramPlotParameters) {
 			this.newIdeogramPlot(plot, experiments,
-					(IdeogramPlotParameters) plotParameters,
+					(IdeogramPlotParameters) completeParams,
 					chromosomeArrayDataGetter);
 		}
+		
 		return plot;
+	}
+	
+	
+	/**
+	 * Derive missing plot parameters not supplied by user.
+	 * @param inputParams Input plot params
+	 * @param experiments Experiments
+	 * @return Corrected plot parameters
+	 */
+	private PlotParameters deriveMissingPlotParameters(
+			final PlotParameters inputParams,
+			final Collection<Experiment> experiments) {
+		PlotParameters outputParams = null;
+		
+		// Scatter plot
+		if (inputParams instanceof ScatterPlotParameters) {
+			ScatterPlotParameters spp = new ScatterPlotParameters(
+					(ScatterPlotParameters) inputParams);
+			outputParams = spp;
+			
+			// minX and maxX
+			Set<Short> chromosomes = GenomeInterval.getChromosomes(
+					spp.getGenomeIntervals());
+			if (Float.isNaN(spp.getMinY())) {
+				float min = Experiment.findMinValue(experiments, chromosomes);
+				spp.setMinY(min);
+			}
+			if (Float.isNaN(spp.getMaxY())) {
+				float max = Experiment.findMaxValue(experiments, chromosomes);
+				spp.setMaxY(max);
+			}
+			
+		// Ideogram plot
+		} else if (inputParams instanceof IdeogramPlotParameters) {
+			IdeogramPlotParameters ipp = new IdeogramPlotParameters(
+					(IdeogramPlotParameters) inputParams);
+			outputParams = ipp;
+			
+			// minSaturation and maxSaturation
+			Set<Short> chromosomes = GenomeInterval.getChromosomes(
+					ipp.getGenomeIntervals());
+			if (Float.isNaN(ipp.getMinSaturation())) {
+				float min = Experiment.findMinValue(experiments, chromosomes);
+				ipp.setMinSaturation(min);
+			}
+			if (Float.isNaN(ipp.getMaxSaturation())) {
+				float max = Experiment.findMaxValue(experiments, chromosomes);
+				ipp.setMaxSaturation(max);
+			}
+		}
+		
+		// Parameters common to all plot types
+		this.fixGenomeIntervals(outputParams.getGenomeIntervals(),
+				experiments);
+		
+		return outputParams;
 	}
 	
 	/**
@@ -204,14 +266,19 @@ public class PngPlotGenerator implements PlotGenerator {
 		}
 		plot.getImageFileMap().clear();
 		
+		// Provide missing plot parameters not supplied by user
+		// by derivation or using defaults
+		PlotParameters completeParams =
+			this.deriveMissingPlotParameters(plotParameters, experiments);
+		
 		// Replot
 		if (plotParameters instanceof ScatterPlotParameters) {
 			this.newScatterPlot(plot, experiments,
-					(ScatterPlotParameters) plotParameters,
+					(ScatterPlotParameters) completeParams,
 					chromosomeArrayDataGetter);
 		} else if (plotParameters instanceof IdeogramPlotParameters) {
 			this.newIdeogramPlot(plot, experiments,
-					(IdeogramPlotParameters) plotParameters,
+					(IdeogramPlotParameters) completeParams,
 					chromosomeArrayDataGetter); 
 		}
 	}
@@ -229,18 +296,6 @@ public class PngPlotGenerator implements PlotGenerator {
 			final ScatterPlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
 		LOGGER.info("Creating new scatter plot");
-		
-		// Make sure plot parameters are okay
-		Set<Short> chromosomes = GenomeInterval.getChromosomes(
-				plotParameters.getGenomeIntervals());
-		if (Float.isNaN(plotParameters.getMinY())) {
-			float min = Experiment.findMinValue(experiments, chromosomes);
-			plotParameters.setMinY(min);
-		}
-		if (Float.isNaN(plotParameters.getMaxY())) {
-			float max = Experiment.findMaxValue(experiments, chromosomes);
-			plotParameters.setMaxY(max);
-		}
 		
 		// Instantiate plot painter
 		ScatterPlotPainter painter =
@@ -298,18 +353,6 @@ public class PngPlotGenerator implements PlotGenerator {
 			final Collection<Experiment> experiments,
 			final IdeogramPlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
-		
-		// Make sure plot parameters okay
-		Set<Short> chromosomes = GenomeInterval.getChromosomes(
-				plotParameters.getGenomeIntervals());
-		if (Float.isNaN(plotParameters.getMinSaturation())) {
-			float min = Experiment.findMinValue(experiments, chromosomes);
-			plotParameters.setMinSaturation(min);
-		}
-		if (Float.isNaN(plotParameters.getMaxSaturation())) {
-			float max = Experiment.findMaxValue(experiments, chromosomes);
-			plotParameters.setMaxSaturation(max);
-		}
 		
 		// Instantiate plot painter
 		IdeogramPlotPainter painter =

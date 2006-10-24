@@ -3,6 +3,9 @@
 <h1 align="center">Scatter Plot Parameters</h1>
 
 <center>
+<p>
+	<html:errors property="global"/>
+</p>
 <html:form action="/cart/newPlot">
 	
 	<table class="noBorder">
@@ -11,6 +14,7 @@
 		<tr>
 			<td>
 				Plot Name
+				<html:errors property="name"/>
 			</td>
 			<td>
 				<html:text property="name"/>
@@ -64,6 +68,7 @@
 		<tr>
 			<td>
 				Number of plots per row
+				<html:errors property="numPlotsPerRow"/>
 			</td>
 			<td>
 				<html:text property="numPlotsPerRow"/>
@@ -74,6 +79,7 @@
 		<tr>
 			<td>
 				Minimum Y-axis value
+				<html:errors property="minY"/>
 			</td>
 			<td>
 				<html:text property="minY"/>
@@ -84,6 +90,7 @@
 		<tr>
 			<td>
 				Maximum Y-axis value
+				<html:errors property="maxY"/>
 			</td>
 			<td>
 				<html:text property="maxY"/>
@@ -94,6 +101,7 @@
 		<tr>
 			<td>
 				Plot width in pixels
+				<html:errors property="width"/>
 			</td>
 			<td>
 				<html:text property="width"/>
@@ -104,6 +112,7 @@
 		<tr>
 			<td>
 				Plot height in pixels
+				<html:errors property="height"/>
 			</td>
 			<td>
 				<html:text property="height"/>

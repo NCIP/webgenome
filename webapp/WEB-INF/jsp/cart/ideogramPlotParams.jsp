@@ -3,6 +3,9 @@
 <h1 align="center">Ideogram Plot Parameters</h1>
 
 <center>
+<p>
+	<html:errors property="global"/>
+</p>
 <html:form action="/cart/newPlot">
 	
 	<table class="noBorder">
@@ -11,6 +14,7 @@
 		<tr>
 			<td>
 				Plot Name
+				<html:errors property="name"/>
 			</td>
 			<td>
 				<html:text property="name"/>
@@ -21,6 +25,7 @@
 		<tr>
 			<td>
 				Genome Intervals
+				<html:errors property="genomeIntervals"/>
 			</td>
 			<td>
 				<html:text property="genomeIntervals"/>
@@ -64,6 +69,7 @@
 		<tr>
 			<td>
 				Number of plots per row
+				<html:errors property="numPlotsPerRow"/>
 			</td>
 			<td>
 				<html:text property="numPlotsPerRow"/>
@@ -91,6 +97,7 @@
 		<tr>
 			<td>
 				Ideogram width
+				<html:errors property="ideogramThickness"/>
 			</td>
 			<td>
 				<html:text property="ideogramThickness"/>
@@ -101,6 +108,7 @@
 		<tr>
 			<td>
 				Minimum data mask
+				<html:errors property="minMask"/>
 			</td>
 			<td>
 				<html:text property="minMask"/>
@@ -111,6 +119,7 @@
 		<tr>
 			<td>
 				Maximum data mask
+				<html:errors property="maxMask"/>
 			</td>
 			<td>
 				<html:text property="maxMask"/>
@@ -121,6 +130,7 @@
 		<tr>
 			<td>
 				Minimum saturation
+				<html:errors property="minSaturation"/>
 			</td>
 			<td>
 				<html:text property="minSaturation"/>
@@ -131,6 +141,7 @@
 		<tr>
 			<td>
 				Maximum saturation
+				<html:errors property="maxSaturation"/>
 			</td>
 			<td>
 				<html:text property="maxSaturation"/>
@@ -141,6 +152,7 @@
 		<tr>
 			<td>
 				Data track width
+				<html:errors property="trackWidth"/>
 			</td>
 			<td>
 				<html:text property="trackWidth"/>

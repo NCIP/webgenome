@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-16 20:06:58 $
+$Revision: 1.7 $
+$Date: 2006-10-24 23:00:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,6 @@ package org.rti.webcgh.webui.util;
 import java.awt.Point;
 import java.io.Serializable;
 
-import org.apache.log4j.Logger;
 import org.rti.webcgh.util.SystemUtils;
 
 
@@ -70,10 +69,6 @@ public final class ClickBoxes implements Serializable {
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
-	/** Logger. */
-	private static final Logger LOGGER = Logger.getLogger(ClickBoxes.class);
-
-
     // =============================
     //       Attributes
     // =============================
@@ -208,12 +203,8 @@ public final class ClickBoxes implements Serializable {
 	public void addClickBoxText(final String text, final int x, final int y) {
 		int row = this.getRowNum(y);
 		int col = this.getColNum(x);
-		if (row < this.numRows && col < this.numCols) {
+		if (row < this.numRows && col < this.numCols && row >= 0 && col >= 0) {
 			this.clickBox[row][col] = text;
-		} else {
-			LOGGER.warn("Cell (" + row + ", " + col
-					+ ") is outside the range of click boxes: ("
-					+ (this.numRows - 1) + ", " + (this.numCols - 1) + ")");
 		}
 	}
 	
@@ -227,12 +218,8 @@ public final class ClickBoxes implements Serializable {
 		String text = null;
 		int row = this.getRowNum(y);
 		int col = this.getColNum(x);
-		if (row < this.numRows && col < this.numCols) {
+		if (row < this.numRows && col < this.numCols && row > 0 && col > 0) {
 			text = this.clickBox[row][col];
-		} else {
-			LOGGER.warn("Cell (" + row + ", " + col
-					+ ") is outside the range of click boxes: ("
-					+ (this.numRows - 1) + ", " + (this.numCols - 1) + ")");
 		}
 		return text;
 	}

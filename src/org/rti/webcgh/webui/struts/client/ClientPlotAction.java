@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-24 01:41:08 $
+$Revision: 1.13 $
+$Date: 2006-10-24 23:00:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
@@ -217,6 +218,7 @@ public final class ClientPlotAction extends BaseAction {
         // Initialize plot parameters form
         PlotParametersForm pForm = (PlotParametersForm) form;
         pForm.init();
+        pForm.setGenomeIntervals(GenomeInterval.encode(constraints));
         
         // Set selected experiments form
         SelectedExperimentsForm sef =

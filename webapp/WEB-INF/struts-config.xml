@@ -144,7 +144,9 @@
 		<action
 			path="/cart/newPlot"
 			name="plot.parameters.form"
-			validate="false">
+			validate="true"
+			input="/cart/routeToPlotParametersPage.do"
+			scope="session">
 			<forward name="success" path="/cart/showPlot.do"/>
 		</action>
 			
@@ -228,16 +230,7 @@
 			name="plot.parameters.form"
 			validate="false"
 			scope="session">
-			<forward name="success" path="/cart/routeToChangePlotParametersPage.do"/>
-		</action>
-		
-	<!-- Route user to a plot parameters page for changing parameters -->
-		<action
-			path="/cart/routeToChangePlotParametersPage"
-			name="plot.parameters.form"
-			scope="session"
-			validate="false">
-			<forward name="scatter" path="cart.scatter.plot.change.params"/>
+			<forward name="success" path="/cart/routeToPlotParametersPage.do"/>
 		</action>
 				
 		<!-- ========= Account management actions ========= -->

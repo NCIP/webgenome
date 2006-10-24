@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.7 $
+$Date: 2006-10-24 23:00:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -175,6 +175,17 @@ public class GenomeInterval {
 	}
 	
 	
+	/**
+	 * Constructor.
+	 * @param interval A genome interval.
+	 */
+	public GenomeInterval(final GenomeInterval interval) {
+		this.chromosome = interval.chromosome;
+		this.endLocation = interval.endLocation;
+		this.startLocation = interval.startLocation;
+	}
+	
+	
 	// =================================
 	//     Business methods
 	// =================================
@@ -274,6 +285,29 @@ public class GenomeInterval {
 	
 	
 	/**
+	 * Encode given bioassay data constraints into
+	 * a string of form '1:100-200,3:500-600'.
+	 * @param constraints Bioassay data constraints
+	 * @return Encoded constraints
+	 */
+	public static final String encode(
+			final BioAssayDataConstraints[] constraints) {
+		if (constraints == null) {
+			throw new IllegalArgumentException(
+					"Bioassay data onstraints are null");
+		}
+		StringBuffer buffer = new StringBuffer();
+		for (int i = 0; i < constraints.length; i++) {
+			if (i > 0) {
+				buffer.append(DELIMITER);
+			}
+			buffer.append(encode(constraints[i]));
+		}
+		return buffer.toString();
+	}
+	
+	
+	/**
 	 * Encode a genome interval as a string of form 1:100-200.
 	 * @param interval Genome interval to encode
 	 * @return Encoded genome interval
@@ -285,6 +319,23 @@ public class GenomeInterval {
 				&& interval.getEndLocation() >= 0) {
 			buff.append(":" + interval.getStartLocation()
 					+ "-" + interval.getEndLocation());
+		}
+		return buff.toString();
+	}
+	
+	
+	/**
+	 * Encode given constraints into a string of format
+	 * '1:100-200'.
+	 * @param constraints Bioassay data constraints
+	 * @return Encoded bioassay data constraints
+	 */
+	private static String encode(final BioAssayDataConstraints constraints) {
+		StringBuffer buff = new StringBuffer(constraints.getChromosome());
+		if (constraints.getStartPosition() >= 0
+				&& constraints.getEndPosition() >= 0) {
+			buff.append(":" + constraints.getStartPosition() + "-"
+					+ constraints.getEndPosition());
 		}
 		return buff.toString();
 	}

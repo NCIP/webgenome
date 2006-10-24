@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-18 20:46:20 $
+$Revision: 1.5 $
+$Date: 2006-10-24 23:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -203,6 +203,23 @@ public class PlotParameters {
      */
     public PlotParameters() {
         
+    }
+    
+    
+    /**
+     * Constructor that performs a deep copy of input
+     * plot parameters.
+     * @param params Plot parameters
+     */
+    public PlotParameters(final PlotParameters params) {
+    	this();
+    	for (GenomeInterval interval : params.genomeIntervals) {
+    		this.add(new GenomeInterval(interval));
+    	}
+    	this.numPlotsPerRow = params.numPlotsPerRow;
+    	this.plotName = params.plotName;
+    	this.quantitationType = params.quantitationType;
+    	this.units = params.units;
     }
     
     

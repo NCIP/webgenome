@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-23 02:20:39 $
+$Revision: 1.3 $
+$Date: 2006-10-24 23:00:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -87,6 +87,13 @@ public class ImageFileManager implements Serializable {
 	/** Logger. */
 	private static final Logger LOGGER =
 		Logger.getLogger(ImageFileManager.class);
+	
+	/**
+	 * Name of placeholder file in image directory.  Having
+	 * at least one file in the plot directory
+	 * ensures that CVS does not purge the directory.
+	 */
+	private static final String PLACEHOLDER_FILE_NAME = "placeholder.txt";
 
 	// =============================
 	//         Attributes
@@ -169,10 +176,12 @@ public class ImageFileManager implements Serializable {
 		File[] files = directory.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			if (!fileSet.contains(file.getName())) {
-				if (!file.delete()) {
-					LOGGER.warn("Unable to delete file '"
-							+ file.getAbsolutePath() + "'");
+			if (!PLACEHOLDER_FILE_NAME.equals(file.getName())) {
+				if (!fileSet.contains(file.getName())) {
+					if (!file.delete()) {
+						LOGGER.warn("Unable to delete file '"
+								+ file.getAbsolutePath() + "'");
+					}
 				}
 			}
 		}
@@ -206,9 +215,8 @@ public class ImageFileManager implements Serializable {
 	public final void deleteImageFile(final String fileName) {
 		String path = this.directory.getAbsolutePath() + "/" + fileName;
 		File file = new File(path);
-		if (!file.exists()) {
-			throw new WebcghSystemException("File '" + path
-					+ "' does not exist");
+		if (file.exists()) {
+			LOGGER.warn("Image file '" + fileName + "' not found");
 		}
 		if (!file.delete()) {
 			LOGGER.warn("Unable to delete file '" + path + "'");

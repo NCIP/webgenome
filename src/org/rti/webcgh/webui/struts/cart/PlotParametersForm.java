@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-24 01:41:08 $
+$Revision: 1.10 $
+$Date: 2006-10-24 23:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
 import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
+import org.rti.webcgh.util.NumericUtils;
 import org.rti.webcgh.util.StringUtils;
 import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.util.ValidationUtils;
@@ -499,10 +500,13 @@ public class PlotParametersForm extends BaseForm {
 		this.validateCommonFields(errors);
 		
 		// Scatter plot-specific fields
-		this.validateScatterPlotFields(errors);
-		
+		if ("scatter".equals(this.plotType)) {
+			this.validateScatterPlotFields(errors);
+			
 		// Ideogram plot-specific fields
-		this.validateIdeogramPlotFields(errors);
+		} else if ("ideogram".equals(this.plotType)) {
+			this.validateIdeogramPlotFields(errors);
+		}
 		
 		if (errors.size() > 0) {
 			errors.add("global", new ActionError("invalid.fields"));
@@ -614,9 +618,9 @@ public class PlotParametersForm extends BaseForm {
 		}
 		
 		// maxSaturation
-		if (!StringUtils.isEmpty(this.minSaturation)) {
-			if (!ValidationUtils.validNumber(this.minSaturation)) {
-				errors.add("minSaturation", new ActionError("invalid.field"));
+		if (!StringUtils.isEmpty(this.maxSaturation)) {
+			if (!ValidationUtils.validNumber(this.maxSaturation)) {
+				errors.add("maxSaturation", new ActionError("invalid.field"));
 			}
 		}
 		
@@ -665,7 +669,7 @@ public class PlotParametersForm extends BaseForm {
 		this.maxMask = "";
 		this.maxSaturation = String.valueOf(
 				IdeogramPlotParameters.DEF_MAX_SATURATION);
-		this.minMask = String.valueOf(IdeogramPlotParameters.DEF_MIN_MASK);
+		this.minMask = "";
 		this.minSaturation = String.valueOf(
 				IdeogramPlotParameters.DEF_MIN_SATURATION);
 	}
@@ -682,6 +686,8 @@ public class PlotParametersForm extends BaseForm {
 		if (type == PlotType.SCATTER) {
 			p = new ScatterPlotParameters();
 			this.setScatterPlotParameters((ScatterPlotParameters) p);
+			
+		// Ideogram plot
 		} else if (type == PlotType.IDEOGRAM) {
 			p = new IdeogramPlotParameters();
 			this.setIdeogramPlotParameters((IdeogramPlotParameters) p);
@@ -781,9 +787,66 @@ public class PlotParametersForm extends BaseForm {
 			ScatterPlotParameters spp = (ScatterPlotParameters) plotParameters;
 			this.height = String.valueOf(spp.getHeight());
 			this.width = String.valueOf(spp.getWidth());
-			this.minY = String.valueOf(spp.getMinY());
-			this.maxY = String.valueOf(spp.getMaxY());
+			
+			// minY
+			if (NumericUtils.isReal(spp.getMinY())) {
+				this.minY = String.valueOf(spp.getMinY());
+			} else {
+				this.minY = "";
+			}
+			
+			// maxY
+			if (NumericUtils.isReal(spp.getMaxY())) {
+				this.maxY = String.valueOf(spp.getMaxY());
+			} else {
+				this.maxY = "";
+			}
+			
+		// Ideogram plot parameters
+		} else if (plotParameters instanceof IdeogramPlotParameters) {
+			IdeogramPlotParameters ipp =
+				(IdeogramPlotParameters) plotParameters;
+			
+			// ideogramSize
+			this.ideogramSize = ipp.getIdeogramSize().getName();
+			
+			// ideogramThickness
+			this.ideogramThickness = String.valueOf(ipp.getIdeogramThickness());
+			
+			// maxMask
+			if (NumericUtils.isReal(ipp.getMaxMask())) {
+				this.maxMask = String.valueOf(ipp.getMaxMask());
+			} else {
+				this.maxMask = "";
+			}
+			
+			// maxSaturation
+			if (NumericUtils.isReal(ipp.getMaxSaturation())) {
+				this.maxSaturation = String.valueOf(ipp.getMaxSaturation());
+			} else {
+				this.maxSaturation = "";
+			}
+			
+			// minMask
+			if (NumericUtils.isReal(ipp.getMinMask())) {
+				this.minMask = String.valueOf(ipp.getMinMask());
+			} else {
+				this.minMask = "";
+			}
+			
+			// minSaturation
+			if (NumericUtils.isReal(ipp.getMinSaturation())) {
+				this.minSaturation = String.valueOf(ipp.getMinSaturation());
+			} else {
+				this.minSaturation = "";
+			}
+			
+			// trackWidth
+			this.trackWidth = String.valueOf(ipp.getTrackWidth());
 		}
+		
+		
+		
 	}
 	
 	

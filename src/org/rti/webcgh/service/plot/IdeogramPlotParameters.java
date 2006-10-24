@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-24 01:41:08 $
+$Revision: 1.5 $
+$Date: 2006-10-24 23:00:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -306,5 +306,21 @@ public class IdeogramPlotParameters extends PlotParameters {
 	 */
 	public IdeogramPlotParameters() {
 		super();
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param params Ideogram plot parameters
+	 */
+	public IdeogramPlotParameters(final IdeogramPlotParameters params) {
+		super(params);
+		this.ideogramSize = params.ideogramSize;
+		this.ideogramThickness = params.ideogramThickness;
+		this.maxMask = params.maxMask;
+		this.maxSaturation = params.maxSaturation;
+		this.minMask = params.minMask;
+		this.minSaturation = params.minSaturation;
+		this.trackWidth = params.trackWidth;
 	}
 }

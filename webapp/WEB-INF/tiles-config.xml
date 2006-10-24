@@ -53,13 +53,6 @@
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
   	
-<!-- Change scatter plot parameters -->
-  	<definition name="cart.scatter.plot.change.params" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Scatter plot parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/scatterPlotChangeParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
-  	</definition>
-  	
 <!-- Ideogram plot parameters -->
   	<definition name="cart.ideogram.plot.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Ideogram plot parameters" />
