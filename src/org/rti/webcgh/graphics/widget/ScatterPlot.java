@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-10-25 18:49:01 $
+$Revision: 1.12 $
+$Date: 2006-10-25 20:52:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -343,6 +343,7 @@ public final class ScatterPlot implements PlotElement {
 	    			(this.plotBoundaries.fractionalDistanceFromLeft(
 	    					currentStartBp) * (double) this.width);
 	    		MouseOverStripe currentStripe = new MouseOverStripe();
+	    		this.mouseOverStripes.add(currentStripe);
 	    		currentStripe.setText(currentReporter.getName());
 	    		currentStripe.setStart(currentStartPix);
 	    		if (lastStripe != null) {
