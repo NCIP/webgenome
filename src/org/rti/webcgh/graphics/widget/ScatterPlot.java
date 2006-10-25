@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-25 17:53:14 $
+$Revision: 1.11 $
+$Date: 2006-10-25 18:49:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -306,7 +306,7 @@ public final class ScatterPlot implements PlotElement {
             canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
             this.paintPoints(cad, bioAssay.getColor(), canvas,
             		pointRadius,
-            		bioAssay.getName(), reporters);
+            		bioAssay.getId(), reporters);
             
             // Error bars
 //            DrawingCanvas errorBarsTile = tile.newTile();
@@ -361,18 +361,18 @@ public final class ScatterPlot implements PlotElement {
      * @param color Color of points
      * @param drawingCanvas A drawing canvas
      * @param pointRadius Radius of data point in pixels
-     * @param bioAssayName Name of bioassay datum comes from
+     * @param bioAssayId ID of bioassay datum comes from
      * @param reporters Sorted set of reporters
      */
     private void paintPoints(final ChromosomeArrayData cad, final Color color,
             final DrawingCanvas drawingCanvas, final int pointRadius,
-            final String bioAssayName,
+            final Long bioAssayId,
             final SortedSet<Reporter> reporters) {
     	List<ArrayDatum> arrayData = cad.getArrayData();
     	if (arrayData != null) {
 	        for (ArrayDatum datum : cad.getArrayData()) {
 	            this.paintPoint(datum, color, drawingCanvas, pointRadius,
-	            		bioAssayName);
+	            		bioAssayId);
 	            reporters.add(datum.getReporter());
 	        }
     	}
@@ -400,11 +400,11 @@ public final class ScatterPlot implements PlotElement {
      * @param color A color
      * @param drawingCanvas A drawing canvas
      * @param pointRadius Radius of data point
-     * @param bioAssayName Name of bioassay datum comes from
+     * @param bioAssayId ID of bioassay datum comes from
      */
     private void paintPoint(final ArrayDatum datum,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int pointRadius, final String bioAssayName) {
+            final int pointRadius, final Long bioAssayId) {
         this.reusableDataPoint1.bulkSet(datum);
 	    if (this.plotBoundaries.withinBoundaries(this.reusableDataPoint1)) {
 	        int x = this.transposeX(this.reusableDataPoint1);
@@ -419,7 +419,7 @@ public final class ScatterPlot implements PlotElement {
 	        y -= this.y;
 	        String command = this.clickBoxes.getClickBoxText(x, y);
 	        if (command == null) {
-	        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
+	        	this.clickBoxes.addClickBoxText(bioAssayId.toString(), x, y);
 	        }
         }
     }
