@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-24 23:00:40 $
+$Revision: 1.11 $
+$Date: 2006-10-25 02:36:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -540,6 +540,7 @@ public class PlotParametersForm extends BaseForm {
 							|| (start >= 0 && end < 0)) {
 						errors.add("genomeIntervals",
 								new ActionError("invalid.field"));
+						break;
 					}
 				}
 			} catch (GenomeIntervalFormatException e) {

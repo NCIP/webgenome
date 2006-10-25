@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-24 23:00:42 $
+$Revision: 1.8 $
+$Date: 2006-10-25 02:36:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -436,7 +436,7 @@ public class GenomeInterval {
 		 */
 		long parseEnd(final String encoding)
 		throws GenomeIntervalFormatException {
-			long end = -2;
+			long end = -1;
 			int p = encoding.indexOf("-");
 			int q = encoding.length();
 			if (p >= 0 && p + 1 < q) {

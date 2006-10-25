@@ -25,6 +25,7 @@
 		<tr>
 			<td>
 				Genome Intervals
+				<html:errors property="genomeIntervals"/>
 			</td>
 			<td>
 				<html:text property="genomeIntervals"/>

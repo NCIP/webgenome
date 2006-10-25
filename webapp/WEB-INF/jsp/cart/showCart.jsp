@@ -34,15 +34,37 @@
 
 <h1 align="center">Shopping Cart</h1>
 
+<center>
+
+	<html:img page="/images/BarGraph.gif"
+		title="Select color"
+		 border="0"
+		 width="15" height="15"/> = Show plot &nbsp;&nbsp;
+	<html:img page="/images/New.gif"
+		title="New name" border="0"
+		width="15" height="15"/> = New name &nbsp;&nbsp;
+							
+	<html:img page="/images/Delete.gif"
+		title="Remove" border="0"
+		width="15" height="15"/> = Delete &nbsp;&nbsp;
+		
+	<html:img page="/images/Palette.gif"
+		title="Select color"
+		 border="0"
+		 width="15" height="15"/> = Select color
+
+<table cellpadding="10"><tr valign="top"><td>
+
 <%-- Experiments --%>
 <html:form action="/cart/routeToOperationPage">
-<center>
 	<html:errors property="global"/>
 	<table class="table">
 		<tr>
-			<th>Experiment</th>
-			<th>Bioassays</th>
-			<th>Actions</th>
+			<th colspan="2">Experiments</th>
+		</tr>
+		<tr>
+			<th>Experiment Name</th>
+			<th>Nested Bioassays</th>
 		</tr>
 		<logic:iterate name="shopping.cart" property="experiments"
 			id="experiment">
@@ -56,9 +78,18 @@
 					<html:checkbox property="<%= propName %>"/>
 					<bean:write name="experiment" property="name"/>
 					<a href="#"
-						onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')"
-							><img src="<html:rewrite page="/images/icon-nameChooser.gif"/>" alt="Change Name" border="0"
-					></a>
+						onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')">
+							<html:img page="/images/New.gif"
+								title="New experiment name" border="0"
+								width="15" height="15"/>
+					</a>
+					<html:link action="/cart/removeExperiment"
+						paramName="experiment" paramProperty="id"
+						paramId="id">
+						<html:img page="/images/Delete.gif"
+							title="Remove experiment" border="0"
+							width="15" height="15"/>
+					</html:link>
 				</td>
 				<td>
 					<logic:iterate name="experiment" property="bioAssays"
@@ -71,37 +102,27 @@
 								<bean:write name="bioAssay" property="name"/>
 								&nbsp;&nbsp;&nbsp;
 								<a href="#"
-									onclick="colorChooser('<bean:write name="bioAssay" property="id"/>')"
-										><img src="<html:rewrite page="/images/icon-colorChooser.gif"/>" alt="Change Color" border="0"
-								></a>
-								&nbsp;
+									onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')">
+										<html:img page="/images/New.gif"
+											title="New bioassay name"
+											 border="0"
+											 width="15" height="15"/>
+								</a>
 								<a href="#"
-									onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')"
-										><img src="<html:rewrite page="/images/icon-nameChooser.gif"/>" alt="Change Name" border="0"
-								></a>
+									onclick="colorChooser('<bean:write name="bioAssay" property="id"/>')">
+										<html:img page="/images/Palette.gif"
+											title="Select bioassay color"
+											 border="0"
+											 width="15" height="15"/>
+								</a>
 							</td>
 						</table>
 					</logic:iterate>
 				</td>
-				<td>
-					<html:link action="/cart/removeExperiment"
-						paramName="experiment" paramProperty="id"
-						paramId="id"
-						><img src="<html:rewrite page="/images/icon-remove.gif"/>" alt="Remove" border="0">Remove
-					</html:link>
-				</td>
 			</tr>
 		</logic:iterate>
 	</table>
-
-<%-- Legend --%>
-	<small><font color="#888888">[
-		<img src="<html:rewrite page="/images/icon-nameChooser.gif"/>" alt="Change Name" border="0"> Rename
-		&nbsp; &nbsp;
-		<img src="<html:rewrite page="/images/icon-colorChooser.gif"/>" alt="Change Color" border="0"> Change Color
-	]</font></small>
-
-
+	
 	<p>
 		<html:radio property="operation" value="plot"/>
 		New Plot
@@ -115,41 +136,39 @@
 		
 		<html:submit value="GO"/>
 	</p>
-</center>
 </html:form>
 
-<hr noshade size="1">
+</td><td>
 
 <%-- Plots --%>
-<center>
 	<table class="table">
 		<tr>
-			<th>Plot Name</th>
-			<th colspan="2">Actions</th>
+			<th>Plots</th>
 		</tr>
 		<logic:iterate name="shopping.cart" property="plots"
 			id="plot">
 			<tr>
 				<td>
 					<bean:write name="plot" property="plotParameters.plotName"/>
-					<a href="#"
-						onclick="nameChange('<bean:write name="plot" property="id"/>', 'plot')"
-							><img src="<html:rewrite page="/images/icon-nameChooser.gif"/>" alt="Change Name" border="0"
-					></a>
-				</td>
-				<td>
 					<html:link action="/cart/showPlot" paramId="plotId"
-						paramName="plot" paramProperty="id"
-						><img src="<html:rewrite page="/images/icon-show.gif"/>" alt="Show" border="0">Show
+						paramName="plot" paramProperty="id">
+						<html:img page="/images/BarGraph.gif" title="Show plot"
+						 	border="0" width="15" height="15"/>
 					</html:link>
-				</td>
-				<td>
+					<a href="#"
+						onclick="nameChange('<bean:write name="plot" property="id"/>', 'plot')">
+							<html:img page="/images/New.gif" title="New plot name"
+								 border="0" width="15" height="15"/>
+					</a>
 					<html:link action="/cart/removePlot" paramId="id"
-						paramName="plot" paramProperty="id"
-						><img src="<html:rewrite page="/images/icon-remove.gif"/>" alt="Remove" border="0">Remove
+						paramName="plot" paramProperty="id">
+						<html:img page="/images/Delete.gif" title="Remove plot"
+							 border="0" width="15" height="15"/>
 					</html:link>
 				</td>
 			</tr>
 		</logic:iterate>
 	</table>
+</td></tr></table>
+
 </center>
