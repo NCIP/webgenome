@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.10 $
+$Date: 2006-10-25 17:53:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
+import org.rti.webcgh.graphics.primitive.Polyline;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.webui.util.ClickBoxes;
@@ -93,17 +94,20 @@ public final class ScatterPlot implements PlotElement {
     /** Radius of selected data points in pixels. */
     private static final int SELECTED_POINT_RADIUS = 5;
     
-//    /** Default width of regression line in pixels. */
-//    private static final int DEF_LINE_WIDTH = 2;
-//    
+    /** Default width of regression line in pixels. */
+    private static final int DEF_LINE_WIDTH = 1;
+    
+    /** Width of selected lines in pixels. */
+    private static final int SELECTED_LINE_WIDTH = 3;
+    
 //    /** Default length of error bar hatch lines in pixels. */
 //    private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
-//    
-//    /**
-//     * Default maximum number of constituent points in
-//     * a regression line polyline.
-//     */
-//    private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
+    
+    /**
+     * Default maximum number of constituent points in
+     * a regression line polyline.
+     */
+    private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
     
     /**
      * Name of attribute that is used by an SVG <pre><g/></pre>
@@ -160,11 +164,11 @@ public final class ScatterPlot implements PlotElement {
      */
     private final DataPoint reusableDataPoint1 = new DataPoint();
     
-//    /**
-//     * Data point object that is reused during plot creation
-//     * in order to economize memory.
-//     */
-//    private final DataPoint reusableDataPoint2 = new DataPoint();
+    /**
+     * Data point object that is reused during plot creation
+     * in order to economize memory.
+     */
+    private final DataPoint reusableDataPoint2 = new DataPoint();
     
     /** Click boxes used for providing interactivity using Javascript. */
     private final ClickBoxes clickBoxes;
@@ -260,48 +264,61 @@ public final class ScatterPlot implements PlotElement {
     	SortedSet<Reporter> reporters = new TreeSet<Reporter>();
     	
         // Paint points and lines
+    	BioAssay selected = null;
         for (Experiment exp : this.experiments) {
             for (BioAssay bioAssay : exp.getBioAssays()) {
-            	int pointRadius = DEF_POINT_RADIUS;
             	if (bioAssay.isSelected()) {
-            		pointRadius = SELECTED_POINT_RADIUS;
+            		selected = bioAssay;
+            	} else {
+            		this.paint(canvas, bioAssay, reporters);
             	}
-            	ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
-            		getChromosomeArrayData(bioAssay, this.chromosome);
-            	if (cad != null) {
-		            DrawingCanvas tile = canvas.newTile();
-		            tile.setAttribute(GRP_ATT_NAME, bioAssay.getName());
-		            tile.setLineWidth(1);
-		            canvas.add(tile);
-		                
-		            // Points
-		            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
-		            this.paintPoints(cad, bioAssay.getColor(), canvas,
-		            		pointRadius,
-		            		bioAssay.getName(), reporters);
-		            
-		            // Error bars
-		//            DrawingCanvas errorBarsTile = tile.newTile();
-		//            tile.add(errorBarsTile);
-		//            errorBarsTile.setAttribute(GRP_ATT_NAME,
-		//            	ERROR_BARS_GRP_ATT_VALUE);
-		//            this.paintErrorBars(cad, color, errorBarsTile);
-		//        
-		//            // Lines
-		//            DrawingCanvas linesTile = tile.newTile();
-		//            tile.add(linesTile);
-		//            linesTile.setAttribute(GRP_ATT_NAME, LINES_GRP_ATT_VALUE);
-		//            String command = "highlight('" + name + "')";
-		//            linesTile.addGraphicEventResponse(
-		//            	GraphicEvent.mouseClickEvent,
-		//                    command);
-		//            this.paintLines(cad, color, linesTile);
-		        }
             }
+        }
+        if (selected != null) {
+        	this.paint(canvas, selected, reporters);
         }
         
         // Initialize mouseover stripes
         this.initializeMouseOverStripes(reporters);
+    }
+    
+    /**
+     * Paint given bioassay.
+     * @param canvas Canvas
+     * @param bioAssay Bioassay to paint
+     * @param reporters All reporters in all experiments that
+     * are being painted
+     */
+    private void paint(final DrawingCanvas canvas, final BioAssay bioAssay,
+    		final SortedSet<Reporter> reporters) {
+    	
+    	int pointRadius = DEF_POINT_RADIUS;
+    	int lineWidth = DEF_LINE_WIDTH;
+    	if (bioAssay.isSelected()) {
+    		pointRadius = SELECTED_POINT_RADIUS;
+    		lineWidth = SELECTED_LINE_WIDTH;
+    	}
+    	ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
+    		getChromosomeArrayData(bioAssay, this.chromosome);
+    	if (cad != null) {
+                
+            // Points
+            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
+            this.paintPoints(cad, bioAssay.getColor(), canvas,
+            		pointRadius,
+            		bioAssay.getName(), reporters);
+            
+            // Error bars
+//            DrawingCanvas errorBarsTile = tile.newTile();
+//            tile.add(errorBarsTile);
+//            errorBarsTile.setAttribute(GRP_ATT_NAME,
+//            	ERROR_BARS_GRP_ATT_VALUE);
+//            this.paintErrorBars(cad, color, errorBarsTile);
+//        
+//            // Lines
+            this.paintLines(cad, bioAssay.getColor(), canvas,
+            		lineWidth);
+        }
     }
     
     
@@ -389,19 +406,21 @@ public final class ScatterPlot implements PlotElement {
             final Color color, final DrawingCanvas drawingCanvas,
             final int pointRadius, final String bioAssayName) {
         this.reusableDataPoint1.bulkSet(datum);
-        int x = this.transposeX(this.reusableDataPoint1);
-        int y = this.transposeY(this.reusableDataPoint1);
-        
-        // Create point
-        this.drawPoint(x, y, color, datum.getReporter().getName(),
-                drawingCanvas, pointRadius);
-        
-        // Add click box command
-        x -= this.x;
-        y -= this.y;
-        String command = this.clickBoxes.getClickBoxText(x, y);
-        if (command == null) {
-        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
+	    if (this.plotBoundaries.withinBoundaries(this.reusableDataPoint1)) {
+	        int x = this.transposeX(this.reusableDataPoint1);
+	        int y = this.transposeY(this.reusableDataPoint1);
+	        
+	        // Create point
+	        this.drawPoint(x, y, color, datum.getReporter().getName(),
+	                drawingCanvas, pointRadius);
+	        
+	        // Add click box command
+	        x -= this.x;
+	        y -= this.y;
+	        String command = this.clickBoxes.getClickBoxText(x, y);
+	        if (command == null) {
+	        	this.clickBoxes.addClickBoxText(bioAssayName, x, y);
+	        }
         }
     }
     
@@ -423,61 +442,67 @@ public final class ScatterPlot implements PlotElement {
 //    }
     
     
-//    /**
-//     * Paint all lines for given chromosme array data.
-//     * This method ultimately uses the SVG <polyline/> element.
-//     * Due to limitations in SVG viewers regarding the
-//     * maximum number of individual points in a polyline,
-//     * the points are broken up into separate polylines
-//     * that contain no more than some maximum number of
-//     * ponts.
-//     * @param cad ChromosomeArrayData
-//     * @param color A color
-//     * @param drawingCanvas A drawing canvas
-//     */
-//    private void paintLines(final ChromosomeArrayData cad,
-//            final Color color, final DrawingCanvas drawingCanvas) {
-//        Polyline polyline = new Polyline(this.lineWidth,
-//                this.maxNumPointsInLine, color);
-//        for (int i = 1; i < cad.getArrayData().size(); i++) {
-//            if (i % this.maxNumPointsInLine == 0) {
-//                drawingCanvas.add(polyline, false);
-//                polyline = new Polyline(this.lineWidth,
-//                        this.maxNumPointsInLine, color);
-//            }
-//            ArrayDatum d1 = cad.getArrayData().get(i - 1);
-//            ArrayDatum d2 = cad.getArrayData().get(i);
-//            boolean runsOff = false;
-//            this.reusableDataPoint1.bulkSet(d1);
-//            this.reusableDataPoint2.bulkSet(d2);
-//            if (!this.plotBoundaries.withinBoundaries(this.reusableDataPoint1)
-//                    || !this.plotBoundaries.withinBoundaries(
-//                            this.reusableDataPoint2)) {
-//                if (!this.plotBoundaries.withinBoundaries(
-//                        this.reusableDataPoint2)) {
-//                    runsOff = true;
-//                }
-//                this.plotBoundaries.truncateToFitOnPlot(
-//                        this.reusableDataPoint1,
-//                        this.reusableDataPoint2);
-//            }
-//            int x1 = this.transposeX(this.reusableDataPoint1);
-//            int y1 = this.transposeY(this.reusableDataPoint1);
-//            int x2 = this.transposeX(this.reusableDataPoint2);
-//            int y2 = this.transposeY(this.reusableDataPoint2);
-//            polyline.add(x1, y1, x2, y2);
-//            if (runsOff) {
-//                if (!polyline.empty()) {
-//                    drawingCanvas.add(polyline, false);
-//                    polyline = new Polyline(this.lineWidth,
-//                            this.maxNumPointsInLine, color);
-//                }
-//            }
-//        }
-//        if (!polyline.empty()) {
-//            drawingCanvas.add(polyline, false);
-//        }
-//    }
+    /**
+     * Paint all lines for given chromosme array data.
+     * This method ultimately uses the SVG <polyline/> element.
+     * Due to limitations in SVG viewers regarding the
+     * maximum number of individual points in a polyline,
+     * the points are broken up into separate polylines
+     * that contain no more than some maximum number of
+     * ponts.
+     * @param cad ChromosomeArrayData
+     * @param color A color
+     * @param drawingCanvas A drawing canvas
+     * @param lineWidth Width of line in pixels
+     */
+    private void paintLines(final ChromosomeArrayData cad,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+        Polyline polyline = new Polyline(lineWidth,
+                DEF_MAX_NUM_POINTS_IN_LINE, color);
+        for (int i = 1; i < cad.getArrayData().size(); i++) {
+            if (i % DEF_MAX_NUM_POINTS_IN_LINE == 0) {
+                drawingCanvas.add(polyline, false);
+                polyline = new Polyline(lineWidth,
+                        DEF_MAX_NUM_POINTS_IN_LINE, color);
+            }
+            ArrayDatum d1 = cad.getArrayData().get(i - 1);
+            ArrayDatum d2 = cad.getArrayData().get(i);
+            boolean runsOff = false;
+            this.reusableDataPoint1.bulkSet(d1);
+            this.reusableDataPoint2.bulkSet(d2);
+            if (this.plotBoundaries.atLeastPartlyOnPlot(
+            		this.reusableDataPoint1, this.reusableDataPoint2)) {
+	            if (!this.plotBoundaries.withinBoundaries(
+	            		this.reusableDataPoint1)
+	                    || !this.plotBoundaries.withinBoundaries(
+	                            this.reusableDataPoint2)) {
+	                if (!this.plotBoundaries.withinBoundaries(
+	                        this.reusableDataPoint2)) {
+	                    runsOff = true;
+	                }
+	                this.plotBoundaries.truncateToFitOnPlot(
+	                        this.reusableDataPoint1,
+	                        this.reusableDataPoint2);
+	            }
+	            int x1 = this.transposeX(this.reusableDataPoint1);
+	            int y1 = this.transposeY(this.reusableDataPoint1);
+	            int x2 = this.transposeX(this.reusableDataPoint2);
+	            int y2 = this.transposeY(this.reusableDataPoint2);
+	            polyline.add(x1, y1, x2, y2);
+	            if (runsOff) {
+	                if (!polyline.empty()) {
+	                    drawingCanvas.add(polyline, false);
+	                    polyline = new Polyline(lineWidth,
+	                            DEF_MAX_NUM_POINTS_IN_LINE, color);
+	                }
+	            }
+            }
+        }
+        if (!polyline.empty()) {
+            drawingCanvas.add(polyline, false);
+        }
+    }
     
     
     /**

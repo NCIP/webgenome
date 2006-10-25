@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.6 $
+$Date: 2006-10-25 17:53:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -376,7 +376,9 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
         graphics.setColor(prim.getColor());
         if (prim instanceof Circle) {
             Circle c = (Circle) prim;
-            graphics.fillOval(c.getX(), c.getY(), c.getRadius() * 2,
+            int correction = c.getRadius();
+            graphics.fillOval(c.getX() - correction,
+            		c.getY() - correction, c.getRadius() * 2,
                     c.getRadius() * 2);
         } else if (prim instanceof Line) {
             Line l = (Line) prim;

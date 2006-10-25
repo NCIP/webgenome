@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-21 05:35:05 $
+$Revision: 1.5 $
+$Date: 2006-10-25 17:53:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -262,6 +262,16 @@ public class PlotBoundaries {
      */
     public final boolean rightOfPlot(final DataPoint dataPoint) {
     	return dataPoint.getValue1() > this.topRightDataPoint.getValue1();
+    }
+    
+    
+    /**
+     * Is data point to either the left or right of plot?
+     * @param dataPoint A data point
+     * @return T/F
+     */
+    public final boolean leftOrRightOfPlot(final DataPoint dataPoint) {
+    	return leftOfPlot(dataPoint) || rightOfPlot(dataPoint);
     }
     
     

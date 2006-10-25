@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.4 $
+$Date: 2006-10-25 17:53:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,7 +75,7 @@ public class TestClientDataService implements ClientDataService {
 	private static final long GAP = 1000000;
 	
 	/** Number of bioassays per experiment generated. */
-	private static final int NUM_BIO_ASSAYS = 3;
+	private static final int NUM_BIO_ASSAYS = 1;
 	
 	/** Experiment data transfer object generator. */
 	private final ExperimentDTOGenerator experimentDTOGenerator =
