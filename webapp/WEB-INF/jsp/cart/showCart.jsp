@@ -78,11 +78,11 @@
 					<html:checkbox property="<%= propName %>"/>
 					<bean:write name="experiment" property="name"/>
 					<a href="#"
-						onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')">
-							<html:img page="/images/New.gif"
+						onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')"
+							><html:img page="/images/New.gif"
 								title="New experiment name" border="0"
-								width="15" height="15"/>
-					</a>
+								width="15" height="15"
+					/></a>
 					<html:link action="/cart/removeExperiment"
 						paramName="experiment" paramProperty="id"
 						paramId="id">
@@ -102,19 +102,19 @@
 								<bean:write name="bioAssay" property="name"/>
 								&nbsp;&nbsp;&nbsp;
 								<a href="#"
-									onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')">
-										<html:img page="/images/New.gif"
+									onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')"
+										><html:img page="/images/New.gif"
 											title="New bioassay name"
 											 border="0"
-											 width="15" height="15"/>
-								</a>
+											 width="15" height="15"
+								/></a>
 								<a href="#"
-									onclick="colorChooser('<bean:write name="bioAssay" property="id"/>')">
-										<html:img page="/images/Palette.gif"
+									onclick="colorChooser('<bean:write name="bioAssay" property="id"/>')"
+										><html:img page="/images/Palette.gif"
 											title="Select bioassay color"
 											 border="0"
-											 width="15" height="15"/>
-								</a>
+											 width="15" height="15"
+								/></a>
 							</td>
 						</table>
 					</logic:iterate>
@@ -156,10 +156,10 @@
 						 	border="0" width="15" height="15"/>
 					</html:link>
 					<a href="#"
-						onclick="nameChange('<bean:write name="plot" property="id"/>', 'plot')">
-							<html:img page="/images/New.gif" title="New plot name"
-								 border="0" width="15" height="15"/>
-					</a>
+						onclick="nameChange('<bean:write name="plot" property="id"/>', 'plot')"
+							><html:img page="/images/New.gif" title="New plot name"
+								 border="0" width="15" height="15"
+					/></a>
 					<html:link action="/cart/removePlot" paramId="id"
 						paramName="plot" paramProperty="id">
 						<html:img page="/images/Delete.gif" title="Remove plot"
