@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2006-10-26 15:37:36 $
+$Revision: 1.15 $
+$Date: 2006-10-26 19:22:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -195,7 +195,8 @@ public final class ClientPlotAction extends BaseAction {
         		request, true);
         Organism org = this.organismDao.loadDefault();
         for (Experiment exp : experiments) {
-        	exp.setId(this.experimentIdGenerator.nextId());
+        	Long expId = this.experimentIdGenerator.nextId();
+        	exp.setId(expId);
         	exp.setOrganism(org);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
@@ -204,8 +205,7 @@ public final class ClientPlotAction extends BaseAction {
         }
         
         // Put data in shopping cart
-        ShoppingCart cart = new ShoppingCart();
-        PageContext.setShoppingCart(request, cart);
+        ShoppingCart cart = PageContext.getShoppingCart(request, true);
         cart.add(experiments);
         
         // Set image file manager property of shopping cart

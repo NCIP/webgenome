@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-16 20:25:18 $
+$Revision: 1.3 $
+$Date: 2006-10-26 19:22:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.BioAssay;
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 
@@ -90,6 +93,13 @@ public final class RemoveExperimentAction extends BaseAction {
     	
     	// Get ID of experiment to remove
     	long id = Long.parseLong(request.getParameter("id"));
+    	
+    	// Relinquish colors in experiment
+    	ColorChooser cc = PageContext.getColorChooser(request, false);
+    	Experiment exp = cart.getExperiment(id);
+    	for (BioAssay ba : exp.getBioAssays()) {
+    		cc.decrementCount(ba.getColor());
+    	}
     	
     	// Remove experiment
     	cart.removeExperiment(id);

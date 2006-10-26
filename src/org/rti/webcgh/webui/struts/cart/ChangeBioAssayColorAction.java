@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-17 22:49:33 $
+$Revision: 1.2 $
+$Date: 2006-10-26 19:22:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.util.ColorUtils;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
@@ -97,9 +98,16 @@ public final class ChangeBioAssayColorAction extends BaseAction {
     	String colorStr = request.getParameter("color");
     	Color color = ColorUtils.getColor(colorStr);
     	
-    	// Change bioassay color
+    	// Get bioassay
     	BioAssay ba = cart.getBioAssay(id);
+    	
+    	// Relinquish old bioassay color
+    	ColorChooser cc = PageContext.getColorChooser(request, false);
+    	cc.decrementCount(ba.getColor());
+    	
+    	// Change bioassay color and register with color chooser
     	ba.setColor(color);
+    	cc.incrementCount(color);
     	
     	return mapping.findForward("success");
     }
