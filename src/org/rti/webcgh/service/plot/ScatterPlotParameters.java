@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-24 23:00:39 $
+$Revision: 1.6 $
+$Date: 2006-10-26 04:46:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -88,6 +88,12 @@ extends PlotParameters implements Serializable {
      */
     private int height = -1;
     
+    /** Draw horizontal grid lines? */
+    private boolean drawHorizGridLines = true;
+    
+    /** Draw vertical grid lines? */
+    private boolean drawVertGridLines = true;
+    
     // ==========================
     //      Getters/setters
     // ==========================
@@ -129,6 +135,42 @@ extends PlotParameters implements Serializable {
      */
 	public void setWidth(final int width) {
 		this.width = width;
+	}
+
+
+	/**
+	 * Draw horizontal grid lines?
+	 * @return T/F
+	 */
+	public boolean isDrawHorizGridLines() {
+		return drawHorizGridLines;
+	}
+
+
+	/**
+	 * Sets whether horizontal grid lines should be drawn.
+	 * @param drawHorizGridLines Draw horizontal grid lines?
+	 */
+	public void setDrawHorizGridLines(final boolean drawHorizGridLines) {
+		this.drawHorizGridLines = drawHorizGridLines;
+	}
+
+
+	/**
+	 * Draw vertical grid lines?
+	 * @return T/F
+	 */
+	public boolean isDrawVertGridLines() {
+		return drawVertGridLines;
+	}
+
+
+	/**
+	 * Sets whether vertical grid lines should be drawn.
+	 * @param drawVertGridLines Draw vertical grid lines?
+	 */
+	public void setDrawVertGridLines(final boolean drawVertGridLines) {
+		this.drawVertGridLines = drawVertGridLines;
 	}
 
 

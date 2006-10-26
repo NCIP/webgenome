@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-10-26 03:50:16 $
+$Revision: 1.14 $
+$Date: 2006-10-26 04:47:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,6 @@ import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Polyline;
-import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.webui.util.ClickBoxes;
@@ -125,9 +124,6 @@ public final class ScatterPlot implements PlotElement {
      * within the group tags correspond to graph points.
      */
     private static final String POINTS_GRP_ATT_VALUE = "p";
-    
-    /** Background color. */
-    private static final Color BG_COLOR = new Color(235, 235, 235);
     
     // =============================
     //       Attributes
@@ -265,11 +261,6 @@ public final class ScatterPlot implements PlotElement {
      */
     public void paint(final DrawingCanvas canvas) {
     	SortedSet<Reporter> reporters = new TreeSet<Reporter>();
-    	
-    	// Paint background
-    	Rectangle rect = new Rectangle(this.x, this.y, this.width,
-    			this.height, BG_COLOR);
-    	canvas.add(rect);
     	
         // Paint points and lines
     	BioAssay selected = null;

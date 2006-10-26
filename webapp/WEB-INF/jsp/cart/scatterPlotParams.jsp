@@ -120,6 +120,26 @@
 			</td>
 		</tr>
 		
+	<%-- Draw horizontal grid lines --%>
+		<tr>
+			<td>
+				Draw horizontal grid lines?
+			</td>
+			<td>
+				<html:checkbox property="drawHorizGridLines"/>
+			</td>
+		</tr>
+		
+	<%-- Draw vertical grid lines --%>
+		<tr>
+			<td>
+				Draw vertical grid lines?
+			</td>
+			<td>
+				<html:checkbox property="drawVertGridLines"/>
+			</td>
+		</tr>
+		
 	</table>
 	
 	<p>

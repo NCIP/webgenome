@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.3 $
+$Date: 2006-10-26 04:47:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -183,15 +183,15 @@ public final class Grid implements PlotElement {
             int pos = ((Integer) it.next()).intValue();
             int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
             if (this.orientation == Orientation.HORIZONTAL) {
-                x1 = 0;
-                x2 = this.width;
-                y1 = this.height - pos;
+                x1 = this.minX;
+                x2 = this.minX + this.width;
+                y1 = this.minY + this.height - pos;
                 y2 = y1;
             } else if (this.orientation == Orientation.VERTICAL) {
-                x1 = pos;
+                x1 = this.minX + pos;
                 x2 = x1;
-                y1 = 0;
-                y2 = this.height;
+                y1 = this.minY;
+                y2 = this.minY + this.height;
             }
             Line line = new Line(x1, y1, x2, y2,
                     this.gridMarkThickness, this.color);

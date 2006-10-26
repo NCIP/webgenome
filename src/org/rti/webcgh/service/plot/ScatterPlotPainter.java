@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-09 03:06:22 $
+$Revision: 1.10 $
+$Date: 2006-10-26 04:46:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -58,7 +59,9 @@ import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.Axis;
+import org.rti.webcgh.graphics.widget.Background;
 import org.rti.webcgh.graphics.widget.Caption;
+import org.rti.webcgh.graphics.widget.Grid;
 import org.rti.webcgh.graphics.widget.Legend;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.graphics.widget.ScatterPlot;
@@ -79,7 +82,15 @@ import org.rti.webcgh.webui.util.MouseOverStripes;
  */
 public class ScatterPlotPainter extends PlotPainter {
 	
-
+	// ===========================
+	//       Constants
+	// ===========================
+	
+	/** Grid color. */
+	private static final Color GRID_COLOR = Color.WHITE;
+	
+	/** Background color. */
+	private static final Color BG_COLOR = new Color(235, 235, 235);
 	
 	// ===============================
 	//    Constructors
@@ -136,6 +147,7 @@ public class ScatterPlotPainter extends PlotPainter {
         }
         
         // Paint plot
+        Axis yAxis = null;
         Collection<ScatterPlot> plots = new ArrayList<ScatterPlot>();
         ScatterPlotSizer sizer =
         	new ScatterPlotSizer(plotParameters);
@@ -166,9 +178,11 @@ public class ScatterPlotPainter extends PlotPainter {
 	            		sizer.height(), pb);
 	        plots.add(scatterPlot);
 	        
-	        // Y-axis
+	        PlotPanel col = row.newChildPlotPanel();
+	        
+	        // Axes
 	        if (plotCount == 1) {
-		        Axis yAxis = new Axis(plotParameters.getMinY(),
+		        yAxis = new Axis(plotParameters.getMinY(),
 		                plotParameters.getMaxY(), scatterPlot.height(),
 		                Orientation.VERTICAL, Location.LEFT_OF,
 		                panel.getDrawingCanvas());
@@ -180,17 +194,35 @@ public class ScatterPlotPainter extends PlotPainter {
 		        row.add(yCaption, HorizontalAlignment.LEFT_OF,
 		                VerticalAlignment.CENTERED);
 	        }
-	        
-	        PlotPanel col = row.newChildPlotPanel();
-	        
-	        // Add scatter plot
-	        col.add(scatterPlot, true);
-	        
-	        // X-axis
 	        Axis xAxis = new Axis(gi.getStartLocation(),
 	                gi.getEndLocation(), scatterPlot.width(),
 	                Orientation.HORIZONTAL, Location.BELOW,
 	                col.getDrawingCanvas());
+	        
+	        // Background
+	        Background bg = new Background(scatterPlot.width(),
+	        		scatterPlot.height(), BG_COLOR);
+	        col.add(bg, true);
+	        
+	        // Grid lines
+	        if (plotParameters.isDrawHorizGridLines()) {
+	        	Grid horizGrid = yAxis.newGrid(scatterPlot.width(),
+	        			scatterPlot.height(), GRID_COLOR, col);
+	        	col.add(horizGrid,  HorizontalAlignment.LEFT_JUSTIFIED,
+	        			VerticalAlignment.TOP_JUSTIFIED);
+	        }
+	        if (plotParameters.isDrawVertGridLines()) {
+	        	Grid vertGrid = xAxis.newGrid(scatterPlot.width(),
+	        			scatterPlot.height(), GRID_COLOR, col);
+	        	col.add(vertGrid, HorizontalAlignment.LEFT_JUSTIFIED,
+	        			VerticalAlignment.TOP_JUSTIFIED);
+	        }
+	        
+	        // Add scatter plot
+	        col.add(scatterPlot, HorizontalAlignment.LEFT_JUSTIFIED,
+	        		VerticalAlignment.TOP_JUSTIFIED);
+	        
+	        // X-axis stuff
 	        String captionText = "Chromosome " + gi.getChromosome()
 	            + " (" + plotParameters.getUnits().getName() + ")";
 	        Caption xCaption = new Caption(captionText,

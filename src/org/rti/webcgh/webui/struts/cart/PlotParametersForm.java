@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-10-25 02:36:43 $
+$Revision: 1.12 $
+$Date: 2006-10-26 04:47:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -182,6 +182,12 @@ public class PlotParametersForm extends BaseForm {
 	private String ideogramThickness =
 		String.valueOf(IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 	
+	/** Draw horizontal grid lines? */
+	private String drawHorizGridLines = "on";
+	
+	/** Draw vertical grid lines? */
+	private String drawVertGridLines = "on";
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -210,7 +216,40 @@ public class PlotParametersForm extends BaseForm {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
-	
+	/**
+	 * Draw horizontal grid lines?
+	 * @return T/F
+	 */
+	public final String getDrawHorizGridLines() {
+		return drawHorizGridLines;
+	}
+
+	/**
+	 * Sets whether horizontal grid lines should be drawn.
+	 * @param drawHorizGridLines Draw horizontal grid lines?
+	 */
+	public final void setDrawHorizGridLines(
+			final String drawHorizGridLines) {
+		this.drawHorizGridLines = drawHorizGridLines;
+	}
+
+	/**
+	 * Draw vertical grid lines?
+	 * @return T/F
+	 */
+	public final String getDrawVertGridLines() {
+		return drawVertGridLines;
+	}
+
+	/**
+	 * Sets whether vertical grid lines should be drawn.
+	 * @param drawVertGridLines Draw vertical grid lines?
+	 */
+	public final void setDrawVertGridLines(
+			final String drawVertGridLines) {
+		this.drawVertGridLines = drawVertGridLines;
+	}
+
 	/**
 	 * Get plot name.
 	 * @return Plot name.
@@ -484,6 +523,21 @@ public class PlotParametersForm extends BaseForm {
 	// ===================================
 	//       Overrides
 	// ===================================
+	
+	
+	/**
+	 * Reset form fields.
+	 * @param mapping Action mapping
+	 * @param request Servlet request
+	 */
+	@Override
+	public final void reset(final ActionMapping mapping,
+			final HttpServletRequest request) {
+		
+		// Turn off checkbox fields
+		this.drawHorizGridLines = "";
+		this.drawVertGridLines = "";
+	}
 
 	/**
 	 * Validate form fields.
@@ -673,6 +727,8 @@ public class PlotParametersForm extends BaseForm {
 		this.minMask = "";
 		this.minSaturation = String.valueOf(
 				IdeogramPlotParameters.DEF_MIN_SATURATION);
+		this.drawHorizGridLines = "on";
+		this.drawVertGridLines = "on";
 	}
 	
 	/**
@@ -740,6 +796,16 @@ public class PlotParametersForm extends BaseForm {
 		}
 		params.setWidth(Integer.parseInt(this.width));
 		params.setHeight(Integer.parseInt(this.height));
+		if ("on".equals(this.drawHorizGridLines)) {
+			params.setDrawHorizGridLines(true);
+		} else {
+			params.setDrawHorizGridLines(false);
+		}
+		if ("on".equals(this.drawVertGridLines)) {
+			params.setDrawVertGridLines(true);
+		} else {
+			params.setDrawVertGridLines(false);
+		}
 	}
 	
 	
@@ -801,6 +867,20 @@ public class PlotParametersForm extends BaseForm {
 				this.maxY = String.valueOf(spp.getMaxY());
 			} else {
 				this.maxY = "";
+			}
+			
+			// drawHorizGridLines
+			if (spp.isDrawHorizGridLines()) {
+				this.drawHorizGridLines = "on";
+			} else {
+				this.drawHorizGridLines = "";
+			}
+			
+			// drawVertGridLines
+			if (spp.isDrawVertGridLines()) {
+				this.drawVertGridLines = "on";
+			} else {
+				this.drawVertGridLines = "";
 			}
 			
 		// Ideogram plot parameters
