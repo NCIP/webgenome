@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-26 21:27:00 $
+$Revision: 1.5 $
+$Date: 2006-10-26 22:43:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -312,7 +312,28 @@ public final class Legend implements PlotElement {
                 Text text = canvas.newText(ba.getName(), textX, textY,
                         fontSize, HorizontalAlignment.LEFT_JUSTIFIED, textColor);
                 canvas.add(text);
-                
+
+                // If selected, draw border around selected bioassay
+                if(ba.isSelected()) {
+                	// coordinates
+                	int selBoxX1 = boxX - selectedBoxXYModifier - 2;
+                	int selBoxY1 = boxY - selectedBoxXYModifier - 2;
+                	int selBoxX2 = textX + text.renderedWidth() + selectedBoxXYModifier + 2;
+                	int selBoxY2 = textY + selectedBoxXYModifier + 2;
+                	// top line
+                	canvas.add(new Line(selBoxX1, selBoxY1, selBoxX2, selBoxY1,
+                			1, ba.getColor()));
+                	// bottom line
+                	canvas.add(new Line(selBoxX1, selBoxY2, selBoxX2, selBoxY2,
+                			1, ba.getColor()));
+                	// left line
+                	canvas.add(new Line(selBoxX1, selBoxY1, selBoxX1, selBoxY2,
+                			1, ba.getColor()));
+                	// right line
+                	canvas.add(new Line(selBoxX2, selBoxY1, selBoxX2, selBoxY2,
+                			1, ba.getColor()));
+                }
+
                 // Advance drawing coordinates
                 boxX = textX + canvas.renderedWidth(ba.getName(), FONT_SIZE)
                     + PADDING * 2;
