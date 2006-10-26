@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webGenome.tld" prefix="webGenome" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
@@ -12,5 +13,5 @@
 <h1 align="center"><bean:write name="plot" property="plotParameters.plotName"/></h1>
 
 <p align="center">
-	<webcgh:showPlot name="plot"/>
+	<webGenome:plotInteractivity plotAttributeName="plot"/>
 </p>
