@@ -1,6 +1,6 @@
 /*
-$Revision: 1.16 $
-$Date: 2006-10-26 16:46:04 $
+$Revision: 1.17 $
+$Date: 2006-10-26 21:27:00 $
 
 The Web CGH Software License, Version 1.0
 
@@ -281,8 +281,8 @@ public final class ScatterPlot implements PlotElement {
         this.width = width;
         this.height = height;
         this.plotBoundaries = plotBoundaries;
-        this.clickBoxes = new ClickBoxes(width, height, DEF_POINT_RADIUS,
-        		DEF_POINT_RADIUS);
+        this.clickBoxes = new ClickBoxes(width, height, DEF_POINT_RADIUS * 3,
+        		DEF_POINT_RADIUS * 3);
         this.mouseOverStripes = new MouseOverStripes(
         		Orientation.HORIZONTAL, width, height);
     }

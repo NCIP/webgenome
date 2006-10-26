@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-26 03:50:16 $
+$Revision: 1.4 $
+$Date: 2006-10-26 21:27:00 $
 
 The Web CGH Software License, Version 1.0
 
@@ -81,7 +81,10 @@ public final class Legend implements PlotElement {
     
     /** Font size. */
     private static final int FONT_SIZE = 12;
-    
+
+    /** Selected font size modifier. */
+    private static final int SELECTED_FONT_SIZE_MODIFIER = 2;
+
     /** Text color. */
     private static final Color TEXT_COLOR = Color.BLACK;
     
@@ -93,7 +96,7 @@ public final class Legend implements PlotElement {
     
     /** Width of line around groups of bioassays. */
     private static final int GROUP_LINE_WIDTH = 1;
-    
+
     /** Color of line around groups of bioassays. */
     private static final Color GROUP_LINE_COLOR = Color.GRAY;
     
@@ -128,7 +131,7 @@ public final class Legend implements PlotElement {
     
     /** Origin point of coordinates. */
     private Point origin = new Point(0, 0);
-    
+
     
     // ==========================
     //     Constructors
@@ -152,7 +155,7 @@ public final class Legend implements PlotElement {
         
         // Set properties
         this.experiments = experiments;
-        this.width = width;        
+        this.width = width;
     }
     
     
@@ -277,7 +280,17 @@ public final class Legend implements PlotElement {
             int rightBoundary = this.origin.x + this.width - PADDING * 2;
             int boxX = leftBoundary;
             for (BioAssay ba : bioAssays) {
-                
+
+            	// Account for selected bioassays
+            	int fontSize = FONT_SIZE;
+            	Color textColor = Legend.TEXT_COLOR;
+            	int selectedBoxXYModifier = 0;
+            	if(ba.isSelected()) {
+            		fontSize += SELECTED_FONT_SIZE_MODIFIER;
+            		textColor = ba.getColor().darker().darker();
+            		selectedBoxXYModifier = Math.round(SELECTED_FONT_SIZE_MODIFIER / 2);
+            	}
+
                 // Set drawing coordinates
                 int textX = boxX + FONT_SIZE + PADDING;
                 int textEndX = textX + canvas.renderedWidth(ba.getName(),
@@ -290,14 +303,14 @@ public final class Legend implements PlotElement {
                 }
                 
                 // Add box
-                Rectangle rect = new Rectangle(boxX, boxY, FONT_SIZE,
-                        FONT_SIZE, ba.getColor());
+                Rectangle rect = new Rectangle(boxX - selectedBoxXYModifier,
+                		boxY - selectedBoxXYModifier, fontSize, fontSize,
+                		ba.getColor());
                 canvas.add(rect);
-                
+
                 // Add text
                 Text text = canvas.newText(ba.getName(), textX, textY,
-                        FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
-                        Legend.TEXT_COLOR);
+                        fontSize, HorizontalAlignment.LEFT_JUSTIFIED, textColor);
                 canvas.add(text);
                 
                 // Advance drawing coordinates
