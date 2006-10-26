@@ -30,6 +30,14 @@
 			+ "resizable=no, toolbar=no, location=no, directories=no"
 		);
 	}
+
+	// Confirm remove
+	function confirmRemove(item, url) {
+		var confirmAnswer = confirm("Are you sure you wish to remove " + item + "?");
+		if(confirmAnswer) {
+			window.location = url;
+		}
+	}
 </script>
 
 <h1 align="center">Shopping Cart</h1>
@@ -95,13 +103,13 @@
 											title="New experiment name" border="0"
 											width="15" height="15"
 								/></a>
-								<html:link action="/cart/removeExperiment"
+								<a href="javascript:confirmRemove('<bean:write name="experiment" property="name"/>', '<html:rewrite page="/cart/removeExperiment.do"
 									paramName="experiment" paramProperty="id"
-									paramId="id">
+									paramId="id"/>');">
 									<html:img page="/images/icon-remove.gif"
 										title="Remove experiment" border="0"
 										width="15" height="15"/>
-								</html:link>
+								</a>
 							</span>
 						</td>
 					</tr></table>
@@ -190,11 +198,11 @@
 										><html:img page="/images/icon-nameChooser.gif" title="New plot name"
 											 border="0" width="15" height="15"
 								/></a>
-								<html:link action="/cart/removePlot" paramId="id"
-									paramName="plot" paramProperty="id">
+								<a href="javascript:confirmRemove('<bean:write name="plot" property="plotParameters.plotName"/>', '<html:rewrite page="/cart/removePlot.do" paramId="id"
+									paramName="plot" paramProperty="id"/>');">
 									<html:img page="/images/icon-remove.gif" title="Remove plot"
 										 border="0" width="15" height="15"/>
-								</html:link>
+								</a>
 							</span>
 						</td>
 					</tr></table>
