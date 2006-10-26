@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-10-26 14:47:06 $
+$Revision: 1.14 $
+$Date: 2006-10-26 15:37:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -189,11 +189,20 @@ public class PlotParametersForm extends BaseForm {
 	private String ideogramThickness =
 		String.valueOf(IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 	
-	/** Draw horizontal grid lines? */
+	/** Draw horizontal grid lines in scatter plot? */
 	private String drawHorizGridLines = "on";
 	
-	/** Draw vertical grid lines? */
+	/** Draw vertical grid lines in scatter plot? */
 	private String drawVertGridLines = "on";
+	
+	/** Draw data points in scatter plot? */
+	private String drawPoints = "on";
+	
+	/** Draw regression lines in scatter plot? */
+	private String drawLines = "on";
+	
+	/** Draw error bars in scatter plot? */
+	private String drawErrorBars = "";
 	
 	// ================================
 	//      Getters/setters
@@ -223,6 +232,55 @@ public class PlotParametersForm extends BaseForm {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
+	
+	/**
+	 * Draw error bars in scatter plot?
+	 * @return "on" or ""
+	 */
+	public final String getDrawErrorBars() {
+		return drawErrorBars;
+	}
+
+	/**
+	 * Set whether error bars should be drawn in scatter plots.
+	 * @param drawErrorBars Draw error bars in scatter plots?
+	 */
+	public final void setDrawErrorBars(final String drawErrorBars) {
+		this.drawErrorBars = drawErrorBars;
+	}
+
+	/**
+	 * Draw regression lines in scatter plots?
+	 * @return "on" or ""
+	 */
+	public final String getDrawLines() {
+		return drawLines;
+	}
+
+	/**
+	 * Sets whether regression lines should be drawn in scatter plots.
+	 * @param drawLines Draw lines in scatter plots?
+	 */
+	public final void setDrawLines(final String drawLines) {
+		this.drawLines = drawLines;
+	}
+
+	/**
+	 * Draw data points in scatter plots?
+	 * @return "on" or ""
+	 */
+	public final String getDrawPoints() {
+		return drawPoints;
+	}
+
+	/**
+	 * Set whether data points should be drawn in scatter plots.
+	 * @param drawPoints Draw points in scatter plots?
+	 */
+	public final void setDrawPoints(final String drawPoints) {
+		this.drawPoints = drawPoints;
+	}
+
 	/**
 	 * Draw horizontal grid lines?
 	 * @return T/F
@@ -549,6 +607,9 @@ public class PlotParametersForm extends BaseForm {
 		if (this.scatterPlotParamsHtmlFormUpstream(request)) {
 			this.drawHorizGridLines = "";
 			this.drawVertGridLines = "";
+			this.drawErrorBars = "";
+			this.drawLines = "";
+			this.drawPoints = "";
 		}
 	}
 	
@@ -754,6 +815,9 @@ public class PlotParametersForm extends BaseForm {
 				IdeogramPlotParameters.DEF_MIN_SATURATION);
 		this.drawHorizGridLines = "on";
 		this.drawVertGridLines = "on";
+		this.drawErrorBars = "";
+		this.drawLines = "on";
+		this.drawPoints = "on";
 	}
 	
 	/**
@@ -831,6 +895,21 @@ public class PlotParametersForm extends BaseForm {
 		} else {
 			params.setDrawVertGridLines(false);
 		}
+		if ("on".equals(this.drawErrorBars)) {
+			params.setDrawErrorBars(true);
+		} else {
+			params.setDrawErrorBars(false);
+		}
+		if ("on".equals(this.drawLines)) {
+			params.setDrawLines(true);
+		} else {
+			params.setDrawLines(false);
+		}
+		if ("on".equals(this.drawPoints)) {
+			params.setDrawPoints(true);
+		} else {
+			params.setDrawPoints(false);
+		}
 	}
 	
 	
@@ -906,6 +985,27 @@ public class PlotParametersForm extends BaseForm {
 				this.drawVertGridLines = "on";
 			} else {
 				this.drawVertGridLines = "";
+			}
+			
+			// drawErrorBars
+			if (spp.isDrawErrorBars()) {
+				this.drawErrorBars = "on";
+			} else {
+				this.drawErrorBars = "";
+			}
+			
+			// drawLines
+			if (spp.isDrawLines()) {
+				this.drawLines = "on";
+			} else {
+				this.drawLines = "";
+			}
+			
+			// drawPoints
+			if (spp.isDrawPoints()) {
+				this.drawPoints = "on";
+			} else {
+				this.drawPoints = "";
 			}
 			
 		// Ideogram plot parameters

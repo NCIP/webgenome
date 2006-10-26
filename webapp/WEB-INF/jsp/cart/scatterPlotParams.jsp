@@ -145,6 +145,36 @@
 			</td>
 		</tr>
 		
+	<%-- Draw data points --%>
+		<tr>
+			<td>
+				Draw data points?
+			</td>
+			<td>
+				<html:checkbox property="drawPoints"/>
+			</td>
+		</tr>
+		
+	<%-- Draw regression lines --%>
+		<tr>
+			<td>
+				Draw regression lines?
+			</td>
+			<td>
+				<html:checkbox property="drawLines"/>
+			</td>
+		</tr>
+		
+	<%-- Draw error bars --%>
+		<tr>
+			<td>
+				Draw error bars if plotting means?
+			</td>
+			<td>
+				<html:checkbox property="drawErrorBars"/>
+			</td>
+		</tr>
+		
 	</table>
 	
 	<p>

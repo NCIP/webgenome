@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-24 23:00:41 $
+$Revision: 1.8 $
+$Date: 2006-10-26 15:37:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -200,7 +200,8 @@ public final class NewPlotAction extends BaseAction {
 		    	Collection<GenomeInterval> genomeIntervals =
 		    		params.getGenomeIntervals();
 		    	BioAssayDataConstraints[] constraints =
-		    		GenomeInterval.getBioAssayDataConstraints(genomeIntervals);
+		    		GenomeInterval.getBioAssayDataConstraints(genomeIntervals,
+		    				params.getUnits());
 		    	this.clientDataService.addData(experiments,
 		    			constraints, clientId);
 	    	}

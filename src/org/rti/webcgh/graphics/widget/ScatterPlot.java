@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2006-10-26 04:47:14 $
+$Revision: 1.15 $
+$Date: 2006-10-26 15:37:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -109,21 +109,6 @@ public final class ScatterPlot implements PlotElement {
      */
     private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
     
-    /**
-     * Name of attribute that is used by an SVG <pre><g/></pre>
-     * element to indicate information about the elements
-     * within that group.  This information is used by
-     * Javascript code to set the properties of all
-     * elements between the <g></g> tags.
-     */
-    public static final String GRP_ATT_NAME = "egrp";
-    
-    /**
-     * Possible value used with the SVG <pre><g/></pre> attribute given
-     * by constant GRP_ATT_NAME to indicate that elements
-     * within the group tags correspond to graph points.
-     */
-    private static final String POINTS_GRP_ATT_VALUE = "p";
     
     // =============================
     //       Attributes
@@ -178,6 +163,14 @@ public final class ScatterPlot implements PlotElement {
      */
     private final MouseOverStripes mouseOverStripes;
     
+    /** Draw data points. */
+    private boolean drawPoints = true;
+    
+    /** Draw regression lines. */
+    private boolean drawLines = true;
+    
+    /** Draw error bars. */
+    private boolean drawErrorBars = false;
     
     // =============================
     //     Getters/setters
@@ -199,11 +192,62 @@ public final class ScatterPlot implements PlotElement {
     	return this.clickBoxes;
     }
     
+    /**
+     * Will error bars be drawn?
+     * @return T/F
+     */
+    public boolean isDrawErrorBars() {
+		return drawErrorBars;
+	}
+
+    /**
+     * Set whether error bars will be drawn.
+     * @param drawErrorBars Will error bars be drawn?
+     */
+	public void setDrawErrorBars(final boolean drawErrorBars) {
+		this.drawErrorBars = drawErrorBars;
+	}
+
+	/**
+	 * Will regression lines be drawn?
+	 * @return T/F
+	 */
+	public boolean isDrawLines() {
+		return drawLines;
+	}
+
+	
+	/**
+	 * Set whether regression lines will be drawn.
+	 * @param drawLines Draw regression lines?
+	 */
+	public void setDrawLines(final boolean drawLines) {
+		this.drawLines = drawLines;
+	}
+
+	/**
+	 * Will data points be drawn?
+	 * @return T/F
+	 */
+	public boolean isDrawPoints() {
+		return drawPoints;
+	}
+
+	/**
+	 * Set whether data points will be drawn.
+	 * @param drawPoints Will data points be drawn?
+	 */
+	public void setDrawPoints(final boolean drawPoints) {
+		this.drawPoints = drawPoints;
+	}
+    
+    
     // ==============================
     //       Constructors
     // ==============================
     
-    /**
+
+	/**
      * Constructor.
      * @param experiments Experiments to plot
      * @param chromosome Chromosome number
@@ -302,10 +346,11 @@ public final class ScatterPlot implements PlotElement {
     	if (cad != null) {
                 
             // Points
-            canvas.setAttribute(GRP_ATT_NAME, POINTS_GRP_ATT_VALUE);
-            this.paintPoints(cad, bioAssay.getColor(), canvas,
-            		pointRadius,
-            		bioAssay.getId(), reporters);
+    		if (this.drawPoints) {
+	            this.paintPoints(cad, bioAssay.getColor(), canvas,
+	            		pointRadius,
+	            		bioAssay.getId(), reporters);
+    		}
             
             // Error bars
 //            DrawingCanvas errorBarsTile = tile.newTile();
@@ -314,9 +359,11 @@ public final class ScatterPlot implements PlotElement {
 //            	ERROR_BARS_GRP_ATT_VALUE);
 //            this.paintErrorBars(cad, color, errorBarsTile);
 //        
-//            // Lines
-            this.paintLines(cad, bioAssay.getColor(), canvas,
-            		lineWidth);
+            // Lines
+    		if (this.drawLines) {
+	            this.paintLines(cad, bioAssay.getColor(), canvas,
+	            		lineWidth);
+    		}
         }
     }
     

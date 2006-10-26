@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-26 04:46:49 $
+$Revision: 1.11 $
+$Date: 2006-10-26 15:37:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,7 @@ import org.rti.webcgh.graphics.widget.Legend;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.graphics.widget.ScatterPlot;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
+import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
@@ -154,6 +155,7 @@ public class ScatterPlotPainter extends PlotPainter {
 		int plotCount = 0;
 		int rowCount = 1;
 		PlotPanel row = panel.newChildPlotPanel();
+		BpUnits units = plotParameters.getUnits();
 		for (GenomeInterval gi : plotParameters.getGenomeIntervals()) {
 			if (plotCount++ >=  plotParameters.getNumPlotsPerRow()) {
 				VerticalAlignment va = null;
@@ -167,15 +169,20 @@ public class ScatterPlotPainter extends PlotPainter {
 				plotCount = 1;
 			}
 			row.setName("row");
+			long start = units.toBp(gi.getStartLocation());
+			long end = units.toBp(gi.getEndLocation());
 	        PlotBoundaries pb = new PlotBoundaries(
-	                (double) gi.getStartLocation(),
+	                (double) start,
 	                (double) plotParameters.getMinY(),
-	                (double) gi.getEndLocation(),
+	                (double) end,
 	                (double) plotParameters.getMaxY());
 	        ScatterPlot scatterPlot =
 	            new ScatterPlot(experiments, gi.getChromosome(),
 	            		this.getChromosomeArrayDataGetter(), sizer.width(gi),
 	            		sizer.height(), pb);
+	        scatterPlot.setDrawErrorBars(plotParameters.isDrawErrorBars());
+	        scatterPlot.setDrawLines(plotParameters.isDrawLines());
+	        scatterPlot.setDrawPoints(plotParameters.isDrawPoints());
 	        plots.add(scatterPlot);
 	        
 	        PlotPanel col = row.newChildPlotPanel();

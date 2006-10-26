@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-25 02:36:43 $
+$Revision: 1.9 $
+$Date: 2006-10-26 15:37:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.units.BpUnits;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 
 
@@ -195,11 +196,13 @@ public class GenomeInterval {
 	 * Get bioassay data contraints.  This method will be used to
 	 * convert a genome interval into an object that can be used
 	 * to query client applications for data.
+	 * @param units Base pair units
 	 * @return Bioassay data constraints.
 	 * @throws WebcghApplicationException If endpoints of this
 	 * interval are not defined.
 	 */
-	public final BioAssayDataConstraints getBioAssayDataConstraints()
+	public final BioAssayDataConstraints getBioAssayDataConstraints(
+			final BpUnits units)
 	throws WebcghApplicationException {
 		if (this.startLocation < 0 || this.endLocation < 0) {
 			throw new WebcghApplicationException(
@@ -207,7 +210,9 @@ public class GenomeInterval {
 		}
 		BioAssayDataConstraints c = new BioAssayDataConstraints();
 		c.setChromosome(String.valueOf(this.chromosome));
-		c.setPositions(this.startLocation, this.endLocation);
+		long start = units.toBp(this.startLocation);
+		long end = units.toBp(this.endLocation);
+		c.setPositions(start, end);
 		return c;
 	}
 	
@@ -218,18 +223,20 @@ public class GenomeInterval {
 	 * convert genome intervals into objects that can be used
 	 * to query client applications for data.
 	 * @param genomeIntervals Genome intervals
+	 * @param units Base pair units
 	 * @return Bioassay data constraints
 	 * @throws WebcghApplicationException If any of the bioassay data
 	 * constraints does not have defined endpoints.
 	 */
 	public static final BioAssayDataConstraints[] getBioAssayDataConstraints(
-			final Collection<GenomeInterval> genomeIntervals)
+			final Collection<GenomeInterval> genomeIntervals,
+			final BpUnits units)
 	throws WebcghApplicationException {
 		BioAssayDataConstraints[] c =
 			new BioAssayDataConstraints[genomeIntervals.size()];
 		int i = 0;
 		for (GenomeInterval gi : genomeIntervals) {
-			c[i++] = gi.getBioAssayDataConstraints();
+			c[i++] = gi.getBioAssayDataConstraints(units);
 		}
 		return c;
 	}

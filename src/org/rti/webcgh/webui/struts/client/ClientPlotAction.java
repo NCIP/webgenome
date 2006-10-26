@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-10-24 23:00:42 $
+$Revision: 1.14 $
+$Date: 2006-10-26 15:37:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,6 +69,7 @@ import org.rti.webcgh.service.client.ClientDataService;
 import org.rti.webcgh.service.dao.OrganismDao;
 import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.IdGenerator;
+import org.rti.webcgh.units.BpUnits;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.struts.cart.PlotParametersForm;
 import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
@@ -219,6 +220,7 @@ public final class ClientPlotAction extends BaseAction {
         PlotParametersForm pForm = (PlotParametersForm) form;
         pForm.init();
         pForm.setGenomeIntervals(GenomeInterval.encode(constraints));
+        pForm.setUnits(BpUnits.BP.getName());
         
         // Set selected experiments form
         SelectedExperimentsForm sef =
