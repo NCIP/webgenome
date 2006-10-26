@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-26 04:47:05 $
+$Revision: 1.13 $
+$Date: 2006-10-26 14:47:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -112,6 +112,13 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Plot namer. */
 	private static final PlotNamer PLOT_NAMER = new PlotNamer();
+	
+	/**
+	 * Name of HTTP query parameter that would indicate
+	 * the request came from a form for setting scatter plot
+	 * parameters.
+	 */
+	private static final String SCATTER_PLOT_INDICATOR_PARAMETER = "width";
 	
 	// ===========================
 	//     Attributes
@@ -534,9 +541,27 @@ public class PlotParametersForm extends BaseForm {
 	public final void reset(final ActionMapping mapping,
 			final HttpServletRequest request) {
 		
-		// Turn off checkbox fields
-		this.drawHorizGridLines = "";
-		this.drawVertGridLines = "";
+		// Turn off scatter plot checkbox fields.
+		// This should only
+		// be done if the JSP immediately upstream actually
+		// included an HTML form for setting scatter plot
+		// parameters.
+		if (this.scatterPlotParamsHtmlFormUpstream(request)) {
+			this.drawHorizGridLines = "";
+			this.drawVertGridLines = "";
+		}
+	}
+	
+	
+	/**
+	 * Determines if the immediate upstream JSP included an
+	 * HTML form for setting scatter plot parameters.
+	 * @param request Servlet request
+	 * @return T/F
+	 */
+	private boolean scatterPlotParamsHtmlFormUpstream(
+			final HttpServletRequest request) {
+		return request.getParameter(SCATTER_PLOT_INDICATOR_PARAMETER) != null;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-26 04:46:54 $
+$Revision: 1.7 $
+$Date: 2006-10-26 14:47:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -231,5 +231,7 @@ extends PlotParameters implements Serializable {
     	this.width = params.width;
     	this.maxY = params.maxY;
     	this.minY = params.minY;
+    	this.drawHorizGridLines = params.drawHorizGridLines;
+    	this.drawVertGridLines = params.drawVertGridLines;
     }
 }
