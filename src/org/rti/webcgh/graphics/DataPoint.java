@@ -1,8 +1,8 @@
 /*
 
-$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/graph/DataPoint.java,v $
+$Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/DataPoint.java,v $
 $Revision: 1.1 $
-$Date: 2006-10-21 05:34:32 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,9 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-package org.rti.webcgh.deprecated.graph;
+package org.rti.webcgh.graphics;
 
+import org.rti.webcgh.deprecated.graph.Groupable;
 import org.rti.webcgh.domain.ArrayDatum;
 
 /**

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/graph/ScatterPlot.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:34:32 $
+$Revision: 1.2 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.event.GraphicEvent;

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-25 17:53:14 $
+$Revision: 1.6 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,8 +52,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics;
 
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import org.rti.webcgh.deprecated.graph.DataPoint;
+import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.util.MathUtils;
 
 /**
  * Defines region over x- and y-axes that contains plot.
@@ -297,12 +300,20 @@ public class PlotBoundaries {
     
     /**
      * Modify points so that entire line on plot.  The contract for this
-     * method is that neither points are to left or right of plot.
+     * method is that a line drawn through both points must
+     * intersect the plot boundaries area.
      * @param point1 First endpoint of line
      * @param point2 Second endpoint of line
      */
     public final void truncateToFitOnPlot(final DataPoint point1,
             final DataPoint point2) {
+    	if (!this.atLeastPartlyOnPlot(point1, point2)) {
+    		throw new IllegalArgumentException("Cannot fit line endpoints "
+    				+ "to plot if the line does not intersect plot");
+    	}
+    	if (this.withinBoundaries(point1) && this.withinBoundaries(point2)) {
+    		throw new IllegalArgumentException("Line already entirely on plot");
+    	}
         double slope = DataPoint.slope(point1, point2);
         if (!this.withinBoundaries(point1)) {
             this.moveDataPointToBorder(point1, slope);
@@ -387,15 +398,148 @@ public class PlotBoundaries {
      */
     private void moveDataPointToBorder(final DataPoint point,
             final double slope) {
-        double y = 0.0;
-        if (this.abovePlot(point)) {
-            y = this.topRightDataPoint.getValue2();
-        } else if (this.belowPlot(point)) {
-            y = this.bottomLeftDataPoint.getValue2();
+        Collection<DataPoint> points = new ArrayList<DataPoint>();
+        
+        // Find intersection of point and slope with left edge
+        DataPoint intersection = this.intersection(point, slope,
+        		this.bottomLeftDataPoint, this.topLeftDataPoint);
+        if (intersection != null) {
+        	points.add(intersection);
         }
-        double x = point.getValue1() + (y - point.getValue2()) / slope;
-        point.setValue1(x);
-        point.setValue2(y);
+        
+        // Find intersection of point and slope with right edge
+        intersection = this.intersection(point, slope,
+        		this.bottomRightDataPoint, this.topRightDataPoint);
+        if (intersection != null) {
+        	points.add(intersection);
+        }
+        
+        // Find intersection of point and slope with top edge
+        intersection = this.intersection(point, slope, this.topLeftDataPoint,
+        		this.topRightDataPoint);
+        if (intersection != null) {
+        	points.add(intersection);
+        }
+        
+        // Find intersection of point and slope with bottom edge
+        intersection = this.intersection(point, slope,
+        		this.bottomLeftDataPoint, this.bottomRightDataPoint);
+        if (intersection != null) {
+        	points.add(intersection);
+        }
+        
+        // Move given data point to closest of these intersecting points
+        if (points.size() < 1) {
+        	throw new WebcghSystemException("Unable to find intersection "
+        			+ "with a line that should intersect the plot");
+        }
+        double minCart = Double.MAX_VALUE;
+        DataPoint closest = null;
+        for (DataPoint dp : points) {
+        	double candidateMin = this.cartesianDistance(point, dp);
+        	if (candidateMin < minCart) {
+        		minCart = candidateMin;
+        		closest = dp;
+        	}
+        }
+        point.setValue1(closest.getValue1());
+        point.setValue2(closest.getValue2());
     }
 
+    
+    /**
+     * Calculate Cartesian distance between the two points.
+     * @param p1 First point
+     * @param p2 Second point
+     * @return Cartesian distance
+     */
+    private double cartesianDistance(final DataPoint p1, final DataPoint p2) {
+    	return Math.sqrt(MathUtils.square(p1.getValue1() - p2.getValue1())
+    			+ MathUtils.square(p2.getValue2() - p2.getValue2()));
+    }
+
+    /**
+     * Find intersection of line defined by <code>p</code> and
+     * <code>slope</code> and line whose endpoints are
+     * <code>end1</code> and <code>end2</code>.  The second line 
+     * must be either vertical or horizontal.  The <code>value1</code>
+     * and <code>value2</code> properties of <code>end1</code> must
+     * be less than or equal to these properies for <code>end2</code>,
+     * respectively.
+     * @param p1 A point on the first line
+     * @param slope1 The slope of the first line
+     * @param end21 First endpoint of second line
+     * @param end22 Second endpoint secondLine line
+     * @return The intersection of the two lines or <code>null</code>
+     * if they do not intersect
+     */
+    private DataPoint intersection(final DataPoint p1, final double slope1,
+    		final DataPoint end21, final DataPoint end22) {
+    	
+    	// Check params
+    	if (end21.getValue1() > end22.getValue1()
+    			|| end21.getValue2() > end22.getValue2()) {
+    		throw new IllegalArgumentException(
+    				"The end21 and end22 parameter values are reversed");
+    	}
+    	
+    	DataPoint intersection = null;
+    	double rise = end22.getValue2() - end21.getValue2();
+    	double run = end22.getValue1() - end21.getValue1();
+    	
+    	// Line 2 is horizontal
+    	if (rise == 0.0) {
+    		double x = Double.NaN;
+    		double y = Double.NaN;
+    		
+    		// Line 1 is vertical
+    		if (Double.isInfinite(slope1)) {
+    			x = p1.getValue1();
+    			y = end21.getValue2();
+    			
+    		// Line 1 is neither vertical or horizontal
+    		} else if (slope1 != 0.0) {
+	    		y = end21.getValue2();
+	    		x = p1.getValue1() + (y - p1.getValue2()) / slope1;
+    		}
+    		
+    		// Create intersection
+    		if (!Double.isNaN(x)) {
+    			if (x >= end21.getValue1() && x <= end22.getValue1()) {
+    				intersection = new DataPoint(x, y);
+    			}
+    		}
+    		
+    	// Line 2 is vertical
+    	} else if (run == 0.0) {
+    		double x = Double.NaN;
+    		double y = Double.NaN;
+    		
+    		// Line 1 slope is horizontal
+    		if (slope1 == 0.0) {
+    			x = end21.getValue1();
+    			y = p1.getValue2();
+    			
+    		// Line 1 is neither horizontal or vertical
+    		} else if (!Double.isInfinite(slope1)) {
+    			x = end21.getValue1();
+        		y = p1.getValue2() + (x - p1.getValue1()) * slope1;
+    		}
+    		
+    		// Create intersection
+    		if (!Double.isNaN(x)) {
+    			if (y >= end21.getValue2() && y <= end22.getValue2()) {
+    				intersection = new DataPoint(x, y);
+    			}
+    		}
+    		
+    	// Line 2 neither horizontal nor vertical.  Throw exception.
+    	} else {
+    		throw new IllegalArgumentException(
+				"Line defined by end21 and end22 must be vertial "
+				+ "or horizontal");
+    	}
+    	
+    	return intersection;
+    }
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/array/Quantitation.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:34:39 $
+$Revision: 1.2 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ package org.rti.webcgh.deprecated.array;
 import java.io.Serializable;
 
 import org.rti.webcgh.deprecated.Cacheable;
-import org.rti.webcgh.deprecated.graph.DataPoint;
+import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.util.MathUtils;
 
 /**

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/array/ArrayDatum.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:34:38 $
+$Revision: 1.2 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.Iterator;
 
 import org.rti.webcgh.deprecated.Cacheable;
 import org.rti.webcgh.deprecated.graph.DataPlotter;
-import org.rti.webcgh.deprecated.graph.DataPoint;
+import org.rti.webcgh.graphics.DataPoint;
 
 /**
  * An array data point

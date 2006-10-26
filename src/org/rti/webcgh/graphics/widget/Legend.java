@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.3 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -100,6 +100,8 @@ public final class Legend implements PlotElement {
     /** Padding around graphical elements in pixels. */
     private static final int PADDING = 10;
     
+//    /** Background color. */
+//    private static final Color BG_COLOR = new Color(255, 205, 255);
     
     // ===========================
     //       Attributes
@@ -319,6 +321,13 @@ public final class Legend implements PlotElement {
     public void paint(final DrawingCanvas canvas) {
         int endY = this.layoutGraphicPrimitives(canvas);
         this.height = endY - this.origin.y;
+        
+        // Background
+//        Rectangle rect = new Rectangle(this.origin.x, this.origin.y,
+//        		this.width(), this.height(), BG_COLOR);
+//        canvas.add(rect);
+        
+        // Graphic primitives
         for (GraphicPrimitive prim : this.graphicPrimitives) {
             canvas.add(prim);
         }

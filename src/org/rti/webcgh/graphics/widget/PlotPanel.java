@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.6 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -394,7 +394,7 @@ public class PlotPanel implements ScalePlotElement {
     protected final int minX() {
     	int min = 0;
     	if (this.leftElement != null) {
-    		min = this.leftElement.topLeftPoint().x;
+    		min = this.leftElement.topLeftPoint().x - this.padding;
         }
     	return min;
     }
@@ -408,7 +408,7 @@ public class PlotPanel implements ScalePlotElement {
     	int max = 0;
     	if (this.rightElement != null) {
     		max = this.rightElement.topLeftPoint().x
-            + this.rightElement.width();
+            + this.rightElement.width() + this.padding;
         }
     	return max;
     }
@@ -421,7 +421,7 @@ public class PlotPanel implements ScalePlotElement {
     protected final int minY() {
     	int min = 0;
     	if (this.topElement != null) {
-    		min = this.topElement.topLeftPoint().y;
+    		min = this.topElement.topLeftPoint().y - this.padding;
         }
     	return min;
     }
@@ -435,7 +435,7 @@ public class PlotPanel implements ScalePlotElement {
     	int max = 0;
     	if (this.bottomElement != null) {
     		max = this.bottomElement.topLeftPoint().y
-            + this.bottomElement.height();
+            + this.bottomElement.height() + this.padding;
         }
     	return max;
     }
@@ -545,7 +545,7 @@ public class PlotPanel implements ScalePlotElement {
     private int computeInsertionXCoord(final PlotElement element, 
             final HorizontalAlignment hAlign) {
     	if (this.topElement == null) {
-    		return 0;
+    		return this.padding;
         }
     	int coord = 0;
     	if (hAlign == HorizontalAlignment.LEFT_JUSTIFIED) {
@@ -579,7 +579,7 @@ public class PlotPanel implements ScalePlotElement {
     private int computeInsertionYCoord(final PlotElement element, 
             final VerticalAlignment vAlign) {
     	if (this.topElement == null) {
-    		return 0;
+    		return this.padding;
         }
         int coord = 0;
         if (vAlign == VerticalAlignment.ABOVE) {

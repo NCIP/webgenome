@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/graph/DataPlotter.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:34:32 $
+$Revision: 1.2 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ package org.rti.webcgh.deprecated.graph;
 
 import java.awt.Color;
 
+import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.widget.PlotElement;
 
 

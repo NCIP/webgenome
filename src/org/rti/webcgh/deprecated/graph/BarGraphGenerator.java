@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/graph/BarGraphGenerator.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-21 05:34:32 $
+$Revision: 1.2 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webcgh.deprecated.array.DataSet;
 import org.rti.webcgh.deprecated.array.Experiment;
 import org.rti.webcgh.deprecated.array.ExperimentIterator;
 import org.rti.webcgh.deprecated.array.QuantitationType;
+import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.HorizontalAlignment;

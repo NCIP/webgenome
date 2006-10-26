@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-25 17:53:14 $
+$Revision: 1.7 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -98,6 +98,9 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
     /** Logger. */
     private static final Logger LOGGER =
     	Logger.getLogger(RasterDrawingCanvas.class);
+    
+    /** Background color. */
+    private static final Color BG_COLOR = new Color(255, 255, 204);
     
     
     // =====================================
@@ -340,7 +343,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
         
         // Add white background
         Rectangle bg = new Rectangle(0, 0, this.width, this.height,
-                Color.WHITE);
+                BG_COLOR);
         this.render(bg, graphics);
         
         // Render elements

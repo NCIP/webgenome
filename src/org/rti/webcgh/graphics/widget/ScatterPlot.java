@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-25 20:52:54 $
+$Revision: 1.13 $
+$Date: 2006-10-26 03:50:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,16 +58,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 //import org.apache.log4j.Logger;
-import org.rti.webcgh.deprecated.graph.DataPoint;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Reporter;
+import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Polyline;
+import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.webui.util.ClickBoxes;
@@ -125,6 +126,8 @@ public final class ScatterPlot implements PlotElement {
      */
     private static final String POINTS_GRP_ATT_VALUE = "p";
     
+    /** Background color. */
+    private static final Color BG_COLOR = new Color(235, 235, 235);
     
     // =============================
     //       Attributes
@@ -262,6 +265,11 @@ public final class ScatterPlot implements PlotElement {
      */
     public void paint(final DrawingCanvas canvas) {
     	SortedSet<Reporter> reporters = new TreeSet<Reporter>();
+    	
+    	// Paint background
+    	Rectangle rect = new Rectangle(this.x, this.y, this.width,
+    			this.height, BG_COLOR);
+    	canvas.add(rect);
     	
         // Paint points and lines
     	BioAssay selected = null;
