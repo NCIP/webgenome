@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2006-10-26 21:27:00 $
+$Revision: 1.18 $
+$Date: 2006-10-26 21:52:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
@@ -173,9 +174,95 @@ public final class ScatterPlot implements PlotElement {
     /** Draw error bars. */
     private boolean drawErrorBars = false;
     
+    /**
+     * Threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+     */
+    private float lohThreshold = (float) 0.5;
+    
+    /**
+     * Interpolate the endpoints of LOH regions.  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+     */
+    private boolean interpolateLohEndpoints = false;
+    
+    /** Draw raw LOH probabilities along with scored data? */
+    private boolean drawRawLohProbabilities = true;
+    
+    /** Quantitation type. */
+    private QuantitationType quantitationType = null;
+    
     // =============================
     //     Getters/setters
     // =============================
+    
+	/**
+	 * Draw raw LOH probabilities?
+	 * @return T/F
+	 */
+	public boolean isDrawRawLohProbabilities() {
+		return drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Set whether to draw raw LOH probabilities.
+	 * @param drawRawLohProbabilities Draw raw LOH probabilities?
+	 */
+	public void setDrawRawLohProbabilities(
+			final boolean drawRawLohProbabilities) {
+		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Interpolate the endpoints of LOH regions?  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 * @return T/F
+	 */
+	public boolean isInterpolateLohEndpoints() {
+		return interpolateLohEndpoints;
+	}
+
+
+	/**
+	 * Set whether to interpolate the endpoints of LOH regions.  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 * @param interpolateLohEndpoints Interpolate LOH endpoints?
+	 */
+	public void setInterpolateLohEndpoints(
+			final boolean interpolateLohEndpoints) {
+		this.interpolateLohEndpoints = interpolateLohEndpoints;
+	}
+
+
+	/**
+	 * Get threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 * @return LOH threshold probability.
+	 */
+	public float getLohThreshold() {
+		return lohThreshold;
+	}
+
+
+	/**
+	 * Set threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 * @param lohThreshold LOH threshold probability.
+	 */
+	public void setLohThreshold(final float lohThreshold) {
+		this.lohThreshold = lohThreshold;
+	}
     
     /**
      * Get mouseover stripes.
@@ -272,6 +359,16 @@ public final class ScatterPlot implements PlotElement {
     	if (chromosomeArrayDataGetter == null) {
     		throw new IllegalArgumentException(
     				"Chromosome array data getter cannot be null");
+    	}
+    	this.quantitationType = null;
+    	for (Experiment exp : experiments) {
+    		QuantitationType qt = exp.getQuantitationType();
+    		if (this.quantitationType == null) {
+    			this.quantitationType = qt;
+    		} else if (this.quantitationType != qt) {
+    			throw new IllegalArgumentException(
+    					"Cannot max quantitation types in plot");
+    		}
     	}
         
         // Initialize attributes

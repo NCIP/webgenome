@@ -71,12 +71,17 @@ public final class QuantitationType implements Serializable {
     public static final QuantitationType LOG_2_RATIO =
         new QuantitationType("log2ratio", "Log2 Ratio");
     
+    /** Loss of heterozygosity. */
+    public static final QuantitationType LOH =
+    	new QuantitationType("loh", "LOH");
+    
     /** Maps quantitation type names of quantitation types. */
     private static final Map<String, QuantitationType> INDEX =
     	new HashMap<String, QuantitationType>();
     
     static {
     	INDEX.put(LOG_2_RATIO.getId(), LOG_2_RATIO);
+    	INDEX.put(LOH.getId(), LOH);
     }
     
     /** Serialized version ID. */

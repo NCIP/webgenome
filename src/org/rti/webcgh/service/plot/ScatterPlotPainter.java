@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-10-26 15:37:33 $
+$Revision: 1.12 $
+$Date: 2006-10-26 21:52:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -212,16 +212,16 @@ public class ScatterPlotPainter extends PlotPainter {
 	        col.add(bg, true);
 	        
 	        // Grid lines
-	        if (plotParameters.isDrawHorizGridLines()) {
-	        	Grid horizGrid = yAxis.newGrid(scatterPlot.width(),
-	        			scatterPlot.height(), GRID_COLOR, col);
-	        	col.add(horizGrid,  HorizontalAlignment.LEFT_JUSTIFIED,
-	        			VerticalAlignment.TOP_JUSTIFIED);
-	        }
 	        if (plotParameters.isDrawVertGridLines()) {
 	        	Grid vertGrid = xAxis.newGrid(scatterPlot.width(),
 	        			scatterPlot.height(), GRID_COLOR, col);
 	        	col.add(vertGrid, HorizontalAlignment.LEFT_JUSTIFIED,
+	        			VerticalAlignment.TOP_JUSTIFIED);
+	        }
+	        if (plotParameters.isDrawHorizGridLines()) {
+	        	Grid horizGrid = yAxis.newGrid(scatterPlot.width(),
+	        			scatterPlot.height(), GRID_COLOR, col);
+	        	col.add(horizGrid,  HorizontalAlignment.LEFT_JUSTIFIED,
 	        			VerticalAlignment.TOP_JUSTIFIED);
 	        }
 	        

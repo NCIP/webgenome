@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-26 04:47:11 $
+$Revision: 1.4 $
+$Date: 2006-10-26 21:52:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -202,15 +202,17 @@ public final class Grid implements PlotElement {
         if (this.zeroPointSet) {
         	Line line = null;
         	if (this.orientation == Orientation.HORIZONTAL) {
-        		int y = this.height - this.zeroPointLocation;
-        		line = new Line(0, y, this.width, y, this.gridMarkThickness, 
+        		int y = this.minY + this.height - this.zeroPointLocation;
+        		line = new Line(minX, y, minX + this.width, y,
+        				this.gridMarkThickness, 
         				this.zeroMarkColor);
-        	} else if (this.orientation == Orientation.VERTICAL) {
-        		line = new Line(this.zeroPointLocation, 0,
-                        this.zeroPointLocation,
-        				this.height, this.gridMarkThickness,
-                        this.zeroMarkColor);
         	}
+//        	else if (this.orientation == Orientation.VERTICAL) {
+//        		line = new Line(this.zeroPointLocation, 0,
+//                        this.zeroPointLocation,
+//        				this.height, this.gridMarkThickness,
+//                        this.zeroMarkColor);
+//        	}
         	canvas.add(line);
         }
     }
@@ -287,11 +289,6 @@ public final class Grid implements PlotElement {
     public void move(final int deltaX, final int deltaY) {
     	this.minX += deltaX;
     	this.minY += deltaY;
-    	if (this.orientation == Orientation.HORIZONTAL) {
-    		this.zeroPointLocation += deltaX;
-        } else if (this.orientation == Orientation.VERTICAL) {
-    		this.zeroPointLocation += deltaY;
-        }
     }
     
     // ==============================

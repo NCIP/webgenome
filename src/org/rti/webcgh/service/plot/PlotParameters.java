@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-24 23:00:40 $
+$Revision: 1.6 $
+$Date: 2006-10-26 21:52:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,6 +71,12 @@ public class PlotParameters {
 	
 	/** Default number of plots per row. */
 	public static final int DEF_NUM_PLOTS_PER_ROW = 5;
+	
+	/**
+	 * Default threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 */
+	public static final float DEF_LOH_THRESHOLD = (float) 0.5;
     
     // ==========================
     //       Attributes
@@ -95,6 +101,24 @@ public class PlotParameters {
     /** Plot name. */
     private String plotName = null;
     
+    /**
+     * Threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+     */
+    private float lohThreshold = DEF_LOH_THRESHOLD;
+    
+    /**
+     * Interpolate the endpoints of LOH regions.  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+     */
+    private boolean interpolateLohEndpoints = false;
+    
+    /** Draw raw LOH probabilities along with scored data? */
+    private boolean drawRawLohProbabilities = true;
+    
     // ===========================
     //    Getters/setters
     // ===========================
@@ -115,6 +139,72 @@ public class PlotParameters {
 	public final void setQuantitationType(
 			final QuantitationType quantitationType) {
 		this.quantitationType = quantitationType;
+	}
+
+
+	/**
+	 * Draw raw LOH probabilities?
+	 * @return T/F
+	 */
+	public final boolean isDrawRawLohProbabilities() {
+		return drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Set whether to draw raw LOH probabilities.
+	 * @param drawRawLohProbabilities Draw raw LOH probabilities?
+	 */
+	public final void setDrawRawLohProbabilities(
+			final boolean drawRawLohProbabilities) {
+		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Interpolate the endpoints of LOH regions?  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 * @return T/F
+	 */
+	public final boolean isInterpolateLohEndpoints() {
+		return interpolateLohEndpoints;
+	}
+
+
+	/**
+	 * Set whether to interpolate the endpoints of LOH regions.  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 * @param interpolateLohEndpoints Interpolate LOH endpoints?
+	 */
+	public final void setInterpolateLohEndpoints(
+			final boolean interpolateLohEndpoints) {
+		this.interpolateLohEndpoints = interpolateLohEndpoints;
+	}
+
+
+	/**
+	 * Get threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 * @return LOH threshold probability.
+	 */
+	public final float getLohThreshold() {
+		return lohThreshold;
+	}
+
+
+	/**
+	 * Set threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 * @param lohThreshold LOH threshold probability.
+	 */
+	public final void setLohThreshold(final float lohThreshold) {
+		this.lohThreshold = lohThreshold;
 	}
 
 
@@ -220,6 +310,9 @@ public class PlotParameters {
     	this.plotName = params.plotName;
     	this.quantitationType = params.quantitationType;
     	this.units = params.units;
+    	this.lohThreshold = params.lohThreshold;
+    	this.interpolateLohEndpoints = params.interpolateLohEndpoints;
+    	this.drawRawLohProbabilities = params.drawRawLohProbabilities;
     }
     
     

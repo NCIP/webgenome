@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2006-10-26 16:46:04 $
+$Revision: 1.16 $
+$Date: 2006-10-26 21:52:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -115,7 +115,17 @@ public class PlotParametersForm extends BaseForm {
 	 * the request came from a form for setting scatter plot
 	 * parameters.
 	 */
-	private static final String SCATTER_PLOT_INDICATOR_PARAMETER = "width";
+	private static final String
+		SCATTER_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = "width";
+	
+	
+	/**
+	 * Name of HTTP query parameter that would indicate
+	 * the request came from a form for setting plot
+	 * parameters.
+	 */
+	private static final String PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = 
+		"genomeIntervals";
 	
 	// ===========================
 	//     Attributes
@@ -201,6 +211,25 @@ public class PlotParametersForm extends BaseForm {
 	/** Draw error bars in scatter plot? */
 	private String drawErrorBars = "";
 	
+	/**
+	 * Threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 */
+	private String lohThreshold =
+		String.valueOf(PlotParameters.DEF_LOH_THRESHOLD);
+	
+	/**
+	 * Interpolate the endpoints of LOH regions?  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 */
+	private String interpolateLohEndpoints = "";
+	
+	/** Draw raw LOH probabilities? */
+	private String drawRawLohProbabilities = "on";
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -229,7 +258,67 @@ public class PlotParametersForm extends BaseForm {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
+	/**
+	 * Draw raw LOH probabilities?
+	 * @return "on" or ""
+	 */
+	public final String getDrawRawLohProbabilities() {
+		return drawRawLohProbabilities;
+	}
+
+	/**
+	 * Set whether to draw raw LOH probabilities.
+	 * @param drawRawLohProbabilities Draw raw LOH probabilities?
+	 */
+	public final void setDrawRawLohProbabilities(
+			final String drawRawLohProbabilities) {
+		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+	/**
+	 * Interpolate the endpoints of LOH regions?  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 * @return T/F
+	 */
+	public final String getInterpolateLohEndpoints() {
+		return interpolateLohEndpoints;
+	}
+
+	/**
+	 * Set whether to interpolate the endpoints of LOH regions?  If false,
+     * the endpoints will be set to the outermost
+     * reporter positions in an LOH region.  If true,
+     * the endpoints will be extended distally midway to the
+     * next reporters.
+	 * @param interpolateLohEndpoints Interpolate LOH endpoints?
+	 */
+	public final void setInterpolateLohEndpoints(
+			final String interpolateLohEndpoints) {
+		this.interpolateLohEndpoints = interpolateLohEndpoints;
+	}
+
+	/**
+	 * Get threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 * @return LOH threshold probability
+	 */
+	public final String getLohThreshold() {
+		return lohThreshold;
+	}
+
 	
+	/**
+	 * Set threshold probability above which the corresponding
+	 * value is considered to be indicative of LOH.
+	 * @param lohThreshold LOH threshold probability
+	 */
+	public final void setLohThreshold(final String lohThreshold) {
+		this.lohThreshold = lohThreshold;
+	}
+
 	/**
 	 * Draw error bars in scatter plot?
 	 * @return "on" or ""
@@ -608,6 +697,16 @@ public class PlotParametersForm extends BaseForm {
 			this.drawLines = "";
 			this.drawPoints = "";
 		}
+		
+		// Turn off general plot parameter checkbox fields.
+		// This should only
+		// be done if the JSP immediately upstream actually
+		// included an HTML form for setting plot
+		// parameters.
+		if (this.plotParamsHtmlFormUpstream(request)) {
+			this.interpolateLohEndpoints = "";
+			this.drawRawLohProbabilities = "";
+		}
 	}
 	
 	
@@ -619,7 +718,21 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	private boolean scatterPlotParamsHtmlFormUpstream(
 			final HttpServletRequest request) {
-		return request.getParameter(SCATTER_PLOT_INDICATOR_PARAMETER) != null;
+		return request.getParameter(
+				SCATTER_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER) != null;
+	}
+	
+	
+	/**
+	 * Determines if the immediate upstream JSP included an
+	 * HTML form for setting plot parameters.
+	 * @param request Servlet request
+	 * @return T/F
+	 */
+	private boolean plotParamsHtmlFormUpstream(
+			final HttpServletRequest request) {
+		return request.getParameter(
+				PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER) != null;
 	}
 
 	/**
@@ -683,6 +796,20 @@ public class PlotParametersForm extends BaseForm {
 		// numPlotsPerRow
 		if (!ValidationUtils.validNumber(this.numPlotsPerRow)) {
 			errors.add("numPlotsPerRow", new ActionError("invalid.field"));
+		}
+		
+		// LOH threshold
+		if (QuantitationType.LOH.getId().equals(this.quantitationType)) {
+			if (!ValidationUtils.validNumber(this.lohThreshold)) {
+				errors.add("lohThreshold", new ActionError("invalid.field"));
+			}
+		} else {
+			if (!StringUtils.isEmpty(this.lohThreshold)) {
+				if (!ValidationUtils.validNumber(this.lohThreshold)) {
+					errors.add("lohThreshold", new ActionError(
+							"invalid.field"));
+				}
+			}
 		}
 	}
 	
@@ -810,6 +937,9 @@ public class PlotParametersForm extends BaseForm {
 		this.drawErrorBars = "";
 		this.drawLines = "on";
 		this.drawPoints = "on";
+		this.lohThreshold = String.valueOf(PlotParameters.DEF_LOH_THRESHOLD);
+		this.interpolateLohEndpoints = "";
+		this.drawRawLohProbabilities = "on";
 	}
 	
 	/**
@@ -857,6 +987,19 @@ public class PlotParametersForm extends BaseForm {
 		params.setUnits(BpUnits.getUnits(this.units));
 		params.setQuantitationType(QuantitationType.getQuantitationType(
 				this.quantitationType));
+		if (!StringUtils.isEmpty(this.lohThreshold)) {
+			params.setLohThreshold(Float.parseFloat(this.lohThreshold));
+		}
+		if ("on".equals(this.interpolateLohEndpoints)) {
+			params.setInterpolateLohEndpoints(true);
+		} else {
+			params.setInterpolateLohEndpoints(false);
+		}
+		if ("on".equals(this.drawRawLohProbabilities)) {
+			params.setDrawRawLohProbabilities(true);
+		} else {
+			params.setDrawRawLohProbabilities(false);
+		}
 	}
 	
 	
@@ -944,6 +1087,18 @@ public class PlotParametersForm extends BaseForm {
 		this.quantitationType = plotParameters.getQuantitationType().getId();
 		this.units = plotParameters.getUnits().getName();
 		this.name = plotParameters.getPlotName();
+		this.lohThreshold = String.valueOf(plotParameters.getLohThreshold());
+		if (plotParameters.isInterpolateLohEndpoints()) {
+			this.interpolateLohEndpoints = "on";
+		} else {
+			this.interpolateLohEndpoints = "";
+		}
+		if (plotParameters.isDrawRawLohProbabilities()) {
+			this.drawRawLohProbabilities = "on";
+		} else {
+			this.drawRawLohProbabilities = "";
+		}
+		
 		
 		// Scatter plot parameters
 		if (plotParameters instanceof ScatterPlotParameters) {
