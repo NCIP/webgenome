@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-25 18:49:00 $
+$Revision: 1.13 $
+$Date: 2006-10-26 21:31:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -323,7 +323,7 @@ public class PngPlotGenerator implements PlotGenerator {
 		for (Experiment exp : experiments) {
 			for (BioAssay ba : exp.getBioAssays()) {
 				LOGGER.info("Creating image with bioassay "
-						+ ba.getName() + "hilighted");
+						+ ba.getName() + " highlighted");
 				ba.setSelected(true);
 				canvas = new RasterDrawingCanvas();
 				panel = new PlotPanel(canvas);
@@ -335,7 +335,7 @@ public class PngPlotGenerator implements PlotGenerator {
 					this.imageFileManager.saveImage(canvas.toBufferedImage());
 				plot.addImageFile(ba.getId().toString(), imageFileName);
 				ba.setSelected(false);
-				LOGGER.info("Completed hilighted plot image");
+				LOGGER.info("Completed highlighted plot image");
 			}
 		}
 		LOGGER.info("Completed scatter plot");
