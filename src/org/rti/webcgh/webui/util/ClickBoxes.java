@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-24 23:00:42 $
+$Revision: 1.8 $
+$Date: 2006-10-26 21:32:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -74,7 +74,7 @@ public final class ClickBoxes implements Serializable {
     // =============================
 	
 	/** Origin of click box region with respect to overall graphic. */
-	private final Point origin = new Point(0, 0);
+	private final Point origin;
 
     /**
      * Individual box width.
@@ -109,7 +109,7 @@ public final class ClickBoxes implements Serializable {
 	// =========================================
     //      Constructors
     // =========================================
-    
+
     /**
      * Constructor.
      * @param width Width of entire click box area in pixels.
@@ -119,6 +119,20 @@ public final class ClickBoxes implements Serializable {
      */
     public ClickBoxes(final int width, final int height, final int boxWidth,
     		final int boxHeight) {
+    	this(width, height, boxWidth, boxHeight, new Point(0, 0));
+    }
+
+    /**
+     * Constructor.
+     * @param width Width of entire click box area in pixels.
+     * @param height Height of entire click box area in pixels.
+     * @param boxWidth Width of a single click box in pixels.
+     * @param boxHeight Height of a single click box in pixels.
+	 * @param origin Origin of clickboxes area relative to
+	 * entire graphic
+     */
+    public ClickBoxes(final int width, final int height, final int boxWidth,
+    		final int boxHeight, final Point origin) {
     	this.width = width;
     	this.height = height;
     	this.boxWidth = boxWidth;
@@ -127,10 +141,11 @@ public final class ClickBoxes implements Serializable {
     			/ (double) boxHeight) + 1;
     	this.numCols = (int) Math.ceil((double) width
     			/ (double) boxWidth) + 1;
-    	this.clickBox = new String[this.numRows][];
-    	for (int i = 0; i < this.numRows; i++) {
-    		clickBox[i] = new String[this.numCols];
+    	this.clickBox = new String[this.numCols][];
+    	for (int i = 0; i < this.numCols; i++) {
+    		clickBox[i] = new String[this.numRows];
     	}
+    	this.origin = origin;
     }
 
 
@@ -204,7 +219,7 @@ public final class ClickBoxes implements Serializable {
 		int row = this.getRowNum(y);
 		int col = this.getColNum(x);
 		if (row < this.numRows && col < this.numCols && row >= 0 && col >= 0) {
-			this.clickBox[row][col] = text;
+			this.clickBox[col][row] = text;
 		}
 	}
 	
@@ -219,7 +234,7 @@ public final class ClickBoxes implements Serializable {
 		int row = this.getRowNum(y);
 		int col = this.getColNum(x);
 		if (row < this.numRows && col < this.numCols && row > 0 && col > 0) {
-			text = this.clickBox[row][col];
+			text = this.clickBox[col][row];
 		}
 		return text;
 	}
