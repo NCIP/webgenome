@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <h1 align="center">Scatter Plot Parameters</h1>
 
@@ -10,7 +10,7 @@
 <html:form action="/cart/newPlot">
 
 	<logic:present parameter="id">
-		<html:hidden property="id" value="<%= request.getParameter("id") %>"/>
+		<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
 	</logic:present>
 	
 	<table class="noBorder">

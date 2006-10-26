@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-26 15:37:36 $
+$Revision: 1.9 $
+$Date: 2006-10-26 16:46:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webcgh.service.plot.PlotGenerator;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.service.util.IdGenerator;
+import org.rti.webcgh.util.StringUtils;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
@@ -88,9 +89,6 @@ public final class NewPlotAction extends BaseAction {
 	
 	/** Plot generator. */
 	private PlotGenerator plotGenerator = null;
-	
-	/** ID generator. */
-	private IdGenerator plotIdGenerator = null;
 	
 	/** Chromosome array data getter. */
 	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
@@ -116,15 +114,6 @@ public final class NewPlotAction extends BaseAction {
 	}
 	
 	
-	/**
-	 * Set ID generator.
-	 * @param idGenerator ID generator
-	 */
-	public void setPlotIdGenerator(final IdGenerator idGenerator) {
-		this.plotIdGenerator = idGenerator;
-	}
-
-
 	/**
 	 * Set chromosome array data getter.
 	 * @param chromosomeArrayDataGetter Chromosome array data getter
@@ -215,10 +204,16 @@ public final class NewPlotAction extends BaseAction {
     					this.chromosomeArrayDataGetter);
     			plotId = plot.getId();
     		} else {
-	    		plotId = this.plotIdGenerator.nextId();
+    			IdGenerator plotIdGenerator =
+    				PageContext.getPlotIdGenerator(request, true);
+	    		plotId = plotIdGenerator.nextId();
 	    		plot = this.plotGenerator.newPlot(experiments, params,
 	    				this.chromosomeArrayDataGetter);
 	    		plot.setId(plotId);
+	    		if (StringUtils.isEmpty(params.getPlotName())) {
+	    			String plotName = "Plot " + plotId.toString();
+	    			params.setPlotName(plotName);
+	    		}
 	    		cart.add(plot);
     		}
     		request.setAttribute("plotId", plotId);

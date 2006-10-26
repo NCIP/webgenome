@@ -394,6 +394,8 @@ public class ShoppingCart implements Serializable {
      */
 	@Override
 	protected final void finalize() throws Throwable {
+		
+		// Get rid of image files
 		if (this.imageFileManager != null) {
 			for (Plot p : this.plots) {
 				for (String name : p.getAllImageFileNames()) {
@@ -401,5 +403,11 @@ public class ShoppingCart implements Serializable {
 				}
 			}
 		}
+		
+		// Clear contents so app server will not try to
+		// recover them in the event that the server
+		// is restarted
+		this.experiments.clear();
+		this.plots.clear();
 	}
 }

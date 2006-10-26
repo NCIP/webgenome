@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-16 20:06:58 $
+$Revision: 1.6 $
+$Date: 2006-10-26 16:46:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,6 +49,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.webui.util;
 
+import java.io.Serializable;
+
 import org.rti.webcgh.util.SystemUtils;
 
 
@@ -56,7 +58,7 @@ import org.rti.webcgh.util.SystemUtils;
 /**
  * MouseOver Stripe information.
  */
-public final class MouseOverStripe {
+public final class MouseOverStripe implements Serializable {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 

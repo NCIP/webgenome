@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-21 04:45:14 $
+$Revision: 1.6 $
+$Date: 2006-10-26 16:46:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import javax.servlet.http.HttpSession;
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
+import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
 
@@ -99,6 +100,9 @@ public final class PageContext {
 	
 	/** Key of color chooser. */
 	private static final String KEY_COLOR_CHOOSER = "key.color.chooser";
+	
+	/** Key of plot ID generator. */
+	private static final String KEY_PLOT_ID_GENERATOR = "key.plot.id.generator";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -280,6 +284,32 @@ public final class PageContext {
 		return cc;
 	}
 	
+	
+	/**
+	 * Get plot ID generator from session.
+	 * @param request Servlet request
+	 * @param createIfMissing Create if missing from session
+	 * @return Plot ID generator
+	 * @throws SessionTimeoutException if session has timed
+	 * out and cannot find plot ID generator.
+	 */
+	public static IdGenerator getPlotIdGenerator(
+			final HttpServletRequest request,
+			final boolean createIfMissing)
+	throws SessionTimeoutException {
+		HttpSession s = request.getSession();
+		IdGenerator gen = (IdGenerator)
+			request.getSession().getAttribute(KEY_PLOT_ID_GENERATOR);
+		if (gen == null) {
+			if (createIfMissing) {
+				gen = new IdGenerator();
+				s.setAttribute(KEY_PLOT_ID_GENERATOR, gen);
+			} else {
+				throw new SessionTimeoutException("Session timed out");
+			}
+		}
+		return gen;
+	}
 	/**
 	 * Get an attribute from session and throw a
 	 * <code>SessionExpired</code> exception if

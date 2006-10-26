@@ -98,11 +98,6 @@
 	<bean id="inMemoryChromosomeArrayDataGetter"
 		class="org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter"/>
 		
-<!-- ID generator for plots not persisted and, hence, not given
-	 IDs by the DAO tier. -->
-	<bean id="plotIdGenerator"
-		class="org.rti.webcgh.service.util.IdGenerator"/>
-		
 <!-- ID generator for bioassays not persisted and, hence, not given
 	 IDs by the DAO tier. -->
 	<bean id="bioAssayIdGenerator"
@@ -235,9 +230,6 @@
 		class="org.rti.webcgh.webui.struts.cart.NewPlotAction">
 		<property name="plotGenerator">
 			<ref bean="plotGenerator"/>
-		</property>
-		<property name="plotIdGenerator">
-			<ref bean="plotIdGenerator"/>
 		</property>
 		<property name="chromosomeArrayDataGetter">
 			<ref bean="inMemoryChromosomeArrayDataGetter"/>

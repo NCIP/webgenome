@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2006-10-26 15:37:36 $
+$Revision: 1.15 $
+$Date: 2006-10-26 16:46:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -110,9 +110,6 @@ public class PlotParametersForm extends BaseForm {
 	private static final String DEF_QUANTITATION_TYPE =
 		QuantitationType.LOG_2_RATIO.getId();
 	
-	/** Plot namer. */
-	private static final PlotNamer PLOT_NAMER = new PlotNamer();
-	
 	/**
 	 * Name of HTTP query parameter that would indicate
 	 * the request came from a form for setting scatter plot
@@ -161,7 +158,7 @@ public class PlotParametersForm extends BaseForm {
 	private String quantitationType = DEF_QUANTITATION_TYPE;
 	
 	/** Plot name. */
-	private String name = PLOT_NAMER.nextName();
+	private String name = "";
 	
 	/** Ideogram size. */
 	private String ideogramSize =
@@ -662,11 +659,6 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	private void validateCommonFields(final ActionErrors errors) {
 		
-		// Plot name
-		if (this.name == null || this.name.length() < 1) {
-			errors.add("name", new ActionError("invalid.field"));
-		}
-		
 		// genomeIntervals
 		if (this.genomeIntervals != null && this.genomeIntervals.length() > 0) {
 			try {
@@ -802,7 +794,7 @@ public class PlotParametersForm extends BaseForm {
 		this.maxY = "";
 		this.width = DEF_WIDTH;
 		this.height = DEF_HEIGHT;
-		this.name = PLOT_NAMER.nextName();
+		this.name = "";
 		this.ideogramSize = String.valueOf(
 				IdeogramPlotParameters.DEF_IDEOGRAM_SIZE);
 		this.ideogramThickness = String.valueOf(
@@ -1049,29 +1041,6 @@ public class PlotParametersForm extends BaseForm {
 			
 			// trackWidth
 			this.trackWidth = String.valueOf(ipp.getTrackWidth());
-		}
-		
-		
-		
-	}
-	
-	
-	/**
-	 * Helper class for naming plots.
-	 * @author dhall
-	 *
-	 */
-	static final class PlotNamer {
-		
-		/** Counter used in plot names. */
-		private long count = 1;
-		
-		/**
-		 * Generate next plot name.
-		 * @return Plot name
-		 */
-		String nextName() {
-			return "Plot " + (count++);
-		}
+		}	
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2006-10-26 15:37:36 $
+$Revision: 1.16 $
+$Date: 2006-10-26 16:46:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
+import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Polyline;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.Orientation;
@@ -100,8 +101,8 @@ public final class ScatterPlot implements PlotElement {
     /** Width of selected lines in pixels. */
     private static final int SELECTED_LINE_WIDTH = 3;
     
-//    /** Default length of error bar hatch lines in pixels. */
-//    private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
+    /** Default length of error bar hatch lines in pixels. */
+    private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
     
     /**
      * Default maximum number of constituent points in
@@ -353,12 +354,11 @@ public final class ScatterPlot implements PlotElement {
     		}
             
             // Error bars
-//            DrawingCanvas errorBarsTile = tile.newTile();
-//            tile.add(errorBarsTile);
-//            errorBarsTile.setAttribute(GRP_ATT_NAME,
-//            	ERROR_BARS_GRP_ATT_VALUE);
-//            this.paintErrorBars(cad, color, errorBarsTile);
-//        
+    		if (this.drawErrorBars) {
+    			this.paintErrorBars(cad, bioAssay.getColor(), canvas,
+    					lineWidth);
+    		}
+        
             // Lines
     		if (this.drawLines) {
 	            this.paintLines(cad, bioAssay.getColor(), canvas,
@@ -426,18 +426,20 @@ public final class ScatterPlot implements PlotElement {
     }
     
     
-//    /**
-//     * Paint all error bars for given chromosome array data.
-//     * @param cad Chromosome array data
-//     * @param color Color of error bars
-//     * @param drawingCanvas A drawing canvas
-//     */
-//    private void paintErrorBars(final ChromosomeArrayData cad,
-//            final Color color, final DrawingCanvas drawingCanvas) {
-//        for (ArrayDatum datum : cad.getArrayData()) {
-//            this.paintErrorBar(datum, color, drawingCanvas);
-//        }
-//    }
+    /**
+     * Paint all error bars for given chromosome array data.
+     * @param cad Chromosome array data
+     * @param color Color of error bars
+     * @param drawingCanvas A drawing canvas
+     * @param lineWidth Width of lines
+     */
+    private void paintErrorBars(final ChromosomeArrayData cad,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+        for (ArrayDatum datum : cad.getArrayData()) {
+            this.paintErrorBar(datum, color, drawingCanvas, lineWidth);
+        }
+    }
     
     
     
@@ -472,21 +474,24 @@ public final class ScatterPlot implements PlotElement {
     }
     
     
-//    /**
-//     * Paint error bars for a single data point.
-//     * @param datum An array datum
-//     * @param color A color
-//     * @param drawingCanvas A drawing canvas
-//     */
-//    private void paintErrorBar(final ArrayDatum datum,
-//            final Color color, final DrawingCanvas drawingCanvas) {
-//        this.reusableDataPoint1.bulkSet(datum);
-//        int x = this.transposeX(this.reusableDataPoint1);
-//        int y = this.transposeY(this.reusableDataPoint1);
-//        if (!Float.isNaN(datum.getError())) {
-//            this.drawErrorBar(x, y, datum.getError(), color, drawingCanvas);
-//        }
-//    }
+    /**
+     * Paint error bars for a single data point.
+     * @param datum An array datum
+     * @param color A color
+     * @param drawingCanvas A drawing canvas
+     * @param lineWidth Width of line
+     */
+    private void paintErrorBar(final ArrayDatum datum,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+        this.reusableDataPoint1.bulkSet(datum);
+        int x = this.transposeX(this.reusableDataPoint1);
+        int y = this.transposeY(this.reusableDataPoint1);
+        if (!Float.isNaN(datum.getError())) {
+            this.drawErrorBar(x, y, datum.getError(), color, drawingCanvas,
+            		lineWidth);
+        }
+    }
     
     
     /**
@@ -570,37 +575,39 @@ public final class ScatterPlot implements PlotElement {
     }
     
     
-//    /**
-//     * Draw single error bar.
-//     * @param x X-axis position of bar in pixels
-//     * @param y Y-axis position of center of bar in pixels
-//     * @param error Error factor which determines the height of bar
-//     * @param color Color of bar
-//     * @param drawingCanvas A drawing canvas
-//     */
-//    private void drawErrorBar(final int x, final int y, final double error,
-//            final Color color, final DrawingCanvas drawingCanvas) {
-//        
-//        // Compute reference points
-//        int deltaY = (int) ((double) height
-//                * this.plotBoundaries.fractionalHeight(error));
-//        int y1 = y - deltaY / 2;
-//        int y2 = y1 + deltaY;
-//        int x1 = x - (this.errorBarHatchLength / 2);
-//        int x2 = x1 + this.errorBarHatchLength;
-//        
-//        // Vertical line
-//        Line line = new Line(x, y1, x, y2, this.lineWidth, color);
-//        drawingCanvas.add(line, false);
-//        
-//        // Top horizontal line
-//        line = new Line(x1, y1, x2, y1, this.lineWidth, color);
-//        drawingCanvas.add(line, false);
-//        
-//        // Bottom horizontal line
-//        line = new Line(x1, y2, x2, y2, this.lineWidth, color);
-//        drawingCanvas.add(line, false);
-//    }
+    /**
+     * Draw single error bar.
+     * @param x X-axis position of bar in pixels
+     * @param y Y-axis position of center of bar in pixels
+     * @param error Error factor which determines the height of bar
+     * @param color Color of bar
+     * @param drawingCanvas A drawing canvas
+     * @param lineWidth Width of line in pixels
+     */
+    private void drawErrorBar(final int x, final int y, final double error,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+        
+        // Compute reference points
+        int deltaY = (int) ((double) height
+                * this.plotBoundaries.fractionalHeight(error));
+        int y1 = y - deltaY / 2;
+        int y2 = y1 + deltaY;
+        int x1 = x - (DEF_ERROR_BAR_HATCH_LENGTH / 2);
+        int x2 = x1 + DEF_ERROR_BAR_HATCH_LENGTH;
+        
+        // Vertical line
+        Line line = new Line(x, y1, x, y2, lineWidth, color);
+        drawingCanvas.add(line, false);
+        
+        // Top horizontal line
+        line = new Line(x1, y1, x2, y1, lineWidth, color);
+        drawingCanvas.add(line, false);
+        
+        // Bottom horizontal line
+        line = new Line(x1, y2, x2, y2, lineWidth, color);
+        drawingCanvas.add(line, false);
+    }
     
     
     /**
