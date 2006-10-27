@@ -1,6 +1,6 @@
 /*
-$Revision: 1.19 $
-$Date: 2006-10-27 04:03:36 $
+$Revision: 1.20 $
+$Date: 2006-10-27 22:24:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -113,6 +113,9 @@ public final class ScatterPlot implements PlotElement {
      * a regression line polyline.
      */
     private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
+    
+    /** Minimum width of a region of LOH in pixels. */
+    private static final int MIN_LOH_WIDTH = 10;
     
     
     // =============================
@@ -687,62 +690,98 @@ public final class ScatterPlot implements PlotElement {
     				lohStartIdx = i;
     			}
     			lohEndIdx = i;
-    		} else {
+    		}
+    		if (datum.getValue() < this.lohThreshold
+    				|| i == arrayData.size() - 1) {
     			if (lohStartIdx >= 0) {
-    				
-    				// Get chromosome endpoints of LOH segment
     				ArrayDatum startDatum = arrayData.get(lohStartIdx);
     				ArrayDatum endDatum = arrayData.get(lohEndIdx);
-    				long start = -1;
-    				long end = -1;
+    				ArrayDatum startInterpolatedDatum = null;
+    				ArrayDatum endInterpolatedDatum = null;
     				if (this.interpolateLohEndpoints) {
     					if (lohStartIdx > 0) {
-    						start = (startDatum.getReporter().getLocation()
-    							+ arrayData.get(lohStartIdx - 1).getReporter().
-    							getLocation()) / 2;
-    					} else {
-    						start = startDatum.getReporter().getLocation();
+    						startInterpolatedDatum =
+    							ArrayDatum.generateIntermediate(
+    								arrayData.get(lohStartIdx - 1), startDatum,
+    								this.lohThreshold);
     					}
     					if (lohEndIdx < arrayData.size() - 1) {
-    						end = (endDatum.getReporter().getLocation()
-    								+ arrayData.get(lohEndIdx + 1).
-    								getReporter().getLocation()) / 2;
-    					} else {
-    						end = endDatum.getReporter().getLocation();
+    						endInterpolatedDatum =
+    							ArrayDatum.generateIntermediate(
+    								endDatum, arrayData.get(lohEndIdx + 1),
+    								this.lohThreshold);
     					}
+    				}
+    				
+    				// Get weighted average LOH probability
+    				long start = startDatum.getReporter().getLocation();
+					long end = endDatum.getReporter().getLocation();
+					float sum = (float) 0.0;
+    				if (lohStartIdx == lohEndIdx
+    						&& startInterpolatedDatum == null
+    						&& endInterpolatedDatum == null) {
+    					sum = startDatum.getValue();
     				} else {
-    					start = startDatum.getReporter().getLocation();
-    					end = endDatum.getReporter().getLocation();
+    					for (int j = lohStartIdx; j < lohEndIdx; j++) {
+    						sum += this.weightedAvg(arrayData.get(j),
+    								arrayData.get(j + 1));
+    					}
     				}
-    				
-    				// Get average LOH probability over this section
-    				float sum = (float) 0.0;
-    				for (int j = lohStartIdx; j <= lohEndIdx; j++) {
-    					sum += arrayData.get(j).getValue();
-    				}
-    				float mean = sum / (float) (lohEndIdx - lohStartIdx + 1);
-    				
+					if (startInterpolatedDatum != null) {
+						sum += this.weightedAvg(startInterpolatedDatum,
+								startDatum);
+						start = startInterpolatedDatum.getReporter().
+							getLocation();
+					}
+					if (endInterpolatedDatum != null) {
+						sum += this.weightedAvg(endDatum,
+								endInterpolatedDatum);
+						end = endInterpolatedDatum.getReporter().
+							getLocation();
+					}
+					float mean = Float.NaN;
+					if (start == end) {
+						mean = sum;
+					} else {
+						mean = sum / (float) (end - start);
+					}
+    				    				
     				// Draw LOH scored segment
     				int startX = this.transposeX(start);
     				int endX = this.transposeX(end);
+    				if (startX == endX) {
+    					startX -= MIN_LOH_WIDTH / 2;
+    					if (startX < this.x) {
+    						startX = this.x;
+    					}
+    					endX += MIN_LOH_WIDTH / 2;
+    					if (endX > this.x + this.width) {
+    						endX = this.x + this.width;
+    					}
+    				}
     				int topY = this.transposeY(mean);
-//    				float minY = (float) 0;
-//    				if (this.plotBoundaries.getMinValue2() > 0) {
-//    					minY = (float) this.plotBoundaries.getMinValue2();
-//    				}
-//    				int bottomY = this.transposeY(minY);
-//    				drawingCanvas.add(new Line(startX, bottomY, startX, topY,
-//    						lineWidth, color));
     				drawingCanvas.add(new Line(startX, topY, endX, topY,
     						lineWidth, color));
-//    				drawingCanvas.add(new Line(endX, topY, endX, bottomY,
-//    						lineWidth, color));
-    				
     				lohStartIdx = -1;
     				lohEndIdx = -1;
     			}
     		}
     	}
+    }
+    
+    
+    /**
+     * Find average value of two datum weighted (i.e., multiplied) by
+     * the distance between the two reporters.
+     * @param d1 First datum
+     * @param d2 Second datum
+     * @return Weighted average value
+     */
+    private float weightedAvg(final ArrayDatum d1, final ArrayDatum d2) {
+		float avg = (d1.getValue() + d2.getValue()) / (float) 2.0;
+		long gap = d2.getReporter().getLocation()
+			- d1.getReporter().getLocation();
+		return (float) ((double) avg * (double) gap);
     }
     
     

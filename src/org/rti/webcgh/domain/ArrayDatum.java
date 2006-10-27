@@ -211,6 +211,97 @@ public class ArrayDatum implements Serializable {
     }
     
     
+    /**
+     * Constructor.  Generates new underlying reporter.
+     * @param value Value
+     * @param chromosome Chromosome of reporter
+     * @param location Chromosomal location of reporter
+     */
+    public ArrayDatum(final float value, final short chromosome,
+    		final long location) {
+    	Reporter r = new Reporter();
+    	r.setChromosome(chromosome);
+    	r.setLocation(location);
+    	this.reporter = r;
+    	this.value = value;
+    }
+    
+    
+    // ==================================
+    //     Additional business methods
+    // ==================================
+    
+    
+    /**
+     * Generate an intermediate array datum between the two given datum.
+     * The reporter location of this datum will be such that it falls
+     * at Y-coordinate <code>y</code>on a line drawn between the two
+     * datum if they are plotted on a scatter plot.
+     * @param leftDatum Left-most datum
+     * @param rightDatum Right-most datum
+     * @param y Value of returned datum.  Its value must be between
+     * <code>leftDatum.value</code> and <code>rightDatum.value</code>.
+     * @return Intermediate array datum
+     */
+    public static ArrayDatum generateIntermediate(final ArrayDatum leftDatum,
+    		final ArrayDatum rightDatum, final float y) {
+    	
+    	// Check args
+    	if (leftDatum == null || rightDatum == null) {
+    		throw new IllegalArgumentException("Datum cannot be null");
+    	}
+    	if (leftDatum.getReporter() == null
+    			|| rightDatum.getReporter() == null) {
+    		throw new IllegalArgumentException("Datum must have reporters");
+    	}
+    	if (leftDatum.getReporter().getChromosome()
+    			!= rightDatum.getReporter().getChromosome()) {
+    		throw new IllegalArgumentException(
+    				"Datum must be from same chromosome");
+    	}
+    	if (leftDatum.getReporter().getLocation()
+    		> rightDatum.getReporter().getLocation()) {
+    		throw new IllegalArgumentException(
+    				"Left datum actually to right of right datum");
+    	}
+    	float min = leftDatum.value;
+    	if (rightDatum.value < min) {
+    		min = rightDatum.value;
+    	}
+    	float max = rightDatum.value;
+    	if (leftDatum.value > max) {
+    		max = leftDatum.value;
+    	}
+    	if (y < min || y > max) {
+    		throw new IllegalArgumentException(
+    				"y not on line between the two array datum");
+    	}
+    	
+    	// Find chromosome location
+    	float rise = rightDatum.getValue() - leftDatum.getValue();
+    	float run = rightDatum.getReporter().getLocation()
+    		- leftDatum.getReporter().getLocation();
+    	long loc = -1;
+    	if (run == (float) 0.0 || rise == (float) 0.0) {
+    		loc = leftDatum.getReporter().getLocation();
+    	} else {
+    		float slope = rise / run;
+    		loc = (long) (leftDatum.getReporter().getLocation()
+    				+ (y - leftDatum.value) / slope);
+    	}
+    	
+    	// Instantiate new datum
+    	Reporter r = new Reporter();
+    	r.setChromosome(leftDatum.getReporter().getChromosome());
+    	r.setLocation(loc);
+    	ArrayDatum d = new ArrayDatum();
+    	d.value = y;
+    	d.reporter = r;
+    	
+    	return d;
+    }
+    
+    
     // ====================================
     //      Helper classes
     // ====================================

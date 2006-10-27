@@ -88,7 +88,7 @@
 			</td>
 		</tr>
 		
-	<%-- Interpolate LOH endpoints -- %>
+	<%-- Interpolate LOH endpoints --%>
 		<tr>
 			<td>
 				Interpolate LOH endpoints?
