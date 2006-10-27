@@ -293,6 +293,17 @@ li {
 	padding: 20;
 }
 
+.exceptionItem
+{
+	background-color: #ffffff;
+	background-image: url('images/item-error-bg.gif');
+	background-repeat: no-repeat;
+	border-style: solid;
+	border-width: 1px;
+	border-color: c0c1d6;
+	padding: 20;
+}
+
 .tip {
 	font : 10px/12px Arial,Helvetica,sans-serif;
 	border : solid 1px #666666;
