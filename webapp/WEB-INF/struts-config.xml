@@ -8,83 +8,125 @@
 	<!-- ====================================================== -->
 	<!--                    Form Beans                          -->
 	<!-- ====================================================== -->
-	
+
 	<form-beans>
-	
+
 	<!-- Login form -->
 		<form-bean
 			name="login.form"
 			type="org.rti.webcgh.webui.struts.user.LoginForm"/>
-		
-	<!-- New account form -->	
+
+	<!-- New account form -->
 		<form-bean
 			name="new.account.form"
 			type="org.rti.webcgh.webui.struts.user.NewAccountForm"/>
-			
+
 	<!-- Plot parameters form -->
 		<form-bean
 			name="plot.parameters.form"
 			type="org.rti.webcgh.webui.struts.cart.PlotParametersForm"/>
-			
+
 	<!-- Selected experiments form -->
 		<form-bean
 			name="selected.experiments.form"
 			type="org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm"/>
-			
+
 	<!-- Name change form -->
 		<form-bean
 			name="name.change.form"
 			type="org.rti.webcgh.webui.struts.cart.NameChangeForm"/>
-			
+
 	<!-- Analytic operation parameters form -->
 		<form-bean
 			name="analytic.operation.params.form"
 			type="org.rti.webcgh.webui.struts.cart.AnalyticOperationParametersForm"/>
-			
+
 		<form-bean
 			name="cytobands.form"
 			type="org.rti.webcgh.webui.struts.admin.CytobandsForm"/>
 	</form-beans>
 
-	
+
 	<!-- =========================================================== -->
 	<!--                   Exception handlers                        -->
 	<!-- =========================================================== -->
-	
-<!--
 	<global-exceptions>
-	</global-exceptions>
--->
-	
+
+    <exception
+    	type="org.rti.webcgh.webui.SessionTimeoutException"
+    	path="session.timeout.exception.page"
+    	key="session.timeout"
+    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="org.rti.webcgh.domain.analytic.DataSetInvalidationException"
+    	path="data.invalidation.page"
+    	key="data.invalidation"
+    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="org.rti.webcgh.core.WebcghSecurityException"
+    	path="security.exception.page"
+    	key="security.exception"
+    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="org.rti.webcgh.core.WebcghSystemException"
+    	path="system.exception.page"
+    	key="system.exception"
+    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="org.rti.webcgh.core.WebcghApplicationException"
+    	path="application.exception.page"
+    	key="application.exception"
+    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="java.lang.Exception"
+    	path="unknown.exception.page"
+    	key="system.exception"
+    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+  	</global-exceptions>
+
+
+
 	<!-- ================================================= -->
 	<!--                   Actions                         -->
 	<!-- ================================================= -->
-	
+
 	<action-mappings>
-	
+
 	<!-- Home -->
 		<action
 			path="/home"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="home.page"/>
-				
+
 		<!-- ============ Shopping cart actions ========= -->
-		
+
 	<!-- Show cart -->
 		<action path="/cart/showCart">
 			<forward name="success" path="cart.show.cart"/>
 		</action>
-		
+
 	<!-- Remove experiment -->
 		<action path="/cart/removeExperiment">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
-		
+
 	<!-- Remove plot -->
 		<action path="/cart/removePlot">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
-		
+
 	<!-- Perform some operation on selected experiments -->
 		<action
 			path="/cart/routeToOperationPage"
@@ -95,7 +137,7 @@
 			<forward name="plot" path="cart.select.plot.type"/>
 			<forward name="analysis" path="/cart/selectAnalysis.do"/>
 		</action>
-		
+
 	<!-- Select analytic operation -->
 		<action
 			path="/cart/selectAnalysis"
@@ -105,7 +147,7 @@
 			input="/cart/showCart.do">
 			<forward name="success" path="cart.select.analysis"/>
 		</action>
-		
+
 	<!-- Route user to a plot parameters page -->
 		<action
 			path="/cart/routeToPlotParametersPage"
@@ -115,31 +157,31 @@
 			<forward name="scatter" path="cart.scatter.plot.params"/>
 			<forward name="ideogram" path="cart.ideogram.plot.params"/>
 		</action>
-			
+
 	<!-- Ideogram plot parameters -->
 		<action
 			path="/cart/ideogramPlotParams"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.ideogram.plot.params"/>
-		
+
 	<!-- Bar plot parameters -->
 		<action
 			path="/cart/barPlotParams"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.bar.plot.params"/>
-		
+
 	<!-- Annotation plot parameters -->
 		<action
 			path="/cart/annotationPlotParams"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.annotation.plot.params"/>
-		
+
 	<!-- Frequency plot parameters -->
 		<action
 			path="/cart/frequencyPlotParams"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.frequency.plot.params"/>
-				
+
 	<!-- New plot -->
 		<action
 			path="/cart/newPlot"
@@ -149,37 +191,37 @@
 			scope="session">
 			<forward name="success" path="/cart/showPlot.do"/>
 		</action>
-			
+
 	<!-- Show plot -->
 		<action
 			path="/cart/showPlot">
 			<forward name="success" path="cart.show.plot"/>
 		</action>
-				
+
 	<!-- Show jobs table -->
 		<action
 			path="/cart/showJobsTable"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.show.jobs.table"/>
-				
+
 	<!-- Job details -->
 		<action
 			path="/cart/jobDetails"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.job.details"/>
-				
+
 	<!-- Set display names of experiments and bioassays -->
 		<action
 			path="/cart/setDisplayNames"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.set.display.names"/>
-				
+
 	<!-- File upload -->
 		<action
 			path="/cart/fileUpload"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.file.upload"/>
-				
+
 	<!-- Set analytic operation parameters -->
 		<action
 			path="/cart/analysisParams"
@@ -187,7 +229,7 @@
 			validate="false">
 			<forward name="success" path="cart.analysis.params"/>
 		</action>
-		
+
 	<!-- Perform analytic operation -->
 		<action
 			path="/cart/analysis"
@@ -195,25 +237,25 @@
 			validate="false">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
-			
+
 	<!-- Show color chooser -->
 		<action
 			path="/cart/colorChooser">
 			<forward name="success" path="/WEB-INF/jsp/cart/colorChooser.jsp"/>
 		</action>
-		
+
 	<!-- Change color of bioassay -->
 		<action
 			path="/cart/changeBioAssayColor">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
-		
+
 	<!-- Show name chooser -->
 		<action
 			path="/cart/nameChooser"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="/WEB-INF/jsp/cart/nameChooser.jsp"/>
-		
+
 	<!-- Change name of experiment, bioassay, or plot -->
 		<action
 			path="/cart/nameChange"
@@ -223,7 +265,7 @@
 			input="/cart/nameChooser.do">
 			<forward name="success" path="/cart/showCart.do"/>
 		</action>
-		
+
 	<!-- View/change plot parameters -->
 		<action
 			path="/cart/changeParameters"
@@ -232,22 +274,22 @@
 			scope="session">
 			<forward name="success" path="/cart/routeToPlotParametersPage.do"/>
 		</action>
-				
+
 		<!-- ========= Account management actions ========= -->
-		
+
 	<!-- Login -->
 		<action
 			path="/user/login"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.login"/>
-			
+
 	<!-- Logout -->
 		<action
 			path="/user/logout">
 			<forward name="success" path="/user/login.do"/>
 		</action>
-	
-	<!-- Validate login credentials -->			
+
+	<!-- Validate login credentials -->
 		<action
 			path="/user/validateLogin"
 			name="login.form"
@@ -257,20 +299,20 @@
 			<forward name="success" path="user.confirm.login"/>
 			<forward name="failure" path="/user/login.do"/>
 		</action>
-			
-	<!-- Confirm login -->	
+
+	<!-- Confirm login -->
 		<action
 			path="/user/confirmLogin"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.confirm.login"/>
-			
+
 	<!-- Create account -->
 		<action
 			path="/user/newAccount"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.new.account"/>
-			
-	<!-- Validate login credentials -->			
+
+	<!-- Validate login credentials -->
 		<action
 			path="/user/createAccount"
 			name="new.account.form"
@@ -280,30 +322,30 @@
 			<forward name="success" path="user.confirm.new.account"/>
 			<forward name="failure" path="/user/newAccount.do"/>
 		</action>
-		
+
 		<!-- ============= Client plotting actions ======== -->
-		
+
 		<action
 			path="/client/plot"
 			name="plot.parameters.form"
 			validate="false">
 			<forward name="success" path="/cart/newPlot.do"/>
 		</action>
-		
+
 		<!-- ============ Administration actions ======== -->
-		
+
 	<!-- Admin home -->
 		<action
 			path="/admin/home"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="admin.home"/>
-		
+
 	<!-- Load cytobands form -->
 		<action
 			path="/admin/loadCytobandsForm">
 			<forward name="success" path="admin.load.cytobands"/>
 		</action>
-			
+
 	<!-- Load cytobands -->
 		<action
 			path="/admin/loadCytobands"
@@ -313,14 +355,14 @@
 			input="/admin/loadCytobandsForm.do">
 			<forward name="success" path="/admin/loadCytobandsForm.do"/>
 		</action>
-		
+
 		<action
 			path="/admin/deleteCytobands">
 			<forward name="success" path="/admin/loadCytobandsForm.do"/>
 		</action>
 	</action-mappings>
-	
-	
+
+
 	<!-- ==================================================== -->
 	<!--            Controller                                -->
 	<!-- ==================================================== -->
@@ -330,11 +372,11 @@
 	  <set-property property="processorClass"
 	      value="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
 	</controller>
-	
+
 	<!-- =========================================================== -->
 	<!--                  Plug-ins                                   -->
 	<!-- =========================================================== -->
-	
+
 <!-- Tiles -->
 	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
 	    <set-property property="definitions-config"
