@@ -8,7 +8,7 @@
 <p>
 	<html:errors property="global"/>
 </p>
-<html:form action="/cart/newPlot">
+<html:form action="/cart/newPlot" target="mainwindow">
 
 	<logic:present parameter="id">
 		<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
@@ -205,7 +205,7 @@
 	</table>
 	
 	<p>
-		<html:submit value="OK"/>
+		<html:submit value="OK" onclick="onLeave();"/>
 	</p>
 </html:form>
 </center>

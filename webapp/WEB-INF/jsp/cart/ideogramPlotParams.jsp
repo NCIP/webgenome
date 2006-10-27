@@ -6,7 +6,7 @@
 <p>
 	<html:errors property="global"/>
 </p>
-<html:form action="/cart/newPlot">
+<html:form action="/cart/newPlot" target="mainwindow">
 	
 	<table class="noBorder">
 	
@@ -158,7 +158,7 @@
 	</table>
 	
 	<p>
-		<html:submit value="OK"/>
+		<html:submit value="OK" onclick="onLeave();"/>
 	</p>
 </html:form>
 </center>

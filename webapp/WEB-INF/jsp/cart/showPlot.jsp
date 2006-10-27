@@ -3,11 +3,21 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
+<script language="JavaScript">
+	function openPopUpWindow(url) {
+		window.open(
+			url + "&makePopUp=true",
+			"popupwindow", 
+			"width=500, height=400, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=no, location=no, directories=no"
+		);
+	}
+</script>
+
 <center>
-	<html:link action="/cart/changeParameters" paramId="id"
-		paramName="plot" paramProperty="id">
+	<a href="javascript:openPopUpWindow('<html:rewrite page="/cart/changeParameters.do" paramId="id"
+		paramName="plot" paramProperty="id"/>');">
 		View/Change Plot Parameters
-	</html:link>
+	</a>
 </center>
 
 <h1 align="center"><bean:write name="plot" property="plotParameters.plotName"/></h1>

@@ -19,6 +19,7 @@
 	<%-- Show help Javascript function --%>
 		<script language="JavaScript">
 			var helpPage = "<html:rewrite page="/html/help.htm"/>";
+
 			function help(topic) {
 				window.open(
 					helpPage + "#" + topic,
@@ -26,15 +27,30 @@
 					"width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no"
 				)
 			}
-			window.self.name = "mainwindow";
+
+			<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
+
+				window.self.name = "mainwindow";
+
+			<% } else { %>
+
+				function onLeave() {
+					if(self.window.name != "mainwindow") {
+						window.close();
+					}
+				}
+				window.self.name = "popupwindow";
+
+			<% } %>
 		</script>
 	</head>
 
 
-	<body><table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
+	<body onUnload="onLeave();"><table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
 
 
 	<%-- Left portion of UI and header --%>
+	<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
 		<tr>
 			<td rowspan="4" align="right" valign="top" background="<html:rewrite page="/images/ui-body-side-tile.gif"/>"><table height="100%" cellpadding="0" cellspacing="0" border="0" align="right"><tr><td background="<html:rewrite page="/images/ui-body-left.gif"/>"><img src="<html:rewrite page="/images/spacer.gif"/>" width="9" height="1" border="0"></td></tr></table></td>
 			<td height="71" align="left" valign="top" background="<html:rewrite page="/images/ui-title-tile.gif"/>"><img src="<html:rewrite page="/images/ui-title.jpg"/>" width="444" height="71" border="0"></td>
@@ -107,6 +123,23 @@
 				</a>
 			</div></td>
 		</tr>
+	<% } else {%>
+		<tr>
+			<td height="26" align="right" valign="top" background="<html:rewrite page="/images/ui-menu-tile.gif"/>"><div class="menu">
+
+			<%-- Help --%>
+				<a class="menuItem" href="javascript:void(0);">
+					Help
+				</a>
+				|
+			<%-- Close --%>
+				<a class="menuItem" href="javascript:window.close();">
+					Close
+				</a>
+
+			</div></td>
+		</tr>
+	<% } %>
 
 
 	<%-- Page content --%>
@@ -122,6 +155,7 @@
 
 
 	<%-- Right portion of UI and footer --%>
+	<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
 		<tr>
 			<td height="39" align="center" valign="center" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" border="0">
 				<span class="footer">
@@ -129,6 +163,7 @@
 				</span>
 			</td>
 		</tr>
+	<% } %>
 
 
 	</table></body>
