@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.2 $
-$Date: 2006-10-27 15:01:45 $
+$Revision: 1.3 $
+$Date: 2006-10-27 19:45:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -370,24 +370,62 @@ public class PlotInteractivityTag extends TagSupport {
 
 
 			// print plots
-			out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"1\"><tr><td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\""
-					+ contextPath + imageSubContextPath + "/" + defaultImage + "\" width=\"" +
-					plotWidth + "\" height=\"" + plotHeight + "\"><span style=\"position:relative\"");
-			out.println("><span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
-					plotWidth + "px; height:" + plotHeight + "px\" onClick=\"captureClick(event);\" onMouseMove=\"captureMove(event);\"></span");
-			out.println("></span></td></tr></table>");
+			out.print("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-style: solid; border-width: 1px; border-color: #888888;\">");
+			out.print(	"<tr>");
+			out.print(		"<td valign=\"top\" align=\"left\">");
+
+			// loading image span
+			out.print(			"<span style=\"background-image:url('" + contextPath +
+					"/images/image-loading.gif" + "'); background-position: center center; background-repeat: no-repeat;\">");
+
+			// default image span shown between plot image changes
+			out.print(				"<span style=\"background-image:url('" +
+					contextPath + imageSubContextPath + "/" + defaultImage +
+					"'); background-position: top left; background-repeat: no-repeat;\">");
+
+			// plot interactivity container
+			out.print(					"<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">");
+			out.print(						"<tr>");
+			out.print(							"<td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\"" +
+					contextPath + imageSubContextPath + "/" + defaultImage + "\" width=\"" +
+					plotWidth + "\" height=\"" + plotHeight + "\">");
+
+			// plot interactivity span
+			out.print(								"<span style=\"position:relative\">");
+			out.print(									"<span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
+					plotWidth + "px; height:" + plotHeight + "px\" onClick=\"captureClick(event);\" onMouseMove=\"captureMove(event);\"></span>");
+			out.print(								"</span>");
+			out.print(							"</td>");
+			out.print(						"</tr>");
+			out.print(					"</table>");
+
+			out.print(				"</span>");
+			out.print(			"</span>");
+			out.print(		"</td>");
+			out.print(	"</tr>");
+			out.println("</table>");
 			out.flush();
 
 		}
 		else {
 			// Print message
 			PrintWriter out = new PrintWriter(pageContext.getOut());
-			out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"1\"><tr><td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\""
+
+			// print plot
+			out.print("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-style: solid; border-width: 1px; border-color: #888888;\">");
+			out.print(	"<tr>");
+			out.print(		"<td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\""
 					+ contextPath + imageSubContextPath + "/" + defaultImage + "\" width=\"" +
-					plotWidth + "\" height=\"" + plotHeight + "\"><span style=\"position:relative\"");
-			out.println("><span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
-					plotWidth + "px; height:" + plotHeight + "px\"></span");
-			out.println("></span></td></tr></table>");
+					plotWidth + "\" height=\"" + plotHeight + "\">");
+
+			out.print(			"<span style=\"position:relative\">");
+			out.print(				"<span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
+					plotWidth + "px; height:" + plotHeight + "px\"></span>");
+			out.print(			"</span>");
+
+			out.print(		"</td>");
+			out.print(	"</tr>");
+			out.println("</table>");
 			out.flush();
 		}
 
