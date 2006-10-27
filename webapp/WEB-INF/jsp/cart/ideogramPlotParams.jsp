@@ -49,18 +49,14 @@
 			</td>
 		</tr>
 		
-	<%--
-	Quantitation type.  Note that option values
-	must correspond to typs defined in org.rti.webcgh.domain.QuantitationType.
-	--%>
+	<%-- Quantitation type. --%>
 		<tr>
 			<td>
 				Quantitation Type
 			</td>
 			<td>
 				<html:select property="quantitationType">
-					<html:option value="log2ratio">Log2 Ratio</html:option>
-					<html:option value="loh">LOH</html:option>
+					<webcgh:quantitationTypeOptions/>
 				</html:select>
 			</td>
 		</tr>

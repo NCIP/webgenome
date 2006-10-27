@@ -105,4 +105,11 @@
 		<rtexprvalue>true</rtexprvalue>
 	  </attribute>
    </tag>
+   
+<!-- Quantitation type options -->
+   <tag>
+      <name>quantitationTypeOptions</name>
+      <tagclass>org.rti.webcgh.webui.taglib.QuantitationTypeOptionsTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
 </taglib>

@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.rti.webcgh.util.SystemUtils;
+import org.rti.webgenome.client.QuantitationTypes;
 
 /**
  * Quantitation type for array experiment values.
@@ -67,20 +68,37 @@ public final class QuantitationType implements Serializable {
     //   Constants
     // =============================
     
-    /** Log2 ratio. */
-    public static final QuantitationType LOG_2_RATIO =
-        new QuantitationType("log2ratio", "Log2 Ratio");
+    /** Fold change. */
+    public static final QuantitationType FOLD_CHANGE =
+    	new QuantitationType(QuantitationTypes.FOLD_CHANGE, "Fold Change");
+    
+    /** Log2 ratio fold change. */
+    public static final QuantitationType LOG_2_RATIO_FOLD_CHANGE =
+        new QuantitationType(QuantitationTypes.FOLD_CHANGE_LOG2_RATIO,
+        		"Log2 Ratio Fold Change");
+    
+    /** Copy number. */
+    public static final QuantitationType COPY_NUMBER =
+    	new QuantitationType(QuantitationTypes.COPY_NUMBER, "Copy Number");
+    
+    /** Lo2 ratio copy number. */
+    public static final QuantitationType LOG_2_RATIO_COPY_NUMBER =
+    	new QuantitationType(QuantitationTypes.COPY_NUMBER_LOG2_RATION,
+    			"Log2 Ratio Copy Number");
     
     /** Loss of heterozygosity. */
     public static final QuantitationType LOH =
-    	new QuantitationType("loh", "LOH");
+    	new QuantitationType(QuantitationTypes.LOH, "LOH");
     
     /** Maps quantitation type names of quantitation types. */
     private static final Map<String, QuantitationType> INDEX =
     	new HashMap<String, QuantitationType>();
     
     static {
-    	INDEX.put(LOG_2_RATIO.getId(), LOG_2_RATIO);
+    	INDEX.put(FOLD_CHANGE.getId(), FOLD_CHANGE);
+    	INDEX.put(LOG_2_RATIO_FOLD_CHANGE.getId(), LOG_2_RATIO_FOLD_CHANGE);
+    	INDEX.put(COPY_NUMBER.getId(), COPY_NUMBER);
+    	INDEX.put(LOG_2_RATIO_COPY_NUMBER.getId(), LOG_2_RATIO_COPY_NUMBER);
     	INDEX.put(LOH.getId(), LOH);
     }
     
@@ -145,5 +163,15 @@ public final class QuantitationType implements Serializable {
      */
     public static QuantitationType getQuantitationType(final String name) {
     	return INDEX.get(name);
+    }
+    
+    
+    /**
+     * Get index of quantitation types.  Keys are IDs.  Values are
+     * quantitation types.
+     * @return Index of quantitation types.
+     */
+    public static Map<String, QuantitationType> getQuantitationTypeIndex() {
+    	return INDEX;
     }
 }

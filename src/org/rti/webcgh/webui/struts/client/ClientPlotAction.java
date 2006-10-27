@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2006-10-26 19:22:40 $
+$Revision: 1.16 $
+$Date: 2006-10-27 04:03:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,10 +59,12 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.core.InvalidClientQueryParametersException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.service.client.ClientDataService;
@@ -173,6 +175,10 @@ public final class ClientPlotAction extends BaseAction {
 		
 		// Cache client ID in session
 		String clientID = request.getParameter("clientID");
+		if (clientID == null) {
+			throw new InvalidClientQueryParametersException(
+					"Missing 'clientID' parameter");
+		}
 		PageContext.setClientId(request, clientID);
 		
 		// Construct parameters for obtaining data through
@@ -181,13 +187,26 @@ public final class ClientPlotAction extends BaseAction {
         BioAssayDataConstraints[] constraints =
         	ClientQueryParser.getBioAssayDataConstraints(request);
         
+        // Get quantitation type
+        String qType = request.getParameter("qType");
+        if (qType == null) {
+        	throw new InvalidClientQueryParametersException(
+        			"Missing 'qType' parameter");
+        }
+        QuantitationType quantitationType =
+        	QuantitationType.getQuantitationType(qType);
+        if (quantitationType == null) {
+        	throw new InvalidClientQueryParametersException(
+			"Unrecognized quantitation type");
+        }
+        
         // Retrieve data from client
         Collection<Experiment> experiments = 
         	this.clientDataService.getClientData(constraints,
         			experimentIds, clientID);
         
         // TODO: In the future the organism should come from the
-        // client queyr string
+        // client query string
         
         // Give each experiment a unique ID and default
         // organism.  Give each bioassay a color
@@ -221,6 +240,7 @@ public final class ClientPlotAction extends BaseAction {
         pForm.init();
         pForm.setGenomeIntervals(GenomeInterval.encode(constraints));
         pForm.setUnits(BpUnits.BP.getName());
+        pForm.setQuantitationType(quantitationType.getId());
         
         // Set selected experiments form
         SelectedExperimentsForm sef =

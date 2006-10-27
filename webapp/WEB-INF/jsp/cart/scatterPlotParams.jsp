@@ -1,5 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
 
 <h1 align="center">Scatter Plot Parameters</h1>
 
@@ -54,18 +55,14 @@
 			</td>
 		</tr>
 		
-	<%--
-	Quantitation type.  Note that option values
-	must correspond to typs defined in org.rti.webcgh.domain.QuantitationType.
-	--%>
+	<%-- Quantitation type. --%>
 		<tr>
 			<td>
 				Quantitation Type
 			</td>
 			<td>
 				<html:select property="quantitationType">
-					<html:option value="log2ratio">Log2 Ratio</html:option>
-					<html:option value="loh">LOH</html:option>
+					<webcgh:quantitationTypeOptions/>
 				</html:select>
 			</td>
 		</tr>
@@ -78,6 +75,36 @@
 			</td>
 			<td>
 				<html:text property="numPlotsPerRow"/>
+			</td>
+		</tr>
+		
+	<%-- LOH threshold --%>
+		<tr>
+			<td>
+				LOH probability threshold
+			</td>
+			<td>
+				<html:text property="lohThreshold"/>
+			</td>
+		</tr>
+		
+	<%-- Interpolate LOH endpoints -- %>
+		<tr>
+			<td>
+				Interpolate LOH endpoints?
+			</td>
+			<td>
+				<html:checkbox property="interpolateLohEndpoints"/>
+			</td>
+		</tr>
+		
+	<%-- Draw raw LOH probabilities --%>
+		<tr>
+			<td>
+				Include raw LOH probabilities?
+			</td>
+			<td>
+				<html:checkbox property="drawRawLohProbabilities"/>
 			</td>
 		</tr>
 		

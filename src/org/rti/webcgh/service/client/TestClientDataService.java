@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-26 16:46:04 $
+$Revision: 1.6 $
+$Date: 2006-10-27 04:03:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import java.util.Collection;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDTOGenerator;
 import org.rti.webgenome.client.BioAssayDataConstraints;
@@ -84,6 +85,24 @@ public class TestClientDataService implements ClientDataService {
 	/** Bioassay data transfer object generator. */
 	private final BioAssayDTOGenerator bioAssayDtoGenerator =
 		new BioAssayDTOGenerator(GAP);
+	
+	/** Quantitation type. */
+	private QuantitationType quantitationType = null;
+	
+	
+	/**
+	 * Set quantitation type.
+	 * @param quantitationTypeId Quantitation type ID.  Must match
+	 * one of the IDs in org.rti.webcgh.domain.QuantitationType.
+	 */
+	public final void setQuantitationType(final String quantitationTypeId) {
+		this.quantitationType =
+			QuantitationType.getQuantitationType(quantitationTypeId);
+		if (this.quantitationType == null) {
+			throw new IllegalArgumentException("Unknown quantitation type '"
+					+ quantitationTypeId + "'");
+		}
+	}
 
 	/**
 	 * Generate random data with given experiment IDs and constraints.
@@ -99,7 +118,9 @@ public class TestClientDataService implements ClientDataService {
     	for (int i = 0; i < experimentIds.length; i++) {
     		ExperimentDTO dto = this.experimentDTOGenerator.newExperimentDTO(
     				experimentIds[i], constraints);
-    		experiments.add(new Experiment(dto));
+    		Experiment exp = new Experiment(dto);
+    		experiments.add(exp);
+    		exp.setQuantitationType(this.quantitationType);
     	}
     	return experiments;
     }

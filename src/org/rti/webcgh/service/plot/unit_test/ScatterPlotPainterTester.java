@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-08 16:52:40 $
+$Revision: 1.8 $
+$Date: 2006-10-27 04:03:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -213,7 +213,7 @@ public final class ScatterPlotPainterTester extends TestCase {
         params.setNumPlotsPerRow(2);
         params.setWidth(WIDTH);
         params.setHeight(HEIGHT);
-        params.setQuantitationType(QuantitationType.LOG_2_RATIO);
+        params.setQuantitationType(QuantitationType.LOG_2_RATIO_FOLD_CHANGE);
         
         // Create plotting panel
         RasterFileTestPlotPanel panel =

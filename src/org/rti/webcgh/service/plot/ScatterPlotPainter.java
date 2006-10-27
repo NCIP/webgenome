@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-26 21:52:32 $
+$Revision: 1.13 $
+$Date: 2006-10-27 04:03:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -183,6 +183,11 @@ public class ScatterPlotPainter extends PlotPainter {
 	        scatterPlot.setDrawErrorBars(plotParameters.isDrawErrorBars());
 	        scatterPlot.setDrawLines(plotParameters.isDrawLines());
 	        scatterPlot.setDrawPoints(plotParameters.isDrawPoints());
+	        scatterPlot.setDrawRawLohProbabilities(
+	        		plotParameters.isDrawRawLohProbabilities());
+	        scatterPlot.setInterpolateLohEndpoints(
+	        		plotParameters.isInterpolateLohEndpoints());
+	        scatterPlot.setLohThreshold(plotParameters.getLohThreshold());
 	        plots.add(scatterPlot);
 	        
 	        PlotPanel col = row.newChildPlotPanel();

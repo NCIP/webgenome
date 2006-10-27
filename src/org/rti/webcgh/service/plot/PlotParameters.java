@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-26 21:52:33 $
+$Revision: 1.7 $
+$Date: 2006-10-27 04:03:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -96,7 +96,7 @@ public class PlotParameters {
     private int numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
     
     /** Quantitation type to plot. */
-    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO;
+    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO_FOLD_CHANGE;
     
     /** Plot name. */
     private String plotName = null;

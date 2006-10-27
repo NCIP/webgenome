@@ -1,6 +1,6 @@
 /*
-$Revision: 1.16 $
-$Date: 2006-10-26 21:52:33 $
+$Revision: 1.17 $
+$Date: 2006-10-27 04:02:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -108,7 +108,7 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Default quantitation type. */
 	private static final String DEF_QUANTITATION_TYPE =
-		QuantitationType.LOG_2_RATIO.getId();
+		QuantitationType.LOG_2_RATIO_FOLD_CHANGE.getId();
 	
 	/**
 	 * Name of HTTP query parameter that would indicate

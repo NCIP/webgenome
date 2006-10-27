@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
+<%@ page import="org.rti.webgenome.client.QuantitationTypes" %>
 
 <p align="center">
 	WebGenome Home
@@ -11,7 +12,7 @@
 		Map<String, String> paramsMap = new HashMap<String, String>();
 		paramsMap.put("exptIDs", "Experiment 1");
 		paramsMap.put("intervals", "1:1-10000000");
-		paramsMap.put("qType", "LOG2Ratio");
+		paramsMap.put("qType", QuantitationTypes.LOH);
 		paramsMap.put("clientID", "1");
 		request.setAttribute("params", paramsMap);
 	%>

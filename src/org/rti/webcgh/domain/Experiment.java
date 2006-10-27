@@ -91,7 +91,7 @@ public class Experiment implements Serializable {
     private Set<BioAssay> bioAssays = new HashSet<BioAssay>();
     
     /** Quantitation type. */
-    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO;
+    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO_FOLD_CHANGE;
     
     /** Organism. */
     private Organism organism = null;

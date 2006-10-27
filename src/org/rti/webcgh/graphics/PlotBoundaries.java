@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-26 03:50:16 $
+$Revision: 1.7 $
+$Date: 2006-10-27 04:03:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -225,6 +225,17 @@ public class PlotBoundaries {
     
     
     /**
+     * Get fractional distance from bottom edge of plot.
+     * @param y A y-coordinate in native units
+     * @return Fractional distance from bottom edge of plot
+     * (i.e. over range 0 - 1.0)
+     */
+    public final double fractionalDistanceFromBottom(final double y) {
+        return (y - this.bottomLeftDataPoint.getValue2()) / this.deltaY;
+    }
+    
+    
+    /**
      * What fraction of plot heigh is given height?
      * @param height Height
      * @return Fraction of plot height (i.e. over range 0.0 - 1.0)
@@ -383,6 +394,15 @@ public class PlotBoundaries {
      */
     public final double getMaxValue1() {
     	return this.bottomRightDataPoint.getValue1();
+    }
+    
+    
+    /**
+     * Get minimum value2.
+     * @return Minimum value 2.
+     */
+    public final double getMinValue2() {
+    	return this.bottomLeftDataPoint.getValue2();
     }
     
     

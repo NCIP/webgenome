@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2006-10-26 21:52:33 $
+$Revision: 1.19 $
+$Date: 2006-10-27 04:03:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,6 +101,9 @@ public final class ScatterPlot implements PlotElement {
     
     /** Width of selected lines in pixels. */
     private static final int SELECTED_LINE_WIDTH = 3;
+    
+    /** LOH line width. */
+    private static final int LOH_LINE_WIDTH = 5;
     
     /** Default length of error bar hatch lines in pixels. */
     private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
@@ -367,7 +370,7 @@ public final class ScatterPlot implements PlotElement {
     			this.quantitationType = qt;
     		} else if (this.quantitationType != qt) {
     			throw new IllegalArgumentException(
-    					"Cannot max quantitation types in plot");
+    					"Cannot mix quantitation types in plot");
     		}
     	}
         
@@ -442,24 +445,34 @@ public final class ScatterPlot implements PlotElement {
     	ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
     		getChromosomeArrayData(bioAssay, this.chromosome);
     	if (cad != null) {
-                
-            // Points
-    		if (this.drawPoints) {
-	            this.paintPoints(cad, bioAssay.getColor(), canvas,
-	            		pointRadius,
-	            		bioAssay.getId(), reporters);
+    		
+	    		if (this.quantitationType != QuantitationType.LOH
+	    				|| (this.quantitationType == QuantitationType.LOH
+	    						&& this.drawRawLohProbabilities)) {
+	                
+	            // Points
+	    		if (this.drawPoints) {
+		            this.paintPoints(cad, bioAssay.getColor(), canvas,
+		            		pointRadius,
+		            		bioAssay.getId(), reporters);
+	    		}
+	            
+	            // Error bars
+	    		if (this.drawErrorBars) {
+	    			this.paintErrorBars(cad, bioAssay.getColor(), canvas,
+	    					lineWidth);
+	    		}
+	        
+	            // Lines
+	    		if (this.drawLines) {
+		            this.paintLines(cad, bioAssay.getColor(), canvas,
+		            		lineWidth);
+	    		}
     		}
-            
-            // Error bars
-    		if (this.drawErrorBars) {
-    			this.paintErrorBars(cad, bioAssay.getColor(), canvas,
-    					lineWidth);
-    		}
-        
-            // Lines
-    		if (this.drawLines) {
-	            this.paintLines(cad, bioAssay.getColor(), canvas,
-	            		lineWidth);
+    		
+    		// LOH scored lines
+    		if (this.quantitationType == QuantitationType.LOH) {
+    			this.paintLoh(cad, bioAssay.getColor(), canvas, LOH_LINE_WIDTH);
     		}
         }
     }
@@ -655,6 +668,85 @@ public final class ScatterPlot implements PlotElement {
     
     
     /**
+     * Paint LOH scored lines.
+     * @param cad Chromosome array data
+     * @param color Color
+     * @param drawingCanvas Canvas to paint on
+     * @param lineWidth Width of line
+     */
+    private void paintLoh(final ChromosomeArrayData cad,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+    	List<ArrayDatum> arrayData = cad.getArrayData();
+    	int lohStartIdx = -1;
+    	int lohEndIdx = -1;
+    	for (int i = 0; i < arrayData.size(); i++) {
+    		ArrayDatum datum = arrayData.get(i);
+    		if (datum.getValue() >= this.lohThreshold) {
+    			if (lohStartIdx < 0) {
+    				lohStartIdx = i;
+    			}
+    			lohEndIdx = i;
+    		} else {
+    			if (lohStartIdx >= 0) {
+    				
+    				// Get chromosome endpoints of LOH segment
+    				ArrayDatum startDatum = arrayData.get(lohStartIdx);
+    				ArrayDatum endDatum = arrayData.get(lohEndIdx);
+    				long start = -1;
+    				long end = -1;
+    				if (this.interpolateLohEndpoints) {
+    					if (lohStartIdx > 0) {
+    						start = (startDatum.getReporter().getLocation()
+    							+ arrayData.get(lohStartIdx - 1).getReporter().
+    							getLocation()) / 2;
+    					} else {
+    						start = startDatum.getReporter().getLocation();
+    					}
+    					if (lohEndIdx < arrayData.size() - 1) {
+    						end = (endDatum.getReporter().getLocation()
+    								+ arrayData.get(lohEndIdx + 1).
+    								getReporter().getLocation()) / 2;
+    					} else {
+    						end = endDatum.getReporter().getLocation();
+    					}
+    				} else {
+    					start = startDatum.getReporter().getLocation();
+    					end = endDatum.getReporter().getLocation();
+    				}
+    				
+    				// Get average LOH probability over this section
+    				float sum = (float) 0.0;
+    				for (int j = lohStartIdx; j <= lohEndIdx; j++) {
+    					sum += arrayData.get(j).getValue();
+    				}
+    				float mean = sum / (float) (lohEndIdx - lohStartIdx + 1);
+    				
+    				// Draw LOH scored segment
+    				int startX = this.transposeX(start);
+    				int endX = this.transposeX(end);
+    				int topY = this.transposeY(mean);
+//    				float minY = (float) 0;
+//    				if (this.plotBoundaries.getMinValue2() > 0) {
+//    					minY = (float) this.plotBoundaries.getMinValue2();
+//    				}
+//    				int bottomY = this.transposeY(minY);
+//    				drawingCanvas.add(new Line(startX, bottomY, startX, topY,
+//    						lineWidth, color));
+    				drawingCanvas.add(new Line(startX, topY, endX, topY,
+    						lineWidth, color));
+//    				drawingCanvas.add(new Line(endX, topY, endX, bottomY,
+//    						lineWidth, color));
+    				
+    				lohStartIdx = -1;
+    				lohEndIdx = -1;
+    			}
+    		}
+    	}
+    }
+    
+    
+    /**
      * Draw single data point.
      * @param x X-coordinate of point center in pixels
      * @param y Y-coordinate of point in pixels
@@ -721,6 +813,19 @@ public final class ScatterPlot implements PlotElement {
     
     
     /**
+     * Transpose the given x-coordinate from
+     * the native units of the plot (i.e., base pairs vs. some
+     * quantitation type) to pixels.
+     * @param x An x-coordinate in native units
+     * @return Transposed x-coordinate in pixels
+     */
+    private int transposeX(final long x) {
+        return this.x + (int) ((double) width
+                * this.plotBoundaries.fractionalDistanceFromLeft(x));
+    }
+    
+    
+    /**
      * Transpose the y-coordinate of given data point from
      * the native units of the plot (i.e., base pairs vs. some
      * quantitation type) to pixels.
@@ -730,6 +835,19 @@ public final class ScatterPlot implements PlotElement {
     private int transposeY(final DataPoint dataPoint) {
         return this.y + height - (int) ((double) height
                 * this.plotBoundaries.fractionalDistanceFromBottom(dataPoint));
+    }
+    
+    
+    /**
+     * Transpose the given y-coordinate from
+     * the native units of the plot (i.e., base pairs vs. some
+     * quantitation type) to pixels.
+     * @param y A y-coordinate in native units
+     * @return Transposed y-coordinate in pixels
+     */
+    private int transposeY(final float y) {
+        return this.y + height - (int) ((double) height
+                * this.plotBoundaries.fractionalDistanceFromBottom(y));
     }
     
     /**
