@@ -78,8 +78,8 @@
 			id="experiment">
 			<tr>
 				<td>
-					<table class="noBorder"><tr>
-						<td valign="middle">
+					<table class="noBorder" width="100%"><tr>
+						<td valign="middle" align="right" width="22">
 							<%
 								Experiment exp = (Experiment)
 									pageContext.findAttribute("experiment");
@@ -87,15 +87,15 @@
 							%>
 							<html:checkbox property="<%= propName %>"/>
 						</td>
-						<td valign="middle">
+						<td valign="middle" align="left">
 							<bean:write name="experiment" property="name"/>
 						</td>
-						<td valign="middle">
+						<td valign="middle" width="1">
 							<html:img page="/images/spacer.gif"
 								border="0"
 								width="1" height="1"
 						/></td>
-						<td valign="middle">
+						<td valign="middle" align="right" width="48">
 							<span style="font-size:16px;">
 								<a href="#"
 									onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')"
@@ -117,21 +117,21 @@
 				<td>
 					<logic:iterate name="experiment" property="bioAssays"
 						id="bioAssay">
-						<table class="noBorder"><tr>
-							<td valign="middle" bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
+						<table class="noBorder" width="100%"><tr>
+							<td valign="middle" width="15" bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
 								<html:img page="/images/spacer.gif"
 									border="0"
 									width="15" height="1"
 							/></td>
-							<td valign="middle">
+							<td valign="middle" align="left">
 								<bean:write name="bioAssay" property="name"/>
 							</td>
-							<td valign="middle">
+							<td valign="middle" width="1">
 								<html:img page="/images/spacer.gif"
 									border="0"
 									width="1" height="1"
 							/></td>
-							<td valign="middle">
+							<td valign="middle" align="right" width="48">
 								<span style="font-size:16px;">
 									<a href="#"
 										onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')"
@@ -182,11 +182,11 @@
 			id="plot">
 			<tr>
 				<td>
-					<table class="noBorder"><tr>
-						<td valign="middle">
+					<table class="noBorder" width="100%"><tr>
+						<td valign="middle" align="left">
 							<bean:write name="plot" property="plotParameters.plotName"/>
 						</td>
-						<td valign="middle">
+						<td valign="middle" align="right">
 							<span style="font-size:16px;">
 								<html:link action="/cart/showPlot" paramId="plotId"
 									paramName="plot" paramProperty="id">
