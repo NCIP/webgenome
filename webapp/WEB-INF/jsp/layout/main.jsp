@@ -16,7 +16,7 @@
 		<link href="<html:rewrite page="/webcgh.css"/>"
 			rel="stylesheet" type="text/css" />
 			
-	<%-- Show help Javascript function --%>
+	<%-- Show help and onLeave Javascript functions --%>
 		<script language="JavaScript">
 			var helpPage = "<html:rewrite page="/html/help.htm"/>";
 
@@ -30,6 +30,7 @@
 
 			<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
 
+				function onLeave() {}
 				window.self.name = "mainwindow";
 
 			<% } else { %>
