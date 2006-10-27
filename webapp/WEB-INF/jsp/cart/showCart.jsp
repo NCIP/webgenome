@@ -105,11 +105,11 @@
 								/></a>
 								<a href="javascript:confirmRemove('<bean:write name="experiment" property="name"/>', '<html:rewrite page="/cart/removeExperiment.do"
 									paramName="experiment" paramProperty="id"
-									paramId="id"/>');">
-									<html:img page="/images/icon-remove.gif"
+									paramId="id"/>');"
+									><html:img page="/images/icon-remove.gif"
 										title="Remove experiment" border="0"
-										width="15" height="15"/>
-								</a>
+										width="15" height="15"
+								/></a>
 							</span>
 						</td>
 					</tr></table>
@@ -199,10 +199,10 @@
 											 border="0" width="15" height="15"
 								/></a>
 								<a href="javascript:confirmRemove('<bean:write name="plot" property="plotParameters.plotName"/>', '<html:rewrite page="/cart/removePlot.do" paramId="id"
-									paramName="plot" paramProperty="id"/>');">
-									<html:img page="/images/icon-remove.gif" title="Remove plot"
-										 border="0" width="15" height="15"/>
-								</a>
+									paramName="plot" paramProperty="id"/>');"
+									><html:img page="/images/icon-remove.gif" title="Remove plot"
+										 border="0" width="15" height="15"
+								/></a>
 							</span>
 						</td>
 					</tr></table>
