@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-26 21:33:15 $
+$Revision: 1.2 $
+$Date: 2006-10-27 15:01:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -118,16 +118,16 @@ public class PlotInteractivityTag extends TagSupport {
 		int plotWidth = plot.getWidth();	// plot width
 		int plotHeight = plot.getHeight();	// plot height
 
+		// Get context path and image sub context path
+		String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
+		String imageSubContextPath = SystemUtils.getApplicationProperty("image.sub.context");
+
 		// string prefixed + suffixed to each mouseoverstripe tooltip
 		String mouseOverStripesTooltipPrefix = SystemUtils.getApplicationProperty("mouseoverstripes.tooltip.prefix");
 		String mouseOverStripesTooltipSuffix = SystemUtils.getApplicationProperty("mouseoverstripes.tooltip.suffix");
 
 		// Show plot interactivity only if plot is of valid size and both click boxes + mouse overstripes are present
 		if ((clickBoxesCol != null) && (mouseOverStripesCol != null) && (plotWidth > 0) && (plotHeight > 0)) {
-
-			// Get context path and image sub context path
-			String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
-			String imageSubContextPath = SystemUtils.getApplicationProperty("image.sub.context");
 
 			// Print to screen
 			PrintWriter out = new PrintWriter(pageContext.getOut());
@@ -370,7 +370,7 @@ public class PlotInteractivityTag extends TagSupport {
 
 
 			// print plots
-			out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\""
+			out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"1\"><tr><td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\""
 					+ contextPath + imageSubContextPath + "/" + defaultImage + "\" width=\"" +
 					plotWidth + "\" height=\"" + plotHeight + "\"><span style=\"position:relative\"");
 			out.println("><span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
@@ -382,7 +382,12 @@ public class PlotInteractivityTag extends TagSupport {
 		else {
 			// Print message
 			PrintWriter out = new PrintWriter(pageContext.getOut());
-			out.println("<p>Plot Interactivity missing.</p>");
+			out.println("<table cellpadding=\"0\" cellspacing=\"0\" border=\"1\"><tr><td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\""
+					+ contextPath + imageSubContextPath + "/" + defaultImage + "\" width=\"" +
+					plotWidth + "\" height=\"" + plotHeight + "\"><span style=\"position:relative\"");
+			out.println("><span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
+					plotWidth + "px; height:" + plotHeight + "px\"></span");
+			out.println("></span></td></tr></table>");
 			out.flush();
 		}
 
