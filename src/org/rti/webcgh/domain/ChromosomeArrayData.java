@@ -377,6 +377,28 @@ public class ChromosomeArrayData implements Serializable {
     
     
     /**
+     * Get an iterator for LOH segments.  It is assumed that
+     * underlying array datum contain LOH probabilities.
+     * @param threshold All LOH probabilities greater than or
+     * equal to this threshold are considered indicative of LOH.
+     * @param interpolateEndPoints If <code>false</code>, then LOH
+     * segment endpoints are set to be the outermost reporter locations
+     * within an LOH segment.  If <code>true</code>, then endpoints
+     * are interpolated distally to the points where linearly descending
+     * lines drawn to the next data point cross the threshold.
+     * @return Iterator for LOH segments.  The <code>quantitation</code>
+	 * of this feature will be the weighted average LOH
+	 * probability of the segment.
+     */
+    public final AnnotatedGenomeFeatureIterator
+    	lohSegmentIterator(final float threshold,
+    		final boolean interpolateEndPoints) {
+    	return new LohSegmentIterator(threshold, interpolateEndPoints,
+    			new ArrayList<ArrayDatum>(this.arrayData), this.chromosome);
+    }
+    
+    
+    /**
      * Update <code>minValue</code> and
      * <code>maxValue</code>.
      * @param datum An array datum that may
@@ -401,5 +423,198 @@ public class ChromosomeArrayData implements Serializable {
     			this.maxValue = candidateMax;
     		}
     	}
+    }
+    
+    
+    // ==============================
+    //     Helper classes
+    // ==============================
+    
+    /**
+     * Iterator for LOH segments.
+     */
+    static class LohSegmentIterator
+    implements AnnotatedGenomeFeatureIterator {
+    	
+    	/**
+    	 * All LOH probabilities greater than or
+    	 * equal to this threshold are considered indicative of LOH.
+    	 */
+    	private final float threshold;
+    	
+    	
+    	/**
+    	 * If <code>false</code>, then LOH
+	     * segment endpoints are set to be the outermost reporter locations
+	     * within an LOH segment.  If <code>true</code>, then endpoints
+	     * are interpolated distally to the points where linearly descending
+	     * lines drawn to the next data point cross the threshold.
+    	 */
+    	private final boolean interpolateEndPoints;
+    	
+    	/** Loop index whose state must be retained between method calls. */
+    	private int i = 0;
+    	
+    	/** Next LOH segment. */
+    	private AnnotatedGenomeFeature nextSeg = null;
+    	
+    	/**
+    	 * Data in which to identify LOH segments.  This
+    	 * list must be sorted on chromosome location.
+    	 */
+    	private final List<ArrayDatum> data;
+    	
+    	/** Chromosome number. */
+    	private final short chromosome;
+    	
+    	
+    	/**
+    	 * Constructor.
+    	 * @param threshold All LOH probabilities greater than or
+	     * equal to this threshold are considered indicative of LOH.
+	     * @param interpolateEndPoints If <code>false</code>, then LOH
+	     * segment endpoints are set to be the outermost reporter locations
+	     * within an LOH segment.  If <code>true</code>, then endpoints
+	     * are interpolated distally to the points where linearly descending
+	     * lines drawn to the next data point cross the threshold.
+	     * @param data Data in which to search for LOH segments.  The
+	     * list must be sorted on chromosome location.
+	     * @param chromosome Chromosome number
+    	 */
+    	LohSegmentIterator(final float threshold,
+    			final boolean interpolateEndPoints,
+    			final List<ArrayDatum> data, final short chromosome) {
+    		this.threshold = threshold;
+    		this.interpolateEndPoints = interpolateEndPoints;
+    		this.data = data;
+    		this.chromosome = chromosome;
+    		this.advance();
+    	}
+    	
+    	/**
+    	 * Return next feature.  The <code>quantitation</code>
+    	 * of this feature will be the weighted average LOH
+    	 * probability of the segment.
+    	 * @return Next feature.
+    	 */
+    	public AnnotatedGenomeFeature next() {
+    		AnnotatedGenomeFeature next = this.nextSeg;
+    		this.advance();
+    		return next;
+    	}
+    	
+    	
+    	/**
+    	 * Are there any more features?
+    	 * @return T/F
+    	 */
+    	public boolean hasNext() {
+    		return this.nextSeg != null;
+    	}
+    	
+    	
+    	/**
+    	 * Advance state to next LOH segment.
+    	 */
+    	private void advance() {
+    		this.nextSeg = null;
+    		int lohStartIdx = -1;
+        	int lohEndIdx = -1;
+    		while (this.i < this.data.size() && this.nextSeg == null) {
+    			ArrayDatum datum = this.data.get(this.i);
+    			if (datum.getValue() >= this.threshold) {
+        			if (lohStartIdx < 0) {
+        				lohStartIdx = i;
+        			}
+        			lohEndIdx = i;
+        		}
+    			if (datum.getValue() < this.threshold
+        				|| i == this.data.size() - 1) {
+        			if (lohStartIdx >= 0) {
+        				this.nextSeg = newLohSegment(lohStartIdx, lohEndIdx);
+        			}
+    			}
+    			this.i++;
+    		}
+    	}
+    	
+    	
+    	/**
+    	 * Generate new LOH segment.
+    	 * @param lohStartIdx Start index of segment in data.
+    	 * @param lohEndIdx End index of segment in data.
+    	 * @return A new LOH segment.
+    	 */
+    	private AnnotatedGenomeFeature newLohSegment(
+    			final int lohStartIdx, final int lohEndIdx) {
+			ArrayDatum startDatum = this.data.get(lohStartIdx);
+			ArrayDatum endDatum = this.data.get(lohEndIdx);
+			ArrayDatum startInterpolatedDatum = null;
+			ArrayDatum endInterpolatedDatum = null;
+			if (this.interpolateEndPoints) {
+				if (lohStartIdx > 0) {
+					startInterpolatedDatum =
+						ArrayDatum.generateIntermediate(
+							this.data.get(lohStartIdx - 1),
+							startDatum, this.threshold);
+				}
+				if (lohEndIdx < this.data.size() - 1) {
+					endInterpolatedDatum =
+						ArrayDatum.generateIntermediate(
+							endDatum, this.data.get(lohEndIdx + 1),
+							this.threshold);
+				}
+			}
+        				
+			// Get weighted average LOH probability
+			long start = startDatum.getReporter().getLocation();
+			long end = endDatum.getReporter().getLocation();
+			float sum = (float) 0.0;
+			if (lohStartIdx == lohEndIdx
+					&& startInterpolatedDatum == null
+					&& endInterpolatedDatum == null) {
+				sum = startDatum.getValue();
+			} else {
+				for (int j = lohStartIdx; j < lohEndIdx; j++) {
+					sum += this.weightedAvg(this.data.get(j),
+							this.data.get(j + 1));
+				}
+			}
+			if (startInterpolatedDatum != null) {
+				sum += this.weightedAvg(startInterpolatedDatum,
+						startDatum);
+				start = startInterpolatedDatum.getReporter().
+					getLocation();
+			}
+			if (endInterpolatedDatum != null) {
+				sum += this.weightedAvg(endDatum,
+						endInterpolatedDatum);
+				end = endInterpolatedDatum.getReporter().
+					getLocation();
+			}
+			float mean = Float.NaN;
+			if (start == end) {
+				mean = sum;
+			} else {
+				mean = sum / (float) (end - start);
+			}
+			
+			return new AnnotatedGenomeFeature(this.chromosome, start, end,
+					AnnotationType.LOH_SEGMENT, mean);
+    	}
+    	
+        /**
+         * Find average value of two datum weighted (i.e., multiplied) by
+         * the distance between the two reporters.
+         * @param d1 First datum
+         * @param d2 Second datum
+         * @return Weighted average value
+         */
+        private float weightedAvg(final ArrayDatum d1, final ArrayDatum d2) {
+    		float avg = (d1.getValue() + d2.getValue()) / (float) 2.0;
+    		long gap = d2.getReporter().getLocation()
+    			- d1.getReporter().getLocation();
+    		return (float) ((double) avg * (double) gap);
+        }
     }
 }

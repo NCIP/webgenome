@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-26 15:37:36 $
+$Revision: 1.10 $
+$Date: 2006-10-28 21:02:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -191,6 +191,41 @@ public class GenomeInterval {
 	//     Business methods
 	// =================================
 	
+	
+	/**
+	 * Does given interval overlap this?
+	 * @param ival A genome interval
+	 * @return T/F
+	 */
+	public final boolean overlaps(final GenomeInterval ival) {
+		return this.chromosome == ival.chromosome
+		&& this.endLocation >= ival.startLocation
+		&& this.startLocation <= ival.endLocation;
+	}
+	
+	
+	/**
+	 * Find intersection of two given genome intervals.
+	 * @param ival1 A genome interval
+	 * @param ival2 Another genome interval
+	 * @return Intersetion or null if intervals do not overlap
+	 */
+	public static GenomeInterval intersection(final GenomeInterval ival1,
+			final GenomeInterval ival2) {
+		GenomeInterval newIval = null;
+		if (ival1.overlaps(ival2)) {
+			long start = ival1.startLocation;
+			if (ival2.startLocation > start) {
+				start = ival2.startLocation;
+			}
+			long end = ival1.endLocation;
+			if (ival2.endLocation < end) {
+				end = ival2.endLocation;
+			}
+			newIval = new GenomeInterval(ival1.chromosome, start, end);
+		}
+		return newIval;
+	}
 	
 	/**
 	 * Get bioassay data contraints.  This method will be used to

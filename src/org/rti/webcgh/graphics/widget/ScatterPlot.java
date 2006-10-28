@@ -1,6 +1,6 @@
 /*
-$Revision: 1.20 $
-$Date: 2006-10-27 22:24:32 $
+$Revision: 1.21 $
+$Date: 2006-10-28 21:02:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 //import org.apache.log4j.Logger;
+import org.rti.webcgh.domain.AnnotatedGenomeFeature;
+import org.rti.webcgh.domain.AnnotatedGenomeFeatureIterator;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -680,108 +682,30 @@ public final class ScatterPlot implements PlotElement {
     private void paintLoh(final ChromosomeArrayData cad,
             final Color color, final DrawingCanvas drawingCanvas,
             final int lineWidth) {
-    	List<ArrayDatum> arrayData = cad.getArrayData();
-    	int lohStartIdx = -1;
-    	int lohEndIdx = -1;
-    	for (int i = 0; i < arrayData.size(); i++) {
-    		ArrayDatum datum = arrayData.get(i);
-    		if (datum.getValue() >= this.lohThreshold) {
-    			if (lohStartIdx < 0) {
-    				lohStartIdx = i;
-    			}
-    			lohEndIdx = i;
-    		}
-    		if (datum.getValue() < this.lohThreshold
-    				|| i == arrayData.size() - 1) {
-    			if (lohStartIdx >= 0) {
-    				ArrayDatum startDatum = arrayData.get(lohStartIdx);
-    				ArrayDatum endDatum = arrayData.get(lohEndIdx);
-    				ArrayDatum startInterpolatedDatum = null;
-    				ArrayDatum endInterpolatedDatum = null;
-    				if (this.interpolateLohEndpoints) {
-    					if (lohStartIdx > 0) {
-    						startInterpolatedDatum =
-    							ArrayDatum.generateIntermediate(
-    								arrayData.get(lohStartIdx - 1), startDatum,
-    								this.lohThreshold);
-    					}
-    					if (lohEndIdx < arrayData.size() - 1) {
-    						endInterpolatedDatum =
-    							ArrayDatum.generateIntermediate(
-    								endDatum, arrayData.get(lohEndIdx + 1),
-    								this.lohThreshold);
-    					}
-    				}
-    				
-    				// Get weighted average LOH probability
-    				long start = startDatum.getReporter().getLocation();
-					long end = endDatum.getReporter().getLocation();
-					float sum = (float) 0.0;
-    				if (lohStartIdx == lohEndIdx
-    						&& startInterpolatedDatum == null
-    						&& endInterpolatedDatum == null) {
-    					sum = startDatum.getValue();
-    				} else {
-    					for (int j = lohStartIdx; j < lohEndIdx; j++) {
-    						sum += this.weightedAvg(arrayData.get(j),
-    								arrayData.get(j + 1));
-    					}
-    				}
-					if (startInterpolatedDatum != null) {
-						sum += this.weightedAvg(startInterpolatedDatum,
-								startDatum);
-						start = startInterpolatedDatum.getReporter().
-							getLocation();
-					}
-					if (endInterpolatedDatum != null) {
-						sum += this.weightedAvg(endDatum,
-								endInterpolatedDatum);
-						end = endInterpolatedDatum.getReporter().
-							getLocation();
-					}
-					float mean = Float.NaN;
-					if (start == end) {
-						mean = sum;
-					} else {
-						mean = sum / (float) (end - start);
-					}
+    	
+    	// Iterate over LOH segments
+    	AnnotatedGenomeFeatureIterator it = cad.lohSegmentIterator(
+    			this.lohThreshold, this.interpolateLohEndpoints);
+    	while (it.hasNext()) {
+    		AnnotatedGenomeFeature feat = it.next();
     				    				
-    				// Draw LOH scored segment
-    				int startX = this.transposeX(start);
-    				int endX = this.transposeX(end);
-    				if (startX == endX) {
-    					startX -= MIN_LOH_WIDTH / 2;
-    					if (startX < this.x) {
-    						startX = this.x;
-    					}
-    					endX += MIN_LOH_WIDTH / 2;
-    					if (endX > this.x + this.width) {
-    						endX = this.x + this.width;
-    					}
-    				}
-    				int topY = this.transposeY(mean);
-    				drawingCanvas.add(new Line(startX, topY, endX, topY,
-    						lineWidth, color));
-    				lohStartIdx = -1;
-    				lohEndIdx = -1;
-    			}
-    		}
-    	}
-    }
-    
-    
-    /**
-     * Find average value of two datum weighted (i.e., multiplied) by
-     * the distance between the two reporters.
-     * @param d1 First datum
-     * @param d2 Second datum
-     * @return Weighted average value
-     */
-    private float weightedAvg(final ArrayDatum d1, final ArrayDatum d2) {
-		float avg = (d1.getValue() + d2.getValue()) / (float) 2.0;
-		long gap = d2.getReporter().getLocation()
-			- d1.getReporter().getLocation();
-		return (float) ((double) avg * (double) gap);
+			// Draw LOH scored segment
+			int startX = this.transposeX(feat.getStartLocation());
+			int endX = this.transposeX(feat.getEndLocation());
+			if (startX == endX) {
+				startX -= MIN_LOH_WIDTH / 2;
+				if (startX < this.x) {
+					startX = this.x;
+				}
+				endX += MIN_LOH_WIDTH / 2;
+				if (endX > this.x + this.width) {
+					endX = this.x + this.width;
+				}
+			}
+			int topY = this.transposeY(feat.getQuantitation());
+			drawingCanvas.add(new Line(startX, topY, endX, topY,
+					lineWidth, color));
+		}
     }
     
     

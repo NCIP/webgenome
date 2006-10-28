@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2006-10-28 14:53:06 $
+$Revision: 1.19 $
+$Date: 2006-10-28 21:02:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -241,7 +241,7 @@ public final class ClientPlotAction extends BaseAction {
         pForm.init();
         pForm.setGenomeIntervals(GenomeInterval.encode(constraints));
         pForm.setUnits(BpUnits.BP.getName());
-        pForm.setPlotType(PlotType.IDEOGRAM.getName());
+        pForm.setPlotType(PlotType.SCATTER.getName());
         
         // Set selected experiments form
         SelectedExperimentsForm sef =
