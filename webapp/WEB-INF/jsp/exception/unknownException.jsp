@@ -6,26 +6,12 @@
 	<font color="red">
 		<b>
 			An unknown exception has occurred that has prevented
-			webCGH from completing this request
+			webCGH from completing this request.
 		</b>
 	</font>
 </p>
 		
 <p>
-	Please help us fix this problem by:
-	<ul>
-		<li>Selecting the error log below
-		<li>Copying and pasting the selection into an email
-		message to <webcgh:sysadmin/>
-	</ul>
-</p>
-		
-<p><br></p>
-<p><br></p>
-		
-		
-<h2>Error Log</h2>
-		
-<p>
-	<webcgh:exceptionStackTrace/>
+	The system administrator has been sent an error report.  We apologize
+	for the inconvenience.
 </p>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-09-23 05:02:23 $
+$Revision: 1.7 $
+$Date: 2006-10-28 14:52:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -387,6 +387,9 @@ public final class HeatMapPlot implements PlotElement {
 		    		}
 		    		int y = this.trackMinY + idSize.pixels(start);
 		    		int height = idSize.pixels(end - start);
+		    		if (height < 1) {
+		    			height = 1;
+		    		}
 		    		Color c = this.colorFactory.getColor(value);
 		    		canvas.add(new Rectangle(x, y, trackWidth, height, c));
 	    		}

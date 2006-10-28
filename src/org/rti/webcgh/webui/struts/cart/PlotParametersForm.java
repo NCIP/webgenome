@@ -1,6 +1,6 @@
 /*
-$Revision: 1.19 $
-$Date: 2006-10-28 04:23:37 $
+$Revision: 1.20 $
+$Date: 2006-10-28 14:53:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -889,8 +889,7 @@ public class PlotParametersForm extends BaseForm {
 		this.width = DEF_WIDTH;
 		this.height = DEF_HEIGHT;
 		this.name = "";
-		this.ideogramSize = String.valueOf(
-				IdeogramPlotParameters.DEF_IDEOGRAM_SIZE);
+		this.ideogramSize = IdeogramPlotParameters.DEF_IDEOGRAM_SIZE.getName();
 		this.ideogramThickness = String.valueOf(
 				IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 		this.maxMask = "";
@@ -1025,15 +1024,26 @@ public class PlotParametersForm extends BaseForm {
 		params.setIdeogramThickness(Integer.parseInt(this.ideogramThickness));
 		if (!StringUtils.isEmpty(this.maxMask)) {
 			params.setMaxMask(Float.parseFloat(this.maxMask));
+		} else {
+			params.setMaxMask(Float.MIN_VALUE);
 		}
 		if (!StringUtils.isEmpty(this.maxSaturation)) {
 			params.setMaxSaturation(Float.parseFloat(this.maxSaturation));
+		} else {
+			params.setMaxSaturation(Float.NaN);
 		}
 		if (!StringUtils.isEmpty(this.minMask)) {
 			params.setMinMask(Float.parseFloat(this.minMask));
+		} else {
+			params.setMinMask(Float.MAX_VALUE);
 		}
 		if (!StringUtils.isEmpty(this.minSaturation)) {
 			params.setMinSaturation(Float.parseFloat(this.minSaturation));
+		} else {
+			params.setMinSaturation(Float.NaN);
+		}
+		if (!StringUtils.isEmpty(this.trackWidth)) {
+			params.setTrackWidth(Integer.parseInt(this.trackWidth));
 		}
 	}
 	
@@ -1136,7 +1146,8 @@ public class PlotParametersForm extends BaseForm {
 			this.ideogramThickness = String.valueOf(ipp.getIdeogramThickness());
 			
 			// maxMask
-			if (NumericUtils.isReal(ipp.getMaxMask())) {
+			if (NumericUtils.isReal(ipp.getMaxMask())
+					&& ipp.getMaxMask() > Float.MIN_VALUE) {
 				this.maxMask = String.valueOf(ipp.getMaxMask());
 			} else {
 				this.maxMask = "";
@@ -1150,7 +1161,8 @@ public class PlotParametersForm extends BaseForm {
 			}
 			
 			// minMask
-			if (NumericUtils.isReal(ipp.getMinMask())) {
+			if (NumericUtils.isReal(ipp.getMinMask())
+					&& ipp.getMinMask() < Float.MAX_VALUE) {
 				this.minMask = String.valueOf(ipp.getMinMask());
 			} else {
 				this.minMask = "";

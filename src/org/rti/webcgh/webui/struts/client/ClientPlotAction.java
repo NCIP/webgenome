@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2006-10-28 04:23:37 $
+$Revision: 1.18 $
+$Date: 2006-10-28 14:53:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.core.InvalidClientQueryParametersException;
+import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
@@ -240,6 +241,7 @@ public final class ClientPlotAction extends BaseAction {
         pForm.init();
         pForm.setGenomeIntervals(GenomeInterval.encode(constraints));
         pForm.setUnits(BpUnits.BP.getName());
+        pForm.setPlotType(PlotType.IDEOGRAM.getName());
         
         // Set selected experiments form
         SelectedExperimentsForm sef =
