@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-24 01:41:08 $
+$Revision: 1.3 $
+$Date: 2006-10-28 04:07:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -90,6 +90,11 @@ public final class RouteToPlotParametersPageAction extends BaseAction {
     	// Recover type of plot from form
     	PlotParametersForm pForm = (PlotParametersForm) form;
     	String plotType = pForm.getPlotType();
+    	
+    	// If new plot, reset form plot name
+    	if (request.getParameter("id") == null) {
+    		pForm.setName("");
+    	}
     	
     	// Determine forward
     	ActionForward forward = null;

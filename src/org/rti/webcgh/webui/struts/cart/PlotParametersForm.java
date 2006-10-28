@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2006-10-27 04:02:46 $
+$Revision: 1.18 $
+$Date: 2006-10-28 04:07:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1080,6 +1080,11 @@ public class PlotParametersForm extends BaseForm {
 	public final void bulkSet(final PlotParameters plotParameters) {
 		
 		// Common attributes
+		if (plotParameters instanceof ScatterPlotParameters) {
+			this.plotType = PlotType.SCATTER.getName();
+		} else if (plotParameters instanceof IdeogramPlotParameters) {
+			this.plotType = PlotType.IDEOGRAM.getName();
+		}
 		this.genomeIntervals = GenomeInterval.encode(
 				plotParameters.getGenomeIntervals());
 		this.numPlotsPerRow =
