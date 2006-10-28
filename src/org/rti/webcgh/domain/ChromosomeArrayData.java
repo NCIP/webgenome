@@ -377,24 +377,26 @@ public class ChromosomeArrayData implements Serializable {
     
     
     /**
-     * Get an iterator for LOH segments.  It is assumed that
-     * underlying array datum contain LOH probabilities.
-     * @param threshold All LOH probabilities greater than or
-     * equal to this threshold are considered indicative of LOH.
-     * @param interpolateEndPoints If <code>false</code>, then LOH
+     * Get an iterator for altered chromosomal
+     * segments.
+     * @param threshold Threshold value for determining if array data
+     * are in altered segment.
+     * @param interpolateEndPoints If <code>false</code>, then
      * segment endpoints are set to be the outermost reporter locations
-     * within an LOH segment.  If <code>true</code>, then endpoints
+     * within a segment.  If <code>true</code>, then endpoints
      * are interpolated distally to the points where linearly descending
      * lines drawn to the next data point cross the threshold.
-     * @return Iterator for LOH segments.  The <code>quantitation</code>
-	 * of this feature will be the weighted average LOH
-	 * probability of the segment.
+     * @param alterationType Alteration type
+     * @return Iterator for altered segments.  The <code>quantitation</code>
+	 * of this feature will be the weighted average value of the segment.
      */
     public final AnnotatedGenomeFeatureIterator
-    	lohSegmentIterator(final float threshold,
-    		final boolean interpolateEndPoints) {
-    	return new LohSegmentIterator(threshold, interpolateEndPoints,
-    			new ArrayList<ArrayDatum>(this.arrayData), this.chromosome);
+    	alteredSegmentIterator(final float threshold,
+    		final boolean interpolateEndPoints,
+    		final AnnotationType alterationType) {
+    	return new AlteredSegmentIterator(threshold, interpolateEndPoints,
+    			new ArrayList<ArrayDatum>(this.arrayData), this.chromosome,
+    			alterationType);
     }
     
     
@@ -431,22 +433,23 @@ public class ChromosomeArrayData implements Serializable {
     // ==============================
     
     /**
-     * Iterator for LOH segments.
+     * Iterator for altered genome segments.  These may
+     * be amplifications, deletions, or LOH segments.
      */
-    static class LohSegmentIterator
+    static class AlteredSegmentIterator
     implements AnnotatedGenomeFeatureIterator {
     	
     	/**
-    	 * All LOH probabilities greater than or
-    	 * equal to this threshold are considered indicative of LOH.
+    	 * Threshold for determining if an array datum
+    	 * is in an altered segment.
     	 */
     	private final float threshold;
     	
     	
     	/**
-    	 * If <code>false</code>, then LOH
+    	 * If <code>false</code>, then
 	     * segment endpoints are set to be the outermost reporter locations
-	     * within an LOH segment.  If <code>true</code>, then endpoints
+	     * within an segment.  If <code>true</code>, then endpoints
 	     * are interpolated distally to the points where linearly descending
 	     * lines drawn to the next data point cross the threshold.
     	 */
@@ -455,11 +458,11 @@ public class ChromosomeArrayData implements Serializable {
     	/** Loop index whose state must be retained between method calls. */
     	private int i = 0;
     	
-    	/** Next LOH segment. */
+    	/** Next segment. */
     	private AnnotatedGenomeFeature nextSeg = null;
     	
     	/**
-    	 * Data in which to identify LOH segments.  This
+    	 * Data in which to identify altered segments.  This
     	 * list must be sorted on chromosome location.
     	 */
     	private final List<ArrayDatum> data;
@@ -467,34 +470,40 @@ public class ChromosomeArrayData implements Serializable {
     	/** Chromosome number. */
     	private final short chromosome;
     	
+    	/** Segment type. */
+    	private final AnnotationType alterationType;
+    	
     	
     	/**
     	 * Constructor.
-    	 * @param threshold All LOH probabilities greater than or
-	     * equal to this threshold are considered indicative of LOH.
-	     * @param interpolateEndPoints If <code>false</code>, then LOH
+    	 * @param threshold Threshold value for determining if
+    	 * an array datum is in an altered segment.
+	     * @param interpolateEndPoints If <code>false</code>, then
 	     * segment endpoints are set to be the outermost reporter locations
-	     * within an LOH segment.  If <code>true</code>, then endpoints
+	     * within an segment.  If <code>true</code>, then endpoints
 	     * are interpolated distally to the points where linearly descending
 	     * lines drawn to the next data point cross the threshold.
-	     * @param data Data in which to search for LOH segments.  The
+	     * @param data Data in which to search for altered segments.  The
 	     * list must be sorted on chromosome location.
 	     * @param chromosome Chromosome number
+	     * @param alterationType Alteration type
     	 */
-    	LohSegmentIterator(final float threshold,
+    	AlteredSegmentIterator(final float threshold,
     			final boolean interpolateEndPoints,
-    			final List<ArrayDatum> data, final short chromosome) {
+    			final List<ArrayDatum> data, final short chromosome,
+    			final AnnotationType alterationType) {
     		this.threshold = threshold;
     		this.interpolateEndPoints = interpolateEndPoints;
     		this.data = data;
     		this.chromosome = chromosome;
+    		this.alterationType = alterationType;
     		this.advance();
     	}
     	
     	/**
     	 * Return next feature.  The <code>quantitation</code>
-    	 * of this feature will be the weighted average LOH
-    	 * probability of the segment.
+    	 * of this feature will be the weighted average value
+    	 * of the segment.
     	 * @return Next feature.
     	 */
     	public AnnotatedGenomeFeature next() {
@@ -514,24 +523,23 @@ public class ChromosomeArrayData implements Serializable {
     	
     	
     	/**
-    	 * Advance state to next LOH segment.
+    	 * Advance state to next segment.
     	 */
     	private void advance() {
     		this.nextSeg = null;
-    		int lohStartIdx = -1;
-        	int lohEndIdx = -1;
+    		int startIdx = -1;
+        	int endIdx = -1;
     		while (this.i < this.data.size() && this.nextSeg == null) {
     			ArrayDatum datum = this.data.get(this.i);
-    			if (datum.getValue() >= this.threshold) {
-        			if (lohStartIdx < 0) {
-        				lohStartIdx = i;
+    			if (this.inSegment(datum)) {
+        			if (startIdx < 0) {
+        				startIdx = i;
         			}
-        			lohEndIdx = i;
+        			endIdx = i;
         		}
-    			if (datum.getValue() < this.threshold
-        				|| i == this.data.size() - 1) {
-        			if (lohStartIdx >= 0) {
-        				this.nextSeg = newLohSegment(lohStartIdx, lohEndIdx);
+    			if (!this.inSegment(datum) || i == this.data.size() - 1) {
+        			if (startIdx >= 0) {
+        				this.nextSeg = newSegment(startIdx, endIdx);
         			}
     			}
     			this.i++;
@@ -540,42 +548,42 @@ public class ChromosomeArrayData implements Serializable {
     	
     	
     	/**
-    	 * Generate new LOH segment.
-    	 * @param lohStartIdx Start index of segment in data.
-    	 * @param lohEndIdx End index of segment in data.
-    	 * @return A new LOH segment.
+    	 * Generate new altered segment.
+    	 * @param startIdx Start index of segment in data.
+    	 * @param endIdx End index of segment in data.
+    	 * @return A new altered segment
     	 */
-    	private AnnotatedGenomeFeature newLohSegment(
-    			final int lohStartIdx, final int lohEndIdx) {
-			ArrayDatum startDatum = this.data.get(lohStartIdx);
-			ArrayDatum endDatum = this.data.get(lohEndIdx);
+    	private AnnotatedGenomeFeature newSegment(
+    			final int startIdx, final int endIdx) {
+			ArrayDatum startDatum = this.data.get(startIdx);
+			ArrayDatum endDatum = this.data.get(endIdx);
 			ArrayDatum startInterpolatedDatum = null;
 			ArrayDatum endInterpolatedDatum = null;
 			if (this.interpolateEndPoints) {
-				if (lohStartIdx > 0) {
+				if (startIdx > 0) {
 					startInterpolatedDatum =
 						ArrayDatum.generateIntermediate(
-							this.data.get(lohStartIdx - 1),
+							this.data.get(startIdx - 1),
 							startDatum, this.threshold);
 				}
-				if (lohEndIdx < this.data.size() - 1) {
+				if (endIdx < this.data.size() - 1) {
 					endInterpolatedDatum =
 						ArrayDatum.generateIntermediate(
-							endDatum, this.data.get(lohEndIdx + 1),
+							endDatum, this.data.get(endIdx + 1),
 							this.threshold);
 				}
 			}
         				
-			// Get weighted average LOH probability
+			// Get weighted average value
 			long start = startDatum.getReporter().getLocation();
 			long end = endDatum.getReporter().getLocation();
 			float sum = (float) 0.0;
-			if (lohStartIdx == lohEndIdx
+			if (startIdx == endIdx
 					&& startInterpolatedDatum == null
 					&& endInterpolatedDatum == null) {
 				sum = startDatum.getValue();
 			} else {
-				for (int j = lohStartIdx; j < lohEndIdx; j++) {
+				for (int j = startIdx; j < endIdx; j++) {
 					sum += this.weightedAvg(this.data.get(j),
 							this.data.get(j + 1));
 				}
@@ -600,7 +608,24 @@ public class ChromosomeArrayData implements Serializable {
 			}
 			
 			return new AnnotatedGenomeFeature(this.chromosome, start, end,
-					AnnotationType.LOH_SEGMENT, mean);
+					this.alterationType, mean);
+    	}
+    	
+    	
+    	/**
+    	 * Is given array datum in an alteration?
+    	 * @param datum An array datum.
+    	 * @return T/F
+    	 */
+    	private boolean inSegment(final ArrayDatum datum) {
+    		boolean in = false;
+    		if (this.alterationType == AnnotationType.AMPLIFIED_SEGMENT
+    				|| this.alterationType == AnnotationType.LOH_SEGMENT) {
+    			in = datum.getValue() >= this.threshold;
+    		} else if (this.alterationType == AnnotationType.DELETED_SEGMENT) {
+    			in = datum.getValue() < this.threshold;
+    		}
+    		return in;
     	}
     	
         /**

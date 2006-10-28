@@ -1,6 +1,6 @@
 /*
-$Revision: 1.21 $
-$Date: 2006-10-28 21:02:12 $
+$Revision: 1.22 $
+$Date: 2006-10-28 23:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import java.util.TreeSet;
 //import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotatedGenomeFeatureIterator;
+import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -684,8 +685,9 @@ public final class ScatterPlot implements PlotElement {
             final int lineWidth) {
     	
     	// Iterate over LOH segments
-    	AnnotatedGenomeFeatureIterator it = cad.lohSegmentIterator(
-    			this.lohThreshold, this.interpolateLohEndpoints);
+    	AnnotatedGenomeFeatureIterator it = cad.alteredSegmentIterator(
+    			this.lohThreshold, this.interpolateLohEndpoints,
+    			AnnotationType.LOH_SEGMENT);
     	while (it.hasNext()) {
     		AnnotatedGenomeFeature feat = it.next();
     				    				

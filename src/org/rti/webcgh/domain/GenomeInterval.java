@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-28 21:02:12 $
+$Revision: 1.11 $
+$Date: 2006-10-28 23:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -201,6 +201,45 @@ public class GenomeInterval {
 		return this.chromosome == ival.chromosome
 		&& this.endLocation >= ival.startLocation
 		&& this.startLocation <= ival.endLocation;
+	}
+	
+	
+	/**
+	 * Does this contain given genome interval?
+	 * @param ival An interval
+	 * @return T/F
+	 */
+	public final boolean contains(final GenomeInterval ival) {
+		return this.chromosome == ival.chromosome
+		&& ival.startLocation >= this.startLocation
+		&& ival.endLocation <= this.endLocation;
+	}
+	
+	/**
+	 * Is this interval completely to left of given?
+	 * @param ival A genome interval
+	 * @return T/F
+	 */
+	public final boolean leftOf(final GenomeInterval ival) {
+		return this.endLocation < ival.startLocation;
+	}
+	
+	
+	/**
+	 * Merge given interval into this one--i.e. expand
+	 * this intervals endpoints if the given one extends
+	 * past in either or both directions.
+	 * @param ival A genome interval.
+	 */
+	public final void merge(final GenomeInterval ival) {
+		if (this.overlaps(ival)) {
+			if (ival.startLocation < this.startLocation) {
+				this.startLocation = ival.startLocation;
+			}
+			if (ival.endLocation > this.endLocation) {
+				this.endLocation = ival.endLocation;
+			}
+		}
 	}
 	
 	

@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-10-28 21:02:12 $
+$Date: 2006-10-28 23:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,73 +50,57 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.rti.webcgh.domain.ChromosomeArrayData;
-
 /**
- * Find minimum common amplified and minimum common deleted
- * regions.  Each of these regions defines a genome interval
- * of maximum size that is amplified or deleted
- * in >= <code>minPercent</code>% bioassays.
+ * Generate error messages for bad analytic
+ * operation parameters.
  * @author dhall
  *
  */
-public final class McarMcdrOperation implements ListToListAnalyticOperation {
+public class ParameterErrorMessageGenerator {
+
+	/** List of invalid parameter names. */
+	private final List<String> invalidParamNames = new ArrayList<String>();
 	
 	/**
-	 * Minimum percent of bioassays that must be deleted or
-	 * amplified for an interval to be included.
+	 * Add name of invalid parameter.
+	 * @param paramName Invalid parameter name.
 	 */
-	private float minPercent = Float.NaN;
-
-	
-    /**
-     * Perform operation.
-     * @param input Input data
-     * @return Output data
-     * @throws AnalyticException if an error occurs
-     * during this operation
-     */
-	public List<ChromosomeArrayData> perform(
-			final List<ChromosomeArrayData> input) throws AnalyticException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-	public String getName() {
-		return "Minimimum common amplified and deleted regions (MCAR)";
-	}
-
-	
-    /**
-     * Get user configurable properties.
-     * @return User configurable properties
-     */
-	public List<UserConfigurableProperty> getUserConfigurableProperties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-    /**
-     * Set some property of the operation.  The name of this
-     * property should correspond to one of user configurable
-     * property names.
-     * @param name Name of property to set.
-     * @param value Value of property.
-     */
-	public void setProperty(final String name,
-			final String value) {
-		// TODO Auto-generated method stub
-		
+	public final void addInvalidParameterName(final String paramName) {
+		this.invalidParamNames.add(paramName);
 	}
 	
 	
-
+	/**
+	 * Have invalid parameters been reported?
+	 * @return T/F
+	 */
+	public final boolean invalidParameters() {
+		return this.invalidParamNames.size() > 0;
+	}
+	
+	/**
+	 * Get invalid parameter message.
+	 * @return Invalid parameter message.
+	 */
+	public final String getMessage() {
+		StringBuffer buff = new StringBuffer();
+		if (this.invalidParameters()) {
+			buff.append("Invalid parameter");
+			if (this.invalidParamNames.size() > 1) {
+				buff.append("s");
+			}
+			buff.append(": ");
+			int count = 0;
+			for (String name : this.invalidParamNames) {
+				if (count++ > 0) {
+					buff.append(",");
+				}
+				buff.append(name);
+			}
+		}
+		return buff.toString();
+	}
 }

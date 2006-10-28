@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-24 23:00:42 $
+$Revision: 1.4 $
+$Date: 2006-10-28 23:54:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,5 +103,22 @@ public final class ValidationUtils {
     		}
     	}
     	return isANum;
+    }
+    
+    
+    /**
+     * Is <code>testNum</code> in range?
+     * @param testNum Number to test.
+     * @param min Left endpoint of range.
+     * @param max Right endpoint of range.
+     * @return T/F.
+     */
+    public static boolean inRange(final float testNum,
+    		final float min, final float max) {
+    	boolean in = false;
+    	if (!Float.isNaN(testNum)) {
+    		in = testNum >= min && testNum <= max;
+    	}
+    	return in;
     }
 }

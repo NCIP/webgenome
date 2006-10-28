@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-28 21:02:12 $
+$Revision: 1.2 $
+$Date: 2006-10-28 23:54:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -158,5 +158,41 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 			final float quantitation) {
 		this(chromosome, startLocation, endLocation, annotationType);
 		this.quantitation = quantitation;
+	}
+	
+	
+	// ================================
+	//      Overrides
+	// ================================
+	
+	/**
+	 * Find intersection of given features.
+	 * @param feat1 First feature.
+	 * @param feat2 Second feature.
+	 * @return Intersection or null if the features do
+	 * not overlap.  The <code>quantitation</code>
+	 * value will be the average of the two
+	 * input features.
+	 */
+	public static AnnotatedGenomeFeature intersection(
+			final AnnotatedGenomeFeature feat1,
+			final AnnotatedGenomeFeature feat2) {
+		if (feat1.annotationType != feat2.annotationType) {
+			throw new IllegalArgumentException(
+					"Features have different alteration types");
+		}
+		AnnotatedGenomeFeature newIval = null;
+		GenomeInterval ival = GenomeInterval.intersection(feat1, feat2);
+		if (ival != null) {
+			float mean = Float.NaN;
+			if (!Float.isNaN(feat1.quantitation)
+					&& !Float.isNaN(feat2.quantitation)) {
+				mean = (feat1.quantitation + feat2.quantitation) / 2;
+			}
+			newIval = new AnnotatedGenomeFeature(ival.getChromosome(),
+					ival.getStartLocation(), ival.getEndLocation(),
+					feat1.annotationType, mean);
+		}
+		return newIval;
 	}
 }
