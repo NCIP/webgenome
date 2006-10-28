@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2006-10-07 15:58:49 $
+$Revision: 1.15 $
+$Date: 2006-10-28 17:09:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,6 +71,7 @@ import org.rti.webcgh.units.Direction;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
+import org.rti.webcgh.webui.util.EventHandlerGraphicBoundaries;
 
 
 /**
@@ -151,8 +152,9 @@ public class IdeogramPlotPainter extends PlotPainter {
      * @param experiments Experiments to plot
      * @param params Plotting parameters specified
      * by user
+     * @return Boundaries of event handler regions
      */
-    public final void paintPlot(final PlotPanel panel,
+    public final EventHandlerGraphicBoundaries  paintPlot(final PlotPanel panel,
     		final Collection<Experiment> experiments,
     		final PlotParameters params) {
 		
@@ -165,6 +167,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 					"Expecting plot parameters of type IdeogramPlotParameters");
 		}
 		IdeogramPlotParameters plotParameters = (IdeogramPlotParameters) params;
+		EventHandlerGraphicBoundaries evtHandlerBoundaries =
+			new EventHandlerGraphicBoundaries();
 		
 		// Get organism
 		Organism org = experiments.iterator().next().getOrganism();
@@ -208,11 +212,11 @@ public class IdeogramPlotPainter extends PlotPainter {
 			this.paintChromosomeIdeogram(row, cytologicalMap,
 					height, idSize, plotParameters.getIdeogramThickness(),
 					"CHR " + gi.getChromosome(),
-					makeReferenceElement);
+					makeReferenceElement, evtHandlerBoundaries);
 			
 			// Add data tracks
 			this.paintDataTracks(row, experiments, gi.getChromosome(),
-					height, plotParameters);
+					height, plotParameters, evtHandlerBoundaries);
 		}
 		
 		// Add final row
@@ -223,6 +227,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 			va = VerticalAlignment.BELOW;
 		}
 		panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
+		
+		return evtHandlerBoundaries;
 	}
 	
 	
@@ -241,12 +247,14 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * @param makeReferenceElement Make this ideogram the
 	 * reference element for the given plot panel in terms
 	 * of layout?
+	 * @param boundaries Event handler boundaries
 	 */
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
 			final int height, final ChromosomeIdeogramSize idSize,
 			final int ideogramThickness,
-			final String chromosome, final boolean makeReferenceElement) {
+			final String chromosome, final boolean makeReferenceElement,
+			final EventHandlerGraphicBoundaries boundaries) {
 		PlotPanel idPanel = plotPanel.newChildPlotPanel();
 		
 		// Instantiate genome feature plot
@@ -263,6 +271,9 @@ public class IdeogramPlotPainter extends PlotPainter {
 		
 		// Add genome feature plot
 		idPanel.add(plot, true);
+		
+		// Add graphic event boundaries
+		boundaries.add(plot.getMouseOverStripes());
 		
 		// Add end caps
 		ChromosomeEndCap topCap = new ChromosomeEndCap(ideogramThickness,
@@ -297,16 +308,19 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * @param chromosome Chromosome number
 	 * @param height Height of data tracks
 	 * @param plotParameters Plot parameters
+	 * @param boundaries Event handler boundaries
 	 */
 	private void paintDataTracks(final PlotPanel panel,
 			final Collection<Experiment> experiments, final short chromosome,
-			final int height, final IdeogramPlotParameters plotParameters) {
+			final int height, final IdeogramPlotParameters plotParameters,
+			final EventHandlerGraphicBoundaries boundaries) {
 		HeatMapColorFactory fac = new HeatMapColorFactory(
 				plotParameters.getMinSaturation(),
 				plotParameters.getMaxSaturation(), NUM_BINS);
 		HeatMapPlot plot = new HeatMapPlot(experiments, chromosome, fac,
 				plotParameters, this.getChromosomeArrayDataGetter(),
 				panel.getDrawingCanvas());
+		boundaries.add(plot.getMouseOverStripes());
 		panel.add(plot, HorizontalAlignment.RIGHT_OF,
 				VerticalAlignment.TOP_JUSTIFIED);
 	}

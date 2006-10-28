@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-09 03:06:23 $
+$Revision: 1.2 $
+$Date: 2006-10-28 17:09:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -61,10 +62,11 @@ import java.util.Collection;
 public class EventHandlerGraphicBoundaries {
 
 	/** Mouseover stripes. */
-	private Collection<MouseOverStripes> mouseOverStripes = null;
+	private Collection<MouseOverStripes> mouseOverStripes =
+		new ArrayList<MouseOverStripes>();
 	
 	/** Click boxes. */
-	private Collection<ClickBoxes> clickBoxes = null;
+	private Collection<ClickBoxes> clickBoxes = new ArrayList<ClickBoxes>();
 
 	/**
 	 * Get click boxes.
@@ -121,4 +123,20 @@ public class EventHandlerGraphicBoundaries {
 	}
 	
 	
+	/**
+	 * Add mouseover stripes.
+	 * @param stripes Mouseover stripes.
+	 */
+	public final void add(final MouseOverStripes stripes) {
+		this.mouseOverStripes.add(stripes);
+	}
+	
+	
+	/**
+	 * Add click boxes.
+	 * @param clickBoxes Click boxes
+	 */
+	public final void add(final ClickBoxes clickBoxes) {
+		this.clickBoxes.add(clickBoxes);
+	}
 }

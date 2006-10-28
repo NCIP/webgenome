@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2006-10-28 04:23:37 $
+$Revision: 1.15 $
+$Date: 2006-10-28 17:09:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -117,8 +117,7 @@ public class ScatterPlotPainter extends PlotPainter {
      * @param experiments Experiments to plot
      * @param params Plotting parameters specified
      * by user
-     * @return Click boxes corresponding to all individual
-     * plotting areas.
+     * @return Boundaries of event handler regions.
      */
     public final EventHandlerGraphicBoundaries paintPlot(
     		final PlotPanel panel,

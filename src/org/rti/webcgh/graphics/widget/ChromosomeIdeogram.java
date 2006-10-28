@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-09-23 05:02:23 $
+$Revision: 1.3 $
+$Date: 2006-10-28 17:09:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,8 @@ import org.rti.webcgh.graphics.util.
 import org.rti.webcgh.graphics.util.ColorMapper;
 import org.rti.webcgh.units.Location;
 import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.webui.util.MouseOverStripe;
+import org.rti.webcgh.webui.util.MouseOverStripes;
 
 
 /**
@@ -165,6 +167,9 @@ public class ChromosomeIdeogram implements PlotElement {
 	private final ColorMapper colorMapper =
 		new ClassPathPropertiesFileRgbHexidecimalColorMapper(
 				"conf/color-mappings.properties");
+	
+	/** Mouseover stripes. */
+	private final MouseOverStripes mouseOverStripes;
 		
 	
 	// ===================================
@@ -181,6 +186,15 @@ public class ChromosomeIdeogram implements PlotElement {
 	}
 	
 	
+	/**
+	 * Get mouseover stripes.
+	 * @return Mouseover stripes.
+	 */
+	public final MouseOverStripes getMouseOverStripes() {
+		return mouseOverStripes;
+	}
+
+
 	/**
 	 * Get length of map in pixels. If horizontal, this is
 	 * the width.  If vertical, this is the height.
@@ -253,6 +267,8 @@ public class ChromosomeIdeogram implements PlotElement {
 		this.centMidPix = (this.centStartPix + this.centEndPix) / 2;
 		this.centSlopeMagnitude = ((double) cytobandThickness / 2.0)
 			/ (double) (this.centEndPix - this.centMidPix);
+		this.mouseOverStripes = new MouseOverStripes(
+				this.orientation, this.width(), this.height());
 	}
 	
 	
@@ -294,6 +310,10 @@ public class ChromosomeIdeogram implements PlotElement {
 		// Calculate top and bottom Y-coordinates
 		int topY = this.bpToPixel(cytoband.getStart());
 		int bottomY = this.bpToPixel(cytoband.getEnd());
+		
+		// Add mouseover stripe
+		this.mouseOverStripes.add(new MouseOverStripe(topY, bottomY,
+				cytoband.getName()));
 		
 		// Create top left point and add to polygon
 		Point tl = new Point(leftX, topY);
@@ -510,6 +530,8 @@ public class ChromosomeIdeogram implements PlotElement {
     	for (GraphicPrimitive p : this.graphicPrimitives) {
     		p.move(deltaX, deltaY);
     	}
+    	this.mouseOverStripes.getOrigin().x += deltaX;
+    	this.mouseOverStripes.getOrigin().y += deltaY;
     }
     
     // ==================================

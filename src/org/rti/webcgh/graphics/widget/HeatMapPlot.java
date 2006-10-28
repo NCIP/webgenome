@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-28 14:52:57 $
+$Revision: 1.8 $
+$Date: 2006-10-28 17:09:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,8 @@ package org.rti.webcgh.graphics.widget;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -69,6 +71,9 @@ import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.ChromosomeIdeogramSize;
 import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Orientation;
+import org.rti.webcgh.webui.util.MouseOverStripe;
+import org.rti.webcgh.webui.util.MouseOverStripes;
 
 
 /**
@@ -129,9 +134,9 @@ public final class HeatMapPlot implements PlotElement {
      */
     private final ChromosomeArrayDataGetter chromosomeArrayDataGetter;
     
-//    /** Number formatter for generating mouseover text. */
-//    private static final NumberFormat FORMAT =
-//    	new DecimalFormat("###.###");
+    /** Number formatter for generating mouseover text. */
+    private static final NumberFormat FORMAT =
+    	new DecimalFormat("###.###");
     
     /** Maximum X-coordinate in plot. */
     private int maxX = 0;
@@ -151,12 +156,28 @@ public final class HeatMapPlot implements PlotElement {
     /** Y-coordinate of bottom of tracks. */
     private int trackMaxY = 0;
   
+    /** Mouseover stripes. */
+    private final MouseOverStripes mouseOverStripes;
+    
+    
+    // ==========================
+    //      Getters
+    // ==========================
+    
+    /**
+     * Get mouseover stripes.
+     * @return Mouseover stripes.
+     */
+    public MouseOverStripes getMouseOverStripes() {
+		return mouseOverStripes;
+	}
     
     // ===============================
     //       Constructors
     // ===============================
     
-    /**
+
+	/**
      * Constructor.
      * @param experiments Experiments containg data to plot
      * @param chromosome Chromosome number to plot
@@ -214,6 +235,8 @@ public final class HeatMapPlot implements PlotElement {
 			}
 		}
 		this.maxY = this.trackMaxY + PADDING + FONT_SIZE;
+		this.mouseOverStripes = new MouseOverStripes(Orientation.VERTICAL,
+				this.width(), this.height());
 	}
 	
 	
@@ -392,6 +415,10 @@ public final class HeatMapPlot implements PlotElement {
 		    		}
 		    		Color c = this.colorFactory.getColor(value);
 		    		canvas.add(new Rectangle(x, y, trackWidth, height, c));
+		    		String mouseOverText = start + "-" + end + ": "
+		    			+ FORMAT.format(value);
+		    		this.mouseOverStripes.add(new MouseOverStripe(y,
+		    				y + height, mouseOverText));
 	    		}
 	    	}
     	}
@@ -472,5 +499,7 @@ public final class HeatMapPlot implements PlotElement {
     	this.maxY += deltaY;
     	this.trackMinY += deltaY;
     	this.trackMaxY += deltaY;
+    	this.mouseOverStripes.getOrigin().x += deltaX;
+    	this.mouseOverStripes.getOrigin().y += deltaY;
     }
 }
