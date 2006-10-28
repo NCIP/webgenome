@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-27 04:03:01 $
+$Revision: 1.8 $
+$Date: 2006-10-28 04:23:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.rti.webcgh.domain.GenomeInterval;
-import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.units.BpUnits;
 
 
@@ -95,9 +94,6 @@ public class PlotParameters {
     /** Number of plots in a row of plots. */
     private int numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
     
-    /** Quantitation type to plot. */
-    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO_FOLD_CHANGE;
-    
     /** Plot name. */
     private String plotName = null;
     
@@ -122,25 +118,6 @@ public class PlotParameters {
     // ===========================
     //    Getters/setters
     // ===========================
-
-    /**
-     * Get quantitation type.
-     * @return Quantitation type.
-     */
-    public final QuantitationType getQuantitationType() {
-		return quantitationType;
-	}
-
-
-    /**
-     * Set quantitation type.
-     * @param quantitationType Quantitation type
-     */
-	public final void setQuantitationType(
-			final QuantitationType quantitationType) {
-		this.quantitationType = quantitationType;
-	}
-
 
 	/**
 	 * Draw raw LOH probabilities?
@@ -308,7 +285,6 @@ public class PlotParameters {
     	}
     	this.numPlotsPerRow = params.numPlotsPerRow;
     	this.plotName = params.plotName;
-    	this.quantitationType = params.quantitationType;
     	this.units = params.units;
     	this.lohThreshold = params.lohThreshold;
     	this.interpolateLohEndpoints = params.interpolateLohEndpoints;

@@ -1,6 +1,5 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
 
 <h1 align="center">Scatter Plot Parameters</h1>
 
@@ -51,18 +50,6 @@
 					<html:option value="BP">BP</html:option>
 					<html:option value="KB">KB</html:option>
 					<html:option value="MB">MB</html:option>
-				</html:select>
-			</td>
-		</tr>
-		
-	<%-- Quantitation type. --%>
-		<tr>
-			<td>
-				Quantitation Type
-			</td>
-			<td>
-				<html:select property="quantitationType">
-					<webcgh:quantitationTypeOptions/>
 				</html:select>
 			</td>
 		</tr>

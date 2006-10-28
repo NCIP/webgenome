@@ -91,7 +91,8 @@ public class Experiment implements Serializable {
     private Set<BioAssay> bioAssays = new HashSet<BioAssay>();
     
     /** Quantitation type. */
-    private QuantitationType quantitationType = QuantitationType.LOG_2_RATIO_FOLD_CHANGE;
+    private QuantitationType quantitationType =
+    	QuantitationType.LOG_2_RATIO_FOLD_CHANGE;
     
     /** Organism. */
     private Organism organism = null;
@@ -576,6 +577,24 @@ public class Experiment implements Serializable {
     		min = (float) 0.0;
     	}
     	return min;
+    }
+    
+    
+    /**
+     * Determine the quantitation type from given experiments.
+     * @param experiments Experiments
+     * @return Quantitation type
+     */
+    public static QuantitationType getQuantitationType(
+    		final Collection<Experiment> experiments) {
+    	QuantitationType qt = null;
+    	for (Experiment exp : experiments) {
+    		qt = exp.quantitationType;
+    		if (qt != null) {
+    			break;
+    		}
+    	}
+    	return qt;
     }
     
     

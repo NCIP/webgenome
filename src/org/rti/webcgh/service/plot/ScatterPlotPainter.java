@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-10-27 04:03:01 $
+$Revision: 1.14 $
+$Date: 2006-10-28 04:23:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.List;
 
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.Background;
@@ -148,6 +149,9 @@ public class ScatterPlotPainter extends PlotPainter {
         }
         
         // Paint plot
+        QuantitationType quantitationType =
+        	Experiment.getQuantitationType(experiments);
+        
         Axis yAxis = null;
         Collection<ScatterPlot> plots = new ArrayList<ScatterPlot>();
         ScatterPlotSizer sizer =
@@ -199,7 +203,7 @@ public class ScatterPlotPainter extends PlotPainter {
 		                Orientation.VERTICAL, Location.LEFT_OF,
 		                panel.getDrawingCanvas());
 		        Caption yCaption = new Caption(
-		                plotParameters.getQuantitationType().getName(),
+		        		quantitationType.getName(),
 		                Orientation.HORIZONTAL, true, panel.getDrawingCanvas());
 		        row.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
 		                VerticalAlignment.BOTTOM_JUSTIFIED);

@@ -49,18 +49,6 @@
 			</td>
 		</tr>
 		
-	<%-- Quantitation type. --%>
-		<tr>
-			<td>
-				Quantitation Type
-			</td>
-			<td>
-				<html:select property="quantitationType">
-					<webcgh:quantitationTypeOptions/>
-				</html:select>
-			</td>
-		</tr>
-		
 	<%-- Number of plots per row --%>
 		<tr>
 			<td>

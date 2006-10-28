@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2006-10-28 04:07:57 $
+$Revision: 1.19 $
+$Date: 2006-10-28 04:23:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,6 @@ import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.GenomeIntervalFormatException;
-import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
@@ -105,10 +104,6 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Default plot height. */
 	private static final String DEF_HEIGHT = "250";
-	
-	/** Default quantitation type. */
-	private static final String DEF_QUANTITATION_TYPE =
-		QuantitationType.LOG_2_RATIO_FOLD_CHANGE.getId();
 	
 	/**
 	 * Name of HTTP query parameter that would indicate
@@ -163,9 +158,6 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Height of plot in pixels. */
 	private String height = DEF_HEIGHT;
-	
-	/** Quantitation type. */
-	private String quantitationType = DEF_QUANTITATION_TYPE;
 	
 	/** Plot name. */
 	private String name = "";
@@ -416,23 +408,6 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	public final void setName(final String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Get quantitation type.
-	 * @return Quantitation type.
-	 */
-	public final String getQuantitationType() {
-		return quantitationType;
-	}
-
-
-	/**
-	 * Set quantitation type.
-	 * @param quantitationType Quantitation type.
-	 */
-	public final void setQuantitationType(final String quantitationType) {
-		this.quantitationType = quantitationType;
 	}
 
 	/**
@@ -798,18 +773,10 @@ public class PlotParametersForm extends BaseForm {
 			errors.add("numPlotsPerRow", new ActionError("invalid.field"));
 		}
 		
-		// LOH threshold
-		if (QuantitationType.LOH.getId().equals(this.quantitationType)) {
-			if (!ValidationUtils.validNumber(this.lohThreshold)) {
-				errors.add("lohThreshold", new ActionError("invalid.field"));
-			}
-		} else {
-			if (!StringUtils.isEmpty(this.lohThreshold)) {
-				if (!ValidationUtils.validNumber(this.lohThreshold)) {
-					errors.add("lohThreshold", new ActionError(
-							"invalid.field"));
-				}
-			}
+		// lohThreshold
+		if (!ValidationUtils.validNumber(this.lohThreshold)) {
+			errors.add("lohThreshold", new ActionError(
+					"invalid.field"));
 		}
 	}
 	
@@ -985,8 +952,6 @@ public class PlotParametersForm extends BaseForm {
 		params.setPlotName(this.name);
 		params.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
 		params.setUnits(BpUnits.getUnits(this.units));
-		params.setQuantitationType(QuantitationType.getQuantitationType(
-				this.quantitationType));
 		if (!StringUtils.isEmpty(this.lohThreshold)) {
 			params.setLohThreshold(Float.parseFloat(this.lohThreshold));
 		}
@@ -1089,7 +1054,6 @@ public class PlotParametersForm extends BaseForm {
 				plotParameters.getGenomeIntervals());
 		this.numPlotsPerRow =
 			String.valueOf(plotParameters.getNumPlotsPerRow());
-		this.quantitationType = plotParameters.getQuantitationType().getId();
 		this.units = plotParameters.getUnits().getName();
 		this.name = plotParameters.getPlotName();
 		this.lohThreshold = String.valueOf(plotParameters.getLohThreshold());

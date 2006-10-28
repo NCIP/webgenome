@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-27 04:03:16 $
+$Revision: 1.9 $
+$Date: 2006-10-28 04:23:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ExperimentGenerator;
 import org.rti.webcgh.domain.GenomeInterval;
-import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.service.plot.ScatterPlotPainter;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
@@ -213,7 +212,6 @@ public final class ScatterPlotPainterTester extends TestCase {
         params.setNumPlotsPerRow(2);
         params.setWidth(WIDTH);
         params.setHeight(HEIGHT);
-        params.setQuantitationType(QuantitationType.LOG_2_RATIO_FOLD_CHANGE);
         
         // Create plotting panel
         RasterFileTestPlotPanel panel =
