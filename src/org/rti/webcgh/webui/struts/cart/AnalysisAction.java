@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-21 04:45:14 $
+$Revision: 1.2 $
+$Date: 2006-10-29 17:16:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +66,8 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
+import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
+import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
 import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
@@ -84,6 +89,13 @@ import org.rti.webcgh.webui.util.SessionMode;
  *
  */
 public final class AnalysisAction extends BaseAction {
+	
+	/** Colors for altered genome segments. */
+	private static final List<Color> ALTERATION_COLORS = new ArrayList<Color>();
+	static {
+		ALTERATION_COLORS.add(Color.DARK_GRAY);
+		ALTERATION_COLORS.add(Color.GRAY);
+	}
 
 	/** Analytic operation factory. */
 	private final AnalyticOperationFactory analyticOperationFactory =
@@ -156,27 +168,6 @@ public final class AnalysisAction extends BaseAction {
     		}
     	}
     	
-    	// Construct map of input bioassay and experiment
-    	// IDs to corresponding output bioassay and
-    	// experiment names
-    	Map<Long, String> outputBioAssayNames =
-    		new HashMap<Long, String>();
-    	Map<Long, String> outputExperimentNames =
-    		new HashMap<Long, String>();
-    	for (Object paramNameObj : paramMap.keySet()) {
-    		String paramName = (String) paramNameObj;
-    		String paramValue = request.getParameter(paramName);
-    		if (paramName.indexOf("eo_") == 0) {
-    			Long experimentId = Long.parseLong(
-    					paramName.substring("eo_".length()));
-    			outputExperimentNames.put(experimentId, paramValue);
-    		} else if (paramName.indexOf("bo_") == 0) {
-    			Long bioAssayId = Long.parseLong(
-    					paramName.substring("bo_".length()));
-    			outputBioAssayNames.put(bioAssayId, paramValue);
-    		}
-    	}
-    	
     	// Retrieve selected experiments form bean.
     	// Note, this is not the form bean configured
     	// for this action in struts-config.xml.
@@ -188,43 +179,83 @@ public final class AnalysisAction extends BaseAction {
     	}
     	Collection<Long> ids = seForm.getSelectedExperimentIds();
     	
+    	// Construct map of input bioassay and experiment
+    	// IDs to corresponding output bioassay and
+    	// experiment names.  If operation is of type
+    	// MultiExperimentToNonArrayDataAnalyticOperation,
+    	// then this will not be done as the user does not
+    	// name output experiments/bioassays.
+    	Map<Long, String> outputBioAssayNames =
+    		new HashMap<Long, String>();
+    	Map<Long, String> outputExperimentNames =
+    		new HashMap<Long, String>();
+    	if (!(op instanceof MultiExperimentToNonArrayDataAnalyticOperation)) {
+	    	for (Object paramNameObj : paramMap.keySet()) {
+	    		String paramName = (String) paramNameObj;
+	    		String paramValue = request.getParameter(paramName);
+	    		if (paramName.indexOf("eo_") == 0) {
+	    			Long experimentId = Long.parseLong(
+	    					paramName.substring("eo_".length()));
+	    			outputExperimentNames.put(experimentId, paramValue);
+	    		} else if (paramName.indexOf("bo_") == 0) {
+	    			Long bioAssayId = Long.parseLong(
+	    					paramName.substring("bo_".length()));
+	    			outputBioAssayNames.put(bioAssayId, paramValue);
+	    		}
+	    	}
+    	}
+    	
     	// Perform operation if in client mode and put in cart
     	SessionMode mode = PageContext.getSessionMode(request);
     	ColorChooser colorChooser = PageContext.getColorChooser(
     			request, true);
     	if (mode == SessionMode.CLIENT) {
     		Collection<Experiment> experiments = cart.getExperiments(ids);
-    		for (Experiment input : experiments) {
-    			Experiment output =
-    				this.inMemoryDataTransformer.perform(input, op);
+    		if (op instanceof MultiExperimentToNonArrayDataAnalyticOperation) {
+    			Experiment output = this.inMemoryDataTransformer.perform(
+    					experiments,
+    					(MultiExperimentToNonArrayDataAnalyticOperation) op);
     			output.setId(this.experimentIdGenerator.nextId());
+    			int count = 0;
     			for (BioAssay ba : output.getBioAssays()) {
     				ba.setId(this.bioAssayIdGenerator.nextId());
-    				ba.setColor(colorChooser.nextColor());
+    				ba.setColor(ALTERATION_COLORS.get(count++
+    						% ALTERATION_COLORS.size()));
     			}
     			cart.add(output);
-    			String expName = outputExperimentNames.get(input.getId());
-    			if (expName != null) {
-    				output.setName(expName);
-    			}
-    			if (op instanceof ScalarToScalarAnalyticOperation
-    					|| (op instanceof AnalyticPipeline
-    							&& ((AnalyticPipeline) op).
-    							producesSingleBioAssayPerExperiment())) {
-    				for (BioAssay ba : output.getBioAssays()) {
-    					String bioAssayName =
-    						outputBioAssayNames.get(
-    								ba.getParentBioAssayId());
-    					if (bioAssayName != null) {
-    						ba.setName(bioAssayName);
-    					}
-    				}
-    			} else {
-    				Collection<BioAssay> bioAssays = output.getBioAssays();
-    				if (bioAssays.size() > 0) {
-    					bioAssays.iterator().next().setName(expName);
-    				}
-    			}
+    		} else {
+	    		for (Experiment input : experiments) {
+	    			Experiment output =
+	    				this.inMemoryDataTransformer.perform(input, op);
+	    			output.setId(this.experimentIdGenerator.nextId());
+	    			for (BioAssay ba : output.getBioAssays()) {
+	    				ba.setId(this.bioAssayIdGenerator.nextId());
+	    				ba.setColor(colorChooser.nextColor());
+	    			}
+	    			cart.add(output);
+	    			String expName = outputExperimentNames.get(input.getId());
+	    			if (expName != null) {
+	    				output.setName(expName);
+	    			}
+	    			if (op instanceof ScalarToScalarAnalyticOperation
+	    					|| (op instanceof AnalyticPipeline
+	    							&& ((AnalyticPipeline) op).
+	    							producesSingleBioAssayPerExperiment())) {
+	    				for (BioAssay ba : output.getBioAssays()) {
+	    					String bioAssayName =
+	    						outputBioAssayNames.get(
+	    								ba.getParentBioAssayId());
+	    					if (bioAssayName != null) {
+	    						ba.setName(bioAssayName);
+	    					}
+	    				}
+	    			} else if (op instanceof ListToScalarAnalyticOperation) {
+	    				Collection<BioAssay> bioAssays = output.getBioAssays();
+	    				if (bioAssays.size() > 0) {
+	    					bioAssays.iterator().next().setName(expName);
+	    				}
+	    			}
+	    		}
     		}
     	}
     	

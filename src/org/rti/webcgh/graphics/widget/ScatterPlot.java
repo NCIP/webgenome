@@ -1,6 +1,6 @@
 /*
-$Revision: 1.22 $
-$Date: 2006-10-28 23:54:53 $
+$Revision: 1.23 $
+$Date: 2006-10-29 17:16:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,13 +53,13 @@ package org.rti.webcgh.graphics.widget;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 //import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
-import org.rti.webcgh.domain.AnnotatedGenomeFeatureIterator;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
@@ -105,8 +105,8 @@ public final class ScatterPlot implements PlotElement {
     /** Width of selected lines in pixels. */
     private static final int SELECTED_LINE_WIDTH = 3;
     
-    /** LOH line width. */
-    private static final int LOH_LINE_WIDTH = 5;
+    /** Chromosomal alteration line width. */
+    private static final int ALTERATION_LINE_WIDTH = 5;
     
     /** Default length of error bar hatch lines in pixels. */
     private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
@@ -452,33 +452,40 @@ public final class ScatterPlot implements PlotElement {
     		getChromosomeArrayData(bioAssay, this.chromosome);
     	if (cad != null) {
     		
+    		if (cad.getChromosomeAlterations() == null) {
+    		
 	    		if (this.quantitationType != QuantitationType.LOH
 	    				|| (this.quantitationType == QuantitationType.LOH
 	    						&& this.drawRawLohProbabilities)) {
 	                
-	            // Points
-	    		if (this.drawPoints) {
-		            this.paintPoints(cad, bioAssay.getColor(), canvas,
-		            		pointRadius,
-		            		bioAssay.getId(), reporters);
+		            // Points
+		    		if (this.drawPoints) {
+			            this.paintPoints(cad, bioAssay.getColor(), canvas,
+			            		pointRadius,
+			            		bioAssay.getId(), reporters);
+		    		}
+		            
+		            // Error bars
+		    		if (this.drawErrorBars) {
+		    			this.paintErrorBars(cad, bioAssay.getColor(), canvas,
+		    					lineWidth);
+		    		}
+		        
+		            // Lines
+		    		if (this.drawLines) {
+			            this.paintLines(cad, bioAssay.getColor(), canvas,
+			            		lineWidth);
+		    		}
+				}
+	    		
+	    		// LOH scored lines
+	    		if (this.quantitationType == QuantitationType.LOH) {
+	    			this.paintLoh(cad, bioAssay.getColor(), canvas,
+	    					ALTERATION_LINE_WIDTH);
 	    		}
-	            
-	            // Error bars
-	    		if (this.drawErrorBars) {
-	    			this.paintErrorBars(cad, bioAssay.getColor(), canvas,
-	    					lineWidth);
-	    		}
-	        
-	            // Lines
-	    		if (this.drawLines) {
-		            this.paintLines(cad, bioAssay.getColor(), canvas,
-		            		lineWidth);
-	    		}
-    		}
-    		
-    		// LOH scored lines
-    		if (this.quantitationType == QuantitationType.LOH) {
-    			this.paintLoh(cad, bioAssay.getColor(), canvas, LOH_LINE_WIDTH);
+    		} else {
+    			this.paintLoh(cad, bioAssay.getColor(), canvas,
+    					ALTERATION_LINE_WIDTH);
     		}
         }
     }
@@ -685,9 +692,13 @@ public final class ScatterPlot implements PlotElement {
             final int lineWidth) {
     	
     	// Iterate over LOH segments
-    	AnnotatedGenomeFeatureIterator it = cad.alteredSegmentIterator(
-    			this.lohThreshold, this.interpolateLohEndpoints,
+    	Iterator<AnnotatedGenomeFeature> it = cad.alteredSegmentIterator(
     			AnnotationType.LOH_SEGMENT);
+    	if (it == null) {
+    		it = cad.alteredSegmentIterator(
+        			this.lohThreshold, this.interpolateLohEndpoints,
+        			AnnotationType.LOH_SEGMENT);
+    	}
     	while (it.hasNext()) {
     		AnnotatedGenomeFeature feat = it.next();
     				    				
@@ -724,7 +735,6 @@ public final class ScatterPlot implements PlotElement {
             final String label, final DrawingCanvas drawingCanvas,
             final int pointRadius) {
         Circle circle = new Circle(x, y, pointRadius, color);
-        //circle.setToolTipText(label);
         drawingCanvas.add(circle, false);
     }
     

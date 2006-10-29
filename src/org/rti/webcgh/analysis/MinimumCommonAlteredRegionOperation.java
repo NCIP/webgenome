@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-29 03:47:25 $
+$Revision: 1.4 $
+$Date: 2006-10-29 17:16:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
-import org.rti.webcgh.domain.AnnotatedGenomeFeatureIterator;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.GenomeInterval;
@@ -214,7 +213,7 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 		List<AnnotatedGenomeFeature> alts =
 			new ArrayList<AnnotatedGenomeFeature>();
 		for (ChromosomeArrayData cad : cads) {
-			AnnotatedGenomeFeatureIterator it =
+			Iterator<AnnotatedGenomeFeature>it =
 				cad.alteredSegmentIterator(this.threshold,
 						this.interpolate, altType);
 			while (it.hasNext()) {

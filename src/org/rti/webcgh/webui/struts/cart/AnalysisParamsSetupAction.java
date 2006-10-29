@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-21 04:45:14 $
+$Revision: 1.4 $
+$Date: 2006-10-29 17:16:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
 import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
+import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
 import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
@@ -117,26 +118,35 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	request.setAttribute("props", props);
     	
     	// Get selected experiments and attach to request.
+    	// This is done so that the downstream JSP can create
+    	// a form enabling the user to set output experiment
+    	// and bioassay names.
     	// First, retrieve selected experiments form bean.
     	// Note, this is not the form bean configured
-    	// for this action in struts-config.xml.
-    	SelectedExperimentsForm seForm =
-    		PageContext.getSelectedExperimentsForm(request, false);
-    	if (seForm == null) {
-    		throw new SessionTimeoutException(
-    				"Could not find selected experiments");
-    	}
-    	Collection<Long> ids = seForm.getSelectedExperimentIds();
-    	Collection<Experiment> experiments = cart.getExperiments(ids);
-    	request.setAttribute("experiments", experiments);
-    	
-    	// Determine if there will be a single bioassay or multiple
-    	// produced per experiment and set an attribute
-    	if (op instanceof ListToScalarAnalyticOperation
-    			|| (op instanceof AnalyticPipeline
-    				&& ((AnalyticPipeline) op).
-    				producesSingleBioAssayPerExperiment())) {
-    		request.setAttribute("singleBioAssay", "true");
+    	// for this action in struts-config.xml.  If
+    	// the operation is of type
+    	// MultiExperimentToNonArrayDataAnalyticOperation,
+    	// none of this will be done since the user does not
+    	// set output names.
+    	if (!(op instanceof MultiExperimentToNonArrayDataAnalyticOperation)) {
+	    	SelectedExperimentsForm seForm =
+	    		PageContext.getSelectedExperimentsForm(request, false);
+	    	if (seForm == null) {
+	    		throw new SessionTimeoutException(
+	    				"Could not find selected experiments");
+	    	}
+	    	Collection<Long> ids = seForm.getSelectedExperimentIds();
+	    	Collection<Experiment> experiments = cart.getExperiments(ids);
+	    	request.setAttribute("experiments", experiments);
+	    	
+	    	// Determine if there will be a single bioassay or multiple
+	    	// produced per experiment and set an attribute
+	    	if (op instanceof ListToScalarAnalyticOperation
+	    			|| (op instanceof AnalyticPipeline
+	    				&& ((AnalyticPipeline) op).
+	    				producesSingleBioAssayPerExperiment())) {
+	    		request.setAttribute("singleBioAssay", "true");
+	    	}
     	}
     	
     	return mapping.findForward("success");

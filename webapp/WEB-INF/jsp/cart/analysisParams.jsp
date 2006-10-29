@@ -103,14 +103,20 @@
 </logic:iterate>
 </center>
 
-<h3 align="center">Specify names of output experiments and bioassays</h3>
-
 <center>
+
+<logic:present name="experiments">
+
+<h3 align="center">Specify names of output experiments and bioassays</h3>
 
 	<%--
 	===========================================================
 	Form elements to bulk-change names of experiments
 	and bioassays in text boxes below.
+	This form is not displayed if the selected experiment is of
+	type MultiExperimentToNonArrayDataAnalyticOperation;
+	the upstream Action will not have attached the necessary
+	beans to the request.
 	============================================================
 	--%>
 	
@@ -141,6 +147,10 @@
 	The prefix may be ei, eo, bi, bo which corresponds to
 	experiment-input (readonly field), experiment-output,
 	bioassay-input (readonly field), bioassay-output, respectively.
+	This form is not displayed if the selected experiment is of
+	type MultiExperimentToNonArrayDataAnalyticOperation;
+	the upstream Action will not have attached the necessary
+	beans to the request.
 	=============================================================
 	--%>
 	
@@ -192,8 +202,11 @@
 		</logic:iterate>
 	</table>
 	
+	</logic:present>
+	
 	<p>
 		<html:submit value="Perform Analysis"/>
 	</p>
 </center>
+
 </html:form>
