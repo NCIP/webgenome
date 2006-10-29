@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-20 03:01:24 $
+$Revision: 1.2 $
+$Date: 2006-10-29 03:47:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,6 +77,8 @@ public class AnalyticOperationFactory {
 		this.operationIndex.put("4", SimpleBioAssayNormalizer.class);
 		this.operationIndex.put("5", SimpleExperimentNormalizer.class);
 		this.operationIndex.put("6", SlidingWindowSmoother.class);
+		this.operationIndex.put("7",
+				MinimumCommonAlteredRegionOperation.class);
 	}
 	
 	

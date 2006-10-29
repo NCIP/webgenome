@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-29 02:49:49 $
+$Revision: 1.3 $
+$Date: 2006-10-29 03:47:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,7 +77,7 @@ import org.rti.webcgh.util.ValidationUtils;
  *
  */
 public final class MinimumCommonAlteredRegionOperation
-implements ListToListAnalyticOperation {
+implements MultiExperimentToNonArrayDataAnalyticOperation {
 	
 	/**
 	 * Default minimum percent of bioassays that must be altered
@@ -162,7 +162,7 @@ implements ListToListAnalyticOperation {
 							AnnotationType.LOH_SEGMENT);
 				ChromosomeArrayData cad =
 					new ChromosomeArrayData(chromosome);
-				cad.setChromosomeAlteration(alts);
+				cad.setChromosomeAlterations(alts);
 				output.add(cad);
 			} else {
 				List<AnnotatedGenomeFeature> alts =
@@ -170,12 +170,12 @@ implements ListToListAnalyticOperation {
 							AnnotationType.AMPLIFIED_SEGMENT);
 				ChromosomeArrayData cad =
 					new ChromosomeArrayData(chromosome);
-				cad.setChromosomeAlteration(alts);
+				cad.setChromosomeAlterations(alts);
 				output.add(cad);
 				alts = this.minimumCommonAlterations(input,
 							AnnotationType.DELETED_SEGMENT);
 				cad = new ChromosomeArrayData(chromosome);
-				cad.setChromosomeAlteration(alts);
+				cad.setChromosomeAlterations(alts);
 				output.add(cad);
 			}
 		}
@@ -319,7 +319,7 @@ implements ListToListAnalyticOperation {
      * @return Name of operation
      */
 	public String getName() {
-		return "Minimimum common altered genome regions";
+		return "Minimimum common alterations";
 	}
 
 	
@@ -370,6 +370,29 @@ implements ListToListAnalyticOperation {
 			}
 		}
 	}
+	
+	
+	/**
+     * Generate a name from given chromosome array data.
+     * @param cad Chromosome array data
+     * @return Name
+     */
+    public String getName(final ChromosomeArrayData cad) {
+    	String name = "";
+    	List<AnnotatedGenomeFeature> feats = cad.getChromosomeAlterations();
+    	if (feats != null && feats.size() > 0) {
+    		AnnotatedGenomeFeature feat = feats.get(0);
+    		AnnotationType type = feat.getAnnotationType();
+    		if (type == AnnotationType.AMPLIFIED_SEGMENT) {
+    			name = "MCAR";
+    		} else if (type == AnnotationType.DELETED_SEGMENT) {
+    			name = "MCDR";
+    		} else if (type == AnnotationType.LOH_SEGMENT) {
+    			name = "MCLOHR";
+    		}
+    	}
+    	return name;
+    }
 	
 	
 

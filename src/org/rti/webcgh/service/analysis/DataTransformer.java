@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-21 04:45:14 $
+$Revision: 1.4 $
+$Date: 2006-10-29 03:47:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,18 +51,22 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.analysis;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticPipeline;
+import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
 import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.StatefulBioAssayAnalyticOperation;
 import org.rti.webcgh.analysis.StatefulExperimentAnalyticOperation;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.DataContainingBioAssay;
+import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.service.util.ChromosomeArrayDataIterator;
 
@@ -193,6 +197,56 @@ public abstract class DataTransformer {
             ChromosomeArrayData newCad = operation.perform(cad);
             this.addChromosomeArrayData(bioAssay, newCad);
         }
+    }
+    
+    
+    /**
+     * Perform given analytic operation on input data writing
+     * results to output.  This method pools chromosome array
+     * data from the same chromosome across all bioassays
+     * and performs operation on these pools.
+     * @param input Input data
+     * @param operation Operation to perform
+     * @return Experiment
+     * @throws AnalyticException if a computation error occurs
+     */
+    public final Experiment perform(final Collection<Experiment> input,
+            final MultiExperimentToNonArrayDataAnalyticOperation operation)
+        throws AnalyticException {
+        if (input.size() < 1) {
+            throw new IllegalArgumentException(
+                    "Cannot perform operation on empty data set");
+        }
+        boolean inMemory = Experiment.dataInMemory(input);
+        Experiment output = new Experiment(operation.getName());
+        List<BioAssay> bioAssays = new ArrayList<BioAssay>();
+        for (Short chromosome : Experiment.chromosomes(input)) {
+            List<ChromosomeArrayData> inCads =
+            	new ArrayList<ChromosomeArrayData>();
+            for (Experiment exp : input) {
+            	for (BioAssay ba : exp.getBioAssays()) {
+            		inCads.add(this.getChromosomeArrayData(ba, chromosome));
+            	}
+            }
+            List<ChromosomeArrayData> outCads = operation.perform(inCads);
+            if (bioAssays.size() < 1) {
+            	for (ChromosomeArrayData cad : outCads) {
+            		BioAssay ba = null;
+            		if (inMemory) {
+            			ba = new DataContainingBioAssay();
+            		} else {
+            			ba = new DataSerializedBioAssay();
+            		}
+            		ba.setName(operation.getName(cad));
+            		bioAssays.add(ba);
+            		output.add(ba);
+            	}
+            }
+            for (int i = 0; i < outCads.size(); i++) {
+            	this.addChromosomeArrayData(bioAssays.get(i), outCads.get(i));
+            }
+        }
+        return output;
     }
     
     

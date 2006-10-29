@@ -109,7 +109,7 @@ public class ChromosomeArrayData implements Serializable {
     private float maxValue = Float.NaN;
     
     /** Chromosome alterations. */
-    private List<AnnotatedGenomeFeature> chromosomeAlteration = null;
+    private List<AnnotatedGenomeFeature> chromosomeAlterations = null;
     
     // =================================
     //    Getters/setters
@@ -130,8 +130,8 @@ public class ChromosomeArrayData implements Serializable {
      * Get chromosome alterations.
      * @return Chromosome alterations.
      */
-    public final List<AnnotatedGenomeFeature> getChromosomeAlteration() {
-		return chromosomeAlteration;
+    public final List<AnnotatedGenomeFeature> getChromosomeAlterations() {
+		return chromosomeAlterations;
 	}
 
 
@@ -139,9 +139,9 @@ public class ChromosomeArrayData implements Serializable {
      * Set chromosome alterations.
      * @param chromosomeAlteration Chromosome alterations.
      */
-	public final void setChromosomeAlteration(
+	public final void setChromosomeAlterations(
 			final List<AnnotatedGenomeFeature> chromosomeAlteration) {
-		this.chromosomeAlteration = chromosomeAlteration;
+		this.chromosomeAlterations = chromosomeAlteration;
 	}
 
 

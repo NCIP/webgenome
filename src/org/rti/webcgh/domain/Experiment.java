@@ -599,6 +599,44 @@ public class Experiment implements Serializable {
     
     
     /**
+     * Are data in this experiment in memory, as opposed
+     * to serialized on disk?
+     * @return T/F
+     */
+    public final boolean dataInMemory() {
+    	boolean inMemory = false;
+    	for (BioAssay ba : this.bioAssays) {
+			if (!inMemory) {
+    			if (ba instanceof DataContainingBioAssay) {
+    				inMemory = true;
+    				break;
+    			}
+			}
+		}
+    	return inMemory;
+    }
+    
+    
+    /**
+     * Are data in this experiment in memory as opposed to
+     * serialized on disk?
+     * @param experiments Experiments
+     * @return T/F
+     */
+    public static boolean dataInMemory(
+    		final Collection<Experiment> experiments) {
+    	boolean inMemory = false;
+    	for (Experiment exp : experiments) {
+    		if (exp.dataInMemory()) {
+    			inMemory = true;
+    			break;
+    		}
+    	}
+    	return inMemory;
+    }
+    
+    
+    /**
      * Get size of chromosome inferred from data in given
      * experiments.
      * @param experiments Experiments
@@ -617,6 +655,21 @@ public class Experiment implements Serializable {
     		}
     	}
     	return max;
+    }
+    
+    
+    /**
+     * Get all chromosomes in input collection.
+     * @param experiments Experiments
+     * @return All chromosome numbers
+     */
+    public static final SortedSet<Short> chromosomes(
+    		final Collection<Experiment> experiments) {
+    	SortedSet<Short> chroms = new TreeSet<Short>();
+    	for (Experiment exp : experiments) {
+    		chroms.addAll(exp.getChromosomes());
+    	}
+    	return chroms;
     }
     
     

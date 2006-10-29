@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-29 02:49:49 $
+$Revision: 1.2 $
+$Date: 2006-10-29 03:47:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -112,7 +112,7 @@ extends TestCase {
 		assertEquals(1, output.size());
 		ChromosomeArrayData cad = output.get(0);
 		List<AnnotatedGenomeFeature> alts =
-			cad.getChromosomeAlteration();
+			cad.getChromosomeAlterations();
 		assertNotNull(alts);
 		assertEquals(2, alts.size());
 		AnnotatedGenomeFeature f = alts.get(0);
