@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-28 23:54:52 $
+$Revision: 1.3 $
+$Date: 2006-10-29 22:36:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -161,6 +161,25 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	}
 	
 	
+	// ========================================
+	//      Business methods
+	// ========================================
+	
+	/**
+	 * Weighted average quantitation.  Weights are based on length.
+	 * @param f1 First feature
+	 * @param f2 Second feature
+	 * @return Weighted average
+	 */
+	public static float weightedAverage(final AnnotatedGenomeFeature f1,
+			final AnnotatedGenomeFeature f2) {
+		long totalLength = f1.length() + f2.length();
+		double w1 = (double) f1.length() / (double) totalLength;
+		double w2 = (double) f2.length() / (double) totalLength;
+		return f1.quantitation * (float) w1 + f2.quantitation * (float) w2;
+	}
+	
+	
 	// ================================
 	//      Overrides
 	// ================================
@@ -187,7 +206,7 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 			float mean = Float.NaN;
 			if (!Float.isNaN(feat1.quantitation)
 					&& !Float.isNaN(feat2.quantitation)) {
-				mean = (feat1.quantitation + feat2.quantitation) / 2;
+				mean = (feat1.quantitation + feat2.quantitation) / (float) 2.0;
 			}
 			newIval = new AnnotatedGenomeFeature(ival.getChromosome(),
 					ival.getStartLocation(), ival.getEndLocation(),

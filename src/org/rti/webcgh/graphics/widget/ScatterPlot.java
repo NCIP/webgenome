@@ -1,6 +1,6 @@
 /*
-$Revision: 1.23 $
-$Date: 2006-10-29 17:16:14 $
+$Revision: 1.24 $
+$Date: 2006-10-29 22:36:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -480,12 +480,17 @@ public final class ScatterPlot implements PlotElement {
 	    		
 	    		// LOH scored lines
 	    		if (this.quantitationType == QuantitationType.LOH) {
-	    			this.paintLoh(cad, bioAssay.getColor(), canvas,
-	    					ALTERATION_LINE_WIDTH);
+	    			this.paintAlterations(cad, bioAssay.getColor(), canvas,
+	    					ALTERATION_LINE_WIDTH, AnnotationType.LOH_SEGMENT);
 	    		}
     		} else {
-    			this.paintLoh(cad, bioAssay.getColor(), canvas,
-    					ALTERATION_LINE_WIDTH);
+    			if (cad.getChromosomeAlterations().size() > 0) {
+    				List<AnnotatedGenomeFeature> feats =
+    					cad.getChromosomeAlterations();
+    				AnnotationType type = feats.get(0).getAnnotationType();
+	    			this.paintAlterations(cad, bioAssay.getColor(), canvas,
+	    					ALTERATION_LINE_WIDTH, type);
+    			}
     		}
         }
     }
@@ -681,28 +686,29 @@ public final class ScatterPlot implements PlotElement {
     
     
     /**
-     * Paint LOH scored lines.
+     * Paint chromosomal alterations.
      * @param cad Chromosome array data
      * @param color Color
      * @param drawingCanvas Canvas to paint on
      * @param lineWidth Width of line
+     * @param alterationType Alteration type
      */
-    private void paintLoh(final ChromosomeArrayData cad,
+    private void paintAlterations(final ChromosomeArrayData cad,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth) {
+            final int lineWidth, final AnnotationType alterationType) {
     	
-    	// Iterate over LOH segments
+    	// Iterate over alterations
     	Iterator<AnnotatedGenomeFeature> it = cad.alteredSegmentIterator(
-    			AnnotationType.LOH_SEGMENT);
+    			alterationType);
     	if (it == null) {
     		it = cad.alteredSegmentIterator(
         			this.lohThreshold, this.interpolateLohEndpoints,
-        			AnnotationType.LOH_SEGMENT);
+        			alterationType);
     	}
     	while (it.hasNext()) {
     		AnnotatedGenomeFeature feat = it.next();
     				    				
-			// Draw LOH scored segment
+			// Draw altered segment
 			int startX = this.transposeX(feat.getStartLocation());
 			int endX = this.transposeX(feat.getEndLocation());
 			if (startX == endX) {

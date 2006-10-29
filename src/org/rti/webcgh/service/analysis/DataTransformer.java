@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-29 03:47:25 $
+$Revision: 1.5 $
+$Date: 2006-10-29 22:36:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import org.apache.log4j.Logger;
 import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticPipeline;
+import org.rti.webcgh.analysis.MinimumCommonAlteredRegionOperation;
 import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
 import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
@@ -68,6 +69,7 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.DataSerializedBioAssay;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.util.ChromosomeArrayDataIterator;
 
 
@@ -217,8 +219,27 @@ public abstract class DataTransformer {
             throw new IllegalArgumentException(
                     "Cannot perform operation on empty data set");
         }
+        QuantitationType qt = null;
+        for (Experiment exp : input) {
+        	if (qt == null) {
+        		qt = exp.getQuantitationType();
+        	} else {
+        		if (qt != exp.getQuantitationType()) {
+        			throw new IllegalArgumentException(
+        					"Cannot perform operation on mixed data types: '"
+        					+ qt.getName() + "' and '"
+        					+ exp.getQuantitationType().getName() + "'");
+        		}
+        	}
+        }
+        if (operation instanceof MinimumCommonAlteredRegionOperation) {
+        	qt = Experiment.getQuantitationType(input);
+        	((MinimumCommonAlteredRegionOperation) operation).
+        		setQuantitationType(qt);
+        }
         boolean inMemory = Experiment.dataInMemory(input);
         Experiment output = new Experiment(operation.getName());
+        output.setQuantitationType(Experiment.getQuantitationType(input));
         List<BioAssay> bioAssays = new ArrayList<BioAssay>();
         for (Short chromosome : Experiment.chromosomes(input)) {
             List<ChromosomeArrayData> inCads =

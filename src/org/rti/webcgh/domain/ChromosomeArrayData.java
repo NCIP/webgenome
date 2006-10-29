@@ -143,6 +143,18 @@ public class ChromosomeArrayData implements Serializable {
 	public final void setChromosomeAlterations(
 			final List<AnnotatedGenomeFeature> chromosomeAlteration) {
 		this.chromosomeAlterations = chromosomeAlteration;
+		if (chromosomeAlteration != null && chromosomeAlteration.size() > 0) {
+			this.minValue = Float.MAX_VALUE;
+			this.maxValue = Float.MIN_VALUE;
+			for (AnnotatedGenomeFeature f : chromosomeAlteration) {
+				if (f.getQuantitation() < this.minValue) {
+					this.minValue = f.getQuantitation();
+				}
+				if (f.getQuantitation() > this.maxValue) {
+					this.maxValue = f.getQuantitation();
+				}
+			}
+		}
 	}
 
 

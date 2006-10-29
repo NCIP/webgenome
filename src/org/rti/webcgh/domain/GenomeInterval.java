@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-10-28 23:54:53 $
+$Revision: 1.12 $
+$Date: 2006-10-29 22:36:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -288,6 +288,15 @@ public class GenomeInterval {
 		long end = units.toBp(this.endLocation);
 		c.setPositions(start, end);
 		return c;
+	}
+	
+	
+	/**
+	 * Get length of interval.
+	 * @return Length of interval
+	 */
+	public final long length() {
+		return this.endLocation - this.startLocation + 1;
 	}
 	
 	

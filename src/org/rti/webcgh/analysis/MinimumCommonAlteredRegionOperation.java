@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-29 17:16:12 $
+$Revision: 1.5 $
+$Date: 2006-10-29 22:36:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -303,7 +303,10 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 				while (it.hasNext()) {
 					AnnotatedGenomeFeature f2 = it.next();
 					if (f1.overlaps(f2)) {
+						float avg = AnnotatedGenomeFeature.
+							weightedAverage(f1, f2);
 						f1.merge(f2);
+						f1.setQuantitation(avg);
 						it.remove();
 					}
 				}
