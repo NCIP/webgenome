@@ -108,6 +108,9 @@ public class ChromosomeArrayData implements Serializable {
      */
     private float maxValue = Float.NaN;
     
+    /** Chromosome alterations. */
+    private List<AnnotatedGenomeFeature> chromosomeAlteration = null;
+    
     // =================================
     //    Getters/setters
     // =================================
@@ -124,6 +127,25 @@ public class ChromosomeArrayData implements Serializable {
 
     
     /**
+     * Get chromosome alterations.
+     * @return Chromosome alterations.
+     */
+    public final List<AnnotatedGenomeFeature> getChromosomeAlteration() {
+		return chromosomeAlteration;
+	}
+
+
+    /**
+     * Set chromosome alterations.
+     * @param chromosomeAlteration Chromosome alterations.
+     */
+	public final void setChromosomeAlteration(
+			final List<AnnotatedGenomeFeature> chromosomeAlteration) {
+		this.chromosomeAlteration = chromosomeAlteration;
+	}
+
+
+	/**
      * Get minimum value.  This value is the sum of
      * the value and error of some <code>ArrayDatum</code>
      * object.

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-28 23:54:53 $
+$Revision: 1.2 $
+$Date: 2006-10-29 02:49:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,13 +52,10 @@ package org.rti.webcgh.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotatedGenomeFeatureIterator;
@@ -143,16 +140,65 @@ implements ListToListAnalyticOperation {
 			new ParameterErrorMessageGenerator();
 		if (!ValidationUtils.inRange(this.minPercent, (float) 0.0,
 				(float) 1.0)) {
-			gen.addInvalidParameterName("minPercent");
+			gen.addInvalidParameterName("minPercent",
+					String.valueOf(this.minPercent));
 		}
-		if (!Float.isNaN(this.threshold)) {
-			gen.addInvalidParameterName("threshold");
+		if (Float.isNaN(this.threshold)) {
+			gen.addInvalidParameterName("threshold",
+					String.valueOf(this.threshold));
 		}
 		if (gen.invalidParameters()) {
 			throw new AnalyticException(gen.getMessage());
 		}
 		
-		return null;
+		// Find minimum common alterations
+		List<ChromosomeArrayData> output =
+			new ArrayList<ChromosomeArrayData>();
+		if (input.size() > 0) {
+			short chromosome = input.get(0).getChromosome();
+			if (this.quantitationType == QuantitationType.LOH) {
+				List<AnnotatedGenomeFeature> alts =
+					this.minimumCommonAlterations(input,
+							AnnotationType.LOH_SEGMENT);
+				ChromosomeArrayData cad =
+					new ChromosomeArrayData(chromosome);
+				cad.setChromosomeAlteration(alts);
+				output.add(cad);
+			} else {
+				List<AnnotatedGenomeFeature> alts =
+					this.minimumCommonAlterations(input,
+							AnnotationType.AMPLIFIED_SEGMENT);
+				ChromosomeArrayData cad =
+					new ChromosomeArrayData(chromosome);
+				cad.setChromosomeAlteration(alts);
+				output.add(cad);
+				alts = this.minimumCommonAlterations(input,
+							AnnotationType.DELETED_SEGMENT);
+				cad = new ChromosomeArrayData(chromosome);
+				cad.setChromosomeAlteration(alts);
+				output.add(cad);
+			}
+		}
+		return output;
+	}
+	
+	
+	/**
+	 * Find minimum common alteration set.
+	 * @param cads Chromosome array data
+	 * @param altType Alteration type
+	 * @return Minimum common alterations
+	 */
+	private List<AnnotatedGenomeFeature> minimumCommonAlterations(
+			final Collection<ChromosomeArrayData> cads,
+			final AnnotationType altType) {
+		List<AnnotatedGenomeFeature> alts =
+			this.accumulateAlterations(cads, altType);
+		List<AnnotatedGenomeFeature> isecs =
+			this.findAllIntersections(alts);
+		int min = (int) Math.ceil((double) cads.size() * this.minPercent);
+		this.weed(isecs, alts, min);
+		return this.unionAll(isecs);
 	}
 	
 	
@@ -162,19 +208,21 @@ implements ListToListAnalyticOperation {
 	 * @param altType Alteration type
 	 * @return All alterations
 	 */
-	private SortedSet<AnnotatedGenomeFeature> accumulateAlterations(
+	private List<AnnotatedGenomeFeature> accumulateAlterations(
 			final Collection<ChromosomeArrayData> cads,
 			final AnnotationType altType) {
-		SortedSet<AnnotatedGenomeFeature> alts =
-			new TreeSet<AnnotatedGenomeFeature>();
+		List<AnnotatedGenomeFeature> alts =
+			new ArrayList<AnnotatedGenomeFeature>();
 		for (ChromosomeArrayData cad : cads) {
 			AnnotatedGenomeFeatureIterator it =
 				cad.alteredSegmentIterator(this.threshold,
 						this.interpolate, altType);
 			while (it.hasNext()) {
-				alts.add(it.next());
+				AnnotatedGenomeFeature f = it.next();
+				alts.add(f);
 			}
 		}
+		Collections.sort(alts, new GenomeIntervalComparator());
 		return alts;
 	}
 	
@@ -184,10 +232,10 @@ implements ListToListAnalyticOperation {
 	 * @param alts Altered segments.
 	 * @return All pairwise intersections.
 	 */
-	private SortedSet<AnnotatedGenomeFeature> findAllIntersections(
-			final SortedSet<AnnotatedGenomeFeature> alts) {
-		SortedSet<AnnotatedGenomeFeature> intersections =
-			new TreeSet<AnnotatedGenomeFeature>();
+	private List<AnnotatedGenomeFeature> findAllIntersections(
+			final List<AnnotatedGenomeFeature> alts) {
+		List<AnnotatedGenomeFeature> intersections =
+			new ArrayList<AnnotatedGenomeFeature>();
 		for (AnnotatedGenomeFeature f1 : alts) {
 			for (AnnotatedGenomeFeature f2 : alts) {
 				if (f1 != f2) {
@@ -202,6 +250,7 @@ implements ListToListAnalyticOperation {
 				}
 			}
 		}
+		Collections.sort(intersections, new GenomeIntervalComparator());
 		return intersections;
 	}
 	
@@ -214,8 +263,8 @@ implements ListToListAnalyticOperation {
 	 * @param min Minimum number of intervals an intersection
 	 * has be be contained in to remain in set.
 	 */
-	private void weed(final SortedSet<AnnotatedGenomeFeature> intersections,
-			final SortedSet<AnnotatedGenomeFeature> intervals,
+	private void weed(final List<AnnotatedGenomeFeature> intersections,
+			final List<AnnotatedGenomeFeature> intervals,
 			final int min) {
 		Iterator<AnnotatedGenomeFeature> it = intersections.iterator();
 		while (it.hasNext()) {
@@ -241,10 +290,10 @@ implements ListToListAnalyticOperation {
 	 * @param feats Features
 	 * @return Unioned features
 	 */
-	private SortedSet<AnnotatedGenomeFeature> unionAll(
-			final SortedSet<AnnotatedGenomeFeature> feats) {
-		SortedSet<AnnotatedGenomeFeature> newSet =
-			new TreeSet<AnnotatedGenomeFeature>();
+	private List<AnnotatedGenomeFeature> unionAll(
+			final List<AnnotatedGenomeFeature> feats) {
+		List<AnnotatedGenomeFeature> newSet =
+			new ArrayList<AnnotatedGenomeFeature>();
 		while (feats.size() > 0) {
 			Iterator<AnnotatedGenomeFeature> it =
 				feats.iterator();

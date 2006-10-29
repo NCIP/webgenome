@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2006-10-29 02:49:49 $
 
 The Web CGH Software License, Version 1.0
@@ -48,67 +48,82 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.analysis.unit_test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import org.rti.webcgh.analysis.MinimumCommonAlteredRegionOperation;
+import org.rti.webcgh.domain.AnnotatedGenomeFeature;
+import org.rti.webcgh.domain.AnnotationType;
+import org.rti.webcgh.domain.ArrayDatum;
+import org.rti.webcgh.domain.ArrayDatumGenerator;
+import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.QuantitationType;
+
+import junit.framework.TestCase;
+
 /**
- * Generate error messages for bad analytic
- * operation parameters.
+ * Tester for <code>MinimumCommonAlteredRegionOperation</code>.
  * @author dhall
  *
  */
-public class ParameterErrorMessageGenerator {
+public final class MinimumCommonAlteredRegionOperationTester
+extends TestCase {
 
-	/** List of invalid parameter names. */
-	private final List<String> invalidParamNames = new ArrayList<String>();
-	
-	/** Parameter values. */
-	private final List<String> values = new ArrayList<String>();
 	
 	/**
-	 * Add name of invalid parameter.
-	 * @param paramName Invalid parameter name.
-	 * @param value Value
+	 * Test perform() method.
+	 * @throws Exception if something bad happens
 	 */
-	public final void addInvalidParameterName(
-			final String paramName, final String value) {
-		this.invalidParamNames.add(paramName);
-		this.values.add(value);
-	}
-	
-	
-	/**
-	 * Have invalid parameters been reported?
-	 * @return T/F
-	 */
-	public final boolean invalidParameters() {
-		return this.invalidParamNames.size() > 0;
-	}
-	
-	/**
-	 * Get invalid parameter message.
-	 * @return Invalid parameter message.
-	 */
-	public final String getMessage() {
-		StringBuffer buff = new StringBuffer();
-		if (this.invalidParameters()) {
-			buff.append("Invalid parameter");
-			if (this.invalidParamNames.size() > 1) {
-				buff.append("s");
-			}
-			buff.append(": ");
-			int count = 0;
-			Iterator<String> valueIt = this.values.iterator();
-			for (String name : this.invalidParamNames) {
-				if (count++ > 0) {
-					buff.append(",");
-				}
-				buff.append(name + "(" + valueIt.next() + ")");
+	public void testPerform() throws Exception {
+		
+		// Create test data
+		long[] locations = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+		float[][] values = {
+				{1, 1, 1, 0, 0, 0, 0, 1, 1, 1},
+				{1, 1, 1, 1, 0, 0, 0, 1, 1, 0},
+				{0, 0, 1, 1, 1, 0, 0, 1, 1, 1},
+				{0, 1, 1, 1, 0, 1, 1, 0, 0, 0},
+				{0, 0, 0, 0, 0, 1, 1, 0, 0, 0}};
+		ArrayDatum[][] data = ArrayDatumGenerator.newArrayData(
+				(short) 1, locations, values);
+		List<ChromosomeArrayData> cads =
+			new ArrayList<ChromosomeArrayData>();
+		for (int i = 0; i < data.length; i++) {
+			ChromosomeArrayData cad = new ChromosomeArrayData((short) 1);
+			cads.add(cad);
+			for (int j = 0; j < data[i].length; j++) {
+				cad.add(data[i][j]);
 			}
 		}
-		return buff.toString();
+		
+		// Instantiate operation
+		MinimumCommonAlteredRegionOperation op =
+			new MinimumCommonAlteredRegionOperation();
+		op.setProperty("interpolate", "NO");
+		op.setProperty("threshold", "0.5");
+		op.setProperty("minPercent", "0.5");
+		op.setQuantitationType(QuantitationType.LOH);
+		
+		// Run test
+		List<ChromosomeArrayData> output = op.perform(cads);
+		assertNotNull(output);
+		assertEquals(1, output.size());
+		ChromosomeArrayData cad = output.get(0);
+		List<AnnotatedGenomeFeature> alts =
+			cad.getChromosomeAlteration();
+		assertNotNull(alts);
+		assertEquals(2, alts.size());
+		AnnotatedGenomeFeature f = alts.get(0);
+		assertEquals(20, f.getStartLocation());
+		assertEquals(40, f.getEndLocation());
+		assertTrue(AnnotationType.LOH_SEGMENT == f.getAnnotationType());
+		assertEquals((float) 1.0, f.getQuantitation());
+		f = alts.get(1);
+		assertEquals(80, f.getStartLocation());
+		assertEquals(90, f.getEndLocation());
+		assertTrue(AnnotationType.LOH_SEGMENT == f.getAnnotationType());
+		assertEquals((float) 1.0, f.getQuantitation());
 	}
 }

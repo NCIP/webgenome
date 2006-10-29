@@ -251,6 +251,44 @@ public final class ArrayDatumGenerator {
     
     
     /**
+     * Create matrix of new array datum objects.
+     * @param chromosome Chromosome number
+     * @param locations Reporter chromosome locations
+     * @param values Values
+     * @return Array datum objects
+     */
+    public static ArrayDatum[][] newArrayData(
+    		final short chromosome, final long[] locations,
+    		final float[][] values) {
+    	for (int i = 0; i < values.length; i++) {
+    		if (locations.length != values[i].length) {
+    			throw new IllegalArgumentException(
+    					"The number of values for all arrays must "
+    					+ "be equal to the number of locations");
+    		}
+    	}
+    	
+    	// Generate reporters
+    	int n = locations.length;
+    	Reporter[] reporters = new Reporter[n];
+    	for (int i = 0; i < n; i++) {
+    		reporters[i] = new Reporter("r", chromosome, locations[i]);
+    	}
+    	
+    	// Generate array datum
+    	ArrayDatum[][] newData = new ArrayDatum[values.length][];
+    	for (int i = 0; i < values.length; i++) {
+    		newData[i] = new ArrayDatum[n];
+    		for (int j = 0; j < n; j++) {
+    			newData[i][j] = new ArrayDatum(values[i][j], reporters[j]);
+    		}
+    	}
+    	
+    	return newData;
+    }
+    
+    
+    /**
      * Generate a new reporter object.
      * @return A new reporter
      */
