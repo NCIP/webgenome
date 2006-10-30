@@ -112,4 +112,12 @@
       <tagclass>org.rti.webcgh.webui.taglib.QuantitationTypeOptionsTag</tagclass>
       <bodycontent>empty</bodycontent>
    </tag>
+   
+<!-- Displays contact information and a mailto link for the system
+     administrator -->
+   <tag>
+      <name>sysadmin</name>
+      <tagclass>org.rti.webcgh.webui.taglib.SysadminTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
 </taglib>
