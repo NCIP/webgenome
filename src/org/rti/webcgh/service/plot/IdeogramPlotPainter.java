@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2006-10-28 17:09:47 $
+$Revision: 1.16 $
+$Date: 2006-10-30 18:37:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -320,7 +320,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 		HeatMapPlot plot = new HeatMapPlot(experiments, chromosome, fac,
 				plotParameters, this.getChromosomeArrayDataGetter(),
 				panel.getDrawingCanvas());
-		boundaries.add(plot.getMouseOverStripes());
+		boundaries.addAll(plot.getMouseOverStripes());
 		panel.add(plot, HorizontalAlignment.RIGHT_OF,
 				VerticalAlignment.TOP_JUSTIFIED);
 	}

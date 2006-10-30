@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-28 17:09:47 $
+$Revision: 1.3 $
+$Date: 2006-10-30 18:37:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -129,6 +129,15 @@ public class EventHandlerGraphicBoundaries {
 	 */
 	public final void add(final MouseOverStripes stripes) {
 		this.mouseOverStripes.add(stripes);
+	}
+	
+	
+	/**
+	 * Add mouseover stripes.
+	 * @param stripes Mouseover stripes
+	 */
+	public final void addAll(final Collection<MouseOverStripes> stripes) {
+		this.mouseOverStripes.addAll(stripes);
 	}
 	
 	

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-30 01:58:06 $
+$Revision: 1.10 $
+$Date: 2006-10-30 18:37:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -158,7 +159,8 @@ public final class HeatMapPlot implements PlotElement {
     private int trackMaxY = 0;
   
     /** Mouseover stripes. */
-    private final MouseOverStripes mouseOverStripes;
+    private final Collection<MouseOverStripes> mouseOverStripes =
+    	new ArrayList<MouseOverStripes>();
     
     
     // ==========================
@@ -169,7 +171,7 @@ public final class HeatMapPlot implements PlotElement {
      * Get mouseover stripes.
      * @return Mouseover stripes.
      */
-    public MouseOverStripes getMouseOverStripes() {
+    public Collection<MouseOverStripes> getMouseOverStripes() {
 		return mouseOverStripes;
 	}
     
@@ -236,8 +238,6 @@ public final class HeatMapPlot implements PlotElement {
 			}
 		}
 		this.maxY = this.trackMaxY + PADDING + FONT_SIZE;
-		this.mouseOverStripes = new MouseOverStripes(Orientation.VERTICAL,
-				this.width(), this.height());
 	}
 	
 	
@@ -391,6 +391,11 @@ public final class HeatMapPlot implements PlotElement {
     	ChromosomeIdeogramSize idSize =
 			this.plotParameters.getIdeogramSize();
     	int trackWidth = this.plotParameters.getTrackWidth();
+    	MouseOverStripes stripes = new MouseOverStripes(Orientation.VERTICAL,
+				trackWidth, this.trackMaxY - this.trackMinY);
+    	stripes.getOrigin().x = x;
+    	stripes.getOrigin().y = this.trackMinY;
+    	this.mouseOverStripes.add(stripes);
     	if (n > 0) {
 	    	for (int i = 0; i < n; i++) {
 	    		ArrayDatum datum = dataList.get(i);
@@ -422,7 +427,7 @@ public final class HeatMapPlot implements PlotElement {
 		    		canvas.add(new Rectangle(x, y, trackWidth, height, c));
 		    		String mouseOverText = start + "-" + end + ": "
 		    			+ FORMAT.format(value);
-		    		this.mouseOverStripes.add(new MouseOverStripe(y,
+		    		stripes.add(new MouseOverStripe(y,
 		    				y + height, mouseOverText));
 	    		}
 	    	}
@@ -446,6 +451,11 @@ public final class HeatMapPlot implements PlotElement {
     	ChromosomeIdeogramSize idSize =
 			this.plotParameters.getIdeogramSize();
     	int trackWidth = this.plotParameters.getTrackWidth();
+    	MouseOverStripes stripes = new MouseOverStripes(Orientation.VERTICAL,
+				trackWidth, this.trackMaxY - this.trackMinY);
+    	stripes.getOrigin().x = x;
+    	stripes.getOrigin().y = this.trackMinY;
+    	this.mouseOverStripes.add(stripes);
     	if (n > 0) {
 	    	for (AnnotatedGenomeFeature datum : dataList) {
 	    		float value = datum.getQuantitation();
@@ -459,7 +469,7 @@ public final class HeatMapPlot implements PlotElement {
 	    		canvas.add(new Rectangle(x, y, trackWidth, height, color));
 	    		String mouseOverText = start + "-" + end + ": "
 	    			+ FORMAT.format(value);
-	    		this.mouseOverStripes.add(new MouseOverStripe(y,
+	    		stripes.add(new MouseOverStripe(y,
 	    				y + height, mouseOverText));
 	    	}
     	}
@@ -540,7 +550,9 @@ public final class HeatMapPlot implements PlotElement {
     	this.maxY += deltaY;
     	this.trackMinY += deltaY;
     	this.trackMaxY += deltaY;
-    	this.mouseOverStripes.getOrigin().x += deltaX;
-    	this.mouseOverStripes.getOrigin().y += deltaY;
+    	for (MouseOverStripes stripes : this.mouseOverStripes) {
+	    	stripes.getOrigin().x += deltaX;
+	    	stripes.getOrigin().y += deltaY;
+    	}
     }
 }

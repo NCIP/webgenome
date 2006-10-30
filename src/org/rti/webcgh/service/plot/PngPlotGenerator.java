@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-10-26 21:31:27 $
+$Revision: 1.14 $
+$Date: 2006-10-30 18:37:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -362,12 +362,14 @@ public class PngPlotGenerator implements PlotGenerator {
 		// Create plot image
 		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
 		PlotPanel panel = new PlotPanel(canvas);
-		painter.paintPlot(panel, experiments, plotParameters);
+		EventHandlerGraphicBoundaries boundaries =
+			painter.paintPlot(panel, experiments, plotParameters);
 		panel.paint(canvas);
 		canvas.setWidth(panel.width());
 		canvas.setHeight(panel.height());
 		plot.setWidth(panel.width());
 		plot.setHeight(panel.height());
+		plot.setMouseOverStripes(boundaries.getMouseOverStripes());
 		String imageFileName =
 			this.imageFileManager.saveImage(canvas.toBufferedImage());
 		plot.setDefaultImageFileName(imageFileName);
