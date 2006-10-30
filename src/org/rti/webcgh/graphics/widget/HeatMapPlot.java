@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-10-30 19:06:36 $
+$Revision: 1.12 $
+$Date: 2006-10-30 22:20:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -428,8 +428,31 @@ public final class HeatMapPlot implements PlotElement {
 		    		Color c = this.colorFactory.getColor(value);
 		    		this.graphicPrimitives.add(
 		    				new Rectangle(x, y, trackWidth, height, c));
-		    		String mouseOverText = start + "-" + end + ": "
-		    			+ FORMAT.format(value);
+		    		StringBuffer annotation = new StringBuffer();
+		    		int count = 0;
+		    		for (String s : datum.getReporter().getAnnotations()) {
+		    			if (count++ > 0) {
+		    				annotation.append(".  ");
+		    			}
+		    			annotation.append(s);
+		    		}
+		    		count = 0;
+		    		StringBuffer genes = new StringBuffer();
+		    		for (String s : datum.getReporter().getAssociatedGenes()) {
+		    			if (count++ > 0) {
+		    				genes.append(", ");
+		    			}
+		    			genes.append(s);
+		    		}
+		    		String mouseOverText = "Range: " + start + "-" + end
+		    			+ "; Value: " + FORMAT.format(value);
+		    		if (annotation.length() > 0) {
+		    			mouseOverText += "; Annotation: "
+		    				+ annotation.toString();
+		    		}
+		    		if (genes.length() > 0) {
+		    			mouseOverText += "; Genes: " + genes.toString();
+		    		}
 		    		stripes.add(new MouseOverStripe(y,
 		    				y + height, mouseOverText));
 	    		}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.24 $
-$Date: 2006-10-29 22:36:41 $
+$Revision: 1.25 $
+$Date: 2006-10-30 22:20:31 $
 
 The Web CGH Software License, Version 1.0
 
@@ -518,7 +518,7 @@ public final class ScatterPlot implements PlotElement {
 	    					currentStartBp) * (double) this.width);
 	    		MouseOverStripe currentStripe = new MouseOverStripe();
 	    		this.mouseOverStripes.add(currentStripe);
-	    		currentStripe.setText(currentReporter.getName());
+	    		currentStripe.setText(this.mouseOverText(currentReporter));
 	    		currentStripe.setStart(currentStartPix);
 	    		if (lastStripe != null) {
 	    			lastStripe.setEnd(currentStartPix - 1);
@@ -528,6 +528,40 @@ public final class ScatterPlot implements PlotElement {
 	    	}
 	    	lastStripe.setEnd(this.width);
     	}
+    }
+    
+    
+    /**
+     * Generate mouseover text.
+     * @param r A reporter
+     * @return Mouseover text
+     */
+    private String mouseOverText(final Reporter r) {
+    	StringBuffer buff = new StringBuffer();
+    	buff.append("Reporter: " + r.getName());
+    	StringBuffer annotation = new StringBuffer();
+    	int count = 0;
+    	for (String s : r.getAnnotations()) {
+    		if (count++ > 0) {
+    			annotation.append(".  ");
+    		}
+    		annotation.append(s);
+    	}
+    	count = 0;
+    	StringBuffer genes = new StringBuffer();
+    	for (String s : r.getAssociatedGenes()) {
+    		if (count++ > 0) {
+    			genes.append(", ");
+    		}
+    		genes.append(s);
+    	}
+    	if (annotation.length() > 0) {
+    		buff.append("; Annotations: " + annotation.toString());
+    	}
+    	if (genes.length() > 0) {
+    		buff.append("; Genes: " + genes.toString());
+    	}
+    	return buff.toString();
     }
     
     /**
