@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-10-30 18:37:31 $
+$Revision: 1.11 $
+$Date: 2006-10-30 19:06:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,7 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.GraphicPrimitive;
 import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Rectangle;
 import org.rti.webcgh.graphics.primitive.Text;
@@ -118,8 +119,9 @@ public final class HeatMapPlot implements PlotElement {
 	//        Attributes
 	// ============================
 	
-	/** Experiments containing data to plot. */
-	private final Collection<Experiment> experiments;
+	/** Graphic primitives. */
+	private Collection<GraphicPrimitive> graphicPrimitives =
+		new ArrayList<GraphicPrimitive>();
 	
 	/** Chromosome number to plot. */
 	private final short chromosome;
@@ -206,7 +208,6 @@ public final class HeatMapPlot implements PlotElement {
 		}
 		
 		// Set attributes
-		this.experiments = experiments;
 		this.chromosome = chromosome;
 		this.colorFactory = colorFactory;
 		this.plotParameters = plotParameters;
@@ -238,6 +239,10 @@ public final class HeatMapPlot implements PlotElement {
 			}
 		}
 		this.maxY = this.trackMaxY + PADDING + FONT_SIZE;
+		int x = this.minY;
+		for (Experiment exp : experiments) {
+			x = this.layoutGraphicPrimitives(drawingCanvas, exp, x);
+		}
 	}
 	
 	
@@ -305,22 +310,20 @@ public final class HeatMapPlot implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(final DrawingCanvas canvas) {
-    	int x = this.minX;
-    	for (Experiment exp : this.experiments) {
-    		int endX = this.paint(canvas, exp, x);
-    		x = endX + PADDING;
+    	for (GraphicPrimitive p : this.graphicPrimitives) {
+    		canvas.add(p);
     	}
     }
     
     
     /**
-     * Paint experiment.
+     * Lay out graphic primitives.
      * @param canvas A drawing canvas to paint on
      * @param experiment Experiment to paint
      * @param x Starting x-coordinate
      * @return Ending x-coordinate
      */
-    private int paint(final DrawingCanvas canvas,
+    private int layoutGraphicPrimitives(final DrawingCanvas canvas,
     		final Experiment experiment, final int x) {
     	int startX = x;
     	int endX = x + this.renderedWidth(experiment, canvas,
@@ -336,16 +339,16 @@ public final class HeatMapPlot implements PlotElement {
 				getChromosomeArrayData(ba, this.chromosome);
 			if (cad != null) {
 				if (cad.getChromosomeAlterations() == null) {
-					this.paintDataTrack(canvas, trackX, cad);
+					this.layoutDataTrack(trackX, cad);
 				} else {
-					this.paintAlterations(canvas, trackX, cad, ba.getColor());
+					this.layoutAlterations(trackX, cad, ba.getColor());
 				}
 	    		int textX = trackX + this.plotParameters.getTrackWidth() / 2;
 	    		Text text = canvas.newText(ba.getName(), textX, textY,
 	    				FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
 	    				TEXT_COLOR);
 	    		text.setRotation(LABEL_ROTATION);
-	    		canvas.add(text);
+	    		this.graphicPrimitives.add(text);
 	    		trackX += this.plotParameters.getTrackWidth() + PADDING;
 			}
     	}
@@ -359,31 +362,30 @@ public final class HeatMapPlot implements PlotElement {
     	Text text = canvas.newText(experiment.getName(), textStartX,
     			textY, FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
     			TEXT_COLOR);
-    	canvas.add(text);
+    	this.graphicPrimitives.add(text);
     	
     	// Add bracket around group label
     	int lineY1 = textY - FONT_SIZE / 2;
     	int lineY2 = lineY1;
-    	canvas.add(new Line(startX, lineY1,
+    	this.graphicPrimitives.add(new Line(startX, lineY1,
     			textStartX - PADDING, lineY2, LINE_WIDTH, LINE_COLOR));
-    	canvas.add(new Line(textEndX + PADDING, lineY1,
+    	this.graphicPrimitives.add(new Line(textEndX + PADDING, lineY1,
     			endX, lineY2, LINE_WIDTH, LINE_COLOR));
     	lineY1 -= PADDING;
-    	canvas.add(new Line(startX, lineY1, startX, lineY2,
+    	this.graphicPrimitives.add(new Line(startX, lineY1, startX, lineY2,
     			LINE_WIDTH, LINE_COLOR));
-    	canvas.add(new Line(endX, lineY1, endX, lineY2,
+    	this.graphicPrimitives.add(new Line(endX, lineY1, endX, lineY2,
     			LINE_WIDTH, LINE_COLOR));
     	return endX;
     }
     
     
     /**
-     * Paint a single data track.
-     * @param canvas Canvas
+     * Lay out a single data track.
      * @param x X-coordinate of track
      * @param chromosomeArrayData Chromosome array data
      */
-    private void paintDataTrack(final DrawingCanvas canvas, final int x,
+    private void layoutDataTrack(final int x,
     		final ChromosomeArrayData chromosomeArrayData) {
     	List<ArrayDatum> dataList =
     		chromosomeArrayData.getArrayData();
@@ -424,7 +426,8 @@ public final class HeatMapPlot implements PlotElement {
 		    			height = 1;
 		    		}
 		    		Color c = this.colorFactory.getColor(value);
-		    		canvas.add(new Rectangle(x, y, trackWidth, height, c));
+		    		this.graphicPrimitives.add(
+		    				new Rectangle(x, y, trackWidth, height, c));
 		    		String mouseOverText = start + "-" + end + ": "
 		    			+ FORMAT.format(value);
 		    		stripes.add(new MouseOverStripe(y,
@@ -436,13 +439,12 @@ public final class HeatMapPlot implements PlotElement {
     
     
     /**
-     * Paint a single track of chromosome alterations.
-     * @param canvas Canvas
+     * Lay out a single track of chromosome alterations.
      * @param x X-coordinate of track
      * @param chromosomeArrayData Chromosome array data
      * @param color Alteration color
      */
-    private void paintAlterations(final DrawingCanvas canvas, final int x,
+    private void layoutAlterations(final int x,
     		final ChromosomeArrayData chromosomeArrayData,
     		final Color color) {
     	List<AnnotatedGenomeFeature> dataList =
@@ -466,7 +468,8 @@ public final class HeatMapPlot implements PlotElement {
 	    		if (height < 1) {
 	    			height = 1;
 	    		}
-	    		canvas.add(new Rectangle(x, y, trackWidth, height, color));
+	    		this.graphicPrimitives.add(
+	    				new Rectangle(x, y, trackWidth, height, color));
 	    		String mouseOverText = start + "-" + end + ": "
 	    			+ FORMAT.format(value);
 	    		stripes.add(new MouseOverStripe(y,
@@ -550,6 +553,9 @@ public final class HeatMapPlot implements PlotElement {
     	this.maxY += deltaY;
     	this.trackMinY += deltaY;
     	this.trackMaxY += deltaY;
+    	for (GraphicPrimitive p : this.graphicPrimitives) {
+    		p.move(deltaX, deltaY);
+    	}
     	for (MouseOverStripes stripes : this.mouseOverStripes) {
 	    	stripes.getOrigin().x += deltaX;
 	    	stripes.getOrigin().y += deltaY;

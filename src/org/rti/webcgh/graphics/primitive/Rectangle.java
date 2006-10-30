@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.4 $
+$Date: 2006-10-30 19:06:36 $
 
 The Web CGH Software License, Version 1.0
 
@@ -193,6 +193,7 @@ public class Rectangle extends GraphicPrimitive {
 	 * @param deltaY Change in Y-coordinates in pixels
 	 */
 	public final void move(final int deltaX, final int deltaY) {
-		
+		this.x += deltaX;
+		this.y += deltaY;
 	}
 }
