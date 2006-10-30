@@ -28,7 +28,7 @@
 		// Iterate over input fields
 		for (var i = 0; i < inputs.length; i++) {
 			var input = inputs[i];
-			var name = input.getAttribute("name");
+			var name = input.name;
 			
 			// Input field is experiment or bioassay output name
 			if (name.indexOf("eo_") == 0 || name.indexOf("bo_") == 0) {
@@ -123,7 +123,7 @@
 		// are not empty and do not contain illegal characters.
 		for (var i = 0; i < inputs.length && valid; i++) {
 			var input = inputs[i];
-			var name = input.getAttribute("name");
+			var name = input.name;
 			
 			// Input field is experiment or bioassay output name
 			if (name.indexOf("eo_") == 0 || name.indexOf("bo_") == 0) {
