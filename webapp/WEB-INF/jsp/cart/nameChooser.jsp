@@ -11,16 +11,21 @@
 		var form = document.forms["name.change.form"];
 		var field = document.forms["name.change.form"].elements["name"];
 
-		if((field.value.indexOf('&') >= 0) ||
-			(field.value.indexOf('=') >= 0) ||
-			(field.value.indexOf('#') >= 0) ||
-			(field.value.indexOf('\'') >= 0))
+		if((field.value.lastIndexOf('&') >= 0) ||
+			(field.value.lastIndexOf('=') >= 0) ||
+			(field.value.lastIndexOf('#') >= 0) ||
+			(field.value.lastIndexOf('\'') >= 0)) {
 			alert('Please use only valid characters for the name.\nInvalid characters are:\n& = # \'');
-		else if(field.value.length <= 0)
+			return false;
+		}
+		else if(field.value.length <= 0) {
 			alert('Please do not leave the name field blank.');
+			return false;
+		}
 		else {
 			form.submit();
 			window.close();
+			return true;
 		}
 	}
 </script>
@@ -29,7 +34,7 @@
 
 <center>
 <html:form action="/cart/nameChange" target="mainwindow"
-	onsubmit="window.close();return true;">
+	onsubmit="return validate();">
 
 	<html:hidden property="id" value="<%= request.getParameter("id") %>"/>
 	<html:hidden property="type" value="<%= request.getParameter("type") %>"/>
