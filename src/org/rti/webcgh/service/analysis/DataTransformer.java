@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-30 01:58:06 $
+$Revision: 1.8 $
+$Date: 2006-10-30 21:52:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -152,10 +152,26 @@ public abstract class DataTransformer {
         throws AnalyticException {
         if (operation instanceof StatefulExperimentAnalyticOperation) {
             ((StatefulExperimentAnalyticOperation) operation).resetState();
+            for (BioAssay ba : input.getBioAssays()) {
+            	ChromosomeArrayDataIterator it =
+                	this.getChromosomeArrayDataIterator(ba);
+                while (it.hasNext()) {
+                	ChromosomeArrayData cad = it.next();
+                	((StatefulExperimentAnalyticOperation)
+                			operation).adjustState(cad);
+                }
+            }
         }
         for (BioAssay ba : input.getBioAssays()) {
             if (operation instanceof StatefulBioAssayAnalyticOperation) {
                 ((StatefulBioAssayAnalyticOperation) operation).resetState();
+                ChromosomeArrayDataIterator it =
+                	this.getChromosomeArrayDataIterator(ba);
+                while (it.hasNext()) {
+                	ChromosomeArrayData cad = it.next();
+                	((StatefulBioAssayAnalyticOperation)
+                			operation).adjustState(cad);
+                }
             }
             BioAssay newBa = this.clone(ba);
             newBa.setParentBioAssayId(ba.getId());

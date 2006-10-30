@@ -51,6 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.rti.webcgh.util.SystemUtils;
 import org.rti.webgenome.client.ReporterDTO;
@@ -82,6 +84,12 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     
     /** Chromosome location. */
     private long location = (long) -1;
+    
+    /** Reporter annotations. */
+    private Collection<String> annotations = new ArrayList<String>();
+    
+    /** Associated genes. */
+    private Collection<String> associatedGenes = new ArrayList<String>();
 
     
     /**
@@ -131,8 +139,25 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     public final void setLocation(final long location) {
         this.location = location;
     }
+    
 
     /**
+     * Get annotations.
+     * @return Annotations.
+     */
+    public final Collection<String> getAnnotations() {
+		return annotations;
+	}
+
+    /**
+     * Get associated genes.
+     * @return Associated genes.
+     */
+	public final Collection<String> getAssociatedGenes() {
+		return associatedGenes;
+	}
+
+	/**
      * Get name of reporter.
      * @return Name of reporter
      */
@@ -183,6 +208,18 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     			dto.getChromosome());
     	this.location = dto.getChromosomeLocation();
     	this.name = dto.getName();
+    	String[] a = dto.getAnnotations();
+    	if (a != null) {
+	    	for (int i = 0; i < a.length; i++) {
+	    		this.annotations.add(a[i]);
+	    	}
+    	}
+    	String[] g = dto.getAssociatedGenes();
+    	if (g != null) {
+    		for (int i = 0; i < g.length; i++) {
+    			this.associatedGenes.add(g[i]);
+    		}
+    	}
     }
 
     // ==================================

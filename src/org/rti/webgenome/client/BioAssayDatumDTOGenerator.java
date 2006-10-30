@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-08 16:52:40 $
+$Revision: 1.3 $
+$Date: 2006-10-30 21:52:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -92,6 +92,8 @@ public class BioAssayDatumDTOGenerator {
 				long pos = (long) j * this.gap + constraint.getStartPosition();
 				DefReporterDTOImpl r = new DefReporterDTOImpl(
 						String.valueOf(j), constraint.getChromosome(), pos);
+				r.addAnnotation("An annotation");
+				r.addAssociatedGene("Gene A");
 				double value = Math.random();
 				dtos[p++] = new DefBioAssayDatumDTOImpl(value,
 						constraint.getQuantitationType(), r);
