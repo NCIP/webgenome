@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-18 17:59:24 $
+$Revision: 1.2 $
+$Date: 2006-10-30 17:55:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -189,6 +189,6 @@ public class NameChangeForm extends BaseForm {
 	 * @return T/F
 	 */
 	private boolean validCharacter(final char c) {
-		return c != '&' && c != '=' && c != '#'; 
+		return c != '&' && c != '=' && c != '#' && c!= '\''; 
 	}
 }
