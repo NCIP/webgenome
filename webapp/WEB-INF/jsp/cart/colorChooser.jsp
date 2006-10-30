@@ -5,47 +5,13 @@
 		rel="stylesheet" type="text/css" />
 
 <script language="Javascript">
-	// dec 2 hex conversion
-	var hD="0123456789ABCDEF";
-	function d2h(d) {
-		var h = hD.substr(d&15, 1);
-		while(d > 15) {
-			d >>= 4;
-			h = hD.substr(d&15, 1) + h;
-		}
-		return h;
-	}
-	function padZero(h) {
-		if(h.length < 2) return '0' + h;
-		else return h;
-	}
-
-	// hex 2 dec conversion
-	function h2d(h) {
-		return parseInt(h,16);
-	}
-
 	function setColor(color) {
-		var td = document.getElementById("selectedColor");
-		td.style.backgroundColor = color;
+		document.getElementById("selectedColor").bgColor = color;
 	}
 	
 	function onOk() {
 		var bioAssayId = "<%= pageContext.findAttribute("id") %>";
-		var td = document.getElementById("selectedColor");
-		var color = td.style.backgroundColor;
-
-		if (color == null || color.length < 1) {
-			color = td.getAttribute("bgcolor");
-		}
-
-		// check if color is in rgb format and convert to hex if so
-		if(color.substring(0,3) == 'rgb') {
-			var rgbString = color.substring(4, color.length-1);
-			var rgb = rgbString.split(',');
-			color = '#' + padZero(d2h(rgb[0])) + padZero(d2h(rgb[1])) + padZero(d2h(rgb[2]));
-		}
-
+		var color = document.getElementById("selectedColor").bgColor;
 		color = color.substring(1, color.length);
 		var url = "<html:rewrite page="/cart/changeBioAssayColor.do"/>?id="
 			+ bioAssayId + "&color=" + color;
