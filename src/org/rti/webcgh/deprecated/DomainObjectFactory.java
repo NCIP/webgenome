@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/DomainObjectFactory.java,v $
-$Revision: 1.2 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.3 $
+$Date: 2006-10-30 23:32:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -149,8 +149,8 @@ public class DomainObjectFactory {
             BioAssayType bioAssayType = BioAssayType.CGH;
             experiment.add(bioAssay);
             BioAssayDatumDTO[] bioAssayDatumDTOs = bioAssayDTOs[i].getBioAssayData();
-            if (bioAssayDatumDTOs.length > 0)
-            	bioAssayType = BioAssayType.getBioAssayType(bioAssayDatumDTOs[0].getQuantitationType());
+//            if (bioAssayDatumDTOs.length > 0)
+//            	bioAssayType = BioAssayType.getBioAssayType(bioAssayDatumDTOs[0].getQuantitationType());
             bioAssay.setBioAssayType(bioAssayType);
             bioAssay.setOrganism(Organism.UNKNOWN);
             bioAssay.setArray(Array.UNKNOWN);
@@ -160,10 +160,10 @@ public class DomainObjectFactory {
                 Reporter reporter = this.getReporter(reporterdto.getName());
                 this.synchronizeReporterMapping(reporter, reporterdto);
                 reporter.setDisplayProperties(reporterdto.getAnnotations(), reporterdto.getAssociatedGenes(), reporterdto.isSelected().booleanValue());
-                QuantitationType type = this.getQuantitationType(baddto.getQuantitationType());
-                Quantitation quantitation = new Quantitation(baddto.getValue().floatValue(), type); 
-                ArrayDatum arrayDatum = new ArrayDatum(reporter, quantitation);
-				bioAssay.add(arrayDatum);
+                //QuantitationType type = this.getQuantitationType(baddto.getQuantitationType());
+                //Quantitation quantitation = new Quantitation(baddto.getValue().floatValue(), type); 
+                //ArrayDatum arrayDatum = new ArrayDatum(reporter, quantitation);
+				//bioAssay.add(arrayDatum);
             }
         }
         return experiment;
