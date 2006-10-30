@@ -364,9 +364,14 @@ public class ChromosomeArrayData implements Serializable {
      */
     public final long inferredChromosomeSize() {
         long size = (long) 0;
-        int n = this.arrayData.size();
-        if (n > 0) {
-        	size = this.arrayData.last().getReporter().getLocation();
+        if (this.chromosomeAlterations != null) {
+        	size = this.chromosomeAlterations.get(
+        			this.chromosomeAlterations.size() - 1).getEndLocation();
+        } else {
+	        int n = this.arrayData.size();
+	        if (n > 0) {
+	        	size = this.arrayData.last().getReporter().getLocation();
+	        }
         }
         return size;
     }

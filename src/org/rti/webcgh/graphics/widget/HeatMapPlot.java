@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-28 17:09:47 $
+$Revision: 1.9 $
+$Date: 2006-10-30 01:58:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -334,7 +335,11 @@ public final class HeatMapPlot implements PlotElement {
     		ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
 				getChromosomeArrayData(ba, this.chromosome);
 			if (cad != null) {
-	    		this.paintTrack(canvas, trackX, cad);
+				if (cad.getChromosomeAlterations() == null) {
+					this.paintDataTrack(canvas, trackX, cad);
+				} else {
+					this.paintAlterations(canvas, trackX, cad, ba.getColor());
+				}
 	    		int textX = trackX + this.plotParameters.getTrackWidth() / 2;
 	    		Text text = canvas.newText(ba.getName(), textX, textY,
 	    				FONT_SIZE, HorizontalAlignment.LEFT_JUSTIFIED,
@@ -378,7 +383,7 @@ public final class HeatMapPlot implements PlotElement {
      * @param x X-coordinate of track
      * @param chromosomeArrayData Chromosome array data
      */
-    private void paintTrack(final DrawingCanvas canvas, final int x,
+    private void paintDataTrack(final DrawingCanvas canvas, final int x,
     		final ChromosomeArrayData chromosomeArrayData) {
     	List<ArrayDatum> dataList =
     		chromosomeArrayData.getArrayData();
@@ -420,6 +425,42 @@ public final class HeatMapPlot implements PlotElement {
 		    		this.mouseOverStripes.add(new MouseOverStripe(y,
 		    				y + height, mouseOverText));
 	    		}
+	    	}
+    	}
+    }
+    
+    
+    /**
+     * Paint a single track of chromosome alterations.
+     * @param canvas Canvas
+     * @param x X-coordinate of track
+     * @param chromosomeArrayData Chromosome array data
+     * @param color Alteration color
+     */
+    private void paintAlterations(final DrawingCanvas canvas, final int x,
+    		final ChromosomeArrayData chromosomeArrayData,
+    		final Color color) {
+    	List<AnnotatedGenomeFeature> dataList =
+    		chromosomeArrayData.getChromosomeAlterations();
+    	int n = dataList.size();
+    	ChromosomeIdeogramSize idSize =
+			this.plotParameters.getIdeogramSize();
+    	int trackWidth = this.plotParameters.getTrackWidth();
+    	if (n > 0) {
+	    	for (AnnotatedGenomeFeature datum : dataList) {
+	    		float value = datum.getQuantitation();
+	    		long start = datum.getStartLocation();
+	    		long end = datum.getEndLocation();
+	    		int y = this.trackMinY + idSize.pixels(start);
+	    		int height = idSize.pixels(end - start);
+	    		if (height < 1) {
+	    			height = 1;
+	    		}
+	    		canvas.add(new Rectangle(x, y, trackWidth, height, color));
+	    		String mouseOverText = start + "-" + end + ": "
+	    			+ FORMAT.format(value);
+	    		this.mouseOverStripes.add(new MouseOverStripe(y,
+	    				y + height, mouseOverText));
 	    	}
     	}
     }

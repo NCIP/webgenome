@@ -621,6 +621,23 @@ public class Experiment implements Serializable {
     	return qt;
     }
     
+    /**
+     * Get organism from experiments.
+     * @param experiments Experiments
+     * @return Organism
+     */
+    public static Organism getOrganism(
+    		final Collection<Experiment> experiments) {
+    	Organism org = null;
+    	for (Experiment exp : experiments) {
+    		org = exp.organism;
+    		if (org != null) {
+    			break;
+    		}
+    	}
+    	return org;
+    }
+    
     
     /**
      * Are data in this experiment in memory, as opposed

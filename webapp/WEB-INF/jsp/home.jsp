@@ -11,8 +11,8 @@
 	<%
 		Map<String, String> paramsMap = new HashMap<String, String>();
 		paramsMap.put("exptIDs", "Experiment 1");
-		paramsMap.put("intervals", "1:1-10000000");
-		paramsMap.put("qType", QuantitationTypes.LOH);
+		paramsMap.put("intervals", "1:1-200000000");
+		paramsMap.put("qType", QuantitationTypes.COPY_NUMBER_LOG2_RATION);
 		paramsMap.put("clientID", "1");
 		request.setAttribute("params", paramsMap);
 	%>

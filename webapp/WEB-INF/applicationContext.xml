@@ -93,7 +93,7 @@
 <!-- Client data service -->
 	<bean id="clientDataService"
 		class="org.rti.webcgh.service.client.TestClientDataService">
-		<property name="quantitationType"><value>loh</value></property>
+		<property name="quantitationType"><value>copyNumberLog2Ratio</value></property>
 	</bean>
 		
 <!-- In-memory chromosome array data getter -->

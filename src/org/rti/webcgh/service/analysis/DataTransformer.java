@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-30 01:22:43 $
+$Revision: 1.7 $
+$Date: 2006-10-30 01:58:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -241,6 +241,7 @@ public abstract class DataTransformer {
         Experiment output = new Experiment(operation.getName());
         output.setQuantitationType(Experiment.getQuantitationType(input));
         output.setTerminal(true);
+        output.setOrganism(Experiment.getOrganism(input));
         List<BioAssay> bioAssays = new ArrayList<BioAssay>();
         for (Short chromosome : Experiment.chromosomes(input)) {
             List<ChromosomeArrayData> inCads =
