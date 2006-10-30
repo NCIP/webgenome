@@ -14,7 +14,7 @@
 		<table cellpadding="5" cellspacing="0" border="0">
 
 		<%-- Scatter plot --%>
-			<tr>
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[0].checked=true;">
 				<td>
 					<html:radio property="plotType" value="scatter"/>
 				</td>
@@ -27,7 +27,7 @@
 			</tr>
 		
 		<%-- Ideogram plot --%>
-			<tr>
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[1].checked=true;">
 				<td>
 					<html:radio property="plotType" value="ideogram"/>
 				</td>
