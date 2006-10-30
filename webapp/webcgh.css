@@ -61,8 +61,8 @@ a.menuItem:link {
 
 	border: 0px;
 	border-style: none;
-	border-color: none;
-	background-color: none;
+	border-color: transparent;
+	background-color: transparent;
 }
 a.menuItem:visited {
 	font-size: 10px;
@@ -77,8 +77,8 @@ a.menuItem:visited {
 
 	border: 0px;
 	border-style: none;
-	border-color: none;
-	background-color: none;
+	border-color: transparent;
+	background-color: transparent;
 }
 a.menuItem:hover {
 	font-size: 10px;
@@ -170,6 +170,30 @@ h1 {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-weight: bold;
 
+	padding: 2px;
+
+	height: 25px;
+
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #dee2f5;
+}
+h2 {
+	font-size: 12px;
+	color: #7273ae;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+
+	padding: 1px;
+
+	height: 13px;
+}
+h3 {
+	font-size: 15px;
+	color: #7273ae;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+
 	background-image: url('images/h1-bullet.gif');
 	background-position: top left;
 	background-repeat: no-repeat;
@@ -184,7 +208,7 @@ h1 {
 	border-bottom-width: 1px;
 	border-bottom-color: #dee2f5;
 }
-h2 {
+h4 {
 	font-size: 12px;
 	color: #7273ae;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
@@ -200,6 +224,7 @@ h2 {
 
 	height: 13px;
 }
+
 
 th {
 	font-size: 11px;
@@ -315,7 +340,6 @@ li {
 	top: 20px;
 	left: 90px;
 	background-color: #ffffcc;
-	layer-background-color: #ffffcc;
 }
 
 .cellOver {
