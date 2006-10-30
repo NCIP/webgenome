@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-24 01:41:08 $
+$Revision: 1.4 $
+$Date: 2006-10-30 19:00:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -131,7 +131,7 @@ public final class StringUtils {
 
 	/**
 	 * Remove line breaks from a string.
-	 * @param str A string
+	 * @param str A String
 	 * @return Equivalent string without line breaks
 	 */
 	public static String removeLineBreaks(final String str) {
@@ -161,7 +161,7 @@ public final class StringUtils {
 	
 	/**
 	 * Split string into separate tokens.
-	 * @param str A string
+	 * @param str A String
 	 * @param delimiter Token delimiter
 	 * @return Array of tokens
 	 */
@@ -190,7 +190,7 @@ public final class StringUtils {
 	
 	/**
 	 * Remove quotations from string.
-	 * @param str A string
+	 * @param str A String
 	 * @param quoteChar Quote character
 	 * @return Unquoted string
 	 */
@@ -209,11 +209,19 @@ public final class StringUtils {
 	/**
 	 * Determine if given string is empty--i.e., null
 	 * or length < 1.
-	 * @param str A string
+	 * @param str A String
 	 * @return T/F
 	 */
 	public static boolean isEmpty(final String str) {
 		return str == null || str.length() < 1;
 	}
-
+    
+    /**
+     * Trim a String, if it isn't null.
+     * @param str A String
+     * @return A trimmed String, if it isn't null
+     */
+    public static String safeTrim(final String str) {
+        return isEmpty ( str ) ? str : str.trim() ; 
+    }
 }
