@@ -120,4 +120,33 @@
       <tagclass>org.rti.webcgh.webui.taglib.SysadminTag</tagclass>
       <bodycontent>empty</bodycontent>
    </tag>
+   
+<!-- Organizes the sending of an error email notification of an exception
+	 to configured email recipients. Also displays whether the
+	 email was dispatched. If it wasn't dispatched successfully, it
+	 asks the user to email the error message manually. -->
+   <tag>
+      <name>errorEmail</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ErrorEmailTag</tagclass>
+      <bodycontent>empty</bodycontent>
+      
+      <!-- Hide Message flag attribute *optional* -->
+      <attribute>
+		<name>hideMessage</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+	  
+	  <!-- Exception Message attribute *optional*
+	  	If this isn't passed in we get the Attribute.EXCEPTION
+	  	from the Page Context and just show this.
+	  -->
+      <attribute>
+		<name>exceptionMsg</name>
+		<required>false</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+
+   
 </taglib>
