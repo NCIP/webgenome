@@ -5,6 +5,26 @@
 	<link href="<html:rewrite page="/webcgh.css"/>"
 		rel="stylesheet" type="text/css" />
 
+
+<script type="text/javascript" language="JavaScript">
+	function validate() {
+		var form = document.forms["name.change.form"];
+		var field = document.forms["name.change.form"].elements["name"];
+
+		if((field.value.indexOf('&') >= 0) ||
+			(field.value.indexOf('=') >= 0) ||
+			(field.value.indexOf('#') >= 0) ||
+			(field.value.indexOf('\'') >= 0))
+			alert('Please use only valid characters for the name.\nInvalid characters are:\n& = # \'');
+		else if(field.value.length <= 0)
+			alert('Please do not leave the name field blank.');
+		else {
+			form.submit();
+			window.close();
+		}
+	}
+</script>
+
 <br>
 
 <center>
@@ -18,9 +38,16 @@
 	<html:text property="name"/>
 
 	<p>
-		<html:submit value="OK"/>
+		<input type="button" value="OK" onclick="validate()"/>
 		&nbsp;&nbsp;&nbsp;
 		<input type="button" value="Cancel" onclick="window.close()">
 	</p>
 </html:form>
 </center>
+
+<script type="text/javascript" language="JavaScript">
+	var focusControl = document.forms["name.change.form"].elements["name"];
+	if (focusControl.type != "hidden") {
+		focusControl.focus();
+	}
+</script>
