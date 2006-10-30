@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-	<class name="org.rti.webcgh.domain.ChromosomeArrayData" table="CHROMOSOME_ARRAY_DATA_2">
+	<class name="org.rti.webcgh.domain.ChromosomeArrayData" table="CHROMOSOME_ARRAY_DATA">
 	
 		<id name="id" column="ID">
 		    <generator class="increment"/>

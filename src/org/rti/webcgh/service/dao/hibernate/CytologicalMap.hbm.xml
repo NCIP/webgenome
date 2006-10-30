@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
 	<class name="org.rti.webcgh.domain.CytologicalMap"
-		table="CYTOLOGICAL_MAP_2">
+		table="CYTOLOGICAL_MAP">
 	
 		<id name="id" column="ID">
 		    <generator class="increment"/>

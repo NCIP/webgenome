@@ -6,7 +6,7 @@
 
 <hibernate-mapping>
 
-	<class name="org.rti.webcgh.domain.Reporter" table="REPORTER_2">
+	<class name="org.rti.webcgh.domain.Reporter" table="REPORTER">
 	
 		<id name="id" column="ID">
 		    <generator class="increment"/>

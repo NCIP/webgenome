@@ -34,17 +34,34 @@
 <!-- Session factory -->
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
     	<property name="dataSource" ref="dataSource"/>
+    	
+    	<!-- =============================================================== -->
+    	<!--   Mapping file directory locations.  Disabled for 3.0 release.  -->
+    	<!-- =============================================================== -->
+    	<!--
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
         			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/service/dao/hibernate</value></constructor-arg>
         		</bean>
-                <!-- Standalone Mode - Hibernate Mappings Location: -->
                 <bean class="org.springframework.core.io.ClassPathResource">
                     <constructor-arg type="java.lang.String"><value>org/rti/webcgh/standalone/dao/hibernate</value></constructor-arg>
                 </bean>
 	      	</list>
     	</property>
+    	-->
+    	<!-- =============================================================== -->
+    	
+    	<!-- =============== Mapping files for 3.0 release ================= -->
+    	<property name="mappingResources">
+    		<list>
+    			<value>org/rti/webcgh/service/dao/hibernate/Principal.hbm.xml</value>
+    			<value>org/rti/webcgh/service/dao/hibernate/Organism.hbm.xml</value>
+    			<value>org/rti/webcgh/service/dao/hibernate/CytologicalMap.hbm.xml</value>
+    			<value>org/rti/webcgh/service/dao/hibernate/Cytoband.hbm.xml</value>
+    		</list>
+    	</property>
+    	
     	<property name="hibernateProperties">
       		<props>
         		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
