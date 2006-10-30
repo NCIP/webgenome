@@ -22,6 +22,6 @@
 
 <h1 align="center"><bean:write name="plot" property="plotParameters.plotName"/></h1>
 
-<p align="center">
+<center>
 	<webGenome:plotInteractivity plotAttributeName="plot"/>
-</p>
+</center>
