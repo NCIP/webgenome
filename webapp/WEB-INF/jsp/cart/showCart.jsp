@@ -61,7 +61,7 @@
 		 border="0"
 		 width="15" height="15"/> = Select color
 
-<table cellpadding="10"><tr valign="top"><td>
+<table cellpadding="10"><tr valign="top" align="center"><td>
 
 <%-- Experiments --%>
 <html:form action="/cart/routeToOperationPage">
