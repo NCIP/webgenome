@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.4 $
-$Date: 2006-10-30 19:17:04 $
+$Revision: 1.5 $
+$Date: 2006-10-30 22:40:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,10 +121,6 @@ public class PlotInteractivityTag extends TagSupport {
 		// Get context path and image sub context path
 		String contextPath = ((HttpServletRequest)pageContext.getRequest()).getContextPath();
 		String imageSubContextPath = SystemUtils.getApplicationProperty("image.sub.context");
-
-		// string prefixed + suffixed to each mouseoverstripe tooltip
-		String mouseOverStripesTooltipPrefix = SystemUtils.getApplicationProperty("mouseoverstripes.tooltip.prefix");
-		String mouseOverStripesTooltipSuffix = SystemUtils.getApplicationProperty("mouseoverstripes.tooltip.suffix");
 
 		// Show plot interactivity only if plot is of valid size and either click boxes or mouse overstripes are present
 		if (((clickBoxesCol != null) || (mouseOverStripesCol != null)) && (plotWidth > 0) && (plotHeight > 0)) {
@@ -355,7 +351,7 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(	"if(ori == 'v') crd = y;");
 				out.println(	"var sidx = searchStripe(ct, crd, 0, scA[ct]-1);");
 				out.println(	"if(sidx >= 0) {");
-				out.println(		"if(sliA[ct]!=sidx) document.getElementById('plotInteractivityTooltip'+ct).innerHTML = '" + mouseOverStripesTooltipPrefix + "' + svA[ct][sidx] + '" + mouseOverStripesTooltipSuffix + "';");
+				out.println(		"if(sliA[ct]!=sidx) document.getElementById('plotInteractivityTooltip'+ct).innerHTML = svA[ct][sidx];");
 				out.println(		"popUp(e,'plotInteractivityTooltip'+ct,1);");
 				out.println(		"slc = ct;");
 				out.println(		"sliA[ct] = sidx;");
