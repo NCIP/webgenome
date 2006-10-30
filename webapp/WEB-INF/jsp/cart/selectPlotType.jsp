@@ -10,19 +10,37 @@
 	some plot type defined in org.rti.webcgh.core.PlotType.
 --%>
 	<html:form action="/cart/routeToPlotParametersPage">
-	
-	<%-- Scatter plot --%>
-		<html:radio property="plotType" value="scatter"/>
-		Scatter Plot
+
+		<table cellpadding="5" cellspacing="0" border="0">
+
+		<%-- Scatter plot --%>
+			<tr>
+				<td>
+					<html:radio property="plotType" value="scatter"/>
+				</td>
+				<td>
+					<html:img page="/images/icon-scatterPlot.gif" border="1"/>
+				</td>
+				<td>
+					Scatter Plot
+				</td>
+			</tr>
 		
-		<br>
-		
-	<%-- Ideogram plot --%>
-		<html:radio property="plotType" value="ideogram"/>
-		Ideogram Plot
-		
-		<br>
-		
+		<%-- Ideogram plot --%>
+			<tr>
+				<td>
+					<html:radio property="plotType" value="ideogram"/>
+				</td>
+				<td>
+					<html:img page="/images/icon-ideogramPlot.gif" border="1"/>
+				</td>
+				<td>
+					Ideogram Plot
+				</td>
+			</tr>
+
+		</table>
+
 		<p>
 			<html:submit value="OK"/>
 		</p>
