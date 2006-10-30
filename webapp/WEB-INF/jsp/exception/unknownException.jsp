@@ -10,7 +10,7 @@
 		</b>
 	</font>
 </p>
-		
+<webcgh:errorEmail hideMessage="true"/>		
 <p>
 	The system administrator has been sent an error report.  We apologize
 	for the inconvenience.

@@ -8,8 +8,8 @@
 			<b>webCGH was unable to complete this request for the following reason:</b>
 		</font>
 	</p>
-		
+	<webcgh:errorEmail/>		
 	<p>
-		<webcgh:exceptionMessage/>
+		<webcgh:exceptionMessage exceptionMsg="<%= exception.getMessage() %>"/>
 	</p>
 </center>

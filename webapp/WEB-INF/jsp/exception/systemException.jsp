@@ -23,9 +23,8 @@
 <p><br></p>
 <p><br></p>
 		
-		
+<webcgh:errorEmail/>		
 <h3>Error Log</h3>
-		
 <p>
 	<webcgh:exceptionStackTrace/>
 </p>
