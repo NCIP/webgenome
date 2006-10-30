@@ -71,18 +71,18 @@ public final class RangeBasedFilterer implements
     //      Attributes
     // =====================
     
-    /** Left endpoint of filter range. */
-    private float min = Float.MIN_VALUE;
+    /** Maximum filtered value. */
+    private float min = Float.NEGATIVE_INFINITY;
     
-    /** Right endpoint of filter range. */
-    private float max = Float.MAX_VALUE;
+    /** Minimum filtered value. */
+    private float max = Float.POSITIVE_INFINITY;
     
     // =========================
     //     Getters/setters
     // =========================
     
     /**
-     * Get right endpoint of filter range.
+     * Get maximum filtered value.
      * @return Right endpoint of filter range
      */
     public float getMax() {
@@ -92,7 +92,7 @@ public final class RangeBasedFilterer implements
 
 
     /**
-     * Set right endpoint of filter range.
+     * Set maximum filtered value.
      * @param max Right endpoint of filter range
      */
     public void setMax(final float max) {
@@ -102,7 +102,7 @@ public final class RangeBasedFilterer implements
 
 
     /**
-     * Get left endpoint of filter range.
+     * Get minimum filtered value.
      * @return Left endpoint of filter range
      */
     public float getMin() {
@@ -112,7 +112,7 @@ public final class RangeBasedFilterer implements
 
 
     /**
-     * Set left endpoint of filter range.
+     * Set minimum filtered value.
      * @param min Left endpoint of filter range
      */
     public void setMin(final float min) {
@@ -209,9 +209,17 @@ public final class RangeBasedFilterer implements
      * property names.
      * @param name Name of property to set.
      * @param value Value of property.
+     * @throws BadUserConfigurablePropertyException if value is invalid.
      */
-    public void setProperty(final String name, final String value) {
-    	float floatValue = Float.parseFloat(value);
+    public void setProperty(final String name, final String value)
+    throws BadUserConfigurablePropertyException {
+    	float floatValue = Float.NaN;
+    	try {
+    		floatValue = Float.parseFloat(value);
+    	} catch (NumberFormatException e) {
+    		throw new BadUserConfigurablePropertyException("Property '"
+    				+ name + "' is not a valid number");
+    	}
     	if ("min".equals(name)) {
     		this.min = floatValue;
     	} else if ("max".equals(name)) {

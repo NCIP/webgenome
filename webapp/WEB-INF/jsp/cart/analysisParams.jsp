@@ -86,13 +86,78 @@
 		// Augment names
 		augmentNames(augmentation, location, source);
 	}
+	
+	/** Illegal characters in form input. */
+	var illegalChars = ['&', '#', '\"', '\''];
+	
+	/**
+	 * Does given string contains illegal characters?
+	 * @param s A string
+	 * @return A boolean value
+	 */
+	function containsIllegalChars(s) {
+		var illegal = false;
+		for (var i = 0; i < s.length && !illegal; i++) {
+			var c = s.charAt(i);
+			for (var j = 0; j < illegalChars.length && !illegal; j++) {
+				var d = illegalChars[j];
+				if (c == d) {
+					illegal = true;
+				}
+			}
+		}
+		return illegal;
+	}
+	
+	/**
+	 * Validates some input fields.  Validation of the remaining fields
+	 * takes place server side.
+	 */
+	function validate() {
+		var valid = true;
+	
+	 	// Get form input fields
+		var inputs = document.forms[0].elements;
+		
+		// Make sure all output experiment and bioassay text boxes
+		// are not empty and do not contain illegal characters.
+		for (var i = 0; i < inputs.length && valid; i++) {
+			var input = inputs[i];
+			var name = input.getAttribute("name");
+			
+			// Input field is experiment or bioassay output name
+			if (name.indexOf("eo_") == 0 || name.indexOf("bo_") == 0) {
+				var text = input.value;
+				if (text.length < 1 || containsIllegalChars(text)) {
+					valid = false;
+				}
+			}
+		}
+		
+		// Show alert box if not valid
+		if (!valid) {
+			var msg = "Output names cannot be empty or contain the following characters: ";
+			for (var i = 0; i < illegalChars.length; i++) {
+				if (i > 0) {
+					msg += ", "
+				}
+				msg += "'" + illegalChars[i] + "'";
+			}
+			alert(msg);
+		}
+		
+		return valid;
+	}
 </script>
 
-<html:form action="/cart/analysis">
-<h1 align="center">Analytic Operation Parameters</h1>
+<html:form action="/cart/analysis" onsubmit="return validate()">
+<h1 align="center"><bean:write name="op" property="name"/> parameters</h1>
 
 <%-- Analytic operation configurable properties --%>
 <center>
+<p>
+	<html:errors property="global"/>
+</p>
 <table border="0">
 <logic:iterate name="props" id="prop">
 	<tr>

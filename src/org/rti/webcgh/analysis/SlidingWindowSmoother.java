@@ -212,8 +212,15 @@ implements ScalarToScalarAnalyticOperation {
      * property names.
      * @param name Name of property to set.
      * @param value Value of property.
+     * @throws BadUserConfigurablePropertyException if value is invalid.
      */
-    public void setProperty(final String name, final String value) {
-    	this.windowSize = Integer.parseInt(value);
+    public void setProperty(final String name, final String value)
+    throws BadUserConfigurablePropertyException {
+    	try {
+    		this.windowSize = Integer.parseInt(value);
+    	} catch (NumberFormatException e) {
+    		throw new BadUserConfigurablePropertyException(
+    				"Window size not valid number");
+    	}
     }
 }

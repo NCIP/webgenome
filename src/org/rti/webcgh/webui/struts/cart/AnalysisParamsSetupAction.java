@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-29 17:16:10 $
+$Revision: 1.5 $
+$Date: 2006-10-30 20:38:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -107,9 +107,10 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     		(AnalyticOperationParametersForm) form;
     	String opKey = aForm.getOperationKey();
     	
-    	// Get instance of analytic operation
+    	// Get instance of analytic operation and attach to request
     	AnalyticOperation op =
     		this.analyticOperationFactory.newAnalyticOperation(opKey);
+    	request.setAttribute("op", op);
     	
     	// Get user configurable parameter characteristics and
     	// attach to request

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-29 17:16:09 $
+$Revision: 1.3 $
+$Date: 2006-10-30 20:38:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,12 +60,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
+import org.rti.webcgh.analysis.BadUserConfigurablePropertyException;
 import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
 import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
@@ -159,13 +162,24 @@ public final class AnalysisAction extends BaseAction {
     	
     	// Set user configurable analytic operation properties
     	Map paramMap = request.getParameterMap();
+    	boolean haveErrors = false;
     	for (Object paramNameObj : paramMap.keySet()) {
     		String paramName = (String) paramNameObj;
     		if (paramName.indexOf("prop_") == 0) {
     			String propName = paramName.substring("prop_".length());
     			String propValue = request.getParameter(paramName);
-    			op.setProperty(propName, propValue);
+    			try {
+    				op.setProperty(propName, propValue);
+    			} catch (BadUserConfigurablePropertyException e) {
+    				haveErrors = true;
+    			}
     		}
+    	}
+    	if (haveErrors) {
+        	ActionErrors errors = new ActionErrors();
+        	errors.add("global", new ActionError("invalid.fields"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("errors");
     	}
     	
     	// Retrieve selected experiments form bean.

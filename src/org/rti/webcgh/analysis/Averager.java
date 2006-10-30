@@ -148,8 +148,10 @@ public final class Averager implements ListToScalarAnalyticOperation {
      * property names.
      * @param name Name of property to set.
      * @param value Value of property.
+     * @throws BadUserConfigurablePropertyException if value is invalid.
      */
-    public void setProperty(final String name, final String value) {
+    public void setProperty(final String name, final String value)
+    throws BadUserConfigurablePropertyException {
     	
     }
     

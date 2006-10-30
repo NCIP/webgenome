@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-29 22:36:41 $
+$Revision: 1.6 $
+$Date: 2006-10-30 20:38:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -357,13 +357,29 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
      * property names.
      * @param name Name of property to set.
      * @param value Value of property.
+     * @throws BadUserConfigurablePropertyException if value is invalid.
      */
 	public void setProperty(final String name,
-			final String value) {
+			final String value) throws BadUserConfigurablePropertyException {
 		if ("minPercent".equals(name)) {
-			this.minPercent = Float.parseFloat(value);
+			try {
+				this.minPercent = Float.parseFloat(value);
+				if (this.minPercent < (float) 0.0
+						|| this.minPercent > (float) 1.0) {
+					throw new BadUserConfigurablePropertyException(
+						"Minimum percent must be between 0 and 1, inclusive");
+				}
+			} catch (NumberFormatException e) {
+				throw new BadUserConfigurablePropertyException(
+						"Minimum percent not valid number");
+			}
 		} else if ("threshold".equals(name)) {
-			this.threshold = Float.parseFloat(value);
+			try {
+				this.threshold = Float.parseFloat(value);
+			} catch (NumberFormatException e) {
+				throw new BadUserConfigurablePropertyException(
+						"Threshold not valid number");
+			}
 		} else if ("interpolate".equals(name)) {
 			if ("YES".equals(value)) {
 				this.interpolate = true;

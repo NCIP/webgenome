@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-10-30 20:38:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,38 +50,55 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-import java.util.List;
-
+import org.rti.webcgh.core.UserInputException;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Represents an analytic operation.
+ * Exception thrown when a user inputs bad analytic operation user
+ * configurable properties.
  * @author dhall
  *
  */
-public interface AnalyticOperation {
+public class BadUserConfigurablePropertyException extends UserInputException {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    String getName();
-    
-    
-    /**
-     * Get user configurable properties.
-     * @return User configurable properties
-     */
-    List<UserConfigurableProperty> getUserConfigurableProperties();
-    
-    
-    /**
-     * Set some property of the operation.  The name of this
-     * property should correspond to one of user configurable
-     * property names.
-     * @param name Name of property to set.
-     * @param value Value of property.
-     * @throws BadUserConfigurablePropertyException if value is invalid.
-     */
-    void setProperty(String name, String value)
-    throws BadUserConfigurablePropertyException;
+	/**
+	 * Constructor.
+	 *
+	 */
+	public BadUserConfigurablePropertyException() {
+		
+	}
+
+	/**
+	 * Constructor.
+	 * @param msg Message
+	 */
+	public BadUserConfigurablePropertyException(final String msg) {
+		super(msg);
+	}
+
+	
+	/**
+	 * Constructor.
+	 * @param origThrowable Original throwable.
+	 */
+	public BadUserConfigurablePropertyException(final Throwable origThrowable) {
+		super(origThrowable);
+	}
+
+	
+	/**
+	 * Constructor.
+	 * @param msg Message.
+	 * @param origThrowable Original throwable.
+	 */
+	public BadUserConfigurablePropertyException(final String msg,
+			final Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
+
 }

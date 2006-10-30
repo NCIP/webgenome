@@ -144,8 +144,10 @@ public class AnalyticPipeline implements AnalyticOperation {
      * property names.
      * @param name Name of property to set.
      * @param value Value of property.
+     * @throws BadUserConfigurablePropertyException if value is invalid.
      */
-    public final void setProperty(final String name, final String value) {
+    public final void setProperty(final String name, final String value)
+    throws BadUserConfigurablePropertyException {
     	
     	// Parse operation number from name
     	int p = name.indexOf('_');

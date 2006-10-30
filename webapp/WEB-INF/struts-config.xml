@@ -60,13 +60,6 @@
     	scope="request"/>
 
     <exception
-    	type="org.rti.webcgh.domain.analytic.DataSetInvalidationException"
-    	path="data.invalidation.page"
-    	key="data.invalidation"
-    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
-    	scope="request"/>
-
-    <exception
     	type="org.rti.webcgh.core.WebcghSecurityException"
     	path="security.exception.page"
     	key="security.exception"
@@ -237,6 +230,7 @@
 			name="analytic.operation.params.form"
 			validate="false">
 			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="errors" path="/cart/analysisParams.do"/>
 		</action>
 
 	<!-- Show color chooser -->

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-21 05:35:06 $
+$Revision: 1.5 $
+$Date: 2006-10-30 20:38:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -161,8 +161,10 @@ public class AcghAnalyticOperation implements ScalarToScalarAnalyticOperation {
      * property names.
      * @param name Name of property to set.
      * @param value Value of property.
+     * @throws BadUserConfigurablePropertyException if value is invalid.
      */
-    public void setProperty(final String name, final String value) {
+    public void setProperty(final String name, final String value)
+    throws BadUserConfigurablePropertyException {
     	
     }
 }
