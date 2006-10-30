@@ -72,6 +72,15 @@ public class ChromosomeArrayData implements Serializable {
     private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
+    /**
+     * Extra "headroom" is added to the min and max value
+     * for chromosome alteration data so that alterations
+     * are not on the absolute top and bottom of plot.
+     * This is a multiplier that is used to calculate the
+     * headroom.
+     */
+    private static final float HEAD_ROOM_MULTIPLE = (float) 0.1;
+    
     // ======================================
     //         Attributes
     // ======================================
@@ -154,6 +163,10 @@ public class ChromosomeArrayData implements Serializable {
 					this.maxValue = f.getQuantitation();
 				}
 			}
+			float headroom = HEAD_ROOM_MULTIPLE
+					* (this.maxValue - this.minValue);
+			this.minValue -= headroom;
+			this.maxValue += headroom;
 		}
 	}
 

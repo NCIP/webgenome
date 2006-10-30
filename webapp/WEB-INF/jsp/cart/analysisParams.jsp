@@ -93,14 +93,19 @@
 
 <%-- Analytic operation configurable properties --%>
 <center>
+<table border="0">
 <logic:iterate name="props" id="prop">
-	<p>
+	<tr>
+		<td align="right">
 		<bean:write name="prop" property="displayName"/>
-		&nbsp;&nbsp;
+		</td>
+		<td>
 		<webcgh:userConfigurablePropertyInput name="prop"
 			prefix="prop_"/>
-	</p>
+		</td>
+	</tr>
 </logic:iterate>
+</table>
 </center>
 
 <center>

@@ -136,6 +136,7 @@
 			input="/cart/showCart.do">
 			<forward name="plot" path="cart.select.plot.type"/>
 			<forward name="analysis" path="/cart/selectAnalysis.do"/>
+			<forward name="cart" path="/cart/showCart.do"/>
 		</action>
 
 	<!-- Select analytic operation -->

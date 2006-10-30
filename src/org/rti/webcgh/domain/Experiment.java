@@ -96,6 +96,12 @@ public class Experiment implements Serializable {
     
     /** Organism. */
     private Organism organism = null;
+    
+    /**
+     * Can analytic operations be performed on
+     * this experiment?
+     */
+    private boolean terminal = false;
         
     // ===============================
     //     Getters/setters
@@ -115,6 +121,24 @@ public class Experiment implements Serializable {
      */
 	public final void setOrganism(final Organism organism) {
 		this.organism = organism;
+	}
+
+	/**
+	 * Can analytic operations be performed on this experiment?
+	 * @return T/F
+	 */
+	public final boolean isTerminal() {
+		return terminal;
+	}
+
+	/**
+	 * Set whether analytic operations can be performed
+	 * on this experiment.
+	 * @param terminal Can analytic operations be performed
+	 * on this experiment?
+	 */
+	public final void setTerminal(final boolean terminal) {
+		this.terminal = terminal;
 	}
 
 	/**

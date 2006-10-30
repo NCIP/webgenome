@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-17 18:47:38 $
+$Revision: 1.2 $
+$Date: 2006-10-30 01:22:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,13 +50,20 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
  * Determines which operation a use has selected
@@ -96,6 +103,18 @@ public final class RouteToOperationPageAction extends BaseAction {
     	if ("plot".equals(operation)) {
     		forward = mapping.findForward("plot");
     	} else if ("analysis".equals(operation)) {
+    		Collection<Long> ids = seForm.getSelectedExperimentIds();
+    		ShoppingCart cart = PageContext.getShoppingCart(request);
+    		for (Long id : ids) {
+    			Experiment exp = cart.getExperiment(id);
+    			if (exp.isTerminal()) {
+    				ActionErrors errors = new ActionErrors();
+    				errors.add("global",
+    						new ActionError("terminal.experiment"));
+    				this.saveErrors(request, errors);
+    				return mapping.findForward("cart");
+    			}
+    		}
     		forward = mapping.findForward("analysis");
     	}
     	
