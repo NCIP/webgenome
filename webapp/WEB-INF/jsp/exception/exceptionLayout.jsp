@@ -95,7 +95,7 @@
 		<tr>
 			<td class="content" align="left" valign="top" background="<html:rewrite page="/images/ui-body-tile.gif"/>" width="800">
 
-				<h1><tiles:getAsString name="errorHeader"/></h1>
+				<h1 class="h1icon"><tiles:getAsString name="errorHeader"/></h1>
 
 				<div class="exceptionItem">
 					<tiles:get name="content"/><br>
