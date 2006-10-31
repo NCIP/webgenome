@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.5 $
-$Date: 2006-10-30 22:40:25 $
+$Revision: 1.6 $
+$Date: 2006-10-31 02:37:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -270,41 +270,46 @@ public class PlotInteractivityTag extends TagSupport {
 			if(clickBoxesCol != null) {
 				// ClickBoxes JavaScript functions - capture click
 				out.println("function captureClick(e) {");
+
+				// capture x and y coordinates
 				out.println(	"var x = (e.x == undefined) ? e.layerX : e.x;");
 				out.println(	"var y = (e.y == undefined) ? e.layerY : e.y;");
+
+				// reset clickboxes area to -1 (none found)
 				out.println(	"var ct = -1;");
+
+				// find correct clickboxes area based on click coordinates
 				out.println(	"for(var i=0 ; i<" + clickBoxesCol.size() + " ; i++) {");
 				out.println(		"if( (x >= cbxoA[i]) && (x <= (cbxoA[i] + cbwA[i])) && (y >= cbyoA[i]) && (y <= (cbyoA[i] + cbhA[i])) ) {");
 				out.println(			"ct = i;");
 				out.println(			"break;");
 				out.println(		"}");
 				out.println(	"}");
+
+				// if one was not found, reset image to default image
 				out.println(	"if(ct == -1) {");
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
-//				out.println(		"document.statusClick.image.value = \"url(" +
-//						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
 				out.println(		"return;");
 				out.println(	"}");
+
+				// adjust click coordinate to native clickbox coordinates
 				out.println(	"x = x - cbxoA[i];");
 				out.println(	"y = y - cbyoA[i];");
-//				out.println(	"document.statusClick.coordx.value = x;");
-//				out.println(	"document.statusClick.coordy.value = y;");
-//				out.println(	"document.statusClick.idx.value = ct;");
-//				out.println(	"document.statusClick.boxx.value = Math.floor(x / cbbwA[ct]);");
-//				out.println(	"document.statusClick.boxy.value = Math.floor(y / cbbhA[ct]);");
+
+				// calculate click box corresponding to click coordinate
 				out.println(	"var cbx = Math.floor(x / cbbwA[ct]);");
 				out.println(	"var cby = Math.floor(y / cbbhA[ct]);");
+
+				// if click box contains an image, display it
 				out.println(	"if((cbA[ct][cbx][cby] != '') && (cbA[ct][cbx][cby] != undefined)) {");
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + cbA[ct][cbx][cby] + \")\";");
-//				out.println(		"document.statusClick.image.value = \"url(" +
-//						contextPath + imageSubContextPath + "/" + "\" + cbA[ct][cbx][cby] + \")\";");
+
+				// otherwise reset to default image
 				out.println(	"} else {");
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
-//				out.println(		"document.statusClick.image.value = \"url(" +
-//						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
 				out.println(	"}");
 				out.println("}");
 			}
@@ -325,10 +330,17 @@ public class PlotInteractivityTag extends TagSupport {
 	
 				// MouseOver Stripe JavaScript functions - capture move
 				out.println("function captureMove(e) {");
+
+				// capture x and y coordinates
 				out.println(	"var x = (e.x == undefined) ? e.layerX : e.x;");
 				out.println(	"var y = (e.y == undefined) ? e.layerY : e.y;");
+
+				// reset clickboxes area to -1 (none found)
 				out.println(	"var ct = -1;");
+				// reset orientation
 				out.println(	"var ori = '';");
+
+				// find correct mouseoverstripes area based on move coordinates
 				out.println(	"for(var i=0 ; i<" + mouseOverStripesCol.size() + " ; i++) {");
 				out.println(		"if( (x >= scxoA[i]) && (x <= (scxoA[i] + scwA[i])) && (y >= scyoA[i]) && (y <= (scyoA[i] + schA[i])) ) {");
 				out.println(			"ct = i;");
@@ -336,29 +348,34 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(			"break;");
 				out.println(		"}");
 				out.println(	"}");
+
+				// if one was not found, hide tooltip
 				out.println(	"if(ct == -1) {");
 				out.println(		"popUp(e,'plotInteractivityTooltip'+slc,0);");
-	//			out.println(		"document.statusMove.desc.value = '?' + ' ' + slc + ' last'");
 				out.println(		"return;");
 				out.println(	"}");
+
+				// adjust mouse coordinate to native mouseoverstripes coordinates
 				out.println(	"x = x - scxoA[i];");
 				out.println(	"y = y - scyoA[i];");
-	//			out.println(	"document.statusMove.coordx.value = x;");
-	//			out.println(	"document.statusMove.coordy.value = y;");
-	//			out.println(	"document.statusMove.idx.value = ct;");
-	//			out.println(	"document.statusMove.ori.value = ori;");
+
+				// by default, set orientation coordinate to horizontal x
 				out.println(	"var crd = x;");
+				// if orientation is vertical, set orientation coordinate to y
 				out.println(	"if(ori == 'v') crd = y;");
+
+				// binary search mouseoverstripes
 				out.println(	"var sidx = searchStripe(ct, crd, 0, scA[ct]-1);");
+
+				// if a stripe is found at given coordinate, show stripe tooltip
 				out.println(	"if(sidx >= 0) {");
 				out.println(		"if(sliA[ct]!=sidx) document.getElementById('plotInteractivityTooltip'+ct).innerHTML = svA[ct][sidx];");
 				out.println(		"popUp(e,'plotInteractivityTooltip'+ct,1);");
 				out.println(		"slc = ct;");
 				out.println(		"sliA[ct] = sidx;");
-	//			out.println(		"document.statusMove.desc.value = svA[ct][sidx] + ' ' + ct;");
+				// otherwise, hide tooltip
 				out.println(	"} else {");
 				out.println(		"popUp(e,'plotInteractivityTooltip'+ct,0);");
-	//			out.println(		"document.statusMove.desc.value = '?' + ' ' + ct");
 				out.println(	"}");
 				out.println("}");
 	
@@ -371,7 +388,7 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println("function popUp(evt,oi,hh) { if (DH) { var wp = pw(); ds = fd(oi,1); dm = fd(oi,0); if (dm.offsetWidth) ew = dm.offsetWidth; else if (dm.clip.width) ew = dm.clip.width; if (hh == 0) { ds.visibility = 'hidden'; } else { tv = mouseY(evt) + 20; lv = mouseX(evt) - (ew/4); if (lv < 2) lv = 2; else if (lv + ew > wp) lv -= ew/2; if (!an) { lv += 'px'; tv += 'px'; } ds.left = lv; ds.top = tv; ds.visibility = 'visible';}}}");
 			}
 
-			// close JavaScript and print tooltip div tag
+			// close JavaScript and print tooltip div tags
 			out.println("</script>");
 			for(int i = 0 ; i < mouseOverStripesCol.size() ; i++)
 				out.println("<div id=\"plotInteractivityTooltip" + i + "\" class=\"tip\"></div>\n");
