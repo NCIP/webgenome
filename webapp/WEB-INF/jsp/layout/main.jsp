@@ -24,7 +24,7 @@
 				window.open(
 					helpPage + "#" + topic,
 					"_blank", 
-					"width=400, height=300, menubar=no, status=no, "
+					"width=450, height=300, menubar=no, status=no, "
 					+ "scrollbars=yes, resizable=yes, toolbar=yes, location=no, "
 					+ "directories=no"
 				)
@@ -134,8 +134,9 @@
 			<td height="26" align="right" valign="top" background="<html:rewrite page="/images/ui-menu-tile.gif"/>"><div class="menu">
 
 			<%-- Help --%>
-				<a class="menuItem" href="javascript:void(0);">
-					Help
+				<a href="#" class="menuItem" 
+						onclick="help('<tiles:getAsString name="helpTopic"/>')">
+						Help
 				</a>
 				|
 			<%-- Close --%>
