@@ -1,4 +1,4 @@
-<h1>WebGenome 2.2 Installation Manual</h1>
+<h1>WebGenome 2.3 Installation Manual</h1>
 
 <h2>1  System Requirements</h2>
 
@@ -30,7 +30,15 @@
 <ul>
 	<li>Create tables by running SQL table build script
 	/db/client/sql/create_tables_oracle.sql</li>
-	<li>Load initial table data using CSV filesin /db/client/data.</li>
+	<li>Load initial table data using CSV filesin /db/client/data thus:</li>
+	<ul>
+		<li>get a command-line prompt (or shell)</li>
+		<li>cd to db/client/sql</li>
+		<li>Enter the command 'sqlldr <em>username</em>/<em>password</em>@<em>db-instance</em> load_cytoband.csv'</br>
+		<em>The cytoband table should be populated from the cytoband.csv file.</em></li>
+		<li>Enter the command 'sqlldr <em>username</em>/<em>password</em>@<em>db-instance</em> load_cytological_map_data.ctl'</br>
+		<em>The cytological_map table should be populated from the cytological_map.csv file.</em></li>
+	</ul>
 </ul>
 
 <h2>4  Building System</h2>
