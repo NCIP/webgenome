@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-29 03:47:25 $
+$Revision: 1.3 $
+$Date: 2006-10-31 18:04:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,6 +79,8 @@ public class AnalyticOperationFactory {
 		this.operationIndex.put("6", SlidingWindowSmoother.class);
 		this.operationIndex.put("7",
 				MinimumCommonAlteredRegionOperation.class);
+		this.operationIndex.put("8", LinearRegressionAnalyticOperation.class);
+		this.operationIndex.put("9", LoessRegressionAnalyticOperation.class);
 	}
 	
 	

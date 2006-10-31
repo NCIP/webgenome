@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-31 02:31:16 $
+$Revision: 1.2 $
+$Date: 2006-10-31 18:04:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,34 +75,16 @@ public class LinearRegressionAnalyticOperation implements ScalarToScalarAnalytic
     //      Constants
     //  ==============================
 
-
+    /** Regression service. */
+    private static final RegressionService REG_SERVICE =
+    	new RegressionService();
 
     //  ==============================
     //      Attributes
     //  ==============================
     private AcghAnalyticTransformer regChrDataTransformer =
     	new AcghAnalyticTransformer();
-    private RegressionService regService = null;
-
-
-    //  ==============================
-    //      Getters/Setters
-    //  ==============================
-    /**
-	 * Getter method for regService.
-	 * @return RegressionService
-	 */
-	public RegressionService getRegressionService() {
-		return regService;
-	}
-
-	/**
-	 * Setter method for regService.
-	 * @param regService
-	 */
-	public void setRegressionService(RegressionService regService) {
-		this.regService = regService;
-	}
+    
 
 
     // ================================================
@@ -124,7 +106,7 @@ public class LinearRegressionAnalyticOperation implements ScalarToScalarAnalytic
 
         try {
         	AcghData acghData = this.regChrDataTransformer.transform(input);
-        	this.regService.runLinearRegression(acghData);
+        	this.REG_SERVICE.runLinearRegression(acghData);
         	output = this.regChrDataTransformer.transform(acghData, input);
         } catch (Exception e) {
             throw new AnalyticException(

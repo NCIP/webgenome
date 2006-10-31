@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/analysis/unit_test/RegressionAnalyticTester.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-31 02:31:51 $
+$Revision: 1.2 $
+$Date: 2006-10-31 18:04:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -110,7 +110,6 @@ public final class RegressionAnalyticTester extends TestCase {
         */
         LinearRegressionAnalyticOperation operation = new LinearRegressionAnalyticOperation();
         //LoessRegressionAnalyticOperation operation = new LoessRegressionAnalyticOperation();
-        operation.setRegressionService(new RegressionService());
         ChromosomeArrayData out = operation.perform(in);
         
         // Check output

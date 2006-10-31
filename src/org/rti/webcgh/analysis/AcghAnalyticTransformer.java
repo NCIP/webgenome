@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.4 $
+$Date: 2006-10-31 18:04:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -111,17 +111,18 @@ public class AcghAnalyticTransformer {
 	 * @return ChromosomeArrayData
 	 */
 	public ChromosomeArrayData transform(AcghData acghData, ChromosomeArrayData oriChrData) {
-		ChromosomeArrayData newChrData = oriChrData;
+		ChromosomeArrayData newChrData =
+			new ChromosomeArrayData(oriChrData.getChromosome());
 
 		double[] smoothedRatios = acghData.getSmoothedRatios(); // smoothed log2 ratio
-		List<ArrayDatum> expValuesByChr = newChrData.getArrayData();
+		List<ArrayDatum> expValuesByChr = oriChrData.getArrayData();
 		for (int i = 0; i < expValuesByChr.size(); i++) {
 			ArrayDatum arrayDatum = expValuesByChr.get(i);
-			arrayDatum.setValue((float) smoothedRatios[i]);
+			ArrayDatum newDatum = new ArrayDatum();
+			newDatum.setReporter(arrayDatum.getReporter());
+			newDatum.setValue((float) smoothedRatios[i]);
+			newChrData.add(newDatum);
 		}
-
-		newChrData.setArrayData(expValuesByChr);
-
 		return newChrData;
 	}
 
