@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-05 03:59:45 $
+$Revision: 1.3 $
+$Date: 2006-10-31 04:05:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,14 +50,16 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.util;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.ejb.EJBLocalHome;
+import javax.ejb.EJBHome;
 
 import org.rti.webcgh.core.WebcghSystemException;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
 
 /**
  * A class to remotely retrieve the EJB from the client given the JNDI name.
@@ -73,8 +75,8 @@ public class ServiceLocator {
 	private InitialContext initialContext = null;
    
    	/** Caches local EJB home references. Keys are JNDI names. */
-	private Map<String, EJBLocalHome> localHomeCache =
-		new HashMap<String, EJBLocalHome>();
+	private Map<String, EJBHome> localHomeCache =
+		new HashMap<String, EJBHome>();
 	
 	
 	// =================================
@@ -104,13 +106,25 @@ public class ServiceLocator {
 	 * @return Object The home class of the EJB
 	 * @throws NamingException if JNDI name lookup fails
 	 */
-	public final EJBLocalHome getLocalHome(final String jndiHomeName)
+	public final EJBHome getLocalHome(final String jndiHomeName, final String jndiProviderURL )
 		throws NamingException {
-		EJBLocalHome localHome = null;
-		if (this.localHomeCache.containsKey(jndiHomeName)) {				
-			localHome = (EJBLocalHome) this.localHomeCache.get(jndiHomeName);
+		EJBHome localHome = null;
+        
+        Properties properties = new Properties();
+        // INITIAL_CONTEXT_FACTORY and URL_PKG_PREFIXES could be placed into the properties settings
+        // and dependency injected either here, or just passed in as method parameters,
+        // but to keep things simple, they're hard-coded in here.
+        // TODO: might move these settings into properties file later (?)
+        properties.put(Context.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
+        properties.put(Context.URL_PKG_PREFIXES, "org.jnp.interfaces");
+        properties.put(Context.PROVIDER_URL,  jndiProviderURL );
+        
+        this.initialContext = new InitialContext( properties );
+
+		if (this.localHomeCache.containsKey(jndiHomeName)) {
+			localHome = (EJBHome) this.localHomeCache.get(jndiHomeName);
 		} else {
-			localHome = (EJBLocalHome) this.initialContext.lookup(jndiHomeName);
+			localHome = (EJBHome) this.initialContext.lookup( jndiHomeName);
 			this.localHomeCache.put(jndiHomeName, localHome);
 		}
         return localHome;
