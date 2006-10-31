@@ -157,12 +157,9 @@
 <!-- Image file manager -->
 	<bean id="imageFileManager"
 		class="org.rti.webcgh.service.io.ImageFileManager">
-		<constructor-arg type="java.lang.String">
-			<value>${image.dir.path}</value>
-		</constructor-arg>
-		<constructor-arg type="org.rti.webcgh.service.dao.ShoppingCartDao">
+		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
-		</constructor-arg>
+		</property>
 	</bean>
 		
 <!-- Plot generator -->

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.21 $
-$Date: 2006-10-31 22:48:19 $
+$Revision: 1.22 $
+$Date: 2006-10-31 22:49:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -229,6 +229,7 @@ public final class ClientPlotAction extends BaseAction {
         ShoppingCart cart = PageContext.getShoppingCart(request, true);
         cart.add(experiments);
         
+        // TODO: Make this cleaner.
         // Initialize image file manager
         if (!this.imageFileManager.isInitialized()) {
 	        String absPlotPath = this.getServlet().
