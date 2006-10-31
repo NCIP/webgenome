@@ -10,13 +10,13 @@
 	<property name="lib.dir" value="${build.dir}/lib"/>
 	<property name="src.dir" value="src"/>
 	<property name="temp.dir" value="${build.dir}/temp"/>
-	<property name="web.dir" value="web"/>
+	<property name="web.dir" value="webapp"/>
 	<property name="conf.dir" value="${src.dir}/conf"/>
 	<property name="db.src.dir" value="initdb"/>
 	<!--<property file="src/conf/webcgh.properties"/>-->
 	
 	<path id="class.path">
-		<fileset dir="web/WEB-INF/lib" includes="*.*"/>
+		<fileset dir="${web.dir}/WEB-INF/lib" includes="*.*"/>
 		<pathelement location="web/svg"/>
 		<pathelement location="etc"/>
 	</path>
@@ -54,7 +54,7 @@
         <copy todir="${classes.dir}">
             <fileset dir="${src.dir}" includes="**/*.properties"/>
         </copy>
-		
+
 		<echo>Performing tests</echo>
 		<junit>
 			<formatter type="xml"/>
@@ -75,7 +75,9 @@
 			<report format="frames" todir="${junit.report.dir}/html"/>
 		</junitreport>
 		
-		<echo>Cleaning up</echo>
+		<echo>Cleaning up - deleting directory ${junit.output.dir}</echo>
+        <!-- You can comment this delete line out - and the files therein can be
+             actually quite useful. -->
 		<delete dir="${junit.output.dir}"/>
 		
 	</target>
@@ -91,19 +93,21 @@
 			packagenames="org.rti.*"
 			destdir="${javadoc.dir}"
 			excludepackagenames="**/*unit_test,org/rti/webcgh/sandbox,org/rti/webcgh/cron/**"
-			source="1.4"
+			source="1.5"
 			Windowtitle="webGenome API"
 			Header="webGenome API"
 		/>
 	</target>
 	
 	<!-- Copy hibernate web dtd files -->
-	<target name="copyhttphibernatexmls">		
+    <!-- Removed - no hibernate xmls in the array package for the moment:
+	<target name="copyhttphibernatexmls">
 		<echo>Copy hibernate xml that point to http hibernate.dtd</echo>		
 		<copy todir="${src.dir}/org/rti/webcgh/array/persistent/impl">
 			<fileset dir="${src.dir}/org/rti/webcgh/array/persistent/buildxml" includes="**/*.xml"/>
-		</copy>		
+		</copy>
 	</target>
+    -->
 
     <!-- Copy hibernate web dtd files -->
 	<target name="copy-config">		
@@ -115,7 +119,8 @@
 
 	
 	<!-- Create JAR files -->
-	<target name="jar" depends="copyhttphibernatexmls, copy-config, compile">
+<!--	<target name="jar" depends="copyhttphibernatexmls, copy-config, compile"> -->
+    <target name="jar" depends="copy-config, compile">
 			
 		<echo>Creating lib directory</echo>
 		<mkdir dir="${lib.dir}"/>	
@@ -153,6 +158,7 @@
          </delete>
          <mkdir dir="output/webGenome/war"/>
          <unwar src="${dist.dir}/webGenome.war" dest="output/webGenome/war"/>
+         <!-- This is missing, but left uncommented, at least to show the error. TODO: fix -->
          <replaceregexp
              file="output/webGenome/war/WEB-INF/classes/conf/jndi.properties"
              match="JNDI-URL" replace="${java.naming.provider.url}"/>
@@ -212,19 +218,19 @@
 	<!-- Print help message -->
 	<target name="help">
 		<echo>
-		
 Targets:
 
-	help - Print help message
+	help - Print this help message
 	unit - Compile and run unit tests
 	all  - Build the distribution
 	db   - Install database
+    doc  - Generate Javadoc
+    war  - Build War file
 		
 		</echo>
 	</target>
 	
 	<!-- Build the distribution -->
 	<target name="all" depends="clean,war,configure-props"/>
-	
 
 </project>
