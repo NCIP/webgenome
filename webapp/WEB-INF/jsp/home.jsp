@@ -12,40 +12,46 @@
 	request.setAttribute("params", paramsMap);
 %>
 
-<h1 align="center">WebGenome Home</h1>
+<h1 align="center">webGenome Home</h1>
 
-<table border="0" cellpadding="10"><tr valign="top"><td>
+<br>
+
+<table align="center" width="760" cellspacing="0" cellpadding="10" border="0"><tr valign="top"><td width="52%">
+
 <p>
-WebGenome is an application for creating genomics plots.  This version
+<font color="#336699"><b><i>web</i>Genome</b></font> is an application for creating genomics plots.  This version
 of the system is designed to operate as a plotting client for
-other applications.  To create plots, you must first select a data set
-in another affiliated application, such as Rembrandt.  You will then
-be directed back into webGenome.
+other applications. To create plots, you must first select a data set
+in another affiliated application, such as <b>Rembrandt</b>.  You will then
+be directed back into <font color="#336699"><b><i>web</i>Genome</b></font>.
 </p>
 
 <p>
 To get a flavor for the system without going through another
-application, you can click
-<html:link action="/client/plot" name="params">here</html:link>.
-The system will randomly generate artifical test data.
+application, you can click <html:link action="/client/plot" name="params">here</html:link>.
+The system will randomly generate artificial test data.
 </p>
 
-</td><td>
+</td><td width="48%">
 
 <p>
-This version of webGenome supports the creation of two types of plots:
-<table>
+This version of <font color="#336699"><b><i>web</i>Genome</b></font> supports the creation of two types of plots:
+<table cellspacing="10" cellpadding="0" border="0">
 	<tr>
-		<td><html:img page="/images/icon-scatterPlot.gif"/></td>
-		<td>Scatter Plot</td>
-	</tr>
-	<tr>
-		<td><html:img page="/images/icon-ideogramPlot.gif"/></td>
-		<td>Ideogram Plot</td>
+		<td align="center">
+			<html:img page="/images/icon-scatterPlot.gif"/><br>
+			<small>Scatter Plot</small>
+		</td>
+		<td rowspan="2"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
+		<td align="center">
+			<html:img page="/images/icon-ideogramPlot.gif"/><br>
+			<small>Ideogram Plot</small>
+		</td>
 	</tr>
 </table>
 Supported data types include <em>copy number</em>, <em>fold change</em>,
 and <em>loss of heterozygosity</em>.  Additionally, a number of basic
 statistical operations are available to process data prior to plotting.
 </p>
+
 </td></tr></table>
