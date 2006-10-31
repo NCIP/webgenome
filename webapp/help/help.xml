@@ -416,6 +416,14 @@
 				an alteration at a particular location for the alteration
 				to be considered common.
 			</prop>
+			
+			<prop name="Linear regression" id="op-8">
+				This operation peforms data smoothing using linear regression.
+			</prop>
+			
+			<prop name="Loess regression" id="op-9">
+				This operation peforms data smoothing using Loess regression.
+			</prop>
 		</prop-list>
 	</section>
 </help-doc>

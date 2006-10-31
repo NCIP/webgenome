@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-31 18:04:26 $
+$Revision: 1.3 $
+$Date: 2006-10-31 18:35:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -122,7 +122,7 @@ public class LinearRegressionAnalyticOperation implements ScalarToScalarAnalytic
      * @return Name of operation
      */
     public String getName() {
-        return "Linear regression operation";
+        return "Linear regression";
     }
 
 
