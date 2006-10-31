@@ -56,4 +56,22 @@
 </ul>
 
 <h2>6  Configuring System</h2>
-*** Dean -- Please add content ***
+<p>System Properties may be specified which override any existing property of the same
+property name in ./conf/webcgh.properties.
+There are several ways of specifying System Properties, for example, they may
+be specified as <em>JAVA_OPTS</em> settings and passed into the web/application container.
+To do this, individual properties are added using the <em>-Dproperty.name=property.value</em>
+setting. Consult the documentation of the application container for specific ways to inject
+System Properties.</p>
+<p>For JBoss, System Properties can be specified in a product-services.xml file, which is
+deployed into the deployment directory, e.g. %JBOSS_HOME%/server/default/deploy.
+<ol>
+	<li>Copy the file ./configuration/product-services.xml into the JBoss Deployment directory,
+	or cut-and-paste the individual System properties settings for webGenome into an existing
+	product-services.xml file (already in the JBoss Deployment directory).</li>
+	<li>Each System Property setting for webGenome is documented to explain what it
+	is used for. Edit the settings to suit the deployment environment.</li>
+	<li>Deploy webGenome.war into the JBoss Deployment environment.</li>
+</ol>
+<p>For other Application/Web Application Servers, follow the documentation available
+for making System Property settings.</p>
