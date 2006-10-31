@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-16 20:06:58 $
+$Revision: 1.6 $
+$Date: 2006-10-31 03:52:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,20 +50,20 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.util;
 
-
 import java.util.Properties;
-
 import java.io.InputStream;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
-
-
 
 /**
  * Contains general utility methods used by multiple classes.
  */
 public final class SystemUtils {
+    
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(SystemUtils.class);
     
     // ================================
     //     Constants
@@ -114,14 +114,21 @@ public final class SystemUtils {
     
     
     /**
-     * Get a system property.
+     * Get an application property. Property retrieval is done by checking
+     * the System properties first, and if no property is found, then checking the
+     * application properties.
+     * 
      * @param key Name of property
-     * @return System property
+     * @return property (either System (first) or "Application")
      */
     public static String getApplicationProperty(
             final String key) {
-    	Properties props = getApplicationProperties();
-    	return (String) props.get(key);
+        String propertySetting = System.getProperty ( key ) ;
+        if ( propertySetting == null ) { 
+            Properties props = getApplicationProperties() ;
+            propertySetting = (String) props.get ( key ) ;
+        }
+    	return propertySetting ;
     }
     
     /**
@@ -162,10 +169,21 @@ public final class SystemUtils {
 		try {
 			InputStream in = Thread.currentThread().
                 getContextClassLoader().getResourceAsStream(fname);
-			props.load(in);
+            if ( in != null )
+                props.load(in);
+            else
+                LOGGER.info( "Error creating InputStream. Unable to load properties file '" + fname + "'." +
+                             " System Properties will still be retrieved however." ) ;
 		} catch (IOException e) {
+            /*
+             * 2006-10-30 We were formerly throwing this:
 			throw new WebcghSystemException(
 				"Unable to load properties file '" + fname + "'");
+            */
+            // Not the end of the world, since System Properties are
+            // always checked first anyhow.
+            LOGGER.warn ( "Unable to load properties file '" + fname + "'." +
+                         " System Properties will still be retrieved however." ) ;
 		}
 		return props;
     }
@@ -176,6 +194,7 @@ public final class SystemUtils {
      * properties (i.e. webcgh.properties file).
      * @param propName Property name
      * @return Property
+     * @deprecated
      */
     public static String findProperty(final String propName) {
         String prop = System.getProperty(propName);
