@@ -10,6 +10,13 @@
 <logic:iterate name="opIndex" id="op">
 	<tr><td>
 		<html:radio property="operationKey" idName="op" value="key"/>
+		<bean:define id="opId" name="op" property="key"/>
+		<img styleClass="pointer"
+			src="<html:rewrite page="/images/Inform.gif"/>"
+			align="absmiddle"
+			onclick="help('op-<bean:write name="op" property="key"/>')"
+			title="Information" border="0"
+			width="15" height="15">
 		<bean:write name="op" property="value"/>
 	</td></tr>
 </logic:iterate>

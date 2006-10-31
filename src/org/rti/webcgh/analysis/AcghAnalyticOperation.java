@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-31 06:02:08 $
+$Revision: 1.7 $
+$Date: 2006-10-31 06:47:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -123,7 +123,7 @@ public class AcghAnalyticOperation implements ScalarToScalarAnalyticOperation {
      * @return Name of operation
      */
     public String getName() {
-        return "Acgh smoother";
+        return "Bioconductor aCGH smoother";
     }
 
 
