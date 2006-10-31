@@ -12,16 +12,9 @@
 </p>
 		
 <p>
-	Please help us to fix this problem by
-	<ul>
-		<li>Selecting the error log below
-		<li>Copying and pasting the selection into an email
-		message to <webcgh:sysadmin/>
-	</ul>
+	A message has been sent to the administrator detailing this
+	exception.  We apologize for the inconvenience.
 </p>
-		
-<p><br></p>
-<p><br></p>
 		
 <webcgh:errorEmail/>		
 <h3>Error Log</h3>

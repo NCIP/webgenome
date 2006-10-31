@@ -16,7 +16,7 @@
 
 	<%-- Show help and onLeave Javascript functions --%>
 		<script language="JavaScript">
-			var helpPage = "<html:rewrite page="/html/help.htm"/>";
+			var helpPage = "<html:rewrite page="/help/help.htm"/>";
 
 			function help(topic) {
 				window.open(

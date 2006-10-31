@@ -378,3 +378,7 @@ li {
 {
     display: inline;
 }
+
+.pointer {
+	cursor: pointer;
+}

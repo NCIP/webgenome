@@ -13,6 +13,11 @@
 	<%-- Plot name --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-plotName')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Plot Name
 				<html:errors property="name"/>
 			</td>
@@ -24,23 +29,17 @@
 	<%-- Genome intervals --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-genomeIntervals')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Genome Intervals
 				<html:errors property="genomeIntervals"/>
 			</td>
 			<td>
 				<html:text property="genomeIntervals"/>
-			</td>
-		</tr>
-		
-	<%--
-	Genome interval units.  Note that option values
-	must correspond to units defined in org.rti.webcgh.units.BpUnits.
-	--%>
-		<tr>
-			<td>
-				Genome Interval Units
-			</td>
-			<td>
+				&nbsp;
 				<html:select property="units">
 					<html:option value="BP">BP</html:option>
 					<html:option value="KB">KB</html:option>
@@ -52,6 +51,11 @@
 	<%-- Number of plots per row --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-numPlotPerRow')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Number of plots per row
 				<html:errors property="numPlotsPerRow"/>
 			</td>
@@ -66,6 +70,11 @@
 	--%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-ideogramSize')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Ideogram size
 			</td>
 			<td>
@@ -80,6 +89,11 @@
 	<%-- Ideogram width --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-ideogramThickness')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Ideogram width
 				<html:errors property="ideogramThickness"/>
 			</td>
@@ -88,10 +102,31 @@
 			</td>
 		</tr>
 		
+	<%-- Data track width --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-trackWidth')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Data track width
+				<html:errors property="trackWidth"/>
+			</td>
+			<td>
+				<html:text property="trackWidth"/>
+			</td>
+		</tr>
+		
 	<%-- Minimum data mask --%>
 		<tr>
 			<td>
-				Minimum data mask
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-minMask')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Minimum data mask value
 				<html:errors property="minMask"/>
 			</td>
 			<td>
@@ -102,6 +137,11 @@
 	<%-- Maximum data mask --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-maxMask')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Maximum data mask
 				<html:errors property="maxMask"/>
 			</td>
@@ -113,7 +153,12 @@
 	<%-- Minimum saturation --%>
 		<tr>
 			<td>
-				Minimum saturation
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-minSaturation')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Minimum saturation value
 				<html:errors property="minSaturation"/>
 			</td>
 			<td>
@@ -124,22 +169,16 @@
 	<%-- Maximum saturation --%>
 		<tr>
 			<td>
-				Maximum saturation
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-maxSaturation')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Maximum saturation value
 				<html:errors property="maxSaturation"/>
 			</td>
 			<td>
 				<html:text property="maxSaturation"/>
-			</td>
-		</tr>
-		
-	<%-- Data track width --%>
-		<tr>
-			<td>
-				Data track width
-				<html:errors property="trackWidth"/>
-			</td>
-			<td>
-				<html:text property="trackWidth"/>
 			</td>
 		</tr>
 		

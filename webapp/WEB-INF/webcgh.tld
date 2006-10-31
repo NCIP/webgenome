@@ -148,5 +148,17 @@
 	  </attribute>
    </tag>
 
+<!-- Displays message associated with an exception -->
+   <tag>
+      <name>exceptionMessage</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ExceptionMessageTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
    
+<!-- Displays stack trace associated with an exception -->
+   <tag>
+      <name>exceptionStackTrace</name>
+      <tagclass>org.rti.webcgh.webui.taglib.ExceptionStackTraceTag</tagclass>
+      <bodycontent>empty</bodycontent>
+   </tag>
 </taglib>

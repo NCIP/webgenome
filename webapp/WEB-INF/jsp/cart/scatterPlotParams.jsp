@@ -18,6 +18,11 @@
 	<%-- Plot name --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-plotName')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Plot Name
 				<html:errors property="name"/>
 			</td>
@@ -29,23 +34,17 @@
 	<%-- Genome intervals --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-genomeIntervals')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Genome Intervals
 				<html:errors property="genomeIntervals"/>
 			</td>
 			<td>
 				<html:text property="genomeIntervals"/>
-			</td>
-		</tr>
-		
-	<%--
-	Genome interval units.  Note that option values
-	must correspond to units defined in org.rti.webcgh.units.BpUnits.
-	--%>
-		<tr>
-			<td>
-				Genome Interval Units
-			</td>
-			<td>
+				&nbsp;
 				<html:select property="units">
 					<html:option value="BP">BP</html:option>
 					<html:option value="KB">KB</html:option>
@@ -57,6 +56,11 @@
 	<%-- Number of plots per row --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-numPlotPerRow')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Number of plots per row
 				<html:errors property="numPlotsPerRow"/>
 			</td>
@@ -68,6 +72,11 @@
 	<%-- LOH threshold --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-lohThreshold')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				LOH probability threshold
 			</td>
 			<td>
@@ -78,6 +87,11 @@
 	<%-- Interpolate LOH endpoints --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-interpolateLohEndpoints')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Interpolate LOH endpoints?
 			</td>
 			<td>
@@ -88,6 +102,11 @@
 	<%-- Draw raw LOH probabilities --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawRawLohProbabilities')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Include raw LOH probabilities?
 			</td>
 			<td>
@@ -98,6 +117,11 @@
 	<%-- Minimum Y-axis value --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-minY')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Minimum Y-axis value
 				<html:errors property="minY"/>
 			</td>
@@ -109,6 +133,11 @@
 	<%-- Maximum Y-axis value --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-maxY')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Maximum Y-axis value
 				<html:errors property="maxY"/>
 			</td>
@@ -120,6 +149,11 @@
 	<%-- Plot width --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-width')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Plot width in pixels
 				<html:errors property="width"/>
 			</td>
@@ -131,6 +165,11 @@
 	<%-- Plot height --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-height')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Plot height in pixels
 				<html:errors property="height"/>
 			</td>
@@ -142,6 +181,11 @@
 	<%-- Draw horizontal grid lines --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawHorizGridLines')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Draw horizontal grid lines?
 			</td>
 			<td>
@@ -152,6 +196,11 @@
 	<%-- Draw vertical grid lines --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawVertGridLines')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Draw vertical grid lines?
 			</td>
 			<td>
@@ -162,6 +211,11 @@
 	<%-- Draw data points --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawPoints')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Draw data points?
 			</td>
 			<td>
@@ -172,6 +226,11 @@
 	<%-- Draw regression lines --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawLines')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Draw regression lines?
 			</td>
 			<td>
@@ -182,6 +241,11 @@
 	<%-- Draw error bars --%>
 		<tr>
 			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawErrorBars')"
+					title="Information" border="0"
+					width="15" height="15"/>
 				Draw error bars if plotting means?
 			</td>
 			<td>

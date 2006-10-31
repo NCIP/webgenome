@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-30 20:38:26 $
+$Revision: 1.6 $
+$Date: 2006-10-31 06:02:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,34 +75,15 @@ public class AcghAnalyticOperation implements ScalarToScalarAnalyticOperation {
     //      Constants
     //  ==============================
 
-
+    /** aCGH service. */
+    private static final AcghService ACGH_SERVICE =
+    	new AcghService();
 
     //  ==============================
     //      Attributes
     //  ==============================
     private AcghAnalyticTransformer acghChrDataTransformer =
     	new AcghAnalyticTransformer();
-    private AcghService acghService = null;
-
-
-    //  ==============================
-    //      Getters/Setters
-    //  ==============================
-    /**
-	 * Getter method for acghService.
-	 * @return AcghService
-	 */
-	public AcghService getAcghService() {
-		return acghService;
-	}
-
-	/**
-	 * Setter method for acghService.
-	 * @param acghService
-	 */
-	public void setAcghService(AcghService acghService) {
-		this.acghService = acghService;
-	}
 
 
     // ================================================
@@ -126,7 +107,7 @@ public class AcghAnalyticOperation implements ScalarToScalarAnalyticOperation {
 
         try {
         	AcghData acghData = this.acghChrDataTransformer.transform(input);
-        	this.acghService.run(acghData);
+        	this.ACGH_SERVICE.run(acghData);
         	output = this.acghChrDataTransformer.transform(acghData, input);
         } catch (Exception e) {
             throw new AnalyticException(

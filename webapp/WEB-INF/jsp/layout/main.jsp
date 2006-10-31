@@ -18,13 +18,15 @@
 			
 	<%-- Show help and onLeave Javascript functions --%>
 		<script language="JavaScript">
-			var helpPage = "<html:rewrite page="/html/help.htm"/>";
+			var helpPage = "<html:rewrite page="/help/help.htm"/>";
 
 			function help(topic) {
 				window.open(
 					helpPage + "#" + topic,
 					"_blank", 
-					"width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no"
+					"width=400, height=300, menubar=no, status=no, "
+					+ "scrollbars=yes, resizable=yes, toolbar=yes, location=no, "
+					+ "directories=no"
 				)
 			}
 
@@ -121,8 +123,9 @@
 				</webcgh:onlyIfUserLoggedIn>
 
 			<%-- Help --%>
-				<a class="menuItem" href="javascript:void(0);">
-					Help
+				<a href="#" class="menuItem" 
+						onclick="window.open('<html:rewrite page="/help/help.htm"/>#<tiles:getAsString name="helpTopic"/>', '_blank', 'width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no');">
+						Help
 				</a>
 			</div></td>
 		</tr>

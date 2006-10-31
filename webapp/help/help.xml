@@ -1,0 +1,451 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="help.xsl"?>
+<help-doc title="WebGenome Help">
+
+	<!-- ============================================================ -->
+	<!--                   Overview                                   -->
+	<!-- ============================================================ -->
+	<section title="WebGenome Version 2.3 Overview" id="overview">
+		<p>
+			WebGenome is a web-based application for
+			creating genomics plots of array-based data
+			and genomic annotation.  This version provides a client
+			plotting service to external applications, such as
+			Rembrandt.  Users must enter webGenome through redirection
+			from another application; the only way to load data is
+			by selecting it in the application client.
+		</p>
+		
+		<p>
+			Data types supported in this version include
+			copy number (i.e., aCGH), loss of heterozygosity (LOH),
+			and gene expression.  Two basic types of plots
+			can be generated:
+		</p>
+		
+		<prop-list>
+			<prop name="Scatter Plots" refid="scatterPlot">
+				Plots DNA copy number measurements
+				across the genome, chromosome, or chromosomal interval.
+			</prop>
+			
+			<prop name="Ideogram Plot" refid="ideogramPlot">
+				Shows chromosomal amplifications
+				and deletions in relation to cytogenetic chromosome ideograms.
+			</prop>
+		</prop-list>
+		
+		<p>
+			The underlying data model used by webGenome is a very simplied version of
+			the MAGE-OM.  The most important concept for the use of the system
+			is that individual array data sets, called <em>bioassays</em> are aggregated
+			into experiments.
+		</p>
+	</section>
+	
+	<!-- =============================================================== -->
+	<!--          Shopping Cart                                          -->
+	<!-- =============================================================== -->
+	
+	<section title="Shopping Cart" id="cart">
+		<p>
+			The shopping cart accumulates raw data sets loaded by the client
+			application, statistically processed data sets derived from
+			raw or other processed data, and plots generated.  For
+			each experiment, the list of nested bioassays is also shown.
+			Users may change the names of experiments and bioassays in this
+			screen.  Names do not have to be unique and can be empty
+			if desired.  Users may delete experiments and plots.
+		</p>
+		
+		<p>
+			Each bioassay has an associated color.  These colors are
+			used in scatter plots to distinguish between bioassays.
+			Colors are initialized by the system.  Users may change
+			colors and all future plots will use the new colors.  However,
+			previously-generated plots in the cart will retain the original
+			colors.
+		</p>
+		
+		<p>
+			From the shopping cart users may select one or more experiments
+			and generate new plots or perform analytic operations.  New plots
+			and statistically processed experiments are saved back into the
+			cart.
+		</p>
+	</section>
+	
+	
+	<!-- =============================================================== -->
+	<!--                         Plots                                   -->
+	<!-- =============================================================== -->
+	<section title="Plots" id="plots">
+	In this section we describe plotting functionality including the
+	types of plots that can be generated and plotting parameters that
+	can be set by the user.  Functionality to create new plots
+	is accessible from the shopping cart screen.
+	
+	<!-- ============= Plot Types ======================= -->
+		<section title="Plot Types" id="plotTypes">
+			WebGenome 2.3 includes two plot types: scatter plots and ideogram
+			plots.
+		
+			<!-- Scatter plot -->
+			<section title="Scatter Plot" id="scatterPlot">
+				<p>
+				Scatter plots display array reporter values (e.g. copy number)
+				against physical genome location.  Users can plot data points,
+				regression lines, and confidence intervals in these plots.
+				If data are loss of heterozygosity (LOH), then the
+				endpoints are LOH regions are inferred and shown as
+				thick horizontal lines.  The Y-coordinate of these lines
+				are equal to the average probability of LOH weighted
+				by the chromosomal distance between adjacent reporters.
+				</p>
+				
+				<p>
+				Scatter plots provide basic interactivity.  Clicking
+				on a data point causes all data points and lines from
+				the bioassay to be highlighted.  Also the bioassay
+				name in the plot legend will be outlined.  Moving the
+				mouse across the plot will cause a tool tip to indicate
+				the nearest reporters.  If available, nearby genes will
+				also be displayed along with arbitrary annotation that
+				may be available through the client application.
+				</p>
+			</section>
+			
+			<!-- Ideogram plot -->
+			<section title="Ideogram Plot" id="ideogramPlot">
+				This plot shows color-coded data values in relation to
+				chromosome ideograms.  The color coding goes from
+				green to blue to red, which indicates data values that
+				are low, medium, and high, respectively.  Moving the mouse
+				over ideograms causes a tool tip to indicate the cytoband
+				and physical chromosomal location under the pointer.
+				Moving the mouse over data tracks causes a tool tip
+				to indicate the physical chromosomal interval and data value
+				under the points.  If available nearby genes will
+				also be displayed along with arbitrary annotation that
+				may be available through the client application.
+			</section>
+			
+		</section>
+		
+		<!-- Plotting parameters -->
+		<section title="Plotting Parameters" id="plotParams">
+			Plotting parameters control how data will be presented graphically.
+			There are parameters that are common to all plot types,
+			such as genome intervals, and parameters specific to one
+			type of plot.  After the user elects to create a new plot
+			from the shopping cart, a form showing parameters for
+			the selected plot type is displayed.  The user may
+			later change these parameter settings by clicking on
+			a link above displayed plots.  Descriptions of the
+			various parameters are given here.
+
+			<section title="Common Plot Paremeters" id="commonPlotParameters">
+				These parameters are common to all plots.
+				<prop-list>
+					<prop name="Plot name" id="param-plotName">
+						This parameter enables the user to name the plot.
+						This name need not be unique and can be changed
+						at any time with no harm.
+					</prop>
+					
+					<!-- Genome segment -->
+					<prop name="Genome intervals" id="param-genomeIntervals">
+						This parameter constrains the genome interval that will
+						be displayed in plots.  Genome segments should be specified in the
+						following format: CHROMOSOME[:FROM-TO][,CHROMOSOME[:FROM-TO]]*
+						
+						<p><b>Examples</b></p>
+						
+						<p>
+							3:40000-50000<br/>
+							3,5:140000-160000<br/>
+							1,2<br/>
+							1:5000-7000,2:30000-100000
+						</p>
+					</prop>
+			
+					<prop name="Number of plot per row" id="param-numPlotPerRow">
+						When the user specifies multiple genome intervals,
+						they will be displayed in different plots,
+						which will be laid out in rows.  This parameter
+						specifies how many plots will be in a row.
+					</prop>
+				</prop-list>
+			</section>
+			
+			<section title="Scatter Plot Parameters" id="scatterPlotParameters">
+				The following parameters are specific to scatter plots.
+				<prop-list>
+					
+					<prop name="LOH probability threshold" id="param-lohThreshold">
+						Loss of heterozygosity (LOH) data may be expressed
+						as probability of LOH.  This parameter is a threshold,
+						above which probabilities will be interpred as
+						indicative of LOH.
+					</prop>
+					
+					<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
+						This parameter is only applicable if the data are
+						LOH (loss of heterozygosity).  Scatter plots of
+						LOH indicate LOH regions as thick horizontal
+						lines.  If for two adjacent reporters one is measuring LOH
+						and the other is not, the location where the
+						transition occurs cannot be known.  If this parameter
+						is checked, the system will interpolate the
+						LOH endpoint using the slope of a straight line
+						between data points corresponding to the two reporters.
+						If unchecked, the endpoint will be at the LOH reporter.
+					</prop>
+					
+					<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
+						This parameter is only applicable if the data are
+						LOH (loss of heterozygosity).  Scatter plots of
+						LOH indicate LOH regions as thick horizontal
+						lines.  If this parameter is checked, then the underlying
+						raw LOH probabilites are also plotted.
+					</prop>
+					
+					<prop name="Minimum plot value" id="param-minY">
+						This sets the minimum value on the scatter plot Y-axis.
+					</prop>
+					
+					<prop name="Maximum plot value" id="param-maxY">
+						This sets the maximum value on the scatter plot Y-axis.
+					</prop>
+					
+					<prop name="Plot width in pixels" id="param-width">
+						This sets the width of each individual scatter plot
+						in pixels.  If multiple genome intervals are selected,
+						the this propery applies to each of the corresponding
+						plots.
+					</prop>
+					
+					<prop name="Plot height in pixels" id="param-height">
+						This sets the height of each individual scatter plot
+						in pixels.  If multiple genome intervals are selected,
+						the this propery applies to each of the corresponding
+						plots.
+					</prop>
+					
+					<prop name="Draw horizontal grid lines" id="param-drawHorizGridLines">
+						If checked, horizontal grid lines emenating from
+						the major tic marks on the Y-axis will be drawn across
+						scatter plot.  
+					</prop>
+					
+					<prop name="Draw vertical grid lines" id="param-drawVertGridLines">
+						If checked, vertical grid lines emenating from
+						the major tic marks on the X-axis will be drawn across
+						scatter plot. 
+					</prop>
+					
+					<prop name="Draw points" id="param-drawPoints">
+						If checked, indivdual data points will be painted for
+						each datum.
+					</prop>
+					
+					<prop name="Draw error bars if plotting means" id="param-drawErrorBars">
+						The averaging analytic operation also calculates
+						standard error values.  If plotting averages in
+						a scatter plot, if this is checked then error
+						bars will be painted for each data point.
+					</prop>
+					
+					<prop name="Draw regression lines" id="param-drawLines">
+						If checked, "regression lines" connecting adjacent
+						data points will be painted.
+					</prop>
+				</prop-list>
+			</section>
+			
+			<section title="Ideogram Plot Parameters" id="ideogramPlotParameters">
+				The following parameters are specific to ideogram plots.
+				<prop-list>
+					<prop name="Ideogram size" id="param-ideogramSize">
+						This enables the user to set the relative height
+						of chromosome ideograms.
+					</prop>
+					
+					<prop name="Ideogram width" id="param-ideogramThickness">
+						This specifies the width of chromosome ideograms
+						in pixels.
+					</prop>
+					
+					<prop name="Data track width" id="param-trackWidth">
+						This specifies the width of data tracks in pixels.
+					</prop>
+					
+					<prop name="Minimum data mask value" id="param-minMask">
+						Background data values within a
+						range (e.g., -0.2 and 0.3) can be masked
+						so that only regions of significant
+						magnitudes are colored.  This parameter is the
+						the lower end of this range.
+					</prop>
+					
+					<prop name="Maximum data mask value" id="param-maxMask">
+						Background data values within a
+						range (e.g., -0.2 and 0.3) can be masked
+						so that only regions of significant
+						magnitudes are colored.  This parameter is the
+						the upper end of this range.
+					</prop>
+					
+					<prop name="Minimum saturation value" id="param-minSaturation">
+						Data tracks color code measured values (e.g. copy number)
+						from green to blue to red.  These colors correspond to
+						low, medium, and high values, respectively.  The saturation
+						values indicate which values are mapped to pure green
+						or red.  Values below and above the saturation points
+						are mapped to pure green and red, respectively.
+						This parameter is for the lower saturation value.
+					</prop>
+					
+					<prop name="Maximum saturation value" id="param-maxSaturation">
+						Data tracks color code measured values (e.g. copy number)
+						from green to blue to red.  These colors correspond to
+						low, medium, and high values, respectively.  The saturation
+						values indicate which values are mapped to pure green
+						or red.  Values below and above the saturation points
+						are mapped to pure green and red, respectively.
+						This parameter is for the upper saturation value.
+					</prop>
+				</prop-list>
+			</section>
+		</section>
+	</section>
+	
+	<!-- ================================================================= -->
+	<!--                       Analytic Operations                         -->
+	<!-- ================================================================= -->
+	<section title="Analytic Pipelines" id="pipelines">
+		When a user creates a plot webGGH may first
+		invoke an <em>analytic pipeline</em> on data.  An analytic pipeline
+		is a sequence of analytical operations that may filter, normalize, or
+		compute aggregate statistics on data.  The system comes pre-loaded
+		with default pipelines.  Additionally the user may create custom
+		analytic pipelines which are persisted and available each time
+		they log into the system.  Users
+		specify which pipeline is invoked through the <ref id="plotParams">
+		plot parameters</ref> screen.  Here we describe how custom analytic pipelines
+		are managed and created.
+		
+		<!-- ================= Managing analytic pipelines ================ -->
+		<section title="Managing Analytic Pipelines" id="pipelines-manage">
+			<p>
+				For basic information on analytic pipelines see the section
+				on <ref id="pipelines">Analytic Pipelines</ref>
+			</p>
+			<p>
+				This screen allows the user to manage their analytic pipelines.
+				The user can delete or edit existing pipelines with the exception
+				of pre-configured pipelines.  The system will prompt the user if the
+				a delete link is clicked to ensure that pipelines will not
+				be inadventantly deleted.
+			</p>
+		</section>
+		
+		<!-- ================= Creating new analytic pipelines ============ -->
+		<section title="Creating/Editing Analytic Pipelines" id="pipelines-new">
+			<p>
+				For basic information on analytic pipelines see the section
+				on <ref id="pipelines">Analytic Pipelines</ref>
+			</p>
+			<p>
+				This screen allows the user to create a new pipeline or edit an
+				existing pipeline.  The user can select a name for the pipeline
+				and create sequences of analytic operations.  Analytic operations
+				are of three basic types: 1) data filtering, 2) data normalization,
+				and 3) aggregate statistical functions.  Available operations are
+				described in the following subsections.
+			</p>
+			
+			<!-- Data filtering -->
+			<section title="Data Filtering Operations" id="filtering">
+				<prop-list>
+					<prop name="Filter within range" id="filterWithinRange">
+						The user species a <em>lower boundary</em> and an
+						<em>upper boundary</em> for a range of values.  The
+						system filters out all probe values within the specified
+						range.  The user may specify any real number for the
+						boundaries including -INFINITY and INFINITY.  For plotting
+						CGH data it is recommended
+						that this filter only be used for removing outliers.  The
+						intensities (e.g. fold change, copy number, etc.) will be
+						interpolated for regions where probes have been filtered out.
+						To mask insignificant regions of copy number change from ideogram and
+						annotation plots, set the <ref id="param-threshold">Data Mask</ref>
+						parameter.
+					</prop>
+				</prop-list>
+			</section>
+			
+			<!-- Data normalization -->
+			<section title="Data Normalization Operations" id="normalization">
+				<prop-list>
+					<prop name="Simple array-based normalization" id="simpleArrayNormalization">
+						This procedure subtracts the array specific mean or median from each observation. 
+						The user specifies the use of the mean or median as the normalization factor. 
+						The choice of median based normalization allows the user to lessen the effect of outliers. 
+						This type of normalization is useful for making spot intensities comparable across arrays 
+						as it removes an overall array effect; each array will be "centered" on zero (or something 
+						close to it if the median is used). 
+					</prop>
+					<prop name="Simple experiment-based normalization" id="simpleExperimentNormalization">
+						This procedure subtracts the array specific mean or median from each observation then 
+						adds the experiment level mean or median back to each observation. The user specifies 
+						the use of the mean or median as the normalization factor. The choice of median based 
+						normalization allows the user to lessen the effect of outliers. This type of normalization 
+						is useful for making spot intensities comparable across arrays while preserving any overall 
+						difference due to treatment effect. This will center each array on the difference between 
+						it's own array mean/median and the experiment wide mean/median. 
+					</prop>
+					<prop name="Simple smoothing" id="simpleSmoothing">
+						This operation smooths data using a "sliding window" approach.  The user
+						specified a <em>Window size</em>.  The value of probe <em>i</em>
+						is equal to the average value of probes <em>i - w/2</em> through 
+						<em>i + w/2</em>, where <em>w</em> is the size of the window.
+					</prop>
+					<prop name="Linear regression" id="linearRegression">
+						The effect of linear regression based normalization is similar to that of the simple 
+						normalization array operation. This procedure uses linear regression to subtract the 
+						array specific mean from each observation, allowing the user to make spot intensities 
+						comparable across arrays.  The regression model treats each array as a separate value 
+						in a class variable and adjusts accordingly. Requires: at least 2 experiments with at 
+						least one array each. 
+					</prop>
+					<prop name="Local (i.e. non-linear or LOESS) regression" id="loess">
+						A data smoothing technique that utilizes regression to reduce "noise", bringing individual 
+						data points into line with neighboring points. Each point is placed into a local neighborhood 
+						of surrounding points (based on distance) the size of which, referred to as “percentage of data”, 
+						is specified by the researcher. For each point, a weighted regression is then performed such 
+						that near points have greater influence (weights) than further points. The residual of this 
+						regression is used as the normalized or smoothed value, and the process is repeated for each
+						 point in the data set. Note that the larger the percentage of the data in the local neighborhood, 
+						 the more intense the smoothing effect will be. For our purposes, the following weight function is 
+						 used for the regression:  W(x) = (1-|d/D|^3)^3, where x = a given point in the neighborhood, 
+						 d = distance to the point of interest, and D = maximum distance to the point of interest 
+						 in the local neighborhood.
+					</prop>
+				</prop-list>
+			</section>
+			<section title="Aggregate Statistical Functions" id="aggregateStatistics">
+				Aggregate statistical functions aggregate data with experiments and create summary statistics
+				on a probe-by-props (i.e. reporter-by-reporter) basis.
+				<prop-list>
+					<prop name="Average" id="averageOperation">
+						This function computes the average and standard error of probes with experiments.
+					</prop>
+				</prop-list>
+			</section>
+		</section>
+	</section>
+	
+	
+	
+</help-doc>
