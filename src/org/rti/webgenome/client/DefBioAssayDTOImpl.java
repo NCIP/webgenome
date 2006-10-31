@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-30 23:32:06 $
+$Revision: 1.7 $
+$Date: 2006-10-31 03:36:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -142,13 +142,5 @@ public class DefBioAssayDTOImpl implements BioAssayDTO {
     public final void add(final BioAssayDatumDTO dto) {
         this.bioAssayData.add(dto);
     }
-
-	public String getQuantitationType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-    
-    
-    
 
 }
