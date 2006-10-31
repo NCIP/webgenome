@@ -1,6 +1,6 @@
 /*
-$Revision: 1.20 $
-$Date: 2006-10-30 18:37:31 $
+$Revision: 1.21 $
+$Date: 2006-10-31 22:48:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.client;
 
+import java.io.File;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
@@ -227,6 +228,15 @@ public final class ClientPlotAction extends BaseAction {
         // Put data in shopping cart
         ShoppingCart cart = PageContext.getShoppingCart(request, true);
         cart.add(experiments);
+        
+        // Initialize image file manager
+        if (!this.imageFileManager.isInitialized()) {
+	        String absPlotPath = this.getServlet().
+	        	getServletContext().getRealPath("/plots");
+	        File imageDir = new File(absPlotPath);
+	        this.imageFileManager.init(imageDir);
+        }
+        
         
         // Set image file manager property of shopping cart
         // so that image files will be deleted when the users

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-24 23:00:42 $
+$Revision: 1.4 $
+$Date: 2006-10-31 22:48:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,27 +94,57 @@ public class ImageFileManager implements Serializable {
 	 * ensures that CVS does not purge the directory.
 	 */
 	private static final String PLACEHOLDER_FILE_NAME = "placeholder.txt";
+	
+	/** Has this been initialized? */
+	private boolean initialized = false;
 
 	// =============================
 	//         Attributes
 	// =============================
 	
 	/** Directory containing images. */
-	private final File directory;
+	private File directory;
 	
 	/** File name generator. */
-	private final UniqueFileNameGenerator fileNameGenerator;
+	private UniqueFileNameGenerator fileNameGenerator;
+	
+	/** Shopping cart DAO. */
+	private ShoppingCartDao shoppingCartDao = null;
 	
 	
+	// ============================
+	//       Getters/setters
+	// ============================
+	
+	/**
+	 * Has this been initialized?
+	 * @return T/F
+	 */
+	public final boolean isInitialized() {
+		return initialized;
+	}
+	
+	
+	/**
+	 * Set shopping cart data access object.
+	 * @param shoppingCartDao Shopping cart data access object.
+	 */
+	public final void setShoppingCartDao(
+			final ShoppingCartDao shoppingCartDao) {
+		this.shoppingCartDao = shoppingCartDao;
+	}
+
+
 	// ================================
 	//     Constructors
 	// ================================
 	
+
 	/**
 	 * Constructor.
-	 * @param directory Directory containing image files.
+	 * @param imageDir Directory containing image files.
 	 */
-	public ImageFileManager(final File directory) {
+	public ImageFileManager(final File imageDir) {
 		
 		// Make sure args okay
 		if (directory == null || !directory.exists()
@@ -127,6 +157,43 @@ public class ImageFileManager implements Serializable {
 		this.directory = directory;
 		this.fileNameGenerator =
 			new UniqueFileNameGenerator(directory, FILE_EXTENSION);
+		
+		this.initialized = true;
+	}
+	
+	
+	/**
+	 * Constructor.
+	 */
+	public ImageFileManager() {
+		
+	}
+	
+	
+	/**
+	 * Initialize this by setting image file directory.
+	 * @param directory Image file directory
+	 */
+	public final void init(final File directory) {
+		String directoryPath = directory.getAbsolutePath();
+		if (!directory.exists() || !directory.isDirectory()) {
+            LOGGER.error("Directory Path specified doesnt' exist "
+            		+ "or isn't a directory. "
+            		+ "Directory Path: [" + directoryPath + "]");
+			throw new IllegalArgumentException("Invalid directory '"
+					+ directoryPath + "'");
+		}
+		
+		// Purge directory of unused image files
+		Collection<String> filesToSave =
+			this.shoppingCartDao.getAllImageFileNames();
+		this.purge(filesToSave, directory);
+		
+		// Initialize properties
+		this.directory = directory;
+		this.fileNameGenerator =
+			new UniqueFileNameGenerator(directory, FILE_EXTENSION);
+		
 	}
 	
 	
@@ -143,22 +210,8 @@ public class ImageFileManager implements Serializable {
 			throw new IllegalArgumentException("Invalid directory 'null'");
 		}
 		File directory = new File(directoryPath);
-		if (!directory.exists() || !directory.isDirectory()) {
-            LOGGER.error("Directory Path specified doesnt' exist "
-            		+ "or isn't a directory. "
-            		+ "Directory Path: [" + directoryPath + "]");
-			throw new IllegalArgumentException("Invalid directory '"
-					+ directoryPath + "'");
-		}
-		
-		// Purge directory of unused image files
-		Collection<String> filesToSave = shoppingCartDao.getAllImageFileNames();
-		this.purge(filesToSave, directory);
-		
-		// Initialize properties
-		this.directory = directory;
-		this.fileNameGenerator =
-			new UniqueFileNameGenerator(directory, FILE_EXTENSION);
+		this.shoppingCartDao = shoppingCartDao;
+		this.init(directory);
 	}
 	
 	
