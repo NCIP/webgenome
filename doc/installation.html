@@ -1,0 +1,59 @@
+<h1>WebGenome 2.2 Installation Manual</h1>
+
+<h2>1  System Requirements</h2>
+
+<ul>
+	<li><a href="http://java.sun.com">Java</a> 5.0</li>
+	<li><a href="http://tomcat.apache.org">Tomcat</a> 5.5.x or
+	<a href="http://www.jboss.com">JBoss</a> 4.0.2</li>
+	<li>Recent version of <a href="http://ant.apache.org">Ant</a></li>
+	<li><a href="http://www.r-project.org">R</a> 2.4.x statistical environment</li>
+	<li>The following R packages</li>
+	<ul>
+		<li>Bioconductor</li>
+		<li>aCGH</li>
+	</ul>
+	<li><a href="http://rosuda.org/Rserve">RServe</a></li>
+	<li>Oracle 9i or higher RDBMS</li>
+</ul>
+
+<h2>2  Installing R Packages and RServe</h2>
+<ul>
+	<li>Install Bioconductor first.  Instructions can be found
+	<a href="http://www.bioconductor.org/docs/install-howto.html">here</a>.</li>
+	<li>Install aCGH by typing 'biocLite(c("aCGH")) in the R command window.</li>
+	<li>Instructions for installing RServe can be found
+	<a href="http://rosuda.org/Rserve">here</a>.
+</ul>
+
+<h2>3  Creating a Database</h2>
+<ul>
+	<li>Create tables by running SQL table build script
+	/db/client/sql/create_tables_oracle.sql</li>
+	<li>Load initial table data using CSV filesin /db/client/data.</li>
+</ul>
+
+<h2>4  Building System</h2>
+
+<ol>
+	<li>Unzip the distribution in a suitable directory location.</li>
+	<li>Open a command window or shell.</li>
+	<li>Change to the <em>WEBGENOME_ROOT</em> directory.</li>
+	<li>Type 'ant all' at the prompt.  This will result in the creation of a WAR file
+		/dist/webGenome.war as well as the generation of
+		Javadoc API documentation in the /doc/api directory.
+	</li>
+</ol>
+
+
+<h2>5  Installing System</h2>
+
+<ul>
+	<li>Start RServe following the instructions on the
+	<a href="http://rosuda.org/Rserve">RServe website</a>.</li>
+	<li>Deploy webGenome.war into a new context following the
+	instructions provided with whichever application server
+</ul>
+
+<h2>6  Configuring System</h2>
+*** Dean -- Please add content ***
