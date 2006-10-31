@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.4 $
+$Date: 2006-10-31 04:03:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webcgh.service.client;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.service.util.ServiceLocator;
@@ -68,12 +69,22 @@ import org.rti.webgenome.client.ExperimentDTO;
  */
 public final class MultiThreadClientDataService
 	implements ClientDataService {
+    
+    // ============================
+    //     Static members
+    // ============================
+
+    /** Logger. */
+    private static final Logger LOGGER =
+        Logger.getLogger(MultiThreadClientDataService.class);
+
 	
 	// ===============================
 	//      Constants
 	// ===============================
 
-	/** Time interval in milliseconds between thread polling events. */
+	/** Time interval in milliseconds between thread polling events.
+     * TODO: This might be nice to inject as a configurable property setting? */
 	private static final int THREAD_POLLING_WAIT_COUNT_MSEC = 10;
 	
 	
@@ -83,6 +94,9 @@ public final class MultiThreadClientDataService
 	
 	/** JNDI name. This property should be injected. */
     private String jndiName = null;
+    
+    /** JNDI Provider URL. This property should be injected. */
+    private String jndiProviderURL = null ;
     
     /** EJB service locator. */
     private final ServiceLocator serviceLocator = new ServiceLocator();
@@ -99,6 +113,14 @@ public final class MultiThreadClientDataService
 	public void setJndiName(final String jndiName) {
 		this.jndiName = jndiName;
 	}
+    
+    /**
+     * Set JNDI Provider URL
+     * @param jndiProviderURL JNDI Provider URL
+     */
+    public void setJndiProviderURL(final String jndiProviderURL) {
+        this.jndiProviderURL = jndiProviderURL;
+    }
 	
 	// ===================================
 	//     ClientDataService interface
@@ -114,12 +136,12 @@ public final class MultiThreadClientDataService
     public Collection<Experiment> getClientData(
     		final BioAssayDataConstraints[] constraints,
             final String[] experimentIds, final String clientID) {
-    	
+        
     	// Get bioassay manager
     	BioAssayMgr mgr = null;
         try {
 			BioAssayMgrHome home = (BioAssayMgrHome)
-				this.serviceLocator.getLocalHome(this.jndiName);
+				this.serviceLocator.getLocalHome(this.jndiName, this.jndiProviderURL);
 			mgr = home.create();
 		} catch (Exception e) {
 			throw new WebcghSystemException("Error accessing client EJB", e);
@@ -130,8 +152,10 @@ public final class MultiThreadClientDataService
         	new ArrayList<ThreadQueryResult>();
     	
         // Create individual query threads
+        LOGGER.debug( "Creating " + experimentIds.length + " Threads for querying" ) ;
         for (int i = 0; i < experimentIds.length; i++) {
             String expID = experimentIds[i];
+            LOGGER.debug( "Creating Thread for Experiment [" + expID + "]") ;
         	for (int j = 0; j < constraints.length; j++) {
                 BioAssayDataConstraints constraint = constraints[j];
                 ThreadQueryResult result = new ThreadQueryResult();
@@ -166,6 +190,7 @@ public final class MultiThreadClientDataService
 				throw new WebcghSystemException(e);
 			}
         }
+        LOGGER.debug ( "All Query Threads are finished" ) ;
         
         // Construct and return result collection
         Collection<ExperimentDTO> dtos = new ArrayList<ExperimentDTO>();
@@ -257,6 +282,11 @@ public final class MultiThreadClientDataService
      * A thread that gets a portion of requested data.
      */
 	static class ClientDataThread implements Runnable {
+        
+        /** Logger. */
+        private static final Logger LOGGER =
+            Logger.getLogger(ClientDataThread.class);
+        
 		
 		// ========================
 		//    Attributes
@@ -306,7 +336,9 @@ public final class MultiThreadClientDataService
 		        		this.experimentID, this.constraint, this.clientID);
 		        this.queryResult.setExperiment(dto);
 			} catch (Exception e) {
+                LOGGER.error( "Caught Exception getting Experiment DTO. Details: " + e.getMessage() ) ;
 				this.queryResult.setException(e);
+
 			}
 		}
 	}
