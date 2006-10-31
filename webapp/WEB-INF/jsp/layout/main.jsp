@@ -124,7 +124,7 @@
 
 			<%-- Help --%>
 				<a href="#" class="menuItem" 
-						onclick="window.open('<html:rewrite page="/help/help.htm"/>#<tiles:getAsString name="helpTopic"/>', '_blank', 'width=400, height=300, menubar=no, status=no, scrollbars=yes, resizable=yes, toolbar=yes, location=no, directories=no');">
+						onclick="help('<tiles:getAsString name="helpTopic"/>')">
 						Help
 				</a>
 			</div></td>

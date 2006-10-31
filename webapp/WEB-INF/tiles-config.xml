@@ -36,70 +36,70 @@
   	<definition name="cart.show.cart" extends="cart.layout" >
 	  	<put name="title" value="webGenome: View shopping cart" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/showCart.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="cart" />
   	</definition>
 
 <!-- Select plot type -->
   	<definition name="cart.select.plot.type" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Select plot type" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/selectPlotType.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plotTypes" />
   	</definition>
 
 <!-- Scatter plot parameters -->
   	<definition name="cart.scatter.plot.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Scatter plot parameters" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/scatterPlotParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 
 <!-- Ideogram plot parameters -->
   	<definition name="cart.ideogram.plot.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Ideogram plot parameters" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/ideogramPlotParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 
 <!-- Annotation plot parameters -->
   	<definition name="cart.annotation.plot.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Annotation plot parameters" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/annotationPlotParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 
 <!-- Bar plot parameters -->
   	<definition name="cart.bar.plot.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Bar plot parameters" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/barPlotParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 
 <!-- Frequency plot parameters -->
   	<definition name="cart.frequency.plot.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Frequency plot parameters" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/frequencyPlotParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 
 <!-- Set colors -->
   	<definition name="cart.set.colors" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Set colors" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/setColors.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="cart" />
   	</definition>
 
 <!-- Set display names -->
   	<definition name="cart.set.display.names" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Set display names" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/setDisplayNames.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="cart" />
   	</definition>
 
 <!-- Show plot -->
   	<definition name="cart.show.plot" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Plot" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/showPlot.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="plots" />
   	</definition>
 
 <!-- Show jobs table -->
@@ -127,14 +127,14 @@
   	<definition name="cart.select.analysis" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Select analytic operation" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/selectAnalysis.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="operations" />
   	</definition>
 
 <!-- Set analytic operation parameters -->
   	<definition name="cart.analysis.params" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Analytic operation parameters" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/analysisParams.jsp" />
-	  	<put name="helpTopic" value="docTop" />
+	  	<put name="helpTopic" value="operations" />
   	</definition>
 
   	<!-- ================================ -->
