@@ -1,6 +1,6 @@
 /*
-$Revision: 1.22 $
-$Date: 2006-10-31 22:49:02 $
+$Revision: 1.23 $
+$Date: 2006-11-01 17:49:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,7 +173,7 @@ public final class ClientPlotAction extends BaseAction {
 	public ActionForward execute(final ActionMapping mapping,
 			final ActionForm form, final HttpServletRequest request, 
     		final HttpServletResponse response) throws Exception {
-		LOGGER.info("Starting ClientPlotAction");
+		LOGGER.debug("Starting ClientPlotAction");
 		
 		// Cache client ID in session
 		String clientID = request.getParameter("clientID");
@@ -188,19 +188,6 @@ public final class ClientPlotAction extends BaseAction {
         String[] experimentIds = ClientQueryParser.getExperimentIds(request);
         BioAssayDataConstraints[] constraints =
         	ClientQueryParser.getBioAssayDataConstraints(request);
-        
-        // Get quantitation type
-        String qType = request.getParameter("qType");
-        if (qType == null) {
-        	throw new InvalidClientQueryParametersException(
-        			"Missing 'qType' parameter");
-        }
-        QuantitationType quantitationType =
-        	QuantitationType.getQuantitationType(qType);
-        if (quantitationType == null) {
-        	throw new InvalidClientQueryParametersException(
-			"Unrecognized quantitation type");
-        }
         
         // Retrieve data from client
         Collection<Experiment> experiments = 
