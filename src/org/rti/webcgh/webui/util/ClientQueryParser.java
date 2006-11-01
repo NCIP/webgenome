@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-06 04:32:54 $
+$Revision: 1.4 $
+$Date: 2006-11-01 18:07:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,9 +72,6 @@ public final class ClientQueryParser {
 	/** Genome intervals query parameter name. */
 	private static final String INTERVALS_PARAM_NAME = "intervals";
 	
-	/** Quantitation type parameter name. */
-	private static final String QTYPE_PARAM_NAME = "qType";
-	
 	/**
 	 * Constructor.
 	 */
@@ -131,12 +128,6 @@ public final class ClientQueryParser {
     public static BioAssayDataConstraints[] getBioAssayDataConstraints(
     		final HttpServletRequest request)
     	throws InvalidClientQueryParametersException {
-    	String qType = request.getParameter(QTYPE_PARAM_NAME);
-    	if (qType == null) {
-    		throw new InvalidClientQueryParametersException(
-    				"Missing HTTP query parameter: "
-    				+ QTYPE_PARAM_NAME);
-    	}
     	String intervals = request.getParameter(INTERVALS_PARAM_NAME);
     	if (intervals == null) {
     		throw new InvalidClientQueryParametersException(
@@ -144,7 +135,7 @@ public final class ClientQueryParser {
     				+ INTERVALS_PARAM_NAME);
     	}
         List<BioAssayDataConstraints> constraints =
-        	ClientQueryParser.parseIntervals(intervals, qType);
+        	ClientQueryParser.parseIntervals(intervals);
         BioAssayDataConstraints[] constraintsArray =
         	new BioAssayDataConstraints[0];
         constraintsArray = (BioAssayDataConstraints[])
@@ -164,7 +155,7 @@ public final class ClientQueryParser {
      * valid bioassay data constraints cannot be parsed.
      */
     private static List<BioAssayDataConstraints> parseIntervals(
-    		final String encodedIntervals, final String qType)
+    		final String encodedIntervals )
     throws InvalidClientQueryParametersException {
     	List<BioAssayDataConstraints> constraints =
     		new ArrayList<BioAssayDataConstraints>();
@@ -189,7 +180,8 @@ public final class ClientQueryParser {
             constraint.setChromosome(String.valueOf(interval.getChromosome()));
             constraint.setPositions(interval.getStartLocation(),
             		interval.getEndLocation());
-            constraint.setQuantitationType(qType);
+            // TODO: no longer setting QuantitationType here
+            //constraint.setQuantitationType(qType);
             constraints.add(constraint);
         }
     	
