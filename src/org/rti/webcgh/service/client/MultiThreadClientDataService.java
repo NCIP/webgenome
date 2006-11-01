@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-31 04:03:55 $
+$Revision: 1.5 $
+$Date: 2006-11-01 18:00:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -140,12 +140,16 @@ public final class MultiThreadClientDataService
     	// Get bioassay manager
     	BioAssayMgr mgr = null;
         try {
+            LOGGER.debug( "Getting BioAssayMgrHome interface from jndiName [" + jndiName + "] jndiProviderURL [" + jndiProviderURL + "]" ) ;
 			BioAssayMgrHome home = (BioAssayMgrHome)
 				this.serviceLocator.getLocalHome(this.jndiName, this.jndiProviderURL);
 			mgr = home.create();
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error accessing client EJB", e);
+			throw new WebcghSystemException(
+                    "Error accessing client EJB using JNDI Name [" + jndiName + "] JNDI Provider URL [" + 
+                    jndiProviderURL + "].", e);
 		}
+        LOGGER.debug ( "Got BioAssayMgrHome" ) ;
         
         // Create container for query results
         Collection<ThreadQueryResult> queryResults =
@@ -165,6 +169,7 @@ public final class MultiThreadClientDataService
                 thread.start();
             }
         }
+        LOGGER.debug( "Dispatched all query threads - polling for results" ) ;
     	
         // Periodically iterate over query results
         // until all query threads finished.
@@ -332,13 +337,14 @@ public final class MultiThreadClientDataService
          */
 		public void run() {
 			try {
+                // TODO: David, it fails in the next step because QuantitationType is null
 		        ExperimentDTO dto = this.bioAssayMgr.getExperiment(
 		        		this.experimentID, this.constraint, this.clientID);
 		        this.queryResult.setExperiment(dto);
 			} catch (Exception e) {
-                LOGGER.error( "Caught Exception getting Experiment DTO. Details: " + e.getMessage() ) ;
+                LOGGER.error( "Caught Exception getting Experiment DTO for experimentID [" +
+                        this.experimentID + "] Details: " + e.getMessage() ) ;
 				this.queryResult.setException(e);
-
 			}
 		}
 	}
