@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/analysis/RegressionService.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-31 02:30:43 $
+$Revision: 1.2 $
+$Date: 2006-11-03 22:39:15 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.deprecated.analytic.AcghData;
+import org.rti.webcgh.util.SystemUtils;
 
 
 
@@ -70,21 +71,52 @@ import org.rti.webcgh.deprecated.analytic.AcghData;
  */
 public class RegressionService {
 	private static final Logger LOGGER = Logger.getLogger(RegressionService.class);
-	private String rserveUrl = "localhost"; // URL of RServe
 	
-	/**
-	 * @return URL of RServe
-	 */
-	public String getRserveUrl() {
-		return rserveUrl;
-	}
+    /**
+     * IP Address of RServe
+     */
+    private String rserveIpAddress = "localhost" ;
+    
+    /**
+     * Port of RServe
+     */
+    private int rservePort = 6311 ; // default port
 
-	/**
-	 * @param rServeUrl URL of RServe
-	 */
-	public void setRserveUrl(String rServeUrl) {
-		this.rserveUrl = rServeUrl;
-	}
+    /** Get method for RServ IP Address
+     * @return RServ IP Address
+     */
+    public String getRserveIpAddress() {
+        return rserveIpAddress;
+    }
+
+    /** Set method for RServe IP Address */
+    public void setRserveIpAddress(String rserveIpAddress) {
+        this.rserveIpAddress = rserveIpAddress;
+    }
+
+    /** Get method for RServ Port
+     * @return RServe Port
+     */
+    public int getRservePort() {
+        return rservePort;
+    }
+    
+    /* Set method for RServe Port */
+    public void setRservePort(int rservePort) {
+        this.rservePort = rservePort;
+    }
+    
+    public RegressionService () {
+        this.rserveIpAddress = SystemUtils.getApplicationProperty("rserve.ipAddress");
+        try {
+            Integer rServeInteger = new Integer(SystemUtils.getApplicationProperty("rserve.port"));
+            this.rservePort = rServeInteger.intValue() ;
+        }
+        catch ( NumberFormatException e ) {
+            throw new WebcghSystemException(
+                    "Error obtaining RServ Port Number from application properties file.", e);
+        }
+    }
 
 	/**
 	 * Run linear model regression. 
@@ -113,7 +145,9 @@ public class RegressionService {
 	 */
 	private void run(AcghData data, String func, String model) 
 		throws RSrvException {
-		LOGGER.info("Trying new Rserve connection to localhost...");	
+        LOGGER.info("Trying new Rserve connection to ip address '" +
+                this.getRserveIpAddress() + 
+                "' port '" + this.getRservePort() + "' ...");    
 		Rconnection c = this.setup(data);
 		LOGGER.info("OK");
 		
@@ -143,7 +177,7 @@ public class RegressionService {
 	private Rconnection setup(AcghData data) {
 		Rconnection c;
 		try {
-			c = new Rconnection(this.rserveUrl);
+            c = new Rconnection( this.getRserveIpAddress(), this.getRservePort() );
 			
 			// prepare data before running regression
 			c.assign("kb", 
