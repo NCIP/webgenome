@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/analysis/AcghService.java,v $
-$Revision: 1.3 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.4 $
+$Date: 2006-11-03 22:38:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rosuda.JRclient.Rconnection;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.deprecated.analytic.AcghData;
 import org.rti.webcgh.util.IOUtils;
+import org.rti.webcgh.util.SystemUtils;
 
 
 /**
@@ -80,6 +81,21 @@ public class AcghService {
 	static {
 		R_COMMAND_LIST = getCommandList();
 	}
+    
+    /**
+     * Constructor
+     */
+    public AcghService ( ) {
+        this.rserveIpAddress = SystemUtils.getApplicationProperty("rserve.ipAddress");
+        try {
+            Integer rServeInteger = new Integer(SystemUtils.getApplicationProperty("rserve.port"));
+            this.rservePort = rServeInteger.intValue() ;
+        }
+        catch ( NumberFormatException e ) {
+            throw new WebcghSystemException(
+                    "Error obtaining RServ Port Number from application properties file.", e);
+        }
+    }
 	
 	/**
 	 * Read R commands from file. 
@@ -102,31 +118,50 @@ public class AcghService {
 	    return rcmdList;
 	}
 
-	private String rserveUrl = "localhost"; // URL of RServe
-	
-	/**
-	 * @return URL of RServe
-	 */
-	public String getRserveUrl() {
-		return rserveUrl;
-	}
+    /**
+     * IP Address of RServe
+     */
+    private String rserveIpAddress = "localhost" ;
+    
+    /**
+     * Port of RServe
+     */
+    private int rservePort = 6311 ; // default port
 
-	/**
-	 * @param rServUrl URL of RServe
-	 */
-	public void setRserveUrl(String rServeUrl) {
-		this.rserveUrl = rServeUrl;
-	}
+    /** Get method for RServ IP Address
+     * @return RServ IP Address
+     */
+	public String getRserveIpAddress() {
+        return rserveIpAddress;
+    }
+
+    /** Set method for RServe IP Address */
+    public void setRserveIpAddress(String rserveIpAddress) {
+        this.rserveIpAddress = rserveIpAddress;
+    }
+
+    /** Get method for RServ Port
+     * @return RServe Port
+     */
+    public int getRservePort() {
+        return rservePort;
+    }
+    
+    /* Set method for RServe Port */
+    public void setRservePort(int rservePort) {
+        this.rservePort = rservePort;
+    }
 
 
-
-	/**
+    /**
 	 * Execute smoothing R commands and retrieve smoothed values. 
 	 * @param data The data given as an AcghData object
 	 * @throws RSrvException if an error occurs during R operation
 	 */
 	public void run(AcghData data) throws RSrvException {
-		LOGGER.info("Trying new Rserve connection to localhost...");	
+		LOGGER.info("Trying new Rserve connection to ip address '" +
+                    this.getRserveIpAddress() + 
+                    "' port '" + this.getRservePort() + "' ...");	
 		Rconnection c = this.setup(data);
 
         String incompleteCmd = "";
@@ -185,8 +220,8 @@ public class AcghService {
 	private Rconnection setup(AcghData data) {
 		Rconnection c;
 		try {
-			c = new Rconnection(this.rserveUrl);
-			System.out.println("OK!\n");
+			c = new Rconnection( this.getRserveIpAddress(), this.getRservePort() );
+			LOGGER.info("Connected OK!\n");
 			
 			// load aCGH library
 			c.eval("library(aCGH)");
