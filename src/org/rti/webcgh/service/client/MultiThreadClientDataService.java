@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-11-01 18:00:35 $
+$Revision: 1.6 $
+$Date: 2006-11-03 19:18:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -149,7 +149,6 @@ public final class MultiThreadClientDataService
                     "Error accessing client EJB using JNDI Name [" + jndiName + "] JNDI Provider URL [" + 
                     jndiProviderURL + "].", e);
 		}
-        LOGGER.debug ( "Got BioAssayMgrHome" ) ;
         
         // Create container for query results
         Collection<ThreadQueryResult> queryResults =
@@ -337,7 +336,6 @@ public final class MultiThreadClientDataService
          */
 		public void run() {
 			try {
-                // TODO: David, it fails in the next step because QuantitationType is null
 		        ExperimentDTO dto = this.bioAssayMgr.getExperiment(
 		        		this.experimentID, this.constraint, this.clientID);
 		        this.queryResult.setExperiment(dto);
@@ -345,6 +343,7 @@ public final class MultiThreadClientDataService
                 LOGGER.error( "Caught Exception getting Experiment DTO for experimentID [" +
                         this.experimentID + "] Details: " + e.getMessage() ) ;
 				this.queryResult.setException(e);
+
 			}
 		}
 	}
