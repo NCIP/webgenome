@@ -185,6 +185,17 @@
 			scope="session">
 			<forward name="success" path="/cart/showPlot.do"/>
 		</action>
+        
+    <!-- New Test plot -->
+        <action
+            path="/cart/newTestPlot"
+            name="plot.parameters.form"
+            validate="true"
+            input="/cart/routeToPlotParametersPage.do"
+            scope="session">
+            <forward name="success" path="/cart/showPlot.do"/>
+        </action>
+
 
 	<!-- Show plot -->
 		<action
@@ -321,11 +332,19 @@
 		<!-- ============= Client plotting actions ======== -->
 
 		<action
-			path="/client/plot"
+			path="/client/testPlot"
 			name="plot.parameters.form"
 			validate="false">
 			<forward name="success" path="/cart/newPlot.do"/>
 		</action>
+        
+        <action
+            path="/client/plot"
+            name="plot.parameters.form"
+            validate="false">
+            <forward name="success" path="/cart/newPlot.do"/>
+        </action>
+
 
 		<!-- ============ Administration actions ======== -->
 
