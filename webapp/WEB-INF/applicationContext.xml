@@ -10,27 +10,23 @@
 	<bean
 		id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <!--
-            systemPropertiesMode instructs Spring how to load System Properties.
-            Spring by default checks System properies in addition to the properties
-            in the properties file (specified below). Depending on its setting
-            you can control how Spring handles System properties versus
-            property settings in the file. For our case, we always want
-            the System properties settings to override any webcgh.property
-            setting that might match for a given property.
-            e.g. if we have a system property db.user.name and a
-            property file setting for db.user.name, we always want to
-            take the system property value. So the value 2 below is:
-            2=SYSTEM_PROPERTIES_MODE_OVERRIDE in Spring
-            (Not sure whether we can just say "SYSTEM_PROPERTIES_MODE_OVERRIDE" ?)
-        -->
-        <property name="systemPropertiesMode"><value>2</value></property>
 		<property name="location">
+            <!-- PROPERTY LOADING FROM INTERNAL PROPERTIES FILE
+                 Uncomment to use the internal properties file
+                 and comment out the external properties declaration immediately below.
+                 
 			<bean class="org.springframework.core.io.ClassPathResource">
 				<constructor-arg type="java.lang.String">
 					<value>conf/webcgh.properties</value>
 				</constructor-arg>
 			</bean>
+            -->
+            <!-- PROPERTY LOADING FROM EXTERNALIZED PROPERTIES FILE -->
+            <bean class="org.rti.webcgh.framework.spring.SysPropsFileSystemResource">
+                <constructor-arg type="java.lang.String">
+                <value>webGenome.configFile</value>
+                </constructor-arg>
+            </bean>
 		</property>
 	</bean>
 
@@ -124,11 +120,13 @@
 	
 <!-- Client data service -->
 
+    <!-- TEST SETTINGS FOR CLIENT DATA SERVICE
     <bean id="clientDataService"
         class="org.rti.webcgh.service.client.TestClientDataService">
         <property name="quantitationType"><value>copyNumberLog2Ratio</value></property>
     </bean>
-    <!-- NON-TEST SETTINGS FOR CLIENT DATA SERVICE
+    -->
+    <!-- NON-TEST SETTINGS FOR CLIENT DATA SERVICE -->
     <bean id="clientDataService"
         class="org.rti.webcgh.service.client.MultiThreadClientDataService">
         <property name="jndiName">
@@ -138,7 +136,6 @@
             <value>${jndi.provider.url}</value>
         </property>
     </bean>
-    -->
 		
 <!-- In-memory chromosome array data getter -->
 	<bean id="inMemoryChromosomeArrayDataGetter"
