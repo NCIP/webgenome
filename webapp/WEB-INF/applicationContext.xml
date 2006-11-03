@@ -14,7 +14,6 @@
             <!-- PROPERTY LOADING FROM INTERNAL PROPERTIES FILE
                  Uncomment to use the internal properties file
                  and comment out the external properties declaration immediately below.
-                 
 			<bean class="org.springframework.core.io.ClassPathResource">
 				<constructor-arg type="java.lang.String">
 					<value>conf/webcgh.properties</value>
@@ -118,14 +117,14 @@
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 	
-<!-- Client data service -->
+<!-- Client data service definitions -->
 
-    <!-- TEST SETTINGS FOR CLIENT DATA SERVICE
-    <bean id="clientDataService"
+    <!-- TEST SETTINGS FOR CLIENT DATA SERVICE -->
+    <bean id="clientTestDataService"
         class="org.rti.webcgh.service.client.TestClientDataService">
         <property name="quantitationType"><value>copyNumberLog2Ratio</value></property>
     </bean>
-    -->
+
     <!-- NON-TEST SETTINGS FOR CLIENT DATA SERVICE -->
     <bean id="clientDataService"
         class="org.rti.webcgh.service.client.MultiThreadClientDataService">
@@ -264,6 +263,27 @@
 			<ref bean="organismDao"/>
 		</property>
 	</bean>
+    
+    <!-- Client plot: entry point for application client -->
+    <bean name="/client/testPlot"
+        class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
+        <property name="clientDataService">
+            <ref bean="clientTestDataService"/>
+        </property>
+        <property name="imageFileManager">
+            <ref bean="imageFileManager"/>
+        </property>
+        <property name="bioAssayIdGenerator">
+            <ref bean="bioAssayIdGenerator"/>
+        </property>
+        <property name="experimentIdGenerator">
+            <ref bean="experimentIdGenerator"/>
+        </property>
+        <property name="organismDao">
+            <ref bean="organismDao"/>
+        </property>
+    </bean>
+
 	
 <!-- New plot -->
 	<bean name="/cart/newPlot"
@@ -278,7 +298,22 @@
 			<ref bean="clientDataService"/>
 		</property>
 	</bean>
-				
+
+    <!-- New Test plot -->
+    <bean name="/cart/newTestPlot"
+        class="org.rti.webcgh.webui.struts.cart.NewPlotAction">
+        <property name="plotGenerator">
+            <ref bean="plotGenerator"/>
+        </property>
+        <property name="chromosomeArrayDataGetter">
+            <ref bean="inMemoryChromosomeArrayDataGetter"/>
+        </property>
+        <property name="clientDataService">
+            <ref bean="clientTestDataService"/>
+        </property>
+    </bean>
+
+    
 <!-- Show plot -->
 	<bean name="/cart/showPlot"
 		class="org.rti.webcgh.webui.struts.cart.ShowPlotSetupAction"/>
