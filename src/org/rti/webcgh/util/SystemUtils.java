@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-31 03:52:17 $
+$Revision: 1.7 $
+$Date: 2006-11-03 19:14:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.util;
 
 import java.util.Properties;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
@@ -74,9 +75,13 @@ public final class SystemUtils {
      * from file given by SYS_PROPS_FILE.
      */
 	private static Properties applicationProperties = null;
+
+    /** The System property that will indicate the location of an externalized property file,
+     * if one exists. */ 
+    private static final String EXTERNAL_PROPS_FILE_KEY = "webGenome.configFile" ;
     
     /** Classpath-relative application properties file. */
-    private static final String SYS_PROPS_FILE = "conf/webcgh.properties";
+    private static final String INTERNAL_PROPS_FILE = "conf/webcgh.properties";
     
     /** Classpath-relative file containing properties for unit test classes. */
     private static final String UNIT_TEST_PROPS_FILE =
@@ -102,12 +107,12 @@ public final class SystemUtils {
     // ===============================
     
     /**
-     * Get system properties.
+     * Get application properties.
      * @return System properties
      */
     public static Properties getApplicationProperties() {
     	if (applicationProperties == null) {
-    		applicationProperties = loadProperties(SYS_PROPS_FILE);
+    		applicationProperties = loadProperties();
         }
     	return applicationProperties;
     }
@@ -157,35 +162,106 @@ public final class SystemUtils {
                || "yes".equalsIgnoreCase(propertySetting));
     }
     
+    /**
+     * Handle loading properties from both external and internal properties
+     * file. External property settings will override internal property settings.
+     * If no external and no internal properties exist, then an Exception will be thrown. 
+     * 
+     * @return Properties - the full set of internal and external properties.
+     * 
+     */
+    public static Properties loadProperties() {
+        
+        Properties allProperties = new Properties();
+        
+        // Load internal properties
+        Properties defaultInternalProps = loadProperties ( INTERNAL_PROPS_FILE ) ;
+        
+        // Load external properties if they have been specified
+        String externalPropertiesFile = System.getProperty( EXTERNAL_PROPS_FILE_KEY ) ;
+        if ( externalPropertiesFile != null ) {
+            LOGGER.info( "Loading from external Properties file '" + externalPropertiesFile + "'" ) ;
+            allProperties = loadPropertiesFromFile ( externalPropertiesFile,
+                                                     defaultInternalProps ) ;
+        }
+        else {
+            allProperties = defaultInternalProps ;
+            String internalPropsInfo = "" ;
+            if ( defaultInternalProps.size() > 0 )
+                internalPropsInfo = " Using " + defaultInternalProps.size() +
+                " internal properties from '" + INTERNAL_PROPS_FILE + "'" ; 
+
+            LOGGER.warn( "No External Properties File specified." +
+                          internalPropsInfo ) ;
+        }
+        
+        if ( allProperties.size() == 0 ) {
+            throw new WebcghSystemException( "No External or Internal Properties were loaded." ) ;
+        }
+        else
+            LOGGER.info( allProperties.size() + " Properties loaded" ) ;
+        
+        return allProperties ;
+    }
     
     /**
      * Load properties from a file.
      * @param fname File name
+     * @param defaultProperties - a list of separate properies which can optionally be
+     *        specified as the defaults, in case a property doesn't exist
+     *        @see java.util.Properties
+     * @return Properties
+     */
+    public static Properties loadPropertiesFromFile(
+            final String fname,
+            final Properties defaultProperties ) {
+        
+        Properties props = null ;
+        if ( defaultProperties != null )
+            props = new Properties ( defaultProperties ) ; // provide any default, if specified
+        else
+            props = new Properties();
+        
+		try {
+            FileInputStream in = new FileInputStream ( fname ) ;
+            if ( in != null )
+                props.load(in);
+            else
+                LOGGER.warn (
+                    "Error creating InputStream. Unable to load properties from file '" +
+                    fname + "'." ) ;
+		} catch (IOException e) {
+            LOGGER.warn ( "Unable to load properties file '" + fname + "'." ) ;
+		}
+		return props;
+    }
+    
+    /**
+     * Load properties from a file.
+     * @param fname File name
+     * @param defaultProperties - a list of separate properies which can optionally be
+     *        specified as the defaults, in case a property doesn't exist
+     *        @see java.util.Properties
      * @return Properties
      */
     public static Properties loadProperties(
-            final String fname) {
-    	Properties props = new Properties();
-		try {
-			InputStream in = Thread.currentThread().
+            final String fname ) {
+        
+        Properties props = new Properties();
+        
+        try {
+            InputStream in = Thread.currentThread().
                 getContextClassLoader().getResourceAsStream(fname);
             if ( in != null )
                 props.load(in);
             else
-                LOGGER.info( "Error creating InputStream. Unable to load properties file '" + fname + "'." +
-                             " System Properties will still be retrieved however." ) ;
-		} catch (IOException e) {
-            /*
-             * 2006-10-30 We were formerly throwing this:
-			throw new WebcghSystemException(
-				"Unable to load properties file '" + fname + "'");
-            */
-            // Not the end of the world, since System Properties are
-            // always checked first anyhow.
-            LOGGER.warn ( "Unable to load properties file '" + fname + "'." +
-                         " System Properties will still be retrieved however." ) ;
-		}
-		return props;
+                LOGGER.warn (
+                    "Error creating InputStream. Unable to load properties file '" +
+                    fname + "'." ) ;
+        } catch (IOException e) {
+            LOGGER.warn ( "Unable to load properties file '" + fname + "'." ) ;
+        }
+        return props;
     }
     
     
@@ -211,7 +287,7 @@ public final class SystemUtils {
      */
     public static String getUnitTestProperty(final String key) {
         Properties props = SystemUtils.loadProperties(
-                SystemUtils.UNIT_TEST_PROPS_FILE);
+                SystemUtils.UNIT_TEST_PROPS_FILE );
         if (props == null) {
             throw new WebcghSystemException(
                     "Cannot find 'unit_test.properties' file");
