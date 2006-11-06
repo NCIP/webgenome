@@ -6,7 +6,7 @@
 <p>
 	<html:errors property="global"/>
 </p>
-<html:form action="/cart/newPlot" target="mainwindow">
+<html:form action="/cart/newTestPlot" target="mainwindow">
 	
 	<table class="noBorder">
 	

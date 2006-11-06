@@ -7,7 +7,7 @@
 <p>
 	<html:errors property="global"/>
 </p>
-<html:form action="/cart/newPlot" target="mainwindow">
+<html:form action="/cart/newTestPlot" target="mainwindow">
 
 	<logic:present parameter="id">
 		<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
