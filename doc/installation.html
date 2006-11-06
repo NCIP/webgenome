@@ -57,14 +57,14 @@
 <ol>
 	<li>Unzip the distribution in a suitable directory location.</li>
 	<li>Edit the file <em>build.properties</em>, set properties such as <em>javadoc.dir</em>
-	to a suitable location on the file-system, e.g. <em>javadoc=c:/tmp/webcgh/javadoc</em>. This
+	to a suitable location on the file-system, e.g. <em>javadoc.dir=c:/tmp/webcgh/javadoc</em>. This
 	could also be set to a location within the build directory, e.g. ./doc/api.</li>
 	<li>Open a command window or shell.</li>
 	<li>Change to the <em>WEBGENOME_ROOT</em> directory.</li>
 	<li>Enter the command 'ant war' at the prompt.  This will result in the creation of a WAR file
 		/dist/webGenome.war.</li>
-	<li>Enter the command 'ant doc' at the prompt.  This will generate
-		Javadoc API documentation in the /doc/api directory.
+	<li>Optional - this step is not required to produce the war, but useful for development: Enter the command 'ant doc' at the prompt.  This will generate
+		Javadoc API documentation in the /doc/api directory or wherever javadoc.dir specifies.
 </ol>
 
 
@@ -74,19 +74,19 @@
 	<li>Start RServe following the instructions on the
 	<a href="http://rosuda.org/Rserve">RServe website</a>.</li>
 	<li>Deploy webGenome.war into a new context following the
-	instructions provided with whichever application server
+	instructions provided for the Application Server
 </ul>
 
 <h2>6  Configuring System</h2>
-<p>System Properties which exist in an external file may be loaded.
+<p>Application Runtime Properties which exist in an external file may be loaded.
 These override any existing properties in ./conf/webcgh.properties.
 To instruct webGenome to load Properties from an exernal file, a System
 Property called 'webGenome.configFile' needs to be specified. The value
-assigned to this property must be the location of the external Property file.
-There are several ways of specifying this Property, for example, it may
+assigned to this property must be the location of the external Property file.</p>
+<p>There are several ways of specifying this Property, for example, it may
 be specified as a <em>JAVA_OPTS</em> setting and passed into the web/application container.
 To do this, use the <em>-DwebGenome.configFile=&lt;property file location&gt;</em>
-setting. Consult the documentation of the application container for specific ways to inject
+setting. Consult the documentation of the application server for specific ways to inject
 System Properties.</p>
 <p>To set up an external Properties file for webGenome using the JBoss Application Server, do the following:</p>
 <ol>
