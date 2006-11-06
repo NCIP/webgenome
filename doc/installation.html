@@ -23,7 +23,18 @@
 	<a href="http://www.bioconductor.org/docs/install-howto.html">here</a>.</li>
 	<li>Install aCGH by typing 'biocLite(c("aCGH")) in the R command window.</li>
 	<li>Instructions for installing RServe can be found
-	<a href="http://rosuda.org/Rserve">here</a>.
+	<a href="http://rosuda.org/Rserve">here</a>.</li>
+	<li>(For our locally installed RServe, which operated on the Windows platform,
+	we found that we needed to do the following to make it remotely accessible to 
+	development environments during testing:
+	<ul>
+		<li>"If no config file is supplied, Rserve accepts no remote connections."
+~ <a href="http://rosuda.org/Rserve/doc.shtml" target="_blank">http://rosuda.org/Rserve/doc.shtml</a></li>
+		<li>Create a text file (called Rserv.conf for example) including one line "remote enable".  
+   Put it under the same directory with Rserve.exe.</li>
+   		<li>Start Rserve with command line argument as the following example:</br>
+			<em>&gt; Rserve --RS-conf Rserv.conf</em></li>
+	</ul>)
 </ul>
 
 <h2>3  Creating a Database</h2>
