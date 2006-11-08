@@ -43,6 +43,7 @@
 	 <attribute name="Properties">
      
      <!-- webGenome System Properties File Location -->
+     <!-- CHANGE THIS TO SUIT YOUR RUNTIME CONFIGURATION -->
      webGenome.configFile=C:/cvs/webGenome/webGenome/conf/wegcgh.properties
          
      </attribute>
