@@ -137,6 +137,8 @@
 		<mkdir dir="${dist.dir}"/>
 		
 		<echo>Creating WAR file</echo>
+        <echo>- populating war with dependent jar from webGenomeIntegrationModule</echo>
+        <echo>- located at ${anthill.dependency.artifacts.dir}/build</echo>
 		<war
 			destfile="${dist.dir}/${war.name}.war"
 			webxml="${web.dir}/WEB-INF/web.xml"
@@ -145,6 +147,10 @@
 			<lib dir="${lib.dir}">
 				<include name="*.jar"/>
 			</lib>
+            <!-- Source in jar from webGenome Integration module -->
+            <lib dir="${anthill.dependency.artifacts.dir}/build">
+                <include name="webGenomeClientEJB.jar"/>
+            </lib>
 			<classes dir="${src.dir}">
 				<exclude name="**/*.java"/>			
 			</classes>			
