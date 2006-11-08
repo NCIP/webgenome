@@ -264,7 +264,7 @@
 		</property>
 	</bean>
     
-    <!-- Client plot: entry point for application client -->
+    <!-- Client plot: test Plot action -->
     <bean name="/client/testPlot"
         class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
         <property name="clientDataService">
