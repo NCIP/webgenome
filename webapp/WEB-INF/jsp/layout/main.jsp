@@ -39,7 +39,7 @@
 
 				function onLeave() {
 					if(self.window.name != "mainwindow") {
-						window.close();
+						setTimeout("window.close()",500);
 					}
 				}
 				window.self.name = "popupwindow";
