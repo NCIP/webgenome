@@ -1,6 +1,6 @@
 /*
-$Revision: 1.26 $
-$Date: 2006-11-15 21:54:39 $
+$Revision: 1.27 $
+$Date: 2006-11-15 22:50:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -481,6 +481,10 @@ public final class ScatterPlot implements PlotElement {
 		    			this.paintConnectingSpline(
 		    					cad, bioAssay.getColor(), canvas,
 		    					lineWidth);
+		    		} else if (this.interpolationType
+		    				== InterpolationType.STEP) {
+		    			this.paintConnectingSteps(cad, bioAssay.getColor(),
+		    					canvas, lineWidth);
 		    		}
 				}
 	    		
@@ -678,23 +682,35 @@ public final class ScatterPlot implements PlotElement {
             ArrayDatum d2 = cad.getArrayData().get(i);
             this.reusableDataPoint1.bulkSet(d1);
             this.reusableDataPoint2.bulkSet(d2);
-            if (this.plotBoundaries.atLeastPartlyOnPlot(
-            		this.reusableDataPoint1, this.reusableDataPoint2)) {
-	            if (!this.plotBoundaries.withinBoundaries(
-	            		this.reusableDataPoint1)
-	                    || !this.plotBoundaries.withinBoundaries(
-	                            this.reusableDataPoint2)) {
-	                this.plotBoundaries.truncateToFitOnPlot(
-	                        this.reusableDataPoint1,
-	                        this.reusableDataPoint2);
-	            }
-	            int x1 = this.transposeX(this.reusableDataPoint1);
-	            int y1 = this.transposeY(this.reusableDataPoint1);
-	            int x2 = this.transposeX(this.reusableDataPoint2);
-	            int y2 = this.transposeY(this.reusableDataPoint2);
-	            Line line = new Line(x1, y1, x2, y2, lineWidth, color);
-	            drawingCanvas.add(line);
+            this.paintLine(this.reusableDataPoint1,
+            		this.reusableDataPoint2, drawingCanvas,
+            		lineWidth, color);
+        }
+    }
+    
+    
+    /**
+     * Draw a line between two data points.
+     * @param p1 First data point
+     * @param p2 Second data point
+     * @param drawingCanvas Drawing canvas
+     * @param lineWidth Width of line in pixels
+     * @param color Color of line
+     */
+    private void paintLine(final DataPoint p1, final DataPoint p2,
+    		final DrawingCanvas drawingCanvas, final int lineWidth,
+    		final Color color) {
+    	if (this.plotBoundaries.atLeastPartlyOnPlot(p1, p2)) {
+            if (!this.plotBoundaries.withinBoundaries(p1)
+                    || !this.plotBoundaries.withinBoundaries(p2)) {
+                this.plotBoundaries.truncateToFitOnPlot(p1, p2);
             }
+            int x1 = this.transposeX(p1);
+            int y1 = this.transposeY(p1);
+            int x2 = this.transposeX(p2);
+            int y2 = this.transposeY(p2);
+            Line line = new Line(x1, y1, x2, y2, lineWidth, color);
+            drawingCanvas.add(line);
         }
     }
     
@@ -756,6 +772,44 @@ public final class ScatterPlot implements PlotElement {
 	        	y1 = y2;
 	        }
     	}
+    }
+    
+    
+    /**
+     * Paint "steps" connecting data points.
+     * @param cad ChromosomeArrayData
+     * @param color A color
+     * @param drawingCanvas A drawing canvas
+     * @param lineWidth Width of line in pixels
+     */
+    private void paintConnectingSteps(final ChromosomeArrayData cad,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+        for (int i = 1; i < cad.getArrayData().size(); i++) {
+            ArrayDatum d1 = cad.getArrayData().get(i - 1);
+            ArrayDatum d2 = cad.getArrayData().get(i);
+            long start = d1.getReporter().getLocation();
+            long end = d2.getReporter().getLocation();
+            long mid = (start + end) / (long) 2;
+            
+            // First line - right horizontal from first datum
+            this.reusableDataPoint1.bulkSet(d1);
+            this.reusableDataPoint2.setValue1(mid);
+            this.reusableDataPoint2.setValue2(d1.getValue());
+            this.paintLine(this.reusableDataPoint1, this.reusableDataPoint2,
+            		drawingCanvas, lineWidth, color);
+            
+            // Second line - vertical
+            this.reusableDataPoint1.setValue1(mid);
+            this.reusableDataPoint1.setValue2(d2.getValue());
+            this.paintLine(this.reusableDataPoint1, this.reusableDataPoint2,
+            		drawingCanvas, lineWidth, color);
+            
+            // Third line - left horizontal into second datum
+            this.reusableDataPoint2.bulkSet(d2);
+            this.paintLine(this.reusableDataPoint1, this.reusableDataPoint2,
+            		drawingCanvas, lineWidth, color);
+        }
     }
     
     

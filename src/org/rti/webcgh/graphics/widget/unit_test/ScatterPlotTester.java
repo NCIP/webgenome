@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-11-15 21:54:39 $
+$Revision: 1.3 $
+$Date: 2006-11-15 22:50:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -287,5 +287,24 @@ public final class ScatterPlotTester extends TestCase {
 		
 		// Write graphics to file
 		panel.toPngFile("spline-interpolation.png");
+	}
+	
+	
+	/**
+	 * Test scatter plot with step interpolation.
+	 */
+	public void testStepInterpolation() {
+		
+		// Create plot panel
+		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+		
+		// Create plot
+		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
+				this.getter, WIDTH, HEIGHT, this.boundaries);
+		plot.setInterpolationType(InterpolationType.STEP);
+		panel.add(plot);
+		
+		// Write graphics to file
+		panel.toPngFile("step-interpolation.png");
 	}
 }

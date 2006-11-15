@@ -28,7 +28,7 @@ be directed back into <font color="#336699"><b><i>web</i>Genome</b></font>.
 
 <p>
 To get a flavor for the system without going through another
-application, you can click <html:link action="/client/plot" name="params">here</html:link>.
+application, you can click <html:link action="/client/testPlot" name="params">here</html:link>.
 The system will randomly generate artificial test data.
 </p>
 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.21 $
-$Date: 2006-11-15 21:54:39 $
+$Revision: 1.22 $
+$Date: 2006-11-15 22:50:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -930,6 +930,8 @@ public class PlotParametersForm extends BaseForm {
 		this.lohThreshold = String.valueOf(PlotParameters.DEF_LOH_THRESHOLD);
 		this.interpolateLohEndpoints = "";
 		this.drawRawLohProbabilities = "on";
+		this.interpolationType =
+			PlotParameters.DEF_INTERPOLATION_TYPE.toString();
 	}
 	
 	/**

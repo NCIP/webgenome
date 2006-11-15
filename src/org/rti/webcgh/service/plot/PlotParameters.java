@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-11-15 21:54:38 $
+$Revision: 1.10 $
+$Date: 2006-11-15 22:50:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -317,6 +317,7 @@ public class PlotParameters {
     	this.lohThreshold = params.lohThreshold;
     	this.interpolateLohEndpoints = params.interpolateLohEndpoints;
     	this.drawRawLohProbabilities = params.drawRawLohProbabilities;
+    	this.interpolationType = params.interpolationType;
     }
     
     
