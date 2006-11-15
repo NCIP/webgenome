@@ -90,6 +90,9 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     
     /** Associated genes. */
     private Collection<String> associatedGenes = new ArrayList<String>();
+    
+    /** Is reporter selected? */
+    private boolean selected = false;
 
     
     /**
@@ -158,6 +161,22 @@ public class Reporter implements Serializable, Comparable<Reporter> {
 	}
 
 	/**
+	 * Is reporter selected?
+	 * @return T/F
+	 */
+	public final boolean isSelected() {
+		return selected;
+	}
+
+	/**
+	 * Specify that reporter is selected.
+	 * @param selected Is reporter selected?
+	 */
+	public final void setSelected(final boolean selected) {
+		this.selected = selected;
+	}
+
+	/**
      * Get name of reporter.
      * @return Name of reporter
      */
@@ -220,6 +239,7 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     			this.associatedGenes.add(g[i]);
     		}
     	}
+    	this.selected = dto.isSelected();
     }
 
     // ==================================

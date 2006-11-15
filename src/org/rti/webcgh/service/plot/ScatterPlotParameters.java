@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-26 15:37:33 $
+$Revision: 1.9 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -97,9 +97,6 @@ extends PlotParameters implements Serializable {
     /** Draw data points. */
     private boolean drawPoints = true;
     
-    /** Draw regression lines. */
-    private boolean drawLines = true;
-    
     /** Draw error bars. */
     private boolean drawErrorBars = false;
     
@@ -162,24 +159,6 @@ extends PlotParameters implements Serializable {
 	 */
 	public void setDrawErrorBars(final boolean drawErrorBars) {
 		this.drawErrorBars = drawErrorBars;
-	}
-
-
-	/**
-	 * Draw regression lines?
-	 * @return T/F
-	 */
-	public boolean isDrawLines() {
-		return drawLines;
-	}
-
-
-	/**
-	 * Set whether regression lines should be drawn.
-	 * @param drawLines Draw regression lines?
-	 */
-	public void setDrawLines(final boolean drawLines) {
-		this.drawLines = drawLines;
 	}
 
 
@@ -297,7 +276,6 @@ extends PlotParameters implements Serializable {
     	this.drawHorizGridLines = params.drawHorizGridLines;
     	this.drawVertGridLines = params.drawVertGridLines;
     	this.drawErrorBars = params.drawErrorBars;
-    	this.drawLines = params.drawLines;
     	this.drawPoints = params.drawPoints;
     }
 }

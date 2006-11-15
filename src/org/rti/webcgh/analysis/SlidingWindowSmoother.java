@@ -56,6 +56,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.QuantitationType;
 
 /**
  * An analytic operation that performs
@@ -195,9 +196,11 @@ implements ScalarToScalarAnalyticOperation {
     
     /**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-    public List<UserConfigurableProperty> getUserConfigurableProperties() {
+    public List<UserConfigurableProperty> getUserConfigurableProperties(
+    		final QuantitationType qType) {
        List<UserConfigurableProperty> props =
            new ArrayList<UserConfigurableProperty>();
        props.add(new SimpleUserConfigurableProperty("windowSize",

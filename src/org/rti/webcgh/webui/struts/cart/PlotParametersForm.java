@@ -1,6 +1,6 @@
 /*
-$Revision: 1.20 $
-$Date: 2006-10-28 14:53:06 $
+$Revision: 1.21 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.GenomeIntervalFormatException;
+import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
@@ -121,6 +122,7 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	private static final String PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = 
 		"genomeIntervals";
+	
 	
 	// ===========================
 	//     Attributes
@@ -222,6 +224,10 @@ public class PlotParametersForm extends BaseForm {
 	/** Draw raw LOH probabilities? */
 	private String drawRawLohProbabilities = "on";
 	
+	/** Type of interpolation to perform between data points. */
+	private String interpolationType =
+		InterpolationType.STRAIGHT_LINE.toString();
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -250,6 +256,24 @@ public class PlotParametersForm extends BaseForm {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
+	
+	/**
+	 * Get type of interpolation to perform between data points.
+	 * @return Type of interpolation
+	 */
+	public final String getInterpolationType() {
+		return interpolationType;
+	}
+
+	/**
+	 * Set type of interpolation to perform between data points.
+	 * @param interpolationType Type of interpolation
+	 */
+	public final void setInterpolationType(
+			final String interpolationType) {
+		this.interpolationType = interpolationType;
+	}
+
 	/**
 	 * Draw raw LOH probabilities?
 	 * @return "on" or ""
@@ -964,6 +988,8 @@ public class PlotParametersForm extends BaseForm {
 		} else {
 			params.setDrawRawLohProbabilities(false);
 		}
+		params.setInterpolationType(
+				InterpolationType.valueOf(this.interpolationType));
 	}
 	
 	
@@ -998,11 +1024,6 @@ public class PlotParametersForm extends BaseForm {
 			params.setDrawErrorBars(true);
 		} else {
 			params.setDrawErrorBars(false);
-		}
-		if ("on".equals(this.drawLines)) {
-			params.setDrawLines(true);
-		} else {
-			params.setDrawLines(false);
 		}
 		if ("on".equals(this.drawPoints)) {
 			params.setDrawPoints(true);
@@ -1077,7 +1098,8 @@ public class PlotParametersForm extends BaseForm {
 		} else {
 			this.drawRawLohProbabilities = "";
 		}
-		
+		this.interpolationType =
+			plotParameters.getInterpolationType().toString();
 		
 		// Scatter plot parameters
 		if (plotParameters instanceof ScatterPlotParameters) {
@@ -1118,13 +1140,6 @@ public class PlotParametersForm extends BaseForm {
 				this.drawErrorBars = "on";
 			} else {
 				this.drawErrorBars = "";
-			}
-			
-			// drawLines
-			if (spp.isDrawLines()) {
-				this.drawLines = "on";
-			} else {
-				this.drawLines = "";
 			}
 			
 			// drawPoints

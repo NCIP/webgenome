@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-28 04:23:37 $
+$Revision: 1.9 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.rti.webcgh.domain.GenomeInterval;
+import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.units.BpUnits;
 
 
@@ -76,6 +77,10 @@ public class PlotParameters {
 	 * value is considered to be indicative of LOH.
 	 */
 	public static final float DEF_LOH_THRESHOLD = (float) 0.5;
+	
+	/** Default interpolation type. */
+	public static final InterpolationType DEF_INTERPOLATION_TYPE =
+		InterpolationType.STRAIGHT_LINE;
     
     // ==========================
     //       Attributes
@@ -115,6 +120,10 @@ public class PlotParameters {
     /** Draw raw LOH probabilities along with scored data? */
     private boolean drawRawLohProbabilities = true;
     
+    /** Type of interpolation to perform between data points. */
+    private InterpolationType interpolationType =
+    	DEF_INTERPOLATION_TYPE;
+    
     // ===========================
     //    Getters/setters
     // ===========================
@@ -135,6 +144,25 @@ public class PlotParameters {
 	public final void setDrawRawLohProbabilities(
 			final boolean drawRawLohProbabilities) {
 		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Get interpolation type.
+	 * @return Interpolation type
+	 */
+	public final InterpolationType getInterpolationType() {
+		return interpolationType;
+	}
+
+
+	/**
+	 * Set interpolation type.
+	 * @param interpolationType Interpolation type
+	 */
+	public final void setInterpolationType(
+			final InterpolationType interpolationType) {
+		this.interpolationType = interpolationType;
 	}
 
 

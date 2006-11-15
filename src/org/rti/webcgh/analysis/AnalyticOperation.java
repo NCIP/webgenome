@@ -52,6 +52,8 @@ package org.rti.webcgh.analysis;
 
 import java.util.List;
 
+import org.rti.webcgh.domain.QuantitationType;
+
 
 /**
  * Represents an analytic operation.
@@ -69,9 +71,11 @@ public interface AnalyticOperation {
     
     /**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-    List<UserConfigurableProperty> getUserConfigurableProperties();
+    List<UserConfigurableProperty> getUserConfigurableProperties(
+    		QuantitationType qType);
     
     
     /**

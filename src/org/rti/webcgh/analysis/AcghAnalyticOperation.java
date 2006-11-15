@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-31 06:47:25 $
+$Revision: 1.8 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.rti.webcgh.deprecated.analytic.AcghData;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.analysis.AcghService;
 
 
@@ -129,9 +130,11 @@ public class AcghAnalyticOperation implements ScalarToScalarAnalyticOperation {
 
     /**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-    public final List<UserConfigurableProperty>getUserConfigurableProperties() {
+    public final List<UserConfigurableProperty> getUserConfigurableProperties(
+    		final QuantitationType qType) {
     	return new ArrayList<UserConfigurableProperty>();
     }
     

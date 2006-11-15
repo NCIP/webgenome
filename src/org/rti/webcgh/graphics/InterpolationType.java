@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,35 +48,34 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
-
-import org.rti.webcgh.domain.ChromosomeArrayData;
+package org.rti.webcgh.graphics;
 
 /**
- * A "scalar-to-scalar" anlaytic operation that maintains
- * some sort of internal state that
- * affects subsequent operations.
+ * Type of interpolation to perform on genomic regions
+ * between reporters.  Such interpolation is displayed
+ * in plots. For scatter plots, lines and/or curves are
+ * drawn between data points.  On color coded plots,
+ * color segments may change abruptly or gradually fade
+ * together.
  * @author dhall
  *
  */
-public interface StatefulAnalyticOperation {
-    
-    
-    /**
-     * Adjust the state of this operation.
-     * @param chromosomeArrayData Chromosome array
-     * data that will modify the internal state
-     * @throws AnalyticException if there is a
-     * computational error
-     */
-    void adjustState(ChromosomeArrayData chromosomeArrayData)
-        throws AnalyticException;
-    
-    
-    /**
-     * Reset state of operation.
-     *
-     */
-    void resetState();
+public enum InterpolationType {
+	
+	/** Do not interpolate between reporters.*/
+	NONE,
+	
+	/** Draw a conceptual straight line between reporters. */
+	STRAIGHT_LINE,
+	
+	/**
+	 * Draw conceptual horizontal line out from points
+	 * with an abrupt step connect lines at the midpoint
+	 * between reporters.
+	 */
+	STEP,
+	
+	/** Connect data points with a cubic spline. */
+	SPLINE;
 
 }

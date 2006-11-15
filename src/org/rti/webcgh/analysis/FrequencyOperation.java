@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,31 +52,17 @@ package org.rti.webcgh.analysis;
 
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
-/**
- * A "scalar-to-scalar" anlaytic operation that maintains
- * some sort of internal state that
- * affects subsequent operations.
- * @author dhall
- *
- */
-public interface StatefulAnalyticOperation {
-    
-    
-    /**
-     * Adjust the state of this operation.
-     * @param chromosomeArrayData Chromosome array
-     * data that will modify the internal state
-     * @throws AnalyticException if there is a
-     * computational error
-     */
-    void adjustState(ChromosomeArrayData chromosomeArrayData)
-        throws AnalyticException;
-    
-    
-    /**
-     * Reset state of operation.
-     *
-     */
-    void resetState();
+public class FrequencyOperation
+implements StatefulExperimentAnalyticOperation {
+
+	public void adjustState(ChromosomeArrayData chromosomeArrayData) throws AnalyticException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void resetState() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

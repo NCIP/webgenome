@@ -231,10 +231,17 @@
 					onclick="help('param-drawLines')"
 					title="Information" border="0"
 					width="15" height="15"/>
-				Draw regression lines?
+				Type of interpolation between data points
 			</td>
 			<td>
-				<html:checkbox property="drawLines"/>
+				<html:radio property="interpolationType" value="NONE"/>
+					None &nbsp;&nbsp;
+				<html:radio property="interpolationType" value="STRAIGHT_LINE"/>
+					Straight line &nbsp;&nbsp;
+				<html:radio property="interpolationType" value="STEP"/>
+					Step &nbsp;&nbsp;
+				<html:radio property="interpolationType" value="SPLINE"/>
+					Spline
 			</td>
 		</tr>
 		

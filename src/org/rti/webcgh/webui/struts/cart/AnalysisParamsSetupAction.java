@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-30 20:38:26 $
+$Revision: 1.6 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,7 @@ import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
 import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
 import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
@@ -107,6 +108,19 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     		(AnalyticOperationParametersForm) form;
     	String opKey = aForm.getOperationKey();
     	
+    	// Get selected experiments
+    	SelectedExperimentsForm seForm =
+    		PageContext.getSelectedExperimentsForm(request, false);
+    	if (seForm == null) {
+    		throw new SessionTimeoutException(
+    				"Could not find selected experiments");
+    	}
+    	Collection<Long> ids = seForm.getSelectedExperimentIds();
+    	Collection<Experiment> experiments = cart.getExperiments(ids);
+    	
+    	// Determine quantitation type
+    	QuantitationType qType = Experiment.getQuantitationType(experiments);
+    	
     	// Get instance of analytic operation and attach to request
     	AnalyticOperation op =
     		this.analyticOperationFactory.newAnalyticOperation(opKey);
@@ -115,7 +129,7 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	// Get user configurable parameter characteristics and
     	// attach to request
     	List<UserConfigurableProperty> props =
-    		op.getUserConfigurableProperties();
+    		op.getUserConfigurableProperties(qType);
     	request.setAttribute("props", props);
     	
     	// Get selected experiments and attach to request.
@@ -130,14 +144,6 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	// none of this will be done since the user does not
     	// set output names.
     	if (!(op instanceof MultiExperimentToNonArrayDataAnalyticOperation)) {
-	    	SelectedExperimentsForm seForm =
-	    		PageContext.getSelectedExperimentsForm(request, false);
-	    	if (seForm == null) {
-	    		throw new SessionTimeoutException(
-	    				"Could not find selected experiments");
-	    	}
-	    	Collection<Long> ids = seForm.getSelectedExperimentIds();
-	    	Collection<Experiment> experiments = cart.getExperiments(ids);
 	    	request.setAttribute("experiments", experiments);
 	    	
 	    	// Determine if there will be a single bioassay or multiple

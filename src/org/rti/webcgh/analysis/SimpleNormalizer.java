@@ -58,6 +58,7 @@ import java.util.List;
 
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.QuantitationType;
 
 /**
  * Performs "simple" normalization, subtracting
@@ -250,10 +251,11 @@ public abstract class SimpleNormalizer {
     
     /**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-    public final List<UserConfigurableProperty>
-        getUserConfigurableProperties() {
+    public final List<UserConfigurableProperty> getUserConfigurableProperties(
+    		final QuantitationType qType) {
        List<UserConfigurableProperty> props =
            new ArrayList<UserConfigurableProperty>();
        UserConfigurablePropertyWithOptions prop = new

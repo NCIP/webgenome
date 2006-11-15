@@ -90,6 +90,10 @@ public final class QuantitationType implements Serializable {
     public static final QuantitationType LOH =
     	new QuantitationType(QuantitationTypes.LOH, "LOH");
     
+    /** Frequency. */
+    private static final QuantitationType FREQUENCY =
+    	new QuantitationType("frequency", "Frequency");
+    
     /** Maps quantitation type names of quantitation types. */
     private static final Map<String, QuantitationType> INDEX =
     	new HashMap<String, QuantitationType>();
@@ -100,6 +104,7 @@ public final class QuantitationType implements Serializable {
     	INDEX.put(COPY_NUMBER.getId(), COPY_NUMBER);
     	INDEX.put(LOG_2_RATIO_COPY_NUMBER.getId(), LOG_2_RATIO_COPY_NUMBER);
     	INDEX.put(LOH.getId(), LOH);
+    	INDEX.put(FREQUENCY.getId(), FREQUENCY);
     }
     
     /** Serialized version ID. */

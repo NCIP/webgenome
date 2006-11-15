@@ -8,20 +8,15 @@
 <a href="#cart">2 - Shopping Cart</a>
 <br>
 <a href="#plots">3 - Plots</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#plotParams">3.1 - Plotting Parameters</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#commonPlotParameters">3.1.1 - Common Plot Paremeters</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scatterPlotParameters">3.1.2 - Scatter Plot Parameters</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ideogramPlotParameters">3.1.3 - Ideogram Plot Parameters</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#plotTypes">3.2 - Plot Types</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scatterPlot">3.2.1 - Scatter Plot</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ideogramPlot">3.2.2 - Ideogram Plot</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#plotTypes">3.1 - Plot Types</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scatterPlot">3.1.1 - Scatter Plot</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ideogramPlot">3.1.2 - Ideogram Plot</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#plotParams">3.2 - Plotting Parameters</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#commonPlotParameters">3.2.1 - Common Plot Paremeters</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scatterPlotParameters">3.2.2 - Scatter Plot Parameters</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#ideogramPlotParameters">3.2.3 - Ideogram Plot Parameters</a>
 <br>
-<a href="#pipelines">4 - Analytic Pipelines</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#pipelines-manage">4.1 - Managing Analytic Pipelines</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#pipelines-new">4.2 - Creating/Editing Analytic Pipelines</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#filtering">4.2.1 - Data Filtering Operations</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#normalization">4.2.2 - Data Normalization Operations</a>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#aggregateStatistics">4.2.3 - Aggregate Statistical Functions</a>
+<a href="#operations">4 - Analytic Operations</a>
 <br>
 <p>
 <br>
@@ -36,11 +31,11 @@
 <p>
 			WebGenome is a web-based application for
 			creating genomics plots of array-based data
-			and genomic annotation.  This version provides a client
+			and genomic annotation.  Version 2.3 provides a client
 			plotting service to external applications, such as
 			Rembrandt.  Users must enter webGenome through redirection
 			from another application; the only way to load data is
-			by selecting it in the application client.
+			by selecting it in the referring client application.
 		</p>
 		
 		
@@ -85,7 +80,7 @@
 <p>
 			The shopping cart accumulates raw data sets loaded by the client
 			application, statistically processed data sets derived from
-			raw or other processed data, and plots generated.  For
+			raw or other processed data, and generated plots.  For
 			each experiment, the list of nested bioassays is also shown.
 			Users may change the names of experiments and bioassays in this
 			screen.  Names do not have to be unique and can be empty
@@ -97,7 +92,7 @@
 			Each bioassay has an associated color.  These colors are
 			used in scatter plots to distinguish between bioassays.
 			Colors are initialized by the system.  Users may change
-			colors and all future plots will use the new colors.  However,
+			colors, and all future plots will use the new colors.  However,
 			previously-generated plots in the cart will retain the original
 			colors.
 		</p>
@@ -114,22 +109,80 @@
 <a name="plots"></a><span class="heading1">3 - Plots</span>
 <br>
 <p>
-		
-		
-		
-		
-		
-		
-		
-
+	In this section we describe plotting functionality including the
+	types of plots that can be generated and plotting parameters that
+	can be set by the user.  Functionality to create new plots
+	is accessible from the shopping cart screen.
 	
+	
+		
+		
+		
+		
+	</p>
+<a name="plotTypes"></a><span class="heading2">3.1 - Plot Types</span>
+<br>
+<p>
+			WebGenome 2.3 includes two plot types: scatter plots and ideogram
+			plots.
+		
+			
+			
+			
+			
+			
+			
+		</p>
+<a name="scatterPlot"></a><span class="heading3">3.1.1 - Scatter Plot</span>
+<br>
+<p>
+				
+<p>
+				Scatter plots display array reporter values (e.g. copy number)
+				against physical genome location.  Users can plot data points,
+				regression lines, and confidence intervals in these plots.
+				If data are loss of heterozygosity (LOH), then the
+				endpoints of LOH regions are inferred and shown as
+				thick horizontal lines.  The Y-coordinates of these lines
+				are equal to the average probability of LOH weighted
+				by the chromosomal distance between adjacent reporters.
+				</p>
+				
+				
+<p>
+				Scatter plots provide basic interactivity.  Clicking
+				on a data point causes all data points and lines from
+				the bioassay to be highlighted.  Also the name of the
+				selected bioassay will be outlined in the plot legend.
+				Moving the
+				mouse across the plot will cause a tool tip to show
+				the nearest reporter.  If available, nearby genes will
+				also be displayed along with arbitrary annotations that
+				may be available through the client application.
+				</p>
+			
 </p>
-<a name="plotParams"></a><span class="heading2">3.1 - Plotting Parameters</span>
+<a name="ideogramPlot"></a><span class="heading3">3.1.2 - Ideogram Plot</span>
+<br>
+<p>
+				This plot shows color-coded data values in relation to
+				chromosome ideograms.  The color coding goes from
+				green to blue to red, which indicates data values that
+				are low, medium, and high, respectively.  Moving the mouse
+				over ideograms causes a tool tip to display the cytoband
+				and physical chromosomal location under the pointer.
+				Moving the mouse over data tracks causes a tool tip
+				to indicate the physical chromosomal interval and data value
+				under the pointer.  If available, nearby genes will
+				also be displayed along with arbitrary annotations that
+				may be available through the client application.
+			</p>
+<a name="plotParams"></a><span class="heading2">3.2 - Plotting Parameters</span>
 <br>
 <p>
 			Plotting parameters control how data will be presented graphically.
-			There are parameters that are common to all plot types,
-			such as genome intervals, and parameters specific to one
+			Some parameters that are common to all plot types,
+			such as genome intervals.  Some parameters specific to one
 			type of plot.  After the user elects to create a new plot
 			from the shopping cart, a form showing parameters for
 			the selected plot type is displayed.  The user may
@@ -143,7 +196,7 @@
 			
 			
 		</p>
-<a name="commonPlotParameters"></a><span class="heading3">3.1.1 - Common Plot Paremeters</span>
+<a name="commonPlotParameters"></a><span class="heading3">3.2.1 - Common Plot Paremeters</span>
 <br>
 <p>
 				These parameters are common to all plots.
@@ -182,14 +235,14 @@
 <span class="propName">Number of plot per row</span> -
 					
 						When the user specifies multiple genome intervals,
-						they will be displayed in different plots,
+						the intervals will be displayed in different plots,
 						which will be laid out in rows.  This parameter
 						specifies how many plots will be in a row.
 					</li>
 </ul>
 			
 </p>
-<a name="scatterPlotParameters"></a><span class="heading3">3.1.2 - Scatter Plot Parameters</span>
+<a name="scatterPlotParameters"></a><span class="heading3">3.2.2 - Scatter Plot Parameters</span>
 <br>
 <p>
 				The following parameters are specific to scatter plots.
@@ -198,8 +251,9 @@
 <li>
 <span class="propName">LOH probability threshold</span> -
 					
-						Loss of heterozygosity (LOH) data may be expressed
-						as probability of LOH.  This parameter is a threshold,
+						Loss of heterozygosity (LOH) data may be provided
+						by the client application
+						as probabilities.  This parameter is a threshold,
 						above which probabilities will be interpred as
 						indicative of LOH.
 					</li>
@@ -210,7 +264,7 @@
 						This parameter is only applicable if the data are
 						LOH (loss of heterozygosity).  Scatter plots of
 						LOH indicate LOH regions as thick horizontal
-						lines.  If for two adjacent reporters one is measuring LOH
+						lines.  If for two adjacent reporters one is indicating LOH
 						and the other is not, the location where the
 						transition occurs cannot be known.  If this parameter
 						is checked, the system will interpolate the
@@ -246,7 +300,7 @@
 					
 						This sets the width of each individual scatter plot
 						in pixels.  If multiple genome intervals are selected,
-						the this propery applies to each of the corresponding
+						then this propery applies to each of the corresponding
 						plots.
 					</li>
 <a name="param-height"></a>
@@ -255,7 +309,7 @@
 					
 						This sets the height of each individual scatter plot
 						in pixels.  If multiple genome intervals are selected,
-						the this propery applies to each of the corresponding
+						then this propery applies to each of the corresponding
 						plots.
 					</li>
 <a name="param-drawHorizGridLines"></a>
@@ -286,7 +340,7 @@
 <span class="propName">Draw error bars if plotting means</span> -
 					
 						The averaging analytic operation also calculates
-						standard error values.  If plotting averages in
+						standard error values.  When plotting averages in
 						a scatter plot, if this is checked then error
 						bars will be painted for each data point.
 					</li>
@@ -300,7 +354,7 @@
 </ul>
 			
 </p>
-<a name="ideogramPlotParameters"></a><span class="heading3">3.1.3 - Ideogram Plot Parameters</span>
+<a name="ideogramPlotParameters"></a><span class="heading3">3.2.3 - Ideogram Plot Parameters</span>
 <br>
 <p>
 				The following parameters are specific to ideogram plots.
@@ -331,8 +385,8 @@
 					
 						Background data values within a
 						range (e.g., -0.2 and 0.3) can be masked
-						so that only regions of significant
-						magnitudes are colored.  This parameter is the
+						so that only values of significant
+						magnitude are colored.  This parameter is the
 						the lower end of this range.
 					</li>
 <a name="param-maxMask"></a>
@@ -341,8 +395,8 @@
 					
 						Background data values within a
 						range (e.g., -0.2 and 0.3) can be masked
-						so that only regions of significant
-						magnitudes are colored.  This parameter is the
+						so that only values of significant
+						magnitude are colored.  This parameter is the
 						the upper end of this range.
 					</li>
 <a name="param-minSaturation"></a>
@@ -372,205 +426,134 @@
 </ul>
 			
 </p>
-<a name="plotTypes"></a><span class="heading2">3.2 - Plot Types</span>
+<a name="operations"></a><span class="heading1">4 - Analytic Operations</span>
 <br>
 <p>
+		In this section we describe the analytic operation that can
+		be performed on data in the shopping cart.  Once a user
+		has selected one or more experiments, they may elect to
+		perform an analytic operation on these experiments.
+		The resulting processed data will be deposited back in the
+		shopping cart.  Analytic operations may be performed on
+		all raw experiments (i.e., experiments loaded from the client
+		application directory) and most processed data.  Processed
+		experiments resulting from the
+		<a href="#op-7">minimum common alterations</a> operation
+		cannot be further processed because individual data points
+		are dropped.
 		
-			
-			
-			
-			
-			
-			
-		
-</p>
-<a name="scatterPlot"></a><span class="heading3">3.2.1 - Scatter Plot</span>
-<br>
-<p>
-				Scatter plots display array reporter values (e.g. fold changes) against physical genome location.
-				Users can view data at arbitrary resolutions from the entire genome on down.
-				Both CGH and gene expression data can be co-visualized in this plot.  When moving
-				the mouse over specific probes the system provides mouse-over probe names.
-				Clicking on the name of an experiment or bioassay in the plot legend will
-				highlight the corresponding data.
-			</p>
-<a name="ideogramPlot"></a><span class="heading3">3.2.2 - Ideogram Plot</span>
-<br>
-<p>
-				This plot shows color-coded data values in relation to chromosome ideograms.
-			</p>
-<a name="pipelines"></a><span class="heading1">4 - Analytic Pipelines</span>
-<br>
-<p>
-		When a user creates a plot webGGH may first
-		invoke an <em>analytic pipeline</em> on data.  An analytic pipeline
-		is a sequence of analytical operations that may filter, normalize, or
-		compute aggregate statistics on data.  The system comes pre-loaded
-		with default pipelines.  Additionally the user may create custom
-		analytic pipelines which are persisted and available each time
-		they log into the system.  Users
-		specify which pipeline is invoked through the <a href="#plotParams">
-		plot parameters</a> screen.  Here we describe how custom analytic pipelines
-		are managed and created.
-		
-		
-		
-		
-		
-		
-	</p>
-<a name="pipelines-manage"></a><span class="heading2">4.1 - Managing Analytic Pipelines</span>
-<br>
-<p>
-			
-<p>
-				For basic information on analytic pipelines see the section
-				on <a href="#pipelines">Analytic Pipelines</a>
-			
-</p>
-			
-<p>
-				This screen allows the user to manage their analytic pipelines.
-				The user can delete or edit existing pipelines with the exception
-				of pre-configured pipelines.  The system will prompt the user if the
-				a delete link is clicked to ensure that pipelines will not
-				be inadventantly deleted.
-			</p>
-		
-</p>
-<a name="pipelines-new"></a><span class="heading2">4.2 - Creating/Editing Analytic Pipelines</span>
-<br>
-<p>
-			
-<p>
-				For basic information on analytic pipelines see the section
-				on <a href="#pipelines">Analytic Pipelines</a>
-			
-</p>
-			
-<p>
-				This screen allows the user to create a new pipeline or edit an
-				existing pipeline.  The user can select a name for the pipeline
-				and create sequences of analytic operations.  Analytic operations
-				are of three basic types: 1) data filtering, 2) data normalization,
-				and 3) aggregate statistical functions.  Available operations are
-				described in the following subsections.
-			</p>
-			
-			
-			
-			
-			
-			
-			
-		
-</p>
-<a name="filtering"></a><span class="heading3">4.2.1 - Data Filtering Operations</span>
-<br>
-<p>
-				
-<ul>
-<a name="filterWithinRange"></a>
+		<ul>
+<a name="op-1"></a>
 <li>
-<span class="propName">Filter within range</span> -
+<span class="propName">Bioconductor aCGH smoother</span> -
 					
-						The user species a <em>lower boundary</em> and an
-						<em>upper boundary</em> for a range of values.  The
-						system filters out all probe values within the specified
-						range.  The user may specify any real number for the
-						boundaries including -INFINITY and INFINITY.  For plotting
-						CGH data it is recommended
-						that this filter only be used for removing outliers.  The
-						intensities (e.g. fold change, copy number, etc.) will be
-						interpolated for regions where probes have been filtered out.
-						To mask insignificant regions of copy number change from ideogram and
-						annotation plots, set the <a href="#param-threshold">Data Mask</a>
-						parameter.
-					</li>
-</ul>
-			
-</p>
-<a name="normalization"></a><span class="heading3">4.2.2 - Data Normalization Operations</span>
-<br>
-<p>
-				
-<ul>
-<a name="simpleArrayNormalization"></a>
-<li>
-<span class="propName">Simple array-based normalization</span> -
-					
-						This procedure subtracts the array specific mean or median from each observation. 
-						The user specifies the use of the mean or median as the normalization factor. 
-						The choice of median based normalization allows the user to lessen the effect of outliers. 
-						This type of normalization is useful for making spot intensities comparable across arrays 
-						as it removes an overall array effect; each array will be "centered" on zero (or something 
-						close to it if the median is used). 
-					</li>
-<a name="simpleExperimentNormalization"></a>
-<li>
-<span class="propName">Simple experiment-based normalization</span> -
-					
-						This procedure subtracts the array specific mean or median from each observation then 
-						adds the experiment level mean or median back to each observation. The user specifies 
-						the use of the mean or median as the normalization factor. The choice of median based 
-						normalization allows the user to lessen the effect of outliers. This type of normalization 
-						is useful for making spot intensities comparable across arrays while preserving any overall 
-						difference due to treatment effect. This will center each array on the difference between 
-						it's own array mean/median and the experiment wide mean/median. 
-					</li>
-<a name="simpleSmoothing"></a>
-<li>
-<span class="propName">Simple smoothing</span> -
-					
-						This operation smooths data using a "sliding window" approach.  The user
-						specified a <em>Window size</em>.  The value of probe <em>i</em>
-						is equal to the average value of probes <em>i - w/2</em> through 
-						<em>i + w/2</em>, where <em>w</em> is the size of the window.
-					</li>
-<a name="linearRegression"></a>
-<li>
-<span class="propName">Linear regression</span> -
-					
-						The effect of linear regression based normalization is similar to that of the simple 
-						normalization array operation. This procedure uses linear regression to subtract the 
-						array specific mean from each observation, allowing the user to make spot intensities 
-						comparable across arrays.  The regression model treats each array as a separate value 
-						in a class variable and adjusts accordingly. Requires: at least 2 experiments with at 
-						least one array each. 
-					</li>
-<a name="loess"></a>
-<li>
-<span class="propName">Local (i.e. non-linear or LOESS) regression</span> -
-					
-						A data smoothing technique that utilizes regression to reduce "noise", bringing individual 
-						data points into line with neighboring points. Each point is placed into a local neighborhood 
-						of surrounding points (based on distance) the size of which, referred to as &ldquo;percentage of data&rdquo;, 
-						is specified by the researcher. For each point, a weighted regression is then performed such 
-						that near points have greater influence (weights) than further points. The residual of this 
-						regression is used as the normalized or smoothed value, and the process is repeated for each
-						 point in the data set. Note that the larger the percentage of the data in the local neighborhood, 
-						 the more intense the smoothing effect will be. For our purposes, the following weight function is 
-						 used for the regression:  W(x) = (1-|d/D|^3)^3, where x = a given point in the neighborhood, 
-						 d = distance to the point of interest, and D = maximum distance to the point of interest 
-						 in the local neighborhood.
-					</li>
-</ul>
-			
-</p>
-<a name="aggregateStatistics"></a><span class="heading3">4.2.3 - Aggregate Statistical Functions</span>
-<br>
-<p>
-				Aggregate statistical functions aggregate data with experiments and create summary statistics
-				on a probe-by-props (i.e. reporter-by-reporter) basis.
-				<ul>
-<a name="averageOperation"></a>
+				This operation invokes the aCGH hidden Markov model-based
+				method from the Bioconductor software package to
+				smooth data.
+			</li>
+<a name="op-2"></a>
 <li>
 <span class="propName">Average</span> -
 					
-						This function computes the average and standard error of probes with experiments.
+				This operation performs chromosome position-wise averaging
+				of all data points within the same experiment.
+			</li>
+<a name="op-3"></a>
+<li>
+<span class="propName">Range based filter</span> -
+					
+				This operation filters out all data with values
+				between two endpoints and is
+				used primarily for removing outliers.
+				The upper and lower endpoints
+				may be INFINITY or -INFINITY, respectively.  This operation
+				includes the following parameters:
+				<ul>
+<a name="opParam-lowerBound"></a>
+<li>
+<span class="propName">Lower bound</span> -
+					
+						Lower filter endpoint
+					</li>
+<a name="opParam-upperBound"></a>
+<li>
+<span class="propName">Upper bound</span> -
+					
+						Upper filter endpoint
 					</li>
 </ul>
 			
+</li>
+<a name="op-4"></a>
+<li>
+<span class="propName">Simple bioassay-based normalization</span> -
+					
+				This operation subtracts the bioassay specific mean or median
+				from each observation. The user specifies the use of the mean
+				or median as the normalization factor. The choice of median
+				based normalization allows the user to lessen the effect
+				of outliers.  This type of normalization is useful for making
+				spot intensities comparable across arrays 
+				as it removes an overall array effect; each array will be 
+				"centered" on zero (or something 
+				close to it if the median is used).
+			</li>
+<a name="op-5"></a>
+<li>
+<span class="propName">Simple experiment-based normalization</span> -
+					
+				This procedure subtracts the array specific mean or median from
+				each observation then adds the experiment level mean or median
+				back to each observation. The user specifies 
+				the use of the mean or median as the normalization factor.
+				The choice of median based 
+				normalization allows the user to lessen the effect of outliers.
+				This type of normalization 
+				is useful for making spot intensities comparable across arrays 
+				while preserving any overall 
+				difference due to treatment effect. This will center each array 
+				on the difference between 
+				it's own array mean/median and the experiment wide mean/median. 
+			</li>
+<a name="op-6"></a>
+<li>
+<span class="propName">Sliding window smoother</span> -
+					
+				This operation smooths data using a "sliding window" approach. 
+				The user
+				specified a <em>Window size</em>.  The value of probe <em>i</em>
+				is equal to the average value of probes <em>i - w/2</em> through 
+				<em>i + w/2</em>, where <em>w</em> is the size of the window.
+			</li>
+<a name="op-7"></a>
+<li>
+<span class="propName">Minimum common alterations</span> -
+					
+				This operation identifies the set of common alteration across
+				bioassays.  These alterations are defined by a
+				<em>threshold</em> and a <em>minPercent</em> property.
+				The <em>threshold</em> is used for scoring alterations.
+				For instance, if the threshold is set to 0.5, then all 
+				LOH probability values greater than this value will be
+				considered LOH.  The <em>minPercent</em> propety defines
+				the minimum percentage of bioassays that must contain
+				an alteration at a particular location for the alteration
+				to be considered common.
+			</li>
+<a name="op-8"></a>
+<li>
+<span class="propName">Linear regression</span> -
+					
+				This operation peforms data smoothing using linear regression.
+			</li>
+<a name="op-9"></a>
+<li>
+<span class="propName">Loess regression</span> -
+					
+				This operation peforms data smoothing using Loess regression.
+			</li>
+</ul>
+	
 </p>
 </body>
 </html>

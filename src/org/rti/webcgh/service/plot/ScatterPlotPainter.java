@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2006-10-28 17:09:46 $
+$Revision: 1.16 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.util.List;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.QuantitationType;
+import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.Background;
@@ -184,7 +185,8 @@ public class ScatterPlotPainter extends PlotPainter {
 	            		this.getChromosomeArrayDataGetter(), sizer.width(gi),
 	            		sizer.height(), pb);
 	        scatterPlot.setDrawErrorBars(plotParameters.isDrawErrorBars());
-	        scatterPlot.setDrawLines(plotParameters.isDrawLines());
+	        scatterPlot.setInterpolationType(
+	        		plotParameters.getInterpolationType());
 	        scatterPlot.setDrawPoints(plotParameters.isDrawPoints());
 	        scatterPlot.setDrawRawLohProbabilities(
 	        		plotParameters.isDrawRawLohProbabilities());

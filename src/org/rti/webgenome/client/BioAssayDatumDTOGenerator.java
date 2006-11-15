@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-30 21:52:43 $
+$Revision: 1.4 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,9 @@ public class BioAssayDatumDTOGenerator {
 	/** Gap in base pairs between generated reporters. */
 	private final long gap;
 	
+	/** Probability that a data point is selected. */
+	private float probabilitySelected = (float) 0.1;
+	
 	/**
 	 * Constructor.
 	 * @param gap Gap between generated reporter in
@@ -90,13 +93,16 @@ public class BioAssayDatumDTOGenerator {
 					- constraints[i].getStartPosition()) / this.gap);
 			for (int j = 0; j < num && p < totalNum; j++) {
 				long pos = (long) j * this.gap + constraint.getStartPosition();
+				boolean selected = Math.random() < this.probabilitySelected;
 				DefReporterDTOImpl r = new DefReporterDTOImpl(
-						String.valueOf(j), constraint.getChromosome(), pos);
+						String.valueOf(j), constraint.getChromosome(), pos,
+						selected);
 				r.addAnnotation("An annotation");
 				r.addAssociatedGene("Gene A");
 				double value = Math.random();
-				dtos[p++] = new DefBioAssayDatumDTOImpl(value,
+				BioAssayDatumDTO dto = new DefBioAssayDatumDTOImpl(value,
 						constraint.getQuantitationType(), r);
+				dtos[p++] = dto;
 			}
 		}
 		return dtos;

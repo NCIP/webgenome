@@ -56,6 +56,7 @@ import java.util.List;
 
 import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.Reporter;
 
 /**
@@ -135,9 +136,11 @@ public final class Averager implements ListToScalarAnalyticOperation {
     
     /**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-    public List<UserConfigurableProperty> getUserConfigurableProperties() {
+    public List<UserConfigurableProperty> getUserConfigurableProperties(
+    		final QuantitationType qType) {
     	return new ArrayList<UserConfigurableProperty>();
     }
     

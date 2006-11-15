@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-30 20:38:26 $
+$Revision: 1.7 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,10 +85,22 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 	private static final float DEF_MIN_PERCENT = (float) 0.5;
 	
 	/**
-	 * Default threshold for determining if a datum is in an
-	 * altered genome region.
+	 * Default threshold for determining if a datum is in a
+	 * region of LOH.
 	 */
-	private static final float DEF_THRESHOLD = (float) 0.5;
+	private static final float DEF_LOH_THRESHOLD = (float) 0.5;
+	
+	/**
+	 * Default threshold for determining if a datum is in a
+	 * region of amplification.
+	 */
+	private static final float DEF_AMPLIFICATION_THRESHOLD = (float) 0.7;
+	
+	/**
+	 * Default threshold for determining if a datum is in a
+	 * region of deletion.
+	 */
+	private static final float DEF_DELETION_THREHSOLD = (float) 0.3;
 	
 	/**
 	 * Minimum percent of bioassays that must be altered
@@ -97,10 +109,23 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 	private float minPercent = DEF_MIN_PERCENT;
 	
 	/**
-	 * Threshold for determining if a datum is in an
-	 * altered genome region.
+	 * Threshold for determining if a datum is in a
+	 * region of LOH.
 	 */
-	private float threshold = DEF_THRESHOLD;
+	private float lohThreshold = DEF_LOH_THRESHOLD;
+	
+	/**
+	 * Threshold for determining if a datum is in a
+	 * region of amplification.
+	 */
+	private float amplificationThreshold = DEF_AMPLIFICATION_THRESHOLD;
+	
+	
+	/**
+	 * Threshold for determining if a datum is in a
+	 * region of deletion.
+	 */
+	private float deletionThreshold = DEF_DELETION_THREHSOLD;
 	
 	/**
 	 * If <code>false</code>, then
@@ -142,9 +167,17 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 			gen.addInvalidParameterName("minPercent",
 					String.valueOf(this.minPercent));
 		}
-		if (Float.isNaN(this.threshold)) {
-			gen.addInvalidParameterName("threshold",
-					String.valueOf(this.threshold));
+		if (Float.isNaN(this.lohThreshold)) {
+			gen.addInvalidParameterName("lohThreshold",
+					String.valueOf(this.lohThreshold));
+		}
+		if (Float.isNaN(this.amplificationThreshold)) {
+			gen.addInvalidParameterName("amplificationThreshold",
+					String.valueOf(this.amplificationThreshold));
+		}
+		if (Float.isNaN(this.deletionThreshold)) {
+			gen.addInvalidParameterName("deletionThreshold",
+					String.valueOf(this.deletionThreshold));
 		}
 		if (gen.invalidParameters()) {
 			throw new AnalyticException(gen.getMessage());
@@ -158,7 +191,8 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 			if (this.quantitationType == QuantitationType.LOH) {
 				List<AnnotatedGenomeFeature> alts =
 					this.minimumCommonAlterations(input,
-							AnnotationType.LOH_SEGMENT);
+							AnnotationType.LOH_SEGMENT,
+							this.lohThreshold);
 				ChromosomeArrayData cad =
 					new ChromosomeArrayData(chromosome);
 				cad.setChromosomeAlterations(alts);
@@ -166,13 +200,15 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 			} else {
 				List<AnnotatedGenomeFeature> alts =
 					this.minimumCommonAlterations(input,
-							AnnotationType.AMPLIFIED_SEGMENT);
+							AnnotationType.AMPLIFIED_SEGMENT,
+							this.amplificationThreshold);
 				ChromosomeArrayData cad =
 					new ChromosomeArrayData(chromosome);
 				cad.setChromosomeAlterations(alts);
 				output.add(cad);
 				alts = this.minimumCommonAlterations(input,
-							AnnotationType.DELETED_SEGMENT);
+							AnnotationType.DELETED_SEGMENT,
+							this.deletionThreshold);
 				cad = new ChromosomeArrayData(chromosome);
 				cad.setChromosomeAlterations(alts);
 				output.add(cad);
@@ -186,13 +222,15 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 	 * Find minimum common alteration set.
 	 * @param cads Chromosome array data
 	 * @param altType Alteration type
+	 * @param threshold Alteration threshold value
 	 * @return Minimum common alterations
 	 */
 	private List<AnnotatedGenomeFeature> minimumCommonAlterations(
 			final Collection<ChromosomeArrayData> cads,
-			final AnnotationType altType) {
+			final AnnotationType altType,
+			final float threshold) {
 		List<AnnotatedGenomeFeature> alts =
-			this.accumulateAlterations(cads, altType);
+			this.accumulateAlterations(cads, altType, threshold);
 		List<AnnotatedGenomeFeature> isecs =
 			this.findAllIntersections(alts);
 		int min = (int) Math.ceil((double) cads.size() * this.minPercent);
@@ -205,16 +243,17 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 	 * Accumulate all alterations in given chromosome array data.
 	 * @param cads Chromosome array data
 	 * @param altType Alteration type
+	 * @param threshold Alteration threshold
 	 * @return All alterations
 	 */
 	private List<AnnotatedGenomeFeature> accumulateAlterations(
 			final Collection<ChromosomeArrayData> cads,
-			final AnnotationType altType) {
+			final AnnotationType altType, final float threshold) {
 		List<AnnotatedGenomeFeature> alts =
 			new ArrayList<AnnotatedGenomeFeature>();
 		for (ChromosomeArrayData cad : cads) {
 			Iterator<AnnotatedGenomeFeature>it =
-				cad.alteredSegmentIterator(this.threshold,
+				cad.alteredSegmentIterator(threshold,
 						this.interpolate, altType);
 			while (it.hasNext()) {
 				AnnotatedGenomeFeature f = it.next();
@@ -325,18 +364,20 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 	}
 
 	
-    /**
+	/**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-	public List<UserConfigurableProperty> getUserConfigurableProperties() {
+    public List<UserConfigurableProperty> getUserConfigurableProperties(
+    		final QuantitationType qType) {
+    	
+    	// Properties common to all quantitation types
 		List<UserConfigurableProperty> props =
 			new ArrayList<UserConfigurableProperty>();
 		props.add(new SimpleUserConfigurableProperty("minPercent",
 				"Minimum percent of altered bioassays",
 				String.valueOf(this.minPercent)));
-		props.add(new SimpleUserConfigurableProperty("threshold",
-				"Threshold", String.valueOf(this.threshold)));
 		String interpolateStr = "NO";
 		if (this.interpolate) {
 			interpolateStr = "YES";
@@ -347,6 +388,19 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 		opts.addOption("0", "NO");
 		opts.addOption("1", "YES");
 		props.add(opts);
+		
+		// LOH properties
+		if (qType == QuantitationType.LOH) {
+			props.add(new SimpleUserConfigurableProperty("lohThreshold",
+					"LOH threshold", String.valueOf(this.lohThreshold)));
+		} else {
+			props.add(new SimpleUserConfigurableProperty(
+					"amplificationThreshold", "Amplification threshold",
+					String.valueOf(this.amplificationThreshold)));
+			props.add(new SimpleUserConfigurableProperty("deletionThreshold",
+					"Deletion threshold", String.valueOf(
+							this.deletionThreshold)));
+		}
 		return props;
 	}
 
@@ -375,10 +429,24 @@ implements MultiExperimentToNonArrayDataAnalyticOperation {
 			}
 		} else if ("threshold".equals(name)) {
 			try {
-				this.threshold = Float.parseFloat(value);
+				this.lohThreshold = Float.parseFloat(value);
 			} catch (NumberFormatException e) {
 				throw new BadUserConfigurablePropertyException(
-						"Threshold not valid number");
+						"LOH threshold not valid number");
+			}
+		} else if ("amplificationThreshold".equals(name)) {
+			try {
+				this.amplificationThreshold = Float.parseFloat(value);
+			} catch (NumberFormatException e) {
+				throw new BadUserConfigurablePropertyException(
+						"Amplification threshold not valid number");
+			}
+		} else if ("deletionThreshold".equals(name)) {
+			try {
+				this.deletionThreshold = Float.parseFloat(value);
+			} catch (NumberFormatException e) {
+				throw new BadUserConfigurablePropertyException(
+						"Deletion threshold not valid number");
 			}
 		} else if ("interpolate".equals(name)) {
 			if ("YES".equals(value)) {

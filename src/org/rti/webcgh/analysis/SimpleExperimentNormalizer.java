@@ -60,7 +60,8 @@ package org.rti.webcgh.analysis;
  *
  */
 public final class SimpleExperimentNormalizer extends SimpleNormalizer
-    implements StatefulBioAssayAnalyticOperation {
+    implements StatefulExperimentAnalyticOperation,
+    ScalarToScalarAnalyticOperation {
     
     /**
      * Get name of operation.

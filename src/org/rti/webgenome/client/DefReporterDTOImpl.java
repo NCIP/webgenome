@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-16 20:06:57 $
+$Revision: 1.4 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,13 +91,16 @@ public class DefReporterDTOImpl implements ReporterDTO {
      * @param name Name
      * @param chromosome Chromsome
      * @param chromosomeLocation Chromsome Location
+     * @param selected Is reporter selected?
      */
     public DefReporterDTOImpl(final String name,
-    		final String chromosome, final Long chromosomeLocation) {
+    		final String chromosome, final Long chromosomeLocation,
+    		boolean selected) {
         this.name = name;
         this.chromosome = chromosome;
         this.chromosomeLocation = chromosomeLocation;
         this.selected = new Boolean(false);
+        this.selected = selected;
     }
     
     /**

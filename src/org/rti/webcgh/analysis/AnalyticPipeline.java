@@ -53,6 +53,8 @@ package org.rti.webcgh.analysis;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.rti.webcgh.domain.QuantitationType;
+
 /**
  * Represents a pipeline of analytic operations
  * performed in sequence.  The output from
@@ -114,17 +116,21 @@ public class AnalyticPipeline implements AnalyticOperation {
     // =================================
     //   AnalyticOperation interface
     // =================================
+    
+    
     /**
      * Get user configurable properties.
+     * @param qType Quantitation type
      * @return User configurable properties
      */
-    public final List<UserConfigurableProperty>getUserConfigurableProperties() {
+    public final List<UserConfigurableProperty> getUserConfigurableProperties(
+    		final QuantitationType qType) {
     	List<UserConfigurableProperty> props =
     		new ArrayList<UserConfigurableProperty>();
     	int count = 0;
     	for (AnalyticOperation op : this.operations) {
     		for (UserConfigurableProperty prop
-    				: op.getUserConfigurableProperties()) {
+    				: op.getUserConfigurableProperties(qType)) {
     			UserConfigurableProperty newProp = prop.createClone();
     			String newName = count + "_" + prop.getName();
     			String newDisplayName = "Step " + count + " "

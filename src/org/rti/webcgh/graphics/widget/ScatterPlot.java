@@ -1,6 +1,6 @@
 /*
-$Revision: 1.25 $
-$Date: 2006-10-30 22:20:31 $
+$Revision: 1.26 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,15 +69,17 @@ import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Line;
-import org.rti.webcgh.graphics.primitive.Polyline;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.webui.util.ClickBoxes;
 import org.rti.webcgh.webui.util.MouseOverStripe;
 import org.rti.webcgh.webui.util.MouseOverStripes;
+
+import flanagan.interpolation.CubicSpline;
 
 /**
  * A two dimensional plotting space that renders
@@ -110,12 +112,6 @@ public final class ScatterPlot implements PlotElement {
     
     /** Default length of error bar hatch lines in pixels. */
     private static final int DEF_ERROR_BAR_HATCH_LENGTH = 6;
-    
-    /**
-     * Default maximum number of constituent points in
-     * a regression line polyline.
-     */
-    private static final int DEF_MAX_NUM_POINTS_IN_LINE = 100;
     
     /** Minimum width of a region of LOH in pixels. */
     private static final int MIN_LOH_WIDTH = 10;
@@ -177,9 +173,6 @@ public final class ScatterPlot implements PlotElement {
     /** Draw data points. */
     private boolean drawPoints = true;
     
-    /** Draw regression lines. */
-    private boolean drawLines = true;
-    
     /** Draw error bars. */
     private boolean drawErrorBars = false;
     
@@ -204,6 +197,9 @@ public final class ScatterPlot implements PlotElement {
     /** Quantitation type. */
     private QuantitationType quantitationType = null;
     
+    /** Interpolation type. */
+    private InterpolationType interpolationType = InterpolationType.NONE;
+    
     // =============================
     //     Getters/setters
     // =============================
@@ -224,6 +220,25 @@ public final class ScatterPlot implements PlotElement {
 	public void setDrawRawLohProbabilities(
 			final boolean drawRawLohProbabilities) {
 		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Get interpolation type.
+	 * @return Interpolation type
+	 */
+	public InterpolationType getInterpolationType() {
+		return interpolationType;
+	}
+
+
+	/**
+	 * Set interpolation type.
+	 * @param interpolationType Interpolation type
+	 */
+	public void setInterpolationType(
+			final InterpolationType interpolationType) {
+		this.interpolationType = interpolationType;
 	}
 
 
@@ -305,22 +320,6 @@ public final class ScatterPlot implements PlotElement {
 		this.drawErrorBars = drawErrorBars;
 	}
 
-	/**
-	 * Will regression lines be drawn?
-	 * @return T/F
-	 */
-	public boolean isDrawLines() {
-		return drawLines;
-	}
-
-	
-	/**
-	 * Set whether regression lines will be drawn.
-	 * @param drawLines Draw regression lines?
-	 */
-	public void setDrawLines(final boolean drawLines) {
-		this.drawLines = drawLines;
-	}
 
 	/**
 	 * Will data points be drawn?
@@ -472,9 +471,16 @@ public final class ScatterPlot implements PlotElement {
 		    		}
 		        
 		            // Lines
-		    		if (this.drawLines) {
-			            this.paintLines(cad, bioAssay.getColor(), canvas,
+		    		if (this.interpolationType
+		    				== InterpolationType.STRAIGHT_LINE) {
+			            this.paintStraightConnectingLines(
+			            		cad, bioAssay.getColor(), canvas,
 			            		lineWidth);
+		    		} else if (this.interpolationType
+		    				== InterpolationType.SPLINE) {
+		    			this.paintConnectingSpline(
+		    					cad, bioAssay.getColor(), canvas,
+		    					lineWidth);
 		    		}
 				}
 	    		
@@ -623,7 +629,8 @@ public final class ScatterPlot implements PlotElement {
 	        
 	        // Create point
 	        this.drawPoint(x, y, color, datum.getReporter().getName(),
-	                drawingCanvas, pointRadius);
+	                drawingCanvas, pointRadius,
+	                datum.getReporter().isSelected());
 	        
 	        // Add click box command
 	        x -= this.x;
@@ -657,32 +664,18 @@ public final class ScatterPlot implements PlotElement {
     
     
     /**
-     * Paint all lines for given chromosme array data.
-     * This method ultimately uses the SVG <polyline/> element.
-     * Due to limitations in SVG viewers regarding the
-     * maximum number of individual points in a polyline,
-     * the points are broken up into separate polylines
-     * that contain no more than some maximum number of
-     * ponts.
+     * Paint straight lines connecting data points.
      * @param cad ChromosomeArrayData
      * @param color A color
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of line in pixels
      */
-    private void paintLines(final ChromosomeArrayData cad,
+    private void paintStraightConnectingLines(final ChromosomeArrayData cad,
             final Color color, final DrawingCanvas drawingCanvas,
             final int lineWidth) {
-        Polyline polyline = new Polyline(lineWidth,
-                DEF_MAX_NUM_POINTS_IN_LINE, color);
         for (int i = 1; i < cad.getArrayData().size(); i++) {
-            if (i % DEF_MAX_NUM_POINTS_IN_LINE == 0) {
-                drawingCanvas.add(polyline, false);
-                polyline = new Polyline(lineWidth,
-                        DEF_MAX_NUM_POINTS_IN_LINE, color);
-            }
             ArrayDatum d1 = cad.getArrayData().get(i - 1);
             ArrayDatum d2 = cad.getArrayData().get(i);
-            boolean runsOff = false;
             this.reusableDataPoint1.bulkSet(d1);
             this.reusableDataPoint2.bulkSet(d2);
             if (this.plotBoundaries.atLeastPartlyOnPlot(
@@ -691,10 +684,6 @@ public final class ScatterPlot implements PlotElement {
 	            		this.reusableDataPoint1)
 	                    || !this.plotBoundaries.withinBoundaries(
 	                            this.reusableDataPoint2)) {
-	                if (!this.plotBoundaries.withinBoundaries(
-	                        this.reusableDataPoint2)) {
-	                    runsOff = true;
-	                }
 	                this.plotBoundaries.truncateToFitOnPlot(
 	                        this.reusableDataPoint1,
 	                        this.reusableDataPoint2);
@@ -703,19 +692,70 @@ public final class ScatterPlot implements PlotElement {
 	            int y1 = this.transposeY(this.reusableDataPoint1);
 	            int x2 = this.transposeX(this.reusableDataPoint2);
 	            int y2 = this.transposeY(this.reusableDataPoint2);
-	            polyline.add(x1, y1, x2, y2);
-	            if (runsOff) {
-	                if (!polyline.empty()) {
-	                    drawingCanvas.add(polyline, false);
-	                    polyline = new Polyline(lineWidth,
-	                            DEF_MAX_NUM_POINTS_IN_LINE, color);
-	                }
-	            }
+	            Line line = new Line(x1, y1, x2, y2, lineWidth, color);
+	            drawingCanvas.add(line);
             }
         }
-        if (!polyline.empty()) {
-            drawingCanvas.add(polyline, false);
-        }
+    }
+    
+    
+    /**
+     * Generate cubic spline.
+     * @param cad Chromosome array data that provided control points
+     * @return Cubic spline
+     */
+    private CubicSpline newCubicSpline(final ChromosomeArrayData cad) {
+    	List<ArrayDatum> arrayData = cad.getArrayData();
+    	int n = arrayData.size();
+    	double[] xx = new double[n];
+    	double[] yy = new double[n];
+    	for (int i = 0; i < n; i++) {
+    		ArrayDatum datum = arrayData.get(i);
+    		xx[i] = (double) this.transposeX(datum.getReporter().getLocation());
+    		yy[i] = (double) this.transposeY(datum.getValue());
+    	}
+    	return new CubicSpline(xx, yy);
+    }
+    
+    
+    /**
+     * Paint cubic spline connecting data points.
+     * @param cad ChromosomeArrayData
+     * @param color A color
+     * @param drawingCanvas A drawing canvas
+     * @param lineWidth Width of line in pixels
+     */
+    private void paintConnectingSpline(final ChromosomeArrayData cad,
+            final Color color, final DrawingCanvas drawingCanvas,
+            final int lineWidth) {
+    	List<ArrayDatum> arrayData = cad.getArrayData();
+    	if (arrayData.size() > 0) {
+	    	CubicSpline spline = this.newCubicSpline(cad);
+	    	ArrayDatum firstDatum = arrayData.get(0);
+	    	ArrayDatum lastDatum = arrayData.get(arrayData.size() - 1);
+	    	int startX = this.x;
+	    	int firstDatumX =
+	    		this.transposeX(firstDatum.getReporter().getLocation());
+	    	if (firstDatumX > startX) {
+	    		startX = firstDatumX;
+	    	}
+	    	int endX = this.x + this.width;
+	    	int lastDatumX =
+	    		this.transposeX(lastDatum.getReporter().getLocation());
+	    	if (lastDatumX < endX) {
+	    		endX = lastDatumX;
+	    	}
+	    	int x1 = startX;
+	    	int y1 = (int) spline.interpolate((double) x1);
+	        for (int i = startX; i < endX - 1; i++) {
+	        	int x2 = i + 1;
+	        	int y2 = (int) spline.interpolate((double) x2);
+	        	Line line = new Line(x1, y1, x2, y2, lineWidth, color);
+	        	drawingCanvas.add(line);
+	        	x1 = x2;
+	        	y1 = y2;
+	        }
+    	}
     }
     
     
@@ -770,12 +810,18 @@ public final class ScatterPlot implements PlotElement {
      * @param label Mouseover label for point
      * @param drawingCanvas A drawing canvas
      * @param pointRadius Radius of data point
+     * @param selected Is individual data point selected (as opposed
+     * to entire bioassay)?
      */
     private void drawPoint(final int x, final int y, final Color color,
             final String label, final DrawingCanvas drawingCanvas,
-            final int pointRadius) {
+            final int pointRadius, final boolean selected) {
         Circle circle = new Circle(x, y, pointRadius, color);
         drawingCanvas.add(circle, false);
+        if (selected) {
+        	circle = new Circle(x, y, pointRadius + 3, color, false);
+        	drawingCanvas.add(circle);
+        }
     }
     
     

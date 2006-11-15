@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-26 21:10:38 $
+$Revision: 1.2 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Reporter;
+import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.widget.Background;
@@ -121,16 +122,121 @@ public final class ScatterPlotTester extends TestCase {
 		exp.add(ba);
 		ba.setName("BioAssay");
 		ba.setColor(Color.BLUE);
-		ba.add(new ArrayDatum((float) 1.0, new Reporter(null, (short) 1, 100)));
-		ba.add(new ArrayDatum((float) 0.0, new Reporter(null, (short) 1, 200)));
-		ba.add(new ArrayDatum((float) -1.0, new Reporter(null,
+		ba.setId((long) 1);
+		ba.add(new ArrayDatum((float) 0.0, new Reporter(null, (short) 1, 100)));
+		ba.add(new ArrayDatum((float) 1.0, new Reporter(null, (short) 1, 200)));
+		ba.add(new ArrayDatum((float) 0.5, new Reporter(null,
 				(short) 1, 300)));
 	}
 	
+//	/**
+//	 * Test scatter plot with no other widgets.
+//	 */
+//	public void testAlone() {
+//		
+//		// Create plot panel
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		
+//		// Create plot
+//		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
+//				this.getter, WIDTH, HEIGHT, this.boundaries);
+//		panel.add(plot);
+//		
+//		// Write graphics to file
+//		panel.toPngFile("alone.png");
+//	}
+//	
+//
+//	/**
+//	 * Test scatter plot above another widget.
+//	 */
+//	public void testAbove() {
+//		
+//		// Create plot panel
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		
+//		// Add background widget
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		
+//		// Create plot
+//		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
+//				this.getter, WIDTH, HEIGHT, this.boundaries);
+//		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
+//		
+//		// Write graphics to file
+//		panel.toPngFile("above.png");
+//	}
+//	
+//	
+//	/**
+//	 * Test scatter plot above another widget.
+//	 */
+//	public void testBelow() {
+//		
+//		// Create plot panel
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		
+//		// Add background widget
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		
+//		// Create plot
+//		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
+//				this.getter, WIDTH, HEIGHT, this.boundaries);
+//		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+//		
+//		// Write graphics to file
+//		panel.toPngFile("below.png");
+//	}
+//	
+//	
+//	/**
+//	 * Test scatter plot to left of another widget.
+//	 */
+//	public void testLeft() {
+//		
+//		// Create plot panel
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		
+//		// Add background widget
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		
+//		// Create plot
+//		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
+//				this.getter, WIDTH, HEIGHT, this.boundaries);
+//		panel.add(plot, HorizontalAlignment.LEFT_OF,
+//				VerticalAlignment.CENTERED);
+//		
+//		// Write graphics to file
+//		panel.toPngFile("left.png");
+//	}
+//	
+//	
+//	/**
+//	 * Test scatter plot to right of another widget.
+//	 */
+//	public void testRight() {
+//		
+//		// Create plot panel
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		
+//		// Add background widget
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		
+//		// Create plot
+//		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
+//				this.getter, WIDTH, HEIGHT, this.boundaries);
+//		panel.add(plot, HorizontalAlignment.RIGHT_OF,
+//				VerticalAlignment.CENTERED);
+//		
+//		// Write graphics to file
+//		panel.toPngFile("right.png");
+//	}
+	
+	
 	/**
-	 * Test scatter plot with no other widgets.
+	 * Test scatter plot with no interpolation.
 	 */
-	public void testAlone() {
+	public void testNoInterpolation() {
 		
 		// Create plot panel
 		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
@@ -138,95 +244,48 @@ public final class ScatterPlotTester extends TestCase {
 		// Create plot
 		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
 				this.getter, WIDTH, HEIGHT, this.boundaries);
+		plot.setInterpolationType(InterpolationType.NONE);
 		panel.add(plot);
 		
 		// Write graphics to file
-		panel.toPngFile("alone.png");
-	}
-	
-
-	/**
-	 * Test scatter plot above another widget.
-	 */
-	public void testAbove() {
-		
-		// Create plot panel
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
-		
-		// Add background widget
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		
-		// Create plot
-		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
-				this.getter, WIDTH, HEIGHT, this.boundaries);
-		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
-		
-		// Write graphics to file
-		panel.toPngFile("above.png");
+		panel.toPngFile("no-interpolation.png");
 	}
 	
 	
 	/**
-	 * Test scatter plot above another widget.
+	 * Test scatter plot with straight line interpolation.
 	 */
-	public void testBelow() {
+	public void testStraightLineInterpolation() {
 		
 		// Create plot panel
 		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
 		
-		// Add background widget
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		
 		// Create plot
 		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
 				this.getter, WIDTH, HEIGHT, this.boundaries);
-		panel.add(plot, HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+		plot.setInterpolationType(InterpolationType.STRAIGHT_LINE);
+		panel.add(plot);
 		
 		// Write graphics to file
-		panel.toPngFile("below.png");
+		panel.toPngFile("straight-line-interpolation.png");
 	}
 	
 	
 	/**
-	 * Test scatter plot to left of another widget.
+	 * Test scatter plot with spline interpolation.
 	 */
-	public void testLeft() {
+	public void testSplineInterpolation() {
 		
 		// Create plot panel
 		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
 		
-		// Add background widget
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		
 		// Create plot
 		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
 				this.getter, WIDTH, HEIGHT, this.boundaries);
-		panel.add(plot, HorizontalAlignment.LEFT_OF,
-				VerticalAlignment.CENTERED);
+		plot.setInterpolationType(InterpolationType.SPLINE);
+		panel.add(plot);
 		
 		// Write graphics to file
-		panel.toPngFile("left.png");
-	}
-	
-	
-	/**
-	 * Test scatter plot to right of another widget.
-	 */
-	public void testRight() {
-		
-		// Create plot panel
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
-		
-		// Add background widget
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		
-		// Create plot
-		ScatterPlot plot = new ScatterPlot(this.experiments, (short) 1,
-				this.getter, WIDTH, HEIGHT, this.boundaries);
-		panel.add(plot, HorizontalAlignment.RIGHT_OF,
-				VerticalAlignment.CENTERED);
-		
-		// Write graphics to file
-		panel.toPngFile("right.png");
+		panel.toPngFile("spline-interpolation.png");
 	}
 }

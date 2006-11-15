@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-27 04:03:31 $
+$Revision: 1.8 $
+$Date: 2006-11-15 21:54:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -403,6 +403,28 @@ public class PlotBoundaries {
      */
     public final double getMinValue2() {
     	return this.bottomLeftDataPoint.getValue2();
+    }
+    
+    
+    /**
+     * Get maximum value2.
+     * @return Maximum value 2.
+     */
+    public final double getMaxValue2() {
+    	return this.topRightDataPoint.getValue2();
+    }
+    
+    
+    /**
+     * Is given data point in boundaries?
+     * @param value1 Value 1
+     * @param value2 Value 2
+     * @return T/F
+     */
+    public final boolean inBoundary(
+    		final double value1, final double value2) {
+    	return value1 >= this.getMinValue1() && value1 <= this.getMaxValue1()
+    	&& value2 >= this.getMinValue2() && value2 <= this.getMaxValue2();
     }
     
     

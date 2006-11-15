@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.4 $
+$Date: 2006-11-15 21:54:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,6 +68,9 @@ public class Circle extends GraphicPrimitive {
 	/** Radius of circle. */
 	private int radius = 0;
 	
+	/** Is circle filled? */
+	private boolean filled = true;
+	
 	
 	/**
 	 * Constructor.
@@ -82,6 +85,21 @@ public class Circle extends GraphicPrimitive {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param x X-coordinate of center
+	 * @param y Y-coordinate of center
+	 * @param radius Radius
+	 * @param color Color
+	 * @param filled Is circle filled?
+	 */
+	public Circle(final int x, final int y, final int radius,
+			final Color color, final boolean filled) {
+		this(x, y, radius, color);
+		this.filled = filled;
 	}
 
 	/**
@@ -108,11 +126,18 @@ public class Circle extends GraphicPrimitive {
 		return y;
 	}
 
+	/**
+	 * Is circle filled?
+	 * @return T/F
+	 */
+	public final boolean isFilled() {
+		return filled;
+	}
 	
 	// ==================================
 	//     Implemented abstract methods
 	// ==================================
-	
+
 	/**
 	 * Move graphic primitive.
 	 * @param deltaX Change in X-coordinates in pixels
