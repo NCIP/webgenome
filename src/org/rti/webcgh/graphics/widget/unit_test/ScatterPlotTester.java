@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-11-15 22:50:22 $
+$Revision: 1.4 $
+$Date: 2006-11-15 23:32:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -86,10 +86,10 @@ public final class ScatterPlotTester extends TestCase {
 		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
 	
 	/** Width of plot in pixels. */
-	private static final int WIDTH = 500;
+	private static final int WIDTH = 30;
 	
 	/** Height of plot in pixels. */
-	private static final int HEIGHT = 400;
+	private static final int HEIGHT = 30;
 	
 	/** Width of background object. */
 	private static final int BG_WIDTH = 200;
@@ -105,7 +105,7 @@ public final class ScatterPlotTester extends TestCase {
 	
 	/** Test plot boundaries. */
 	private PlotBoundaries boundaries =
-		new PlotBoundaries(0.0, -1.5, 400.0, 1.5);
+		new PlotBoundaries(95.0, -0.1, 305.0, 1.1);
 	
 	/** Array data getter. */
 	private InMemoryChromosomeArrayDataGetter getter =
@@ -125,7 +125,7 @@ public final class ScatterPlotTester extends TestCase {
 		ba.setId((long) 1);
 		ba.add(new ArrayDatum((float) 0.0, new Reporter(null, (short) 1, 100)));
 		ba.add(new ArrayDatum((float) 1.0, new Reporter(null, (short) 1, 200)));
-		ba.add(new ArrayDatum((float) 0.5, new Reporter(null,
+		ba.add(new ArrayDatum((float) 0.75, new Reporter(null,
 				(short) 1, 300)));
 	}
 	

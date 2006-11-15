@@ -223,25 +223,39 @@
 			</td>
 		</tr>
 		
-	<%-- Draw regression lines --%>
+	<%-- Interpolation type --%>
 		<tr>
-			<td>
+			<td valign="top">
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-drawLines')"
+					onclick="help('param-interpolationType')"
 					title="Information" border="0"
 					width="15" height="15"/>
 				Type of interpolation between data points
 			</td>
-			<td>
+			<td valign="top">
+				<table border="0" cellpadding="5">
+				<tr><td valign="middle">
 				<html:radio property="interpolationType" value="NONE"/>
-					None &nbsp;&nbsp;
+				<html:img page="/images/no-interpolation.png" border="1" align="middle"/>
+				None
+				</td></tr>
+				<tr><td>
 				<html:radio property="interpolationType" value="STRAIGHT_LINE"/>
-					Straight line &nbsp;&nbsp;
+				<html:img page="/images/straight-line-interpolation.png" border="1" align="middle"/>
+				Straight line
+				</td></tr>
+				<tr><td>
 				<html:radio property="interpolationType" value="STEP"/>
-					Step &nbsp;&nbsp;
+				<html:img page="/images/step-interpolation.png" border="1" align="middle"/>
+				Step
+				</td></tr>
+				<tr><td>
 				<html:radio property="interpolationType" value="SPLINE"/>
-					Spline
+				<html:img page="/images/spline-interpolation.png" border="1" align="middle"/>
+				Spline
+				</td></tr>
+				</table>
 			</td>
 		</tr>
 		

@@ -258,9 +258,10 @@
 						bars will be painted for each data point.
 					</prop>
 					
-					<prop name="Draw regression lines" id="param-drawLines">
-						If checked, "regression lines" connecting adjacent
-						data points will be painted.
+					<prop name="Type of interpolation between data points" id="param-interpolationType">
+						Enables the user to specify if and how data points
+						will be connected.  Options include none, straight
+						lines, steps, or splines.
 					</prop>
 				</prop-list>
 			</section>
