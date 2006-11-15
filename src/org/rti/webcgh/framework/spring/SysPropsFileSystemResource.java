@@ -55,7 +55,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.util.SystemUtils;
+
 import org.springframework.core.io.FileSystemResource;
 
 /**
@@ -82,14 +82,25 @@ import org.springframework.core.io.FileSystemResource;
  * In the above example, the webGenome.configFile would be a System property defined/loaded by the
  * JVM or application server, e.g. </em>-DwegGenome.configFile=c:/wegcgh-external.properties</em>.
  * </p>
+ * <p>IF THE SYSTEM PROPERTY FOR THE EXTERNAL PROPERTIES FILE IS NOT SET, THEN
+ * THE INTERNAL PROPERTIES FILE IN conf/webcgh.properties WILL BE USED INSTEAD!</p>
  * @author djackman
  *
  */
 public class SysPropsFileSystemResource extends FileSystemResource {
     
+    //
+    //    S T A T I C S
+    //
+    
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(SysPropsFileSystemResource.class);
 
+    /**
+     * The name of the internal properties file, to be used in case we can't find the
+     * extenal one (which is specified as a System Property as a file reference).
+     */
+    private static final String INTERNAL_PROPERTIES_FILE = "conf/webcgh.properties" ; 
 
     //
     //    A T T R I B U T E S
@@ -106,8 +117,6 @@ public class SysPropsFileSystemResource extends FileSystemResource {
     
     SysPropsFileSystemResource ( String systemProperty ) {
         super( systemProperty ) ;
-        LOGGER.info ( "Getting Properties from file reference specified in the System Property '" +
-                      systemProperty + "'" ) ;
         this.systemProperty = systemProperty ;
     }
     
@@ -120,21 +129,34 @@ public class SysPropsFileSystemResource extends FileSystemResource {
      * and uses this to create and return an InputStream.
      */
     public InputStream getInputStream ( ) throws IOException {
-        FileInputStream in = null ;
+        InputStream in = null ;
         if ( isEmpty ( this.systemProperty ) )
-            LOGGER.error ( "Required String argument not specified - " +
-                           "You need to specify a System Property whose value " +
+            LOGGER.error ( "You need to specify a System Property whose value " +
                            "points to an external properties file." ) ;
         else {
             String filename = System.getProperty ( this.systemProperty ) ;
-            if ( isEmpty ( filename ) ) {
-                LOGGER.error ( "System.getProperty() has no value. " +
-                               "You need to set a Ssytem Property whose value points to an " +
-                               "external properties file." )  ;
+            if ( isEmpty ( filename) ) {
+                //
+                //    The System Property has not been specified, so we'll
+                //    throw a warning, but just see if the internal configuration file
+                //    is available - and use it instead.
+                //
+                LOGGER.warn ( "You should set a System Property whose value points to an " +
+                              "external properties file." ) ;
+                
+                in = this.getClass().getClassLoader().getResourceAsStream ( INTERNAL_PROPERTIES_FILE ) ;
+
+                if ( in == null )
+                    LOGGER.error( "Tried using internal properties '" + INTERNAL_PROPERTIES_FILE +
+                                  "' but couldn't find this in the search path used to load classes. " +
+                                  " There aren't any application properties at this point!" ) ;
+                else
+                    LOGGER.warn( "Using internal properties settings specified in '" +
+                                  INTERNAL_PROPERTIES_FILE + "' - not using an external properties file." ) ;
             }
             else {
-                in = new FileInputStream( System.getProperty ( this.systemProperty ));
-                LOGGER.info ( "Getting Properties from file '" + filename + "'" ) ;
+                in = new FileInputStream( filename );
+                LOGGER.info ( "Getting Properties from file '" + filename + "' (specified in System Property '" + this.systemProperty + "')" ) ;
             }
         }
         return in ;
