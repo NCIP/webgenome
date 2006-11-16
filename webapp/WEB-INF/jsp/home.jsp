@@ -4,7 +4,7 @@
 <%@ page import="org.rti.webgenome.client.QuantitationTypes" %>
 
 <%
-	Map<String, String> paramsMap = new HashMap<String, String>();
+	Map paramsMap = new HashMap();
 	paramsMap.put("exptIDs", "Experiment 1");
 	paramsMap.put("intervals", "1:1-200000000");
 	paramsMap.put("qType", QuantitationTypes.COPY_NUMBER_LOG2_RATION);
