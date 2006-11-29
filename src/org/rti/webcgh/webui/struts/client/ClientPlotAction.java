@@ -1,6 +1,6 @@
 /*
-$Revision: 1.25 $
-$Date: 2006-11-29 03:14:06 $
+$Revision: 1.26 $
+$Date: 2006-11-29 04:05:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,6 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Organism;
-import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.service.client.ClientDataService;
@@ -188,19 +187,6 @@ public final class ClientPlotAction extends BaseAction {
         String[] experimentIds = ClientQueryParser.getExperimentIds(request);
         BioAssayDataConstraints[] constraints =
         	ClientQueryParser.getBioAssayDataConstraints(request);
-        
-        // Get quantitation type
-        String qType = request.getParameter("qType");
-        if (qType == null) {
-        	throw new InvalidClientQueryParametersException(
-        			"Missing 'qType' parameter");
-        }
-        QuantitationType quantitationType =
-        	QuantitationType.getQuantitationType(qType);
-        if (quantitationType == null) {
-        	throw new InvalidClientQueryParametersException(
-			"Unrecognized quantitation type");
-        }
         
         // Retrieve data from client
         Collection<Experiment> experiments = 

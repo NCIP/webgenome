@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-11-29 03:14:07 $
+$Revision: 1.8 $
+$Date: 2006-11-29 04:05:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -120,7 +120,6 @@ public class TestClientDataService implements ClientDataService {
     				experimentIds[i], constraints);
     		Experiment exp = new Experiment(dto);
     		experiments.add(exp);
-    		exp.setQuantitationType(this.quantitationType);
     	}
     	return experiments;
     }
