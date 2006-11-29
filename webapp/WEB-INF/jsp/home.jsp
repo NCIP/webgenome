@@ -2,11 +2,10 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="org.rti.webgenome.client.QuantitationTypes" %>
-
 <%
 
 	// Parameters for copy number plot
-	Map<String, String> copyNumParams = new HashMap<String, String>();
+	Map copyNumParams = new HashMap();
 	copyNumParams.put("exptIDs", "Experiment 1");
 	copyNumParams.put("intervals", "1:1-200000000");
 	copyNumParams.put("qType", QuantitationTypes.COPY_NUMBER_LOG2_RATION);
@@ -14,7 +13,7 @@
 	request.setAttribute("copyNumParamsMap", copyNumParams);
 	
 	// Parameters for LOH plot
-	Map<String, String> lohParams = new HashMap<String, String>();
+	Map lohParams = new HashMap();
 	lohParams.put("exptIDs", "Experiment 1");
 	lohParams.put("intervals", "1:1-200000000");
 	lohParams.put("qType", QuantitationTypes.LOH);
