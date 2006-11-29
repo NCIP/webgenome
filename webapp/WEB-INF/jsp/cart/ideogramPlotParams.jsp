@@ -1,4 +1,5 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <h1 align="center">Ideogram Plot Parameters</h1>
 
@@ -7,6 +8,10 @@
 	<html:errors property="global"/>
 </p>
 <html:form action="/cart/newTestPlot" target="mainwindow">
+
+	<logic:present parameter="id">
+		<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
+	</logic:present>
 	
 	<table class="noBorder">
 	
