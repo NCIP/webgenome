@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.taglib;
 
 import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -68,6 +69,10 @@ import org.rti.webcgh.webui.util.Attribute;
  *
  */
 public class ErrorEmailTag extends TagSupport {
+    
+    /** Serlialized version ID. */
+    private static final long serialVersionUID = 
+        SystemUtils.getLongApplicationProperty("serial.version.uid");
     
     private static final Logger LOGGER = Logger.getLogger(ErrorEmailTag.class);
     
@@ -97,20 +102,28 @@ public class ErrorEmailTag extends TagSupport {
         
         Exception ex = (Exception)pageContext.findAttribute(Attribute.EXCEPTION);
         
-        System.out.println ( this.getClass().getName() + "doStartTag() entered" ) ;
-        
         if ( ex != null || this.getExceptionMsg() != null ) {
             
             // Get email subject and email recipients
             String subject = SystemUtils.getApplicationProperty( "error.page.email.subject" ) ;
-            String to = SystemUtils.getApplicationProperty ( "sysadmin.email" ) ;
-   
+            String to = SystemUtils.getApplicationProperty ( "error.email.distribution.list" ) ;
+            
             // Collate Message
             String message = "The following Exception was caught by webGenome:\n\n" ;
             if ( this.getExceptionMsg() != null )
                 message += this.getExceptionMsg() ;
             else
                 message += ex.getMessage() ;
+            
+            // Get the Stack Trace, if its available
+            if ( ex.getStackTrace() != null && ex.getStackTrace().length > 0 ) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                ex.printStackTrace(pw);
+                message += "\n\nStackTrace follows:\n" +
+                           sw.toString() ;
+            }
+
             message += "\n" ;
         
             // Dispatch the Exception Email
