@@ -243,7 +243,7 @@ public class AnalyticPipeline implements AnalyticOperation {
     public final boolean producesSingleBioAssayPerExperiment() {
     	boolean single = false;
     	for (AnalyticOperation op : this.operations) {
-    		if (op instanceof ListToScalarAnalyticOperation) {
+    		if (op instanceof SingleExperimentStatelessOperation) {
     			single = true;
     			break;
     		}

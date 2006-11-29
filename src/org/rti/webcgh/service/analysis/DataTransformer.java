@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-30 21:52:43 $
+$Revision: 1.9 $
+$Date: 2006-11-29 03:14:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,11 +59,11 @@ import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticPipeline;
 import org.rti.webcgh.analysis.MinimumCommonAlteredRegionOperation;
-import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
-import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
-import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
-import org.rti.webcgh.analysis.StatefulBioAssayAnalyticOperation;
-import org.rti.webcgh.analysis.StatefulExperimentAnalyticOperation;
+import org.rti.webcgh.analysis.MultiExperimentStatelessOperation;
+import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
+import org.rti.webcgh.analysis.SingleBioAssayStatelessOperation;
+import org.rti.webcgh.analysis.IntraBioAssayStatefulOperation;
+import org.rti.webcgh.analysis.IntraExperimentStatefulOperation;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataContainingBioAssay;
@@ -126,12 +126,12 @@ public abstract class DataTransformer {
     private void perform(final Experiment input, final Experiment output,
             final AnalyticOperation operation)
     throws AnalyticException {
-        if (operation instanceof ScalarToScalarAnalyticOperation) {
+        if (operation instanceof SingleBioAssayStatelessOperation) {
             this.perform(input, output,
-                    (ScalarToScalarAnalyticOperation) operation);
-        } else if (operation instanceof ListToScalarAnalyticOperation) {
+                    (SingleBioAssayStatelessOperation) operation);
+        } else if (operation instanceof SingleExperimentStatelessOperation) {
             this.perform(input, output,
-                    (ListToScalarAnalyticOperation) operation);
+                    (SingleExperimentStatelessOperation) operation);
         } else if (operation instanceof AnalyticPipeline) {
             this.perform(input, output, (AnalyticPipeline) operation);
         }
@@ -148,28 +148,28 @@ public abstract class DataTransformer {
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ScalarToScalarAnalyticOperation operation)
+            final SingleBioAssayStatelessOperation operation)
         throws AnalyticException {
-        if (operation instanceof StatefulExperimentAnalyticOperation) {
-            ((StatefulExperimentAnalyticOperation) operation).resetState();
+        if (operation instanceof IntraExperimentStatefulOperation) {
+            ((IntraExperimentStatefulOperation) operation).resetState();
             for (BioAssay ba : input.getBioAssays()) {
             	ChromosomeArrayDataIterator it =
                 	this.getChromosomeArrayDataIterator(ba);
                 while (it.hasNext()) {
                 	ChromosomeArrayData cad = it.next();
-                	((StatefulExperimentAnalyticOperation)
+                	((IntraExperimentStatefulOperation)
                 			operation).adjustState(cad);
                 }
             }
         }
         for (BioAssay ba : input.getBioAssays()) {
-            if (operation instanceof StatefulBioAssayAnalyticOperation) {
-                ((StatefulBioAssayAnalyticOperation) operation).resetState();
+            if (operation instanceof IntraBioAssayStatefulOperation) {
+                ((IntraBioAssayStatefulOperation) operation).resetState();
                 ChromosomeArrayDataIterator it =
                 	this.getChromosomeArrayDataIterator(ba);
                 while (it.hasNext()) {
                 	ChromosomeArrayData cad = it.next();
-                	((StatefulBioAssayAnalyticOperation)
+                	((IntraBioAssayStatefulOperation)
                 			operation).adjustState(cad);
                 }
             }
@@ -198,7 +198,7 @@ public abstract class DataTransformer {
      * @throws AnalyticException if a computation error occurs
      */
     private void perform(final Experiment input, final Experiment output,
-            final ListToScalarAnalyticOperation operation)
+            final SingleExperimentStatelessOperation operation)
         throws AnalyticException {
         if (input.getBioAssays().size() < 1) {
             throw new IllegalArgumentException(
@@ -229,7 +229,7 @@ public abstract class DataTransformer {
      * @throws AnalyticException if a computation error occurs
      */
     public final Experiment perform(final Collection<Experiment> input,
-            final MultiExperimentToNonArrayDataAnalyticOperation operation)
+            final MultiExperimentStatelessOperation operation)
         throws AnalyticException {
         if (input.size() < 1) {
             throw new IllegalArgumentException(

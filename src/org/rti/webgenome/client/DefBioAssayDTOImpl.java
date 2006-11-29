@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-10-31 06:47:25 $
+$Revision: 1.9 $
+$Date: 2006-11-29 03:14:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,6 +77,9 @@ public class DefBioAssayDTOImpl implements BioAssayDTO {
     private Collection<BioAssayDatumDTO> bioAssayData =
     	new ArrayList<BioAssayDatumDTO>();
     
+    /** Quantitation type. */
+    private String quantitationType = QuantitationTypes.COPY_NUMBER_LOG2_RATION;
+    
     /**
      * Constructor.
      * @param id ID
@@ -143,11 +146,19 @@ public class DefBioAssayDTOImpl implements BioAssayDTO {
         this.bioAssayData.add(dto);
     }
 
-	public String getQuantitationType() {
-		// TODO Auto-generated method stub
-		return null;
+    /**
+     * Get quantitation type.
+     * @return Quantitation type
+     */
+	public final String getQuantitationType() {
+		return this.quantitationType;
 	}
-    
-    
 
+	/**
+	 * Set quantitation type.
+	 * @param quantitationType Quantitation type
+	 */
+	public final void setQuantitationType(final String quantitationType) {
+		this.quantitationType = quantitationType;
+	}
 }

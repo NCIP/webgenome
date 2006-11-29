@@ -65,7 +65,7 @@ import org.rti.webcgh.domain.QuantitationType;
  *
  */
 public final class RangeBasedFilterer implements
-    ScalarToScalarAnalyticOperation {
+    SingleBioAssayStatelessOperation {
     
     
     // =====================

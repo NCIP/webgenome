@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-11-15 21:54:39 $
+$Revision: 1.7 $
+$Date: 2006-11-29 03:13:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,8 +62,8 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
-import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
-import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
+import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
+import org.rti.webcgh.analysis.MultiExperimentStatelessOperation;
 import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.QuantitationType;
@@ -143,12 +143,12 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	// MultiExperimentToNonArrayDataAnalyticOperation,
     	// none of this will be done since the user does not
     	// set output names.
-    	if (!(op instanceof MultiExperimentToNonArrayDataAnalyticOperation)) {
+    	if (!(op instanceof MultiExperimentStatelessOperation)) {
 	    	request.setAttribute("experiments", experiments);
 	    	
 	    	// Determine if there will be a single bioassay or multiple
 	    	// produced per experiment and set an attribute
-	    	if (op instanceof ListToScalarAnalyticOperation
+	    	if (op instanceof SingleExperimentStatelessOperation
 	    			|| (op instanceof AnalyticPipeline
 	    				&& ((AnalyticPipeline) op).
 	    				producesSingleBioAssayPerExperiment())) {

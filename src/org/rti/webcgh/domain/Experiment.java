@@ -252,6 +252,27 @@ public class Experiment implements Serializable {
     	this.name = experimentDto.getExperimentID();
     	BioAssayDTO[] bioAssayDto = experimentDto.getBioAssays();
     	this.add(bioAssayDto);
+    	if (bioAssayDto.length > 0) {
+    		for (int i = 0; i < bioAssayDto.length; i++) {
+	    		String qtName = bioAssayDto[i].getQuantitationType();
+	    		QuantitationType qt = QuantitationType.getQuantitationType(
+	    				qtName);
+	    		if (qt == null) {
+	    			throw new IllegalArgumentException(
+	    					"Unknown quantitation type '"
+	    					+ qtName + "'");
+	    		}
+	    		if (i == 0) {
+	    			this.quantitationType = qt;
+	    		} else {
+	    			if (this.quantitationType != qt) {
+	    				throw new IllegalArgumentException(
+	    						"Cannot have mixed quantitation types in "
+	    						+ "the same experiment");
+	    			}
+	    		}
+    		}
+    	}
     }
     
     

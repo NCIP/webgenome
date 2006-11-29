@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-29 03:14:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,33 +50,39 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.List;
+
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
- * A "scalar-to-scalar" anlaytic operation that maintains
- * some sort of internal state that
- * affects subsequent operations.
+ * An analytic operation on a data from a chromosome
+ * from a set of experiments.
  * @author dhall
  *
  */
-public interface StatefulAnalyticOperation {
-    
-    
+public interface MultiExperimentStatelessOperation
+extends AnalyticOperation {
+	
     /**
-     * Adjust the state of this operation.
-     * @param chromosomeArrayData Chromosome array
-     * data that will modify the internal state
-     * @throws AnalyticException if there is a
-     * computational error
+     * Perform operation.
+     * @param input Input data, which will originate from
+     * one or more experiments.
+     * @return Output data.  There is no correlation between
+     * the input data and output data.  Different operations
+     * may produce different numbers of chromosome array
+     * data objects.
+     * @throws AnalyticException if an error occurs
+     * during this operation
      */
-    void adjustState(ChromosomeArrayData chromosomeArrayData)
+    List<ChromosomeArrayData> perform(List<ChromosomeArrayData> input)
         throws AnalyticException;
     
     
     /**
-     * Reset state of operation.
-     *
+     * Generate a name from given chromosome array data.
+     * @param cad Chromosome array data
+     * @return Name
      */
-    void resetState();
+    String getName(ChromosomeArrayData cad);
 
 }

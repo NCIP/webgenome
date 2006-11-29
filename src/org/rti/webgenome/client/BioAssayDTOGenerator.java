@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-19 03:55:14 $
+$Revision: 1.3 $
+$Date: 2006-11-29 03:14:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -88,6 +88,21 @@ public class BioAssayDTOGenerator {
 				bioAssayName,
 				this.bioAssayDatumDtoGenerator.newBioAssayDatumDTOs(
 						constraints));
+		if (constraints != null && constraints.length > 0) {
+			for (int i = 0; i < constraints.length; i++) {
+				if (i == 0) {
+					dto.setQuantitationType(
+							constraints[i].getQuantitationType());
+				} else {
+					if (!dto.getQuantitationType().equals(
+							constraints[i].getQuantitationType())) {
+						throw new IllegalArgumentException(
+								"Cannot have mixed quantitation types within a "
+								+ "bioassay");
+					}
+				}
+			}
+		}
 		return dto;
 	}
 	

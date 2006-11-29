@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-11-15 21:54:38 $
+$Revision: 1.2 $
+$Date: 2006-11-29 03:14:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,19 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-import org.rti.webcgh.domain.ChromosomeArrayData;
+public class FrequencyOperation {
 
-public class FrequencyOperation
-implements StatefulExperimentAnalyticOperation {
-
-	public void adjustState(ChromosomeArrayData chromosomeArrayData) throws AnalyticException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void resetState() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 }

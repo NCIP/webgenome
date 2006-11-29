@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-11-15 21:54:38 $
+$Date: 2006-11-29 03:14:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,16 +53,24 @@ package org.rti.webcgh.analysis;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
- * An analytic operation where some sort of cumulative
- * results are maintained and then accessed.
+ * An analytic operation performed on data from a 
+ * chromosome from a single
+ * bioassay where no state is maintained between
+ * method invocations.
  * @author dhall
  *
  */
-public interface CumulativeAnalyticOperation extends AnalyticOperation {
+public interface SingleBioAssayStatelessOperation extends AnalyticOperation {
+    
+    /**
+     * Perform operation.
+     * @param input Input data.  This should be all data
+     * from a chromosome from a single bioassay.
+     * @return Output data
+     * @throws AnalyticException if an error occurs
+     * during this operation
+     */
+    ChromosomeArrayData perform(ChromosomeArrayData input)
+        throws AnalyticException;
 
-	/**
-	 * Get cumulative results.
-	 * @return Cumulative results
-	 */
-	public ChromosomeArrayData getResults();
 }

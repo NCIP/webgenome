@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,14 +50,25 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import org.rti.webcgh.domain.ChromosomeArrayData;
+
 /**
- * Represents a stateful analytic operation where the state
- * should be adjusted by all data from an entire bioassay
- * before performing the actual operation.
+ * An analytic operation where some sort of cumulative
+ * results are maintained and then accessed.
  * @author dhall
  *
  */
-public interface StatefulBioAssayAnalyticOperation
-    extends StatefulAnalyticOperation {
+public interface AccumulatorOperation extends AnalyticOperation {
 
+	/**
+	 * Get cumulative results.
+	 * @return Cumulative results
+	 */
+	ChromosomeArrayData getResults();
+	
+	/**
+	 * Add more data.
+	 * @param cad Chromosome array data
+	 */
+	void add(ChromosomeArrayData cad);
 }

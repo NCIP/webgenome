@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-10-29 03:47:25 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,32 +55,23 @@ import java.util.List;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
- * An analytic operation on a list
- * of input objects from multiple experiments that produces
- * a output objects that do not contain <code>ArrayDatum</code>
- * objects.
+ * An analytic operation performed on all data from
+ * a chromosome from a single experiment in which
+ * no state is maintained between method invocations. 
  * @author dhall
  *
  */
-public interface MultiExperimentToNonArrayDataAnalyticOperation
-extends AnalyticOperation {
-	
+public interface SingleExperimentStatelessOperation extends AnalyticOperation {
+    
     /**
      * Perform operation.
-     * @param input Input data
+     * @param input Input data.  This should be all
+     * data from a chromosome from a single experiment
      * @return Output data
      * @throws AnalyticException if an error occurs
      * during this operation
      */
-    List<ChromosomeArrayData> perform(List<ChromosomeArrayData> input)
+    ChromosomeArrayData perform(List<ChromosomeArrayData> input)
         throws AnalyticException;
-    
-    
-    /**
-     * Generate a name from given chromosome array data.
-     * @param cad Chromosome array data
-     * @return Name
-     */
-    String getName(ChromosomeArrayData cad);
 
 }

@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,23 +51,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.analysis;
 
 /**
- * Performs "simple" normalization, subtracting
- * either mean or median value of bioassay
- * from all values to bring to mean or median,
- * respectively, to 0.  Intended to be used
- * to normalize all data from a single experiment.
+ * Represents an analytic operation that is
+ * stateless, i.e., it maintains no internal
+ * state between method invocations.
  * @author dhall
  *
  */
-public final class SimpleExperimentNormalizer extends SimpleNormalizer
-    implements IntraExperimentStatefulOperation {
-    
-    /**
-     * Get name of operation.
-     * @return Name of operation
-     */
-    public String getName() {
-        return "Simple experiment-based normalization";
-    }
+public interface StatelessOperation extends AnalyticOperation {
 
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-30 20:38:26 $
+$Revision: 1.4 $
+$Date: 2006-11-29 03:13:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,9 +69,9 @@ import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
 import org.rti.webcgh.analysis.BadUserConfigurablePropertyException;
-import org.rti.webcgh.analysis.ListToScalarAnalyticOperation;
-import org.rti.webcgh.analysis.MultiExperimentToNonArrayDataAnalyticOperation;
-import org.rti.webcgh.analysis.ScalarToScalarAnalyticOperation;
+import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
+import org.rti.webcgh.analysis.MultiExperimentStatelessOperation;
+import org.rti.webcgh.analysis.SingleBioAssayStatelessOperation;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
@@ -203,7 +203,7 @@ public final class AnalysisAction extends BaseAction {
     		new HashMap<Long, String>();
     	Map<Long, String> outputExperimentNames =
     		new HashMap<Long, String>();
-    	if (!(op instanceof MultiExperimentToNonArrayDataAnalyticOperation)) {
+    	if (!(op instanceof MultiExperimentStatelessOperation)) {
 	    	for (Object paramNameObj : paramMap.keySet()) {
 	    		String paramName = (String) paramNameObj;
 	    		String paramValue = request.getParameter(paramName);
@@ -225,10 +225,10 @@ public final class AnalysisAction extends BaseAction {
     			request, true);
     	if (mode == SessionMode.CLIENT) {
     		Collection<Experiment> experiments = cart.getExperiments(ids);
-    		if (op instanceof MultiExperimentToNonArrayDataAnalyticOperation) {
+    		if (op instanceof MultiExperimentStatelessOperation) {
     			Experiment output = this.inMemoryDataTransformer.perform(
     					experiments,
-    					(MultiExperimentToNonArrayDataAnalyticOperation) op);
+    					(MultiExperimentStatelessOperation) op);
     			output.setId(this.experimentIdGenerator.nextId());
     			int count = 0;
     			for (BioAssay ba : output.getBioAssays()) {
@@ -251,7 +251,7 @@ public final class AnalysisAction extends BaseAction {
 	    			if (expName != null) {
 	    				output.setName(expName);
 	    			}
-	    			if (op instanceof ScalarToScalarAnalyticOperation
+	    			if (op instanceof SingleBioAssayStatelessOperation
 	    					|| (op instanceof AnalyticPipeline
 	    							&& ((AnalyticPipeline) op).
 	    							producesSingleBioAssayPerExperiment())) {
@@ -263,7 +263,7 @@ public final class AnalysisAction extends BaseAction {
 	    						ba.setName(bioAssayName);
 	    					}
 	    				}
-	    			} else if (op instanceof ListToScalarAnalyticOperation) {
+	    			} else if (op instanceof SingleExperimentStatelessOperation) {
 	    				Collection<BioAssay> bioAssays = output.getBioAssays();
 	    				if (bioAssays.size() > 0) {
 	    					bioAssays.iterator().next().setName(expName);

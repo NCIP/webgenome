@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-11-15 21:54:38 $
+$Revision: 1.5 $
+$Date: 2006-11-29 03:14:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,8 @@ import org.rti.webcgh.service.analysis.RegressionService;
  * linear model regression on input data.
  * @author Kungyen
  */
-public class LinearRegressionAnalyticOperation implements ScalarToScalarAnalyticOperation {
+public class LinearRegressionAnalyticOperation
+implements SingleBioAssayStatelessOperation {
 
     /** Logger. */
     private static final Logger LOGGER =

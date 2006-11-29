@@ -4,12 +4,22 @@
 <%@ page import="org.rti.webgenome.client.QuantitationTypes" %>
 
 <%
-	Map paramsMap = new HashMap();
-	paramsMap.put("exptIDs", "Experiment 1");
-	paramsMap.put("intervals", "1:1-200000000");
-	paramsMap.put("qType", QuantitationTypes.COPY_NUMBER_LOG2_RATION);
-	paramsMap.put("clientID", "1");
-	request.setAttribute("params", paramsMap);
+
+	// Parameters for copy number plot
+	Map<String, String> copyNumParams = new HashMap<String, String>();
+	copyNumParams.put("exptIDs", "Experiment 1");
+	copyNumParams.put("intervals", "1:1-200000000");
+	copyNumParams.put("qType", QuantitationTypes.COPY_NUMBER_LOG2_RATION);
+	copyNumParams.put("clientID", "1");
+	request.setAttribute("copyNumParamsMap", copyNumParams);
+	
+	// Parameters for LOH plot
+	Map<String, String> lohParams = new HashMap<String, String>();
+	lohParams.put("exptIDs", "Experiment 1");
+	lohParams.put("intervals", "1:1-200000000");
+	lohParams.put("qType", QuantitationTypes.LOH);
+	lohParams.put("clientID", "1");
+	request.setAttribute("lohParamsMap", lohParams);
 %>
 
 <h1 align="center">webGenome Home</h1>
@@ -28,8 +38,12 @@ be directed back into <font color="#336699"><b><i>web</i>Genome</b></font>.
 
 <p>
 To get a flavor for the system without going through another
-application, you can click <html:link action="/client/testPlot" name="params">here</html:link>.
-The system will randomly generate artificial test data.
+application, you can plot randomly generated
+<html:link action="/client/testPlot"
+name="copyNumParamsMap">copy number</html:link>
+or
+<html:link action="/client/testPlot"
+name="lohParamsMap">LOH</html:link> data.
 </p>
 
 </td><td width="48%">

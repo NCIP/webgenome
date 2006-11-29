@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,28 +50,33 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-import java.util.List;
-
 import org.rti.webcgh.domain.ChromosomeArrayData;
 
 /**
- * An analytic operation on a list
- * of input objects that produces
- * a single output object (i.e., a "scalar"
- * object).
+ * A anlaytic operation that maintains
+ * some sort of internal state that
+ * affects subsequent operations.
  * @author dhall
  *
  */
-public interface ListToScalarAnalyticOperation extends AnalyticOperation {
+public interface StatefulOperation extends AnalyticOperation {
+    
     
     /**
-     * Perform operation.
-     * @param input Input data
-     * @return Output data
-     * @throws AnalyticException if an error occurs
-     * during this operation
+     * Adjust the state of this operation.
+     * @param chromosomeArrayData Chromosome array
+     * data that will modify the internal state
+     * @throws AnalyticException if there is a
+     * computational error
      */
-    ChromosomeArrayData perform(List<ChromosomeArrayData> input)
+    void adjustState(ChromosomeArrayData chromosomeArrayData)
         throws AnalyticException;
+    
+    
+    /**
+     * Reset state of operation.
+     *
+     */
+    void resetState();
 
 }

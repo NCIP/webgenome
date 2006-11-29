@@ -70,7 +70,7 @@ import org.rti.webcgh.domain.QuantitationType;
  *
  */
 public final class SlidingWindowSmoother
-implements ScalarToScalarAnalyticOperation {
+implements SingleBioAssayStatelessOperation {
     
     /** Logger. */
     private static final Logger LOGGER =

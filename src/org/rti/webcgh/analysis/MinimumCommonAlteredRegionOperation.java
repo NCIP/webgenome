@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-11-15 21:54:38 $
+$Revision: 1.8 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,7 +76,7 @@ import org.rti.webcgh.util.ValidationUtils;
  *
  */
 public final class MinimumCommonAlteredRegionOperation
-implements MultiExperimentToNonArrayDataAnalyticOperation {
+implements MultiExperimentStatelessOperation {
 	
 	/**
 	 * Default minimum percent of bioassays that must be altered

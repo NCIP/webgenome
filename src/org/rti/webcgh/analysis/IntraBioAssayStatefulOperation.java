@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,12 +52,12 @@ package org.rti.webcgh.analysis;
 
 /**
  * Represents a stateful analytic operation where the state
- * should be adjusted by all data from an entire experiment
+ * should be adjusted by all data from an entire bioassay
  * before performing the actual operation.
  * @author dhall
  *
  */
-public interface StatefulExperimentAnalyticOperation
-    extends StatefulAnalyticOperation {
+public interface IntraBioAssayStatefulOperation
+    extends StatefulOperation {
 
 }

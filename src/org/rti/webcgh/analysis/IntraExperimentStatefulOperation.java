@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2006-11-29 03:14:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,26 +50,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
-import org.rti.webcgh.domain.ChromosomeArrayData;
-
 /**
- * An analytic operation on "scalar" input
- * that produces "scalar" output.
- * In this context, "scalar" means a single
- * object.
+ * Represents a stateful analytic operation where the state
+ * should be adjusted by all data from an entire experiment
+ * before performing the actual operation.
  * @author dhall
  *
  */
-public interface ScalarToScalarAnalyticOperation extends AnalyticOperation {
-    
-    /**
-     * Perform operation.
-     * @param input Input data
-     * @return Output data
-     * @throws AnalyticException if an error occurs
-     * during this operation
-     */
-    ChromosomeArrayData perform(ChromosomeArrayData input)
-        throws AnalyticException;
+public interface IntraExperimentStatefulOperation
+    extends StatefulOperation {
 
 }

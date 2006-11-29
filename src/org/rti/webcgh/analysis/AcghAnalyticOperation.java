@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-11-15 21:54:38 $
+$Revision: 1.9 $
+$Date: 2006-11-29 03:14:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import org.rti.webcgh.service.analysis.AcghService;
  * aCGH smoothing on input data.
  * @author Kungyen
  */
-public class AcghAnalyticOperation implements ScalarToScalarAnalyticOperation {
+public class AcghAnalyticOperation implements SingleBioAssayStatelessOperation {
 
     /** Logger. */
     private static final Logger LOGGER =

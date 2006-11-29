@@ -70,7 +70,7 @@ import org.rti.webcgh.domain.Reporter;
  * @author dhall
  *
  */
-public final class Averager implements ListToScalarAnalyticOperation {
+public final class Averager implements SingleExperimentStatelessOperation {
     
     /**
      * Perform operation.
