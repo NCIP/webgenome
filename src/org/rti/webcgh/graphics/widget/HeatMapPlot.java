@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-30 22:20:31 $
+$Revision: 1.13 $
+$Date: 2006-11-29 04:30:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,7 @@ import org.rti.webcgh.domain.ArrayDatum;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.GraphicPrimitive;
 import org.rti.webcgh.graphics.primitive.Line;
@@ -339,7 +340,8 @@ public final class HeatMapPlot implements PlotElement {
 				getChromosomeArrayData(ba, this.chromosome);
 			if (cad != null) {
 				if (cad.getChromosomeAlterations() == null) {
-					this.layoutDataTrack(trackX, cad);
+					this.layoutDataTrack(trackX, cad,
+							experiment.getQuantitationType());
 				} else {
 					this.layoutAlterations(trackX, cad, ba.getColor());
 				}
@@ -384,9 +386,11 @@ public final class HeatMapPlot implements PlotElement {
      * Lay out a single data track.
      * @param x X-coordinate of track
      * @param chromosomeArrayData Chromosome array data
+     * @param qType Quantitation type
      */
     private void layoutDataTrack(final int x,
-    		final ChromosomeArrayData chromosomeArrayData) {
+    		final ChromosomeArrayData chromosomeArrayData,
+    		final QuantitationType qType) {
     	List<ArrayDatum> dataList =
     		chromosomeArrayData.getArrayData();
     	int n = dataList.size();
@@ -402,8 +406,7 @@ public final class HeatMapPlot implements PlotElement {
 	    	for (int i = 0; i < n; i++) {
 	    		ArrayDatum datum = dataList.get(i);
 	    		float value = datum.getValue();
-	    		if (value <= this.plotParameters.getMinMask()
-	    				|| value >= this.plotParameters.getMaxMask()) {
+	    		if (this.drawValue(value, qType)) {
 		    		long start = 0;
 		    		long middle = datum.getReporter().getLocation();
 		    		if (i > 0) {
@@ -458,6 +461,24 @@ public final class HeatMapPlot implements PlotElement {
 	    		}
 	    	}
     	}
+    }
+    
+    
+    /**
+     * Should we draw the given value?
+     * @param value Value to potentially draw
+     * @param qType Quantitation type
+     * @return T/F
+     */
+    private boolean drawValue(final float value, final QuantitationType qType) {
+    	boolean draw = false;
+    	if (qType == QuantitationType.LOH) {
+    		draw = value >= this.plotParameters.getLohThreshold();
+    	} else {
+    		draw = value <= this.plotParameters.getMinMask()
+    		|| value >= this.plotParameters.getMaxMask();
+    	}
+    	return draw;
     }
     
     

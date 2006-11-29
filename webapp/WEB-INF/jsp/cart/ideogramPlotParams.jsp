@@ -64,6 +64,21 @@
 			</td>
 		</tr>
 		
+	<%-- LOH threshold --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-lohThreshold')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				LOH probability threshold
+			</td>
+			<td>
+				<html:text property="lohThreshold"/>
+			</td>
+		</tr>
+		
 	<%--
 	Ideogram size.  Note that values must correspond to
 	ChromosomeIdeogramSize.
