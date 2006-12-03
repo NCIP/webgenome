@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-11-29 03:13:58 $
+$Revision: 1.5 $
+$Date: 2006-12-03 22:23:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -263,7 +263,8 @@ public final class AnalysisAction extends BaseAction {
 	    						ba.setName(bioAssayName);
 	    					}
 	    				}
-	    			} else if (op instanceof SingleExperimentStatelessOperation) {
+	    			} else if (op
+	    					instanceof SingleExperimentStatelessOperation) {
 	    				Collection<BioAssay> bioAssays = output.getBioAssays();
 	    				if (bioAssays.size() > 0) {
 	    					bioAssays.iterator().next().setName(expName);

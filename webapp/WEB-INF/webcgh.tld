@@ -42,6 +42,13 @@
       <bodycontent>JSP</bodycontent>
    </tag>
    
+<!-- Show body content only if in client mode -->
+   <tag>
+      <name>onlyIfClientMode</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfClientModeTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+   </tag>
+   
 <!-- Show body content only if there is a shopping cart associated
      with the session -->
    <tag>

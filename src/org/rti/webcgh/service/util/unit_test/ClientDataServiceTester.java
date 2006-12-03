@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/util/unit_test/ClientDataServiceTester.java,v $
-$Revision: 1.4 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.5 $
+$Date: 2006-12-03 22:23:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.rti.webcgh.deprecated.array.Experiment;
-import org.rti.webcgh.service.client.MultiThreadClientDataService;
+import org.rti.webcgh.service.client.BioAssayMgrEjbClientDataService;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.QuantitationTypes;
 
@@ -64,7 +64,7 @@ import junit.framework.TestCase;
 
 public class ClientDataServiceTester extends TestCase {
     
-    protected MultiThreadClientDataService service = null;
+    protected BioAssayMgrEjbClientDataService service = null;
     protected String clientID = null;
     protected Experiment[] experiments = null;
     protected String[] experimentIds1 = null;
@@ -80,7 +80,7 @@ public class ClientDataServiceTester extends TestCase {
      */
     protected void setUp() {
         
-        service = new MultiThreadClientDataService();
+        service = new BioAssayMgrEjbClientDataService();
         clientID = "1628747535";
         
         // Set up first array of experiment ids 

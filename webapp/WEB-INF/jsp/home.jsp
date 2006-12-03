@@ -10,6 +10,7 @@
 	copyNumParams.put("intervals", "1:1-200000000");
 	copyNumParams.put("qType", QuantitationTypes.COPY_NUMBER_LOG2_RATION);
 	copyNumParams.put("clientID", "1");
+	copyNumParams.put("test", "true");
 	request.setAttribute("copyNumParamsMap", copyNumParams);
 	
 	// Parameters for LOH plot
@@ -18,6 +19,7 @@
 	lohParams.put("intervals", "1:1-200000000");
 	lohParams.put("qType", QuantitationTypes.LOH);
 	lohParams.put("clientID", "1");
+	lohParams.put("test", "true");
 	request.setAttribute("lohParamsMap", lohParams);
 %>
 

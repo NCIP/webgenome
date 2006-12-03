@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-10-29 22:36:41 $
+$Revision: 1.13 $
+$Date: 2006-12-03 22:23:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -307,19 +307,23 @@ public class GenomeInterval {
 	 * to query client applications for data.
 	 * @param genomeIntervals Genome intervals
 	 * @param units Base pair units
+	 * @param qType Quantitation type
 	 * @return Bioassay data constraints
 	 * @throws WebcghApplicationException If any of the bioassay data
 	 * constraints does not have defined endpoints.
 	 */
 	public static final BioAssayDataConstraints[] getBioAssayDataConstraints(
 			final Collection<GenomeInterval> genomeIntervals,
-			final BpUnits units)
+			final BpUnits units,
+			final QuantitationType qType)
 	throws WebcghApplicationException {
 		BioAssayDataConstraints[] c =
 			new BioAssayDataConstraints[genomeIntervals.size()];
 		int i = 0;
 		for (GenomeInterval gi : genomeIntervals) {
-			c[i++] = gi.getBioAssayDataConstraints(units);
+			BioAssayDataConstraints con = gi.getBioAssayDataConstraints(units);
+			con.setQuantitationType(qType.getId());
+			c[i++] = con;
 		}
 		return c;
 	}

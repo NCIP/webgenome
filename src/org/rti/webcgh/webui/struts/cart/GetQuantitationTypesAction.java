@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-12-03 22:23:38 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,31 +51,26 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.struts.cart;
 
 import java.util.Collection;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.webui.struts.BaseAction;
-import org.rti.webcgh.webui.util.PageContext;
+import org.rti.webcgh.domain.QuantitationType;
 
 /**
- * Determines which operation a use has selected
- * to perform on selected experiments and forwards
- * to the appropriate action.  Possible operations
- * are creating a new plot and performing an analytic
- * operation on data.
+ * Action that retrieves the available types of quantitation
+ * types.
  * @author dhall
  *
  */
-public final class RouteToOperationPageAction extends BaseAction {
+public final class GetQuantitationTypesAction extends Action {
 
+	
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -93,33 +88,10 @@ public final class RouteToOperationPageAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
-    	
-    	// Recover which operation the user has selected
-    	SelectedExperimentsForm seForm = (SelectedExperimentsForm) form;
-    	String operation = seForm.getOperation();
-    	
-    	// Determine forward
-    	ActionForward forward = null;
-    	if ("plot".equals(operation)) {
-    		forward = mapping.findForward("plot");
-    	} else if ("analysis".equals(operation)) {
-    		Collection<Long> ids = seForm.getSelectedExperimentIds();
-    		ShoppingCart cart = PageContext.getShoppingCart(request);
-    		for (Long id : ids) {
-    			Experiment exp = cart.getExperiment(id);
-    			if (exp.isTerminal()) {
-    				ActionErrors errors = new ActionErrors();
-    				errors.add("global",
-    						new ActionError("terminal.experiment"));
-    				this.saveErrors(request, errors);
-    				return mapping.findForward("cart");
-    			}
-    		}
-    		forward = mapping.findForward("analysis");
-    	} else if ("import".equals(operation)) {
-    		forward = mapping.findForward("import");
-    	}
-    	
-    	return forward;
+    	Map<String, QuantitationType> typeMap =
+    		QuantitationType.getQuantitationTypeIndex();
+    	Collection<QuantitationType> types = typeMap.values();
+    	request.setAttribute("quantitationTypes", types);
+    	return mapping.findForward("success");
     }
 }

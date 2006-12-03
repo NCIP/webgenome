@@ -63,6 +63,7 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.util.StringUtils;
 import org.rti.webcgh.util.SystemUtils;
 import org.rti.webgenome.client.BioAssayDTO;
+import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.ExperimentDTO;
 
 /**
@@ -87,6 +88,9 @@ public class Experiment implements Serializable {
     /** Name of experiment. */
     private String name = null;
     
+    /** Identifier of experiment in source database. */
+    private String sourceDbId = null;
+    
     /** Bioassays performed during experiment. */
     private Set<BioAssay> bioAssays = new HashSet<BioAssay>();
     
@@ -102,6 +106,16 @@ public class Experiment implements Serializable {
      * this experiment?
      */
     private boolean terminal = false;
+    
+    /**
+     * Bioassay data constraints that have been of data
+     * added from client application.
+     */  
+    private final Collection<BioAssayDataConstraints> bioAssayDataConstraints =
+    		new ArrayList<BioAssayDataConstraints>();
+    
+    /** Identifier of data source where experiment is stored. */
+    private DataSourceProperties dataSourceProperties = null;
         
     // ===============================
     //     Getters/setters
@@ -121,6 +135,41 @@ public class Experiment implements Serializable {
      */
 	public final void setOrganism(final Organism organism) {
 		this.organism = organism;
+	}
+	
+	
+	/**
+	 * Get data source properties.
+	 * @return Data source properties
+	 */
+	public final DataSourceProperties getDataSourceProperties() {
+		return dataSourceProperties;
+	}
+
+	/**
+	 * Set data source properties.
+	 * @param dataSourceProperties Data source properties
+	 */
+	public final void setDataSourceProperties(
+			final DataSourceProperties dataSourceProperties) {
+		this.dataSourceProperties = dataSourceProperties;
+	}
+
+	/**
+	 * Get identifier used in source database.
+	 * @return Identifier in source database
+	 */
+	public final String getSourceDbId() {
+		return sourceDbId;
+	}
+
+	
+	/**
+	 * Set identifier used in source database.
+	 * @param sourceDbId Identifier used in source database
+	 */
+	public final void setSourceDbId(final String sourceDbId) {
+		this.sourceDbId = sourceDbId;
 	}
 
 	/**
@@ -156,8 +205,18 @@ public class Experiment implements Serializable {
     public final void setBioAssays(final Set<BioAssay> bioAssays) {
         this.bioAssays = bioAssays;
     }
-
+    
+    
     /**
+     * Get bioassay data constraints of data added from client.
+     * @return Bioassay data constraints
+     */
+    public final Collection<BioAssayDataConstraints>
+    getBioAssayDataConstraints() {
+		return bioAssayDataConstraints;
+	}
+
+	/**
      * Get identifier used for persistence.
      * @return Identifier
      */
@@ -243,13 +302,21 @@ public class Experiment implements Serializable {
     /**
      * Constructor.
      * @param experimentDto Experiment data transfer object.
+     * @param bioAssayDataConstraints Bioassay data constraints
+     * associated with given experiment data transfer object
      */
-    public Experiment(final ExperimentDTO experimentDto) {
+    public Experiment(final ExperimentDTO experimentDto,
+    		final BioAssayDataConstraints[] bioAssayDataConstraints) {
     	if (experimentDto.getExperimentID() == null) {
     		throw new IllegalArgumentException(
     				"ExperimentDTO.experimentId cannot be null");
     	}
+    	if (bioAssayDataConstraints == null) {
+    		throw new IllegalArgumentException(
+    				"Bioassay data constraints cannot be null");
+    	}
     	this.name = experimentDto.getExperimentID();
+    	this.sourceDbId = experimentDto.getExperimentID();
     	BioAssayDTO[] bioAssayDto = experimentDto.getBioAssays();
     	this.add(bioAssayDto);
     	if (bioAssayDto.length > 0) {
@@ -273,6 +340,57 @@ public class Experiment implements Serializable {
 	    		}
     		}
     	}
+    	addAll(this.bioAssayDataConstraints, bioAssayDataConstraints);
+    }
+    
+    
+    /**
+     * Add all constraints from given array to given collection.
+     * This is essentially a set operation in that for any
+     * constraints in array that are equivalent to any
+     * constraints in the collection, they will not be added.
+     * Equivalency in this case is based on chromosome number and physical
+     * location only. 
+     * @param constraintsCol Target collection
+     * @param constraintsArr Source array
+     */
+    private static void addAll(
+    		final Collection<BioAssayDataConstraints> constraintsCol,
+    		final BioAssayDataConstraints[] constraintsArr) {
+    	for (int i = 0; i < constraintsArr.length; i++) {
+    		BioAssayDataConstraints c = constraintsArr[i];
+    		add(constraintsCol, c);
+    	}	
+    }
+    
+    
+    /**
+     * Add given constraints to given collection in 'set-like'
+     * fashion such that for any
+     * constraints in array that are equivalent to any
+     * constraints in the collection, they will not be added.
+     * Equivalency in this case is based on chromosome number and physical
+     * location only. 
+     * @param constraintsCol Collection
+     * @param constraints Constraints
+     */
+    private static void add(
+    		final Collection<BioAssayDataConstraints> constraintsCol,
+    		final BioAssayDataConstraints constraints) {
+    	boolean found = false;
+		for (BioAssayDataConstraints d : constraintsCol) {
+			if (constraints.getChromosome().equals(d.getChromosome())
+					&& constraints.getStartPosition().equals(
+							d.getStartPosition())
+					&& constraints.getEndPosition().equals(
+							d.getEndPosition())) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			constraintsCol.add(constraints);
+		}
     }
     
     
@@ -410,6 +528,26 @@ public class Experiment implements Serializable {
     		}
     	}
     	return max;
+    }
+    
+    
+    /**
+     * Round up all bioassay data constraints in given experiments.
+     * @param experiments Experiments
+     * @return All bioassay data constraints in given experiments
+     */
+    public static final Collection<BioAssayDataConstraints>
+    getBioAssayDataConstraints(final Collection<Experiment> experiments) {
+    	Collection<BioAssayDataConstraints> c =
+    		new ArrayList<BioAssayDataConstraints>();
+    	for (Experiment exp : experiments) {
+    		Collection<BioAssayDataConstraints> constraints =
+    			exp.bioAssayDataConstraints;
+    		for (BioAssayDataConstraints d : constraints) {
+    			add(c, d);
+    		}
+    	}
+    	return c;
     }
     
     
@@ -738,10 +876,13 @@ public class Experiment implements Serializable {
     /**
      * Create new experiments from given data transfer objects.
      * @param experimentDtos Experiment data transfer objects.
+     * @param bioAssayDataConstraints Constraints associated with
+     * given experiment data transfer object
      * @return Experiments
      */
     public static final Collection<Experiment> newExperiments(
-    		final Collection<ExperimentDTO> experimentDtos) {
+    		final Collection<ExperimentDTO> experimentDtos,
+    		final BioAssayDataConstraints[] bioAssayDataConstraints) {
     	Collection<Experiment> experiments = new ArrayList<Experiment>();
     	for (ExperimentDTO dto : experimentDtos) {
     		boolean found = false;
@@ -757,7 +898,7 @@ public class Experiment implements Serializable {
     			}
     		}
     		if (!found) {
-    			experiments.add(new Experiment(dto));
+    			experiments.add(new Experiment(dto, bioAssayDataConstraints));
     		}
     	}
     	return experiments;

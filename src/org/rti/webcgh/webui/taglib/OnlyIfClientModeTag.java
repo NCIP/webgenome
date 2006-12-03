@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,37 +48,47 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.client;
+package org.rti.webcgh.webui.taglib;
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webgenome.client.BioAssayDataConstraints;
+import org.rti.webcgh.util.SystemUtils;
+import org.rti.webcgh.webui.SessionTimeoutException;
+import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * Interface for getting data from application client.
+ * Body of tag will only be displayed if the session
+ * is client mode.
+ * @author dhall
  *
  */
-public interface ClientDataService {
+public class OnlyIfClientModeTag extends TagSupport {
+	
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
 	
 	/**
-	 * Get data from application client.
-	 * @param constraints Query constraints
-	 * @param experimentIds Experiment identifiers
-	 * @param clientID Application client ID
-	 * @return Experiments from application client
+	 * Do after start tag parsed.
+	 * @throws JspException if anything goes wrong.
+	 * @return Return value
 	 */
-    Collection<Experiment> getClientData(
-    		BioAssayDataConstraints[] constraints,
-    		String[] experimentIds, String clientID);
-    
-    /**
-     * Add data to given experiments.
-     * @param experiments Experiments
-     * @param constraints Query constraints
-     * @param clientId Application client ID
-     */
-    void addData(Collection<Experiment> experiments,
-    		BioAssayDataConstraints[] constraints,
-    		String clientId);
+	@Override
+	public final int doStartTag() throws JspException {
+		int rVal = TagSupport.SKIP_BODY;
+		try {
+			SessionMode mode =
+				org.rti.webcgh.webui.util.PageContext.getSessionMode(
+					(HttpServletRequest) pageContext.getRequest());
+			if (mode == SessionMode.CLIENT) {
+				rVal = TagSupport.EVAL_BODY_INCLUDE;
+			}
+		} catch (SessionTimeoutException e) {
+			rVal = TagSupport.SKIP_BODY;
+		}
+		return rVal;
+	}
 }

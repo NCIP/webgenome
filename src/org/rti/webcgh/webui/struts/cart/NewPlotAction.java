@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-26 16:46:04 $
+$Revision: 1.10 $
+$Date: 2006-12-03 22:23:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,8 +61,9 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.service.client.ClientDataService;
+import org.rti.webcgh.service.client.ClientDataServiceManager;
 import org.rti.webcgh.service.plot.PlotGenerator;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
@@ -92,19 +93,7 @@ public final class NewPlotAction extends BaseAction {
 	
 	/** Chromosome array data getter. */
 	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
-	
-	/** Client data service. */
-    private ClientDataService clientDataService = null;
-    
-	/**
-     * Set the client data service.
-     * @param clientDataService Client data service
-     */
-    public void setClientDataService(
-    		final ClientDataService clientDataService) {
-		this.clientDataService = clientDataService;
-	}
-	
+		
 	/**
 	 * Set plot generator.
 	 * @param plotGenerator Plot generator.
@@ -181,18 +170,23 @@ public final class NewPlotAction extends BaseAction {
 	    	plot = cart.getPlot(plotId);
 	    	Collection<Long> experimentIds = plot.getExperimentIds();
 	    	experiments = cart.getExperiments(experimentIds);
+	    	QuantitationType qType =
+	    		Experiment.getQuantitationType(experiments);
+	    	
+	    	// TODO: If genome intervals have not changed, do not
+	    	// go back to client for data.
 	    	
 	    	// If client mode, get data from requested genome intervals
 	    	// from client and put in shopping cart
 	    	if (mode == SessionMode.CLIENT) {
-		    	String clientId = PageContext.getClientId(request);
 		    	Collection<GenomeInterval> genomeIntervals =
 		    		params.getGenomeIntervals();
 		    	BioAssayDataConstraints[] constraints =
 		    		GenomeInterval.getBioAssayDataConstraints(genomeIntervals,
-		    				params.getUnits());
-		    	this.clientDataService.addData(experiments,
-		    			constraints, clientId);
+		    				params.getUnits(), qType);
+		    	ClientDataServiceManager mgr =
+		    		PageContext.getClientDataServiceManager(request);
+		    	mgr.addData(experiments, constraints);
 	    	}
 	    }
     	

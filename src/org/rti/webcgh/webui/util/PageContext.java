@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-10-26 19:22:40 $
+$Revision: 1.8 $
+$Date: 2006-12-03 22:23:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import javax.servlet.http.HttpSession;
 import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
+import org.rti.webcgh.service.client.ClientDataServiceManager;
 import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
@@ -95,14 +96,15 @@ public final class PageContext {
 	private static final String KEY_SELECTED_EXPERIMENTS_FORM =
 		"selected.experiments.form";
 	
-	/** Key for ID of client application. */
-	private static final String KEY_CLIENT_ID = "key.client.id";
-	
 	/** Key of color chooser. */
 	private static final String KEY_COLOR_CHOOSER = "key.color.chooser";
 	
 	/** Key of plot ID generator. */
 	private static final String KEY_PLOT_ID_GENERATOR = "key.plot.id.generator";
+	
+	/** Key of client data service manager. */
+	private static final String KEY_CLIENT_DATA_SERVICE_MANAGER =
+		"key.client.data.service.manager";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -229,31 +231,7 @@ public final class PageContext {
 			final ShoppingCart shoppingCart) {
 		request.getSession().setAttribute(KEY_SHOPPING_CART, shoppingCart);
 	}
-	
-	
-	/**
-	 * Get ID of client application.
-	 * @param request Servlet request.
-	 * @return ID of client application.
-	 * @throws SessionTimeoutException if attribute not found in
-	 * the session.
-	 */
-	public static String getClientId(final HttpServletRequest request)
-	throws SessionTimeoutException {
-		return (String) getSessionAttribute(request, KEY_CLIENT_ID);
-	}
-	
-	
-	/**
-	 * Set ID of client application.
-	 * @param request Servlet request
-	 * @param clientId ID of client application.
-	 */
-	public static void setClientId(final HttpServletRequest request,
-			final String clientId) {
-		request.getSession().setAttribute(KEY_CLIENT_ID, clientId);
-	}
-	
+		
 	/**
 	 * Get selected experiments form.
 	 * @param request Servlet request
@@ -337,6 +315,25 @@ public final class PageContext {
 		}
 		return gen;
 	}
+	
+	
+	/**
+	 * Get client data service manager.
+	 * @param request Servlet request
+	 * @return Client data service manager
+	 */
+	public static ClientDataServiceManager getClientDataServiceManager(
+			final HttpServletRequest request) {
+		HttpSession sess = request.getSession();
+		ClientDataServiceManager mgr = (ClientDataServiceManager)
+			sess.getAttribute(KEY_CLIENT_DATA_SERVICE_MANAGER);
+		if (mgr == null) {
+			mgr = new ClientDataServiceManager();
+			sess.setAttribute(KEY_CLIENT_DATA_SERVICE_MANAGER, mgr);
+		}
+		return mgr;
+	}
+	
 	/**
 	 * Get an attribute from session and throw a
 	 * <code>SessionExpired</code> exception if

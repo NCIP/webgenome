@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,37 +48,80 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.client;
-
-import java.util.Collection;
-
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webgenome.client.BioAssayDataConstraints;
+package org.rti.webcgh.domain;
 
 /**
- * Interface for getting data from application client.
+ * Properties of a data source that is an EJB.
+ * @author dhall
  *
  */
-public interface ClientDataService {
+public class EjbDataSourceProperties
+extends DataSourceProperties.BaseDataSourceProperties {
+	
+	/** Name of JNDI service. */
+	private final String jndiName;
+	
+	/** JNDI provider URL. */
+	private final String jndiProviderURL;
 	
 	/**
-	 * Get data from application client.
-	 * @param constraints Query constraints
-	 * @param experimentIds Experiment identifiers
-	 * @param clientID Application client ID
-	 * @return Experiments from application client
+	 * Get JNDI service name.
+	 * @return JNDI service name
 	 */
-    Collection<Experiment> getClientData(
-    		BioAssayDataConstraints[] constraints,
-    		String[] experimentIds, String clientID);
-    
-    /**
-     * Add data to given experiments.
-     * @param experiments Experiments
-     * @param constraints Query constraints
-     * @param clientId Application client ID
-     */
-    void addData(Collection<Experiment> experiments,
-    		BioAssayDataConstraints[] constraints,
-    		String clientId);
+	public final String getJndiName() {
+		return jndiName;
+	}
+
+	/**
+	 * Get JNDI provider URL.
+	 * @return JNDI provider URL.
+	 */
+	public final String getJndiProviderURL() {
+		return jndiProviderURL;
+	}
+
+	/**
+	 * Constructor.
+	 * @param jndiName JNDI service name
+	 * @param jndiProviderURL JNDI provider URL
+	 * @param clientId ID of application client
+	 */
+	public EjbDataSourceProperties(final String jndiName,
+			final String jndiProviderURL, final String clientId) {
+		super(clientId);
+		if (jndiName == null || jndiProviderURL == null
+				|| jndiName.length() < 1 || jndiProviderURL.length() < 1) {
+			throw new IllegalArgumentException(
+					"Both JNDI name and provider URL must be specified");
+		}
+		this.jndiName = jndiName;
+		this.jndiProviderURL = jndiProviderURL;
+	}
+
+	/**
+	 * Equals method.
+	 * @param obj An object.
+	 * @return T/F
+	 */
+	@Override
+	public final boolean equals(final Object obj) {
+		boolean eq = false;
+		if (obj instanceof EjbDataSourceProperties) {
+			EjbDataSourceProperties props = (EjbDataSourceProperties) obj;
+			eq = this.jndiName.equals(props.jndiName)
+			&& this.jndiProviderURL.equals(props.jndiProviderURL)
+			&& this.getClientId().equals(props.getClientId());
+		}
+		return eq;
+	}
+
+	/**
+	 * Get hash code.
+	 * @return Hash code
+	 */
+	@Override
+	public final int hashCode() {
+		return (this.jndiName + this.jndiProviderURL
+				+ this.getClientId()).hashCode();
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-11-29 04:05:09 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,7 +70,7 @@ import org.rti.webgenome.client.ExperimentDTOGenerator;
  * @author dhall
  *
  */
-public class TestClientDataService implements ClientDataService {
+public class SimulatedDataClientDataService implements ClientDataService {
 	
 	/** Gap between generated reporters in base pairs. */
 	private static final long GAP = 10000000;
@@ -118,7 +118,7 @@ public class TestClientDataService implements ClientDataService {
     	for (int i = 0; i < experimentIds.length; i++) {
     		ExperimentDTO dto = this.experimentDTOGenerator.newExperimentDTO(
     				experimentIds[i], constraints);
-    		Experiment exp = new Experiment(dto);
+    		Experiment exp = new Experiment(dto, constraints);
     		experiments.add(exp);
     	}
     	return experiments;

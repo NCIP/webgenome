@@ -41,9 +41,15 @@
 			name="analytic.operation.params.form"
 			type="org.rti.webcgh.webui.struts.cart.AnalyticOperationParametersForm"/>
 
+	<!-- Form for specifying cytoband data to upload -->
 		<form-bean
 			name="cytobands.form"
 			type="org.rti.webcgh.webui.struts.admin.CytobandsForm"/>
+			
+	<!-- Form for specifying a quantitation type -->
+		<form-bean
+			name="quantitation.type.form"
+			type="org.rti.webcgh.webui.struts.cart.QuantitationTypeForm"/>
 	</form-beans>
 
 
@@ -129,7 +135,23 @@
 			input="/cart/showCart.do">
 			<forward name="plot" path="cart.select.plot.type"/>
 			<forward name="analysis" path="/cart/selectAnalysis.do"/>
+			<forward name="import" path="/cart/selectImportDataType.do"/>
 			<forward name="cart" path="/cart/showCart.do"/>
+		</action>
+		
+	<!-- Select type of data to import from client -->
+		<action
+			path="/cart/selectImportDataType">
+			<forward name="success" path="cart.select.import.data.type"/>
+		</action>
+		
+	<!-- Import data from client -->
+		<action
+			path="/cart/import"
+			name="quantitation.type.form"
+			scope="session"
+			validate="false">
+			<forward name="success" path="/cart/showCart.do"/>
 		</action>
 
 	<!-- Select analytic operation -->
@@ -186,17 +208,6 @@
 			<forward name="success" path="/cart/showPlot.do"/>
 		</action>
         
-    <!-- New Test plot -->
-        <action
-            path="/cart/newTestPlot"
-            name="plot.parameters.form"
-            validate="true"
-            input="/cart/routeToPlotParametersPage.do"
-            scope="session">
-            <forward name="success" path="/cart/showPlot.do"/>
-        </action>
-
-
 	<!-- Show plot -->
 		<action
 			path="/cart/showPlot">

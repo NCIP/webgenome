@@ -88,7 +88,8 @@
 							<html:checkbox property="<%= propName %>"/>
 						</td>
 						<td valign="middle" align="left">
-							<bean:write name="experiment" property="name"/>
+							<bean:write name="experiment" property="name"/> -
+							<bean:write name="experiment" property="quantitationType.name"/>
 						</td>
 						<td valign="middle" width="1">
 							<html:img page="/images/spacer.gif"
@@ -166,6 +167,13 @@
 		Perform Analytic Operation
 		
 		&nbsp;&nbsp;
+		
+		<webcgh:onlyIfClientMode>
+			<html:radio property="operation" value="import"/>
+			Add data of different type
+			
+			&nbsp;&nbsp;
+		</webcgh:onlyIfClientMode>
 		
 		<html:submit value="GO"/>
 	</p>

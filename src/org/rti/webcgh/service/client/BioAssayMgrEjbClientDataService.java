@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-11-03 19:18:56 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,9 +65,9 @@ import org.rti.webgenome.client.ExperimentDTO;
 
 /**
  * Implementatation of <code>ClientDataService</code> interface
- * that uses multithreading to increase data throughput.
+ * that obtains data from a <code>BioAssayMgr</code> EJB data source.
  */
-public final class MultiThreadClientDataService
+public final class BioAssayMgrEjbClientDataService
 	implements ClientDataService {
     
     // ============================
@@ -76,7 +76,7 @@ public final class MultiThreadClientDataService
 
     /** Logger. */
     private static final Logger LOGGER =
-        Logger.getLogger(MultiThreadClientDataService.class);
+        Logger.getLogger(BioAssayMgrEjbClientDataService.class);
 
 	
 	// ===============================
@@ -201,7 +201,7 @@ public final class MultiThreadClientDataService
         for (ThreadQueryResult res : queryResults) {
         	dtos.add(res.getExperiment());
         }
-        return Experiment.newExperiments(dtos);
+        return Experiment.newExperiments(dtos, constraints);
     }
     
     

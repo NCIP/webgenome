@@ -1,6 +1,6 @@
 /*
-$Revision: 1.27 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,53 +48,36 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.webui.struts.client;
+package org.rti.webcgh.webui.struts.cart;
 
-import java.io.File;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.core.InvalidClientQueryParametersException;
-import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.domain.BioAssay;
-import org.rti.webcgh.domain.DataSourceProperties;
-import org.rti.webcgh.domain.EjbDataSourceProperties;
 import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.domain.SimulatedDataSourceProperties;
 import org.rti.webcgh.graphics.util.ColorChooser;
-import org.rti.webcgh.service.client.ClientDataService;
 import org.rti.webcgh.service.client.ClientDataServiceManager;
 import org.rti.webcgh.service.dao.OrganismDao;
-import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.IdGenerator;
-import org.rti.webcgh.units.BpUnits;
-import org.rti.webcgh.util.SystemUtils;
-import org.rti.webcgh.webui.struts.BaseAction;
-import org.rti.webcgh.webui.struts.cart.PlotParametersForm;
-import org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm;
-import org.rti.webcgh.webui.util.ClientQueryParser;
+import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.util.PageContext;
-import org.rti.webcgh.webui.util.SessionMode;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 
 /**
- * Action that is invoked when a user is initially directed
- * to webGenome from a client application.
+ * Imports data from a client application and
+ * deposits in shopping cart.
+ * @author dhall
+ *
  */
-public final class ClientPlotAction extends BaseAction {
-    
-	/** Logger. */
-	private static final Logger LOGGER =
-		Logger.getLogger(ClientPlotAction.class);
+public final class ImportAction extends Action {
 	
     /** Experiment ID generator. */
     private IdGenerator experimentIdGenerator = null;
@@ -102,23 +85,9 @@ public final class ClientPlotAction extends BaseAction {
     /** Bioassay ID generator. */
     private IdGenerator bioAssayIdGenerator = null;
     
-    /** Image file manager. */
-    private ImageFileManager imageFileManager = null;
-    
     /** Organism data access object. */
     private OrganismDao organismDao = null;
-
-
-    /**
-     * Set image file manager.
-     * @param imageFileManager Image file manager.
-     */
-    public void setImageFileManager(
-    		final ImageFileManager imageFileManager) {
-		this.imageFileManager = imageFileManager;
-	}
-
-
+    
     /**
      * Set organism data access object.
      * @param organismDao Organism data access object
@@ -126,9 +95,9 @@ public final class ClientPlotAction extends BaseAction {
 	public void setOrganismDao(final OrganismDao organismDao) {
 		this.organismDao = organismDao;
 	}
-
-
-    /**
+	
+	
+	/**
      * Set bioassay ID generator.
      * @param bioAssayIdGenerator ID generator
      */
@@ -146,8 +115,7 @@ public final class ClientPlotAction extends BaseAction {
 			final IdGenerator experimentIdGenerator) {
 		this.experimentIdGenerator = experimentIdGenerator;
 	}
-
-
+	
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -160,55 +128,46 @@ public final class ClientPlotAction extends BaseAction {
      * the method are passed up to a registered exception
      * handler configured in the struts-config.xml file
      */
-	public ActionForward execute(final ActionMapping mapping,
-			final ActionForm form, final HttpServletRequest request, 
-    		final HttpServletResponse response) throws Exception {
-		LOGGER.debug("Starting ClientPlotAction");
-		
-		// Cache client ID in session
-		String clientID = request.getParameter("clientID");
-		if (clientID == null) {
-			throw new InvalidClientQueryParametersException(
-					"Missing 'clientID' parameter");
-		}
-		
-		// Construct parameters for obtaining data through
-		// the client data service
-        String[] experimentIds = ClientQueryParser.getExperimentIds(request);
-        BioAssayDataConstraints[] constraints =
-        	ClientQueryParser.getBioAssayDataConstraints(request);
-        
-        // Instantiate data source properties.
-        DataSourceProperties props = null;
-        if (request.getParameter("test") == null) {
-        	// TODO: Get jndiName and jndiProviderURL from
-            // request parameters
-            String jndiName = SystemUtils.getApplicationProperty("jndi.name");
-            String jndiProviderUrl =
-            	SystemUtils.getApplicationProperty("jndi.provider.url");
-        	props = new EjbDataSourceProperties(
-            		jndiName, jndiProviderUrl, clientID);
-        } else {
-        	props = new SimulatedDataSourceProperties(clientID);
-        }
-        
-        // Get client data service
-        ClientDataServiceManager mgr =
-        	PageContext.getClientDataServiceManager(request);
-        ClientDataService service = mgr.getClientDataService(props);
-        
-        // Retrieve data from client
-        Collection<Experiment> experiments = 
-        	service.getClientData(constraints,
-        			experimentIds, clientID);
-        for (Experiment exp : experiments) {
-        	exp.setDataSourceProperties(props);
-        }
-        
-        // TODO: In the future the organism should come from the
-        // client query string
-        
-        // Give each experiment a unique ID and default
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	
+    	// Retrieve selected experiments form bean.
+    	// Note, this is not the form bean configured
+    	// for this action in struts-config.xml.
+    	SelectedExperimentsForm seForm =
+    		PageContext.getSelectedExperimentsForm(request, false);
+    	if (seForm == null) {
+    		throw new SessionTimeoutException(
+    				"Could not find selected experiments");
+    	}
+    	Collection<Long> ids = seForm.getSelectedExperimentIds();
+    	
+    	// Get selected experiments from cart
+    	ShoppingCart cart = PageContext.getShoppingCart(request, true);
+    	Collection<Experiment> selectedExperiments =
+    		cart.getExperiments(ids);
+    	
+    	// Get bioassay data constraints from selected experiments
+    	Collection<BioAssayDataConstraints> constraints =
+    		Experiment.getBioAssayDataConstraints(selectedExperiments);
+    	
+    	// Set quantitation type
+    	QuantitationTypeForm qForm = (QuantitationTypeForm) form;
+    	String qType = qForm.getQuantitationTypeId();
+    	for (BioAssayDataConstraints c : constraints) {
+    		c.setQuantitationType(qType);
+    	}
+    	
+    	// Get data from client
+    	ClientDataServiceManager mgr =
+    		PageContext.getClientDataServiceManager(request);
+    	Collection<Experiment> experiments =
+    		mgr.importData(selectedExperiments, constraints);
+    	
+    	// Give each experiment a unique ID and default
         // organism.  Give each bioassay a color and ID
         ColorChooser colorChooser = PageContext.getColorChooser(
         		request, true);
@@ -224,39 +183,8 @@ public final class ClientPlotAction extends BaseAction {
         }
         
         // Put data in shopping cart
-        ShoppingCart cart = PageContext.getShoppingCart(request, true);
         cart.add(experiments);
-        
-        // TODO: Make this cleaner.
-        // Initialize image file manager
-        if (!this.imageFileManager.isInitialized()) {
-	        String absPlotPath = this.getServlet().
-	        	getServletContext().getRealPath("/plots");
-	        File imageDir = new File(absPlotPath);
-	        this.imageFileManager.init(imageDir);
-        }
-        
-        
-        // Set image file manager property of shopping cart
-        // so that image files will be deleted when the users
-        // session ends
-        cart.setImageFileManager(this.imageFileManager);
-        
-        // Set session mode
-        PageContext.setSessionMode(request, SessionMode.CLIENT);
-        
-        // Initialize plot parameters form
-        PlotParametersForm pForm = (PlotParametersForm) form;
-        pForm.init();
-        pForm.setGenomeIntervals(GenomeInterval.encode(constraints));
-        pForm.setUnits(BpUnits.BP.getName());
-        pForm.setPlotType(PlotType.SCATTER.getName());
-        
-        // Set selected experiments form
-        SelectedExperimentsForm sef =
-        	PageContext.getSelectedExperimentsForm(request, true);
-        sef.setSelectedExperimentIds(experiments);
-        
-		return mapping.findForward("success");
-	}
+
+    	return mapping.findForward("success");
+    }
 }

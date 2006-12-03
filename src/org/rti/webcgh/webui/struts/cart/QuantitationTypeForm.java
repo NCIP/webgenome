@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.1 $
+$Date: 2006-12-03 22:23:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,37 +48,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.client;
+package org.rti.webcgh.webui.struts.cart;
 
-import java.util.Collection;
-
-import org.rti.webcgh.domain.Experiment;
-import org.rti.webgenome.client.BioAssayDataConstraints;
+import org.apache.struts.action.ActionForm;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Interface for getting data from application client.
+ * Form for specifying a quantitation type.
+ * @author dhall
  *
  */
-public interface ClientDataService {
+public class QuantitationTypeForm extends ActionForm {
 	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+
+	/** ID of a quantitation type. */
+	private String quantitationTypeId = "";
+
 	/**
-	 * Get data from application client.
-	 * @param constraints Query constraints
-	 * @param experimentIds Experiment identifiers
-	 * @param clientID Application client ID
-	 * @return Experiments from application client
+	 * Get ID of a quantitation type.
+	 * @return Quantitation type ID property
 	 */
-    Collection<Experiment> getClientData(
-    		BioAssayDataConstraints[] constraints,
-    		String[] experimentIds, String clientID);
-    
-    /**
-     * Add data to given experiments.
-     * @param experiments Experiments
-     * @param constraints Query constraints
-     * @param clientId Application client ID
-     */
-    void addData(Collection<Experiment> experiments,
-    		BioAssayDataConstraints[] constraints,
-    		String clientId);
+	public final String getQuantitationTypeId() {
+		return quantitationTypeId;
+	}
+
+	/**
+	 * Set ID of quantitation type.
+	 * @param quantitationTypeId Quantitation type ID property
+	 */
+	public final void setQuantitationTypeId(
+			final String quantitationTypeId) {
+		this.quantitationTypeId = quantitationTypeId;
+	}
+	
+	
 }

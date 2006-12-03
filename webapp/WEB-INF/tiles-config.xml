@@ -129,6 +129,13 @@
 	  	<put name="content" value="/WEB-INF/jsp/cart/selectAnalysis.jsp" />
 	  	<put name="helpTopic" value="operations" />
   	</definition>
+  	
+<!-- Select data type to import -->
+	<definition name="cart.select.import.data.type" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Select import data type" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/selectImportDataType.jsp" />
+	  	<put name="helpTopic" value="operations" />
+  	</definition>
 
 <!-- Set analytic operation parameters -->
   	<definition name="cart.analysis.params" extends="cart.layout" >
