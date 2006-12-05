@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-09-15 01:16:46 $
+$Date: 2006-12-05 02:55:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,14 +48,90 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.graphics.widget;
+package org.rti.webcgh.graphics.widget.unit_test;
+
+import java.io.File;
+
+import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
+import org.rti.webcgh.graphics.widget.ColorScale;
+import org.rti.webcgh.util.FileUtils;
+
+import junit.framework.TestCase;
 
 /**
- * Plots data in one dimension using color intensities
- * to represent another dimension.
+ * Tester for <code>ColorScale</code>.
  * @author dhall
  *
  */
-public class ColorCodePlot {
+public final class ColorScaleTester extends TestCase {
+	
+	//
+	//       CONSTANTS
+	//
+	
+	/** Width of scale in pixels. */
+	private static final int WIDTH = 250;
+	
+	/** Height of scale in pixels. */
+	private static final int HEIGHT = 30;
+	
+	/** Number of color bins. */
+	private static final int NUM_BINS = 16;
+	
+	/**
+	 * Name (not absolute path) of directory where test files
+	 * will be written.
+	 */
+	private static final String TEST_DIR_NAME = "color-scale-test";
+	
+	/** Directory where test files will be written. */
+	private static final File TEST_DIR =
+		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+	
+	
+	//
+	//       TEST METHODS
+	//
+	
+	/**
+	 * Test drawing this widget alone
+	 * with the zero point centered.
+	 */
+	public void testAloneZeroCentered() {
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		ColorScale cs = new ColorScale((float) -0.5, (float) 0.5,
+				WIDTH, HEIGHT, NUM_BINS, panel.getDrawingCanvas());
+		panel.add(cs);
+		panel.toPngFile("alone-zero-centered.png");
+	}
+	
+	
+	/**
+	 * Test drawing this widget alone
+	 * with the zero point close to left side.
+	 */
+	public void testAloneZeroLeft() {
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		ColorScale cs = new ColorScale((float) -0.005, (float) 0.5,
+				WIDTH, HEIGHT, NUM_BINS, panel.getDrawingCanvas());
+		panel.add(cs);
+		panel.toPngFile("alone-zero-left.png");
+	}
+	
+	
+	/**
+	 * Test drawing this widget alone
+	 * with the zero point close to right side.
+	 */
+	public void testAloneZeroRight() {
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		ColorScale cs = new ColorScale((float) -0.5, (float) 0.005,
+				WIDTH, HEIGHT, NUM_BINS, panel.getDrawingCanvas());
+		panel.add(cs);
+		panel.toPngFile("alone-zero-right.png");
+	}
 
 }

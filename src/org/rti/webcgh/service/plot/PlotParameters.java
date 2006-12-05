@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-11-15 22:50:22 $
+$Revision: 1.11 $
+$Date: 2006-12-05 02:55:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -80,7 +80,7 @@ public class PlotParameters {
 	
 	/** Default interpolation type. */
 	public static final InterpolationType DEF_INTERPOLATION_TYPE =
-		InterpolationType.STRAIGHT_LINE;
+		InterpolationType.NONE;
     
     // ==========================
     //       Attributes

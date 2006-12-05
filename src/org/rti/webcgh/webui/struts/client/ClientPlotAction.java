@@ -1,6 +1,6 @@
 /*
-$Revision: 1.27 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.28 $
+$Date: 2006-12-05 02:55:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,12 +85,20 @@ import org.rti.webcgh.webui.util.ClientQueryParser;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
 import org.rti.webgenome.client.BioAssayDataConstraints;
+import org.rti.webgenome.client.QuantitationTypes;
 
 /**
  * Action that is invoked when a user is initially directed
  * to webGenome from a client application.
  */
 public final class ClientPlotAction extends BaseAction {
+	
+	/**
+	 * Quantitation type of initial data retrieval from
+	 * application client.
+	 */
+	private static final String INIT_QUANTITATION_TYPE =
+		QuantitationTypes.COPY_NUMBER;
     
 	/** Logger. */
 	private static final Logger LOGGER =
@@ -178,9 +186,10 @@ public final class ClientPlotAction extends BaseAction {
         BioAssayDataConstraints[] constraints =
         	ClientQueryParser.getBioAssayDataConstraints(request);
         
-        // Instantiate data source properties.
+        // Instantiate data source properties and set quantitation type.
         DataSourceProperties props = null;
         if (request.getParameter("test") == null) {
+        	
         	// TODO: Get jndiName and jndiProviderURL from
             // request parameters
             String jndiName = SystemUtils.getApplicationProperty("jndi.name");
@@ -188,6 +197,11 @@ public final class ClientPlotAction extends BaseAction {
             	SystemUtils.getApplicationProperty("jndi.provider.url");
         	props = new EjbDataSourceProperties(
             		jndiName, jndiProviderUrl, clientID);
+        	
+        	// Initialize quantitation type
+        	for (int i = 0; i < constraints.length; i++) {
+        		constraints[i].setQuantitationType(INIT_QUANTITATION_TYPE);
+        	}
         } else {
         	props = new SimulatedDataSourceProperties(clientID);
         }

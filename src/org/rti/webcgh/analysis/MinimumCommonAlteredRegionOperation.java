@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2006-11-29 03:14:03 $
+$Revision: 1.9 $
+$Date: 2006-12-05 02:55:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,7 +82,7 @@ implements MultiExperimentStatelessOperation {
 	 * Default minimum percent of bioassays that must be altered
 	 * for an interval to be included.
 	 */
-	private static final float DEF_MIN_PERCENT = (float) 0.5;
+	private static final float DEF_MIN_PERCENT = (float) 50;
 	
 	/**
 	 * Default threshold for determining if a datum is in a
@@ -94,13 +94,13 @@ implements MultiExperimentStatelessOperation {
 	 * Default threshold for determining if a datum is in a
 	 * region of amplification.
 	 */
-	private static final float DEF_AMPLIFICATION_THRESHOLD = (float) 0.7;
+	private static final float DEF_AMPLIFICATION_THRESHOLD = (float) 2.0;
 	
 	/**
 	 * Default threshold for determining if a datum is in a
 	 * region of deletion.
 	 */
-	private static final float DEF_DELETION_THREHSOLD = (float) 0.3;
+	private static final float DEF_DELETION_THREHSOLD = (float) 0.5;
 	
 	/**
 	 * Minimum percent of bioassays that must be altered
@@ -163,7 +163,7 @@ implements MultiExperimentStatelessOperation {
 		ParameterErrorMessageGenerator gen =
 			new ParameterErrorMessageGenerator();
 		if (!ValidationUtils.inRange(this.minPercent, (float) 0.0,
-				(float) 1.0)) {
+				(float) 100.0)) {
 			gen.addInvalidParameterName("minPercent",
 					String.valueOf(this.minPercent));
 		}
@@ -376,7 +376,7 @@ implements MultiExperimentStatelessOperation {
 		List<UserConfigurableProperty> props =
 			new ArrayList<UserConfigurableProperty>();
 		props.add(new SimpleUserConfigurableProperty("minPercent",
-				"Minimum percent of altered bioassays",
+				"Minimum percent of altered bioassays (0% - 100%)",
 				String.valueOf(this.minPercent)));
 		String interpolateStr = "NO";
 		if (this.interpolate) {
@@ -419,7 +419,7 @@ implements MultiExperimentStatelessOperation {
 			try {
 				this.minPercent = Float.parseFloat(value);
 				if (this.minPercent < (float) 0.0
-						|| this.minPercent > (float) 1.0) {
+						|| this.minPercent > (float) 100.0) {
 					throw new BadUserConfigurablePropertyException(
 						"Minimum percent must be between 0 and 1, inclusive");
 				}

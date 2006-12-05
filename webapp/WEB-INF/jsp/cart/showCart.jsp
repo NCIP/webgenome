@@ -40,7 +40,7 @@
 	}
 </script>
 
-<h1 align="center">Shopping Cart</h1>
+<h1 align="center">Workspace</h1>
 
 <center>
 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-15 01:16:46 $
+$Revision: 1.2 $
+$Date: 2006-12-05 02:55:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -192,12 +192,17 @@ public class HeatMapColorFactory {
         }
     }
     
+    
+    // =================================
+    //      Business methods
+    // =================================
+    
     /**
      * Get number of bin associated with value.
      * @param value A value
      * @return Bin number
      */
-    private int binNumber(final float value) {
+    public final int binNumber(final float value) {
         int binNum = (int) Math.floor((value - this.lowSaturation)
         		/ this.binRange);
         if (binNum < 0) {
@@ -208,11 +213,6 @@ public class HeatMapColorFactory {
         }
         return binNum;
     }
-    
-    
-    // =================================
-    //      Business methods
-    // =================================
     
     /**
      * Get color associated with given value.
@@ -225,5 +225,18 @@ public class HeatMapColorFactory {
         }
         int binNum = this.binNumber(value);
         return this.pallate[binNum];
+    }
+    
+    
+    /**
+     * Get color associated with given bin.
+     * @param bin Bin number
+     * @return A color
+     */
+    public final Color getBinColor(final int bin) {
+    	if (bin < 0 || bin >= this.pallate.length) {
+    		throw new IllegalArgumentException("Bin number out of range");
+    	}
+    	return this.pallate[bin];
     }
 }

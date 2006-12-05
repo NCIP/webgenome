@@ -80,10 +80,10 @@
 					|
 				</webcgh:onlyIfAdmin>
 
-			<%-- Shopping cart --%>
+			<%-- Workspace --%>
 				<webcgh:onlyIfShoppingCartExists>
 					<a class="menuItem" href="<html:rewrite page="/cart/showCart.do"/>">
-						Shopping Cart
+						Workspace
 					</a>
 					|
 				</webcgh:onlyIfShoppingCartExists>
