@@ -1,6 +1,6 @@
 /*
-$Revision: 1.16 $
-$Date: 2006-10-30 18:37:31 $
+$Revision: 1.17 $
+$Date: 2006-12-05 03:19:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import org.rti.webcgh.graphics.util.HeatMapColorFactory;
 import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
 import org.rti.webcgh.graphics.widget.ChromosomeIdeogram;
+import org.rti.webcgh.graphics.widget.ColorScale;
 import org.rti.webcgh.graphics.widget.HeatMapPlot;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.service.dao.CytologicalMapDao;
@@ -90,6 +91,15 @@ public class IdeogramPlotPainter extends PlotPainter {
 	
 	/** Number of color bins. */
 	private static final int NUM_BINS = 16;
+	
+	/** Width of color scale in pixels. */
+	private static final int COLOR_SCALE_WIDTH = 250;
+	
+	/** Height of color scale in pixels. */
+	private static final int COLOR_SCALE_HEIGHT = 15;
+	
+	/** Number of color bins in color scale. */
+	private static final int COLOR_SCALE_NUM_BINS = 16;
 	
 	
 	// ======================
@@ -191,6 +201,13 @@ public class IdeogramPlotPainter extends PlotPainter {
 					va = VerticalAlignment.BELOW;
 				}
 				panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
+				ColorScale scale = new ColorScale(
+						plotParameters.getMinSaturation(),
+						plotParameters.getMaxSaturation(),
+						COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
+						COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
+				panel.add(scale, HorizontalAlignment.CENTERED,
+						VerticalAlignment.BELOW);
 				row = panel.newChildPlotPanel();
 				plotCount = 1;
 			}
@@ -227,6 +244,13 @@ public class IdeogramPlotPainter extends PlotPainter {
 			va = VerticalAlignment.BELOW;
 		}
 		panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
+		ColorScale scale = new ColorScale(
+				plotParameters.getMinSaturation(),
+				plotParameters.getMaxSaturation(),
+				COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
+				COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
+		panel.add(scale, HorizontalAlignment.CENTERED,
+				VerticalAlignment.BELOW);
 		
 		return evtHandlerBoundaries;
 	}
