@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.2 $
+$Date: 2006-12-12 21:37:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,6 +173,9 @@ public class ClientDataServiceManager {
 			ClientDataService service = this.getClientDataService(p);
 			Collection<Experiment> exps = service.getClientData(
 					conArr, expIds, p.getClientId());
+			for (Experiment exp : exps) {
+				exp.setDataSourceProperties(p);
+			}
 			outputExperiments.addAll(exps);
 		}
 		

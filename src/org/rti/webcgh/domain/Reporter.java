@@ -230,13 +230,17 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     	String[] a = dto.getAnnotations();
     	if (a != null) {
 	    	for (int i = 0; i < a.length; i++) {
-	    		this.annotations.add(a[i]);
+	    		if (a[i] != null) {
+	    			this.annotations.add(a[i]);
+	    		}
 	    	}
     	}
     	String[] g = dto.getAssociatedGenes();
     	if (g != null) {
     		for (int i = 0; i < g.length; i++) {
-    			this.associatedGenes.add(g[i]);
+    			if (g[i] != null) {
+    				this.associatedGenes.add(g[i]);
+    			}
     		}
     	}
     	this.selected = dto.isSelected();

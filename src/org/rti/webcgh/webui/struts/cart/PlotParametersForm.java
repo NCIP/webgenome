@@ -1,6 +1,6 @@
 /*
-$Revision: 1.22 $
-$Date: 2006-11-15 22:50:22 $
+$Revision: 1.23 $
+$Date: 2006-12-12 21:37:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -228,6 +228,12 @@ public class PlotParametersForm extends BaseForm {
 	private String interpolationType =
 		InterpolationType.STRAIGHT_LINE.toString();
 	
+	/** Show reporter annotation in mouseover. */
+	private String showAnnotation = "on";
+	
+	/** Show gene names in mouseover. */
+	private String showGenes = "on";
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -257,6 +263,45 @@ public class PlotParametersForm extends BaseForm {
 	}
 	
 	
+	/**
+	 * Show reporter annotation in mouseover?
+	 * @return Whether reporter annotation should be shown
+	 * in mouseover
+	 */
+	public final String getShowAnnotation() {
+		return showAnnotation;
+	}
+
+	
+	/**
+	 * Set whether reporter annotation should be shown in mouseover.
+	 * @param showAnnotation Should reporter annotation be
+	 * shown in mouseover?
+	 */
+	public final void setShowAnnotation(final String showAnnotation) {
+		this.showAnnotation = showAnnotation;
+	}
+
+	
+	/**
+	 * Should gene names be shown in mouseover?
+	 * @return Whether gene names should be shown in
+	 * mouseover.
+	 */
+	public final String getShowGenes() {
+		return showGenes;
+	}
+
+	
+	/**
+	 * Set whether gene names should be shown in mouseover.
+	 * @param showGenes Should gene names be shown in
+	 * mouseover?
+	 */
+	public final void setShowGenes(final String showGenes) {
+		this.showGenes = showGenes;
+	}
+
 	/**
 	 * Get type of interpolation to perform between data points.
 	 * @return Type of interpolation
@@ -705,6 +750,8 @@ public class PlotParametersForm extends BaseForm {
 		if (this.plotParamsHtmlFormUpstream(request)) {
 			this.interpolateLohEndpoints = "";
 			this.drawRawLohProbabilities = "";
+			this.showAnnotation = "";
+			this.showGenes = "";
 		}
 	}
 	
@@ -932,6 +979,8 @@ public class PlotParametersForm extends BaseForm {
 		this.drawRawLohProbabilities = "on";
 		this.interpolationType =
 			PlotParameters.DEF_INTERPOLATION_TYPE.toString();
+		this.showAnnotation = "on";
+		this.showGenes = "on";
 	}
 	
 	/**
@@ -992,6 +1041,16 @@ public class PlotParametersForm extends BaseForm {
 		}
 		params.setInterpolationType(
 				InterpolationType.valueOf(this.interpolationType));
+		if ("on".equals(this.showAnnotation)) {
+			params.setShowAnnotation(true);
+		} else {
+			params.setShowAnnotation(false);
+		}
+		if ("on".equals(this.showGenes)) {
+			params.setShowGenes(true);
+		} else {
+			params.setShowGenes(false);
+		}
 	}
 	
 	
@@ -1102,6 +1161,16 @@ public class PlotParametersForm extends BaseForm {
 		}
 		this.interpolationType =
 			plotParameters.getInterpolationType().toString();
+		if (plotParameters.isShowAnnotation()) {
+			this.showAnnotation = "on";
+		} else {
+			this.showAnnotation = "";
+		}
+		if (plotParameters.isShowGenes()) {
+			this.showGenes = "on";
+		} else {
+			this.showGenes = "";
+		}
 		
 		// Scatter plot parameters
 		if (plotParameters instanceof ScatterPlotParameters) {

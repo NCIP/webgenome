@@ -1,6 +1,6 @@
 /*
-$Revision: 1.27 $
-$Date: 2006-11-15 22:50:22 $
+$Revision: 1.28 $
+$Date: 2006-12-12 21:37:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -200,6 +200,12 @@ public final class ScatterPlot implements PlotElement {
     /** Interpolation type. */
     private InterpolationType interpolationType = InterpolationType.NONE;
     
+    /** Show annotation in mouseover text? */
+    private boolean showAnnotation = true;
+    
+    /** Show genes in mouseover text? */
+    private boolean showGenes = true;
+    
     // =============================
     //     Getters/setters
     // =============================
@@ -220,6 +226,43 @@ public final class ScatterPlot implements PlotElement {
 	public void setDrawRawLohProbabilities(
 			final boolean drawRawLohProbabilities) {
 		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Will annotation be shown in mouseover text?
+	 * @return T/F
+	 */
+	public boolean isShowAnnotation() {
+		return showAnnotation;
+	}
+
+
+	/**
+	 * Determines whether annotation will be shown in mouseover
+	 * text.
+	 * @param showAnnotation Show annotation in mouseover text?
+	 */
+	public void setShowAnnotation(final boolean showAnnotation) {
+		this.showAnnotation = showAnnotation;
+	}
+
+
+	/**
+	 * Show genes names in mouseover text?
+	 * @return T/F
+	 */
+	public boolean isShowGenes() {
+		return showGenes;
+	}
+
+
+	/**
+	 * Set whether to show gene names in mouseover text.
+	 * @param showGenes Show gene names in mouseover text?
+	 */
+	public void setShowGenes(final boolean showGenes) {
+		this.showGenes = showGenes;
 	}
 
 
@@ -548,29 +591,44 @@ public final class ScatterPlot implements PlotElement {
      */
     private String mouseOverText(final Reporter r) {
     	StringBuffer buff = new StringBuffer();
+    	
+    	// Reporter name
     	buff.append("Reporter: " + r.getName());
-    	StringBuffer annotation = new StringBuffer();
-    	int count = 0;
-    	for (String s : r.getAnnotations()) {
-    		if (count++ > 0) {
-    			annotation.append(".  ");
-    		}
-    		annotation.append(s);
+    	
+    	// Annotations
+    	if (this.showAnnotation) {
+    		int count = 0;
+    		StringBuffer annotation = new StringBuffer();
+	    	for (String s : r.getAnnotations()) {
+	    		if (s != null && s.length() > 0) {
+		    		if (count++ > 0) {
+		    			annotation.append(".  ");
+		    		}
+		    		annotation.append(s);
+	    		}
+	    	}
+	    	if (annotation.length() > 0) {
+	    		buff.append("; Annotations: " + annotation.toString());
+	    	}
     	}
-    	count = 0;
-    	StringBuffer genes = new StringBuffer();
-    	for (String s : r.getAssociatedGenes()) {
-    		if (count++ > 0) {
-    			genes.append(", ");
-    		}
-    		genes.append(s);
+    	
+    	// Genes
+    	if (this.showGenes) {
+	    	int count = 0;
+	    	StringBuffer genes = new StringBuffer();
+	    	for (String s : r.getAssociatedGenes()) {
+	    		if (s != null && s.length() > 0) {
+		    		if (count++ > 0) {
+		    			genes.append(", ");
+		    		}
+		    		genes.append(s);
+	    		}
+	    	}
+	    	if (genes.length() > 0) {
+	    		buff.append("; Genes: " + genes.toString());
+	    	}
     	}
-    	if (annotation.length() > 0) {
-    		buff.append("; Annotations: " + annotation.toString());
-    	}
-    	if (genes.length() > 0) {
-    		buff.append("; Genes: " + genes.toString());
-    	}
+    	
     	return buff.toString();
     }
     

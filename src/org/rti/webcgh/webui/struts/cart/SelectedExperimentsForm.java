@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-17 03:16:26 $
+$Revision: 1.4 $
+$Date: 2006-12-12 21:37:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,10 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.QuantitationType;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.util.SystemUtils;
+import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseForm;
 import org.rti.webcgh.webui.util.PageContext;
 
@@ -217,9 +220,37 @@ public class SelectedExperimentsForm extends BaseForm {
 	public final ActionErrors validate(final ActionMapping actionMappings,
 			final HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
+		
+		// Make sure at least one experiment selected
 		if (this.values.size() < 1) {
 			errors.add("global", new ActionError("no.experiments.selected"));
+		} else {
+		
+			// Make sure selected experiments not of different
+			// quantitation types
+			ShoppingCart cart = null;
+			try {
+				cart = PageContext.getShoppingCart(request);
+			} catch (SessionTimeoutException e) {
+				throw new WebcghSystemException(
+						"Unable to obtain shopping cart", e);
+			}
+			Collection<Experiment> exps = cart.getExperiments(
+					this.getSelectedExperimentIds());
+			QuantitationType qType = null;
+			for (Experiment exp : exps) {
+				if (qType == null) {
+					qType = exp.getQuantitationType();
+				} else {
+					if (qType != exp.getQuantitationType()) {
+						errors.add("global",
+								new ActionError("mixed.quantitation.types"));
+						break;
+					}
+				}
+			}
 		}
+			
 		return errors;
 	}
 }

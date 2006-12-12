@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-12-05 02:55:16 $
+$Revision: 1.12 $
+$Date: 2006-12-12 21:37:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -124,6 +124,12 @@ public class PlotParameters {
     private InterpolationType interpolationType =
     	DEF_INTERPOLATION_TYPE;
     
+    /** Show annotation in mouseover text? */
+    private boolean showAnnotation = true;
+    
+    /** Show gene names in mouseover text? */
+    private boolean showGenes = true;
+    
     // ===========================
     //    Getters/setters
     // ===========================
@@ -144,6 +150,43 @@ public class PlotParameters {
 	public final void setDrawRawLohProbabilities(
 			final boolean drawRawLohProbabilities) {
 		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Will annotation be shown in mouseover text?
+	 * @return T/F
+	 */
+	public final boolean isShowAnnotation() {
+		return showAnnotation;
+	}
+
+
+	/**
+	 * Determines whether annotation will be shown in mouseover
+	 * text.
+	 * @param showAnnotation Show annotation in mouseover text?
+	 */
+	public final void setShowAnnotation(final boolean showAnnotation) {
+		this.showAnnotation = showAnnotation;
+	}
+
+
+	/**
+	 * Show genes names in mouseover text?
+	 * @return T/F
+	 */
+	public final boolean isShowGenes() {
+		return showGenes;
+	}
+
+
+	/**
+	 * Set whether to show gene names in mouseover text.
+	 * @param showGenes Show gene names in mouseover text?
+	 */
+	public final void setShowGenes(final boolean showGenes) {
+		this.showGenes = showGenes;
 	}
 
 
@@ -318,6 +361,8 @@ public class PlotParameters {
     	this.interpolateLohEndpoints = params.interpolateLohEndpoints;
     	this.drawRawLohProbabilities = params.drawRawLohProbabilities;
     	this.interpolationType = params.interpolationType;
+    	this.showAnnotation = params.showAnnotation;
+    	this.showGenes = params.showGenes;
     }
     
     

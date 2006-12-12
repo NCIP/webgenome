@@ -170,11 +170,27 @@
 						</p>
 					</prop>
 			
+					<!-- Number of rows per plot -->
 					<prop name="Number of plot per row" id="param-numPlotPerRow">
 						When the user specifies multiple genome intervals,
 						the intervals will be displayed in different plots,
 						which will be laid out in rows.  This parameter
 						specifies how many plots will be in a row.
+					</prop>
+					
+					<!-- Show annotation -->
+					<prop name="Show reporter annotation" id="param-showAnnotation">
+						If this property is checked, then annotation associated
+						with the reporter under the mouse will be displayed
+						in the mouseover text.
+					</prop>
+					
+					<!-- Show genes -->
+					<prop name="Show gene names" id="param-showGenes">
+						If this property is checked, then names of genes
+						near the location of the under the mouse pointer
+						will be displayed
+						in the mouseover text.
 					</prop>
 				</prop-list>
 			</section>

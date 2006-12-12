@@ -223,6 +223,38 @@
 			</td>
 		</tr>
 		
+	<%-- Show annotations in mouseover --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-showAnnotation')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Display reporter annotations<br>
+				in mouseover text?
+			</td>
+			<td>
+				<html:checkbox property="showAnnotation"/>
+			</td>
+		</tr>
+		
+	<%-- Show gene names in mouseover --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-showGenes')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Display names of nearby genes<br>
+				in mouseover text?
+			</td>
+			<td>
+				<html:checkbox property="showGenes"/>
+			</td>
+		</tr>
+		
 	<%-- Interpolation type --%>
 		<tr>
 			<td valign="top">

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-11-15 21:54:39 $
+$Revision: 1.5 $
+$Date: 2006-12-12 21:37:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,12 @@ package org.rti.webgenome.client;
  *
  */
 public class BioAssayDatumDTOGenerator {
+	
+	/** Probability a reporter will have annotation. */
+	private static final double PROBABILITY_ANNOTATION = 0.5;
+	
+	/** Probability a reporter will have an associated gene. */
+	private static final double PROBABILITY_GENE = 0.3;
 
 	/** Gap in base pairs between generated reporters. */
 	private final long gap;
@@ -97,8 +103,12 @@ public class BioAssayDatumDTOGenerator {
 				DefReporterDTOImpl r = new DefReporterDTOImpl(
 						String.valueOf(j), constraint.getChromosome(), pos,
 						selected);
-				r.addAnnotation("An annotation");
-				r.addAssociatedGene("Gene A");
+				if (Math.random() < PROBABILITY_ANNOTATION) {
+					r.addAnnotation("An annotation");
+				}
+				if (Math.random() < PROBABILITY_GENE) {
+					r.addAssociatedGene("Gene A");
+				}
 				double value = Math.random();
 				BioAssayDatumDTO dto = new DefBioAssayDatumDTOImpl(value,
 						constraint.getQuantitationType(), r);
