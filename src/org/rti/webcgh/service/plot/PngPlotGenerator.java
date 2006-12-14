@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2006-10-30 18:37:31 $
+$Revision: 1.15 $
+$Date: 2006-12-14 02:24:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,6 +75,9 @@ public class PngPlotGenerator implements PlotGenerator {
 	
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(PlotGenerator.class);
+	
+	/** Extra padding around entire plot. */
+	private static final int EXTRA_PADDING = 25;
 	
 	// ============================
 	//      Attributes
@@ -310,7 +313,7 @@ public class PngPlotGenerator implements PlotGenerator {
 		panel.paint(canvas);
 		canvas.setWidth(panel.width());
 		canvas.setHeight(panel.height());
-		plot.setWidth(panel.width());
+		plot.setWidth(panel.width() + EXTRA_PADDING);		
 		plot.setHeight(panel.height());
 		String imageFileName =
 			this.imageFileManager.saveImage(canvas.toBufferedImage());

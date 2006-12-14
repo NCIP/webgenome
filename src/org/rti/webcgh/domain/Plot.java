@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-10-18 20:46:35 $
+$Revision: 1.10 $
+$Date: 2006-12-14 02:24:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -333,7 +333,7 @@ public class Plot implements Serializable {
 	public final Collection<String> getAllImageFileNames() {
 		Collection<String> names = new ArrayList<String>();
 		names.add(this.defaultImageFileName);
-		names.addAll(this.imageFileMap.keySet());
+		names.addAll(this.imageFileMap.values());
 		return names;
 	}
 	

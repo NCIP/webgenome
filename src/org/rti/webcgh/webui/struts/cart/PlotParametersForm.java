@@ -1,6 +1,6 @@
 /*
-$Revision: 1.23 $
-$Date: 2006-12-12 21:37:52 $
+$Revision: 1.24 $
+$Date: 2006-12-14 02:24:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,7 +101,7 @@ public class PlotParametersForm extends BaseForm {
 	private static final String DEF_NUM_PLOTS_PER_ROW = "4";
 	
 	/** Default plot width. */
-	private static final String DEF_WIDTH = "600";
+	private static final String DEF_WIDTH = "550";
 	
 	/** Default plot height. */
 	private static final String DEF_HEIGHT = "250";

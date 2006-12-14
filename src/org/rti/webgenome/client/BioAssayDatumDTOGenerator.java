@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-12-14 00:27:54 $
+$Revision: 1.7 $
+$Date: 2006-12-14 02:24:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,8 @@ package org.rti.webgenome.client;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
  * This class generates <code>BioAssayDatumDTO</code>
@@ -136,6 +138,10 @@ public class BioAssayDatumDTOGenerator {
 					- constraints[i].getStartPosition()) / this.gap);
 			ValueGenerator gen =
 				GENERATORS.get(constraint.getQuantitationType());
+			if (gen == null) {
+				throw new WebcghSystemException("Unknown quantitation type: '"
+						+ constraint.getQuantitationType() + "'");
+			}
 			for (int j = 0; j < num && p < totalNum; j++) {
 				long pos = (long) j * this.gap + constraint.getStartPosition();
 				boolean selected = Math.random() < this.probabilitySelected;

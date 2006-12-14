@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-31 22:48:19 $
+$Revision: 1.5 $
+$Date: 2006-12-14 02:24:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -268,7 +268,7 @@ public class ImageFileManager implements Serializable {
 	public final void deleteImageFile(final String fileName) {
 		String path = this.directory.getAbsolutePath() + "/" + fileName;
 		File file = new File(path);
-		if (file.exists()) {
+		if (!file.exists()) {
 			LOGGER.warn("Image file '" + fileName + "' not found");
 		}
 		if (!file.delete()) {

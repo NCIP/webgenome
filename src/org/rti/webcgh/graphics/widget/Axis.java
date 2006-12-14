@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-21 05:35:07 $
+$Revision: 1.7 $
+$Date: 2006-12-14 02:24:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -350,9 +350,10 @@ public final class Axis implements ScalePlotElement {
         		if (this.spansZero) {
         			this.zeroX -= relativeTextMinX;
         		}
+        		relativeTextMaxX -= relativeTextMinX;
         	}
-        	if (relativeTextMaxX > length) {
-        		this.maxX += relativeTextMaxX - length;
+        	if (relativeTextMaxX > this.maxX) {
+        		this.maxX = relativeTextMaxX;
         	}
         	this.maxY = this.fontSize + this.padding + this.majorTicLength;
         	
