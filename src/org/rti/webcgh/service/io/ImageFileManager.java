@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-12-14 02:24:56 $
+$Revision: 1.6 $
+$Date: 2006-12-14 04:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -154,7 +154,6 @@ public class ImageFileManager implements Serializable {
 		}
 		
 		// Initialize properties
-		this.directory = directory;
 		this.fileNameGenerator =
 			new UniqueFileNameGenerator(directory, FILE_EXTENSION);
 		
@@ -193,7 +192,7 @@ public class ImageFileManager implements Serializable {
 		this.directory = directory;
 		this.fileNameGenerator =
 			new UniqueFileNameGenerator(directory, FILE_EXTENSION);
-		
+		this.initialized = true;
 	}
 	
 	
@@ -222,6 +221,7 @@ public class ImageFileManager implements Serializable {
 	 */
 	private void purge(final Collection<String> filesToSave,
 			final File directory) {
+		LOGGER.info("Purging orphaned image files");
 		Set<String> fileSet = new HashSet<String>();
 		if (filesToSave != null) {
 			fileSet.addAll(filesToSave);
@@ -229,13 +229,18 @@ public class ImageFileManager implements Serializable {
 		File[] files = directory.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			if (!PLACEHOLDER_FILE_NAME.equals(file.getName())) {
-				if (!fileSet.contains(file.getName())) {
-					if (!file.delete()) {
-						LOGGER.warn("Unable to delete file '"
-								+ file.getAbsolutePath() + "'");
+			if (file.isFile()) {
+				if (!PLACEHOLDER_FILE_NAME.equals(file.getName())) {
+					if (!fileSet.contains(file.getName())) {
+						if (!file.delete()) {
+							LOGGER.warn("Unable to delete file '"
+									+ file.getAbsolutePath() + "'");
+						}
 					}
 				}
+			} else {
+				LOGGER.info("Not deleting sub-directory '"
+						+ file.getName() + "' in the plot directory");
 			}
 		}
 	}
@@ -266,6 +271,7 @@ public class ImageFileManager implements Serializable {
 	 * @param fileName Image file name
 	 */
 	public final void deleteImageFile(final String fileName) {
+		LOGGER.info("Deleting image file '" + fileName + "'");
 		String path = this.directory.getAbsolutePath() + "/" + fileName;
 		File file = new File(path);
 		if (!file.exists()) {

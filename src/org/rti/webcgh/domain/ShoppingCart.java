@@ -57,6 +57,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.util.SystemUtils;
@@ -71,6 +72,9 @@ public class ShoppingCart implements Serializable {
     /** Serialized version ID. */
     private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
+    
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(ShoppingCart.class);
     
     // ====================================
     //       Attributes
@@ -212,6 +216,37 @@ public class ShoppingCart implements Serializable {
      * @param experiment An experiment
      */
     public final void add(final Experiment experiment) {
+    	
+    	// Make sure experiment has an ID
+    	if (experiment.getId() == null) {
+    		throw new IllegalArgumentException("Experiment has no ID");
+    	}
+    	
+    	// Make sure there is not an existing experiment with the
+    	// same ID
+    	for (Experiment exp : this.experiments) {
+    		if (exp.getId().equals(experiment.getId())) {
+    			throw new IllegalArgumentException(
+    					"Shopping cart already contains an experiment with ID '"
+    					+ exp.getId() + "'");
+    		}
+    	}
+    	
+    	// If cart already has an experiment with same source DB ID,
+    	// remove the existing one
+    	String sourceDbId = experiment.getSourceDbId();
+    	if (sourceDbId != null && sourceDbId.length() > 0) {
+	    	for (Experiment exp : this.experiments) {
+	    		if (exp.getSourceDbId() != null
+	    				&& sourceDbId.equals(exp.getSourceDbId())) {
+	    			this.experiments.remove(exp);
+	    			LOGGER.info("Replacing existing experiment with source "
+	    					+ "database ID '" + sourceDbId + "' with new data");
+	    			break;
+	    		}
+	    	}
+    	}
+    	
         this.experiments.add(experiment);
     }
     
@@ -221,7 +256,9 @@ public class ShoppingCart implements Serializable {
      * @param experiments Experiments
      */
     public final void add(final Collection<Experiment> experiments) {
-    	this.experiments.addAll(experiments);
+    	for (Experiment exp : experiments) {
+    		this.add(exp);
+    	}
     }
     
     

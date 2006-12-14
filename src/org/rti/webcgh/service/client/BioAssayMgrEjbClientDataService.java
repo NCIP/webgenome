@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.2 $
+$Date: 2006-12-14 04:42:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,6 +101,9 @@ public final class BioAssayMgrEjbClientDataService
     /** EJB service locator. */
     private final ServiceLocator serviceLocator = new ServiceLocator();
     
+    /** Bioassay manager. */
+    private BioAssayMgr bioAssayMgr = null;
+    
     
     // =============================
     //      Getters/setters
@@ -120,6 +123,18 @@ public final class BioAssayMgrEjbClientDataService
      */
     public void setJndiProviderURL(final String jndiProviderURL) {
         this.jndiProviderURL = jndiProviderURL;
+        
+        // Get bioassay manager
+        try {
+            LOGGER.debug( "Getting BioAssayMgrHome interface from jndiName [" + jndiName + "] jndiProviderURL [" + jndiProviderURL + "]" ) ;
+			BioAssayMgrHome home = (BioAssayMgrHome)
+				this.serviceLocator.getLocalHome(this.jndiName, this.jndiProviderURL);
+			this.bioAssayMgr = home.create();
+		} catch (Exception e) {
+			throw new WebcghSystemException(
+                    "Error accessing client EJB using JNDI Name [" + jndiName + "] JNDI Provider URL [" + 
+                    jndiProviderURL + "].", e);
+		}
     }
 	
 	// ===================================
@@ -136,19 +151,22 @@ public final class BioAssayMgrEjbClientDataService
     public Collection<Experiment> getClientData(
     		final BioAssayDataConstraints[] constraints,
             final String[] experimentIds, final String clientID) {
-        
-    	// Get bioassay manager
-    	BioAssayMgr mgr = null;
-        try {
-            LOGGER.debug( "Getting BioAssayMgrHome interface from jndiName [" + jndiName + "] jndiProviderURL [" + jndiProviderURL + "]" ) ;
-			BioAssayMgrHome home = (BioAssayMgrHome)
-				this.serviceLocator.getLocalHome(this.jndiName, this.jndiProviderURL);
-			mgr = home.create();
-		} catch (Exception e) {
-			throw new WebcghSystemException(
-                    "Error accessing client EJB using JNDI Name [" + jndiName + "] JNDI Provider URL [" + 
-                    jndiProviderURL + "].", e);
-		}
+    	Collection<ExperimentDTO> dtos = this.getExperimentDtos(
+    			constraints, experimentIds, clientID);
+    	return Experiment.newExperiments(dtos, constraints);
+    }
+    
+    
+    /**
+     * Get experiment DTOs from client.
+     * @param constraints Query constraints
+	 * @param experimentIds Experiment identifiers
+	 * @param clientID Application client ID
+     * @return Experiment DTOs
+     */
+    private Collection<ExperimentDTO> getExperimentDtos(
+    		final BioAssayDataConstraints[] constraints,
+            final String[] experimentIds, final String clientID) {
         
         // Create container for query results
         Collection<ThreadQueryResult> queryResults =
@@ -164,7 +182,7 @@ public final class BioAssayMgrEjbClientDataService
                 ThreadQueryResult result = new ThreadQueryResult();
                 queryResults.add(result);
                 Thread thread = new Thread(new ClientDataThread(
-                		expID, constraint, clientID, result, mgr));
+                		expID, constraint, clientID, result, this.bioAssayMgr));
                 thread.start();
             }
         }
@@ -201,7 +219,8 @@ public final class BioAssayMgrEjbClientDataService
         for (ThreadQueryResult res : queryResults) {
         	dtos.add(res.getExperiment());
         }
-        return Experiment.newExperiments(dtos, constraints);
+        
+        return dtos;
     }
     
     
@@ -214,7 +233,47 @@ public final class BioAssayMgrEjbClientDataService
     public void addData(final Collection<Experiment> experiments,
     		final BioAssayDataConstraints[] constraints,
     		final String clientId) {
-    	// TODO: Implement this
+    	
+    	// Check args
+    	if (experiments == null || experiments.size() < 1) {
+    		throw new IllegalArgumentException("Experiment list is empty");
+    	}
+    	if (constraints == null || constraints.length < 1) {
+    		throw new IllegalArgumentException(
+    				"Bioassay data constraints are empty");
+    	}
+    	if (clientId == null || clientId.length() < 1) {
+    		throw new IllegalArgumentException("No client ID");
+    	}
+    	
+    	// Get list of experiment IDs
+    	Collection<String> idList = new ArrayList<String>();
+    	StringBuffer msg = new StringBuffer(
+    			"Retrieving additional data for experiments ");
+    	for (Experiment exp : experiments) {
+    		String id = exp.getSourceDbId();
+    		msg.append(" " + id);
+    		idList.add(id);
+    	}
+    	String[] sourceDbIds = new String[0];
+    	sourceDbIds = idList.toArray(sourceDbIds);
+    	LOGGER.info(msg.toString());
+    	
+    	// Get data from client
+    	Collection<ExperimentDTO> dtos = this.getExperimentDtos(
+    			constraints, sourceDbIds, clientId);
+    	
+    	// Add data to experiments
+    	for (ExperimentDTO dto : dtos) {
+    		for (Experiment exp : experiments) {
+    			if (dto.getExperimentID().equals(exp.getSourceDbId())) {
+    				LOGGER.info("Adding additional data to experiment '"
+    						+ exp.getSourceDbId() + "'");
+    				exp.addData(dto);
+    				break;
+    			}
+    		}
+    	}
     }
     
     
