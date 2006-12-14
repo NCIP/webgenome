@@ -223,6 +223,22 @@
 			</td>
 		</tr>
 		
+	<%-- Show reporter names in mouseover --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-showReporterNames')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Display reporter names<br>
+				in mouseover text?
+			</td>
+			<td>
+				<html:checkbox property="showReporterNames"/>
+			</td>
+		</tr>
+		
 	<%-- Show annotations in mouseover --%>
 		<tr>
 			<td>

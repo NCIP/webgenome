@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2006-12-14 05:23:09 $
+$Revision: 1.19 $
+$Date: 2006-12-14 05:51:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -194,6 +194,8 @@ public class ScatterPlotPainter extends PlotPainter {
 	        scatterPlot.setLohThreshold(plotParameters.getLohThreshold());
 	        scatterPlot.setShowAnnotation(plotParameters.isShowAnnotation());
 	        scatterPlot.setShowGenes(plotParameters.isShowGenes());
+	        scatterPlot.setShowReporterNames(
+	        		plotParameters.isShowReporterNames());
 	        plots.add(scatterPlot);
 	        
 	        PlotPanel col = row.newChildPlotPanel();

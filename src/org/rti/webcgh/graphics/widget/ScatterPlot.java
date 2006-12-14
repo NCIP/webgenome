@@ -1,6 +1,6 @@
 /*
-$Revision: 1.29 $
-$Date: 2006-12-14 00:27:54 $
+$Revision: 1.30 $
+$Date: 2006-12-14 05:51:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -170,7 +170,7 @@ public final class ScatterPlot implements PlotElement {
      * Mouseover stripes used for providing interactivity
      * using Javascript.
      */
-    private final MouseOverStripes mouseOverStripes;
+    private MouseOverStripes mouseOverStripes;
     
     /** Draw data points. */
     private boolean drawPoints = true;
@@ -208,6 +208,9 @@ public final class ScatterPlot implements PlotElement {
     /** Show genes in mouseover text? */
     private boolean showGenes = true;
     
+    /** Show reporter names in mouseover text? */
+    private boolean showReporterNames = true;
+    
     // =============================
     //     Getters/setters
     // =============================
@@ -228,6 +231,26 @@ public final class ScatterPlot implements PlotElement {
 	public void setDrawRawLohProbabilities(
 			final boolean drawRawLohProbabilities) {
 		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Show reporter names in mouseover text?
+	 * @return T/F
+	 */
+	public boolean isShowReporterNames() {
+		return showReporterNames;
+	}
+
+
+	/**
+	 * Sets whether or not to show reporter names in mouseover
+	 * text.
+	 * @param showReporterNames Show reporter names in mouseover
+	 * text?
+	 */
+	public void setShowReporterNames(final boolean showReporterNames) {
+		this.showReporterNames = showReporterNames;
 	}
 
 
@@ -557,31 +580,36 @@ public final class ScatterPlot implements PlotElement {
      */
     private void initializeMouseOverStripes(
     		final SortedSet<Reporter> reporters) {
-    	this.mouseOverStripes.getOrigin().x = this.x;
-    	this.mouseOverStripes.getOrigin().y = this.y;
-    	if (reporters.size() > 0) {
-	    	MouseOverStripe lastStripe = null;
-	    	Reporter lastReporter = null;
-	    	for (Reporter currentReporter : reporters) {
-	    		long currentStartBp = 0;
-	    		if (lastReporter != null) {
-	    			currentStartBp = (currentReporter.getLocation()
-	    					+ lastReporter.getLocation()) / 2;
-	    		}
-	    		int currentStartPix = (int)
-	    			(this.plotBoundaries.fractionalDistanceFromLeft(
-	    					currentStartBp) * (double) this.width);
-	    		MouseOverStripe currentStripe = new MouseOverStripe();
-	    		this.mouseOverStripes.add(currentStripe);
-	    		currentStripe.setText(this.mouseOverText(currentReporter));
-	    		currentStripe.setStart(currentStartPix);
-	    		if (lastStripe != null) {
-	    			lastStripe.setEnd(currentStartPix - 1);
-	    		}
-	    		lastStripe = currentStripe;
-	    		lastReporter = currentReporter;
+    	if (!this.showAnnotation && !this.showGenes
+    			&& !this.showReporterNames) {
+    		this.mouseOverStripes = null;
+    	} else {
+	    	this.mouseOverStripes.getOrigin().x = this.x;
+	    	this.mouseOverStripes.getOrigin().y = this.y;
+	    	if (reporters.size() > 0) {
+		    	MouseOverStripe lastStripe = null;
+		    	Reporter lastReporter = null;
+		    	for (Reporter currentReporter : reporters) {
+		    		long currentStartBp = 0;
+		    		if (lastReporter != null) {
+		    			currentStartBp = (currentReporter.getLocation()
+		    					+ lastReporter.getLocation()) / 2;
+		    		}
+		    		int currentStartPix = (int)
+		    			(this.plotBoundaries.fractionalDistanceFromLeft(
+		    					currentStartBp) * (double) this.width);
+		    		MouseOverStripe currentStripe = new MouseOverStripe();
+		    		this.mouseOverStripes.add(currentStripe);
+		    		currentStripe.setText(this.mouseOverText(currentReporter));
+		    		currentStripe.setStart(currentStartPix);
+		    		if (lastStripe != null) {
+		    			lastStripe.setEnd(currentStartPix - 1);
+		    		}
+		    		lastStripe = currentStripe;
+		    		lastReporter = currentReporter;
+		    	}
+		    	lastStripe.setEnd(this.width);
 	    	}
-	    	lastStripe.setEnd(this.width);
     	}
     }
     
@@ -595,7 +623,9 @@ public final class ScatterPlot implements PlotElement {
     	StringBuffer buff = new StringBuffer();
     	
     	// Reporter name
-    	buff.append("Reporter: " + r.getName());
+    	if (this.showReporterNames) {
+    		buff.append("Reporter: " + r.getName());
+    	}
     	
     	// Annotations
     	if (this.showAnnotation) {
@@ -610,7 +640,10 @@ public final class ScatterPlot implements PlotElement {
 	    		}
 	    	}
 	    	if (annotation.length() > 0) {
-	    		buff.append("; Annotations: " + annotation.toString());
+	    		if (buff.length() > 0) {
+	    			buff.append("; ");
+	    		}
+	    		buff.append("Annotations: " + annotation.toString());
 	    	}
     	}
     	
@@ -627,7 +660,10 @@ public final class ScatterPlot implements PlotElement {
 	    		}
 	    	}
 	    	if (genes.length() > 0) {
-	    		buff.append("; Genes: " + genes.toString());
+	    		if (buff.length() > 0) {
+	    			buff.append("; ");
+	    		}
+	    		buff.append("Genes: " + genes.toString());
 	    	}
     	}
     	

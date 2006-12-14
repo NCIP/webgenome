@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-12-12 21:37:52 $
+$Revision: 1.13 $
+$Date: 2006-12-14 05:51:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -130,6 +130,9 @@ public class PlotParameters {
     /** Show gene names in mouseover text? */
     private boolean showGenes = true;
     
+    /** Show reporter names in mouseover text? */
+    private boolean showReporterNames = true;
+    
     // ===========================
     //    Getters/setters
     // ===========================
@@ -150,6 +153,25 @@ public class PlotParameters {
 	public final void setDrawRawLohProbabilities(
 			final boolean drawRawLohProbabilities) {
 		this.drawRawLohProbabilities = drawRawLohProbabilities;
+	}
+
+
+	/**
+	 * Show reporter names in mouseover text?
+	 * @return T/F
+	 */
+	public final boolean isShowReporterNames() {
+		return showReporterNames;
+	}
+
+
+	/**
+	 * Sets whether to show reporter names in mouseover text.
+	 * @param showReporterNames Show reporter names in mouseover text?
+	 */
+	public final void setShowReporterNames(
+			final boolean showReporterNames) {
+		this.showReporterNames = showReporterNames;
 	}
 
 
@@ -363,6 +385,7 @@ public class PlotParameters {
     	this.interpolationType = params.interpolationType;
     	this.showAnnotation = params.showAnnotation;
     	this.showGenes = params.showGenes;
+    	this.showReporterNames = params.showReporterNames;
     }
     
     

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.24 $
-$Date: 2006-12-14 02:24:56 $
+$Revision: 1.25 $
+$Date: 2006-12-14 05:51:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -228,11 +228,14 @@ public class PlotParametersForm extends BaseForm {
 	private String interpolationType =
 		InterpolationType.STRAIGHT_LINE.toString();
 	
-	/** Show reporter annotation in mouseover. */
+	/** Show reporter annotation in mouseover? */
 	private String showAnnotation = "on";
 	
-	/** Show gene names in mouseover. */
+	/** Show gene names in mouseover? */
 	private String showGenes = "on";
+	
+	/** Show reporter anmes in mouseover? */
+	private String showReporterNames = "on";
 	
 	// ================================
 	//      Getters/setters
@@ -263,6 +266,25 @@ public class PlotParametersForm extends BaseForm {
 	}
 	
 	
+	/**
+	 * Show reporter names in mouseover?
+	 * @return <code>on</code> or empty string
+	 */
+	public final String getShowReporterNames() {
+		return showReporterNames;
+	}
+
+	
+	/**
+	 * Specifies whether to show reporter names in
+	 * mouseover text.
+	 * @param showReporterNames Show reporter names in mouseover?
+	 */
+	public final void setShowReporterNames(
+			final String showReporterNames) {
+		this.showReporterNames = showReporterNames;
+	}
+
 	/**
 	 * Show reporter annotation in mouseover?
 	 * @return Whether reporter annotation should be shown
@@ -752,6 +774,7 @@ public class PlotParametersForm extends BaseForm {
 			this.drawRawLohProbabilities = "";
 			this.showAnnotation = "";
 			this.showGenes = "";
+			this.showReporterNames = "";
 		}
 	}
 	
@@ -981,6 +1004,7 @@ public class PlotParametersForm extends BaseForm {
 			PlotParameters.DEF_INTERPOLATION_TYPE.toString();
 		this.showAnnotation = "on";
 		this.showGenes = "on";
+		this.showReporterNames = "on";
 	}
 	
 	/**
@@ -1050,6 +1074,11 @@ public class PlotParametersForm extends BaseForm {
 			params.setShowGenes(true);
 		} else {
 			params.setShowGenes(false);
+		}
+		if ("on".equals(this.showReporterNames)) {
+			params.setShowReporterNames(true);
+		} else {
+			params.setShowReporterNames(false);
 		}
 	}
 	
@@ -1170,6 +1199,11 @@ public class PlotParametersForm extends BaseForm {
 			this.showGenes = "on";
 		} else {
 			this.showGenes = "";
+		}
+		if (plotParameters.isShowReporterNames()) {
+			this.showReporterNames = "on";
+		} else {
+			this.showReporterNames = "";
 		}
 		
 		// Scatter plot parameters

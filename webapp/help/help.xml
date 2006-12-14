@@ -178,6 +178,13 @@
 						specifies how many plots will be in a row.
 					</prop>
 					
+					<!-- Show reporter names -->
+					<prop name="Show reporter names" id="param-showReporterNames">
+						If this property is checked, names of reporters
+						near mouse will be displayed
+						in the mouseover text.
+					</prop>
+					
 					<!-- Show annotation -->
 					<prop name="Show reporter annotation" id="param-showAnnotation">
 						If this property is checked, then annotation associated
