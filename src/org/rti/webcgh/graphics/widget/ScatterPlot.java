@@ -1,6 +1,6 @@
 /*
-$Revision: 1.28 $
-$Date: 2006-12-12 21:37:52 $
+$Revision: 1.29 $
+$Date: 2006-12-14 00:27:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webcgh.graphics.widget;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -73,6 +74,7 @@ import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.primitive.Circle;
 import org.rti.webcgh.graphics.primitive.Line;
+import org.rti.webcgh.graphics.util.PointListCompressor;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
 import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.webui.util.ClickBoxes;
@@ -781,12 +783,21 @@ public final class ScatterPlot implements PlotElement {
     private CubicSpline newCubicSpline(final ChromosomeArrayData cad) {
     	List<ArrayDatum> arrayData = cad.getArrayData();
     	int n = arrayData.size();
+    	List<Double> xxList = new ArrayList<Double>();
+    	List<Double> yyList = new ArrayList<Double>();
+    	for (int i = 0; i < n; i++) {
+    		ArrayDatum datum = arrayData.get(i);
+    		xxList.add((double) this.transposeX(
+    				datum.getReporter().getLocation()));
+    		yyList.add((double) this.transposeY(datum.getValue()));
+    	}
+    	PointListCompressor.compress(xxList, yyList);
+    	n = xxList.size();
     	double[] xx = new double[n];
     	double[] yy = new double[n];
     	for (int i = 0; i < n; i++) {
-    		ArrayDatum datum = arrayData.get(i);
-    		xx[i] = (double) this.transposeX(datum.getReporter().getLocation());
-    		yy[i] = (double) this.transposeY(datum.getValue());
+    		xx[i] = xxList.get(i);
+    		yy[i] = yyList.get(i);
     	}
     	return new CubicSpline(xx, yy);
     }
@@ -804,6 +815,8 @@ public final class ScatterPlot implements PlotElement {
             final int lineWidth) {
     	List<ArrayDatum> arrayData = cad.getArrayData();
     	if (arrayData.size() > 0) {
+    		int minY = this.y;
+    		int maxY = minY + this.height;
 	    	CubicSpline spline = this.newCubicSpline(cad);
 	    	ArrayDatum firstDatum = arrayData.get(0);
 	    	ArrayDatum lastDatum = arrayData.get(arrayData.size() - 1);
@@ -824,8 +837,22 @@ public final class ScatterPlot implements PlotElement {
 	        for (int i = startX; i < endX - 1; i++) {
 	        	int x2 = i + 1;
 	        	int y2 = (int) spline.interpolate((double) x2);
-	        	Line line = new Line(x1, y1, x2, y2, lineWidth, color);
-	        	drawingCanvas.add(line);
+	        	if (y1 < minY && y2 >= minY) {
+	        		y1 = minY;
+	        	} else if (y1 > maxY && y2 <= maxY) {
+	        		y1 = maxY;
+	        	}
+	        	if (y2 < minY && y1 >= minY) {
+	        		y2 = minY;
+	        	}
+	        	if (y2 > maxY && y1 <= maxY) {
+	        		y2 = maxY;
+	        	}
+	        	if (y1 >= minY && y1 <= maxY
+	        			&& y2 >= minY && y2 <= maxY) {
+		        	Line line = new Line(x1, y1, x2, y2, lineWidth, color);
+		        	drawingCanvas.add(line);
+	        	}
 	        	x1 = x2;
 	        	y1 = y2;
 	        }

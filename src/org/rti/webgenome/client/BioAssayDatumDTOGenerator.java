@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-12-12 21:37:52 $
+$Revision: 1.6 $
+$Date: 2006-12-14 00:27:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.client;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This class generates <code>BioAssayDatumDTO</code>
  * objects for testing.
@@ -62,7 +65,41 @@ public class BioAssayDatumDTOGenerator {
 	private static final double PROBABILITY_ANNOTATION = 0.5;
 	
 	/** Probability a reporter will have an associated gene. */
-	private static final double PROBABILITY_GENE = 0.3;
+	private static final float PROBABILITY_GENE = (float) 0.3;
+	
+	/**
+	 * Probability a reporter marks an endpoint of an
+	 * altered genome region.
+	 */
+	private static final float PROBABILITY_ALTERATION_ENDPOINT =
+		(float) 0.005;
+	
+	/** Value generators keyed on quantitation type. */
+	private static final Map<String, ValueGenerator> GENERATORS =
+		new HashMap<String, ValueGenerator>();
+	
+	static {
+		GENERATORS.put(QuantitationTypes.COPY_NUMBER,
+				new ValueGenerator((float) 20.0, (float) 30.0,
+						(float) 0.0, (float) 10.0,
+						PROBABILITY_ALTERATION_ENDPOINT));
+		GENERATORS.put(QuantitationTypes.COPY_NUMBER_LOG2_RATION,
+				new ValueGenerator((float) 2.0, (float) 3.0,
+						(float) 0.0, (float) 0.6,
+						PROBABILITY_ALTERATION_ENDPOINT));
+		GENERATORS.put(QuantitationTypes.FOLD_CHANGE,
+				new ValueGenerator((float) 20.0, (float) 30.0,
+						(float) 0.0, (float) 10.0,
+						PROBABILITY_ALTERATION_ENDPOINT));
+		GENERATORS.put(QuantitationTypes.FOLD_CHANGE_LOG2_RATIO,
+				new ValueGenerator((float) 2.0, (float) 3.0,
+						(float) 0.0, (float) 0.6,
+						PROBABILITY_ALTERATION_ENDPOINT));
+		GENERATORS.put(QuantitationTypes.LOH,
+				new ValueGenerator((float) 0.8, (float) 1.0,
+						(float) 0.0, (float) 0.3,
+						PROBABILITY_ALTERATION_ENDPOINT));
+	}
 
 	/** Gap in base pairs between generated reporters. */
 	private final long gap;
@@ -97,6 +134,8 @@ public class BioAssayDatumDTOGenerator {
 			BioAssayDataConstraints constraint = constraints[i];
 			int num = (int) ((constraints[i].getEndPosition()
 					- constraints[i].getStartPosition()) / this.gap);
+			ValueGenerator gen =
+				GENERATORS.get(constraint.getQuantitationType());
 			for (int j = 0; j < num && p < totalNum; j++) {
 				long pos = (long) j * this.gap + constraint.getStartPosition();
 				boolean selected = Math.random() < this.probabilitySelected;
@@ -109,12 +148,96 @@ public class BioAssayDatumDTOGenerator {
 				if (Math.random() < PROBABILITY_GENE) {
 					r.addAssociatedGene("Gene A");
 				}
-				double value = Math.random();
+				double value = gen.nextValue();
 				BioAssayDatumDTO dto = new DefBioAssayDatumDTOImpl(value,
 						constraint.getQuantitationType(), r);
 				dtos[p++] = dto;
 			}
 		}
 		return dtos;
+	}
+	
+	
+	/**
+	 * Generates values.
+	 * @author dhall
+	 *
+	 */
+	static class ValueGenerator {
+		
+		/** Minimim value in an altered region. */
+		private final float minAltValue;
+		
+		/** Maximum value in an altered region. */
+		private final float maxAltValue;
+		
+		/** Minimum value in a non-altered region. */
+		private final float minBackgroundValue;
+		
+		/** Maximum value in a non-altered region. */
+		private final float maxBackgroundValue;
+		
+		/** Is generator currently in an altered region? */
+		private boolean inAlteration = false;
+		
+		/**
+		 * Probability that a given values represents
+		 * the end point of an altered region.
+		 */
+		private final float probAltEndPoint;
+		
+		/**
+		 * Constructor.
+		 * @param minAltValue Minimim value in an altered region
+		 * @param maxAltValue Maximum value in an altered region
+		 * @param minBackgroundValue Minimum value in a non-altered region
+		 * @param maxBackgroundValue Maximum value in a non-altered region
+		 * @param probAltEndPoint Probability that a given values represents
+		 * the end point of an altered region
+		 */
+		ValueGenerator(final float minAltValue, final float maxAltValue,
+				final float minBackgroundValue,
+				final float maxBackgroundValue,
+				final float probAltEndPoint) {
+			this.minAltValue = minAltValue;
+			this.maxAltValue = maxAltValue;
+			this.minBackgroundValue = minBackgroundValue;
+			this.maxBackgroundValue = maxBackgroundValue;
+			this.probAltEndPoint = probAltEndPoint;
+		}
+		
+		
+		/**
+		 * Generate next value.
+		 * @return Value
+		 */
+		public float nextValue() {
+			float value = Float.NaN;
+			if (!this.inAlteration) {
+				this.inAlteration = Math.random() < this.probAltEndPoint;
+			}
+			if (!this.inAlteration) {
+				value = this.generateValue(this.minBackgroundValue,
+						this.maxBackgroundValue);
+			} else {
+				value = this.generateValue(this.minAltValue,
+						this.maxAltValue);
+				this.inAlteration = Math.random()
+					< (float) 1.0 - this.probAltEndPoint;
+			}
+			return value;
+		}
+		
+		/**
+		 * Generate a value between <code>min</code> and
+		 * <code>max</code>.
+		 * @param min Minimum
+		 * @param max Maximum
+		 * @return A value
+		 */
+		private float generateValue(final float min, final float max) {
+			float range = max - min;
+			return (float) Math.random() * range + min;
+		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-12-03 22:23:44 $
+$Revision: 1.2 $
+$Date: 2006-12-14 00:27:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,10 +73,10 @@ import org.rti.webgenome.client.ExperimentDTOGenerator;
 public class SimulatedDataClientDataService implements ClientDataService {
 	
 	/** Gap between generated reporters in base pairs. */
-	private static final long GAP = 10000000;
+	private static final long GAP = 1000000;
 	
 	/** Number of bioassays per experiment generated. */
-	private static final int NUM_BIO_ASSAYS = 3;
+	private static final int NUM_BIO_ASSAYS = 2;
 	
 	/** Experiment data transfer object generator. */
 	private final ExperimentDTOGenerator experimentDTOGenerator =
