@@ -1,5 +1,6 @@
 The WebGenome Software License, Version 1.0
 
+
 Copyright 2003 RTI. This software was developed in conjunction with the National 
 Cancer Institute, and so to the extent government employees are co-authors, any 
 rights in such works shall be subject to Title 17 of the United States Code, 
