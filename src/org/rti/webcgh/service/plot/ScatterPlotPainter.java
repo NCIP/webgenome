@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2006-12-12 21:37:52 $
+$Revision: 1.18 $
+$Date: 2006-12-14 05:23:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import java.util.List;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.QuantitationType;
-import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.widget.Axis;
 import org.rti.webcgh.graphics.widget.Background;
@@ -285,12 +284,14 @@ public class ScatterPlotPainter extends PlotPainter {
     /**
      * Class that is responsible for calculating
      * the width and height of scatter plot widgets.
-     * The constructor takes parameters <code>width</code> and
-     * <code>height</code>.  When there is only a single
+     * When there is only a single
      * genome interval to plot, the dimensions of the
-     * single scatter plot widget are equal to these parameters.
+     * single scatter plot widget are equal to the width
+     * and height passed in through the scatter plot parameters
+     * web form.
      * For multiple genome intervals, the sum of widths and
-     * heights of the individual scatter plot widgets are
+     * heights of the individual scatter plot widgets
+     * for the widest row of plots is
      * less than or equal to these parameters, respectively.
      */
     static final class ScatterPlotSizer {
@@ -311,12 +312,20 @@ public class ScatterPlotPainter extends PlotPainter {
     				/ (double) params.getNumPlotsPerRow());
     		this.height = params.getHeight() / numRows;
     		long longestInterval = 0;
-    		for (GenomeInterval interval : intervals) {
-    			long candidateLongest = interval.getEndLocation()
-    				- interval.getStartLocation();
+    		int p = 0;
+    		while (p < intervals.size()) {
+    			int q = p + params.getNumPlotsPerRow();
+    			if (q > intervals.size()) {
+    				q = intervals.size();
+    			}
+    			long candidateLongest = 0;
+    			for (int i = p; i < q; i++) {
+    				candidateLongest += intervals.get(i).length();
+    			}
     			if (candidateLongest > longestInterval) {
     				longestInterval = candidateLongest;
     			}
+    			p = q;
     		}
     		this.scale = (double) params.getWidth() / (double) longestInterval;
     	}
