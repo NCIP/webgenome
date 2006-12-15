@@ -60,9 +60,13 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
+import org.rti.webcgh.domain.Principal;
 import org.rti.webcgh.util.Email;
 import org.rti.webcgh.util.SystemUtils;
+import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.util.Attribute;
+import org.rti.webcgh.webui.util.PageContext;
+import org.rti.webcgh.webui.util.SessionMode;
 
 /**
  * JSP Tag to control the sending of an Exception email to configured recipients
@@ -103,8 +107,6 @@ public class ErrorEmailTag extends TagSupport {
      */
     public int doStartTag() throws JspException {
         
-        System.out.println( this.getClass().getName() + " entered" ) ;
-        
         Exception ex = (Exception)pageContext.findAttribute(Attribute.EXCEPTION);
         
         if ( ex != null || this.getExceptionMsg() != null ) {
@@ -136,18 +138,13 @@ public class ErrorEmailTag extends TagSupport {
             message.append ( "\n\nADDITIONAL INFORMATION (Not part of Error Message or StackTrace):\n" ) ;
             
             HttpServletRequest request = (HttpServletRequest) pageContext.getRequest() ;
-            String requestingURL = getUrl ( request ) ;
-            message.append ( "Request URL: " + requestingURL ) ;
-            
-            message.append( "\n\nREQUEST HEADER INFORMATION:\n" ) ;
-            Enumeration headers = request.getHeaderNames() ;
-            while ( headers.hasMoreElements() ) {
-                String headerName = (String) headers.nextElement() ;
-                String headerValue = request.getHeader ( headerName ) ;
-                message.append ( "  " + headerName + "=" + headerValue + "\n" ) ;
-            }
-            
+            message.append ( getURL (request ) ) ;
+            message.append ( getHeaderInfo ( request ) ) ;
             message.append ( getSystemProperties() ) ;
+            message.append ( getApplicationProperties() ) ;
+            message.append ( getOtherSettings( request ) ) ;
+            message.append ( getMemoryInformation () ) ;
+            
             
             // Dispatch the Exception Email
             Email email = new Email() ;
@@ -187,13 +184,15 @@ public class ErrorEmailTag extends TagSupport {
     /**
      * Collates the calling URL - in its entirety
      */
-    private String getUrl(HttpServletRequest req) {
+    private String getURL (HttpServletRequest req) {
+        StringBuffer returnValue = new StringBuffer ( "REQUEST URL: " ) ;
         String reqUrl = req.getRequestURL().toString();
         String queryString = req.getQueryString();
         if (queryString != null) {
             reqUrl += "?"+queryString;
         }
-        return reqUrl;
+        returnValue.append ( reqUrl + "\n\n" ) ;
+        return returnValue.toString();
     }
     
     /**
@@ -202,7 +201,7 @@ public class ErrorEmailTag extends TagSupport {
     private String getSystemProperties ( ) {
         StringBuffer returnValue = new StringBuffer() ;
         
-        returnValue.append( "\nSYSTEM PROPERTIES:\n" ) ;
+        returnValue.append( "GENERAL SYSTEM PROPERTIES:\n" ) ;
         // Get all system properties
         Properties props = System.getProperties();
         
@@ -216,6 +215,112 @@ public class ErrorEmailTag extends TagSupport {
             String propValue = (String)props.get(propName);
             returnValue.append( "  " + propName + "=" + propValue + "\n" ) ;
         }
+        returnValue.append ( "\n\n" ) ;
+        return returnValue.toString() ;
+    }
+    
+    /**
+     * Collate a list of all the headers in the Http Request.
+     * @param request
+     * @return
+     */
+    private String getHeaderInfo ( HttpServletRequest request ) {
+        StringBuffer returnValue = new StringBuffer() ;
+        returnValue.append( "REQUEST HEADER INFORMATION:\n" ) ;
+        Enumeration headers = request.getHeaderNames() ;
+        while ( headers.hasMoreElements() ) {
+            String headerName = (String) headers.nextElement() ;
+            String headerValue = request.getHeader ( headerName ) ;
+            returnValue.append ( "  " + headerName + "=" + headerValue + "\n" ) ;
+        }
+        returnValue.append ( "\n\n" ) ;
+        return returnValue.toString() ;
+    }
+    
+    /**
+     * Return the application properties for webGenome.
+     * @return String
+     */
+    private String getApplicationProperties ( ) {
+        StringBuffer returnValue = new StringBuffer () ;
+        
+        returnValue.append ( "APPLICATION PROPERTIES (webGenome application properties):\n" ) ;
+        
+        Properties appProps = SystemUtils.getApplicationProperties() ;
+        if ( appProps != null ) {
+            Enumeration appEnums = appProps.keys() ;
+            while ( appEnums.hasMoreElements() ) {
+                String key = (String) appEnums.nextElement() ;
+                String value = appProps.getProperty( key ) ;
+                returnValue.append( "  " + key + "=" + value + "\n" ) ;
+            }
+        }
+        returnValue.append ( "\n\n" ) ;
+        
+        return returnValue.toString() ;
+    }
+    
+    /**
+     * Report on miscellaneous settings.
+     * @param request
+     * @return String ~ miscellaneous settings which might be helpful for solving
+     * problems reported.
+     */
+    private String getOtherSettings ( HttpServletRequest request ) {
+        StringBuffer returnValue = new StringBuffer ( ) ;
+        returnValue.append ( "OTHER SETTINGS:\n" ) ;
+        returnValue.append ( "            Session Mode: " ) ;
+        try { 
+            SessionMode mode = PageContext.getSessionMode( request ) ;
+            returnValue.append( mode.toString() ) ;
+        }
+        catch ( SessionTimeoutException ignored ) {
+            returnValue.append( "Unavailable/unknown" ) ;
+        }
+        returnValue.append ( "\n" ) ;
+        returnValue.append ( "Principal (current user): " ) ;
+        try {
+            Principal principal = PageContext.getPrincipal( request ) ;
+            returnValue.append ( principal.getName() ) ;
+            returnValue.append ( " (is Admin user? " + principal.isAdmin() + ")" ) ;
+        }
+        catch ( SessionTimeoutException ignored ) {
+            returnValue.append( "no user logged in" ) ;
+        }
+        returnValue.append ( "\n\n" ) ;
+
+        return returnValue.toString() ;
+    }
+    
+    /**
+     * Grab the memory information, pretty useless stuff to report, but you never know
+     * it might come in handy for solving some problems reported.
+     * 
+     * @return String ~ collated information about JVM heap memory
+     */
+    private String getMemoryInformation ( ) {
+        StringBuffer returnValue = new StringBuffer ( "MEMORY INFORMATION:\n" ) ;
+        
+        // Get current size of heap in bytes
+        long heapSize = Runtime.getRuntime().totalMemory();
+        
+        // Get maximum size of heap in bytes. The heap cannot grow beyond this size.
+        // Any attempt will result in an OutOfMemoryException.
+        long heapMaxSize = Runtime.getRuntime().maxMemory();
+        
+        // Get amount of free memory within the heap in bytes. This size will increase
+        // after garbage collection and decrease as new objects are created.
+        long heapFreeSize = Runtime.getRuntime().freeMemory();
+        
+        float percentUsed = ((float) heapSize) / ((float) heapMaxSize) * (float) 100.00 ;
+        
+        returnValue.append ( "       Heap Size (bytes): " + heapSize + "\n" ) ;
+        returnValue.append ( "   Heap Max Size (bytes): " + heapMaxSize + "\n" ) ;
+        returnValue.append ( "Free Heap Memory (bytes): " + heapFreeSize + "\n" ) ;
+        returnValue.append ( "             Memory Used: " +  String.format ( "%4.2f", percentUsed ) + " %\n" ) ;
+        
+        returnValue.append ( "\n" ) ;
+        
         return returnValue.toString() ;
     }
 }
