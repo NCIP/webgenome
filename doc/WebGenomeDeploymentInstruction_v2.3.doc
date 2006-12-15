@@ -12,7 +12,7 @@ RembrandtDeploymentRequest_STAGE_DEC72006.doc\par
 \cell\row\trowd\trgaph115\trleft-139\trqc\trrh20\trpaddl115\trpaddr115\trpaddfl3\trpaddfr3
 \clcbpat3\clbrdrl\brdrw15\brdrs\brdrcf2\clbrdrr\brdrw15\brdrs\brdrcf2\clbrdrb\brdrw15\brdrs\brdrcf2 \cellx8779\pard\intbl\nowidctlpar\hyphpar0\sl240\slmult0\b Dependencies\cell\row\trowd\trgaph115\trleft-139\trqc\trrh20\trpaddl115\trpaddr115\trpaddfl3\trpaddfr3
 \clcbpat4\clbrdrl\brdrw15\brdrs\brdrcf2\clbrdrb\brdrw15\brdrs\brdrcf2 \cellx1714\clbrdrl\brdrw15\brdrs\brdrcf2\clbrdrr\brdrw15\brdrs\brdrcf2\clbrdrb\brdrw15\brdrs\brdrcf2 \cellx8779\pard\intbl\nowidctlpar\hyphpar0\sl240\slmult0\b0 Project Background\cell\pard\intbl\nowidctlpar\hyphpar0\sb60\sa60\sl240\slmult0\f2 **********************************************************************************\par
-Technology Stack (jdk1.5.0_04, jboss 4.0.2, ant 1.6.2)\par
+Technology Stack (jdk1.5.0_04, jboss 4.0.4, ant 1.6.2)\par
 **********************************************************************************\par
 An Anthill friendly build script has been written so that the above dependencies are checked out and placed in the appropriate locations by Anthill.  This is the default task for the build script.  If you choose not to use Anthill to grab these dependencies, you will need to acquire the above dependencies manually.\par
 **********************************************************************************\cell\row\trowd\trgaph115\trleft-139\trqc\trrh20\trpaddl115\trpaddr115\trpaddfl3\trpaddfr3
