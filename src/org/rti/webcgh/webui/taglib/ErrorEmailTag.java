@@ -52,7 +52,10 @@ package org.rti.webcgh.webui.taglib;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Enumeration;
+import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -100,6 +103,8 @@ public class ErrorEmailTag extends TagSupport {
      */
     public int doStartTag() throws JspException {
         
+        System.out.println( this.getClass().getName() + " entered" ) ;
+        
         Exception ex = (Exception)pageContext.findAttribute(Attribute.EXCEPTION);
         
         if ( ex != null || this.getExceptionMsg() != null ) {
@@ -109,26 +114,44 @@ public class ErrorEmailTag extends TagSupport {
             String to = SystemUtils.getApplicationProperty ( "error.email.distribution.list" ) ;
             
             // Collate Message
-            String message = "The following Exception was caught by webGenome:\n\n" ;
+            StringBuffer message = new StringBuffer("The following Exception was caught by webGenome:\n\n" );
             if ( this.getExceptionMsg() != null )
-                message += this.getExceptionMsg() ;
+                message.append( this.getExceptionMsg() + "\n") ;
             else
-                message += ex.getMessage() ;
+                message.append ( ex.getMessage() + "\n" ) ;
             
             // Get the Stack Trace, if its available
-            if ( ex.getStackTrace() != null && ex.getStackTrace().length > 0 ) {
+            if ( ex != null && ex.getStackTrace() != null && ex.getStackTrace().length > 0 ) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 ex.printStackTrace(pw);
-                message += "\n\nStackTrace follows:\n" +
-                           sw.toString() ;
+                message.append( "\n\nStackTrace follows:\n" + sw.toString() ) ;
             }
 
-            message += "\n" ;
-        
+            message.append ( "\n" ) ;
+            
+            //
+            // Get additional information which might be helpful
+            //
+            message.append ( "\n\nADDITIONAL INFORMATION (Not part of Error Message or StackTrace):\n" ) ;
+            
+            HttpServletRequest request = (HttpServletRequest) pageContext.getRequest() ;
+            String requestingURL = getUrl ( request ) ;
+            message.append ( "Request URL: " + requestingURL ) ;
+            
+            message.append( "\n\nREQUEST HEADER INFORMATION:\n" ) ;
+            Enumeration headers = request.getHeaderNames() ;
+            while ( headers.hasMoreElements() ) {
+                String headerName = (String) headers.nextElement() ;
+                String headerValue = request.getHeader ( headerName ) ;
+                message.append ( "  " + headerName + "=" + headerValue + "\n" ) ;
+            }
+            
+            message.append ( getSystemProperties() ) ;
+            
             // Dispatch the Exception Email
             Email email = new Email() ;
-            boolean emailed = email.send ( to, subject, message ) ;
+            boolean emailed = email.send ( to, subject, message.toString() ) ;
     
             // Display the results, if no directive to hide this message has
             // been given.
@@ -155,5 +178,44 @@ public class ErrorEmailTag extends TagSupport {
         }
 
         return SKIP_BODY;
+    }
+    
+    //
+    //    P R I V A T E    M E T H O D S
+    //
+    
+    /**
+     * Collates the calling URL - in its entirety
+     */
+    private String getUrl(HttpServletRequest req) {
+        String reqUrl = req.getRequestURL().toString();
+        String queryString = req.getQueryString();
+        if (queryString != null) {
+            reqUrl += "?"+queryString;
+        }
+        return reqUrl;
+    }
+    
+    /**
+     * Collate a list of the system properties - formatted for error reporting.
+     */
+    private String getSystemProperties ( ) {
+        StringBuffer returnValue = new StringBuffer() ;
+        
+        returnValue.append( "\nSYSTEM PROPERTIES:\n" ) ;
+        // Get all system properties
+        Properties props = System.getProperties();
+        
+        // Enumerate all system properties
+        Enumeration propEnum = props.propertyNames();
+        for (; propEnum.hasMoreElements(); ) {
+            // Get property name
+            String propName = (String)propEnum.nextElement();
+        
+            // Get property value
+            String propValue = (String)props.get(propName);
+            returnValue.append( "  " + propName + "=" + propValue + "\n" ) ;
+        }
+        return returnValue.toString() ;
     }
 }
