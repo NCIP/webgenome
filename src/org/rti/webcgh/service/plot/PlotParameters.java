@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-12-14 05:51:07 $
+$Revision: 1.14 $
+$Date: 2006-12-16 05:22:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -125,7 +125,7 @@ public class PlotParameters {
     	DEF_INTERPOLATION_TYPE;
     
     /** Show annotation in mouseover text? */
-    private boolean showAnnotation = true;
+    private boolean showAnnotation = false;
     
     /** Show gene names in mouseover text? */
     private boolean showGenes = true;

@@ -3,7 +3,10 @@
 
 <center>
 <html:form action="/cart/import">
-
+	
+	<p>
+		<html:errors property="global"/>
+	</p>
 	Select data type &nbsp;&nbsp;
 	<html:select property="quantitationTypeId">
 		<html:optionsCollection name="quantitationTypes"

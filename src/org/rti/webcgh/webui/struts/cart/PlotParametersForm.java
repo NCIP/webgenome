@@ -1,6 +1,6 @@
 /*
-$Revision: 1.25 $
-$Date: 2006-12-14 05:51:16 $
+$Revision: 1.26 $
+$Date: 2006-12-16 05:22:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -229,7 +229,7 @@ public class PlotParametersForm extends BaseForm {
 		InterpolationType.STRAIGHT_LINE.toString();
 	
 	/** Show reporter annotation in mouseover? */
-	private String showAnnotation = "on";
+	private String showAnnotation = "";
 	
 	/** Show gene names in mouseover? */
 	private String showGenes = "on";
@@ -1002,7 +1002,7 @@ public class PlotParametersForm extends BaseForm {
 		this.drawRawLohProbabilities = "on";
 		this.interpolationType =
 			PlotParameters.DEF_INTERPOLATION_TYPE.toString();
-		this.showAnnotation = "on";
+		this.showAnnotation = "";
 		this.showGenes = "on";
 		this.showReporterNames = "on";
 	}

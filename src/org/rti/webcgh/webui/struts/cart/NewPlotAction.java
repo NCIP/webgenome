@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-12-03 22:23:43 $
+$Revision: 1.11 $
+$Date: 2006-12-16 05:22:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -87,6 +89,10 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
  *
  */
 public final class NewPlotAction extends BaseAction {
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(NewPlotAction.class);
 	
 	/** Plot generator. */
 	private PlotGenerator plotGenerator = null;
@@ -177,16 +183,21 @@ public final class NewPlotAction extends BaseAction {
 	    	// go back to client for data.
 	    	
 	    	// If client mode, get data from requested genome intervals
-	    	// from client and put in shopping cart
+	    	// from client and update experiments, if necessary
 	    	if (mode == SessionMode.CLIENT) {
 		    	Collection<GenomeInterval> genomeIntervals =
 		    		params.getGenomeIntervals();
 		    	BioAssayDataConstraints[] constraints =
 		    		GenomeInterval.getBioAssayDataConstraints(genomeIntervals,
 		    				params.getUnits(), qType);
-		    	ClientDataServiceManager mgr =
-		    		PageContext.getClientDataServiceManager(request);
-		    	mgr.addData(experiments, constraints);
+		    	constraints = this.findNewConstraints(constraints,
+		    			experiments);
+		    	if (constraints.length > 0) {
+		    		LOGGER.info("Getting additional data from client");
+			    	ClientDataServiceManager mgr =
+			    		PageContext.getClientDataServiceManager(request);
+			    	mgr.addData(experiments, constraints);
+		    	}
 	    	}
 	    }
     	
@@ -214,5 +225,44 @@ public final class NewPlotAction extends BaseAction {
     	}
     	
         return mapping.findForward("success");
+    }
+    
+    
+    /**
+     * Find constraints in input for which no data has
+     * been obtained for given experiments.
+     * @param inputConstraints Input constraints
+     * @param experiments Experiments
+     * @return Returns constraints for which no data
+     * has been obtained in the given experiments
+     */
+    private BioAssayDataConstraints[] findNewConstraints(
+    		final BioAssayDataConstraints[] inputConstraints,
+    		final Collection<Experiment> experiments) {
+    	Collection<BioAssayDataConstraints> outputConstraintsCol =
+    		new ArrayList<BioAssayDataConstraints>();
+    	for (int i = 0; i < inputConstraints.length; i++) {
+    		BioAssayDataConstraints c = inputConstraints[i];
+    		boolean allContains = true;
+    		for (Experiment exp : experiments) {
+    			if (!exp.containsData(c)) {
+    				allContains = false;
+    				break;
+    			}
+    		}
+    		if (allContains) {
+    			LOGGER.info("Experiments already have data from "
+    					+ c.getChromosome() + ":"
+    					+ c.getStartPosition() + "-"
+    					+ c.getEndPosition());
+    		} else {
+    			outputConstraintsCol.add(c);
+    		}
+    	}
+    	BioAssayDataConstraints[] outputConstraints =
+    		new BioAssayDataConstraints[0];
+    	outputConstraints =
+    		outputConstraintsCol.toArray(outputConstraints);
+    	return outputConstraints;
     }
 }

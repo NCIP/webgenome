@@ -232,21 +232,6 @@ public class ShoppingCart implements Serializable {
     		}
     	}
     	
-    	// If cart already has an experiment with same source DB ID,
-    	// remove the existing one
-    	String sourceDbId = experiment.getSourceDbId();
-    	if (sourceDbId != null && sourceDbId.length() > 0) {
-	    	for (Experiment exp : this.experiments) {
-	    		if (exp.getSourceDbId() != null
-	    				&& sourceDbId.equals(exp.getSourceDbId())) {
-	    			this.experiments.remove(exp);
-	    			LOGGER.info("Replacing existing experiment with source "
-	    					+ "database ID '" + sourceDbId + "' with new data");
-	    			break;
-	    		}
-	    	}
-    	}
-    	
         this.experiments.add(experiment);
     }
     

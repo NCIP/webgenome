@@ -152,6 +152,8 @@
 			scope="session"
 			validate="false">
 			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="unsupported.quantitation.type"
+				path="/cart/selectImportDataType.do"/>
 		</action>
 
 	<!-- Select analytic operation -->

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-12-14 04:42:18 $
+$Revision: 1.3 $
+$Date: 2006-12-16 05:22:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -269,7 +269,7 @@ public final class BioAssayMgrEjbClientDataService
     			if (dto.getExperimentID().equals(exp.getSourceDbId())) {
     				LOGGER.info("Adding additional data to experiment '"
     						+ exp.getSourceDbId() + "'");
-    				exp.addData(dto);
+    				exp.addData(dto, constraints);
     				break;
     			}
     		}
@@ -402,7 +402,6 @@ public final class BioAssayMgrEjbClientDataService
                 LOGGER.error( "Caught Exception getting Experiment DTO for experimentID [" +
                         this.experimentID + "] Details: " + e.getMessage() ) ;
 				this.queryResult.setException(e);
-
 			}
 		}
 	}

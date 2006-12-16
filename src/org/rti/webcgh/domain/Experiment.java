@@ -116,6 +116,8 @@ public class Experiment implements Serializable {
     
     /** Identifier of data source where experiment is stored. */
     private DataSourceProperties dataSourceProperties = null;
+    
+
         
     // ===============================
     //     Getters/setters
@@ -452,7 +454,8 @@ public class Experiment implements Serializable {
      * Add data from given data transfer object.
      * @param experimentDto Experiment data transfer object.
      */
-    public final void addData(final ExperimentDTO experimentDto) {
+    public final void addData(final ExperimentDTO experimentDto,
+    		final BioAssayDataConstraints[] constraints) {
     	if (experimentDto == null) {
     		throw new IllegalArgumentException("ExperimentDTO cannot be null");
     	}
@@ -466,6 +469,21 @@ public class Experiment implements Serializable {
     				+ "Invalid experimentId");
     	}
     	this.add(experimentDto.getBioAssays());
+    	for (int i = 0; i < constraints.length; i++) {
+    		boolean found = false;
+    		BioAssayDataConstraints c = constraints[i];
+    		for (BioAssayDataConstraints d : this.bioAssayDataConstraints) {
+    			if (c.getChromosome().equals(d.getChromosome())
+    					&& c.getStartPosition().equals(d.getStartPosition())
+    					&& c.getEndPosition().equals(d.getEndPosition())) {
+    				found = true;
+    				break;
+    			}
+    			if (!found) {
+    				this.bioAssayDataConstraints.add(d);
+    			}
+    		}
+    	}
     }
     
     /**
@@ -548,6 +566,28 @@ public class Experiment implements Serializable {
     		}
     	}
     	return c;
+    }
+    
+    
+    /**
+     * Does experiment contain data from given constraints?
+     * @param constraints Constraints?
+     * @return T/F
+     */
+    public final boolean containsData(
+    		final BioAssayDataConstraints constraints) {
+    	boolean contains = false;
+    	for (BioAssayDataConstraints c : this.bioAssayDataConstraints) {
+    		if (c.getChromosome().equals(constraints.getChromosome())
+    				&& c.getStartPosition().equals(
+    						constraints.getStartPosition())
+    				&& c.getEndPosition().equals(
+    						constraints.getEndPosition())) {
+    			contains = true;
+    			break;
+    		}
+    	}
+    	return contains;
     }
     
     
@@ -892,7 +932,7 @@ public class Experiment implements Serializable {
     		}
     		for (Experiment exp : experiments) {
     			if (exp.getName().equals(dto.getExperimentID())) {
-    				exp.addData(dto);
+    				exp.addData(dto, bioAssayDataConstraints);
     				found = true;
     				break;
     			}

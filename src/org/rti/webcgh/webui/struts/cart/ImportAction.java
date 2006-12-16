@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-12-03 22:23:43 $
+$Revision: 1.2 $
+$Date: 2006-12-16 05:22:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,9 +56,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Organism;
@@ -161,11 +164,29 @@ public final class ImportAction extends Action {
     		c.setQuantitationType(qType);
     	}
     	
-    	// Get data from client
-    	ClientDataServiceManager mgr =
-    		PageContext.getClientDataServiceManager(request);
-    	Collection<Experiment> experiments =
-    		mgr.importData(selectedExperiments, constraints);
+    	// TODO: Create specific exception for not
+    	// unsupported quantitation types
+    	
+    	// Get data from client.  If an exception is thrown,
+    	// we assume that data for 
+    	Collection<Experiment> experiments = null;
+    	try {
+	    	ClientDataServiceManager mgr =
+	    		PageContext.getClientDataServiceManager(request);
+	    	experiments = mgr.importData(selectedExperiments, constraints);
+	    	int numBioAssays = 0;
+	    	for (Experiment exp : experiments) {
+	    		numBioAssays += exp.getBioAssays().size();
+	    	}
+	    	if (numBioAssays < 1) {
+	    		throw new WebcghApplicationException("No bioassays found");
+	    	}
+    	} catch (Exception e) {
+    		ActionErrors errors = new ActionErrors();
+    		errors.add("global", new ActionError("data.not.found"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("unsupported.quantitation.type");
+    	}
     	
     	// Give each experiment a unique ID and default
         // organism.  Give each bioassay a color and ID
