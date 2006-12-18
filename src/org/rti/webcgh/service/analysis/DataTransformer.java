@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-11-29 03:14:07 $
+$Revision: 1.10 $
+$Date: 2006-12-18 18:13:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,9 @@ import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
 import org.rti.webcgh.analysis.SingleBioAssayStatelessOperation;
 import org.rti.webcgh.analysis.IntraBioAssayStatefulOperation;
 import org.rti.webcgh.analysis.IntraExperimentStatefulOperation;
+import org.rti.webcgh.analysis.StatefulOperation;
+import org.rti.webcgh.analysis.StatelessOperation;
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataContainingBioAssay;
@@ -109,7 +112,7 @@ public abstract class DataTransformer {
         Experiment output =
             new Experiment(experimentName, input.getOrganism(),
             		input.getQuantitationType());
-        this.perform(input, output, operation);
+        this.performAnalyticOperation(input, output, operation);
         LOGGER.info("Completed operation");
         return output;
     }
@@ -123,17 +126,142 @@ public abstract class DataTransformer {
      * @param operation Opeation to perform
      * @throws AnalyticException if a computation error occurs
      */
-    private void perform(final Experiment input, final Experiment output,
+    private void performAnalyticOperation(
+    		final Experiment input, final Experiment output,
             final AnalyticOperation operation)
     throws AnalyticException {
-        if (operation instanceof SingleBioAssayStatelessOperation) {
-            this.perform(input, output,
+        if (operation instanceof AnalyticPipeline) {
+            this.performAnalyticPipeline(
+            		input, output, (AnalyticPipeline) operation);
+        } else if (operation instanceof StatelessOperation) {
+        	this.performStatelessOperation(input, output,
+        			(StatelessOperation) operation);
+        } else if (operation instanceof StatefulOperation) {
+        	this.performStatefulOperation(input, output,
+        			(StatefulOperation) operation);
+        }
+    }
+    
+    
+    /**
+     * Perform given analytic operation on given input data
+     * writing the results in given output experiment.
+     * @param input Input data
+     * @param output Output experiment
+     * @param operation Opeation to perform
+     * @throws AnalyticException if a computation error occurs
+     */
+    private void performStatelessOperation(
+    		final Experiment input, final Experiment output,
+            final StatelessOperation operation)
+    throws AnalyticException {
+    	if (operation instanceof SingleBioAssayStatelessOperation) {
+            this.performSingleBioAssayStatelessOperation(input, output,
                     (SingleBioAssayStatelessOperation) operation);
         } else if (operation instanceof SingleExperimentStatelessOperation) {
-            this.perform(input, output,
+            this.performSingleExperimentStatelessOperation(input, output,
                     (SingleExperimentStatelessOperation) operation);
-        } else if (operation instanceof AnalyticPipeline) {
-            this.perform(input, output, (AnalyticPipeline) operation);
+        } else {
+        	throw new WebcghSystemException(
+        			"Unknown stateless operation '"
+        			+ operation.getClass().getName() + "'");
+        }
+    }
+    
+    
+    /**
+     * Perform given analytic operation on given input data
+     * writing the results in given output experiment.
+     * @param input Input data
+     * @param output Output experiment
+     * @param operation Opeation to perform
+     * @throws AnalyticException if a computation error occurs
+     */
+    private void performStatefulOperation(
+    		final Experiment input, final Experiment output,
+            final StatefulOperation operation)
+    throws AnalyticException {
+    	if (operation instanceof IntraBioAssayStatefulOperation) {
+    		this.performIntraBioAssayStatefulOperation(input,
+    				output,
+    				(IntraBioAssayStatefulOperation) operation);
+    	} else if (operation instanceof IntraExperimentStatefulOperation) {
+    		this.performIntraExperimentStatefulOperation(input,
+    				output,
+    				(IntraExperimentStatefulOperation) operation);
+    	} else {
+    		throw new WebcghSystemException(
+        			"Unknown stateful operation '"
+        			+ operation.getClass().getName() + "'");
+    	}
+    }
+    
+    
+    /**
+     * Perform given analytic operation on given input data
+     * writing the results in given output experiment.
+     * @param input Input data
+     * @param output Output experiment
+     * @param operation Opeation to perform
+     * @throws AnalyticException if a computation error occurs
+     */
+    private void performIntraBioAssayStatefulOperation(
+    		final Experiment input, final Experiment output,
+            final IntraBioAssayStatefulOperation operation)
+    throws AnalyticException {
+        for (BioAssay ba : input.getBioAssays()) {
+            operation.resetState();
+            ChromosomeArrayDataIterator it =
+            	this.getChromosomeArrayDataIterator(ba);
+            while (it.hasNext()) {
+            	ChromosomeArrayData cad = it.next();
+            	operation.adjustState(cad);
+            }
+            BioAssay newBa = this.clone(ba);
+            newBa.setParentBioAssayId(ba.getId());
+            output.add(newBa);
+            it = this.getChromosomeArrayDataIterator(ba);
+            while (it.hasNext()) {
+                ChromosomeArrayData inputCad = it.next();
+                ChromosomeArrayData outputCad = operation.perform(inputCad);
+                this.addChromosomeArrayData(newBa, outputCad);
+            }
+        }
+    }
+    
+    
+    /**
+     * Perform given analytic operation on given input data
+     * writing the results in given output experiment.
+     * @param input Input data
+     * @param output Output experiment
+     * @param operation Opeation to perform
+     * @throws AnalyticException if a computation error occurs
+     */
+    private void performIntraExperimentStatefulOperation(
+    		final Experiment input, final Experiment output,
+            final IntraExperimentStatefulOperation operation)
+    throws AnalyticException {
+        operation.resetState();
+        for (BioAssay ba : input.getBioAssays()) {
+        	ChromosomeArrayDataIterator it =
+            	this.getChromosomeArrayDataIterator(ba);
+            while (it.hasNext()) {
+            	ChromosomeArrayData cad = it.next();
+            	operation.adjustState(cad);
+            }
+        }
+        for (BioAssay ba : input.getBioAssays()) {
+            BioAssay newBa = this.clone(ba);
+            newBa.setParentBioAssayId(ba.getId());
+            output.add(newBa);
+            ChromosomeArrayDataIterator it =
+            	this.getChromosomeArrayDataIterator(ba);
+            while (it.hasNext()) {
+                ChromosomeArrayData inputCad = it.next();
+                ChromosomeArrayData outputCad = operation.perform(inputCad);
+                this.addChromosomeArrayData(newBa, outputCad);
+            }
         }
     }
     
@@ -147,7 +275,8 @@ public abstract class DataTransformer {
      * @param operation Operation to perform
      * @throws AnalyticException if a computation error occurs
      */
-    private void perform(final Experiment input, final Experiment output,
+    private void performSingleBioAssayStatelessOperation(
+    		final Experiment input, final Experiment output,
             final SingleBioAssayStatelessOperation operation)
         throws AnalyticException {
         if (operation instanceof IntraExperimentStatefulOperation) {
@@ -197,7 +326,9 @@ public abstract class DataTransformer {
      * @param operation Operation to perform
      * @throws AnalyticException if a computation error occurs
      */
-    private void perform(final Experiment input, final Experiment output,
+    private void performSingleExperimentStatelessOperation(
+    		final Experiment input,
+    		final Experiment output,
             final SingleExperimentStatelessOperation operation)
         throws AnalyticException {
         if (input.getBioAssays().size() < 1) {
@@ -228,7 +359,8 @@ public abstract class DataTransformer {
      * @return Experiment
      * @throws AnalyticException if a computation error occurs
      */
-    public final Experiment perform(final Collection<Experiment> input,
+    public final Experiment performMultiExperimentStatelessOperation(
+    		final Collection<Experiment> input,
             final MultiExperimentStatelessOperation operation)
         throws AnalyticException {
         if (input.size() < 1) {
@@ -296,8 +428,10 @@ public abstract class DataTransformer {
      * @param pipeline Analytic pipeline
      * @throws AnalyticException if a computation error occurs
      */
-    private void perform(final Experiment input, final Experiment output,
-            final AnalyticPipeline pipeline) throws AnalyticException {
+    private void performAnalyticPipeline(
+    		final Experiment input, final Experiment output,
+            final AnalyticPipeline pipeline)
+    throws AnalyticException {
         if (pipeline.getOperations().size() < 1) {
             throw new IllegalArgumentException(
                     "Pipeline must have at least one operation");
@@ -310,7 +444,7 @@ public abstract class DataTransformer {
         for (int i = 0; i < ops.size(); i++) {
             AnalyticOperation op = ops.get(i);
             if (i == ops.size() - 1) {
-                this.perform(intermediateIn, output, op);
+                this.performAnalyticOperation(intermediateIn, output, op);
             } else {
                 intermediateOut = this.perform(intermediateIn, op);
             }

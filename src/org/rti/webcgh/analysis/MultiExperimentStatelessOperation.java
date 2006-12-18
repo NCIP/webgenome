@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-11-29 03:14:01 $
+$Revision: 1.2 $
+$Date: 2006-12-18 18:13:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,7 @@ import org.rti.webcgh.domain.ChromosomeArrayData;
  *
  */
 public interface MultiExperimentStatelessOperation
-extends AnalyticOperation {
+extends StatelessOperation {
 	
     /**
      * Perform operation.

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-12-03 22:23:38 $
+$Revision: 1.6 $
+$Date: 2006-12-18 18:13:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -226,7 +226,7 @@ public final class AnalysisAction extends BaseAction {
     	if (mode == SessionMode.CLIENT) {
     		Collection<Experiment> experiments = cart.getExperiments(ids);
     		if (op instanceof MultiExperimentStatelessOperation) {
-    			Experiment output = this.inMemoryDataTransformer.perform(
+    			Experiment output = this.inMemoryDataTransformer.performMultiExperimentStatelessOperation(
     					experiments,
     					(MultiExperimentStatelessOperation) op);
     			output.setId(this.experimentIdGenerator.nextId());
