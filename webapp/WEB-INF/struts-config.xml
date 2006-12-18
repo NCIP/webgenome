@@ -387,6 +387,13 @@
 			path="/admin/deleteCytobands">
 			<forward name="success" path="/admin/loadCytobandsForm.do"/>
 		</action>
+        
+    <!-- Status Page -->
+        <action
+            path="/status"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="status.page"/>
+
 	</action-mappings>
 
 

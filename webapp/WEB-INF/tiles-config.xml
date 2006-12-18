@@ -203,7 +203,14 @@
 	  	<put name="content" value="/WEB-INF/jsp/admin/loadCytobands.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
-
+    
+<!-- Status page -->
+    <definition name="status.page" extends="def.layout" >
+        <put name="title" value="webGenome: Status" />
+        <put name="selectedMenuItem" value="home" />
+        <put name="content" value="/WEB-INF/jsp/status.jsp" />
+        <put name="helpTopic" value="" />
+    </definition>
 
   	<!-- ========================================================== -->
   	<!--                  Exception pages                           -->
