@@ -453,6 +453,7 @@ public class Experiment implements Serializable {
     /**
      * Add data from given data transfer object.
      * @param experimentDto Experiment data transfer object.
+     * @param constraints Bioassay data constraints
      */
     public final void addData(final ExperimentDTO experimentDto,
     		final BioAssayDataConstraints[] constraints) {
@@ -479,10 +480,10 @@ public class Experiment implements Serializable {
     				found = true;
     				break;
     			}
-    			if (!found) {
-    				this.bioAssayDataConstraints.add(d);
-    			}
     		}
+			if (!found) {
+				this.bioAssayDataConstraints.add(c);
+			}
     	}
     }
     

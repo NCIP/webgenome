@@ -365,8 +365,10 @@ public class ChromosomeArrayData implements Serializable {
     public final long inferredChromosomeSize() {
         long size = (long) 0;
         if (this.chromosomeAlterations != null) {
-        	size = this.chromosomeAlterations.get(
-        			this.chromosomeAlterations.size() - 1).getEndLocation();
+        	if (this.chromosomeAlterations.size() > 0) {
+	        	size = this.chromosomeAlterations.get(
+	        			this.chromosomeAlterations.size() - 1).getEndLocation();
+        	}
         } else {
 	        int n = this.arrayData.size();
 	        if (n > 0) {
