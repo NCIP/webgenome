@@ -1,0 +1,149 @@
+Release Notes - DRAFT ONLY - NOT FINALIZED
+     
+                        webGenome
+                       Release 2.3
+                     December, 2006
+ 
+        National Cancer Institute Center for Bioinformatics
+ 
+ 
+ =====================================================================
+                             Contents
+ =====================================================================
+     
+     1.0 webGenome Introduction and background
+     2.0 Features
+     3.0 Known Issues
+     4.0 Bug Reports and Support
+     5.0 Tutorials and help pages
+     6.0 NCICB Web resources
+ 
+ 
+ =====================================================================
+               1.0 webGenome Introduction and background
+ =====================================================================
+ 
+     webGenome
+     
+     WebGenome is a web-based application for creating genomics plots of
+     array-based data and genomic annotation. Version 2.3 provides a client
+     plotting service to external applications, such as Rembrandt. Users must
+     enter webGenome through redirection from another application; the only
+     way to load data is by selecting it in the referring client application.
+
+     Data types supported in this version include copy number (i.e., aCGH),
+     loss of heterozygosity (LOH), and gene expression. Two basic types of plots
+     can be generated:
+
+     * Scatter Plots - Plots DNA copy number measurements across the genome,
+       chromosome, or chromosomal interval.
+     * Ideogram Plot - Shows chromosomal amplifications and deletions in
+       relation to cytogenetic chromosome ideograms.
+
+     The underlying data model used by webGenome is a very simplied version of
+     the MAGE-OM. The most important concept for the use of the system is
+     that individual array data sets, called bioassays are aggregated into experiments. 
+
+     Visit the following site URL for more information:
+     
+     http://caintegrator-info.nci.nih.gov/developers/#wgenome
+    
+ 
+ =====================================================================
+                            2.0 Features
+ =====================================================================
+    
+(REMOVE:
+     --  Search capability for SNP Analysis Group data includes description,
+         memberCount, and name   
+
+     --  Search capability for SNP Association Analysis data includes description,
+         methods, and name  
+    
+     --  Search capability for SNP AssociationFinding data includes pvalue,
+         and rank  
+ 
+     --  Search capability for Gene Biomarker data includes chromosome,
+         cytoband, entrezGeneID, hugoGeneSymbol, endPhysicalLocation,
+         and startPhyscialLocation
+
+     --  Search capability for SNP Annotation data includes chromosomeLocation,
+         chromosomeName, dbsnpBuild, dbsnpId, geneLocation, genomeBuild,
+         referenceSequence, referenceStrand, and secondaryIdentifier
+     
+     --  Search capability for SNP Assay data includes designAlleles,
+         designScore, designSequence, designStrand, status, vendorAssayId,
+         and version   
+     
+     --  Search capability for SNP Panel data includes assayCount,description,
+         name, technology, vendor, vendorPanelId, and version
+
+     --  Search capability for SNP Frequency Finding data includes completionRate,hardyWeinbergPValue,
+         heterozygoteCount, minorAlleleFrequency, missingAlleleCount, missingGenotypeCount,
+         otherAllele, otherAlleleCount, otherHomozygoteCount,referenceAllele,referenceAlleleCount,         
+         and referenceHomozygoteCount
+
+     --  Search capability for DNA Specimen Finding data includes dnaAmplificationMethod,dnaExtractionMethod,
+         dnaMaterialType, collectionMethod, materialType, and specimenIdentifier
+
+     --  Search capability for Population data includes description,memberCount,
+         name, and source
+
+     --  Search capability for Secondary Participant Identifier data includes organizationName
+
+     --  Search capability for Secondary Specimen Identifier data includes organizationName
+
+     --  Search capability for Specimen data includes collectionMethod, materialType, and 
+         specimenIdentifier
+    
+     --  Search capability for Study data includes description, endDate, name, sponsorStudyIdentifier,
+         and startDate
+)
+
+     --
+
+
+          
+ =====================================================================
+                   3.0 Known Issues
+ =====================================================================
+     --  xxxxx     
+         
+      
+ =====================================================================
+                   4.0 Bug Reports and Support
+ =====================================================================
+     
+     Send email to dhall@rti.org to request support or report a bug.
+     Please put "webGenome Support" in the subject line for support.
+     Please put "webGenome Bug" in the subject line when reporting a bug.
+ 
+   =====================================================================
+                   5.0 Tutorials and help pages
+ =====================================================================
+     
+     Demonstrations on using webGenome can be viewed from the webGenome home
+     page - at http://xxx.xxx.xxx - which generates test plots based on artificially-generated
+     test data. Users may interact with the test plots using the Work Area to
+     change the initial plots. NEED HELP HERE
+     
+     Help information is available ...
+ 
+
+ =====================================================================
+                    6.0 NCICB resources
+ =====================================================================
+     
+     The NCI Center for Bioinformatics
+ 
+     --  http://ncicb.nci.nih.gov/
+
+     Cancer Biomedical Informatics Grid
+     
+     --  https://cabig.nci.nih.gov
+     
+     NCICB Application Support
+      
+     --  http://ncicbsupport.nci.nih.gov/sw/
+ 
+     //end
