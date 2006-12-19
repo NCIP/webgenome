@@ -4,15 +4,51 @@
 <%@ page import="javax.mail.Session" %>
 <%@ page import="javax.mail.Transport" %>
 <%@ page import="java.sql.*" %>
+<%@ page import="java.io.InputStream,java.io.IOException" %>
 <%!
 boolean isEmpty ( String value ) {
     return value == null || value.length() < 1 ? true : false ;
+}
+
+String reportBuildProperty ( String label, String propertyKey , Properties properties ) {
+	String returnValue = label + ": " ;
+	if ( properties != null && properties.getProperty( propertyKey ) != null ) {
+	    returnValue += properties.getProperty ( propertyKey ) ;
+	}
+	else
+	    returnValue += "NOT AVAILABLE/NO VALUE DEFINED" ;
+	return returnValue ;
 }
 %>
 <h1 align="center">webGenome Status</h1>
 <h2>Software Release Information</h2>
 <pre>
-    Current Release Version: rel-2-3-build-6-20061218
+<%
+	String propertiesFile = "buildInformation.properties" ;
+	String errorMessage = "Software Release Information not available.\n" +
+					      "'" + propertiesFile + "' missing from CLASSPATH.\n" +
+	   					  "Uusually this will only be available,\nif you are running this web application packaged as a War file." ;
+	try {
+		Properties buildProperties = new Properties() ;
+		InputStream in = Thread.currentThread().
+								getContextClassLoader().getResourceAsStream( propertiesFile );
+
+		if ( in != null ) {
+			buildProperties.load( in ) ;
+			out.println ( reportBuildProperty ( "Current Build Release", "release.tag", buildProperties ) ) ;
+			out.println ( reportBuildProperty ( "           Build Date", "build.date", buildProperties ) ) ;
+			out.println ( reportBuildProperty ( "           Build Time", "build.time", buildProperties ) ) ;
+			out.println ( reportBuildProperty ( "      Built on (host)", "build.host", buildProperties ) ) ;
+			out.println ( reportBuildProperty ( "      Built By (user)", "build.user.name", buildProperties ) ) ;
+		}
+		else
+		    out.println ( errorMessage ) ;
+	}
+	catch ( IOException e ) {
+	    out.println ( errorMessage ) ;
+	}
+%>
+
 </pre>
 <h2>Memory Information</h2>
 <pre>
