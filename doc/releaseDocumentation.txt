@@ -53,62 +53,28 @@ Release Notes - DRAFT ONLY - NOT FINALIZED
                             2.0 Features
  =====================================================================
     
-(REMOVE:
-     --  Search capability for SNP Analysis Group data includes description,
-         memberCount, and name   
-
-     --  Search capability for SNP Association Analysis data includes description,
-         methods, and name  
-    
-     --  Search capability for SNP AssociationFinding data includes pvalue,
-         and rank  
- 
-     --  Search capability for Gene Biomarker data includes chromosome,
-         cytoband, entrezGeneID, hugoGeneSymbol, endPhysicalLocation,
-         and startPhyscialLocation
-
-     --  Search capability for SNP Annotation data includes chromosomeLocation,
-         chromosomeName, dbsnpBuild, dbsnpId, geneLocation, genomeBuild,
-         referenceSequence, referenceStrand, and secondaryIdentifier
+     -- Test Plot generation is available by default on the home page
+        - these plots are created using randomly generated data.
+        
+     -- Help documentation updated
      
-     --  Search capability for SNP Assay data includes designAlleles,
-         designScore, designSequence, designStrand, status, vendorAssayId,
-         and version   
-     
-     --  Search capability for SNP Panel data includes assayCount,description,
-         name, technology, vendor, vendorPanelId, and version
-
-     --  Search capability for SNP Frequency Finding data includes completionRate,hardyWeinbergPValue,
-         heterozygoteCount, minorAlleleFrequency, missingAlleleCount, missingGenotypeCount,
-         otherAllele, otherAlleleCount, otherHomozygoteCount,referenceAllele,referenceAlleleCount,         
-         and referenceHomozygoteCount
-
-     --  Search capability for DNA Specimen Finding data includes dnaAmplificationMethod,dnaExtractionMethod,
-         dnaMaterialType, collectionMethod, materialType, and specimenIdentifier
-
-     --  Search capability for Population data includes description,memberCount,
-         name, and source
-
-     --  Search capability for Secondary Participant Identifier data includes organizationName
-
-     --  Search capability for Secondary Specimen Identifier data includes organizationName
-
-     --  Search capability for Specimen data includes collectionMethod, materialType, and 
-         specimenIdentifier
-    
-     --  Search capability for Study data includes description, endDate, name, sponsorStudyIdentifier,
-         and startDate
-)
-
-     --
-
-
+     -- A new "Work Area" has been created for storing and refining
+        plots generated from Rembrandt. These are available
+        for the browser's session.
           
  =====================================================================
                    3.0 Known Issues
  =====================================================================
-     --  xxxxx     
-         
+ 
+     --  Plot interactivity does not function correctly only for the
+         Safari browser on the Macintosh operating environment. Plots
+         can still be generated correctly using Safari, but
+         mouse-over and tooltip interaction do not function. This issue
+         is primarily caused by Safari's poor JavaScript implementation/support.
+         To obtain full plot interactivity using the Macintosh OS, users
+         are recommended to use the Firefox browser - which
+         works correctly.
+
       
  =====================================================================
                    4.0 Bug Reports and Support
@@ -121,14 +87,12 @@ Release Notes - DRAFT ONLY - NOT FINALIZED
    =====================================================================
                    5.0 Tutorials and help pages
  =====================================================================
+
+     Test plots can be generated from the webGenome home page - using randomly
+     generated data. Users may interact with the test plots using the Work Area to
+     change the initial plots.
      
-     Demonstrations on using webGenome can be viewed from the webGenome home
-     page - at http://xxx.xxx.xxx - which generates test plots based on artificially-generated
-     test data. Users may interact with the test plots using the Work Area to
-     change the initial plots. NEED HELP HERE
-     
-     Help information is available ...
- 
+     Help information is available from all webGenome pages.
 
  =====================================================================
                     6.0 NCICB resources
