@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-12-05 02:55:16 $
+$Revision: 1.10 $
+$Date: 2006-12-21 03:56:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -233,7 +233,8 @@ implements MultiExperimentStatelessOperation {
 			this.accumulateAlterations(cads, altType, threshold);
 		List<AnnotatedGenomeFeature> isecs =
 			this.findAllIntersections(alts);
-		int min = (int) Math.ceil((double) cads.size() * this.minPercent);
+		int min = (int) Math.ceil((double) cads.size()
+				* this.minPercent / 100.0);
 		this.weed(isecs, alts, min);
 		return this.unionAll(isecs);
 	}
@@ -421,7 +422,7 @@ implements MultiExperimentStatelessOperation {
 				if (this.minPercent < (float) 0.0
 						|| this.minPercent > (float) 100.0) {
 					throw new BadUserConfigurablePropertyException(
-						"Minimum percent must be between 0 and 1, inclusive");
+						"Minimum percent must be between 0 and 100, inclusive");
 				}
 			} catch (NumberFormatException e) {
 				throw new BadUserConfigurablePropertyException(

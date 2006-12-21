@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-12-03 22:23:43 $
+$Revision: 1.2 $
+$Date: 2006-12-21 03:56:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,14 @@ package org.rti.webcgh.domain;
  *
  */
 public interface DataSourceProperties {
+	
+	/** Client ID for data that originate in analytic operations. */
+	String ANALYTIC_OPERATION_CLIENT_ID =
+		"analytic.operation";
+	
+	/** Data source consisting of an analytic operation. */
+	DataSourceProperties ANALYTIC_OPERATION =
+		new BaseDataSourceProperties(ANALYTIC_OPERATION_CLIENT_ID);
 
 	/**
 	 * Get ID of application client.

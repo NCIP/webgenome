@@ -43,6 +43,15 @@
 				<html:errors property="genomeIntervals"/>
 			</td>
 			<td>
+				<logic:present name="derivedFromAnalysis">
+					<html:text property="genomeIntervals" disabled="true"/>
+					<html:select property="units" disabled="true">
+					<html:option value="BP">BP</html:option>
+					<html:option value="KB">KB</html:option>
+					<html:option value="MB">MB</html:option>
+				</html:select>
+				</logic:present>
+				<logic:notPresent name="derivedFromAnalysis">
 				<html:text property="genomeIntervals"/>
 				&nbsp;
 				<html:select property="units">
@@ -50,6 +59,7 @@
 					<html:option value="KB">KB</html:option>
 					<html:option value="MB">MB</html:option>
 				</html:select>
+				</logic:notPresent>
 			</td>
 		</tr>
 		

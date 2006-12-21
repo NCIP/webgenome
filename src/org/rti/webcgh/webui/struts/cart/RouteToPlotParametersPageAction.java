@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-28 04:07:57 $
+$Revision: 1.4 $
+$Date: 2006-12-21 03:56:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,13 +50,21 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.DataSourceProperties;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
  * Routes a request to one of several pages
@@ -92,8 +100,37 @@ public final class RouteToPlotParametersPageAction extends BaseAction {
     	String plotType = pForm.getPlotType();
     	
     	// If new plot, reset form plot name
-    	if (request.getParameter("id") == null) {
+    	String plotIdStr = request.getParameter("id");
+    	if (plotIdStr == null) {
     		pForm.setName("");
+    	}
+    	
+    	// Get selected experiments and determine if
+    	// any are derived from an analytic operation.
+    	// The downstream JSP needs to know this because
+    	// some form elements must be de-activated.
+    	Collection<Long> expIds = null;
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	if (plotIdStr != null) {
+    		Long plotId = Long.parseLong(plotIdStr);
+    		Plot plot = cart.getPlot(plotId);
+    		expIds = plot.getExperimentIds();
+    	} else {
+    		SelectedExperimentsForm seForm =
+	    		PageContext.getSelectedExperimentsForm(request, false);
+	    	if (seForm == null) {
+	    		throw new SessionTimeoutException(
+	    				"Could not find selected experiments");
+	    	}
+	    	expIds = seForm.getSelectedExperimentIds();
+    	}
+    	Collection<Experiment> experiments = cart.getExperiments(expIds);
+    	for (Experiment exp : experiments) {
+    		if (exp.getDataSourceProperties()
+    				== DataSourceProperties.ANALYTIC_OPERATION) {
+    			request.setAttribute("derivedFromAnalysis", "1");
+    			break;
+    		}
     	}
     	
     	// Determine forward

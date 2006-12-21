@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-12-18 18:13:19 $
+$Revision: 1.11 $
+$Date: 2006-12-21 03:56:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,6 +71,7 @@ import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.DataContainingBioAssay;
 import org.rti.webcgh.domain.DataSerializedBioAssay;
+import org.rti.webcgh.domain.DataSourceProperties;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.util.ChromosomeArrayDataIterator;
@@ -112,6 +113,7 @@ public abstract class DataTransformer {
         Experiment output =
             new Experiment(experimentName, input.getOrganism(),
             		input.getQuantitationType());
+        output.setDataSourceProperties(DataSourceProperties.ANALYTIC_OPERATION);
         this.performAnalyticOperation(input, output, operation);
         LOGGER.info("Completed operation");
         return output;
@@ -390,6 +392,7 @@ public abstract class DataTransformer {
         output.setQuantitationType(Experiment.getQuantitationType(input));
         output.setTerminal(true);
         output.setOrganism(Experiment.getOrganism(input));
+        output.setDataSourceProperties(DataSourceProperties.ANALYTIC_OPERATION);
         List<BioAssay> bioAssays = new ArrayList<BioAssay>();
         for (Short chromosome : Experiment.chromosomes(input)) {
             List<ChromosomeArrayData> inCads =
