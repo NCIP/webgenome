@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.6 $
-$Date: 2006-10-31 02:37:38 $
+$Revision: 1.7 $
+$Date: 2006-12-21 17:26:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -395,7 +395,7 @@ public class PlotInteractivityTag extends TagSupport {
 
 
 			// print plots
-			out.print("<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-style: solid; border-width: 1px; border-color: #888888;\">");
+			out.print("<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border-style: solid; border-width: 1px; border-color: #888888;\" width=\"" + plotWidth + "\">");
 			out.print(	"<tr>");
 			out.print(		"<td valign=\"top\" align=\"left\">");
 
@@ -413,7 +413,7 @@ public class PlotInteractivityTag extends TagSupport {
 			out.print(						"<tr>");
 			out.print(							"<td id=\"plotGraph\" valign=\"top\" align=\"left\" background=\"" +
 					contextPath + imageSubContextPath + "/" + defaultImage + "\" width=\"" +
-					plotWidth + "\" height=\"" + plotHeight + "\">");
+					plotWidth + "\" height=\"" + plotHeight + "\" style=\"background-repeat: no-repeat;\">");
 
 			// plot interactivity span
 			out.print(								"<span style=\"position:relative\">");
