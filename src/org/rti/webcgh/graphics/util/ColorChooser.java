@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-26 19:22:39 $
+$Revision: 1.4 $
+$Date: 2006-12-21 15:44:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -239,13 +239,13 @@ public class ColorChooser {
 			for (int i = 0; i < numRows; i++) {
 				palette[i] = new String[numCols];
 				for (int j = 0; j < numCols; j++) {
-					String color = null;
+					String hexColor = null;
 					if (count++ < numColors) {
-						color = ColorUtils.toRgbHexEncoding(cg.nextColor());
+						hexColor = ColorUtils.toRgbHexEncoding(cg.nextColor());
 					} else {
-						color = "#FFFFFF";
-					}
-					palette[i][j] = color;
+						hexColor = "#FFFFFF";
+                    }
+					palette[i][j] = hexColor;
 				}
 			}
 			return palette;
@@ -283,7 +283,7 @@ public class ColorChooser {
 		 * components get set the component value.  Components that
 		 * don't get set this value get set to 0.
 		 */
-		private void setComponents(final int value,
+		private void setComponents(int value,
 				final int combinationNumber) {
 			switch (combinationNumber) {
 				case 0 :
@@ -305,6 +305,8 @@ public class ColorChooser {
 					this.setComponents(0, value, value);
 					break;
 				case 6 :
+                    if ( value >= 245 ) // reduce the value of the color, as all 245's make
+                        value = 180 ;   // a color which is too light.
 					this.setComponents(value, value, value);
 					break;
 				default: setComponents(0, 0, 0);
@@ -318,11 +320,12 @@ public class ColorChooser {
 		 * @param b Value of second component (i.e. green)
 		 * @param c Value of third component (i.e. blue)
 		 */
-		private void setComponents(final int a, final int b,
-				final int c) {
-			components[0] = a;
-			components[1] = b;
-			components[2] = c;
+		private void setComponents( final int redValue,
+                                    final int greenValue,
+                                    final int blueValue) {
+			components[0] = redValue;
+			components[1] = greenValue;
+			components[2] = blueValue;
 		}
 	}
 }
