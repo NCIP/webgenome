@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-23 02:20:39 $
+$Revision: 1.3 $
+$Date: 2006-12-21 19:20:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webcgh.service.dao.hibernate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.lang.IllegalArgumentException;
 
 import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Organism;
@@ -74,6 +75,8 @@ extends HibernateDaoSupport implements CytologicalMapDao {
 	 * @param cytologicalMap Cytological map.
 	 */
 	public void save(final CytologicalMap cytologicalMap) {
+        if ( cytologicalMap == null )
+            throw new IllegalArgumentException ( "cytologicalMap parameter cannot be null" ) ;
 		this.getHibernateTemplate().save(cytologicalMap);
 	}
 	
@@ -99,6 +102,10 @@ extends HibernateDaoSupport implements CytologicalMapDao {
 	 */
 	public CytologicalMap load(final Organism organism,
 			final short chromosome) {
+        
+        if ( organism == null )
+            throw new IllegalArgumentException ( "Organism parameter cannot be null." ) ;
+
 		String query = "from CytologicalMap m "
 			+ "where m.organism = ? and m.chromosome = ?";
 		Object[] args = new Object[] {organism, chromosome};
@@ -115,6 +122,8 @@ extends HibernateDaoSupport implements CytologicalMapDao {
 	 * @param cytologicalMap Cytological map to delete.
 	 */
 	public void delete(final CytologicalMap cytologicalMap) {
+        if ( cytologicalMap == null )
+            throw new IllegalArgumentException ( "cytologicalMap parameter cannot be null" ) ;
 		this.getHibernateTemplate().delete(cytologicalMap);
 	}
 	
@@ -138,6 +147,8 @@ extends HibernateDaoSupport implements CytologicalMapDao {
 	 * @param organism Organism.
 	 */
 	public void deleteAll(final Organism organism) {
+        if ( organism == null )
+            throw new IllegalArgumentException ( "organism parameter cannot be null" ) ;
 		String query = "from CytologicalMap m where m.organism = ?";
 		Object[] args = new Object[] {organism};
 		List maps = this.getHibernateTemplate().find(query, args);
