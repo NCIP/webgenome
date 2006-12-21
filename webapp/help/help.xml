@@ -18,7 +18,8 @@
 		
 		<p>
 			Data types supported in this version include
-			copy number (i.e., aCGH), loss of heterozygosity (LOH),
+			copy number (i.e., aCGH),
+			<ref id="loh">loss of heterozygosity (LOH)</ref>,
 			and gene expression.  Two basic types of plots
 			can be generated:
 		</p>
@@ -96,10 +97,12 @@
 				Scatter plots display array reporter values (e.g. copy number)
 				against physical genome location.  Users can plot data points,
 				regression lines, and confidence intervals in these plots.
-				If data are loss of heterozygosity (LOH), then the
+				If data are loss of
+				<ref id="loh">heterozygosity (LOH)</ref>, then the
 				endpoints of LOH regions are inferred and shown as
 				thick horizontal lines.  The Y-coordinates of these lines
-				are equal to the average probability of LOH weighted
+				are equal to the average probability of
+				LOH weighted
 				by the chromosomal distance between adjacent reporters.
 				</p>
 				
@@ -207,7 +210,8 @@
 				<prop-list>
 					
 					<prop name="LOH probability threshold" id="param-lohThreshold">
-						Loss of heterozygosity (LOH) data may be provided
+						<ref id="loh">Loss of heterozygosity (LOH)</ref>
+						data may be provided
 						by the client application
 						as probabilities.  This parameter is a threshold,
 						above which probabilities will be interpred as
@@ -216,7 +220,8 @@
 					
 					<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
 						This parameter is only applicable if the data are
-						LOH (loss of heterozygosity).  Scatter plots of
+						<ref id="loh">LOH(loss of heterozygosity)</ref>.
+						Scatter plots of
 						LOH indicate LOH regions as thick horizontal
 						lines.  If for two adjacent reporters one is indicating LOH
 						and the other is not, the location where the
@@ -229,7 +234,8 @@
 					
 					<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
 						This parameter is only applicable if the data are
-						LOH (loss of heterozygosity).  Scatter plots of
+						<ref id="loh">LOH(loss of heterozygosity)</ref>.
+						Scatter plots of
 						LOH indicate LOH regions as thick horizontal
 						lines.  If this parameter is checked, then the underlying
 						raw LOH probabilites are also plotted.
@@ -434,7 +440,8 @@
 				<em>threshold</em> and a <em>minPercent</em> property.
 				The <em>threshold</em> is used for scoring alterations.
 				For instance, if the threshold is set to 0.5, then all 
-				LOH probability values greater than this value will be
+				<ref id="loh">LOH</ref> probability values greater than
+				this value will be
 				considered LOH.  The <em>minPercent</em> propety defines
 				the minimum percentage of bioassays that must contain
 				an alteration at a particular location for the alteration
@@ -449,5 +456,39 @@
 				This operation peforms data smoothing using Loess regression.
 			</prop>
 		</prop-list>
+	</section>
+	
+	<!-- =========================================== -->
+	<!--                 Appendix                    -->
+	<!-- =========================================== -->
+	<section title="Appendix" id="operations">
+		<section title="LOH Measurements" id="loh">
+		
+		<p>
+			Loss of heterozygosity (LOH) is detected by measuring
+			the amount of DNA from each
+			allele from tumor cells and comparing this with the amounts
+			found from normal tissue in the same individual or a reference sample.
+			A skewed distribution in the tumor cells, compared with those
+			found in the normal tissue, indicates an allelic
+			imbalance. This imbalance can result from either loss of an allele
+			(true LOH) or allelic amplification. Some earlier articles reporting
+			LOH may, for technical reasons, have measured allelic amplification
+			rather than loss of an allele.
+		</p>
+		
+		<p>
+			LOH measurements are reported as the
+			-log10 of the probability of continuous genomic region of
+			homozygote calls.
+			Thus, the larger the LOH value is, the more likely the value
+			indicates a true LOH
+			(or allelic amplification). The following formulae are
+			used to compute LOH values:
+		</p>
+		
+		<img src="loh_formula.png" align="center" border="1"/>
+
+		</section>
 	</section>
 </help-doc>

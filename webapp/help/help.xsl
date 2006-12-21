@@ -57,7 +57,7 @@
 		<a name="{@id}"/>
 		<span class="heading{$level}"><xsl:number level="multiple"/> - <xsl:value-of select="@title"/></span><br/>
 		<p>
-			<xsl:apply-templates select="text()|ref|link|prop-list|em|b|p|br"/>
+			<xsl:apply-templates select="text()|ref|link|prop-list|em|b|p|br|img"/>
 		</p>
 		<xsl:for-each select="section">
 			<xsl:call-template name="section">
@@ -90,10 +90,25 @@
 					<xsl:if test="not(@refid)">
 						<span class="propName"><xsl:value-of select="@name"/></span> -
 					</xsl:if>
-					<xsl:apply-templates select="text()|ref|link|prop-list|em|b|p|br"/>
+					<xsl:apply-templates select="text()|ref|link|prop-list|em|b|p|br|img"/>
 				</li>
 			</xsl:for-each>
 		</ul>
+	</xsl:template>
+	
+	<!-- Image -->
+	<xsl:template match="img">
+		<xsl:element name="img">
+			<xsl:attribute name="src">
+				<xsl:value-of select="@src"/>
+			</xsl:attribute>
+			<xsl:attribute name="align">
+				<xsl:value-of select="@align"/>
+			</xsl:attribute>
+			<xsl:attribute name="border">
+				<xsl:value-of select="@border"/>
+			</xsl:attribute>
+		</xsl:element>
 	</xsl:template>
 	
 	<!-- HTML stuff -->
