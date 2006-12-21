@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2006-12-05 03:19:59 $
+$Revision: 1.18 $
+$Date: 2006-12-21 04:50:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import org.rti.webcgh.domain.CytologicalMap;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.util.HeatMapColorFactory;
 import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.ChromosomeEndCap;
@@ -189,6 +190,9 @@ public class IdeogramPlotPainter extends PlotPainter {
 			}
 		}
 		
+		// Get quantitation type
+		QuantitationType qType = Experiment.getQuantitationType(experiments);
+		
 		int plotCount = 0;
 		int rowCount = 1;
 		PlotPanel row = panel.newChildPlotPanel();
@@ -207,6 +211,10 @@ public class IdeogramPlotPainter extends PlotPainter {
 						COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
 						COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
 				panel.add(scale, HorizontalAlignment.CENTERED,
+						VerticalAlignment.BELOW);
+				panel.add(new Caption(qType.getName(), Orientation.HORIZONTAL,
+						false, panel.getDrawingCanvas()),
+						HorizontalAlignment.CENTERED,
 						VerticalAlignment.BELOW);
 				row = panel.newChildPlotPanel();
 				plotCount = 1;
@@ -250,6 +258,10 @@ public class IdeogramPlotPainter extends PlotPainter {
 				COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
 				COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
 		panel.add(scale, HorizontalAlignment.CENTERED,
+				VerticalAlignment.BELOW);
+		panel.add(new Caption(qType.getName(), Orientation.HORIZONTAL,
+				false, panel.getDrawingCanvas()),
+				HorizontalAlignment.CENTERED,
 				VerticalAlignment.BELOW);
 		
 		return evtHandlerBoundaries;
