@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2006-12-14 02:24:56 $
+$Revision: 1.16 $
+$Date: 2006-12-21 17:23:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -298,14 +298,14 @@ public class PngPlotGenerator implements PlotGenerator {
 			final Collection<Experiment> experiments,
 			final ScatterPlotParameters plotParameters,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
-		LOGGER.info("Creating new scatter plot");
+		LOGGER.debug("Creating new scatter plot");
 		
 		// Instantiate plot painter
 		ScatterPlotPainter painter =
 			new ScatterPlotPainter(chromosomeArrayDataGetter);
 		
 		// Create default plot image
-		LOGGER.info("Creating default plot image");
+		LOGGER.debug("Creating default plot image");
 		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
 		PlotPanel panel = new PlotPanel(canvas);
 		EventHandlerGraphicBoundaries boundaries =
@@ -320,12 +320,12 @@ public class PngPlotGenerator implements PlotGenerator {
 		plot.setDefaultImageFileName(imageFileName);
 		plot.setClickBoxes(boundaries.getClickBoxes());
 		plot.setMouseOverStripes(boundaries.getMouseOverStripes());
-		LOGGER.info("Completed default plot image");
+		LOGGER.debug("Completed default plot image");
 		
 		// Create images of each bioassay selected
 		for (Experiment exp : experiments) {
 			for (BioAssay ba : exp.getBioAssays()) {
-				LOGGER.info("Creating image with bioassay "
+				LOGGER.debug("Creating image with bioassay "
 						+ ba.getName() + " highlighted");
 				ba.setSelected(true);
 				canvas = new RasterDrawingCanvas();
@@ -338,10 +338,10 @@ public class PngPlotGenerator implements PlotGenerator {
 					this.imageFileManager.saveImage(canvas.toBufferedImage());
 				plot.addImageFile(ba.getId().toString(), imageFileName);
 				ba.setSelected(false);
-				LOGGER.info("Completed highlighted plot image");
+				LOGGER.debug("Completed highlighted plot image");
 			}
 		}
-		LOGGER.info("Completed scatter plot");
+		LOGGER.debug("Completed scatter plot");
 	}
 	
 	
