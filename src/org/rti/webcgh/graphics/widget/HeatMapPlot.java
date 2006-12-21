@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-11-29 04:30:17 $
+$Revision: 1.14 $
+$Date: 2006-12-21 04:58:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -242,7 +242,7 @@ public final class HeatMapPlot implements PlotElement {
 		this.maxY = this.trackMaxY + PADDING + FONT_SIZE;
 		int x = this.minY;
 		for (Experiment exp : experiments) {
-			x = this.layoutGraphicPrimitives(drawingCanvas, exp, x);
+			x = this.layoutGraphicPrimitives(drawingCanvas, exp, x) + PADDING;
 		}
 	}
 	
