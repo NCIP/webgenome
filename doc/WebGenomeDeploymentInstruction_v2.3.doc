@@ -39,7 +39,7 @@ RServe\par
 this properties-service.xml file might be located in a directory such as: /usr/local/jboss404/server/ncicb-webgenome/deploy\par
 \par
 \par
-\pard\intbl\fi-404\li404 2.    Copy the existing webcgh.properties file (located in ./conf) into the location that you want to use as your external properties file directory. \par
+\pard\intbl\fi-404\li404 2.    Copy the existing webcgh.properties file (located in cvs ./src/conf) into the location that you want to use as your external properties file directory. \par
 \pard\intbl\nowidctlpar\li404 e.g. the file may be located as:\par
 \pard\intbl\nowidctlpar\hyphpar0\li404\sb60\sa60\sl240\slmult0 /local/content/rembrandt/config/webcgh.properties\par
 \pard\intbl\nowidctlpar\hyphpar0\li360\sb60\sa60\sl240\slmult0\par
