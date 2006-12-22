@@ -102,6 +102,9 @@
     <!-- Collate some environment information into a buildInformation.properties
          file which the Status Page can report on -->
     <target name="document-build-properties">
+        <mkdir dir="${web.dir}"/>
+        <mkdir dir="${web.dir}/WEB-INF"/>
+        <mkdir dir="${web.dir}/WEB-INF/classes"/>
         <property environment="env"/>
         <!-- determine hostname -->
         <condition property="hostname" value="${env.HOSTNAME}">
