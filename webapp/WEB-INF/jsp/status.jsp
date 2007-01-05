@@ -5,6 +5,7 @@
 <%@ page import="javax.mail.Transport" %>
 <%@ page import="java.sql.*" %>
 <%@ page import="java.io.InputStream,java.io.IOException" %>
+<%@ page import="org.rosuda.JRclient.Rconnection" %>
 <%!
 boolean isEmpty ( String value ) {
     return value == null || value.length() < 1 ? true : false ;
@@ -97,6 +98,32 @@ catch ( Exception e ) {
 %>
 </pre>
 --%>
+
+<h2>RServe</h2>
+<pre>
+<%
+String rserveHost = "not found" ;
+String rservePort = "not found" ;
+Rconnection c = null ;
+try {
+    rserveHost = SystemUtils.getApplicationProperty ( "rserve.ipAddress" ) ;
+    rservePort = SystemUtils.getApplicationProperty ( "rserve.port" ) ;
+    
+    c = new Rconnection( rserveHost, Integer.parseInt(rservePort) ); 
+    out.println ( "    RServe IP=" + rserveHost + " Connected?: " + c.isConnected() ) ;
+}
+catch ( Exception e ) {
+	out.println ( "    Exception experienced trying to check whether RServe [" + rserveHost +
+	              "] is connected." ) ;
+	out.println ( "    Exception Message: " + e.getMessage() ) ;
+}
+finally {
+    if ( c != null )
+        try { c.close(); } catch ( Exception ignored ) {}
+}
+%>
+</pre>
+
 <h2>Database</h2>
 <pre>
 <%
@@ -120,7 +147,7 @@ try {
 	rs.next() ;
     int rowCount = rs.getInt( "rowCount" ) ;
 	out.println ( "    Test table: CYTOBAND table has " + rowCount + " rows" ) ;
-	out.print ( "      DB Access: " ) ;
+	out.print ( "     DB Access: " ) ;
 	if ( rowCount > 0 )
 	    out.println ( "Success!" ) ;
 	else
