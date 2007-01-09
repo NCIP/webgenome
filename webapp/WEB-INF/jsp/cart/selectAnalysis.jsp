@@ -23,8 +23,24 @@
 </table>
 
 <p>
-	<html:submit value="OK"/>
+	<html:submit value="OK" onclick="javascript:return validateSelection(this.form)"/>
 </p>
+<script language="JavaScript">
+/* Make sure at least one analytic operation is selected */
+function validateSelection( form )
+{
+	var ok=false ;
+	for ( var idx = 0 ; idx < form.operationKey.length; idx++ ) {
+		if ( form.operationKey[idx].checked ) {
+			ok=true;
+		}
+	}
+	if ( ! ok ) {
+		alert ( "Please select an Analytic Operation to perform." ) ;
+	}
+    return ok;
+}
+</script>
 
 </center>
 </html:form>
