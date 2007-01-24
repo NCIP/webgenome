@@ -18,6 +18,9 @@
 <br>
 <a href="#operations">4 - Analytic Operations</a>
 <br>
+<a href="#operations">5 - Appendix</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#loh">5.1 - LOH Measurements</a>
+<br>
 <p>
 <br>
 </p>
@@ -41,7 +44,8 @@
 		
 <p>
 			Data types supported in this version include
-			copy number (i.e., aCGH), loss of heterozygosity (LOH),
+			copy number (i.e., aCGH),
+			<a href="#loh">loss of heterozygosity (LOH)</a>,
 			and gene expression.  Two basic types of plots
 			can be generated:
 		</p>
@@ -141,10 +145,12 @@
 				Scatter plots display array reporter values (e.g. copy number)
 				against physical genome location.  Users can plot data points,
 				regression lines, and confidence intervals in these plots.
-				If data are loss of heterozygosity (LOH), then the
+				If data are loss of
+				<a href="#loh">heterozygosity (LOH)</a>, then the
 				endpoints of LOH regions are inferred and shown as
 				thick horizontal lines.  The Y-coordinates of these lines
-				are equal to the average probability of LOH weighted
+				are equal to the average probability of
+				LOH weighted
 				by the chromosomal distance between adjacent reporters.
 				</p>
 				
@@ -239,6 +245,14 @@
 						which will be laid out in rows.  This parameter
 						specifies how many plots will be in a row.
 					</li>
+<a name="param-showReporterNames"></a>
+<li>
+<span class="propName">Show reporter names</span> -
+					
+						If this property is checked, names of reporters
+						near mouse will be displayed
+						in the mouseover text.
+					</li>
 <a name="param-showAnnotation"></a>
 <li>
 <span class="propName">Show reporter annotation</span> -
@@ -268,7 +282,8 @@
 <li>
 <span class="propName">LOH probability threshold</span> -
 					
-						Loss of heterozygosity (LOH) data may be provided
+						<a href="#loh">Loss of heterozygosity (LOH)</a>
+						data may be provided
 						by the client application
 						as probabilities.  This parameter is a threshold,
 						above which probabilities will be interpred as
@@ -279,7 +294,8 @@
 <span class="propName">Interpoloate LOH endpoints</span> -
 					
 						This parameter is only applicable if the data are
-						LOH (loss of heterozygosity).  Scatter plots of
+						<a href="#loh">LOH(loss of heterozygosity)</a>.
+						Scatter plots of
 						LOH indicate LOH regions as thick horizontal
 						lines.  If for two adjacent reporters one is indicating LOH
 						and the other is not, the location where the
@@ -294,7 +310,8 @@
 <span class="propName">Include raw LOH probabilities</span> -
 					
 						This parameter is only applicable if the data are
-						LOH (loss of heterozygosity).  Scatter plots of
+						<a href="#loh">LOH(loss of heterozygosity)</a>.
+						Scatter plots of
 						LOH indicate LOH regions as thick horizontal
 						lines.  If this parameter is checked, then the underlying
 						raw LOH probabilites are also plotted.
@@ -552,7 +569,8 @@
 				<em>threshold</em> and a <em>minPercent</em> property.
 				The <em>threshold</em> is used for scoring alterations.
 				For instance, if the threshold is set to 0.5, then all 
-				LOH probability values greater than this value will be
+				<a href="#loh">LOH</a> probability values greater than
+				this value will be
 				considered LOH.  The <em>minPercent</em> propety defines
 				the minimum percentage of bioassays that must contain
 				an alteration at a particular location for the alteration
@@ -573,5 +591,44 @@
 </ul>
 	
 </p>
+<a name="operations"></a><span class="heading1">5 - Appendix</span>
+<br>
+<p>
+		
+	
+</p>
+<a name="loh"></a><span class="heading2">5.1 - LOH Measurements</span>
+<br>
+<p>
+		
+		
+<p>
+			Loss of heterozygosity (LOH) is detected by measuring
+			the amount of DNA from each
+			allele from tumor cells and comparing this with the amounts
+			found from normal tissue in the same individual or a reference sample.
+			A skewed distribution in the tumor cells, compared with those
+			found in the normal tissue, indicates an allelic
+			imbalance. This imbalance can result from either loss of an allele
+			(true LOH) or allelic amplification. Some earlier articles reporting
+			LOH may, for technical reasons, have measured allelic amplification
+			rather than loss of an allele.
+		</p>
+		
+		
+<p>
+			LOH measurements are reported as the
+			-log10 of the probability of continuous genomic region of
+			homozygote calls.
+			Thus, the larger the LOH value is, the more likely the value
+			indicates a true LOH
+			(or allelic amplification). The following formulae are
+			used to compute LOH values:
+		</p>
+		
+		
+<img src="loh_formula.png" align="center" border="1">
+
+		</p>
 </body>
 </html>

@@ -298,6 +298,7 @@ public class Experiment implements Serializable {
             final QuantitationType quantitationType) {
         this.name = name;
         this.quantitationType = quantitationType;
+        this.organism = organism;
     }
     
     
