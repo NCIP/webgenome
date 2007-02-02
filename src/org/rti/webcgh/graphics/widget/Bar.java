@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-02 02:05:49 $
+$Revision: 1.2 $
+$Date: 2007-02-02 18:56:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -339,22 +339,27 @@ public class Bar implements PlotElement {
 	private void layoutNegativeBar(final float value, final float error,
 			final float plotMax, final float scale) {
 		assert value < (float) 0.0;
-		int graphMinPix = this.maxY + this.padding;
+		
+		// Adjust maximum value in plot so that it is >= 0
 		float maxValue = plotMax;
 		if (maxValue < (float) 0.0) {
 			maxValue = (float) 0.0;
 		}
 		
-		// Bar
+		// Find Y-pixel that corresonds to 0.0
+		this.zeroY = this.maxY + this.padding
+			+ (int) ((maxValue - (float) 0.0) * scale);
+		
+		// Draw bar
 		int barHeight = (int) ((maxValue - value) * scale);
-		Rectangle bar = new Rectangle(this.minX, graphMinPix,
+		Rectangle bar = new Rectangle(this.minX, this.zeroY,
 				this.barWidth, barHeight, this.barColor);
 		this.graphicPrimitives.add(bar);
-		int graphMaxPix = graphMinPix + barHeight;
+		int graphMaxPix = this.zeroY + barHeight;
 		
-		// Error bar
+		// Draw error bar
 		if (!Float.isNaN(error)) {
-			int topY = graphMinPix + barHeight;
+			int topY = this.zeroY + barHeight;
 			int errorBarHeight = (int) (error * scale);
 			int bottomY = topY + errorBarHeight;
 			Line horizLine = new Line(this.minX, bottomY,
@@ -368,7 +373,7 @@ public class Bar implements PlotElement {
 			graphMaxPix = bottomY;
 		}
 		
-		// Adjust properties
+		// Set maximum Y-pixel value
 		this.maxY = graphMaxPix;
 	}
 	
