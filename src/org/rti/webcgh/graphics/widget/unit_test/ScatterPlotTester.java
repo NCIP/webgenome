@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-11-15 23:32:47 $
+$Revision: 1.5 $
+$Date: 2007-02-02 02:05:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,11 +62,8 @@ import org.rti.webcgh.domain.Reporter;
 import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.graphics.PlotBoundaries;
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
-import org.rti.webcgh.graphics.widget.Background;
 import org.rti.webcgh.graphics.widget.ScatterPlot;
 import org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter;
-import org.rti.webcgh.units.HorizontalAlignment;
-import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -91,14 +88,14 @@ public final class ScatterPlotTester extends TestCase {
 	/** Height of plot in pixels. */
 	private static final int HEIGHT = 30;
 	
-	/** Width of background object. */
-	private static final int BG_WIDTH = 200;
-	
-	/** Height of background object. */
-	private static final int BG_HEIGHT = 200;
-	
-	/** Color of background object. */
-	private static final Color BG_COLOR = Color.PINK;
+//	/** Width of background object. */
+//	private static final int BG_WIDTH = 200;
+//	
+//	/** Height of background object. */
+//	private static final int BG_HEIGHT = 200;
+//	
+//	/** Color of background object. */
+//	private static final Color BG_COLOR = Color.PINK;
 	
 	/** Test experiments. */
 	private Collection<Experiment> experiments = new ArrayList<Experiment>();

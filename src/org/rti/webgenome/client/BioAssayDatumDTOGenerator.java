@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-12-14 02:24:56 $
+$Revision: 1.8 $
+$Date: 2007-02-02 02:05:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,11 +70,18 @@ public class BioAssayDatumDTOGenerator {
 	private static final float PROBABILITY_GENE = (float) 0.3;
 	
 	/**
-	 * Probability a reporter marks an endpoint of an
+	 * Probability a reporter marks an start point of an
+	 * altered genome region.
+	 */
+	private static final float PROBABILITY_ALTERATION_STARTPOINT =
+		(float) 0.005;
+	
+	/**
+	 * Probability a reporter marks an end point of an
 	 * altered genome region.
 	 */
 	private static final float PROBABILITY_ALTERATION_ENDPOINT =
-		(float) 0.005;
+		(float) 0.1;
 	
 	/** Value generators keyed on quantitation type. */
 	private static final Map<String, ValueGenerator> GENERATORS =
@@ -84,22 +91,27 @@ public class BioAssayDatumDTOGenerator {
 		GENERATORS.put(QuantitationTypes.COPY_NUMBER,
 				new ValueGenerator((float) 20.0, (float) 30.0,
 						(float) 0.0, (float) 10.0,
+						PROBABILITY_ALTERATION_STARTPOINT,
 						PROBABILITY_ALTERATION_ENDPOINT));
 		GENERATORS.put(QuantitationTypes.COPY_NUMBER_LOG2_RATION,
 				new ValueGenerator((float) 2.0, (float) 3.0,
 						(float) 0.0, (float) 0.6,
+						PROBABILITY_ALTERATION_STARTPOINT,
 						PROBABILITY_ALTERATION_ENDPOINT));
 		GENERATORS.put(QuantitationTypes.FOLD_CHANGE,
 				new ValueGenerator((float) 20.0, (float) 30.0,
 						(float) 0.0, (float) 10.0,
+						PROBABILITY_ALTERATION_STARTPOINT,
 						PROBABILITY_ALTERATION_ENDPOINT));
 		GENERATORS.put(QuantitationTypes.FOLD_CHANGE_LOG2_RATIO,
 				new ValueGenerator((float) 2.0, (float) 3.0,
 						(float) 0.0, (float) 0.6,
+						PROBABILITY_ALTERATION_STARTPOINT,
 						PROBABILITY_ALTERATION_ENDPOINT));
 		GENERATORS.put(QuantitationTypes.LOH,
 				new ValueGenerator((float) 0.8, (float) 1.0,
 						(float) 0.0, (float) 0.3,
+						PROBABILITY_ALTERATION_STARTPOINT,
 						PROBABILITY_ALTERATION_ENDPOINT));
 	}
 
@@ -188,6 +200,12 @@ public class BioAssayDatumDTOGenerator {
 		
 		/**
 		 * Probability that a given values represents
+		 * the start point of an altered region.
+		 */
+		private final float probAltStartPoint;
+		
+		/**
+		 * Probability that a given value represents
 		 * the end point of an altered region.
 		 */
 		private final float probAltEndPoint;
@@ -198,17 +216,21 @@ public class BioAssayDatumDTOGenerator {
 		 * @param maxAltValue Maximum value in an altered region
 		 * @param minBackgroundValue Minimum value in a non-altered region
 		 * @param maxBackgroundValue Maximum value in a non-altered region
+		 * @param probAltStartPoint Probability that a given values represents
+		 * the start point of an altered region
 		 * @param probAltEndPoint Probability that a given values represents
 		 * the end point of an altered region
 		 */
 		ValueGenerator(final float minAltValue, final float maxAltValue,
 				final float minBackgroundValue,
 				final float maxBackgroundValue,
+				final float probAltStartPoint,
 				final float probAltEndPoint) {
 			this.minAltValue = minAltValue;
 			this.maxAltValue = maxAltValue;
 			this.minBackgroundValue = minBackgroundValue;
 			this.maxBackgroundValue = maxBackgroundValue;
+			this.probAltStartPoint = probAltStartPoint;
 			this.probAltEndPoint = probAltEndPoint;
 		}
 		
@@ -220,7 +242,7 @@ public class BioAssayDatumDTOGenerator {
 		public float nextValue() {
 			float value = Float.NaN;
 			if (!this.inAlteration) {
-				this.inAlteration = Math.random() < this.probAltEndPoint;
+				this.inAlteration = Math.random() < this.probAltStartPoint;
 			}
 			if (!this.inAlteration) {
 				value = this.generateValue(this.minBackgroundValue,

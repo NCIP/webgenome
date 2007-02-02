@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-12-16 05:22:20 $
+$Revision: 1.4 $
+$Date: 2007-02-02 02:05:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -118,7 +118,7 @@ public final class BioAssayMgrEjbClientDataService
 	}
     
     /**
-     * Set JNDI Provider URL
+     * Set JNDI Provider URL.
      * @param jndiProviderURL JNDI Provider URL
      */
     public void setJndiProviderURL(final String jndiProviderURL) {
@@ -126,7 +126,8 @@ public final class BioAssayMgrEjbClientDataService
         
         // Get bioassay manager
         try {
-            LOGGER.debug( "Getting BioAssayMgrHome interface from jndiName [" + jndiName + "] jndiProviderURL [" + jndiProviderURL + "]" ) ;
+            LOGGER.debug(
+            		"Getting BioAssayMgrHome interface from jndiName [" + jndiName + "] jndiProviderURL [" + jndiProviderURL + "]" ) ;
 			BioAssayMgrHome home = (BioAssayMgrHome)
 				this.serviceLocator.getLocalHome(this.jndiName, this.jndiProviderURL);
 			this.bioAssayMgr = home.create();
