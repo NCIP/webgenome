@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-02-02 02:05:49 $
+$Revision: 1.9 $
+$Date: 2007-02-05 18:16:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -74,14 +74,14 @@ public class BioAssayDatumDTOGenerator {
 	 * altered genome region.
 	 */
 	private static final float PROBABILITY_ALTERATION_STARTPOINT =
-		(float) 0.005;
+		(float) 0.01;
 	
 	/**
 	 * Probability a reporter marks an end point of an
 	 * altered genome region.
 	 */
 	private static final float PROBABILITY_ALTERATION_ENDPOINT =
-		(float) 0.1;
+		(float) 0.05;
 	
 	/** Value generators keyed on quantitation type. */
 	private static final Map<String, ValueGenerator> GENERATORS =

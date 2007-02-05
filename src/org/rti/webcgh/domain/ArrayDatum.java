@@ -233,6 +233,26 @@ public class ArrayDatum implements Serializable {
     
     
     /**
+     * Return <code>value</code> plus the error factor, if any.
+     * If the value is >= 0, the error factor will be
+     * positive, otherwise it will be negative.  The error factor
+     * is half of the value of <code>error</code>.
+     * @return Value plus error
+     */
+    public final float valuePlusError() {
+    	float val = this.value;
+    	if (!Float.isNaN(this.error)) {
+    		if (this.value >= (float) 0.0) {
+    			val += this.error / (float) 2.0;
+    		} else {
+    			val -= this.error / (float) 2.0;
+    		}
+    	}
+    	return val;
+    }
+    
+    
+    /**
      * Generate an intermediate array datum between the two given datum.
      * The reporter location of this datum will be such that it falls
      * at Y-coordinate <code>y</code>on a line drawn between the two

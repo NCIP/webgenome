@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-02-02 18:56:06 $
+$Revision: 1.3 $
+$Date: 2007-02-05 18:16:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -288,7 +288,8 @@ public class Bar implements PlotElement {
 			}
 			if (absMax > plotMax) {
 				throw new IllegalArgumentException(
-						"Value to plot cannot be larger than "
+						"Value to plot '" + absMax
+						+ "' cannot be larger than "
 						+ "maximum value in plot");
 			}
 		}
