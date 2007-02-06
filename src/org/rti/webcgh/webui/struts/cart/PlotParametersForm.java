@@ -1,6 +1,6 @@
 /*
-$Revision: 1.26 $
-$Date: 2006-12-16 05:22:20 $
+$Revision: 1.27 $
+$Date: 2007-02-06 16:12:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,8 @@ import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.GenomeIntervalFormatException;
 import org.rti.webcgh.graphics.InterpolationType;
+import org.rti.webcgh.service.plot.BarPlotParameters;
+import org.rti.webcgh.service.plot.BaseGenomicPlotParameters;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
@@ -106,6 +108,10 @@ public class PlotParametersForm extends BaseForm {
 	/** Default plot height. */
 	private static final String DEF_HEIGHT = "250";
 	
+	/** Default bar plot bar width in pixels. */
+	private static final String DEF_BAR_WIDTH = "10";
+	
+	
 	/**
 	 * Name of HTTP query parameter that would indicate
 	 * the request came from a form for setting scatter plot
@@ -117,10 +123,11 @@ public class PlotParametersForm extends BaseForm {
 	
 	/**
 	 * Name of HTTP query parameter that would indicate
-	 * the request came from a form for setting plot
+	 * the request came from a form for setting genomic plot
 	 * parameters.
 	 */
-	private static final String PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = 
+	private static final String
+	GENOMIC_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = 
 		"genomeIntervals";
 	
 	
@@ -210,7 +217,7 @@ public class PlotParametersForm extends BaseForm {
 	 * value is considered to be indicative of LOH.
 	 */
 	private String lohThreshold =
-		String.valueOf(PlotParameters.DEF_LOH_THRESHOLD);
+		String.valueOf(BaseGenomicPlotParameters.DEF_LOH_THRESHOLD);
 	
 	/**
 	 * Interpolate the endpoints of LOH regions?  If false,
@@ -236,6 +243,9 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Show reporter anmes in mouseover? */
 	private String showReporterNames = "on";
+	
+	/** Width of bar plot bar in pixels. */
+	private String barWidth = DEF_BAR_WIDTH;
 	
 	// ================================
 	//      Getters/setters
@@ -266,6 +276,22 @@ public class PlotParametersForm extends BaseForm {
 	}
 	
 	
+	/**
+	 * Get bar plot bar width.
+	 * @return Width in pixels
+	 */
+	public final String getBarWidth() {
+		return barWidth;
+	}
+
+	/**
+	 * Set bar plot bar width.
+	 * @param barWidth Width in pixels
+	 */
+	public final void setBarWidth(final String barWidth) {
+		this.barWidth = barWidth;
+	}
+
 	/**
 	 * Show reporter names in mouseover?
 	 * @return <code>on</code> or empty string
@@ -764,12 +790,12 @@ public class PlotParametersForm extends BaseForm {
 			this.drawPoints = "";
 		}
 		
-		// Turn off general plot parameter checkbox fields.
+		// Turn off general genomic plot parameter checkbox fields.
 		// This should only
 		// be done if the JSP immediately upstream actually
 		// included an HTML form for setting plot
 		// parameters.
-		if (this.plotParamsHtmlFormUpstream(request)) {
+		if (this.genomicPlotParamsHtmlFormUpstream(request)) {
 			this.interpolateLohEndpoints = "";
 			this.drawRawLohProbabilities = "";
 			this.showAnnotation = "";
@@ -794,14 +820,15 @@ public class PlotParametersForm extends BaseForm {
 	
 	/**
 	 * Determines if the immediate upstream JSP included an
-	 * HTML form for setting plot parameters.
+	 * HTML form for setting genomic plot parameters.
 	 * @param request Servlet request
 	 * @return T/F
 	 */
-	private boolean plotParamsHtmlFormUpstream(
+	private boolean genomicPlotParamsHtmlFormUpstream(
 			final HttpServletRequest request) {
 		return request.getParameter(
-				PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER) != null;
+				GENOMIC_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER)
+				!= null;
 	}
 
 	/**
@@ -814,17 +841,29 @@ public class PlotParametersForm extends BaseForm {
 	public final ActionErrors validate(final ActionMapping actionMappings,
 			final HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
+		PlotType plotType = PlotType.valueOf(this.plotType);
 		
 		// Fields common to all plot types
 		this.validateCommonFields(errors);
 		
-		// Scatter plot-specific fields
-		if ("scatter".equals(this.plotType)) {
-			this.validateScatterPlotFields(errors);
+		// Bar plot-specific fields
+		if (plotType == PlotType.BAR) {
+			this.validateBarPlotFields(errors);
 			
-		// Ideogram plot-specific fields
-		} else if ("ideogram".equals(this.plotType)) {
-			this.validateIdeogramPlotFields(errors);
+		// Genomic plot types
+		} else {
+		
+			// Fields common to all remaining plot types
+			this.validateCommonGenomicPlotFields(errors);
+			
+			// Scatter plot-specific fields
+			if (plotType == PlotType.SCATTER) {
+				this.validateScatterPlotFields(errors);
+				
+			// Ideogram plot-specific fields
+			} else if (plotType == PlotType.IDEOGRAM) {
+				this.validateIdeogramPlotFields(errors);
+			}
 		}
 		
 		if (errors.size() > 0) {
@@ -836,10 +875,15 @@ public class PlotParametersForm extends BaseForm {
 	
 	
 	/**
-	 * Validate fields common to all plot types.
-	 * @param errors Action errors.
+	 * Validate fields common to all plots types.
+	 * @param errors Errors
 	 */
 	private void validateCommonFields(final ActionErrors errors) {
+		
+		// numPlotsPerRow
+		if (!ValidationUtils.validNumber(this.numPlotsPerRow)) {
+			errors.add("numPlotsPerRow", new ActionError("invalid.field"));
+		}
 		
 		// genomeIntervals
 		if (this.genomeIntervals != null && this.genomeIntervals.length() > 0) {
@@ -861,11 +905,32 @@ public class PlotParametersForm extends BaseForm {
 				errors.add("genomeIntervals", new ActionError("invalid.field"));
 			}
 		}
+	}
+	
+	
+	/**
+	 * Validate bar plot fields.
+	 * @param errors Errors
+	 */
+	private void validateBarPlotFields(final ActionErrors errors) {
 		
-		// numPlotsPerRow
-		if (!ValidationUtils.validNumber(this.numPlotsPerRow)) {
-			errors.add("numPlotsPerRow", new ActionError("invalid.field"));
+		// height
+		if (!ValidationUtils.validNumber(this.height)) {
+			errors.add("height", new ActionError("invalid.field"));
 		}
+		
+		// barWidth
+		if (!ValidationUtils.validNumber(this.barWidth)) {
+			errors.add("barWidth", new ActionError("invalid.field"));
+		}
+	}
+	
+	
+	/**
+	 * Validate fields common to all genomic plot types.
+	 * @param errors Action errors.
+	 */
+	private void validateCommonGenomicPlotFields(final ActionErrors errors) {
 		
 		// lohThreshold
 		if (!ValidationUtils.validNumber(this.lohThreshold)) {
@@ -997,14 +1062,16 @@ public class PlotParametersForm extends BaseForm {
 		this.drawErrorBars = "";
 		this.drawLines = "on";
 		this.drawPoints = "on";
-		this.lohThreshold = String.valueOf(PlotParameters.DEF_LOH_THRESHOLD);
+		this.lohThreshold = String.valueOf(
+				BaseGenomicPlotParameters.DEF_LOH_THRESHOLD);
 		this.interpolateLohEndpoints = "";
 		this.drawRawLohProbabilities = "on";
 		this.interpolationType =
-			PlotParameters.DEF_INTERPOLATION_TYPE.toString();
+			BaseGenomicPlotParameters.DEF_INTERPOLATION_TYPE.toString();
 		this.showAnnotation = "";
 		this.showGenes = "on";
 		this.showReporterNames = "on";
+		this.barWidth = DEF_BAR_WIDTH;
 	}
 	
 	/**
@@ -1015,20 +1082,36 @@ public class PlotParametersForm extends BaseForm {
 		PlotParameters p = null;
 		PlotType type = PlotType.getPlotType(this.plotType);
 		
-		// Scatter plot
-		if (type == PlotType.SCATTER) {
-			p = new ScatterPlotParameters();
-			this.setScatterPlotParameters((ScatterPlotParameters) p);
+		// Bar plot
+		if (type == PlotType.BAR) {
+			p = new BarPlotParameters();
+			this.setBarPlotParameters((BarPlotParameters) p);
 			
-		// Ideogram plot
-		} else if (type == PlotType.IDEOGRAM) {
-			p = new IdeogramPlotParameters();
-			this.setIdeogramPlotParameters((IdeogramPlotParameters) p);
+		
+		// Other plot types
+		} else {
+			
+			// Scatter plot
+			if (type == PlotType.SCATTER) {
+				p = new ScatterPlotParameters();
+				this.setScatterPlotParameters((ScatterPlotParameters) p);
+				
+			// Ideogram plot
+			} else if (type == PlotType.IDEOGRAM) {
+				p = new IdeogramPlotParameters();
+				this.setIdeogramPlotParameters((IdeogramPlotParameters) p);
+			}
+			
+			// Attributes common to genomic plots
+			if (p != null) {
+				this.setCommonGenomicPlotParameters(
+						(BaseGenomicPlotParameters) p);
+			}
 		}
 		
-		// Common attributes
+		// Attributes common to all plot types
 		if (p != null) {
-			this.setCommonParameters(p);
+			this.setCommonPlotParameters(p);
 		}
 		
 		return p;
@@ -1039,7 +1122,9 @@ public class PlotParametersForm extends BaseForm {
 	 * Set plot parameters common to all plot types.
 	 * @param params Plot parameters
 	 */
-	private void setCommonParameters(final PlotParameters params) {
+	private void setCommonPlotParameters(final PlotParameters params) {
+		params.setPlotName(this.name);
+		params.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
 		try {
 			params.setGenomeIntervals(GenomeInterval.decode(
 					this.genomeIntervals));
@@ -1047,9 +1132,26 @@ public class PlotParametersForm extends BaseForm {
 			throw new WebcghSystemException(
 					"Error extracting plot parameters", e);
 		}
-		params.setPlotName(this.name);
-		params.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
 		params.setUnits(BpUnits.getUnits(this.units));
+	}
+	
+	
+	/**
+	 * Set bar plot parameters.
+	 * @param params Plot parameters
+	 */
+	private void setBarPlotParameters(final BarPlotParameters params) {
+		params.setRowHeight(Integer.parseInt(this.height));
+		params.setBarWidth(Integer.parseInt(this.barWidth));
+	}
+	
+	
+	/**
+	 * Set plot parameters common to all genomic plot types.
+	 * @param params Plot parameters
+	 */
+	private void setCommonGenomicPlotParameters(
+			final BaseGenomicPlotParameters params) {
 		if (!StringUtils.isEmpty(this.lohThreshold)) {
 			params.setLohThreshold(Float.parseFloat(this.lohThreshold));
 		}
@@ -1165,18 +1267,75 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	public final void bulkSet(final PlotParameters plotParameters) {
 		
-		// Common attributes
+		// Set plot type
 		if (plotParameters instanceof ScatterPlotParameters) {
 			this.plotType = PlotType.SCATTER.getName();
 		} else if (plotParameters instanceof IdeogramPlotParameters) {
 			this.plotType = PlotType.IDEOGRAM.getName();
+		} else if (plotParameters instanceof BarPlotParameters) {
+			this.plotType = PlotType.BAR.getName();
 		}
-		this.genomeIntervals = GenomeInterval.encode(
-				plotParameters.getGenomeIntervals());
+		PlotType plotType = PlotType.valueOf(this.plotType);
+		
+		// Attributes common to all plot types
+		this.bulkSetCommontPlotAttributes(plotParameters);
+		
+		// Bar plot attributes
+		if (plotType == PlotType.BAR) {
+			this.bulkSetBarPlotAttributes(
+					(BarPlotParameters) plotParameters);
+			
+		// Genomic plots
+		} else {
+			this.bulkSetCommonGenomicPlotAttributes(
+					(BaseGenomicPlotParameters) plotParameters);
+			
+			// Scatter plot
+			if (plotType == PlotType.SCATTER) {
+				this.bulkSetScatterPlotAttributes(
+						(ScatterPlotParameters) plotParameters);
+				
+			// Ideogram plot
+			} else if (plotType == PlotType.IDEOGRAM) {
+				this.bulkSetIdeogramPlotAttributes(
+						(IdeogramPlotParameters) plotParameters);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Bulk set attributes common to all plot types.
+	 * @param plotParameters Plot parameters
+	 */
+	private void bulkSetCommontPlotAttributes(
+			final PlotParameters plotParameters) {
+		this.name = plotParameters.getPlotName();
 		this.numPlotsPerRow =
 			String.valueOf(plotParameters.getNumPlotsPerRow());
+		this.genomeIntervals = GenomeInterval.encode(
+				plotParameters.getGenomeIntervals());
 		this.units = plotParameters.getUnits().getName();
-		this.name = plotParameters.getPlotName();
+	}
+	
+	
+	/**
+	 * Bulk-set bar plot attributes.
+	 * @param plotParameters Plot parameters
+	 */
+	private void bulkSetBarPlotAttributes(
+			final BarPlotParameters plotParameters) {
+		this.height = String.valueOf(plotParameters.getRowHeight());
+		this.barWidth = String.valueOf(plotParameters.getBarWidth());
+	}
+	
+	
+	/**
+	 * Bulk set attributes common to all genomic plots.
+	 * @param plotParameters Plot parameters
+	 */
+	private void bulkSetCommonGenomicPlotAttributes(
+			final BaseGenomicPlotParameters plotParameters) {
 		this.lohThreshold = String.valueOf(plotParameters.getLohThreshold());
 		if (plotParameters.isInterpolateLohEndpoints()) {
 			this.interpolateLohEndpoints = "on";
@@ -1205,98 +1364,110 @@ public class PlotParametersForm extends BaseForm {
 		} else {
 			this.showReporterNames = "";
 		}
+	}
+	
+	
+	/**
+	 * Bulk set scatter plot attributes.
+	 * @param plotParameters Plot parameters
+	 */
+	private void bulkSetScatterPlotAttributes(
+			final ScatterPlotParameters plotParameters) {
 		
-		// Scatter plot parameters
-		if (plotParameters instanceof ScatterPlotParameters) {
-			ScatterPlotParameters spp = (ScatterPlotParameters) plotParameters;
-			this.height = String.valueOf(spp.getHeight());
-			this.width = String.valueOf(spp.getWidth());
+		this.height = String.valueOf(plotParameters.getHeight());
+		this.width = String.valueOf(plotParameters.getWidth());
+		
+		// minY
+		if (NumericUtils.isReal(plotParameters.getMinY())) {
+			this.minY = String.valueOf(plotParameters.getMinY());
+		} else {
+			this.minY = "";
+		}
+		
+		// maxY
+		if (NumericUtils.isReal(plotParameters.getMaxY())) {
+			this.maxY = String.valueOf(plotParameters.getMaxY());
+		} else {
+			this.maxY = "";
+		}
+		
+		// drawHorizGridLines
+		if (plotParameters.isDrawHorizGridLines()) {
+			this.drawHorizGridLines = "on";
+		} else {
+			this.drawHorizGridLines = "";
+		}
+		
+		// drawVertGridLines
+		if (plotParameters.isDrawVertGridLines()) {
+			this.drawVertGridLines = "on";
+		} else {
+			this.drawVertGridLines = "";
+		}
+		
+		// drawErrorBars
+		if (plotParameters.isDrawErrorBars()) {
+			this.drawErrorBars = "on";
+		} else {
+			this.drawErrorBars = "";
+		}
+		
+		// drawPoints
+		if (plotParameters.isDrawPoints()) {
+			this.drawPoints = "on";
+		} else {
+			this.drawPoints = "";
+		}
+	}
 			
-			// minY
-			if (NumericUtils.isReal(spp.getMinY())) {
-				this.minY = String.valueOf(spp.getMinY());
-			} else {
-				this.minY = "";
-			}
+	
+	/**
+	 * Bulk-set ideogram plot attributes.
+	 * @param plotParameters Plot parameters
+	 */
+	private void bulkSetIdeogramPlotAttributes(
+			final IdeogramPlotParameters plotParameters) {
 			
-			// maxY
-			if (NumericUtils.isReal(spp.getMaxY())) {
-				this.maxY = String.valueOf(spp.getMaxY());
-			} else {
-				this.maxY = "";
-			}
-			
-			// drawHorizGridLines
-			if (spp.isDrawHorizGridLines()) {
-				this.drawHorizGridLines = "on";
-			} else {
-				this.drawHorizGridLines = "";
-			}
-			
-			// drawVertGridLines
-			if (spp.isDrawVertGridLines()) {
-				this.drawVertGridLines = "on";
-			} else {
-				this.drawVertGridLines = "";
-			}
-			
-			// drawErrorBars
-			if (spp.isDrawErrorBars()) {
-				this.drawErrorBars = "on";
-			} else {
-				this.drawErrorBars = "";
-			}
-			
-			// drawPoints
-			if (spp.isDrawPoints()) {
-				this.drawPoints = "on";
-			} else {
-				this.drawPoints = "";
-			}
-			
-		// Ideogram plot parameters
-		} else if (plotParameters instanceof IdeogramPlotParameters) {
-			IdeogramPlotParameters ipp =
-				(IdeogramPlotParameters) plotParameters;
-			
-			// ideogramSize
-			this.ideogramSize = ipp.getIdeogramSize().getName();
-			
-			// ideogramThickness
-			this.ideogramThickness = String.valueOf(ipp.getIdeogramThickness());
-			
-			// maxMask
-			if (NumericUtils.isReal(ipp.getMaxMask())
-					&& ipp.getMaxMask() > Float.MIN_VALUE) {
-				this.maxMask = String.valueOf(ipp.getMaxMask());
-			} else {
-				this.maxMask = "";
-			}
-			
-			// maxSaturation
-			if (NumericUtils.isReal(ipp.getMaxSaturation())) {
-				this.maxSaturation = String.valueOf(ipp.getMaxSaturation());
-			} else {
-				this.maxSaturation = "";
-			}
-			
-			// minMask
-			if (NumericUtils.isReal(ipp.getMinMask())
-					&& ipp.getMinMask() < Float.MAX_VALUE) {
-				this.minMask = String.valueOf(ipp.getMinMask());
-			} else {
-				this.minMask = "";
-			}
-			
-			// minSaturation
-			if (NumericUtils.isReal(ipp.getMinSaturation())) {
-				this.minSaturation = String.valueOf(ipp.getMinSaturation());
-			} else {
-				this.minSaturation = "";
-			}
-			
-			// trackWidth
-			this.trackWidth = String.valueOf(ipp.getTrackWidth());
-		}	
+		// ideogramSize
+		this.ideogramSize = plotParameters.getIdeogramSize().getName();
+		
+		// ideogramThickness
+		this.ideogramThickness =
+			String.valueOf(plotParameters.getIdeogramThickness());
+		
+		// maxMask
+		if (NumericUtils.isReal(plotParameters.getMaxMask())
+				&& plotParameters.getMaxMask() > Float.MIN_VALUE) {
+			this.maxMask = String.valueOf(plotParameters.getMaxMask());
+		} else {
+			this.maxMask = "";
+		}
+		
+		// maxSaturation
+		if (NumericUtils.isReal(plotParameters.getMaxSaturation())) {
+			this.maxSaturation =
+				String.valueOf(plotParameters.getMaxSaturation());
+		} else {
+			this.maxSaturation = "";
+		}
+		
+		// minMask
+		if (NumericUtils.isReal(plotParameters.getMinMask())
+				&& plotParameters.getMinMask() < Float.MAX_VALUE) {
+			this.minMask = String.valueOf(plotParameters.getMinMask());
+		} else {
+			this.minMask = "";
+		}
+		
+		// minSaturation
+		if (NumericUtils.isReal(plotParameters.getMinSaturation())) {
+			this.minSaturation =
+				String.valueOf(plotParameters.getMinSaturation());
+		} else {
+			this.minSaturation = "";
+		}
+		
+		// trackWidth
+		this.trackWidth = String.valueOf(plotParameters.getTrackWidth());
 	}
 }

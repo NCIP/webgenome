@@ -1,6 +1,6 @@
 /*
-$Revision: 1.19 $
-$Date: 2006-12-14 05:51:05 $
+$Revision: 1.20 $
+$Date: 2007-02-06 16:12:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -122,7 +122,7 @@ public class ScatterPlotPainter extends PlotPainter {
     public final EventHandlerGraphicBoundaries paintPlot(
     		final PlotPanel panel,
     		final Collection<Experiment> experiments,
-    		final PlotParameters params) {
+    		final BaseGenomicPlotParameters params) {
         
         // Check args
     	if (!(params instanceof ScatterPlotParameters)) {

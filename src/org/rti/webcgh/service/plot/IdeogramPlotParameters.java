@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-10-24 23:00:39 $
+$Revision: 1.6 $
+$Date: 2007-02-06 16:12:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import org.rti.webcgh.units.ChromosomeIdeogramSize;
  * @author dhall
  *
  */
-public class IdeogramPlotParameters extends PlotParameters {
+public class IdeogramPlotParameters extends BaseGenomicPlotParameters {
 	
 	// ==========================
 	//   Constants

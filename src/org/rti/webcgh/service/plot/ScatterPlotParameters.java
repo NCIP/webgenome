@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2006-11-15 21:54:38 $
+$Revision: 1.10 $
+$Date: 2007-02-06 16:12:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.rti.webcgh.util.SystemUtils;
  *
  */
 public final class ScatterPlotParameters
-extends PlotParameters implements Serializable {
+extends BaseGenomicPlotParameters implements Serializable {
 	
 	/** Serialized version ID. */
     private static final long serialVersionUID = 

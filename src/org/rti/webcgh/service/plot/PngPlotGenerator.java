@@ -1,6 +1,6 @@
 /*
-$Revision: 1.16 $
-$Date: 2006-12-21 17:23:25 $
+$Revision: 1.17 $
+$Date: 2007-02-06 16:12:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -177,10 +177,10 @@ public class PngPlotGenerator implements PlotGenerator {
 	 * @param experiments Experiments
 	 * @return Corrected plot parameters
 	 */
-	private PlotParameters deriveMissingPlotParameters(
+	private BaseGenomicPlotParameters deriveMissingPlotParameters(
 			final PlotParameters inputParams,
 			final Collection<Experiment> experiments) {
-		PlotParameters outputParams = null;
+		BaseGenomicPlotParameters outputParams = null;
 		
 		// Scatter plot
 		if (inputParams instanceof ScatterPlotParameters) {
@@ -271,7 +271,7 @@ public class PngPlotGenerator implements PlotGenerator {
 		
 		// Provide missing plot parameters not supplied by user
 		// by derivation or using defaults
-		PlotParameters completeParams =
+		BaseGenomicPlotParameters completeParams =
 			this.deriveMissingPlotParameters(plotParameters, experiments);
 		
 		// Replot

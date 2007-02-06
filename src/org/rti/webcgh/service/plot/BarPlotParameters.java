@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-05 18:16:30 $
+$Revision: 1.2 $
+$Date: 2007-02-06 16:12:27 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,26 +55,22 @@ package org.rti.webcgh.service.plot;
  * Parameters for bar plots.
  * @author dhall
  */
-public class BarPlotParameters {
+public class BarPlotParameters extends PlotParameters {
 	
 	//
 	//     ATTRIBUTES
 	//
 	
-	/** Height of plot in pixels. */
-	private int height = 300;
-	
-	/**
-	 * Maximum number of columns. In the bar plot
-	 * the individual bars are grouped by reporter;
-	 * each group contains values from each bioassay
-	 * for the corresponding reporter.  Each reporter
-	 * group constitutes a single column.
-	 */
-	private int maxNumCols = 3;
+	/** Height of plot row in pixels. */
+	private int rowHeight = 300;
 	
 	/** Width of each individual bar in pixels. */
 	private int barWidth = 10;
+	
+	
+	//
+	//     GETTERS/SETTERS
+	//
 
 	/**
 	 * Get width of individual bars.
@@ -93,45 +89,19 @@ public class BarPlotParameters {
 	}
 
 	/**
-	 * Get height of plot.
+	 * Get height of plot row.
 	 * @return Height in pixels
 	 */
-	public final int getHeight() {
-		return height;
+	public final int getRowHeight() {
+		return rowHeight;
 	}
 
 	/**
-	 * Set height of plot.
+	 * Set height of plot row.
 	 * @param height Height in pixels
 	 */
-	public final void setHeight(final int height) {
-		this.height = height;
-	}
-
-	/**
-	 * Get maximum number of columns.
-	 * In the bar plot
-	 * the individual bars are grouped by reporter;
-	 * each group contains values from each bioassay
-	 * for the corresponding reporter.  Each reporter
-	 * group constitutes a single column.
-	 * @return Maximum number of columns
-	 */
-	public final int getMaxNumCols() {
-		return maxNumCols;
-	}
-
-	/**
-	 * Set maximum number of columns.
-	 * In the bar plot
-	 * the individual bars are grouped by reporter;
-	 * each group contains values from each bioassay
-	 * for the corresponding reporter.  Each reporter
-	 * group constitutes a single column.
-	 * @param maxNumCols Maximum number of columns
-	 */
-	public final void setMaxNumCols(final int maxNumCols) {
-		this.maxNumCols = maxNumCols;
+	public final void setRowHeight(final int height) {
+		this.rowHeight = height;
 	}
 	
 	
@@ -155,7 +125,6 @@ public class BarPlotParameters {
 	 */
 	public BarPlotParameters(final BarPlotParameters params) {
 		this.barWidth = params.barWidth;
-		this.height = params.height;
-		this.maxNumCols = params.maxNumCols;
+		this.rowHeight = params.rowHeight;
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-05 18:16:30 $
+$Revision: 1.2 $
+$Date: 2007-02-06 16:12:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -127,7 +127,7 @@ public final class BarPlotPainterTester extends TestCase {
 		BarPlotPainter painter = new BarPlotPainter(
 				new InMemoryChromosomeArrayDataGetter());
 		BarPlotParameters params = new BarPlotParameters();
-		params.setMaxNumCols(8);
+		params.setNumPlotsPerRow(8);
 		RasterFileTestPlotPanel panel =
 			new RasterFileTestPlotPanel(TEST_DIR);
 		painter.paintPlot(panel, experiments, params);
