@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2007-02-06 17:48:53 $
+$Revision: 1.19 $
+$Date: 2007-02-06 19:31:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -292,6 +292,10 @@ public class PngPlotGenerator implements PlotGenerator {
 			this.newIdeogramPlot(plot, experiments,
 					(IdeogramPlotParameters) completeParams,
 					chromosomeArrayDataGetter); 
+		} else if (plotParameters instanceof BarPlotParameters) {
+			this.newBarPlot(plot, experiments,
+					(BarPlotParameters) plotParameters,
+					chromosomeArrayDataGetter);
 		}
 	}
 	

@@ -5,7 +5,7 @@
 	<!-- ============================================================ -->
 	<!--                   Overview                                   -->
 	<!-- ============================================================ -->
-	<section title="WebGenome Version 2.3 Overview" id="overview">
+	<section title="WebGenome Version 3.0 Overview" id="overview">
 		<p>
 			WebGenome is a web-based application for
 			creating genomics plots of array-based data
@@ -88,50 +88,69 @@
 	
 	<!-- ============= Plot Types ======================= -->
 		<section title="Plot Types" id="plotTypes">
-			WebGenome 2.3 includes two plot types: scatter plots and ideogram
-			plots.
+			WebGenome 3.0 includes three genomic plot types
+			as well as a bar plot for selected reporters.
+			
+			<!-- Genomic plots -->
+			<section title="Genomic Plot Types" id="genomicPlots">
 		
-			<!-- Scatter plot -->
-			<section title="Scatter Plot" id="scatterPlot">
-				<p>
-				Scatter plots display array reporter values (e.g. copy number)
-				against physical genome location.  Users can plot data points,
-				regression lines, and confidence intervals in these plots.
-				If data are loss of
-				<ref id="loh">heterozygosity (LOH)</ref>, then the
-				endpoints of LOH regions are inferred and shown as
-				thick horizontal lines.  The Y-coordinates of these lines
-				are equal to the average probability of
-				LOH weighted
-				by the chromosomal distance between adjacent reporters.
-				</p>
+				<!-- Scatter plot -->
+				<section title="Scatter Plot" id="scatterPlot">
+					<p>
+					Scatter plots display array reporter values (e.g. copy number)
+					against physical genome location.  Users can plot data points,
+					regression lines, and confidence intervals in these plots.
+					If data are loss of
+					<ref id="loh">heterozygosity (LOH)</ref>, then the
+					endpoints of LOH regions are inferred and shown as
+					thick horizontal lines.  The Y-coordinates of these lines
+					are equal to the average probability of
+					LOH weighted
+					by the chromosomal distance between adjacent reporters.
+					</p>
+					
+					<p>
+					Scatter plots provide basic interactivity.  Clicking
+					on a data point causes all data points and lines from
+					the bioassay to be highlighted.  Also the name of the
+					selected bioassay will be outlined in the plot legend.
+					Moving the
+					mouse across the plot will cause a tool tip to show
+					the nearest reporter.  If available, nearby genes will
+					also be displayed along with arbitrary annotations that
+					may be available through the client application.
+					</p>
+				</section>
 				
-				<p>
-				Scatter plots provide basic interactivity.  Clicking
-				on a data point causes all data points and lines from
-				the bioassay to be highlighted.  Also the name of the
-				selected bioassay will be outlined in the plot legend.
-				Moving the
-				mouse across the plot will cause a tool tip to show
-				the nearest reporter.  If available, nearby genes will
-				also be displayed along with arbitrary annotations that
-				may be available through the client application.
-				</p>
+				<!-- Ideogram plot -->
+				<section title="Ideogram Plot" id="ideogramPlot">
+					This plot shows color-coded data values in relation to
+					chromosome ideograms.  The color coding goes from
+					green to blue to red, which indicates data values that
+					are low, medium, and high, respectively.  Moving the mouse
+					over ideograms causes a tool tip to display the cytoband
+					and physical chromosomal location under the pointer.
+					Moving the mouse over data tracks causes a tool tip
+					to indicate the physical chromosomal interval and data value
+					under the pointer.  If available, nearby genes will
+					also be displayed along with arbitrary annotations that
+					may be available through the client application.
+				</section>
+				
+				<!-- Annotation plot -->
+				<section title="Annotation Plot" id="annotationPlot">
+				Annotation plots.
+				</section>
+				
 			</section>
 			
-			<!-- Ideogram plot -->
-			<section title="Ideogram Plot" id="ideogramPlot">
-				This plot shows color-coded data values in relation to
-				chromosome ideograms.  The color coding goes from
-				green to blue to red, which indicates data values that
-				are low, medium, and high, respectively.  Moving the mouse
-				over ideograms causes a tool tip to display the cytoband
-				and physical chromosomal location under the pointer.
-				Moving the mouse over data tracks causes a tool tip
-				to indicate the physical chromosomal interval and data value
-				under the pointer.  If available, nearby genes will
-				also be displayed along with arbitrary annotations that
-				may be available through the client application.
+			<!-- Bar plot -->
+			<section title="Bar Plot" id="barPlot">
+				This plot graphs only selected reporters.  The measurements
+				at each reporter are shown using bars.  Bars are grouped
+				by reporter.  Within each reporter group, each
+				measurement from a different bioassay is shown as a single
+				bar.
 			</section>
 			
 		</section>
@@ -180,172 +199,201 @@
 						which will be laid out in rows.  This parameter
 						specifies how many plots will be in a row.
 					</prop>
-					
-					<!-- Show reporter names -->
-					<prop name="Show reporter names" id="param-showReporterNames">
-						If this property is checked, names of reporters
-						near mouse will be displayed
-						in the mouseover text.
-					</prop>
-					
-					<!-- Show annotation -->
-					<prop name="Show reporter annotation" id="param-showAnnotation">
-						If this property is checked, then annotation associated
-						with the reporter under the mouse will be displayed
-						in the mouseover text.
-					</prop>
-					
-					<!-- Show genes -->
-					<prop name="Show gene names" id="param-showGenes">
-						If this property is checked, then names of genes
-						near the location of the under the mouse pointer
-						will be displayed
-						in the mouseover text.
-					</prop>
 				</prop-list>
 			</section>
 			
-			<section title="Scatter Plot Parameters" id="scatterPlotParameters">
-				The following parameters are specific to scatter plots.
-				<prop-list>
+			<section title="Genomic Plot Parameters" id="genomicPlotParameters">
+			
+				<section title="Common Genomic Plot Parameters" id="commonGenomicPlotParameters">
+					The parameters in this section are common to all genomic plots.
+					<prop-list>
 					
-					<prop name="LOH probability threshold" id="param-lohThreshold">
-						<ref id="loh">Loss of heterozygosity (LOH)</ref>
-						data may be provided
-						by the client application
-						as probabilities.  This parameter is a threshold,
-						above which probabilities will be interpred as
-						indicative of LOH.
-					</prop>
-					
-					<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
-						This parameter is only applicable if the data are
-						<ref id="loh">LOH(loss of heterozygosity)</ref>.
-						Scatter plots of
-						LOH indicate LOH regions as thick horizontal
-						lines.  If for two adjacent reporters one is indicating LOH
-						and the other is not, the location where the
-						transition occurs cannot be known.  If this parameter
-						is checked, the system will interpolate the
-						LOH endpoint using the slope of a straight line
-						between data points corresponding to the two reporters.
-						If unchecked, the endpoint will be at the LOH reporter.
-					</prop>
-					
-					<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
-						This parameter is only applicable if the data are
-						<ref id="loh">LOH(loss of heterozygosity)</ref>.
-						Scatter plots of
-						LOH indicate LOH regions as thick horizontal
-						lines.  If this parameter is checked, then the underlying
-						raw LOH probabilites are also plotted.
-					</prop>
-					
-					<prop name="Minimum plot value" id="param-minY">
-						This sets the minimum value on the scatter plot Y-axis.
-					</prop>
-					
-					<prop name="Maximum plot value" id="param-maxY">
-						This sets the maximum value on the scatter plot Y-axis.
-					</prop>
-					
-					<prop name="Plot width in pixels" id="param-width">
-						This sets the width of each individual scatter plot
-						in pixels.  If multiple genome intervals are selected,
-						then this propery applies to each of the corresponding
-						plots.
-					</prop>
-					
-					<prop name="Plot height in pixels" id="param-height">
-						This sets the height of each individual scatter plot
-						in pixels.  If multiple genome intervals are selected,
-						then this propery applies to each of the corresponding
-						plots.
-					</prop>
-					
-					<prop name="Draw horizontal grid lines" id="param-drawHorizGridLines">
-						If checked, horizontal grid lines emenating from
-						the major tic marks on the Y-axis will be drawn across
-						scatter plot.  
-					</prop>
-					
-					<prop name="Draw vertical grid lines" id="param-drawVertGridLines">
-						If checked, vertical grid lines emenating from
-						the major tic marks on the X-axis will be drawn across
-						scatter plot. 
-					</prop>
-					
-					<prop name="Draw points" id="param-drawPoints">
-						If checked, indivdual data points will be painted for
-						each datum.
-					</prop>
-					
-					<prop name="Draw error bars if plotting means" id="param-drawErrorBars">
-						The averaging analytic operation also calculates
-						standard error values.  When plotting averages in
-						a scatter plot, if this is checked then error
-						bars will be painted for each data point.
-					</prop>
-					
-					<prop name="Type of interpolation between data points" id="param-interpolationType">
-						Enables the user to specify if and how data points
-						will be connected.  Options include none, straight
-						lines, steps, or splines.
-					</prop>
-				</prop-list>
+						<!-- Show reporter names -->
+						<prop name="Show reporter names" id="param-showReporterNames">
+							If this property is checked, names of reporters
+							near mouse will be displayed
+							in the mouseover text.
+						</prop>
+						
+						<!-- Show annotation -->
+						<prop name="Show reporter annotation" id="param-showAnnotation">
+							If this property is checked, then annotation associated
+							with the reporter under the mouse will be displayed
+							in the mouseover text.
+						</prop>
+						
+						<!-- Show genes -->
+						<prop name="Show gene names" id="param-showGenes">
+							If this property is checked, then names of genes
+							near the location of the under the mouse pointer
+							will be displayed
+							in the mouseover text.
+						</prop>
+					</prop-list>
+				</section>
+			
+				<section title="Scatter Plot Parameters" id="scatterPlotParameters">
+					The following parameters are specific to scatter plots.
+					<prop-list>
+						
+						<prop name="LOH probability threshold" id="param-lohThreshold">
+							<ref id="loh">Loss of heterozygosity (LOH)</ref>
+							data may be provided
+							by the client application
+							as probabilities.  This parameter is a threshold,
+							above which probabilities will be interpred as
+							indicative of LOH.
+						</prop>
+						
+						<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If for two adjacent reporters one is indicating LOH
+							and the other is not, the location where the
+							transition occurs cannot be known.  If this parameter
+							is checked, the system will interpolate the
+							LOH endpoint using the slope of a straight line
+							between data points corresponding to the two reporters.
+							If unchecked, the endpoint will be at the LOH reporter.
+						</prop>
+						
+						<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If this parameter is checked, then the underlying
+							raw LOH probabilites are also plotted.
+						</prop>
+						
+						<prop name="Minimum plot value" id="param-minY">
+							This sets the minimum value on the scatter plot Y-axis.
+						</prop>
+						
+						<prop name="Maximum plot value" id="param-maxY">
+							This sets the maximum value on the scatter plot Y-axis.
+						</prop>
+						
+						<prop name="Plot width in pixels" id="param-width">
+							This sets the width of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+						
+						<prop name="Plot height in pixels" id="param-height">
+							This sets the height of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+						
+						<prop name="Draw horizontal grid lines" id="param-drawHorizGridLines">
+							If checked, horizontal grid lines emenating from
+							the major tic marks on the Y-axis will be drawn across
+							scatter plot.  
+						</prop>
+						
+						<prop name="Draw vertical grid lines" id="param-drawVertGridLines">
+							If checked, vertical grid lines emenating from
+							the major tic marks on the X-axis will be drawn across
+							scatter plot. 
+						</prop>
+						
+						<prop name="Draw points" id="param-drawPoints">
+							If checked, indivdual data points will be painted for
+							each datum.
+						</prop>
+						
+						<prop name="Draw error bars if plotting means" id="param-drawErrorBars">
+							The averaging analytic operation also calculates
+							standard error values.  When plotting averages in
+							a scatter plot, if this is checked then error
+							bars will be painted for each data point.
+						</prop>
+						
+						<prop name="Type of interpolation between data points" id="param-interpolationType">
+							Enables the user to specify if and how data points
+							will be connected.  Options include none, straight
+							lines, steps, or splines.
+						</prop>
+					</prop-list>
+				</section>
+				
+				<section title="Ideogram Plot Parameters" id="ideogramPlotParameters">
+					The following parameters are specific to ideogram plots.
+					<prop-list>
+						<prop name="Ideogram size" id="param-ideogramSize">
+							This enables the user to set the relative height
+							of chromosome ideograms.
+						</prop>
+						
+						<prop name="Ideogram width" id="param-ideogramThickness">
+							This specifies the width of chromosome ideograms
+							in pixels.
+						</prop>
+						
+						<prop name="Data track width" id="param-trackWidth">
+							This specifies the width of data tracks in pixels.
+						</prop>
+						
+						<prop name="Minimum data mask value" id="param-minMask">
+							Background data values within a
+							range (e.g., -0.2 and 0.3) can be masked
+							so that only values of significant
+							magnitude are colored.  This parameter is the
+							the lower end of this range.
+						</prop>
+						
+						<prop name="Maximum data mask value" id="param-maxMask">
+							Background data values within a
+							range (e.g., -0.2 and 0.3) can be masked
+							so that only values of significant
+							magnitude are colored.  This parameter is the
+							the upper end of this range.
+						</prop>
+						
+						<prop name="Minimum saturation value" id="param-minSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the lower saturation value.
+						</prop>
+						
+						<prop name="Maximum saturation value" id="param-maxSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the upper saturation value.
+						</prop>
+					</prop-list>
+				</section>
 			</section>
 			
-			<section title="Ideogram Plot Parameters" id="ideogramPlotParameters">
-				The following parameters are specific to ideogram plots.
+			<section title="Bar Plot Parameters" id="barPlotParameters">
+				The following parameters are specific to bar plots.
+				
 				<prop-list>
-					<prop name="Ideogram size" id="param-ideogramSize">
-						This enables the user to set the relative height
-						of chromosome ideograms.
-					</prop>
-					
-					<prop name="Ideogram width" id="param-ideogramThickness">
-						This specifies the width of chromosome ideograms
+					<prop name="Row height" id="param-rowHeight">
+						The bar plot groups bars into rows and columns by
+						reporter.  Each cell contains all measurement
+						from a single reporter.  (Each measurement will
+						come from a different bioassay.)  This parameter
+						specifies how high each row of columns is
 						in pixels.
 					</prop>
 					
-					<prop name="Data track width" id="param-trackWidth">
-						This specifies the width of data tracks in pixels.
-					</prop>
-					
-					<prop name="Minimum data mask value" id="param-minMask">
-						Background data values within a
-						range (e.g., -0.2 and 0.3) can be masked
-						so that only values of significant
-						magnitude are colored.  This parameter is the
-						the lower end of this range.
-					</prop>
-					
-					<prop name="Maximum data mask value" id="param-maxMask">
-						Background data values within a
-						range (e.g., -0.2 and 0.3) can be masked
-						so that only values of significant
-						magnitude are colored.  This parameter is the
-						the upper end of this range.
-					</prop>
-					
-					<prop name="Minimum saturation value" id="param-minSaturation">
-						Data tracks color code measured values (e.g. copy number)
-						from green to blue to red.  These colors correspond to
-						low, medium, and high values, respectively.  The saturation
-						values indicate which values are mapped to pure green
-						or red.  Values below and above the saturation points
-						are mapped to pure green and red, respectively.
-						This parameter is for the lower saturation value.
-					</prop>
-					
-					<prop name="Maximum saturation value" id="param-maxSaturation">
-						Data tracks color code measured values (e.g. copy number)
-						from green to blue to red.  These colors correspond to
-						low, medium, and high values, respectively.  The saturation
-						values indicate which values are mapped to pure green
-						or red.  Values below and above the saturation points
-						are mapped to pure green and red, respectively.
-						This parameter is for the upper saturation value.
+					<prop name="Bar width" id="param-barWidth">
+						This parameter determines the width of each
+						individual bar in pixels.
 					</prop>
 				</prop-list>
 			</section>

@@ -84,7 +84,7 @@
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-height')"
+					onclick="help('param-rowHeight')"
 					title="Information" border="0"
 					width="15" height="15"/>
 				Height of row of plots in pixels
