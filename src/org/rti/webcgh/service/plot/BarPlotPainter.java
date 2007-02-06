@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-05 18:16:30 $
+$Revision: 1.2 $
+$Date: 2007-02-06 02:27:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot;
 
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -123,8 +124,24 @@ public class BarPlotPainter extends PlotPainter {
 		}
 		CommonArrayDatumGroupIterator it =
 			new CommonArrayDatumGroupIterator(experiments);
+		float plotMin = this.minSelectedValue(experiments);
+		float plotMax = this.maxSelectedValue(experiments);
+		if (plotMin > (float) 0.0) {
+			plotMin = (float) 0.0;
+		}
+		if (plotMax < (float) 0.0) {
+			plotMax = (float) 0.0;
+		}
+		plotMin = this.withHeadroom(plotMin);
+		plotMax = this.withHeadroom(plotMax);
+		float range = plotMax - plotMin;
+		if (range == 0) {
+			range = 1;
+		}
+		float scale = (float) params.getHeight() / range;
 		MultiPlotGridLayouter layouter = new MultiPlotGridLayouter(
-				params.getMaxNumCols(), panel);
+				params.getMaxNumCols(), panel, plotMin, plotMax,
+				params.getHeight());
 		layouter.setPadding(PADDING);
 		while (it.hasNext()) {
 			CommonArrayDatumGroup group = it.next();
@@ -134,19 +151,20 @@ public class BarPlotPainter extends PlotPainter {
 				ArrayDatum ad = tuple.arrayDatum;
 				Bar bar = new Bar(ad.getValue(), ad.getError(),
 						tuple.bioAssayName,
-						this.withHeadroom(group.maxValue()),
-						(float) 10.0,
+						plotMax,
+						scale,
 						panel.getDrawingCanvas());
+				bar.setBarColor(tuple.bioAssayColor);
 				column.add(bar, HorizontalAlignment.RIGHT_OF,
-						VerticalAlignment.TOP_JUSTIFIED);
+						VerticalAlignment.ON_ZERO);
 			}
 			Caption caption = new Caption(group.reporterName,
 					Orientation.HORIZONTAL, false,
 					column.getDrawingCanvas());
 			column.add(caption, HorizontalAlignment.CENTERED,
 					VerticalAlignment.BELOW);
-			layouter.add(column, HorizontalAlignment.RIGHT_OF,
-					VerticalAlignment.TOP_JUSTIFIED);
+			layouter.addColumn(column, HorizontalAlignment.RIGHT_OF,
+					VerticalAlignment.ON_ZERO);
 		}
 		layouter.flush();
 	}
@@ -162,6 +180,65 @@ public class BarPlotPainter extends PlotPainter {
 	private float withHeadroom(final float value) {
 		return value + value * BIOASSAY_LABEL_PADDING_MULTIPLIER;
 	}
+	
+	
+	/**
+	 * Find minimum selected value over given experiments.
+	 * @param experiments Experiments
+	 * @return Minimum selected value (plus error)
+	 */
+	private float minSelectedValue(
+			final Collection<Experiment> experiments) {
+		assert experiments != null;
+		float min = Float.MAX_VALUE;
+		for (Experiment exp : experiments) {
+			for (Short chrom : exp.getChromosomes()) {
+				for (BioAssay ba : exp.getBioAssays()) {
+					ChromosomeArrayData cad =
+						this.getChromosomeArrayDataGetter()
+						.getChromosomeArrayData(ba, chrom);
+					for (ArrayDatum ad : cad.getArrayData()) {
+						if (ad.getReporter().isSelected()) {
+							if (ad.valuePlusError() < min) {
+								min = ad.valuePlusError();
+							}
+						}
+					}
+				}
+			}
+		}
+		return min;
+	}
+	
+	
+	/**
+	 * Find maximum selected value over given experiments.
+	 * @param experiments Experiments
+	 * @return Maximum selected value (plus error)
+	 */
+	private float maxSelectedValue(
+			final Collection<Experiment> experiments) {
+		assert experiments != null;
+		float max = Float.MIN_VALUE;
+		for (Experiment exp : experiments) {
+			for (Short chrom : exp.getChromosomes()) {
+				for (BioAssay ba : exp.getBioAssays()) {
+					ChromosomeArrayData cad =
+						this.getChromosomeArrayDataGetter()
+						.getChromosomeArrayData(ba, chrom);
+					for (ArrayDatum ad : cad.getArrayData()) {
+						if (ad.getReporter().isSelected()) {
+							if (ad.valuePlusError() > max) {
+								max = ad.valuePlusError();
+							}
+						}
+					}
+				}
+			}
+		}
+		return max;
+	}
+	
 	
 	//
 	//     CONSTRUCTORS
@@ -199,6 +276,9 @@ public class BarPlotPainter extends PlotPainter {
 		/** Array datum. */
 		private final ArrayDatum arrayDatum;
 		
+		/** Bioassay color. */
+		private final Color bioAssayColor;
+		
 		//
 		//     CONSTRUCTORS
 		//
@@ -207,11 +287,14 @@ public class BarPlotPainter extends PlotPainter {
 		 * Constructor.
 		 * @param bioAssayName Name of a bioassay
 		 * @param arrayDatum An array datum
+		 * @param bioAssayColor Bioassay color
 		 */
 		private BioAssayNameArrayDatumTuple(
-				final String bioAssayName, final ArrayDatum arrayDatum) {
+				final String bioAssayName, final ArrayDatum arrayDatum,
+				final Color bioAssayColor) {
 			this.bioAssayName = bioAssayName;
 			this.arrayDatum = arrayDatum;
+			this.bioAssayColor = bioAssayColor;
 		}
 
 		//
@@ -280,22 +363,6 @@ public class BarPlotPainter extends PlotPainter {
 		private void add(final BioAssayNameArrayDatumTuple tuple) {
 			this.tuples.add(tuple);
 		}
-		
-		
-		/**
-		 * Return maximum value (including error).
-		 * @return Maximum value including error
-		 */
-		private float maxValue() {
-			float max = Float.MIN_VALUE;
-			for (BioAssayNameArrayDatumTuple t : this.tuples) {
-				ArrayDatum ad = t.arrayDatum;
-				if (ad.valuePlusError() > max) {
-					max = ad.valuePlusError();
-				}
-			}
-			return max;
-		}
 	}
 	
 	
@@ -345,7 +412,8 @@ public class BarPlotPainter extends PlotPainter {
 									}
 									group.add(
 											new BioAssayNameArrayDatumTuple(
-													ba.getName(), ad));
+													ba.getName(), ad,
+													ba.getColor()));
 								}
 							}
 						}

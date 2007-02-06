@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.2 $
+$Date: 2007-02-06 02:27:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -147,5 +147,20 @@ public final class AxisTester extends TestCase {
 				Location.RIGHT_OF, panel.getDrawingCanvas()),
 				HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
 		panel.toPngFile("vert-right.png");
+	}
+	
+	
+	/**
+	 * Test in vertical aligned to zero point.
+	 */
+	public void testVertOnZero() {
+		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
+				Location.LEFT_OF, panel.getDrawingCanvas()),
+				HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
+		panel.add(new Axis(MIN, MAX + 1.0, LENGTH, Orientation.VERTICAL,
+				Location.RIGHT_OF, panel.getDrawingCanvas()),
+				HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
+		panel.toPngFile("vert-on-zero.png");
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-02 02:05:49 $
+$Revision: 1.2 $
+$Date: 2007-02-06 02:27:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,8 @@ import java.io.File;
 
 import org.rti.webcgh.graphics.RasterFileTestPlotPanel;
 import org.rti.webcgh.graphics.widget.Bar;
+import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.VerticalAlignment;
 import org.rti.webcgh.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -127,5 +129,52 @@ public final class BarTester extends TestCase {
 				(float) 0.0, (float) 50, panel.getDrawingCanvas());
 		panel.add(bar);
 		panel.toPngFile("negative-with-error.png");
+	}
+	
+	
+	/**
+	 * Test two positives.
+	 */
+	public void testTwoPositives() {
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		Bar bar = new Bar((float) 3.0, (float) 0.5, "Bioassay 1",
+				(float) 6.0, (float) 50, panel.getDrawingCanvas());
+		panel.add(bar, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
+		bar = new Bar((float) 5.0, (float) 0.5, "Bioassay 1",
+				(float) 6.0, (float) 50, panel.getDrawingCanvas());
+		panel.add(bar, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
+		panel.toPngFile("two-positives.png");
+	}
+	
+	/**
+	 * Test two negatives.
+	 */
+	public void testTwoNegatives() {
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		Bar bar = new Bar((float) -3.0, (float) 0.5, "Bioassay 1",
+				(float) 0.0, (float) 50, panel.getDrawingCanvas());
+		panel.add(bar, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
+		bar = new Bar((float) -5.0, (float) 0.5, "Bioassay 1",
+				(float) 0.0, (float) 50, panel.getDrawingCanvas());
+		panel.add(bar, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
+		panel.toPngFile("two-negatives.png");
+	}
+	
+	
+	/**
+	 * Test negative and positive.
+	 */
+	public void testNegativeAndPositive() {
+		RasterFileTestPlotPanel panel =
+			new RasterFileTestPlotPanel(TEST_DIR);
+		Bar bar = new Bar((float) 3.0, (float) 0.5, "Bioassay 1",
+				(float) 6.0, (float) 50, panel.getDrawingCanvas());
+		panel.add(bar, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
+		bar = new Bar((float) -5.0, (float) 0.5, "Bioassay 1",
+				(float) 6.0, (float) 50, panel.getDrawingCanvas());
+		panel.add(bar, HorizontalAlignment.LEFT_OF, VerticalAlignment.ON_ZERO);
+		panel.toPngFile("negative-and-positive.png");
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-02-05 18:16:30 $
+$Revision: 1.4 $
+$Date: 2007-02-06 02:27:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,7 +70,7 @@ import org.rti.webcgh.units.HorizontalAlignment;
  * @author dhall
  *
  */
-public class Bar implements PlotElement {
+public class Bar implements ScalePlotElement {
 	
 	//
 	//     STATICS
@@ -441,7 +441,7 @@ public class Bar implements PlotElement {
      * @return A point
      */
     public final Point topLeftAlignmentPoint() {
-    	return new Point(this.minX, this.zeroY);
+    	return new Point(this.minX, this.minY);
     }
     
     
@@ -450,7 +450,7 @@ public class Bar implements PlotElement {
      * @return A point
      */
     public final Point bottomLeftAlignmentPoint() {
-    	return new Point(this.minX, this.zeroY);
+    	return new Point(this.minX, this.maxY);
     }
     
     
@@ -459,7 +459,7 @@ public class Bar implements PlotElement {
      * @return A point
      */
     public final Point topRightAlignmentPoint() {
-    	return new Point(this.maxX, this.zeroY);
+    	return new Point(this.maxX, this.minY);
     }
     
     
@@ -468,7 +468,7 @@ public class Bar implements PlotElement {
      * @return A point
      */
     public final Point bottomRightAlignmentPoint() {
-    	return new Point(this.maxX, this.zeroY);
+    	return new Point(this.maxX, this.maxY);
     }
     
     
@@ -515,4 +515,18 @@ public class Bar implements PlotElement {
     	}
     }
 
+    
+    //
+    //     ScalePlotElement INTERFACE
+    //
+    
+    /**
+	 * Return point in pixels corresponding to a zero point
+	 * in the native units of measurement.
+	 * @return A point or <code>null</code> if the element
+	 * does not contain a zero point
+	 */
+	public final Point zeroPoint() {
+		return new Point(this.minX, this.zeroY);
+	}
 }

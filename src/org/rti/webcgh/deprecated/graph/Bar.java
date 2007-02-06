@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/deprecated/graph/Bar.java,v $
-$Revision: 1.2 $
-$Date: 2006-10-26 03:50:16 $
+$Revision: 1.3 $
+$Date: 2007-02-06 02:27:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import org.rti.webcgh.graphics.DataPoint;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Rectangle;
+import org.rti.webcgh.graphics.widget.ScalePlotElement;
 
 
 /**

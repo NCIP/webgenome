@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-10-26 03:50:16 $
+$Revision: 1.7 $
+$Date: 2007-02-06 02:27:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,10 +52,9 @@ package org.rti.webcgh.graphics.widget;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.rti.webcgh.deprecated.graph.EmptySpace;
-import org.rti.webcgh.deprecated.graph.ScalePlotElement;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.units.HorizontalAlignment;
 import org.rti.webcgh.units.Location;
@@ -90,15 +89,18 @@ public class PlotPanel implements ScalePlotElement {
     
     /** Widget occupying right-most position in panel. */
 	private PlotElement rightElement = null;
+	
+	/**
+	 * Reference scale plot element.  Used when aligning
+	 * on zero.
+	 */
+	private ScalePlotElement referenceScalePlotElement = null;
     
     /**
      * Widget that is reference point for laying out
      * other widgets.  This may or may not be set.
      */
 	private PlotElement referenceElement = null;
-    
-    /** Point in panel representing '0' in the plot. */
-	private Point zeroPoint = new Point(0, 0);
     
     /** Padding between widgets in pixels. */
     private int padding = DEF_PADDING;
@@ -110,7 +112,7 @@ public class PlotPanel implements ScalePlotElement {
     private String name = null;
     
     /** Nested plot widgets. */
-    private Collection<PlotElement> nestedWidets =
+    private List<PlotElement> nestedWidets =
     	new ArrayList<PlotElement>();
    
     
@@ -310,13 +312,34 @@ public class PlotPanel implements ScalePlotElement {
 	 * does not contain a zero point
 	 */
 	public final Point zeroPoint() {
-		return this.zeroPoint;
+		Point point = new Point(0, 0);
+		if (this.referenceScalePlotElement != null) {
+			point = this.referenceScalePlotElement.zeroPoint();
+		}
+		return point;
 	}
     
     
     // ========================================
     //        Public methods
     // ========================================
+	
+	
+	/**
+	 * Move given plot element to the back (i.e. render first).
+	 * @param element Element to move to the back.  This
+	 * element must have already been added or an
+	 * <code>IllegalArgumentException</code> will be thrown.
+	 */
+	public final void moveToBack(final PlotElement element) {
+		if (!this.nestedWidets.contains(element)) {
+			throw new IllegalArgumentException(
+					"Cannot move element to back of panel if "
+					+ "it has not first been added");
+		}
+		this.nestedWidets.remove(element);
+		this.nestedWidets.add(0, element);
+	}
     
     /**
      * Add an element.
@@ -364,6 +387,13 @@ public class PlotPanel implements ScalePlotElement {
         
         if (makeReferenceElement) {
         	this.referenceElement = element;
+        	if (element instanceof ScalePlotElement) {
+        		this.referenceScalePlotElement = (ScalePlotElement) element;
+        	}
+        }
+        if (element instanceof ScalePlotElement
+        		&& this.referenceScalePlotElement == null) {
+        	this.referenceScalePlotElement = (ScalePlotElement) element;
         }
         if (this.topElement == null) {
         	this.topElement = element;
@@ -564,7 +594,7 @@ public class PlotPanel implements ScalePlotElement {
     		int alignmentX = (element instanceof ScalePlotElement)
                 ? ((ScalePlotElement) element).zeroPoint().x
                 : (element.width() + element.topLeftAlignmentPoint().x) / 2; 
-    		coord = this.zeroPoint.x - alignmentX;
+    		coord = this.zeroPoint().x - alignmentX;
     	}
     	return coord;
     }
@@ -601,7 +631,7 @@ public class PlotPanel implements ScalePlotElement {
                 ? ((ScalePlotElement) element).zeroPoint().y
                 : (element.height()
                         + element.bottomLeftAlignmentPoint().y) / 2;
-        	coord = this.zeroPoint.y - alignY;
+        	coord = this.zeroPoint().y - alignY;
         }
     	return coord;
     }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-05 18:16:30 $
+$Revision: 1.2 $
+$Date: 2007-02-06 02:27:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,17 +50,32 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+
+import java.awt.Color;
+
+import org.rti.webcgh.graphics.widget.Axis;
+import org.rti.webcgh.graphics.widget.Grid;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.HorizontalAlignment;
+import org.rti.webcgh.units.Location;
+import org.rti.webcgh.units.Orientation;
 import org.rti.webcgh.units.VerticalAlignment;
 
 /**
  * Class lays out multiple plots on a panel in
- * a grid pattern.  Plots are layed out column-wise.
+ * a grid pattern.  Plots are layed out column-wise
+ * against an axis.
  * @author dhall
  *
  */
 public class MultiPlotGridLayouter {
+	
+	//
+	//     STATICS
+	//
+	
+	/** Color of grid. */
+	private static final Color GRID_COLOR = Color.BLACK;
 	
 	//
 	//     NON-ACCESSIBLE ATTRIBUTES
@@ -78,6 +93,18 @@ public class MultiPlotGridLayouter {
 	/** Current column number. */
 	private int currentColNum = 0;
 	
+	/** Minimum plotted value. */
+	private final float minValue;
+	
+	/** Maximum plotted value. */
+	private final float maxValue;
+	
+	/** Height of rows in pixels. */
+	private final int rowHeight;
+	
+	/** Current axis. */
+	private Axis currentAxis = null;
+		
 	
 	//
 	//     ACCESSIBLE ATTRIBUTES
@@ -116,9 +143,13 @@ public class MultiPlotGridLayouter {
 	 * Constructor.
 	 * @param numCols Number of columns
 	 * @param rootPanel Root panel
+	 * @param minValue Minimum plotted value
+	 * @param maxValue Maximum plotted value
+	 * @param rowHeight Height of rows in pixels
 	 */
 	public MultiPlotGridLayouter(final int numCols,
-			final PlotPanel rootPanel) {
+			final PlotPanel rootPanel, final float minValue,
+			final float maxValue, final int rowHeight) {
 		
 		// Check args
 		if (rootPanel == null) {
@@ -132,6 +163,9 @@ public class MultiPlotGridLayouter {
 		// Set properties
 		this.numCols = numCols;
 		this.rootPanel = rootPanel;
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+		this.rowHeight = rowHeight;
 	}
 	
 	
@@ -140,27 +174,41 @@ public class MultiPlotGridLayouter {
 	//
 	
 	/**
-	 * Add given panel to grid.
-	 * @param panel Panel to add
+	 * Add given panel representing a column to grid.
+	 * @param panel Panel representing a column
 	 * @param horizontalAlignment Horizontal alignment
 	 * @param verticalAlignment Vertical alignment
 	 */
-	public final void add(final PlotPanel panel,
+	public final void addColumn(final PlotPanel panel,
 			final HorizontalAlignment horizontalAlignment,
 			final VerticalAlignment verticalAlignment) {
 		if (this.currentRow == null) {
 			this.currentRow = rootPanel.newChildPlotPanel();
 			this.currentRow.setPadding(this.padding);
+			this.currentAxis = this.addYAxis(this.currentRow);
 		}
 		this.currentRow.add(panel, horizontalAlignment, verticalAlignment);
 		this.currentColNum++;
 		if (this.currentColNum >= this.numCols) {
-			this.rootPanel.add(this.currentRow,
-					HorizontalAlignment.LEFT_JUSTIFIED,
-					VerticalAlignment.BELOW);
+			this.flush();
 			this.currentRow = null;
 			this.currentColNum = 0;
 		}
+	}
+	
+	
+	/**
+	 * Add Y-axis to given panel.
+	 * @param panel A panel
+	 * @return Newly-created axis
+	 */
+	private Axis addYAxis(final PlotPanel panel) {
+		Axis axis = new Axis(this.minValue, this.maxValue,
+				this.rowHeight, Orientation.VERTICAL, Location.LEFT_OF,
+				panel.getDrawingCanvas());
+		panel.add(axis, HorizontalAlignment.LEFT_OF,
+				VerticalAlignment.ON_ZERO, true);
+		return axis;
 	}
 	
 	
@@ -170,6 +218,12 @@ public class MultiPlotGridLayouter {
 	 */
 	public final void flush() {
 		if (this.currentRow != null) {
+			Grid grid = this.currentAxis.newGrid(this.currentRow.width(),
+					this.currentAxis.height(), GRID_COLOR,
+					this.currentRow);
+			this.currentRow.add(grid, HorizontalAlignment.LEFT_JUSTIFIED,
+					VerticalAlignment.ON_ZERO);
+			this.currentRow.moveToBack(grid);
 			this.rootPanel.add(this.currentRow,
 					HorizontalAlignment.LEFT_JUSTIFIED,
 					VerticalAlignment.BELOW);

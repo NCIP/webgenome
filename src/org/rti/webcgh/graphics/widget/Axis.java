@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-12-14 02:24:56 $
+$Revision: 1.8 $
+$Date: 2007-02-06 02:27:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import java.net.URL;
 
 import org.rti.webcgh.deprecated.graph.NumberFormatter;
 import org.rti.webcgh.deprecated.graph.RealNumberFormatter;
-import org.rti.webcgh.deprecated.graph.ScalePlotElement;
 import org.rti.webcgh.graphics.DrawingCanvas;
 import org.rti.webcgh.graphics.primitive.Cursor;
 import org.rti.webcgh.graphics.primitive.Hyperlink;
@@ -379,10 +378,10 @@ public final class Axis implements ScalePlotElement {
         	
         	// Calculate reference coordinates
         	int relativeTextMinY = length
-        		- this.nativeUnitsToPixel(startingMajorTic)
+        		- this.nativeUnitsToPixel(endingMajorTic)
         		- this.fontSize / 2;
         	int relativeTextMaxY = length
-        		- this.nativeUnitsToPixel(endingMajorTic)
+        		- this.nativeUnitsToPixel(startingMajorTic)
         		+ this.fontSize / 2;
         	int maxTextWidth = this.maxTextWidth(startingMajorTic,
         			majorTicInterval, canvas);
@@ -393,15 +392,15 @@ public final class Axis implements ScalePlotElement {
         	this.lineMinY = 0;
         	this.lineMaxY = length;
         	if (this.spansZero) {
-        		this.zeroY = this.nativeUnitsToPixel(0.0);
+        		this.zeroY = this.length - this.nativeUnitsToPixel(0.0);
         	}
         	if (relativeTextMinY < 0) {
         		this.maxY -= relativeTextMinY;
         		this.lineMinY -= relativeTextMinY;
         		this.lineMaxY -= relativeTextMinY;
-        	}
-        	if (this.spansZero) {
-        		this.zeroY -= relativeTextMinY;
+	        	if (this.spansZero) {
+	        		this.zeroY -= relativeTextMinY;
+	        	}
         	}
         	if (relativeTextMaxY > length) {
         		this.maxY += relativeTextMaxY - length;
