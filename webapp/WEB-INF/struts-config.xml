@@ -172,8 +172,9 @@
 			name="plot.parameters.form"
 			scope="session"
 			validate="false">
-			<forward name="scatter" path="cart.scatter.plot.params"/>
-			<forward name="ideogram" path="cart.ideogram.plot.params"/>
+			<forward name="SCATTER" path="cart.scatter.plot.params"/>
+			<forward name="IDEOGRAM" path="cart.ideogram.plot.params"/>
+			<forward name="BAR" path="cart.bar.plot.params"/>
 		</action>
 
 	<!-- Ideogram plot parameters -->

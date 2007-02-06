@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-12-21 03:56:53 $
+$Revision: 1.5 $
+$Date: 2007-02-06 17:48:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.domain.DataSourceProperties;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Plot;
@@ -97,7 +98,8 @@ public final class RouteToPlotParametersPageAction extends BaseAction {
     	
     	// Recover type of plot from form
     	PlotParametersForm pForm = (PlotParametersForm) form;
-    	String plotType = pForm.getPlotType();
+    	String plotTypeName = pForm.getPlotType();
+    	PlotType plotType = PlotType.valueOf(plotTypeName);
     	
     	// If new plot, reset form plot name
     	String plotIdStr = request.getParameter("id");
@@ -133,14 +135,6 @@ public final class RouteToPlotParametersPageAction extends BaseAction {
     		}
     	}
     	
-    	// Determine forward
-    	ActionForward forward = null;
-    	if ("scatter".equals(plotType))	 {
-    		forward = mapping.findForward("scatter");
-    	} else if ("ideogram".equals(plotType)) {
-    		forward = mapping.findForward("ideogram");
-    	}
-    	
-    	return forward;
+    	return mapping.findForward(plotType.toString());
     }
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.27 $
-$Date: 2007-02-06 16:12:28 $
+$Revision: 1.28 $
+$Date: 2007-02-06 17:48:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,7 +94,8 @@ public class PlotParametersForm extends BaseForm {
 	private static final String DEF_GENOME_INTERVALS = "1";
 	
 	/** Default plot type. */
-	private static final String DEF_PLOT_TYPE = PlotType.SCATTER.getName();
+	private static final String DEF_PLOT_TYPE =
+		PlotType.SCATTER.toString();
 	
 	/** Default units. */
 	private static final String DEF_UNITS = BpUnits.KB.getName();
@@ -1080,7 +1081,7 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	public final PlotParameters getPlotParameters() {
 		PlotParameters p = null;
-		PlotType type = PlotType.getPlotType(this.plotType);
+		PlotType type = PlotType.valueOf(this.plotType);
 		
 		// Bar plot
 		if (type == PlotType.BAR) {
@@ -1269,11 +1270,11 @@ public class PlotParametersForm extends BaseForm {
 		
 		// Set plot type
 		if (plotParameters instanceof ScatterPlotParameters) {
-			this.plotType = PlotType.SCATTER.getName();
+			this.plotType = PlotType.SCATTER.toString();
 		} else if (plotParameters instanceof IdeogramPlotParameters) {
-			this.plotType = PlotType.IDEOGRAM.getName();
+			this.plotType = PlotType.IDEOGRAM.toString();
 		} else if (plotParameters instanceof BarPlotParameters) {
-			this.plotType = PlotType.BAR.getName();
+			this.plotType = PlotType.BAR.toString();
 		}
 		PlotType plotType = PlotType.valueOf(this.plotType);
 		

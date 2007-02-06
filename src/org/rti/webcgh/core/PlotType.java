@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-06 04:35:07 $
+$Revision: 1.2 $
+$Date: 2007-02-06 17:48:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.core;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Plot type.
@@ -61,55 +59,17 @@ import java.util.Map;
 public enum PlotType {
 
 	/** Scatter plot. */
-	SCATTER("scatter"),
+	SCATTER,
 	
 	/** Ideogram plot. */
-	IDEOGRAM("ideogram"),
+	IDEOGRAM,
 	
 	/** Annotation plot. */
-	ANNOTATION("annotation"),
+	ANNOTATION,
 	
 	/** Bar plot. */
-	BAR("bar"),
+	BAR,
 	
 	/** Frequency plot. */
-	FREQUENCY("frequency");
-	
-	/** Index of plot type names to plot type. */
-	private static final Map<String, PlotType> PLOT_TYPE_INDEX =
-		new HashMap<String, PlotType>();
-	
-	static {
-		for (PlotType type : PlotType.values()) {
-			PLOT_TYPE_INDEX.put(type.getName(), type);
-		}
-	}
-	
-	/** Plot type name. */
-	private final String name;
-	
-	/**
-	 * Constructor.
-	 * @param name Plot type name.
-	 */
-	private PlotType(final String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Get plot type name.
-	 * @return Plot type name.
-	 */
-	public String getName() {
-		return this.name;
-	}
-	
-	/**
-	 * Get plot type by name.
-	 * @param name Plot type name.
-	 * @return Plot type
-	 */
-	public static PlotType getPlotType(final String name) {
-		return PLOT_TYPE_INDEX.get(name);
-	}
+	FREQUENCY;
 }

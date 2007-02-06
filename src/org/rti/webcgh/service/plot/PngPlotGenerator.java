@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2007-02-06 16:12:28 $
+$Revision: 1.18 $
+$Date: 2007-02-06 17:48:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -165,6 +165,12 @@ public class PngPlotGenerator implements PlotGenerator {
 			this.newIdeogramPlot(plot, experiments,
 					(IdeogramPlotParameters) completeParams,
 					chromosomeArrayDataGetter);
+			
+		// Bar plot
+		} else if (plotParameters instanceof BarPlotParameters) {
+			this.newBarPlot(plot, experiments,
+					(BarPlotParameters) plotParameters,
+					chromosomeArrayDataGetter);
 		}
 		
 		return plot;
@@ -177,10 +183,10 @@ public class PngPlotGenerator implements PlotGenerator {
 	 * @param experiments Experiments
 	 * @return Corrected plot parameters
 	 */
-	private BaseGenomicPlotParameters deriveMissingPlotParameters(
+	private PlotParameters deriveMissingPlotParameters(
 			final PlotParameters inputParams,
 			final Collection<Experiment> experiments) {
-		BaseGenomicPlotParameters outputParams = null;
+		PlotParameters outputParams = null;
 		
 		// Scatter plot
 		if (inputParams instanceof ScatterPlotParameters) {
@@ -217,6 +223,9 @@ public class PngPlotGenerator implements PlotGenerator {
 				float max = Experiment.findMaxValue(experiments, chromosomes);
 				ipp.setMaxSaturation(max);
 			}
+		} else if (inputParams instanceof BarPlotParameters) {
+			outputParams = new BarPlotParameters(
+					(BarPlotParameters) inputParams);
 		}
 		
 		// Parameters common to all plot types
@@ -271,7 +280,7 @@ public class PngPlotGenerator implements PlotGenerator {
 		
 		// Provide missing plot parameters not supplied by user
 		// by derivation or using defaults
-		BaseGenomicPlotParameters completeParams =
+		PlotParameters completeParams =
 			this.deriveMissingPlotParameters(plotParameters, experiments);
 		
 		// Replot
@@ -373,6 +382,37 @@ public class PngPlotGenerator implements PlotGenerator {
 		plot.setWidth(panel.width());
 		plot.setHeight(panel.height());
 		plot.setMouseOverStripes(boundaries.getMouseOverStripes());
+		String imageFileName =
+			this.imageFileManager.saveImage(canvas.toBufferedImage());
+		plot.setDefaultImageFileName(imageFileName);
+	}
+	
+	
+	/**
+	 * Create new bar plot.
+	 * @param plot Plot
+	 * @param experiments Experiments to plot
+	 * @param plotParameters Plot parameters
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 */
+	private void newBarPlot(final Plot plot, 
+			final Collection<Experiment> experiments,
+			final BarPlotParameters plotParameters,
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		
+		// Instantiate plot painter
+		BarPlotPainter painter =
+			new BarPlotPainter(chromosomeArrayDataGetter);
+		
+		// Create plot image
+		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+		PlotPanel panel = new PlotPanel(canvas);
+		painter.paintPlot(panel, experiments, plotParameters);
+		panel.paint(canvas);
+		canvas.setWidth(panel.width());
+		canvas.setHeight(panel.height());
+		plot.setWidth(panel.width());
+		plot.setHeight(panel.height());
 		String imageFileName =
 			this.imageFileManager.saveImage(canvas.toBufferedImage());
 		plot.setDefaultImageFileName(imageFileName);

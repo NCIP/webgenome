@@ -16,7 +16,7 @@
 		<%-- Scatter plot --%>
 			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[0].checked=true;">
 				<td>
-					<html:radio property="plotType" value="scatter"/>
+					<html:radio property="plotType" value="SCATTER"/>
 				</td>
 				<td>
 					<html:img page="/images/icon-scatterPlot.gif" border="1"/>
@@ -29,13 +29,26 @@
 		<%-- Ideogram plot --%>
 			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[1].checked=true;">
 				<td>
-					<html:radio property="plotType" value="ideogram"/>
+					<html:radio property="plotType" value="IDEOGRAM"/>
 				</td>
 				<td>
 					<html:img page="/images/icon-ideogramPlot.gif" border="1"/>
 				</td>
 				<td>
 					Ideogram Plot
+				</td>
+			</tr>
+			
+		<%-- Bar plot --%>
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[2].checked=true;">
+				<td>
+					<html:radio property="plotType" value="BAR"/>
+				</td>
+				<td>
+					<html:img page="/images/icon-barPlot.gif" border="1"/>
+				</td>
+				<td>
+					Bar Plot
 				</td>
 			</tr>
 

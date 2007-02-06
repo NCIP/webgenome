@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-02-06 16:12:28 $
+$Revision: 1.4 $
+$Date: 2007-02-06 17:48:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -141,7 +141,8 @@ public class BarPlotPainter extends PlotPainter {
 		float scale = (float) params.getRowHeight() / range;
 		MultiPlotGridLayouter layouter = new MultiPlotGridLayouter(
 				params.getNumPlotsPerRow(), panel, plotMin, plotMax,
-				params.getRowHeight());
+				params.getRowHeight(),
+				Experiment.getQuantitationType(experiments));
 		layouter.setPadding(PADDING);
 		while (it.hasNext()) {
 			CommonArrayDatumGroup group = it.next();

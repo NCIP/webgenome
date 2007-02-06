@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-02-06 02:27:51 $
+$Revision: 1.3 $
+$Date: 2007-02-06 17:48:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,9 @@ package org.rti.webcgh.service.plot;
 
 import java.awt.Color;
 
+import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.graphics.widget.Axis;
+import org.rti.webcgh.graphics.widget.Caption;
 import org.rti.webcgh.graphics.widget.Grid;
 import org.rti.webcgh.graphics.widget.PlotPanel;
 import org.rti.webcgh.units.HorizontalAlignment;
@@ -104,6 +106,9 @@ public class MultiPlotGridLayouter {
 	
 	/** Current axis. */
 	private Axis currentAxis = null;
+	
+	/** Quantitation type. */
+	private final QuantitationType quantitationType;
 		
 	
 	//
@@ -146,10 +151,12 @@ public class MultiPlotGridLayouter {
 	 * @param minValue Minimum plotted value
 	 * @param maxValue Maximum plotted value
 	 * @param rowHeight Height of rows in pixels
+	 * @param quantitationType Quantitation type
 	 */
 	public MultiPlotGridLayouter(final int numCols,
 			final PlotPanel rootPanel, final float minValue,
-			final float maxValue, final int rowHeight) {
+			final float maxValue, final int rowHeight,
+			final QuantitationType quantitationType) {
 		
 		// Check args
 		if (rootPanel == null) {
@@ -166,6 +173,7 @@ public class MultiPlotGridLayouter {
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 		this.rowHeight = rowHeight;
+		this .quantitationType = quantitationType;
 	}
 	
 	
@@ -203,11 +211,20 @@ public class MultiPlotGridLayouter {
 	 * @return Newly-created axis
 	 */
 	private Axis addYAxis(final PlotPanel panel) {
+		
+		// Axis
 		Axis axis = new Axis(this.minValue, this.maxValue,
 				this.rowHeight, Orientation.VERTICAL, Location.LEFT_OF,
 				panel.getDrawingCanvas());
 		panel.add(axis, HorizontalAlignment.LEFT_OF,
 				VerticalAlignment.ON_ZERO, true);
+		
+		// Caption
+		Caption caption = new Caption(this.quantitationType.getName(),
+				Orientation.HORIZONTAL, true,
+				panel.getDrawingCanvas());
+		panel.add(caption, HorizontalAlignment.LEFT_OF,
+				VerticalAlignment.CENTERED);
 		return axis;
 	}
 	
