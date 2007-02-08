@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-02-08 04:23:53 $
 
 The Web CGH Software License, Version 1.0
@@ -48,27 +48,24 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.domain;
+package org.rti.webcgh.framework.hibernate;
+
+import org.rti.bioinfo.util.framework.hibernate.EnumUserType;
+import org.rti.webcgh.domain.AnnotationType;
+
 
 /**
- * Type of genome annotation.
+ * User type for persisting the <code>AnnotationType</code>
+ * enumeration.
  * @author dhall
  *
  */
-public enum AnnotationType {
-	
-	/** Genome interval that exhibits loss of heterozygosity. */
-	LOH_SEGMENT,
-	
-	/** Genome interval that is amplified. */
-	AMPLIFIED_SEGMENT,
-	
-	/** Genome interval that is deleted. */
-	DELETED_SEGMENT,
-	
-	/** Gene. */
-	GENE,
-	
-	/** Exon. */
-	EXON;
+public class AnnotationTypeUserType extends EnumUserType<AnnotationType> {
+
+	/**
+	 * Constructor.
+	 */
+	public AnnotationTypeUserType() {
+		super(AnnotationType.class);
+	}
 }

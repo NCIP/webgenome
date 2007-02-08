@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-02-08 04:23:53 $
 
 The Web CGH Software License, Version 1.0
@@ -48,27 +48,59 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.domain;
+package org.rti.webcgh.service.dao.hibernate;
+
+import java.util.SortedSet;
+
+import org.rti.webcgh.deprecated.array.Organism;
+import org.rti.webcgh.domain.AnnotatedGenomeFeature;
+import org.rti.webcgh.domain.AnnotationType;
+import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Type of genome annotation.
+ * Implementation of <code>AnnotatedGenomeFeatureDao</code> using
+ * Hibernate.
  * @author dhall
  *
  */
-public enum AnnotationType {
+public class HibernateAnnotatedGenomeFeatureDao
+extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
+
+	/**
+	 * Persist given feature.
+	 * @param feature Feature to persist
+	 */
+	public final void save(final AnnotatedGenomeFeature feature) {
+		
+	}
 	
-	/** Genome interval that exhibits loss of heterozygosity. */
-	LOH_SEGMENT,
+	/**
+	 * Un-persist all features of given type and organism.
+	 * @param annotationType Feature type
+	 * @param organism Organism
+	 */
+	public final void deleteAll(final AnnotationType annotationType,
+			final Organism organism) {
+		
+	}
 	
-	/** Genome interval that is amplified. */
-	AMPLIFIED_SEGMENT,
-	
-	/** Genome interval that is deleted. */
-	DELETED_SEGMENT,
-	
-	/** Gene. */
-	GENE,
-	
-	/** Exon. */
-	EXON;
+	/**
+	 * Load all annotated features of given type
+	 * and organism in given genomic
+	 * range.
+	 * @param chromosome Chromosome number
+	 * @param startPos Starting position of range
+	 * @param endPos Ending position of range
+	 * @param annotationType Annotation feature type
+	 * @param organism Organism
+	 * @return Annotated features
+	 */
+	public final SortedSet<AnnotatedGenomeFeature> load(
+			final short chromosome, final long startPos,
+			final long endPos,
+			final AnnotationType annotationType,
+			final Organism organism) {
+		return null;
+	}
 }

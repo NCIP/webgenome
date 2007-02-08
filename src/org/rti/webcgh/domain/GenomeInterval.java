@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2006-12-03 22:23:43 $
+$Revision: 1.14 $
+$Date: 2007-02-08 04:23:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,7 +67,7 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
  * @author dhall
  *
  */
-public class GenomeInterval {
+public class GenomeInterval implements Comparable<GenomeInterval> {
 	
 	// ===========================
 	//      Constants
@@ -184,6 +184,41 @@ public class GenomeInterval {
 		this.chromosome = interval.chromosome;
 		this.endLocation = interval.endLocation;
 		this.startLocation = interval.startLocation;
+	}
+	
+	
+	// ==============================
+	//     Comparable interface
+	// ==============================
+	
+	/**
+	 * Comparison method.
+	 * @param gi A genome interval
+	 * @return -1, 0, 1 (see <code>Comparable.compareTo</code>)
+	 * @see java.lang.Comparable#compareTo(Object)
+	 */
+	public final int compareTo(final GenomeInterval gi) {
+		int value = 0;
+		if (this.chromosome < gi.chromosome) {
+			value = -1;
+		} else if (this.chromosome == gi.chromosome) {
+			if (this.startLocation < gi.startLocation) {
+				value = -1;
+			} else if (this.startLocation == gi.startLocation) {
+				if (this.endLocation < gi.endLocation) {
+					value = -1;
+				} else if (this.endLocation == gi.endLocation) {
+					value = 0;
+				} else if (this.endLocation > gi.endLocation) {
+					value = 1;
+				}
+			} else if (this.startLocation > gi.startLocation) {
+				value = 1;
+			}
+		} else if (this.chromosome > gi.chromosome) {
+			value = 1;
+		}
+		return value;
 	}
 	
 	

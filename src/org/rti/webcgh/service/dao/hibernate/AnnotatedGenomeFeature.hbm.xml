@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webcgh.domain.AnnotatedGenomeFeature"
+		table="ANNOTATED_GENOME_FEATURE">
+	
+	<!-- id -->
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+	<!-- annotationType -->
+		<property name="annotationType" column="annotation_type"
+			type="org.rti.webcgh.framework.hibernate.AnnotationTypeUserType"/>
+			
+	<!-- quantitation -->
+		<property name="quantitation"/>
+		
+	<!-- chromosome -->
+		<property name="chromosome"/>
+		
+	<!-- startLocation -->
+		<property name="startLocation" column="start_loc"/>
+		
+	<!-- endLocation -->
+		<property name="endLocation" column="end_loc"/>
+		
+	<!-- organism -->
+		<many-to-one
+			name="organism"
+			column="organism_id"
+			class="org.rti.webcgh.domain.Organism"
+			lazy="false"/>
+			
+	<!-- childFeatures -->
+		<set
+			name="childFeatures"
+			lazy="false"
+			cascade="all,delete-orphan"
+			sort="natural">
+			<key column="parent_id" not-null="true"/>
+			<one-to-many class="org.rti.webcgh.domain.AnnotatedGenomeFeature"/>
+		</set>
+		
+	</class>
+
+</hibernate-mapping>

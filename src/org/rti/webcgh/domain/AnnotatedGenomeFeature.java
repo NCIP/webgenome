@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-29 22:36:41 $
+$Revision: 1.4 $
+$Date: 2007-02-08 04:23:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 /**
  * An annotated genome feature.
  * @author dhall
@@ -62,9 +65,11 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	//        Attributes
 	// ===================================
 	
+	/** ID used as primary key for persistence. */
+	private Long id = null;
 	
 	/** Annotation type. */
-	private final AnnotationType annotationType;
+	private AnnotationType annotationType;
 	
 	/**
 	 * Some sort of quantitation.  The meaning of this
@@ -72,6 +77,13 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	 * Clients should know how to interpret this.
 	 */
 	private float quantitation = Float.NaN;
+	
+	/** Child annotation features. */
+	private SortedSet<AnnotatedGenomeFeature> childFeatures =
+		new TreeSet<AnnotatedGenomeFeature>();
+	
+	/** Organism. */
+	private Organism organism;
 	
 	
 	// ===================================
@@ -101,6 +113,71 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 
 
 	/**
+	 * Get organism.
+	 * @return Organism
+	 */
+	public final Organism getOrganism() {
+		return organism;
+	}
+
+
+	/**
+	 * Set organism.
+	 * @param organism Organism
+	 */
+	public final void setOrganism(final Organism organism) {
+		this.organism = organism;
+	}
+
+
+	/**
+	 * Get primary key ID used for persistence.
+	 * @return ID
+	 */
+	public final Long getId() {
+		return id;
+	}
+
+
+	/**
+	 * Set primary key ID used for persistence.
+	 * @param id ID
+	 */
+	public final void setId(final Long id) {
+		this.id = id;
+	}
+
+
+	/**
+	 * Get child annotation features.
+	 * @return Child annotation features
+	 */
+	public final SortedSet<AnnotatedGenomeFeature> getChildFeatures() {
+		return childFeatures;
+	}
+
+
+	/**
+	 * Set child annotation features.
+	 * @param childFeatures Child annotation features
+	 */
+	public final void setChildFeatures(
+			final SortedSet<AnnotatedGenomeFeature> childFeatures) {
+		this.childFeatures = childFeatures;
+	}
+
+
+	/**
+	 * Set annotation tpye.
+	 * @param annotationType Annotation type
+	 */
+	public final void setAnnotationType(
+			final AnnotationType annotationType) {
+		this.annotationType = annotationType;
+	}
+
+
+	/**
 	 * Get annotation type.
 	 * @return Annotation type
 	 */
@@ -113,6 +190,13 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	//       Constructors
 	// ========================================
 	
+	
+	/**
+	 * Constructor.
+	 */
+	public AnnotatedGenomeFeature() {
+		
+	}
 	
 	/**
 	 * Constructor.

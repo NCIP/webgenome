@@ -47,3 +47,19 @@ CREATE TABLE cytoband (
 	PRIMARY KEY (id),
 	FOREIGN KEY (cytological_map_id) REFERENCES cytological_map(id)
 );
+
+--
+-- AnnotatedGenomeFeature
+--
+CREATE TABLE annotated_genome_feature (
+	id NUMBER(38) NOT NULL,
+	annotation_type VARCHAR(16),
+	quantitation NUMBER(16),
+	chromosome INT,
+	start_loc NUMBER(38),
+	end_loc NUMBER(38),
+	parent_id NUMBER(38),
+	organism_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (organism_id) REFERENCES organism(id)
+);
