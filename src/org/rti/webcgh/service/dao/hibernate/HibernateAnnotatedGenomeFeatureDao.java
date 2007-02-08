@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-08 04:23:53 $
+$Revision: 1.2 $
+$Date: 2007-02-08 22:41:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,13 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
+import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
-import org.rti.webcgh.deprecated.array.Organism;
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
+import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -72,7 +74,7 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 	 * @param feature Feature to persist
 	 */
 	public final void save(final AnnotatedGenomeFeature feature) {
-		
+		this.getHibernateTemplate().save(feature);
 	}
 	
 	/**
@@ -83,6 +85,16 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 	public final void deleteAll(final AnnotationType annotationType,
 			final Organism organism) {
 		
+		// Get features
+		String query =
+			"from AnnotatedGenomeFeature f "
+			+ "where f.annotationType = ? and f.organism = ?";
+		Object[] args = new Object[] {annotationType.toString(),
+				organism};
+		List feats = this.getHibernateTemplate().find(query, args);
+		
+		// Delete features
+		this.getHibernateTemplate().deleteAll(feats);
 	}
 	
 	/**
@@ -96,11 +108,25 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 	 * @param organism Organism
 	 * @return Annotated features
 	 */
+	@SuppressWarnings("unchecked")
 	public final SortedSet<AnnotatedGenomeFeature> load(
 			final short chromosome, final long startPos,
 			final long endPos,
 			final AnnotationType annotationType,
 			final Organism organism) {
-		return null;
+		String query =
+			"from AnnotatedGenomeFeature f "
+			+ "where f.annotationType = ? and f.organism = ? "
+			+ "and f.chromosome = ? and f.startLocation <= ? "
+			+ "and f.endLocation >= ?";
+		Object[] args = new Object[] {annotationType.toString(),
+				organism,
+				chromosome, endPos, startPos};
+		List<AnnotatedGenomeFeature> feats =
+			this.getHibernateTemplate().find(query, args);
+		SortedSet<AnnotatedGenomeFeature> ss =
+			new TreeSet<AnnotatedGenomeFeature>();
+		ss.addAll(feats);
+		return ss;
 	}
 }

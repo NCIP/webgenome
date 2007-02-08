@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-02-08 22:41:47 $
 
 The Web CGH Software License, Version 1.0
@@ -48,46 +48,72 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.dao;
+package org.rti.webcgh.service.dao.hibernate.unit_test;
 
 import java.util.SortedSet;
 
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import junit.framework.TestCase;
 
 /**
- * Data access class for <code>AnnotatedGenomeFeature</code>.
+ * Tester for <code>HibernateAnnotatedGenomeFeatureDao</code>.
  * @author dhall
  *
  */
-public interface AnnotatedGenomeFeatureDao {
+public final class HibernateAnnotatedGenomeFeatureDaoTester
+extends TestCase {
 
-	/**
-	 * Persist given feature.
-	 * @param feature Feature to persist
-	 */
-	void save(AnnotatedGenomeFeature feature);
 	
 	/**
-	 * Un-persist all features of given type and organism.
-	 * @param annotationType Feature type
-	 * @param organism Organism
+	 * Test all methods.
 	 */
-	void deleteAll(AnnotationType annotationType, Organism organism);
-	
-	/**
-	 * Load all annotated features of given type
-	 * and organism in given genomic
-	 * range.
-	 * @param chromosome Chromosome number
-	 * @param startPos Starting position of range
-	 * @param endPos Ending position of range
-	 * @param annotationType Annotation feature type
-	 * @param organism Organism
-	 * @return Annotated features
-	 */
-	SortedSet<AnnotatedGenomeFeature> load(
-			short chromosome, long startPos, long endPos,
-			AnnotationType annotationType, Organism organism);
+	public void testAllMethods() {
+		
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
+		HibernateAnnotatedGenomeFeatureDao dao =
+			(HibernateAnnotatedGenomeFeatureDao)
+			ctx.getBean("annotatedGenomeFeatureDao");
+		
+		// Create test object
+		Organism org = new Organism("genus", "species");
+		AnnotatedGenomeFeature feat = new AnnotatedGenomeFeature();
+		feat.setAnnotationType(AnnotationType.GENE);
+		feat.setChromosome((short) 1);
+		feat.setStartLocation(1);
+		feat.setEndLocation(100);
+		feat.setQuantitation((float) 1.0);
+		feat.setOrganism(org);
+		
+		// Save
+		dao.save(feat);
+		
+		// Load
+		SortedSet<AnnotatedGenomeFeature> feats =
+			dao.load((short) 1, (long) 1, (long) 100,
+					AnnotationType.GENE, org);
+		assertNotNull(feats);
+		assertEquals(1, feats.size());
+		AnnotatedGenomeFeature feat2 = feats.first();
+		assertEquals((short) 1, feat2.getChromosome());
+		feats = dao.load((short) 1, (long) 101, (long) 1000,
+				AnnotationType.GENE, org);
+		assertNotNull(feats);
+		assertEquals(0, feats.size());
+		
+		// Delete
+		dao.deleteAll(AnnotationType.GENE, org);
+		feats =
+			dao.load((short) 1, (long) 1, (long) 100,
+					AnnotationType.GENE, org);
+		assertNotNull(feats);
+		assertEquals(0, feats.size());
+	}
 }

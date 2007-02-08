@@ -34,10 +34,11 @@
 		<many-to-one
 			name="organism"
 			column="organism_id"
+			cascade="all"
 			class="org.rti.webcgh.domain.Organism"
 			lazy="false"/>
 			
-	<!-- childFeatures -->
+	<!-- childFeatures
 		<set
 			name="childFeatures"
 			lazy="false"
@@ -46,6 +47,7 @@
 			<key column="parent_id" not-null="true"/>
 			<one-to-many class="org.rti.webcgh.domain.AnnotatedGenomeFeature"/>
 		</set>
+	-->
 		
 	</class>
 

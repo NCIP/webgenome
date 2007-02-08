@@ -38,13 +38,11 @@
   	<bean id="bioAssayDataDao" class="org.rti.webcgh.service.dao.hibernate.HibernateBioAssayDataDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
--->
   	
   	<bean id="organismDao" class="org.rti.webcgh.service.dao.hibernate.HibernateOrganismDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
-<!--
   	<bean id="shoppingCartDao" class="org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
@@ -52,10 +50,16 @@
   	<bean id="principalDao" class="org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
--->
   	
   	<bean id="cytologicalMapDao" class="org.rti.webcgh.service.dao.hibernate.HibernateCytologicalMapDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
+-->
+
+	<bean id="annotatedGenomeFeatureDao"
+		class="org.rti.webcgh.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+	
 
 </beans>
