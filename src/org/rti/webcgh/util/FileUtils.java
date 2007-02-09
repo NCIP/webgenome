@@ -132,6 +132,11 @@ public final class FileUtils {
         String absoluteName = directoryPath + "/" + fileName;
         ClassLoader loader = ClassLoader.getSystemClassLoader();
         URL url = loader.getResource(absoluteName);
+        if (url == null) {
+        	throw new WebcghSystemException("Cannot find file '"
+        			+ fileName + "' in directory '" + directoryPath
+        			+ "'");
+        }
         File file = null;
         try {
             file = new File(url.toURI());

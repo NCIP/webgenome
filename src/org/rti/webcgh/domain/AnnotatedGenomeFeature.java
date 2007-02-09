@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-02-09 03:09:00 $
+$Revision: 1.7 $
+$Date: 2007-02-09 20:43:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.domain;
 
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -291,6 +292,16 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	 */
 	public final void addChild(final AnnotatedGenomeFeature child) {
 		this.childFeatures.add(child);
+	}
+	
+	
+	/**
+	 * Add child features.
+	 * @param children Child features
+	 */
+	public final void addChildren(
+			final List<AnnotatedGenomeFeature> children) {
+		this.childFeatures.addAll(children);
 	}
 	
 	

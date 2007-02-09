@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-09 03:09:00 $
+$Revision: 1.2 $
+$Date: 2007-02-09 20:43:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,11 +53,14 @@ package org.rti.webcgh.service.io;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.util.ChromosomeCoder;
 import org.rti.webcgh.util.StringTokenizerUtils;
 
 /**
@@ -125,6 +128,9 @@ public class UcscGeneReader {
 	/** Buffered reader for reading input line-by-line. */
 	private final BufferedReader in;
 	
+	/** Index of next record to parse. */
+	private int recordNumber = 0;
+	
 	
 	//
 	//     CONSTRUCTORS
@@ -154,6 +160,7 @@ public class UcscGeneReader {
 	 */
 	private void advance() throws IOException {
 		this.nextRecord = in.readLine();
+		this.recordNumber++;
 	}
 	
 	
@@ -165,7 +172,7 @@ public class UcscGeneReader {
 	 * Is there another record?
 	 * @return T/F
 	 */
-	public final boolean haveNext() {
+	public final boolean hasNext() {
 		return this.nextRecord != null;
 	}
 	
@@ -182,7 +189,7 @@ public class UcscGeneReader {
 	public final AnnotatedGenomeFeature next()
 	throws IOException, UcscFileFormatException {
 		AnnotatedGenomeFeature feat = null;
-		if (this.haveNext()) {
+		if (this.hasNext()) {
 			feat = this.parseNextRecord();
 			this.advance();
 		}
@@ -208,22 +215,79 @@ public class UcscGeneReader {
 		try {
 			
 			// Field 0: Name
-			feat.setName(StringTokenizerUtils.skip(1, tok));
+			String token = StringTokenizerUtils.skip(1, tok);
+			feat.setName(token);
 			
 			// Field 1: Chromosome
+			token = StringTokenizerUtils.skip(1, tok);
+			feat.setChromosome(ChromosomeCoder.decodeUcscFormat(
+					token, this.organism));
 			
 			// Field 3: txStart
+			token = StringTokenizerUtils.skip(2, tok);
+			feat.setStartLocation(Long.parseLong(token));
 			
 			// Field 4: txEnd
+			token = StringTokenizerUtils.skip(1, tok);
+			feat.setEndLocation(Long.parseLong(token));
 			
 			// Field 8: exonStarts
+			String exonStarts = StringTokenizerUtils.skip(4, tok);
 			
 			// Field 9: exonEnds
+			String exonEnds = StringTokenizerUtils.skip(1, tok);
 			
-		} catch (IndexOutOfBoundsException e) {
-			throw new UcscFileFormatException("Invalid format");
+			// Add exons
+			List<AnnotatedGenomeFeature> exons =
+				this.createExons(exonStarts, exonEnds);
+			feat.addChildren(exons);
+			
+		} catch (Exception e) {
+			throw new UcscFileFormatException(
+					"Invalid format in record " + this.recordNumber, e);
 		}
 		
 		return feat;
+	}
+	
+	
+	/**
+	 * Instantiate exon features.
+	 * @param exonStarts Comma-separated list of exon start positions
+	 * @param exonEnds Comma-separated list of exon end locations
+	 * @return Exon features
+	 * @throws UcscFileFormatException if the exon starts and ends
+	 * cannot be parsed or are of unequal number
+	 */
+	private List<AnnotatedGenomeFeature> createExons(
+			final String exonStarts, final String exonEnds)
+			throws UcscFileFormatException {
+		assert exonStarts != null && exonEnds != null;
+		List<AnnotatedGenomeFeature> exons =
+			new ArrayList<AnnotatedGenomeFeature>();
+		StringTokenizer startTok = new StringTokenizer(exonStarts, ",");
+		StringTokenizer endTok = new StringTokenizer(exonEnds, ",");
+		while (startTok.hasMoreTokens() && endTok.hasMoreTokens()) {
+			long start = -1, end = -1;
+			try {
+				start = Long.parseLong(startTok.nextToken());
+				end = Long.parseLong(endTok.nextToken());
+			} catch (NumberFormatException e) {
+				throw new UcscFileFormatException(
+						"Unparseable exon end points in record "
+						+ this.recordNumber);
+			}
+			AnnotatedGenomeFeature exon = new AnnotatedGenomeFeature();
+			exon.setAnnotationType(AnnotationType.EXON);
+			exon.setStartLocation(start);
+			exon.setEndLocation(end);
+			exons.add(exon);
+		}
+		if (startTok.hasMoreTokens() || endTok.hasMoreTokens()) {
+			throw new UcscFileFormatException(
+					"Unequal number of exon start and end points "
+					+ "in record " + this.recordNumber);
+		}
+		return exons;
 	}
 }

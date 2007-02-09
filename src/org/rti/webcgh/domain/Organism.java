@@ -171,4 +171,38 @@ public class Organism implements Serializable {
     public final String getDisplayName() {
     	return this.genus + " " + this.species;
     }
+    
+    
+    // =========================
+    //       Overrides
+    // =========================
+
+    /**
+     * Equals methods.
+     * @param obj An object
+     * @return See java.lang.Object.equals()
+     * @see java.lang.Object#equals(Object)
+     */
+	@Override
+	public final boolean equals(final Object obj) {
+		boolean equals = false;
+		if (obj instanceof Organism) {
+			Organism org = (Organism) obj;
+			equals = this.genus.equals(org.genus)
+			&& this.species.equals(org.species);
+		}
+		return equals;
+	}
+
+	/**
+	 * Generate hash code.
+	 * @return Hash code
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public final int hashCode() {
+		return (this.genus + this.species).hashCode();
+	}
+    
+    
 }
