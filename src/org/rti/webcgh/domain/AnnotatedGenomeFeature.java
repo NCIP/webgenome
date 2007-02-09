@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-02-08 04:23:53 $
+$Revision: 1.5 $
+$Date: 2007-02-09 02:18:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -261,6 +261,15 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 		double w1 = (double) f1.length() / (double) totalLength;
 		double w2 = (double) f2.length() / (double) totalLength;
 		return f1.quantitation * (float) w1 + f2.quantitation * (float) w2;
+	}
+	
+	
+	/**
+	 * Add child feature.
+	 * @param child Child feature
+	 */
+	public final void addChild(final AnnotatedGenomeFeature child) {
+		this.childFeatures.add(child);
 	}
 	
 	

@@ -38,16 +38,15 @@
 			class="org.rti.webcgh.domain.Organism"
 			lazy="false"/>
 			
-	<!-- childFeatures
+	<!-- childFeatures -->
 		<set
 			name="childFeatures"
 			lazy="false"
 			cascade="all,delete-orphan"
 			sort="natural">
-			<key column="parent_id" not-null="true"/>
+			<key column="parent_id"/>
 			<one-to-many class="org.rti.webcgh.domain.AnnotatedGenomeFeature"/>
 		</set>
-	-->
 		
 	</class>
 

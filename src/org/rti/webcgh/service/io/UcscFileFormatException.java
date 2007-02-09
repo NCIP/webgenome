@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2006-10-22 03:20:46 $
+$Date: 2007-02-09 02:18:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,11 +54,11 @@ import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Thrown if UCSC cytoband file format is bad.
+ * Thrown if UCSC data file format is bad.
  * @author dhall
  *
  */
-public class UcscCytobandFileFormatException
+public class UcscFileFormatException
 extends WebcghApplicationException {
 	
 	/** Serialized version ID. */
@@ -68,7 +68,7 @@ extends WebcghApplicationException {
 	/**
 	 * Constructor.
 	 */
-	public UcscCytobandFileFormatException() {
+	public UcscFileFormatException() {
 		
 	}
 
@@ -76,7 +76,7 @@ extends WebcghApplicationException {
 	 * Constructor.
 	 * @param msg Message.
 	 */
-	public UcscCytobandFileFormatException(final String msg) {
+	public UcscFileFormatException(final String msg) {
 		super(msg);
 	}
 
@@ -85,7 +85,7 @@ extends WebcghApplicationException {
 	 * Constructor.
 	 * @param origThrowable Original throwable.
 	 */
-	public UcscCytobandFileFormatException(
+	public UcscFileFormatException(
 			final Throwable origThrowable) {
 		super(origThrowable);
 	}
@@ -96,7 +96,7 @@ extends WebcghApplicationException {
 	 * @param msg Message.
 	 * @param origThrowable Original throwable.
 	 */
-	public UcscCytobandFileFormatException(final String msg,
+	public UcscFileFormatException(final String msg,
 			final Throwable origThrowable) {
 		super(msg, origThrowable);
 	}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-22 03:20:46 $
+$Revision: 1.2 $
+$Date: 2007-02-09 02:18:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,13 +103,13 @@ public class UcscCytologicalMapReader {
 	 * cytological maps.
 	 * @param in Input stream.
 	 * @return Cytological maps.
-	 * @throws UcscCytobandFileFormatException if file format
+	 * @throws UcscFileFormatException if file format
 	 * is bad.
 	 * @throws IOException if there is a problem reading
 	 * the stream.
 	 */
 	public final Collection<CytologicalMap> read(final InputStream in)
-	throws UcscCytobandFileFormatException, IOException {
+	throws UcscFileFormatException, IOException {
 		Reader r = new InputStreamReader(in);
 		return this.read(r);
 	}
@@ -122,13 +122,13 @@ public class UcscCytologicalMapReader {
 	 * cytological maps.
 	 * @param in A reader.
 	 * @return Cytological maps.
-	 * @throws UcscCytobandFileFormatException if file format
+	 * @throws UcscFileFormatException if file format
 	 * is bad.
 	 * @throws IOException if there is a problem reading
 	 * the stream.
 	 */
 	public final Collection<CytologicalMap> read(final Reader in)
-	throws UcscCytobandFileFormatException, IOException {
+	throws UcscFileFormatException, IOException {
 		Collection<CytologicalMap> maps =
 			new ArrayList<CytologicalMap>();
 		CytologicalMap map = null;
@@ -178,13 +178,13 @@ public class UcscCytologicalMapReader {
 	 * throwing exception if there are no more tokens.
 	 * @param tok String tokenizer.
 	 * @return Next token.
-	 * @throws UcscCytobandFileFormatException if there
+	 * @throws UcscFileFormatException if there
 	 * are no more tokens.
 	 */
 	private String nextToken(final StringTokenizer tok)
-	throws UcscCytobandFileFormatException {
+	throws UcscFileFormatException {
 		if (!tok.hasMoreTokens()) {
-			throw new UcscCytobandFileFormatException("Too few columns");
+			throw new UcscFileFormatException("Too few columns");
 		}
 		return tok.nextToken();
 	}
@@ -195,14 +195,14 @@ public class UcscCytologicalMapReader {
 	 * exception if it cannot be parsed.
 	 * @param str A string encoding a chromosome number.
 	 * @return Chromosome number.
-	 * @throws UcscCytobandFileFormatException if chromosome
+	 * @throws UcscFileFormatException if chromosome
 	 * number cannot be parsed from given string.
 	 */
 	private short parseChromosome(final String str)
-	throws UcscCytobandFileFormatException {
+	throws UcscFileFormatException {
 		if (str.length() <= CHROMOSOME_PREFIX.length()
 				|| str.indexOf(CHROMOSOME_PREFIX) != 0) {
-			throw new UcscCytobandFileFormatException(
+			throw new UcscFileFormatException(
 					"Invalid chromosome number '" + str + "'");
 		}
 		String chromosomeField = str.substring(
@@ -216,7 +216,7 @@ public class UcscCytologicalMapReader {
 			try {
 				chromosome = Short.parseShort(chromosomeField);
 			} catch (NumberFormatException e) {
-				throw new UcscCytobandFileFormatException(
+				throw new UcscFileFormatException(
 						"Invalid chromosome number '" + str + "'");
 			}
 		}
@@ -228,16 +228,16 @@ public class UcscCytologicalMapReader {
 	 * Parse chromosome location from given string.
 	 * @param str String encoding chromosome location.
 	 * @return Chromosome location.
-	 * @throws UcscCytobandFileFormatException if string
+	 * @throws UcscFileFormatException if string
 	 * does not encode a valid number.
 	 */
 	private long parseLocation(final String str)
-	throws UcscCytobandFileFormatException {
+	throws UcscFileFormatException {
 		long loc = -1;
 		try {
 			loc = Long.parseLong(str);
 		} catch (NumberFormatException e) {
-			throw new UcscCytobandFileFormatException(
+			throw new UcscFileFormatException(
 					"Invalid number '" + str + "'");
 		}
 		return loc;

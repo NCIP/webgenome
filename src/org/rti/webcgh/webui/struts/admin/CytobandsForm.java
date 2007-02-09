@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-23 02:20:38 $
+$Revision: 1.2 $
+$Date: 2007-02-09 02:18:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.struts.BaseForm;
 
 /**
- * For for uploading cytoband data.
+ * Form for uploading cytoband data.
  * @author dhall
  *
  */

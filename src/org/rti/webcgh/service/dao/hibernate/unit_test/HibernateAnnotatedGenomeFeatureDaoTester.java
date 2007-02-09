@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-08 22:41:47 $
+$Revision: 1.2 $
+$Date: 2007-02-09 02:18:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -92,6 +92,15 @@ extends TestCase {
 		feat.setQuantitation((float) 1.0);
 		feat.setOrganism(org);
 		
+		AnnotatedGenomeFeature childFeat = new AnnotatedGenomeFeature();
+		childFeat.setAnnotationType(AnnotationType.GENE);
+		childFeat.setChromosome((short) 1);
+		childFeat.setStartLocation(1);
+		childFeat.setEndLocation(100);
+		childFeat.setQuantitation((float) 1.0);
+		childFeat.setOrganism(org);
+		feat.addChild(childFeat);
+		
 		// Save
 		dao.save(feat);
 		
@@ -103,6 +112,7 @@ extends TestCase {
 		assertEquals(1, feats.size());
 		AnnotatedGenomeFeature feat2 = feats.first();
 		assertEquals((short) 1, feat2.getChromosome());
+		assertEquals(1, feat2.getChildFeatures().size());
 		feats = dao.load((short) 1, (long) 101, (long) 1000,
 				AnnotationType.GENE, org);
 		assertNotNull(feats);
