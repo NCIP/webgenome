@@ -14,6 +14,9 @@
 		    <generator class="increment"/>
 		</id>
 		
+	<!-- name -->
+		<property name="name"/>
+		
 	<!-- annotationType -->
 		<property name="annotationType" column="annotation_type"
 			type="org.rti.webcgh.framework.hibernate.AnnotationTypeUserType"/>

@@ -53,6 +53,7 @@ CREATE TABLE cytoband (
 --
 CREATE TABLE annotated_genome_feature (
 	id NUMBER(38) NOT NULL,
+	name VARCHAR(64),
 	annotation_type VARCHAR(16),
 	quantitation NUMBER(16),
 	chromosome INT,

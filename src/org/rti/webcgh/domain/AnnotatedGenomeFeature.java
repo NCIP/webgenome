@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-02-09 02:18:02 $
+$Revision: 1.6 $
+$Date: 2007-02-09 03:09:00 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,6 +68,9 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	/** ID used as primary key for persistence. */
 	private Long id = null;
 	
+	/** Display name of feature. */
+	private String name = null;
+	
 	/** Annotation type. */
 	private AnnotationType annotationType;
 	
@@ -109,6 +112,24 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	 */
 	public final void setQuantitation(final float quantitation) {
 		this.quantitation = quantitation;
+	}
+
+
+	/**
+	 * Get display name of feature.
+	 * @return Display name
+	 */
+	public final String getName() {
+		return name;
+	}
+
+
+	/**
+	 * Set display name of feature.
+	 * @param name Display name
+	 */
+	public final void setName(final String name) {
+		this.name = name;
 	}
 
 
