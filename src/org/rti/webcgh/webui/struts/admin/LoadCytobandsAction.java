@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-10-23 02:20:38 $
+$Revision: 1.4 $
+$Date: 2007-02-12 03:09:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -117,8 +117,8 @@ public final class LoadCytobandsAction extends BaseAction {
     ) throws Exception {
     	
     	// Get input stream to uploaded file
-    	CytobandsForm cForm = (CytobandsForm) form;
-    	InputStream in = cForm.getCytobandFormFile().getInputStream();
+    	AnnotationUploadForm cForm = (AnnotationUploadForm) form;
+    	InputStream in = cForm.getFormFile().getInputStream();
     	
     	// Get organism
     	Long orgId = Long.parseLong(cForm.getOrganismId());

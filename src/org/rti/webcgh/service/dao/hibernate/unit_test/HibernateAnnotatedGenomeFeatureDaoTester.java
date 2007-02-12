@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-02-09 02:18:03 $
+$Revision: 1.3 $
+$Date: 2007-02-12 03:09:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate.unit_test;
 
+import java.util.Set;
 import java.util.SortedSet;
 
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
@@ -117,6 +118,12 @@ extends TestCase {
 				AnnotationType.GENE, org);
 		assertNotNull(feats);
 		assertEquals(0, feats.size());
+		
+		// Query organisms
+		Set<Organism> orgs = dao.organismsWithLoadedGenes();
+		assertNotNull(orgs);
+		assertEquals(1, orgs.size());
+		assertEquals("genus", orgs.iterator().next().getGenus());
 		
 		// Delete
 		dao.deleteAll(AnnotationType.GENE, org);

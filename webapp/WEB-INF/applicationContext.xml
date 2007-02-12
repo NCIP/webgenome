@@ -307,6 +307,11 @@
 			<ref bean="cytologicalMapDao"/>
 		</property>
 	</bean>
+	
+<!-- Load genes form -->
+	<bean name="/admin/loadGenesForm"
+		class="org.rti.webcgh.webui.struts.admin.LoadGenesFormSetupAction">
+	</bean>
 		
 <!-- Load cytobands -->
 	<bean name="/admin/loadCytobands"

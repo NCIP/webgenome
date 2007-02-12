@@ -7,5 +7,9 @@
 	<html:link action="/admin/loadCytobandsForm">
 		Load cytobands
 	</html:link>
+	&nbsp;&nbsp;|&nbsp;&nbsp;
+	<html:link action="/admin/loadGenesForm">
+		Load genes
+	</html:link>
 </p>
 </center>

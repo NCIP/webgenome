@@ -203,6 +203,13 @@
 	  	<put name="content" value="/WEB-INF/jsp/admin/loadCytobands.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
+  	
+<!-- Load genes -->
+  	<definition name="admin.load.genes" extends="admin.layout" >
+	  	<put name="title" value="webGenome: Load genes" />
+	  	<put name="content" value="/WEB-INF/jsp/admin/loadGenes.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
     
 <!-- Status page -->
     <definition name="status.page" extends="def.layout" >

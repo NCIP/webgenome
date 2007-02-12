@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-02-12 03:09:19 $
+$Revision: 1.1 $
+$Date: 2007-02-12 03:09:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,55 +48,44 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.dao;
+package org.rti.webcgh.webui.struts.admin;
 
-import java.util.Set;
-import java.util.SortedSet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.rti.webcgh.domain.AnnotatedGenomeFeature;
-import org.rti.webcgh.domain.AnnotationType;
-import org.rti.webcgh.domain.Organism;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Data access class for <code>AnnotatedGenomeFeature</code>.
+ * Action that sets up request attributes for
+ * the JSP that shows which sets of genese have
+ * been loaded.
  * @author dhall
  *
  */
-public interface AnnotatedGenomeFeatureDao {
+public final class LoadGenesFormSetupAction extends BaseAction {
+	
+	
+	/**
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	return mapping.findForward("success");
+    }
 
-	/**
-	 * Persist given feature.
-	 * @param feature Feature to persist
-	 */
-	void save(AnnotatedGenomeFeature feature);
-	
-	/**
-	 * Un-persist all features of given type and organism.
-	 * @param annotationType Feature type
-	 * @param organism Organism
-	 */
-	void deleteAll(AnnotationType annotationType, Organism organism);
-	
-	/**
-	 * Load all annotated features of given type
-	 * and organism in given genomic
-	 * range.
-	 * @param chromosome Chromosome number
-	 * @param startPos Starting position of range
-	 * @param endPos Ending position of range
-	 * @param annotationType Annotation feature type
-	 * @param organism Organism
-	 * @return Annotated features
-	 */
-	SortedSet<AnnotatedGenomeFeature> load(
-			short chromosome, long startPos, long endPos,
-			AnnotationType annotationType, Organism organism);
-	
-	/**
-	 * Return all organisms who have gene data loaded in
-	 * database.
-	 * @return All organisms who have gene data loaded in
-	 * database
-	 */
-	Set<Organism> organismsWithLoadedGenes();
 }

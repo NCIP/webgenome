@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-02-09 02:18:07 $
+$Revision: 1.1 $
+$Date: 2007-02-12 03:09:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,11 +60,11 @@ import org.rti.webcgh.util.SystemUtils;
 import org.rti.webcgh.webui.struts.BaseForm;
 
 /**
- * Form for uploading cytoband data.
+ * Form for uploading annotation data.
  * @author dhall
  *
  */
-public class CytobandsForm extends BaseForm {
+public class AnnotationUploadForm extends BaseForm {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
@@ -74,8 +74,8 @@ public class CytobandsForm extends BaseForm {
 	//     Attributes
 	// ============================
 
-	/** Form file for uploading cytobands. */
-	private FormFile cytobandFormFile = null;
+	/** Form file for uploading annotation data. */
+	private FormFile formFile = null;
 	
 	/** Organism ID. */
 	private String organismId = null;
@@ -85,19 +85,20 @@ public class CytobandsForm extends BaseForm {
 	// ============================
 	
 	/**
-	 * Get form file for uploading cytobands.
-	 * @return Form file for uploading cytobands.
+	 * Get form file for uploading annotation data.
+	 * @return Form file for uploading annotation data.
 	 */
-	public final FormFile getCytobandFormFile() {
-		return cytobandFormFile;
+	public final FormFile getFormFile() {
+		return formFile;
 	}
 
 	/**
-	 * Set form file for uploading cytobands.
-	 * @param cytobandFormFile Form file for uploading cytobands.
+	 * Set form file for uploading annotation data.
+	 * @param cytobandFormFile Form file for uploading annotation
+	 * data.
 	 */
-	public final void setCytobandFormFile(final FormFile cytobandFormFile) {
-		this.cytobandFormFile = cytobandFormFile;
+	public final void setFormFile(final FormFile cytobandFormFile) {
+		this.formFile = cytobandFormFile;
 	}
 
 	/**
@@ -132,10 +133,10 @@ public class CytobandsForm extends BaseForm {
 			final HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
 		
-		// cytobandFormFile
-		String fname = this.cytobandFormFile.getFileName();
+		// formFile
+		String fname = this.formFile.getFileName();
 		if (fname == null || fname.length() < 1) {
-			errors.add("cytobandFormFile", new ActionError("invalid.field"));
+			errors.add("formFile", new ActionError("invalid.field"));
 		}
 		
 		// Global message

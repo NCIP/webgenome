@@ -97,14 +97,12 @@
 				</webcgh:onlyIfLoggedInAndStandAloneMode>
 
 			<%-- Login --%>
-				<%--
 				<webcgh:onlyIfUserLoggedOut>
 					<a class="menuItem" href="<html:rewrite page="/user/login.do"/>">
 						Login
 					</a>
 					|
 				</webcgh:onlyIfUserLoggedOut>
-				--%>
 
 			<%-- Profile --%>
 				<webcgh:onlyIfUserLoggedIn>

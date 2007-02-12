@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-02-08 22:41:47 $
+$Revision: 1.3 $
+$Date: 2007-02-12 03:09:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -128,5 +130,23 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 			new TreeSet<AnnotatedGenomeFeature>();
 		ss.addAll(feats);
 		return ss;
+	}
+	
+	/**
+	 * Return all organisms who have gene data loaded in
+	 * database.
+	 * @return All organisms who have gene data loaded in
+	 * database
+	 */
+	@SuppressWarnings("unchecked")
+	public final Set<Organism> organismsWithLoadedGenes() {
+		Set<Organism> orgs = new HashSet<Organism>();
+		String query =
+			"select org "
+			+ "from Organism org, AnnotatedGenomeFeature feat "
+			+ "where feat.organism = org";
+		List<Organism> results = this.getHibernateTemplate().find(query);
+		orgs.addAll(results);
+		return orgs;
 	}
 }
