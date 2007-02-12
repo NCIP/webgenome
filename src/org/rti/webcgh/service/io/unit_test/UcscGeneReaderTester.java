@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-09 20:43:52 $
+$Revision: 1.2 $
+$Date: 2007-02-12 01:59:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -108,16 +108,16 @@ public final class UcscGeneReaderTester extends TestCase {
 		// Test second record
 		assertTrue(geneReader.hasNext());
 		feat = geneReader.next();
-		assertEquals("BC073913", feat.getName());
-		assertEquals((short) 1, feat.getChromosome());
-		assertEquals(4268, feat.getStartLocation());
-		assertEquals(7438, feat.getEndLocation());
+		assertEquals("NM_001018113", feat.getName());
+		assertEquals((short) 23, feat.getChromosome());
+		assertEquals(14771449, feat.getStartLocation());
+		assertEquals(14801105, feat.getEndLocation());
 		childFeatures = feat.getChildFeatures();
 		assertNotNull(childFeatures);
-		assertEquals(6, childFeatures.size());
+		assertEquals(10, childFeatures.size());
 		exon = childFeatures.first();
-		assertEquals(4268, exon.getStartLocation());
-		assertEquals(4692, exon.getEndLocation());
+		assertEquals(14771449, exon.getStartLocation());
+		assertEquals(14772024, exon.getEndLocation());
 		
 		// Make sure there are no more records
 		assertFalse(geneReader.hasNext());
