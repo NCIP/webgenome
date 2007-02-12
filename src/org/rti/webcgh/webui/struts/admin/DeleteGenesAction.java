@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-02-12 20:04:19 $
 
 The Web CGH Software License, Version 1.0
@@ -50,30 +50,35 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.admin;
 
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
+import org.rti.webcgh.service.dao.OrganismDao;
 import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Action that sets up request attributes for
- * the JSP that shows which sets of genese have
- * been loaded.
+ * This action is reponsible for deleting all gene data from
+ * a particular organism.
  * @author dhall
  *
  */
-public final class LoadGenesFormSetupAction extends BaseAction {
+public final class DeleteGenesAction extends BaseAction {
 	
 	//
 	//     ATTRIBUTES
 	//
+	
+	/**
+	 * Organism data access object.  This property
+	 * must be set via dependency injection.
+	 */
+	private OrganismDao organismDao = null;
 	
 	/**
 	 * DAO for getting annotated genome features.  This property
@@ -97,11 +102,20 @@ public final class LoadGenesFormSetupAction extends BaseAction {
 		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
 	}
 	
+	/**
+	 * Set organism data access object.  This property
+	 * must be set via dependency injection.
+	 * @param organismDao Organims data access object.
+	 */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
+	}
+	
 	
 	//
 	//     OVERRIDDEN METHODS
 	//
-
+	
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -120,12 +134,12 @@ public final class LoadGenesFormSetupAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Get organisms that have uploaded gene data
-    	Set<Organism> organisms =
-    		this.annotatedGenomeFeatureDao.organismsWithLoadedGenes();
+    	// Get organism
+    	Long orgId = new Long(request.getParameter("orgId"));
+    	Organism org = this.organismDao.load(orgId);
     	
-    	// Attach organisms to request
-    	request.setAttribute("organisms", organisms);
+    	// Delete genes
+    	this.annotatedGenomeFeatureDao.deleteAll(AnnotationType.GENE, org);
     	
     	return mapping.findForward("success");
     }

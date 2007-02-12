@@ -69,6 +69,7 @@
     			<value>org/rti/webcgh/service/dao/hibernate/Organism.hbm.xml</value>
     			<value>org/rti/webcgh/service/dao/hibernate/CytologicalMap.hbm.xml</value>
     			<value>org/rti/webcgh/service/dao/hibernate/Cytoband.hbm.xml</value>
+    			<value>org/rti/webcgh/service/dao/hibernate/AnnotatedGenomeFeature.hbm.xml</value>
     		</list>
     	</property>
     	
@@ -105,6 +106,12 @@
 <!-- Cytological map DAO -->
 	<bean id="cytologicalMapDao"
 		class="org.rti.webcgh.service.dao.hibernate.HibernateCytologicalMapDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+<!-- Annotated genome feature DAO -->
+	<bean id="annotatedGenomeFeatureDao"
+		class="org.rti.webcgh.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
@@ -307,11 +314,6 @@
 			<ref bean="cytologicalMapDao"/>
 		</property>
 	</bean>
-	
-<!-- Load genes form -->
-	<bean name="/admin/loadGenesForm"
-		class="org.rti.webcgh.webui.struts.admin.LoadGenesFormSetupAction">
-	</bean>
 		
 <!-- Load cytobands -->
 	<bean name="/admin/loadCytobands"
@@ -332,6 +334,25 @@
 		</property>
 		<property name="cytologicalMapDao">
 			<ref bean="cytologicalMapDao"/>
+		</property>
+	</bean>
+	
+<!-- Load genes form -->
+	<bean name="/admin/loadGenesForm"
+		class="org.rti.webcgh.webui.struts.admin.LoadGenesFormSetupAction">
+		<property name="annotatedGenomeFeatureDao">
+			<ref bean="annotatedGenomeFeatureDao"/>
+		</property>
+	</bean>
+	
+<!-- Delete genes -->
+	<bean name="/admin/deleteGenes"
+		class="org.rti.webcgh.webui.struts.admin.DeleteGenesAction">
+		<property name="annotatedGenomeFeatureDao">
+			<ref bean="annotatedGenomeFeatureDao"/>
+		</property>
+		<property name="organismDao">
+			<ref bean="organismDao"/>
 		</property>
 	</bean>
 </beans>

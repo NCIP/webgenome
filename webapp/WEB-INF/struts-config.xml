@@ -392,6 +392,11 @@
 		<action path="/admin/loadGenesForm">
 			<forward name="success" path="admin.load.genes"/>
 		</action>
+		
+	<!-- Delete genes -->
+		<action path="/admin/deleteGenes">
+			<forward name="success" path="/admin/loadGenesForm.do"/>
+		</action>
         
     <!-- Status Page -->
         <action
