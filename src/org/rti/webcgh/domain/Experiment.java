@@ -117,6 +117,8 @@ public class Experiment implements Serializable {
     /** Identifier of data source where experiment is stored. */
     private DataSourceProperties dataSourceProperties = null;
     
+    /** ShoppingCart. */
+    private ShoppingCart shoppingCart = null;
 
         
     // ===============================
@@ -267,6 +269,22 @@ public class Experiment implements Serializable {
             final QuantitationType quantitationType) {
         this.quantitationType = quantitationType;
     }
+    
+    /**
+     * Get shoppingcar.
+     * @return ShoppingCart.
+     */
+    public final ShoppingCart getShoppingCart() {
+		return shoppingCart;
+	}
+
+    /**
+     * Set shoppingcar.
+     * @param shoppingCart A ShoppingCart.
+     */
+	public final void setShoppingCart(final ShoppingCart shoppingCart) {
+		this.shoppingCart = shoppingCart;
+	}
     
     // ==================================
     //       Constructors
@@ -494,6 +512,14 @@ public class Experiment implements Serializable {
      */
     public final void add(final BioAssay bioAssay) {
         this.bioAssays.add(bioAssay);
+    }
+    
+    /**
+     * Remove a bioassay from this experiment.
+     * @param bioAssay A bioassay.
+     */
+    public final void remove(final BioAssay bioAssay) {
+    	this.bioAssays.remove(bioAssay);
     }
     
     

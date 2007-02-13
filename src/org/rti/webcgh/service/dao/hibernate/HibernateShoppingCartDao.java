@@ -53,6 +53,7 @@ package org.rti.webcgh.service.dao.hibernate;
 import java.util.Collection;
 import java.util.List;
 
+import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.dao.ShoppingCartDao;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -93,8 +94,12 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      */
     public ShoppingCart load(final String userName) {
         String query = "from ShoppingCart cart where cart.userName = ?";
+    	//String query = "from SHOPPING_CART cart where cart.userName = ?";
+        Object[] args = new Object[] {userName};
+        //query = "from ShoppingCart cart where cart.id = ?";
+        List carts = this.getHibernateTemplate().find(query, args);
+        //List carts = this.getHibernateTemplate().find(query, userName);
         ShoppingCart cart = null;
-        List carts = this.getHibernateTemplate().find(query, userName);
         if (carts != null && carts.size() > 0) {
             cart = (ShoppingCart) carts.get(0);
         }
@@ -119,6 +124,7 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
         this.getHibernateTemplate().delete(shoppingCart);
     }
 
+    
     /**
      * Get names of all image files in shopping
      * cart.
