@@ -10,7 +10,7 @@
 <tr>
 <th colspan="2">Organism</th>
 </tr>
-<logic:iterate name="organisms" id="org">
+<logic:iterate name="organismsWithGeneData" id="org">
 	<tr>
 	<td>
 		<bean:write name="org" property="displayName"/>
@@ -26,12 +26,11 @@
 </table>
 </center>
 
-<%--
 <center>
 <p>
 <html:errors property="global"/>
 </p>
-<html:form action="/admin/loadCytobands" enctype="multipart/form-data"
+<html:form action="/admin/loadGenes" enctype="multipart/form-data"
 	method="POST">
 	<p>
 		<html:select property="organismId">
@@ -41,8 +40,8 @@
 	</p>
 	
 	<p>
-		<html:errors property="cytobandFormFile"/>
-	    <html:file property="cytobandFormFile"/>
+		<html:errors property="formFile"/>
+	    <html:file property="formFile"/>
     </p>
     
     <p>
@@ -50,4 +49,3 @@
 	</p>
 </html:form>
 </center>
---%>

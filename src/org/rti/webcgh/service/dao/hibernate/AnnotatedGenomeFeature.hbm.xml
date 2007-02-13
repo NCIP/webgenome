@@ -21,9 +21,6 @@
 		<property name="annotationType" column="annotation_type"
 			type="org.rti.webcgh.framework.hibernate.AnnotationTypeUserType"/>
 			
-	<!-- quantitation -->
-		<property name="quantitation"/>
-		
 	<!-- chromosome -->
 		<property name="chromosome"/>
 		
@@ -37,7 +34,6 @@
 		<many-to-one
 			name="organism"
 			column="organism_id"
-			cascade="all"
 			class="org.rti.webcgh.domain.Organism"
 			lazy="false"/>
 			
@@ -45,7 +41,7 @@
 		<set
 			name="childFeatures"
 			lazy="false"
-			cascade="all,delete-orphan"
+			cascade="all"
 			sort="natural">
 			<key column="parent_id"/>
 			<one-to-many class="org.rti.webcgh.domain.AnnotatedGenomeFeature"/>

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-02-13 03:33:12 $
 
 The Web CGH Software License, Version 1.0
@@ -50,8 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.admin;
 
-import java.util.List;
-import java.util.Set;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,56 +60,48 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webcgh.service.dao.OrganismDao;
+import org.rti.webcgh.service.io.UcscGeneReader;
 import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Action that sets up request attributes for
- * the JSP that shows which sets of genese have
- * been loaded.
+ * This action is responsible for uploading gene data
+ * from a UCSC database dump file.  Documentation
+ * of the expected file format can be found in
+ * org.rti.webcgh.service.io.UcscGeneReader.
+ * 
  * @author dhall
- *
+ * @see org.rti.webcgh.service.io.UcscGeneReader
  */
-public final class LoadGenesFormSetupAction extends BaseAction {
+public final class LoadGenesAction extends BaseAction {
 	
 	//
 	//     ATTRIBUTES
 	//
 	
 	/**
-	 * DAO for getting annotated genome features.  This property
-	 * must be set via dependency injection.
-	 */
-	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
-	
-	/**
-	 * Organism data access object.  This property
-	 * must be set via dependency injection.
+	 * Organism data access object. This property
+	 * must be set using dependency injection.
 	 */
 	private OrganismDao organismDao = null;
+	
+	/**
+	 * DAO for annotated genome features. This property
+	 * must be set using dependency injection.
+	 */
+	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
+
 	
 	//
 	//     SETTERS (for dependency injection)
 	//
 	
-	
 	/**
-	 * Set DAO for getting annotated genome features.  This property
-	 * must be set via dependency injection.
-	 * @param annotatedGenomeFeatureDao DAO for getting annotated
-	 * genome features
-	 */
-	public void setAnnotatedGenomeFeatureDao(
-			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
-		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
-	}
-	
-	
-	/**
-	 * Set organism data access object.  This property
-	 * must be set via dependency injection.
+	 * Set organism data access object. This property
+	 * must be set using dependency injection.
 	 * @param organismDao Organims data access object.
 	 */
 	public void setOrganismDao(final OrganismDao organismDao) {
@@ -116,8 +109,20 @@ public final class LoadGenesFormSetupAction extends BaseAction {
 	}
 	
 	
+	/**
+	 * Setter for annotated genome feature data access object.
+	 * This property
+	 * must be set using dependency injection.
+	 * @param annotatedGenomeFeatureDao Annotated genome feature
+	 * data access object
+	 */
+	public void setAnnotatedGenomeFeatureDao(
+			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
+		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
+	}
+	
 	//
-	//     OVERRIDDEN METHODS
+	//     OVERLOADS
 	//
 
 	/**
@@ -138,20 +143,22 @@ public final class LoadGenesFormSetupAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Get all organisms and attach to request
-    	List<Organism> organisms = this.organismDao.loadAll();
-    	request.setAttribute("organisms",  organisms);
+    	// Get input stream to uploaded file
+    	AnnotationUploadForm cForm = (AnnotationUploadForm) form;
+    	InputStream in = cForm.getFormFile().getInputStream();
+    	Reader reader = new InputStreamReader(in);
     	
-    	// Get organisms that have uploaded gene data
-    	Set<Organism> organismsWithGeneData =
-    		this.annotatedGenomeFeatureDao.organismsWithLoadedGenes();
+    	// Get organism
+    	Long orgId = Long.parseLong(cForm.getOrganismId());
+    	Organism org = this.organismDao.load(orgId);
     	
-    	// Attach attributes to request
-    	request.setAttribute("organisms", organisms);
-    	request.setAttribute("organismsWithGeneData",
-    			organismsWithGeneData);
+    	// Load data
+    	UcscGeneReader geneReader = new UcscGeneReader(reader, org);
+    	while (geneReader.hasNext()) {
+    		AnnotatedGenomeFeature feat = geneReader.next();
+    		this.annotatedGenomeFeatureDao.save(feat);
+    	}
     	
     	return mapping.findForward("success");
     }
-
 }

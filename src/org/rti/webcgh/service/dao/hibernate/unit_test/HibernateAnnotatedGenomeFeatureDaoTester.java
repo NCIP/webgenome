@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-02-12 03:09:18 $
+$Revision: 1.4 $
+$Date: 2007-02-13 03:33:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,7 +94,7 @@ extends TestCase {
 		feat.setOrganism(org);
 		
 		AnnotatedGenomeFeature childFeat = new AnnotatedGenomeFeature();
-		childFeat.setAnnotationType(AnnotationType.GENE);
+		childFeat.setAnnotationType(AnnotationType.EXON);
 		childFeat.setChromosome((short) 1);
 		childFeat.setStartLocation(1);
 		childFeat.setEndLocation(100);

@@ -340,6 +340,20 @@
 <!-- Load genes form -->
 	<bean name="/admin/loadGenesForm"
 		class="org.rti.webcgh.webui.struts.admin.LoadGenesFormSetupAction">
+		<property name="organismDao">
+			<ref bean="organismDao"/>
+		</property>
+		<property name="annotatedGenomeFeatureDao">
+			<ref bean="annotatedGenomeFeatureDao"/>
+		</property>
+	</bean>
+	
+<!-- Load cytobands -->
+	<bean name="/admin/loadGenes"
+		class="org.rti.webcgh.webui.struts.admin.LoadGenesAction">
+		<property name="organismDao">
+			<ref bean="organismDao"/>
+		</property>
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
 		</property>

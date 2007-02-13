@@ -88,6 +88,12 @@ public final class HibernateOrganismDaoTester extends TestCase {
         this.dao.save(org);
         Organism org2 = dao.load(genus, species);
         assertNotNull(org2);
+        assertEquals(genus, org2.getGenus());
+        assertEquals(species, org2.getSpecies());
+        org2 = dao.load(org.getId());
+        assertNotNull(org2);
+        assertEquals(genus, org2.getGenus());
+        assertEquals(species, org2.getSpecies());
         this.dao.delete(org2);
     }
     

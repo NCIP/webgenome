@@ -188,8 +188,8 @@ public class Organism implements Serializable {
 		boolean equals = false;
 		if (obj instanceof Organism) {
 			Organism org = (Organism) obj;
-			equals = this.genus.equals(org.genus)
-			&& this.species.equals(org.species);
+			equals = this.getGenus().equals(org.getGenus())
+			&& this.getSpecies().equals(org.getSpecies());
 		}
 		return equals;
 	}
@@ -201,7 +201,8 @@ public class Organism implements Serializable {
 	 */
 	@Override
 	public final int hashCode() {
-		return (this.genus + this.species).hashCode();
+		String concatenation = this.getGenus() + this.getSpecies();
+		return concatenation.hashCode();
 	}
     
     

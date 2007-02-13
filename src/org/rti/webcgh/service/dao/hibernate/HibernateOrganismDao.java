@@ -82,8 +82,27 @@ public final class HibernateOrganismDao extends HibernateDaoSupport
      * @return An organism
      */
     public Organism load(final Long id) {
-        return (Organism)
-            this.getHibernateTemplate().load(Organism.class, id);
+    	
+    	// The following code is commented out due to an
+    	// apparent defect in HibernateTemplate whereby
+    	// the attributes of Organism are not properly set.
+    	// The setter methods for these properies are never
+    	// invoked.
+    	
+//        return (Organism)
+//            this.getHibernateTemplate().load(Organism.class, id);
+    	
+    	// The following is a workaround for the issue described
+    	// with the above code
+    	Organism org = null;
+    	String query = 
+            "from Organism org where id = ?";
+        Object[] args = new Object[]{id};
+        List results = this.getHibernateTemplate().find(query, args);
+        if (results != null && results.size() > 0) {
+            org = (Organism) results.get(0);
+        }
+    	return org;
     }
     
     

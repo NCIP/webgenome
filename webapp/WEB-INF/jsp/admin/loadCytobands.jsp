@@ -40,8 +40,8 @@
 	</p>
 	
 	<p>
-		<html:errors property="cytobandFormFile"/>
-	    <html:file property="cytobandFormFile"/>
+		<html:errors property="formFile"/>
+	    <html:file property="formFile"/>
     </p>
     
     <p>

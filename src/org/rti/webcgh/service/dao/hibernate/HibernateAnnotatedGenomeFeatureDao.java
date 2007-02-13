@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-02-12 03:09:18 $
+$Revision: 1.4 $
+$Date: 2007-02-13 03:33:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,6 +62,7 @@ import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -84,8 +87,10 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 	 * @param annotationType Feature type
 	 * @param organism Organism
 	 */
+	@SuppressWarnings("unchecked")
 	public final void deleteAll(final AnnotationType annotationType,
 			final Organism organism) {
+		HibernateTemplate template = this.getHibernateTemplate();
 		
 		// Get features
 		String query =
@@ -93,11 +98,13 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 			+ "where f.annotationType = ? and f.organism = ?";
 		Object[] args = new Object[] {annotationType.toString(),
 				organism};
-		List feats = this.getHibernateTemplate().find(query, args);
+		List<AnnotatedGenomeFeature> feats =
+			template.find(query, args);
 		
 		// Delete features
-		this.getHibernateTemplate().deleteAll(feats);
+		template.deleteAll(feats);
 	}
+	
 	
 	/**
 	 * Load all annotated features of given type

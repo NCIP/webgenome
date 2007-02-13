@@ -393,6 +393,16 @@
 			<forward name="success" path="admin.load.genes"/>
 		</action>
 		
+	<!-- Load cytobands -->
+		<action
+			path="/admin/loadGenes"
+			name="annotation.upload.form"
+			scope="request"
+			validate="true"
+			input="/admin/loadGenesForm.do">
+			<forward name="success" path="/admin/loadGenesForm.do"/>
+		</action>
+		
 	<!-- Delete genes -->
 		<action path="/admin/deleteGenes">
 			<forward name="success" path="/admin/loadGenesForm.do"/>
