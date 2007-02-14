@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-02-09 20:43:52 $
+$Revision: 1.3 $
+$Date: 2007-02-14 17:47:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -190,8 +190,13 @@ public class UcscGeneReader {
 	throws IOException, UcscFileFormatException {
 		AnnotatedGenomeFeature feat = null;
 		if (this.hasNext()) {
-			feat = this.parseNextRecord();
-			this.advance();
+			try {
+				feat = this.parseNextRecord();
+			} catch (UcscFileFormatException e) {
+				throw e;
+			} finally {
+				this.advance();
+			}
 		}
 		return feat;
 	}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-13 03:33:12 $
+$Revision: 1.2 $
+$Date: 2007-02-14 17:47:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import java.io.Reader;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -77,6 +78,14 @@ import org.rti.webcgh.webui.struts.BaseAction;
  * @see org.rti.webcgh.service.io.UcscGeneReader
  */
 public final class LoadGenesAction extends BaseAction {
+	
+	//
+	//     STATICS
+	//
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(LoadGenesAction.class);
 	
 	//
 	//     ATTRIBUTES
@@ -155,8 +164,13 @@ public final class LoadGenesAction extends BaseAction {
     	// Load data
     	UcscGeneReader geneReader = new UcscGeneReader(reader, org);
     	while (geneReader.hasNext()) {
-    		AnnotatedGenomeFeature feat = geneReader.next();
-    		this.annotatedGenomeFeatureDao.save(feat);
+    		try {
+    			AnnotatedGenomeFeature feat = geneReader.next();
+    			this.annotatedGenomeFeatureDao.save(feat);
+    		} catch (Exception e) {
+    			LOGGER.warn("Unable to load feature: "
+    					+ e.getMessage());
+    		}
     	}
     	
     	return mapping.findForward("success");

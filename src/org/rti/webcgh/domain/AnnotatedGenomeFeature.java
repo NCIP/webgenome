@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-02-09 20:43:51 $
+$Revision: 1.8 $
+$Date: 2007-02-14 17:47:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -227,8 +227,8 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	public AnnotatedGenomeFeature(final AnnotationType annotationType) {
 		this.annotationType = annotationType;
 	}
-
-
+	
+	
 	/**
 	 * Constructor.
 	 * @param chromosome Chromosome number
@@ -243,6 +243,25 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 			final AnnotationType annotationType) {
 		super(chromosome, startLocation, endLocation);
 		this.annotationType = annotationType;
+	}
+
+
+	/**
+	 * Constructor.
+	 * @param chromosome Chromosome number
+	 * @param startLocation Chromosomal start location of interval
+	 * in base pairs
+	 * @param endLocation Chromosomal end location of interval
+	 * in base pairs
+	 * @param annotationType Annotation type
+	 * @param featureName Name of feature
+	 */
+	public AnnotatedGenomeFeature(final short chromosome,
+			final long startLocation, final long endLocation,
+			final AnnotationType annotationType,
+			final String featureName) {
+		this(chromosome, startLocation, endLocation, annotationType);
+		this.name = featureName;
 	}
 
 	
