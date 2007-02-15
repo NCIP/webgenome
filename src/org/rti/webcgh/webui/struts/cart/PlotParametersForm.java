@@ -1,6 +1,6 @@
 /*
-$Revision: 1.28 $
-$Date: 2007-02-06 17:48:53 $
+$Revision: 1.29 $
+$Date: 2007-02-15 13:08:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,7 @@ import org.rti.webcgh.domain.GenomeIntervalFormatException;
 import org.rti.webcgh.graphics.InterpolationType;
 import org.rti.webcgh.service.plot.BarPlotParameters;
 import org.rti.webcgh.service.plot.BaseGenomicPlotParameters;
+import org.rti.webcgh.service.plot.HeatMapPlotParameters;
 import org.rti.webcgh.service.plot.IdeogramPlotParameters;
 import org.rti.webcgh.service.plot.PlotParameters;
 import org.rti.webcgh.service.plot.ScatterPlotParameters;
@@ -182,11 +183,11 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Ideogram plot minimum saturation. */
 	private String minSaturation = String.valueOf(
-			IdeogramPlotParameters.DEF_MIN_SATURATION);
+			HeatMapPlotParameters.DEF_MIN_SATURATION);
 	
 	/** Maximum saturation. */
 	private String maxSaturation = String.valueOf(
-			IdeogramPlotParameters.DEF_MAX_SATURATION);
+			HeatMapPlotParameters.DEF_MAX_SATURATION);
 	
 	/** Minimum data mask value for ideogram plot. */
 	private String minMask = "";
@@ -1054,10 +1055,10 @@ public class PlotParametersForm extends BaseForm {
 				IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 		this.maxMask = "";
 		this.maxSaturation = String.valueOf(
-				IdeogramPlotParameters.DEF_MAX_SATURATION);
+				HeatMapPlotParameters.DEF_MAX_SATURATION);
 		this.minMask = "";
 		this.minSaturation = String.valueOf(
-				IdeogramPlotParameters.DEF_MIN_SATURATION);
+				HeatMapPlotParameters.DEF_MIN_SATURATION);
 		this.drawHorizGridLines = "on";
 		this.drawVertGridLines = "on";
 		this.drawErrorBars = "";
@@ -1101,6 +1102,14 @@ public class PlotParametersForm extends BaseForm {
 			} else if (type == PlotType.IDEOGRAM) {
 				p = new IdeogramPlotParameters();
 				this.setIdeogramPlotParameters((IdeogramPlotParameters) p);
+			}
+			
+			// Attributes common to heat map plots
+			if (type == PlotType.IDEOGRAM || type == PlotType.ANNOTATION) {
+				if (p != null) {
+					this.setCommonHeatMapPlotParameters(
+							(HeatMapPlotParameters) p);
+				}
 			}
 			
 			// Attributes common to genomic plots
@@ -1187,6 +1196,35 @@ public class PlotParametersForm extends BaseForm {
 	
 	
 	/**
+	 * Set parameters common to all heat map plots.
+	 * @param params Plot parameters
+	 */
+	private void setCommonHeatMapPlotParameters(
+			final HeatMapPlotParameters params) {
+		if (!StringUtils.isEmpty(this.maxMask)) {
+			params.setMaxMask(Float.parseFloat(this.maxMask));
+		} else {
+			params.setMaxMask(Float.MIN_VALUE);
+		}
+		if (!StringUtils.isEmpty(this.maxSaturation)) {
+			params.setMaxSaturation(Float.parseFloat(this.maxSaturation));
+		} else {
+			params.setMaxSaturation(Float.NaN);
+		}
+		if (!StringUtils.isEmpty(this.minMask)) {
+			params.setMinMask(Float.parseFloat(this.minMask));
+		} else {
+			params.setMinMask(Float.MAX_VALUE);
+		}
+		if (!StringUtils.isEmpty(this.minSaturation)) {
+			params.setMinSaturation(Float.parseFloat(this.minSaturation));
+		} else {
+			params.setMinSaturation(Float.NaN);
+		}
+	}
+	
+	
+	/**
 	 * Initialize scatter plot parameters.
 	 * @param params Plot parameters
 	 */
@@ -1236,26 +1274,6 @@ public class PlotParametersForm extends BaseForm {
 				ChromosomeIdeogramSize.getChromosomeIdeogramSize(
 						this.ideogramSize));
 		params.setIdeogramThickness(Integer.parseInt(this.ideogramThickness));
-		if (!StringUtils.isEmpty(this.maxMask)) {
-			params.setMaxMask(Float.parseFloat(this.maxMask));
-		} else {
-			params.setMaxMask(Float.MIN_VALUE);
-		}
-		if (!StringUtils.isEmpty(this.maxSaturation)) {
-			params.setMaxSaturation(Float.parseFloat(this.maxSaturation));
-		} else {
-			params.setMaxSaturation(Float.NaN);
-		}
-		if (!StringUtils.isEmpty(this.minMask)) {
-			params.setMinMask(Float.parseFloat(this.minMask));
-		} else {
-			params.setMinMask(Float.MAX_VALUE);
-		}
-		if (!StringUtils.isEmpty(this.minSaturation)) {
-			params.setMinSaturation(Float.parseFloat(this.minSaturation));
-		} else {
-			params.setMinSaturation(Float.NaN);
-		}
 		if (!StringUtils.isEmpty(this.trackWidth)) {
 			params.setTrackWidth(Integer.parseInt(this.trackWidth));
 		}
@@ -1290,6 +1308,12 @@ public class PlotParametersForm extends BaseForm {
 		} else {
 			this.bulkSetCommonGenomicPlotAttributes(
 					(BaseGenomicPlotParameters) plotParameters);
+			
+			if (plotType == PlotType.ANNOTATION
+					|| plotType == PlotType.IDEOGRAM) {
+				this.bulkSetCommonHeatMapPlotAttributes(
+						(HeatMapPlotParameters) plotParameters);
+			}
 			
 			// Scatter plot
 			if (plotType == PlotType.SCATTER) {
@@ -1328,6 +1352,35 @@ public class PlotParametersForm extends BaseForm {
 			final BarPlotParameters plotParameters) {
 		this.height = String.valueOf(plotParameters.getRowHeight());
 		this.barWidth = String.valueOf(plotParameters.getBarWidth());
+	}
+	
+	
+	/**
+	 * Bulk set attributes common to all heat map plots by deep copy.
+	 * @param params Parameters to deep copy
+	 */
+	private void bulkSetCommonHeatMapPlotAttributes(
+			final HeatMapPlotParameters params) {
+		if (!StringUtils.isEmpty(this.maxMask)) {
+			params.setMaxMask(Float.parseFloat(this.maxMask));
+		} else {
+			params.setMaxMask(Float.MIN_VALUE);
+		}
+		if (!StringUtils.isEmpty(this.maxSaturation)) {
+			params.setMaxSaturation(Float.parseFloat(this.maxSaturation));
+		} else {
+			params.setMaxSaturation(Float.NaN);
+		}
+		if (!StringUtils.isEmpty(this.minMask)) {
+			params.setMinMask(Float.parseFloat(this.minMask));
+		} else {
+			params.setMinMask(Float.MAX_VALUE);
+		}
+		if (!StringUtils.isEmpty(this.minSaturation)) {
+			params.setMinSaturation(Float.parseFloat(this.minSaturation));
+		} else {
+			params.setMinSaturation(Float.NaN);
+		}
 	}
 	
 	
@@ -1435,38 +1488,6 @@ public class PlotParametersForm extends BaseForm {
 		// ideogramThickness
 		this.ideogramThickness =
 			String.valueOf(plotParameters.getIdeogramThickness());
-		
-		// maxMask
-		if (NumericUtils.isReal(plotParameters.getMaxMask())
-				&& plotParameters.getMaxMask() > Float.MIN_VALUE) {
-			this.maxMask = String.valueOf(plotParameters.getMaxMask());
-		} else {
-			this.maxMask = "";
-		}
-		
-		// maxSaturation
-		if (NumericUtils.isReal(plotParameters.getMaxSaturation())) {
-			this.maxSaturation =
-				String.valueOf(plotParameters.getMaxSaturation());
-		} else {
-			this.maxSaturation = "";
-		}
-		
-		// minMask
-		if (NumericUtils.isReal(plotParameters.getMinMask())
-				&& plotParameters.getMinMask() < Float.MAX_VALUE) {
-			this.minMask = String.valueOf(plotParameters.getMinMask());
-		} else {
-			this.minMask = "";
-		}
-		
-		// minSaturation
-		if (NumericUtils.isReal(plotParameters.getMinSaturation())) {
-			this.minSaturation =
-				String.valueOf(plotParameters.getMinSaturation());
-		} else {
-			this.minSaturation = "";
-		}
 		
 		// trackWidth
 		this.trackWidth = String.valueOf(plotParameters.getTrackWidth());

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-14 21:41:01 $
+$Revision: 1.2 $
+$Date: 2007-02-15 13:07:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,118 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.rti.webcgh.domain.AnnotationType;
+
 /**
  * Parameters for generating an annotation plot.
  * @author dhall
  *
  */
-public class AnnotationPlotParameters extends BaseGenomicPlotParameters {
+public class AnnotationPlotParameters extends HeatMapPlotParameters {
 
+	//
+	//     ATTRIBUTES
+	//
+	
+	/** Annotation types to plot. */
+	private Set<AnnotationType> annotationTypes =
+		new HashSet<AnnotationType>();
+
+	/** Width of plot excluding track labels to the left in pixels. */
+	private int width = 0;
+	
+	/** Draw labels above features? */
+	private boolean drawFeatureLabels = false;
+	
+	//
+	//     GETTERS/SETTERS
+	//
+	
+	/**
+	 * Get annotation types to plot.
+	 * @return Annotation type names
+	 */
+	public final Set<AnnotationType> getAnnotationTypes() {
+		return annotationTypes;
+	}
+
+	/**
+	 * Set annotation types to plot.
+	 * @param annotationTypes Annotation type names
+	 */
+	public final void setAnnotationTypes(
+			final Set<AnnotationType> annotationTypes) {
+		this.annotationTypes = annotationTypes;
+	}
+
+	/**
+	 * Draw labels above features?
+	 * @return T/F
+	 */
+	public final boolean isDrawFeatureLabels() {
+		return drawFeatureLabels;
+	}
+
+	/**
+	 * Sets whether to draw labels above features.
+	 * @param drawFeatureLabels Draw labels above features?
+	 */
+	public final void setDrawFeatureLabels(final boolean drawFeatureLabels) {
+		this.drawFeatureLabels = drawFeatureLabels;
+	}
+
+	/**
+	 * Get width of plot excluding track labels to the left in pixels.
+	 * @return Width in pixels
+	 */
+	public final int getWidth() {
+		return width;
+	}
+
+	
+	/**
+	 * Set width of plot excluding track labels to the left in pixels.
+	 * @param width Width in pixels
+	 */
+	public final void setWidth(final int width) {
+		this.width = width;
+	}
+	
+	
+	//
+	//     CONSTRUCTORS
+	//
+	
+	/**
+	 * Constructor.
+	 */
+	public AnnotationPlotParameters() {
+		
+	}
+	
+	/**
+	 * Constructor that uses deep copy to initialize properties.
+	 * @param params Parameters to deep copy
+	 */
+	public AnnotationPlotParameters(final AnnotationPlotParameters params) {
+		super(params);
+		params.setAnnotationTypes(new HashSet<AnnotationType>(
+				params.getAnnotationTypes()));
+	}
+	
+	
+	//
+	//     BUSINESS METHODS
+	//
+	
+	/**
+	 * Add annotation type.
+	 * @param type An annotation type
+	 */
+	public final void add(final AnnotationType type) {
+		this.annotationTypes.add(type);
+	}
 }
