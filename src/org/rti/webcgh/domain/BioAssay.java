@@ -86,6 +86,9 @@ public abstract class BioAssay implements Serializable {
     /** Organism that was tested. */
     private Organism organism = null;
     
+    /** Experiment. */
+    private Experiment experiment = null;
+    
     /** Microarray model used in bioassay. */
     private Array array = null;
     
@@ -233,6 +236,22 @@ public abstract class BioAssay implements Serializable {
      */
     public final void setOrganism(final Organism organism) {
         this.organism = organism;
+    }
+    
+    /**
+     * Get experiment.
+     * @return An experiment
+     */
+    public final Experiment getExperiment() {
+        return experiment;
+    }
+
+    /**
+     * Set experiment.
+     * @param experiment An experiment
+     */
+    public final void setExperiment(final Experiment experiment) {
+        this.experiment = experiment;
     }
 
     // =======================================
