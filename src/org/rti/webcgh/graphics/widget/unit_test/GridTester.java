@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-25 22:04:55 $
+$Revision: 1.5 $
+$Date: 2007-02-16 21:59:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -86,7 +86,6 @@ public final class GridTester extends TestCase {
     
     /**
      * Draw horizontal grid.
-     *
      */
     public void testHorizontal() {
         RasterFileTestPlotPanel panel =
@@ -104,5 +103,27 @@ public final class GridTester extends TestCase {
         panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED,
                 VerticalAlignment.BOTTOM_JUSTIFIED);
         panel.toPngFile("horizontal.png");
+    }
+    
+    
+    /**
+     * Draw vertical grid.
+     */
+    public void testVertical() {
+        RasterFileTestPlotPanel panel =
+            new RasterFileTestPlotPanel(
+            		FileUtils.createUnitTestDirectory(TEST_DIR_NAME));
+        Axis axis = new Axis(0, 10, 400, Orientation.HORIZONTAL,
+                Location.ABOVE, panel.getDrawingCanvas());
+        Grid grid = axis.newGrid(400, 400, Color.white,
+                panel);
+        Background background = new Background(400, 400, Color.yellow);
+        panel.add(background, HorizontalAlignment.CENTERED,
+                VerticalAlignment.CENTERED);
+        panel.add(grid, HorizontalAlignment.LEFT_JUSTIFIED,
+                VerticalAlignment.TOP_JUSTIFIED);
+        panel.add(axis, HorizontalAlignment.LEFT_JUSTIFIED,
+                VerticalAlignment.TOP_JUSTIFIED);
+        panel.toPngFile("vertical.png");
     }
 }

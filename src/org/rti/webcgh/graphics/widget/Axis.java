@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-02-06 02:27:54 $
+$Revision: 1.9 $
+$Date: 2007-02-16 21:59:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -505,7 +505,7 @@ public final class Axis implements ScalePlotElement {
      * @return A point
      */
     public Point topLeftAlignmentPoint() {
-        return new Point(this.lineMinX, this.lineMaxX);
+        return new Point(this.lineMinX, this.lineMinX);
     }
     
     

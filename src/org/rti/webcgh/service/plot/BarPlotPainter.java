@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-02-06 17:48:53 $
+$Revision: 1.5 $
+$Date: 2007-02-16 21:59:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -122,6 +122,7 @@ public class BarPlotPainter extends PlotPainter {
 		if (params == null) {
 			throw new IllegalArgumentException("Plot parameters are null");
 		}
+		
 		CommonArrayDatumGroupIterator it =
 			new CommonArrayDatumGroupIterator(experiments);
 		float plotMin = this.minSelectedValue(experiments);

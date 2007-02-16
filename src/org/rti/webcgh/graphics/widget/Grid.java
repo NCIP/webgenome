@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-10-26 21:52:33 $
+$Revision: 1.5 $
+$Date: 2007-02-16 21:59:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,10 +54,10 @@ package org.rti.webcgh.graphics.widget;
 import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Collection;
 
 import org.rti.webcgh.graphics.DrawingCanvas;
+import org.rti.webcgh.graphics.primitive.GraphicPrimitive;
 import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.units.Orientation;
 
@@ -84,15 +84,6 @@ public final class Grid implements PlotElement {
     /** Orientation of grid. */
     private final Orientation orientation;
     
-    /** Pixel locations of grid marks. */
-    private final List<Integer> gridMarkLocations = new ArrayList<Integer>();
-    
-    /** Pixel location of grid line representing "0". */
-    private int zeroPointLocation = 0;
-    
-    /** Does grid contain a zeroPoint? */
-    private boolean zeroPointSet = false;
-    
     /** Color of grid. */
     private final Color color;
     
@@ -114,6 +105,13 @@ public final class Grid implements PlotElement {
     /** Minimum Y-coordinate in grid. */
     private int minY = 0;
     
+    /**
+     * Graphic primitives, which are instantiated by the
+     * constructor and business methods and later rendered.
+     */
+    private final Collection<GraphicPrimitive> graphicPrimitives =
+    	new ArrayList<GraphicPrimitive>();
+    
     
     // =================================
     //      Getters/setters
@@ -133,8 +131,14 @@ public final class Grid implements PlotElement {
 	 * @param zeroPointLocation The zeroPointLocation to set.
 	 */
 	public void setZeroPointLocation(final int zeroPointLocation) {
-		this.zeroPointLocation = zeroPointLocation;
-		this.zeroPointSet = true;
+    	Line line = null;
+    	if (this.orientation == Orientation.HORIZONTAL) {
+    		int y = this.minY + this.height - zeroPointLocation;
+    		line = new Line(minX, y, minX + this.width, y,
+    				this.gridMarkThickness, 
+    				this.zeroMarkColor);
+    		this.graphicPrimitives.add(line);
+    	}
 	}
 	
 	
@@ -177,44 +181,9 @@ public final class Grid implements PlotElement {
      * @param canvas A canvas
      */
     public void paint(final DrawingCanvas canvas) {
-    	
-    	// Add all lines except zero point
-        for (Iterator it = this.gridMarkLocations.iterator(); it.hasNext();) {
-            int pos = ((Integer) it.next()).intValue();
-            int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-            if (this.orientation == Orientation.HORIZONTAL) {
-                x1 = this.minX;
-                x2 = this.minX + this.width;
-                y1 = this.minY + this.height - pos;
-                y2 = y1;
-            } else if (this.orientation == Orientation.VERTICAL) {
-                x1 = this.minX + pos;
-                x2 = x1;
-                y1 = this.minY;
-                y2 = this.minY + this.height;
-            }
-            Line line = new Line(x1, y1, x2, y2,
-                    this.gridMarkThickness, this.color);
-            canvas.add(line);
-        }
-        
-        // Add zero point
-        if (this.zeroPointSet) {
-        	Line line = null;
-        	if (this.orientation == Orientation.HORIZONTAL) {
-        		int y = this.minY + this.height - this.zeroPointLocation;
-        		line = new Line(minX, y, minX + this.width, y,
-        				this.gridMarkThickness, 
-        				this.zeroMarkColor);
-        	}
-//        	else if (this.orientation == Orientation.VERTICAL) {
-//        		line = new Line(this.zeroPointLocation, 0,
-//                        this.zeroPointLocation,
-//        				this.height, this.gridMarkThickness,
-//                        this.zeroMarkColor);
-//        	}
-        	canvas.add(line);
-        }
+    	for (GraphicPrimitive prim : this.graphicPrimitives) {
+    		canvas.add(prim);
+    	}
     }
     
     
@@ -289,6 +258,9 @@ public final class Grid implements PlotElement {
     public void move(final int deltaX, final int deltaY) {
     	this.minX += deltaX;
     	this.minY += deltaY;
+    	for (GraphicPrimitive prim : this.graphicPrimitives) {
+    		prim.move(deltaX, deltaY);
+    	}
     }
     
     // ==============================
@@ -300,7 +272,21 @@ public final class Grid implements PlotElement {
      * @param pos Grid mark position in pixels from origin
      */
     public void addGridMarkPosition(final int pos) {
-        this.gridMarkLocations.add(new Integer(pos));
+        int x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+        if (this.orientation == Orientation.HORIZONTAL) {
+            x1 = this.minX;
+            x2 = this.minX + this.width;
+            y1 = this.minY + this.height - pos;
+            y2 = y1;
+        } else if (this.orientation == Orientation.VERTICAL) {
+            x1 = this.minX + pos;
+            x2 = x1;
+            y1 = this.minY;
+            y2 = this.minY + this.height;
+        }
+        Line line = new Line(x1, y1, x2, y2,
+                this.gridMarkThickness, this.color);
+        this.graphicPrimitives.add(line);
     }
 
 }
