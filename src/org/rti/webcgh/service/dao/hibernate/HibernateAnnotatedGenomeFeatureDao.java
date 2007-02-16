@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-02-13 03:33:11 $
+$Revision: 1.5 $
+$Date: 2007-02-16 23:29:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,14 +50,19 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.sql.DataSource;
+
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.Organism;
@@ -73,6 +78,35 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class HibernateAnnotatedGenomeFeatureDao
 extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
+	
+	//
+	//     ATTRIBUTES
+	//
+	
+	/**
+	 * Data source used for a single SQL query that I could
+	 * not figure out now to do using HQL and Spring.
+	 */
+	private DataSource dataSource = null;
+	
+	//
+	//     GETTERS/SETTERS
+	//
+	
+	
+	/**
+	 * Set data source which is used for a single SQL query that I could
+	 * not figure out now to do using HQL and Spring.
+	 * @param dataSource Data source
+	 */
+	public final void setDataSource(final DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+	
+	
+	//
+	//     INTERFACE: AnnotatedGenomeFeatureDao
+	//
 
 	/**
 	 * Persist given feature.
@@ -155,5 +189,39 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 		List<Organism> results = this.getHibernateTemplate().find(query);
 		orgs.addAll(results);
 		return orgs;
+	}
+	
+	// TODO (or not to do!): Convert SQL code below to HQL
+	/**
+	 * Get all annotation types with data for given organism.
+	 * @param org An organism
+	 * @return Annotation types
+	 */
+	@SuppressWarnings("unchecked")
+	public final Set<AnnotationType> availableAnnotationTypes(
+			final Organism org) {
+		Set<AnnotationType> types = new HashSet<AnnotationType>();
+		
+		// Unable to get the following query to work with HQL,
+		// so I fell back on SQL
+		try {
+			Connection conn = this.dataSource.getConnection();
+			String query =
+				"select distinct(annotation_type) "
+				+ "from annotated_genome_feature "
+				+ "where organism_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setLong(1, org.getId());
+			ResultSet rset = stmt.executeQuery();
+			while (rset.next()) {
+				String name = rset.getString(1);
+				AnnotationType type = AnnotationType.valueOf(name);
+				types.add(type);
+			}
+		} catch (SQLException e) {
+			throw new WebcghSystemException(
+					"Error retrieving available annotation types", e);
+		}
+		return types;
 	}
 }

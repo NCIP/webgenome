@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-02-12 03:09:19 $
+$Revision: 1.4 $
+$Date: 2007-02-16 23:29:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -99,4 +99,11 @@ public interface AnnotatedGenomeFeatureDao {
 	 * database
 	 */
 	Set<Organism> organismsWithLoadedGenes();
+	
+	/**
+	 * Get all annotation types with data for given organism.
+	 * @param org An organism
+	 * @return Annotation types
+	 */
+	Set<AnnotationType> availableAnnotationTypes(Organism org);
 }

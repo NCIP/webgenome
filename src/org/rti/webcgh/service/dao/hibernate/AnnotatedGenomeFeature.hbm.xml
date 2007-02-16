@@ -35,6 +35,7 @@
 			name="organism"
 			column="organism_id"
 			class="org.rti.webcgh.domain.Organism"
+			cascade="save-update"
 			lazy="false"/>
 			
 	<!-- childFeatures -->

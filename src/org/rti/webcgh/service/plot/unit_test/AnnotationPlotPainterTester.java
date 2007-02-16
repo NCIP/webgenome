@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-15 13:07:21 $
+$Revision: 1.2 $
+$Date: 2007-02-16 23:29:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -260,6 +260,16 @@ public final class AnnotationPlotPainterTester extends TestCase {
 		 * database
 		 */
 		public Set<Organism> organismsWithLoadedGenes() {
+			return null;
+		}
+		
+		/**
+		 * Get all annotation types with data for given organism.
+		 * @param org An organism
+		 * @return Annotation types
+		 */
+		public Set<AnnotationType> availableAnnotationTypes(
+				final Organism org) {
 			return null;
 		}
 	}

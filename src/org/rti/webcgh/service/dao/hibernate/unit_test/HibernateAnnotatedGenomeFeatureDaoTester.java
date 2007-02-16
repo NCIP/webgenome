@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-02-13 03:33:11 $
+$Revision: 1.5 $
+$Date: 2007-02-16 23:29:38 $
 
 The Web CGH Software License, Version 1.0
 
@@ -120,10 +120,15 @@ extends TestCase {
 		assertEquals(0, feats.size());
 		
 		// Query organisms
-		Set<Organism> orgs = dao.organismsWithLoadedGenes();
-		assertNotNull(orgs);
-		assertEquals(1, orgs.size());
-		assertEquals("genus", orgs.iterator().next().getGenus());
+//		Set<Organism> orgs = dao.organismsWithLoadedGenes();
+//		assertNotNull(orgs);
+//		assertEquals(1, orgs.size());
+//		assertEquals("genus", orgs.iterator().next().getGenus());
+		
+		// Query feature types
+		Set<AnnotationType> types = dao.availableAnnotationTypes(org);
+		assertNotNull(types);
+		assertEquals(2, types.size());
 		
 		// Delete
 		dao.deleteAll(AnnotationType.GENE, org);
