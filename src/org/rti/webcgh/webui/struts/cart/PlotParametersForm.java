@@ -1,6 +1,6 @@
 /*
-$Revision: 1.29 $
-$Date: 2007-02-15 13:08:03 $
+$Revision: 1.30 $
+$Date: 2007-02-22 01:58:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -249,6 +249,9 @@ public class PlotParametersForm extends BaseForm {
 	/** Width of bar plot bar in pixels. */
 	private String barWidth = DEF_BAR_WIDTH;
 	
+	/** Selected annotation types. */
+	private String[] annotationTypes = null;
+	
 	// ================================
 	//      Getters/setters
 	// ================================
@@ -277,7 +280,22 @@ public class PlotParametersForm extends BaseForm {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
-	
+	/**
+	 * Get selected annotation types.
+	 * @return Selected annotation types.
+	 */
+	public final String[] getAnnotationTypes() {
+		return annotationTypes;
+	}
+
+	/**
+	 * Set selected annotation types.
+	 * @param annotationTypes Selected annotation types
+	 */
+	public final void setAnnotationTypes(final String[] annotationTypes) {
+		this.annotationTypes = annotationTypes;
+	}
+
 	/**
 	 * Get bar plot bar width.
 	 * @return Width in pixels

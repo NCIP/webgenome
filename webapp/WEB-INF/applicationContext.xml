@@ -110,9 +110,10 @@
   	</bean>
   	
 <!-- Annotated genome feature DAO -->
-	<bean id="annotatedGenomeFeatureDao"
+  	<bean id="annotatedGenomeFeatureDao"
 		class="org.rti.webcgh.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource"><ref bean="dataSource"/></property>
   	</bean>
   	
   	<!-- =================================== -->
@@ -284,6 +285,13 @@
         </property>
     </bean>
 
+<!-- Annotation plot parameters setup -->
+	<bean name="/cart/annotationPlotParams"
+		class="org.rti.webcgh.webui.struts.cart.AnnotationPlotParamsSetupAction">
+		<property name="annotatedGenomeFeatureDao">
+			<ref bean="annotatedGenomeFeatureDao"/>
+		</property>
+	</bean>
 	
 <!-- New plot -->
 	<bean name="/cart/newPlot"

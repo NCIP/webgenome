@@ -175,31 +175,13 @@
 			<forward name="SCATTER" path="cart.scatter.plot.params"/>
 			<forward name="IDEOGRAM" path="cart.ideogram.plot.params"/>
 			<forward name="BAR" path="cart.bar.plot.params"/>
+			<forward name="ANNOTATION" path="/cart/annotationPlotParams.do"/>
 		</action>
 
-	<!-- Ideogram plot parameters -->
-		<action
-			path="/cart/ideogramPlotParams"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.ideogram.plot.params"/>
-
-	<!-- Bar plot parameters -->
-		<action
-			path="/cart/barPlotParams"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.bar.plot.params"/>
-
 	<!-- Annotation plot parameters -->
-		<action
-			path="/cart/annotationPlotParams"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.annotation.plot.params"/>
-
-	<!-- Frequency plot parameters -->
-		<action
-			path="/cart/frequencyPlotParams"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.frequency.plot.params"/>
+		<action path="/cart/annotationPlotParams">
+			<forward name="success" path="cart.annotation.plot.params"/>
+		</action>
 
 	<!-- New plot -->
 		<action

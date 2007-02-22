@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-09-27 22:22:58 $
+$Revision: 1.2 $
+$Date: 2007-02-22 01:58:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,23 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.AnnotationType;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
+import org.rti.webcgh.webui.SessionTimeoutException;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 
 /**
@@ -65,7 +76,36 @@ import org.apache.struts.action.ActionMapping;
  * @author dhall
  *
  */
-public final class AnnotationPlotParamsSetupAction {
+public final class AnnotationPlotParamsSetupAction extends BaseAction {
+	
+	//
+	//     ATTRIBUTES TO BE INJECTED
+	//
+	
+	/**
+	 * Data access object for obtaining annotated genome features.
+	 * This propery must be injected.
+	 */
+	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
+	
+	//
+	//     SETTERS
+	//
+	
+
+	/**
+	 * Set data access object for obtaining annotated genome features.
+	 * This propery must be injected.
+	 * @param annotatedGenomeFeatureDao Data access object
+	 */
+	public void setAnnotatedGenomeFeatureDao(
+			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
+		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
+	}
+	
+	//
+	//     OVERRIDES
+	//
 
 	/**
      * Execute action.
@@ -84,6 +124,24 @@ public final class AnnotationPlotParamsSetupAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	
+    	// Organism from selected experiments
+    	SelectedExperimentsForm seForm =
+    		PageContext.getSelectedExperimentsForm(request, false);
+    	if (seForm == null) {
+    		throw new SessionTimeoutException(
+    				"Could not find selected experiments");
+    	}
+    	Collection<Long> ids = seForm.getSelectedExperimentIds();
+    	Collection<Experiment> experiments = cart.getExperiments(ids);
+    	Organism org = Experiment.getOrganism(experiments);
+    	
+    	// Get available annotation types and attach to request
+    	Set<AnnotationType> annotationTypes =
+    		this.annotatedGenomeFeatureDao.availableAnnotationTypes(org);
+    	request.setAttribute("annotationTypes", annotationTypes);
+    	
         return mapping.findForward("success");
     }
 }

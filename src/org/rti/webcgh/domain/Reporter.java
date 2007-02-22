@@ -289,11 +289,7 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     // ==============================
     
     /**
-     * Equals method.  This methods is consistent
-     * with compareTo() for all pairs of reporter
-     * objects.
-     * @param obj Comparison object
-     * @return T/F
+     * {@inheritDoc}
      */
 	@Override
 	public final boolean equals(final Object obj) {
@@ -305,8 +301,7 @@ public class Reporter implements Serializable, Comparable<Reporter> {
 	}
 
 	/**
-	 * Hash code.
-	 * @return Hash code.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final int hashCode() {

@@ -51,6 +51,19 @@
 					Bar Plot
 				</td>
 			</tr>
+			
+		<%-- Bar plot --%>
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[3].checked=true;">
+				<td>
+					<html:radio property="plotType" value="ANNOTATION"/>
+				</td>
+				<td>
+					<html:img page="/images/icon-annotationPlot.gif" border="1"/>
+				</td>
+				<td>
+					Annotation Plot
+				</td>
+			</tr>
 
 		</table>
 
