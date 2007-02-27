@@ -47,37 +47,9 @@
   	</definition>
 
 <!-- Scatter plot parameters -->
-  	<definition name="cart.scatter.plot.params" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Scatter plot parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/scatterPlotParams.jsp" />
-	  	<put name="helpTopic" value="plotParams" />
-  	</definition>
-
-<!-- Ideogram plot parameters -->
-  	<definition name="cart.ideogram.plot.params" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Ideogram plot parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/ideogramPlotParams.jsp" />
-	  	<put name="helpTopic" value="plotParams" />
-  	</definition>
-
-<!-- Annotation plot parameters -->
-  	<definition name="cart.annotation.plot.params" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Annotation plot parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/annotationPlotParams.jsp" />
-	  	<put name="helpTopic" value="plotParams" />
-  	</definition>
-
-<!-- Bar plot parameters -->
-  	<definition name="cart.bar.plot.params" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Bar plot parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/barPlotParams.jsp" />
-	  	<put name="helpTopic" value="plotParams" />
-  	</definition>
-
-<!-- Frequency plot parameters -->
-  	<definition name="cart.frequency.plot.params" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Frequency plot parameters" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/frequencyPlotParams.jsp" />
+  	<definition name="cart.plot.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Plot parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/plotParams.jsp" />
 	  	<put name="helpTopic" value="plotParams" />
   	</definition>
 

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-02-27 01:19:53 $
 
 The Web CGH Software License, Version 1.0
@@ -48,52 +48,38 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.core;
+package org.rti.webcgh.webui.taglib;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.core.PlotType;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Plot type.
+ * Display contents of tag only if there is a bean
+ * of type <code>PlotType</code> in some scope of reference
+ * pointed to by the superclass property
+ * <code>plotTypeBeanName</code> is an ideogram plot.
  * @author dhall
  *
  */
-public enum PlotType {
+public class OnlyIfIdeogramPlotTag extends BasePlotTypeSwitch {
 
-	/** Scatter plot. */
-	SCATTER,
-	
-	/** Ideogram plot. */
-	IDEOGRAM,
-	
-	/** Annotation plot. */
-	ANNOTATION,
-	
-	/** Bar plot. */
-	BAR,
-	
-	/** Frequency plot. */
-	FREQUENCY;
-	
-	//
-	//     BUSINESS METHODS
-	//
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+
 	
 	/**
-	 * Is given plot type a heat map plot?
-	 * @param plotType Plot type
-	 * @return T/F
+	 * {@inheritDoc}
 	 */
-	public static boolean isHeatMapPlot(final PlotType plotType) {
-		return plotType == ANNOTATION || plotType == IDEOGRAM;
-	}
-	
-	
-	/**
-	 * Is given plot a genomic plot?
-	 * @param plotType Plot type
-	 * @return T/F
-	 */
-	public static boolean isGenomePlot(final PlotType plotType) {
-		return plotType == ANNOTATION || plotType == IDEOGRAM
-		|| plotType == SCATTER;
+	@Override
+	public final int doStartTag() throws JspException {
+		int rval = TagSupport.SKIP_BODY;
+		if (PlotType.IDEOGRAM == this.getPlotType()) {
+			rval = TagSupport.EVAL_BODY_INCLUDE;
+		}
+		return rval;
 	}
 }

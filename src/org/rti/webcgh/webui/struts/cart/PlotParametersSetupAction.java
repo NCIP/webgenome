@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-02-06 17:48:53 $
+$Revision: 1.1 $
+$Date: 2007-02-27 01:19:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.webui.struts.cart;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,10 +60,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.core.PlotType;
+import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.DataSourceProperties;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Organism;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
@@ -75,7 +79,32 @@ import org.rti.webcgh.webui.util.PageContext;
  * @author dhall
  *
  */
-public final class RouteToPlotParametersPageAction extends BaseAction {
+public final class PlotParametersSetupAction extends BaseAction {
+	
+	//
+	//     ATTRIBUTES TO BE INJECTED
+	//
+	
+	/**
+	 * Data access object for obtaining annotated genome features.
+	 * This propery must be injected.
+	 */
+	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
+	
+	//
+	//     SETTERS
+	//
+	
+
+	/**
+	 * Set data access object for obtaining annotated genome features.
+	 * This propery must be injected.
+	 * @param annotatedGenomeFeatureDao Data access object
+	 */
+	public void setAnnotatedGenomeFeatureDao(
+			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
+		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
+	}
 
 	
 	/**
@@ -135,6 +164,18 @@ public final class RouteToPlotParametersPageAction extends BaseAction {
     		}
     	}
     	
-    	return mapping.findForward(plotType.toString());
+    	// If plot is an annotation plot, get available
+    	// annotation types and attach to request
+    	if (plotType == PlotType.ANNOTATION) {
+	    	Organism org = Experiment.getOrganism(experiments);
+	    	Set<AnnotationType> annotationTypes =
+	    		this.annotatedGenomeFeatureDao.availableAnnotationTypes(org);
+	    	request.setAttribute("annotationTypes", annotationTypes);
+    	}
+    	
+    	// Attach plot type to request
+    	request.setAttribute("plotType", plotType);
+    	
+    	return mapping.findForward("success");
     }
 }

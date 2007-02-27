@@ -78,6 +78,90 @@
       <bodycontent>JSP</bodycontent>
    </tag>
    
+<!-- Show body content for genomic plots -->
+   <tag>
+      <name>onlyIfGenomicPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfGenomicPlotTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>plotTypeBeanName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+<!-- Show body content for heat map plots -->
+   <tag>
+      <name>onlyIfHeatMapPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfHeatMapPlotTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>plotTypeBeanName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+<!-- Show body content for annotation plots -->
+   <tag>
+      <name>onlyIfAnnotationPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfAnnotationPlotTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>plotTypeBeanName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+<!-- Show body content for bar plots -->
+   <tag>
+      <name>onlyIfBarPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfBarPlotTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>plotTypeBeanName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+<!-- Show body content for ideogram plots -->
+   <tag>
+      <name>onlyIfIdeogramPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfIdeogramPlotTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>plotTypeBeanName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
+<!-- Show body content for scatter plots -->
+   <tag>
+      <name>onlyIfScatterPlot</name>
+      <tagclass>org.rti.webcgh.webui.taglib.OnlyIfScatterPlotTag</tagclass>
+      <bodycontent>JSP</bodycontent>
+      
+   <!-- Name attribute -->
+      <attribute>
+		<name>plotTypeBeanName</name>
+		<required>true</required>
+		<rtexprvalue>true</rtexprvalue>
+	  </attribute>
+   </tag>
+   
 <!-- Print bioassay color -->
    <tag>
       <name>bioAssayColor</name>

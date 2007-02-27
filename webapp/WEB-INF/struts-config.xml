@@ -166,16 +166,13 @@
 			<forward name="success" path="cart.select.analysis"/>
 		</action>
 
-	<!-- Route user to a plot parameters page -->
+	<!-- Plot parameters page -->
 		<action
-			path="/cart/routeToPlotParametersPage"
+			path="/cart/plotParameters"
 			name="plot.parameters.form"
 			scope="session"
 			validate="false">
-			<forward name="SCATTER" path="cart.scatter.plot.params"/>
-			<forward name="IDEOGRAM" path="cart.ideogram.plot.params"/>
-			<forward name="BAR" path="cart.bar.plot.params"/>
-			<forward name="ANNOTATION" path="/cart/annotationPlotParams.do"/>
+			<forward name="success" path="cart.plot.params"/>
 		</action>
 
 	<!-- Annotation plot parameters -->
@@ -188,7 +185,7 @@
 			path="/cart/newPlot"
 			name="plot.parameters.form"
 			validate="true"
-			input="/cart/routeToPlotParametersPage.do"
+			input="/cart/plotParameters.do"
 			scope="session">
 			<forward name="success" path="/cart/showPlot.do"/>
 		</action>
@@ -274,7 +271,7 @@
 			name="plot.parameters.form"
 			validate="false"
 			scope="session">
-			<forward name="success" path="/cart/routeToPlotParametersPage.do"/>
+			<forward name="success" path="/cart/plotParameters.do"/>
 		</action>
 
 		<!-- ========= Account management actions ========= -->

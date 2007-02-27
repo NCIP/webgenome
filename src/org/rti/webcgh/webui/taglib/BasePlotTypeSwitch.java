@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-02-27 01:19:53 $
 
 The Web CGH Software License, Version 1.0
@@ -48,52 +48,93 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.core;
+package org.rti.webcgh.webui.taglib;
 
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.core.PlotType;
+import org.rti.webcgh.util.SystemUtils;
 
 /**
- * Plot type.
+ * Abstract base class for tags that display body only
+ * for certain plot types.
  * @author dhall
  *
  */
-public enum PlotType {
-
-	/** Scatter plot. */
-	SCATTER,
-	
-	/** Ideogram plot. */
-	IDEOGRAM,
-	
-	/** Annotation plot. */
-	ANNOTATION,
-	
-	/** Bar plot. */
-	BAR,
-	
-	/** Frequency plot. */
-	FREQUENCY;
+public abstract class BasePlotTypeSwitch extends TagSupport {
 	
 	//
-	//     BUSINESS METHODS
+	//     STATICS
+	//
+	
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	
+	//
+	//     ATTRIBUTES
 	//
 	
 	/**
-	 * Is given plot type a heat map plot?
-	 * @param plotType Plot type
-	 * @return T/F
+	 * Name of bean in some context that is of type
+	 * <code>PlotType</code>.
 	 */
-	public static boolean isHeatMapPlot(final PlotType plotType) {
-		return plotType == ANNOTATION || plotType == IDEOGRAM;
+	private String plotTypeBeanName = null;
+
+	
+	//
+	//     GETTERS AND SETTERS
+	//
+	
+	/**
+	 * Set name of bean in some context that is of type
+	 * <code>PlotType</code>.
+	 * @param plotTypeBeanName Name of bean in some context that is of type
+	 * <code>PlotType</code>.
+	 */
+	public final void setPlotTypeBeanName(final String plotTypeBeanName) {
+		this.plotTypeBeanName = plotTypeBeanName;
 	}
 	
 	
+	//
+	//     HELPER METHODS
+	//
+	
 	/**
-	 * Is given plot a genomic plot?
-	 * @param plotType Plot type
-	 * @return T/F
+	 * Get plot type bean referenced by
+	 * property <code>plotTypeBeanName</code>.
+	 * @return Plot type
+	 * @throws JspException if a bean of type plot type
+	 * is not found
 	 */
-	public static boolean isGenomePlot(final PlotType plotType) {
-		return plotType == ANNOTATION || plotType == IDEOGRAM
-		|| plotType == SCATTER;
+	protected final PlotType getPlotType() throws JspException {
+		
+		// Make sure bean name set
+		if (this.plotTypeBeanName == null
+				|| this.plotTypeBeanName.length() < 1) {
+			throw new JspException(
+					"Plot type bean name not set properly");
+		}
+		
+		// Retrieve bean
+		Object bean = this.pageContext.findAttribute(plotTypeBeanName);
+		
+		// Make sure bean is not null
+		if (bean == null) {
+			throw new JspException(
+				"Cannot find plot type bean in any scope");
+		}
+		
+		// Make sure bean of right type
+		if (!(bean instanceof PlotType)) {
+			throw new JspException(
+				"Bean referenced by JSP attribute 'plotTypeBeanName' "
+					+ "is not of type PlotType");
+		}
+		
+		return (PlotType) bean;
 	}
 }

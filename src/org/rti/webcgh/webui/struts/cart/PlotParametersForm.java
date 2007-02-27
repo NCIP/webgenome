@@ -1,6 +1,6 @@
 /*
-$Revision: 1.31 $
-$Date: 2007-02-22 23:35:32 $
+$Revision: 1.32 $
+$Date: 2007-02-27 01:19:53 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,9 +61,11 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.core.PlotType;
 import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.GenomeIntervalFormatException;
 import org.rti.webcgh.graphics.InterpolationType;
+import org.rti.webcgh.service.plot.AnnotationPlotParameters;
 import org.rti.webcgh.service.plot.BarPlotParameters;
 import org.rti.webcgh.service.plot.BaseGenomicPlotParameters;
 import org.rti.webcgh.service.plot.HeatMapPlotParameters;
@@ -276,9 +280,6 @@ public class PlotParametersForm extends BaseForm {
 	
 	/** Draw data points in scatter plot? */
 	private String drawPoints = "on";
-	
-	/** Draw regression lines in scatter plot? */
-	private String drawLines = "on";
 	
 	/** Draw error bars in scatter plot? */
 	private String drawErrorBars = "";
@@ -527,22 +528,6 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	public final void setDrawErrorBars(final String drawErrorBars) {
 		this.drawErrorBars = drawErrorBars;
-	}
-
-	/**
-	 * Draw regression lines in scatter plots?
-	 * @return "on" or ""
-	 */
-	public final String getDrawLines() {
-		return drawLines;
-	}
-
-	/**
-	 * Sets whether regression lines should be drawn in scatter plots.
-	 * @param drawLines Draw lines in scatter plots?
-	 */
-	public final void setDrawLines(final String drawLines) {
-		this.drawLines = drawLines;
 	}
 
 	/**
@@ -869,7 +854,6 @@ public class PlotParametersForm extends BaseForm {
 			this.drawHorizGridLines = "";
 			this.drawVertGridLines = "";
 			this.drawErrorBars = "";
-			this.drawLines = "";
 			this.drawPoints = "";
 		}
 		
@@ -1214,7 +1198,6 @@ public class PlotParametersForm extends BaseForm {
 		this.drawHorizGridLines = "on";
 		this.drawVertGridLines = "on";
 		this.drawErrorBars = "";
-		this.drawLines = "on";
 		this.drawPoints = "on";	
 	}
 	
@@ -1226,8 +1209,12 @@ public class PlotParametersForm extends BaseForm {
 		PlotParameters p = null;
 		PlotType type = PlotType.valueOf(this.plotType);
 		
+		// Annotation plot
+		if (type == PlotType.ANNOTATION) {
+			p = this.newAnnotationPlotParameters();
+		
 		// Bar plot
-		if (type == PlotType.BAR) {
+		} else if (type == PlotType.BAR) {
 			p = this.newBarPlotParameters();
 			
 		// Ideogram plot
@@ -1240,6 +1227,28 @@ public class PlotParametersForm extends BaseForm {
 		}
 
 		return p;
+	}
+	
+	
+	/**
+	 * Create new annotation plot parameters and initialize attributes
+	 * from this instance.
+	 * @return Annotation plot parameters
+	 */
+	private AnnotationPlotParameters newAnnotationPlotParameters() {
+		AnnotationPlotParameters params = new AnnotationPlotParameters();
+		this.transferCommonHeatMapPlotParameters(params);
+		Set<AnnotationType> types = new HashSet<AnnotationType>();
+		for (int i = 0; i < this.annotationTypes.length; i++) {
+			AnnotationType type = AnnotationType.valueOf(
+					this.annotationTypes[i]);
+			types.add(type);
+		}
+		params.setAnnotationTypes(types);
+		params.setDrawFeatureLabels(FormUtils.checkBoxToBoolean(
+				this.drawFeatureLabels));
+		params.setWidth(Integer.parseInt(this.width));
+		return params;
 	}
 	
 	
@@ -1375,11 +1384,18 @@ public class PlotParametersForm extends BaseForm {
 			this.plotType = PlotType.IDEOGRAM.toString();
 		} else if (plotParameters instanceof BarPlotParameters) {
 			this.plotType = PlotType.BAR.toString();
+		} else if (plotParameters instanceof AnnotationPlotParameters) {
+			this.plotType = PlotType.ANNOTATION.toString();
 		}
 		PlotType plotType = PlotType.valueOf(this.plotType);
 		
+		// Annotation plot attributes
+		if (plotType == PlotType.ANNOTATION) {
+			this.bulkSetAnnotationPlotAttributes(
+					(AnnotationPlotParameters) plotParameters);
+		
 		// Bar plot attributes
-		if (plotType == PlotType.BAR) {
+		} else if (plotType == PlotType.BAR) {
 			this.bulkSetBarPlotAttributes(
 					(BarPlotParameters) plotParameters);
 			
@@ -1448,6 +1464,22 @@ public class PlotParametersForm extends BaseForm {
 		this.minMask = FormUtils.floatToTextBox(params.getMinMask());
 		this.minSaturation = FormUtils.floatToTextBox(
 				params.getMinSaturation());
+	}
+	
+	
+	/**
+	 * Bulk set annotation plot attributes.
+	 * @param params Parameters whose attributes are the source
+	 * of values to set
+	 */
+	private void bulkSetAnnotationPlotAttributes(
+			final AnnotationPlotParameters params) {
+		this.bulkSetCommonHeatMapPlotAttributes(params);
+		this.annotationTypes =
+			params.getAnnotationTypes().toArray(this.annotationTypes);
+		this.width = String.valueOf(params.getWidth());
+		this.drawFeatureLabels = FormUtils.booleanToCheckBox(
+				params.isDrawFeatureLabels());
 	}
 	
 	
