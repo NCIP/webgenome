@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-06 16:12:28 $
+$Revision: 1.2 $
+$Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.util.Collection;
+
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.graphics.InterpolationType;
 
 
@@ -60,7 +63,7 @@ import org.rti.webcgh.graphics.InterpolationType;
  * @author dhall
  *
  */
-public class BaseGenomicPlotParameters extends PlotParameters {
+public abstract class BaseGenomicPlotParameters extends PlotParameters {
 	
 	// =======================
 	//   Constants
@@ -285,5 +288,21 @@ public class BaseGenomicPlotParameters extends PlotParameters {
     	this.showAnnotation = params.showAnnotation;
     	this.showGenes = params.showGenes;
     	this.showReporterNames = params.showReporterNames;
+    }
+    
+    
+    //
+    //     BUSINESS METHODS
+    //
+    
+    /**
+     * Derive any attributes not supplied by the user
+     * from the given experiments.
+     * @param experiments Experiments from which to derive
+     * attributes not supplied by user.
+     */
+    public void deriveMissingAttributes(
+    		final Collection<Experiment> experiments) {
+		super.deriveMissingAttributes(experiments);
     }
 }

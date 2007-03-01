@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-02-15 13:07:21 $
+$Revision: 1.8 $
+$Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -169,4 +169,18 @@ public class IdeogramPlotParameters extends HeatMapPlotParameters {
 		this.ideogramThickness = params.ideogramThickness;
 		this.trackWidth = params.trackWidth;
 	}
+	
+	
+	//
+	//     ABSTRACTS
+	//
+	
+    /**
+     * Return clone of this object derived by deep copy of
+     * all attributes.
+     * @return Clone of this object
+     */
+    public PlotParameters deepCopy() {
+    	return new IdeogramPlotParameters(this);
+    }
 }

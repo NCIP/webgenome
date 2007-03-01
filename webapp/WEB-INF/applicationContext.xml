@@ -156,6 +156,9 @@
 		<property name="cytologicalMapDao">
 			<ref bean="cytologicalMapDao"/>
 		</property>
+		<property name="annotatedGenomeFeatureDao">
+			<ref bean="annotatedGenomeFeatureDao"/>
+		</property>
 	</bean>
 	
 	<!-- ========================================== -->

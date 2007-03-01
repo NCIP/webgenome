@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2007-02-06 16:12:28 $
+$Revision: 1.11 $
+$Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Set;
 
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.util.SystemUtils;
 
 /**
@@ -277,5 +281,43 @@ extends BaseGenomicPlotParameters implements Serializable {
     	this.drawVertGridLines = params.drawVertGridLines;
     	this.drawErrorBars = params.drawErrorBars;
     	this.drawPoints = params.drawPoints;
+    }
+    
+    
+    //
+    //     OVERRIDES
+    //
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deriveMissingAttributes(
+    		final Collection<Experiment> experiments) {
+    	super.deriveMissingAttributes(experiments);
+    	Set<Short> chromosomes = GenomeInterval.getChromosomes(
+				this.getGenomeIntervals());
+		if (Float.isNaN(this.getMinY())) {
+			float min = Experiment.findMinValue(experiments, chromosomes);
+			this.setMinY(min);
+		}
+		if (Float.isNaN(this.getMaxY())) {
+			float max = Experiment.findMaxValue(experiments, chromosomes);
+			this.setMaxY(max);
+		}
+    }
+    
+    
+	//
+	//     ABSTRACTS
+	//
+	
+    /**
+     * Return clone of this object derived by deep copy of
+     * all attributes.
+     * @return Clone of this object
+     */
+    public PlotParameters deepCopy() {
+    	return new ScatterPlotParameters(this);
     }
 }

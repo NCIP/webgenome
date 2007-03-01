@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-03-01 16:50:23 $
+$Revision: 1.1 $
+$Date: 2007-03-01 16:50:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,96 +48,46 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.plot;
+package org.rti.webcgh.service.dao.jdbc;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.rti.webcgh.core.WebcghSystemException;
 
 /**
- * Parameters for bar plots.
+ * Utility methods for JDBC.
  * @author dhall
+ *
  */
-public class BarPlotParameters extends PlotParameters {
-	
-	//
-	//     ATTRIBUTES
-	//
-	
-	/** Height of plot row in pixels. */
-	private int rowHeight = 300;
-	
-	/** Width of each individual bar in pixels. */
-	private int barWidth = 10;
-	
-	
-	//
-	//     GETTERS/SETTERS
-	//
+public final class JdbcUtils {
 
-	/**
-	 * Get width of individual bars.
-	 * @return Width in pixels
-	 */
-	public final int getBarWidth() {
-		return barWidth;
-	}
-
-	/**
-	 * Set width of individual bars.
-	 * @param barWidth Width in pixels
-	 */
-	public final void setBarWidth(final int barWidth) {
-		this.barWidth = barWidth;
-	}
-
-	/**
-	 * Get height of plot row.
-	 * @return Height in pixels
-	 */
-	public final int getRowHeight() {
-		return rowHeight;
-	}
-
-	/**
-	 * Set height of plot row.
-	 * @param height Height in pixels
-	 */
-	public final void setRowHeight(final int height) {
-		this.rowHeight = height;
-	}
-	
-	
-	//
-	//     CONSTRUCTORS
-	//
-	
 	/**
 	 * Constructor.
 	 */
-	public BarPlotParameters() {
+	private JdbcUtils() {
 		
 	}
 	
-	
 	/**
-	 * Constructor.  A clone will be created by
-	 * deep copy.
-	 * @param params Bar plot parameters from which to
-	 * initialize properties.
+	 * Wrapper around ResultSet.close() and Statement.close()
+	 * methods that rethrows SQLExceptions as unchecked
+	 * exceptions.
+	 * @param rset A result set to close
+	 * @param stmt A statement to close
 	 */
-	public BarPlotParameters(final BarPlotParameters params) {
-		this.barWidth = params.barWidth;
-		this.rowHeight = params.rowHeight;
+	public static void close(final ResultSet rset, final Statement stmt) {
+		try {
+			if (rset != null) {
+				rset.close();
+			}
+			if (stmt != null) {
+				stmt.close();
+			}
+		} catch (SQLException e) {
+			throw new WebcghSystemException(
+					"Error closing JDBC result set and statement", e);
+		}
 	}
-	
-	//
-	//     ABSTRACTS
-	//
-	
-    /**
-     * Return clone of this object derived by deep copy of
-     * all attributes.
-     * @return Clone of this object
-     */
-    public PlotParameters deepCopy() {
-    	return new BarPlotParameters(this);
-    }
 }

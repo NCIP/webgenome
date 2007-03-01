@@ -1,6 +1,6 @@
 /*
-$Revision: 1.32 $
-$Date: 2007-02-27 01:19:53 $
+$Revision: 1.33 $
+$Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -147,7 +147,6 @@ public class PlotParametersForm extends BaseForm {
 	//
 	//     ATTRIBUTES FOR ALL PLOT TYPES
 	//
-	
 	
 	/** Plot name. */
 	private String name = "";
@@ -1239,10 +1238,12 @@ public class PlotParametersForm extends BaseForm {
 		AnnotationPlotParameters params = new AnnotationPlotParameters();
 		this.transferCommonHeatMapPlotParameters(params);
 		Set<AnnotationType> types = new HashSet<AnnotationType>();
-		for (int i = 0; i < this.annotationTypes.length; i++) {
-			AnnotationType type = AnnotationType.valueOf(
-					this.annotationTypes[i]);
-			types.add(type);
+		if (this.annotationTypes != null) {
+			for (int i = 0; i < this.annotationTypes.length; i++) {
+				AnnotationType type = AnnotationType.valueOf(
+						this.annotationTypes[i]);
+				types.add(type);
+			}
 		}
 		params.setAnnotationTypes(types);
 		params.setDrawFeatureLabels(FormUtils.checkBoxToBoolean(
@@ -1475,8 +1476,12 @@ public class PlotParametersForm extends BaseForm {
 	private void bulkSetAnnotationPlotAttributes(
 			final AnnotationPlotParameters params) {
 		this.bulkSetCommonHeatMapPlotAttributes(params);
-		this.annotationTypes =
-			params.getAnnotationTypes().toArray(this.annotationTypes);
+		Set<AnnotationType> annotationTypes = params.getAnnotationTypes();
+		this.annotationTypes = new String[annotationTypes.size()];
+		int i = 0;
+		for (AnnotationType type : annotationTypes) {
+			this.annotationTypes[i++] = type.toString();
+		}
 		this.width = String.valueOf(params.getWidth());
 		this.drawFeatureLabels = FormUtils.booleanToCheckBox(
 				params.isDrawFeatureLabels());

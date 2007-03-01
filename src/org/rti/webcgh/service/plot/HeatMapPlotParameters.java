@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-15 13:07:21 $
+$Revision: 1.2 $
+$Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,13 +50,19 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.plot;
 
+import java.util.Collection;
+import java.util.Set;
+
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.GenomeInterval;
+
 /**
  * Parameters that are relevant to plots where data values
  * are represented by a color coding system.
  * @author dhall
  *
  */
-public class HeatMapPlotParameters extends BaseGenomicPlotParameters {
+public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 	
 	//
 	//     STATICS
@@ -247,4 +253,30 @@ public class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 		this.minMask = params.minMask;
 		this.minSaturation = params.minSaturation;
 	}
+	
+	
+	//
+	//     BUSINESS METHODS
+	//
+	
+    /**
+     * Derive any attributes not supplied by the user
+     * from the given experiments.
+     * @param experiments Experiments from which to derive
+     * attributes not supplied by user.
+     */
+    public void deriveMissingAttributes(
+    		final Collection<Experiment> experiments) {
+		super.deriveMissingAttributes(experiments);
+		Set<Short> chromosomes = GenomeInterval.getChromosomes(
+				this.getGenomeIntervals());
+		if (Float.isNaN(this.getMinSaturation())) {
+			float min = Experiment.findMinValue(experiments, chromosomes);
+			this.setMinSaturation(min);
+		}
+		if (Float.isNaN(this.getMaxSaturation())) {
+			float max = Experiment.findMaxValue(experiments, chromosomes);
+			this.setMaxSaturation(max);
+		}
+    }
 }

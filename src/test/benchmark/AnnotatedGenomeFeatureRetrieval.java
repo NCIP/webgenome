@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
@@ -48,88 +48,43 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.service.plot;
+package test.benchmark;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
 
+import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
+import org.rti.webcgh.domain.Organism;
+import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
+import org.rti.webcgh.service.dao.OrganismDao;
+import org.rti.webcgh.util.StopWatch;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Parameters for generating an annotation plot.
+ * Class for benchmarking the retrieval of annotated genome features
+ * from the database.
  * @author dhall
  *
  */
-public class AnnotationPlotParameters extends HeatMapPlotParameters {
-
-	//
-	//     ATTRIBUTES
-	//
-	
-	/** Annotation types to plot. */
-	private Set<AnnotationType> annotationTypes =
-		new HashSet<AnnotationType>();
-
-	/** Width of plot excluding track labels to the left in pixels. */
-	private int width = 0;
-	
-	/** Draw labels above features? */
-	private boolean drawFeatureLabels = false;
+public final class AnnotatedGenomeFeatureRetrieval {
 	
 	//
-	//     GETTERS/SETTERS
+	//     STATICS
 	//
 	
-	/**
-	 * Get annotation types to plot.
-	 * @return Annotation type names
-	 */
-	public final Set<AnnotationType> getAnnotationTypes() {
-		return annotationTypes;
-	}
-
-	/**
-	 * Set annotation types to plot.
-	 * @param annotationTypes Annotation type names
-	 */
-	public final void setAnnotationTypes(
-			final Set<AnnotationType> annotationTypes) {
-		this.annotationTypes = annotationTypes;
-	}
-
-	/**
-	 * Draw labels above features?
-	 * @return T/F
-	 */
-	public final boolean isDrawFeatureLabels() {
-		return drawFeatureLabels;
-	}
-
-	/**
-	 * Sets whether to draw labels above features.
-	 * @param drawFeatureLabels Draw labels above features?
-	 */
-	public final void setDrawFeatureLabels(final boolean drawFeatureLabels) {
-		this.drawFeatureLabels = drawFeatureLabels;
-	}
-
-	/**
-	 * Get width of plot excluding track labels to the left in pixels.
-	 * @return Width in pixels
-	 */
-	public final int getWidth() {
-		return width;
-	}
-
+	/** Chromosome number. */
+	private static final short CHROMOSOME = (short) 1;
 	
-	/**
-	 * Set width of plot excluding track labels to the left in pixels.
-	 * @param width Width in pixels
-	 */
-	public final void setWidth(final int width) {
-		this.width = width;
-	}
+	/** Chromosome start position. */
+	private static final long START_POS = 50000000;
 	
+	/** Chromosome end position. */
+	private static final long END_POS = 60000000;
+	
+	/** Annotation type that is queried for in benchmark. */
+	private static final AnnotationType ANNOTATION_TYPE =
+		AnnotationType.GENE;
 	
 	//
 	//     CONSTRUCTORS
@@ -137,45 +92,52 @@ public class AnnotationPlotParameters extends HeatMapPlotParameters {
 	
 	/**
 	 * Constructor.
+	 *
 	 */
-	public AnnotationPlotParameters() {
+	private AnnotatedGenomeFeatureRetrieval() {
 		
 	}
-	
-	/**
-	 * Constructor that uses deep copy to initialize properties.
-	 * @param params Parameters to deep copy
-	 */
-	public AnnotationPlotParameters(final AnnotationPlotParameters params) {
-		super(params);
-		params.setAnnotationTypes(new HashSet<AnnotationType>(
-				params.getAnnotationTypes()));
-	}
-	
-	
+
 	//
-	//     BUSINESS METHODS
+	//     MAIN METHOD
 	//
 	
 	/**
-	 * Add annotation type.
-	 * @param type An annotation type
+	 * Main methods.
+	 * @param args Command line arguments
 	 */
-	public final void add(final AnnotationType type) {
-		this.annotationTypes.add(type);
+	public static void main(final String[] args) {
+		
+		// Get DAO beans
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+				"test/benchmark/applicationContext.xml");
+		OrganismDao oDao = (OrganismDao) ctx.getBean("organismDao");
+		AnnotatedGenomeFeatureDao hDao = (AnnotatedGenomeFeatureDao)
+			ctx.getBean("hibernateAnnotatedGenomeFeatureDao");
+		
+		// Get default organism
+		Organism organism = oDao.loadDefault();
+		
+		StopWatch stopWatch = new StopWatch();
+		SortedSet<AnnotatedGenomeFeature> feats = null;
+		
+		// Perform benchmark query using hibernte
+		System.out.println("Querying via Hibernate for features of type '"
+				+ ANNOTATION_TYPE.toString()
+				+ "' over genome interval '" + CHROMOSOME + ":"
+				+ START_POS + "-" + END_POS + "'");
+		stopWatch.start();
+		feats =
+			hDao.load(CHROMOSOME, START_POS, END_POS, ANNOTATION_TYPE,
+					organism);
+		stopWatch.stop();
+		System.out.println("Finished.  Elapsed time: "
+				+ stopWatch.getFormattedElapsedTime());
+		System.out.println(feats.size() + " features retrieved");
+		if (feats.size() > 0) {
+			AnnotatedGenomeFeature feat = feats.first();
+			System.out.println("Feature '" + feat.getId() + "' has "
+					+ feat.getChildFeatures().size() + " child features");
+		}
 	}
-	
-	
-	//
-	//     ABSTRACTS
-	//
-	
-    /**
-     * Return clone of this object derived by deep copy of
-     * all attributes.
-     * @return Clone of this object
-     */
-    public PlotParameters deepCopy() {
-    	return new AnnotationPlotParameters(this);
-    }
 }

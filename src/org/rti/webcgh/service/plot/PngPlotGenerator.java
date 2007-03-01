@@ -1,6 +1,6 @@
 /*
-$Revision: 1.19 $
-$Date: 2007-02-06 19:31:03 $
+$Revision: 1.20 $
+$Date: 2007-03-01 16:50:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,15 +51,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.service.plot;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
-import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.graphics.RasterDrawingCanvas;
 import org.rti.webcgh.graphics.widget.PlotPanel;
+import org.rti.webcgh.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webcgh.service.dao.CytologicalMapDao;
 import org.rti.webcgh.service.io.ImageFileManager;
 import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
@@ -89,6 +88,9 @@ public class PngPlotGenerator implements PlotGenerator {
 	/** Cytlogical map data access object. */
 	private CytologicalMapDao cytologicalMapDao = null;
 	
+	/** Annotated genome feature data access object. */
+	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
+	
 	
 	// =========================
 	//      Setters
@@ -104,6 +106,17 @@ public class PngPlotGenerator implements PlotGenerator {
 	}
 	
 	
+	/**
+	 * Set annotated genome feature data access object.
+	 * @param annotatedGenomeFeatureDao Annotated genome feature
+	 * data access object
+	 */
+	public final void setAnnotatedGenomeFeatureDao(
+			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
+		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
+	}
+
+
 	/**
 	 * Set cytological map data access object.
 	 * @param cytologicalMapDao Cytological map data access object.
@@ -151,8 +164,8 @@ public class PngPlotGenerator implements PlotGenerator {
 		
 		// Provide missing plot parameters not supplied by user
 		// by derivation or using defaults
-		PlotParameters completeParams =
-			this.deriveMissingPlotParameters(plotParameters, experiments);
+		PlotParameters completeParams = plotParameters.deepCopy();
+		completeParams.deriveMissingAttributes(experiments);
 		
 		// Scatter plot
 		if (plotParameters instanceof ScatterPlotParameters) {
@@ -171,91 +184,15 @@ public class PngPlotGenerator implements PlotGenerator {
 			this.newBarPlot(plot, experiments,
 					(BarPlotParameters) plotParameters,
 					chromosomeArrayDataGetter);
+			
+		// Annotation plot
+		} else if (plotParameters instanceof AnnotationPlotParameters) {
+			this.newAnnotationPlot(plot, experiments,
+					(AnnotationPlotParameters) plotParameters,
+					chromosomeArrayDataGetter);
 		}
 		
 		return plot;
-	}
-	
-	
-	/**
-	 * Derive missing plot parameters not supplied by user.
-	 * @param inputParams Input plot params
-	 * @param experiments Experiments
-	 * @return Corrected plot parameters
-	 */
-	private PlotParameters deriveMissingPlotParameters(
-			final PlotParameters inputParams,
-			final Collection<Experiment> experiments) {
-		PlotParameters outputParams = null;
-		
-		// Scatter plot
-		if (inputParams instanceof ScatterPlotParameters) {
-			ScatterPlotParameters spp = new ScatterPlotParameters(
-					(ScatterPlotParameters) inputParams);
-			outputParams = spp;
-			
-			// minX and maxX
-			Set<Short> chromosomes = GenomeInterval.getChromosomes(
-					spp.getGenomeIntervals());
-			if (Float.isNaN(spp.getMinY())) {
-				float min = Experiment.findMinValue(experiments, chromosomes);
-				spp.setMinY(min);
-			}
-			if (Float.isNaN(spp.getMaxY())) {
-				float max = Experiment.findMaxValue(experiments, chromosomes);
-				spp.setMaxY(max);
-			}
-			
-		// Ideogram plot
-		} else if (inputParams instanceof IdeogramPlotParameters) {
-			IdeogramPlotParameters ipp = new IdeogramPlotParameters(
-					(IdeogramPlotParameters) inputParams);
-			outputParams = ipp;
-			
-			// minSaturation and maxSaturation
-			Set<Short> chromosomes = GenomeInterval.getChromosomes(
-					ipp.getGenomeIntervals());
-			if (Float.isNaN(ipp.getMinSaturation())) {
-				float min = Experiment.findMinValue(experiments, chromosomes);
-				ipp.setMinSaturation(min);
-			}
-			if (Float.isNaN(ipp.getMaxSaturation())) {
-				float max = Experiment.findMaxValue(experiments, chromosomes);
-				ipp.setMaxSaturation(max);
-			}
-		} else if (inputParams instanceof BarPlotParameters) {
-			outputParams = new BarPlotParameters(
-					(BarPlotParameters) inputParams);
-		}
-		
-		// Parameters common to all plot types
-		this.fixGenomeIntervals(outputParams.getGenomeIntervals(),
-				experiments);
-		
-		return outputParams;
-	}
-	
-	/**
-	 * Fix genome intervals by setting chromosomal end points.  User may
-	 * have only specified chromosome numbers.  Endpoints are set
-	 * to 0 and the length of the chromosome inferred from the
-	 * experimental data (i.e., the position of the right-most
-	 * reporter).
-	 * @param intervals Genome intervals
-	 * @param experiments Experiments
-	 */
-	private void fixGenomeIntervals(final Collection<GenomeInterval> intervals,
-			final Collection<Experiment> experiments) {
-		for (GenomeInterval gi : intervals) {
-			if (gi.getStartLocation() < 0) {
-				gi.setStartLocation(0);
-			}
-			if (gi.getEndLocation() < 0) {
-				long end = Experiment.inferredChromosomeSize(experiments,
-						gi.getChromosome());
-				gi.setEndLocation(end);
-			}
-		}
 	}
 	
 	
@@ -280,8 +217,8 @@ public class PngPlotGenerator implements PlotGenerator {
 		
 		// Provide missing plot parameters not supplied by user
 		// by derivation or using defaults
-		PlotParameters completeParams =
-			this.deriveMissingPlotParameters(plotParameters, experiments);
+		PlotParameters completeParams = plotParameters.deepCopy();
+		completeParams.deriveMissingAttributes(experiments);
 		
 		// Replot
 		if (plotParameters instanceof ScatterPlotParameters) {
@@ -295,6 +232,10 @@ public class PngPlotGenerator implements PlotGenerator {
 		} else if (plotParameters instanceof BarPlotParameters) {
 			this.newBarPlot(plot, experiments,
 					(BarPlotParameters) plotParameters,
+					chromosomeArrayDataGetter);
+		} else if (plotParameters instanceof AnnotationPlotParameters) {
+			this.newAnnotationPlot(plot, experiments,
+					(AnnotationPlotParameters) plotParameters,
 					chromosomeArrayDataGetter);
 		}
 	}
@@ -409,6 +350,34 @@ public class PngPlotGenerator implements PlotGenerator {
 			new BarPlotPainter(chromosomeArrayDataGetter);
 		
 		// Create plot image
+		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+		PlotPanel panel = new PlotPanel(canvas);
+		painter.paintPlot(panel, experiments, plotParameters);
+		panel.paint(canvas);
+		canvas.setWidth(panel.width());
+		canvas.setHeight(panel.height());
+		plot.setWidth(panel.width());
+		plot.setHeight(panel.height());
+		String imageFileName =
+			this.imageFileManager.saveImage(canvas.toBufferedImage());
+		plot.setDefaultImageFileName(imageFileName);
+	}
+	
+	
+	/**
+	 * Create new annotation plot.
+	 * @param plot Plot
+	 * @param experiments Experiments to plot
+	 * @param plotParameters Plot parameters
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 */
+	private void newAnnotationPlot(final Plot plot,
+			final Collection<Experiment> experiments,
+			final AnnotationPlotParameters plotParameters,
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		AnnotationPlotPainter painter =
+			new AnnotationPlotPainter(chromosomeArrayDataGetter);
+		painter.setAnnotatedGenomeFeatureDao(this.annotatedGenomeFeatureDao);
 		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
 		PlotPanel panel = new PlotPanel(canvas);
 		painter.paintPlot(panel, experiments, plotParameters);

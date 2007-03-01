@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2006-12-21 03:56:53 $
+$Revision: 1.13 $
+$Date: 2007-03-01 16:50:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,15 +91,27 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
  */
 public final class NewPlotAction extends BaseAction {
 	
+	//
+	//     STATICS
+	//
+	
 	/** Logger. */
 	private static final Logger LOGGER =
 		Logger.getLogger(NewPlotAction.class);
+	
+	//
+	//     ATTRIBUTES
+	//
 	
 	/** Plot generator. */
 	private PlotGenerator plotGenerator = null;
 	
 	/** Chromosome array data getter. */
 	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
+	
+	//
+	//     SETTERS
+	//
 		
 	/**
 	 * Set plot generator.
@@ -119,6 +131,10 @@ public final class NewPlotAction extends BaseAction {
 		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
 	}
 
+	
+	//
+	//     OVERRIDES
+	//
 
 	/**
      * Execute action.
