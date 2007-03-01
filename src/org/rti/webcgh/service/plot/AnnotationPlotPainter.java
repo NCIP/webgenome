@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-15 13:07:21 $
+$Revision: 1.2 $
+$Date: 2007-03-01 17:31:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -288,6 +288,17 @@ public class AnnotationPlotPainter extends PlotPainter {
 					this.annotatedGenomeFeatureDao.load(
 							chromosome, startLocation, endLocation,
 							type, organism);
+				AnnotatedGenomeFeature feat = feats.first();
+				// TODO: Remove print statements
+				System.out.println("PARENT - " + feat.getId()
+						+ ": " + feat.getStartLocation()
+						+ "-" + feat.getEndLocation());
+				int i = 1;
+				for (AnnotatedGenomeFeature child : feat.getChildFeatures()) {
+					System.out.println("CHILD " + (i++) + " - " + child.getId()
+							+ ": " + child.getStartLocation()
+							+ "-" + child.getEndLocation());
+				}
 				AnnotationTrack track = new AnnotationTrack(feats,
 						params.getWidth(), startLocation,
 						endLocation, type.toString(),

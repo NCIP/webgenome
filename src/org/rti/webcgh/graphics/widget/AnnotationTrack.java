@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-14 17:47:49 $
+$Revision: 1.2 $
+$Date: 2007-03-01 17:31:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,6 +94,9 @@ public class AnnotationTrack implements PlotElement {
 	
 	/** Stroke (i.e. width) of line in pixels connecting exons. */
 	private static final int STROKE = 2;
+	
+	/** Minimum width in features that a feature can be. */
+	private static final int MIN_FEAT_WIDTH = 2;
 	
 	//
 	//     ATTRIBUTES
@@ -191,7 +194,15 @@ public class AnnotationTrack implements PlotElement {
 				this.addNonGene(feat, startX, endX, y);
 			}
 			if (this.drawFeatureLabels) {
-				this.addLabel(feat.getName(), (startX + endX) / 2, y);
+				int textStartX = startX;
+				if (textStartX < this.trackStartX) {
+					textStartX = this.trackStartX;
+				}
+				int textEndX = endX;
+				if (textEndX > this.maxX) {
+					textEndX = this.maxX;
+				}
+				this.addLabel(feat.getName(), (textStartX + textEndX) / 2, y);
 			}
 		}
 		int midY = (this.minY + this.maxY) / 2;
@@ -255,7 +266,11 @@ public class AnnotationTrack implements PlotElement {
 			final int startX, final int endX,
 			final int subTrackMidY) {
 		int topY = subTrackMidY - FEATURE_HEIGHT / 2;
-		Rectangle rect = new Rectangle(startX, topY, (endX - startX),
+		int width = endX - startX;
+		if (width < MIN_FEAT_WIDTH) {
+			width = MIN_FEAT_WIDTH;
+		}
+		Rectangle rect = new Rectangle(startX, topY, width,
 				FEATURE_HEIGHT, FEATURE_COLOR);
 		this.graphicPrimitives.add(rect);
 	}
