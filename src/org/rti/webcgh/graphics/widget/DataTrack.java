@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-14 21:41:01 $
+$Revision: 1.2 $
+$Date: 2007-03-01 20:09:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -187,78 +187,33 @@ public class DataTrack implements PlotElement {
 		for (int i = 0; i < arrayData.size(); i++) {
 			ArrayDatum datum = arrayData.get(i);
 			Reporter r = datum.getReporter();
-			
-			// General case: datum within interval
-			if (r.getLocation() >= startLoc && r.getLocation() <= endLoc) {
-				int midX = this.toPixels(r.getLocation());
-				int startX = midX;
-				int endX = midX;
-				if (i > 0) {
-					ArrayDatum leftDatum = arrayData.get(i - 1);
-					Reporter leftReporter = leftDatum.getReporter();
-					startX = (this.toPixels(leftReporter.getLocation())
-							+ midX) / 2;
-					if (startX < this.trackStartX) {
-						startX = this.trackStartX;
-					}
+			int startX = this.toPixels(r.getLocation());
+			int endX = startX;
+			if (i > 0) {
+				ArrayDatum leftDatum = arrayData.get(i - 1);
+				Reporter leftRep = leftDatum.getReporter();
+				long midPoint = (r.getLocation() + leftRep.getLocation())
+					/ 2;
+				startX = this.toPixels(midPoint);
+			}
+			if (i < arrayData.size() - 1) {
+				ArrayDatum rightDatum = arrayData.get(i + 1);
+				Reporter rightRep = rightDatum.getReporter();
+				long midPoint = (r.getLocation() + rightRep.getLocation())
+					/ 2;
+				endX = this.toPixels(midPoint);
+			}
+			if (startX < this.maxX && endX > this.trackStartX) {
+				if (startX < this.trackStartX) {
+					startX = this.trackStartX;
 				}
-				if (i < arrayData.size() - 1) {
-					ArrayDatum rightDatum = arrayData.get(i + 1);
-					Reporter rightReporter = rightDatum.getReporter();
-					endX = (midX + (this.toPixels(
-							rightReporter.getLocation()))) / 2;
-					if (endX > this.maxX) {
-						endX = maxX;
-					}
+				if (endX > this.maxX) {
+					endX = this.maxX;
 				}
 				Color intensity = colorFac.getColor(datum.getValue());
 				Rectangle rect = new Rectangle(startX, y,
 						endX - startX, BAR_HEIGHT, intensity);
 				this.graphicPrimitives.add(rect);
-				
-			// Special cases when datum to right of plot
-			} else if (r.getLocation() < startLoc) {
-				if (i < arrayData.size() - 1) {
-					ArrayDatum rightDatum = arrayData.get(i + 1);
-					Reporter rightReporter = rightDatum.getReporter();
-					
-					// Special case: adjacent reports span plot
-					if (rightReporter.getLocation() > endLoc) {
-						long midLoc = (r.getLocation()
-								+ rightReporter.getLocation()) / 2;
-						int midX = this.toPixels(midLoc);
-						
-						// Draw left rectangle
-						if (midX > this.trackStartX) {
-							int endX = midX;
-							if (endX > this.maxX) {
-								endX = this.maxX;
-							}
-							Color intensity = colorFac.getColor(
-									datum.getValue());
-							Rectangle rect = new Rectangle(
-									this.trackStartX, y,
-									endX - this.trackStartX,
-									BAR_HEIGHT, intensity);
-							this.graphicPrimitives.add(rect);
-						}
-						
-						// Draw right rectangle
-						if (midX < this.maxX) {
-							int startX = midX;
-							if (startX < this.trackStartX) {
-								startX = this.trackStartX;
-							}
-							Color intensity = colorFac.getColor(
-									rightDatum.getValue());
-							Rectangle rect = new Rectangle(
-									startX, y,
-									this.maxX - startX,
-									BAR_HEIGHT, intensity);
-							this.graphicPrimitives.add(rect);
-						}
-					}
-				}
 			}
 		}
 	}
