@@ -251,6 +251,12 @@
 			<forward name="success" path="/cart/showCart.do"/>
 			<forward name="errors" path="/cart/rerunAnalysisParams.do"/>
 		</action>
+		
+	<!-- Adjust analysis parameters from a plot screen -->
+		<action path="/cart/adjustPlotAnalysisParamsSetup">
+			<forward name="success" path="cart.adjust.plot.analysis.params"/>
+		</action>
+			
 
 	<!-- Show color chooser -->
 		<action

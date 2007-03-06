@@ -16,7 +16,12 @@
 <center>
 	<a href="javascript:openPopUpWindow('<html:rewrite page="/cart/changeParameters.do" paramId="id"
 		paramName="plot" paramProperty="id"/>');">
-		View/Change Plot Parameters
+		Change Plot Parameters
+	</a>
+	&nbsp;&nbsp;
+	<a href="javascript:openPopUpWindow('<html:rewrite page="/cart/adjustPlotAnalysisParamsSetup.do" paramId="id"
+		paramName="plot" paramProperty="id"/>');">
+		Change Analytic Parameters
 	</a>
 </center>
 

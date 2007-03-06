@@ -122,6 +122,13 @@
 	  	<put name="content" value="/WEB-INF/jsp/cart/rerunAnalysisParams.jsp" />
 	  	<put name="helpTopic" value="operations" />
   	</definition>
+  	
+<!-- Set analytic operation parameters for rerun and replot -->
+  	<definition name="cart.adjust.plot.analysis.params" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Analytic operation parameters" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/adjustPlotAnalysisParams.jsp" />
+	  	<put name="helpTopic" value="operations" />
+  	</definition>
 
   	<!-- ================================ -->
   	<!--   User account management pages  -->

@@ -227,6 +227,10 @@
 	<bean name="/cart/rerunAnalysisParams"
 		class="org.rti.webcgh.webui.struts.cart.ReRunAnalyticOperationSetupAction"/>
 		
+<!-- Set up for re-plotting using different analytic operation parameters -->
+	<bean name="/cart/adjustPlotAnalysisParamsSetup"
+		class="org.rti.webcgh.webui.struts.cart.AdjustPlotAnalysisParamsSetupAction"/>
+		
 <!-- Perform analytic operation -->
 	<bean name="/cart/analysis"
 		class="org.rti.webcgh.webui.struts.cart.AnalysisAction">
