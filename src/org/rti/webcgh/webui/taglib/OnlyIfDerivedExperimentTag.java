@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-11-29 03:14:06 $
+$Revision: 1.1 $
+$Date: 2007-03-06 02:06:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,9 +48,78 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.webui.taglib;
 
-public class FrequencyOperation {
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
+
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.util.SystemUtils;
+
+/**
+ * Show content of tag only if there is a derived experiment
+ * bean in some scope with name provided by the
+ * <code>name</code> property.  A derived experiment is one
+ * that results from an analytic operation.
+ * @author dhall
+ *
+ */
+public class OnlyIfDerivedExperimentTag extends TagSupport {
+	
+	
+	//
+	//     STATICS
+	//
+	
+	/** Serlialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
 	
+	//
+	//     ATTRIBUTES
+	//
+	
+	/** Name of experiment bean. */
+	private String name = null;
+	
+	
+	//
+	//     SETTERS
+	//
+	
+	/**
+	 * Set name of experiment bean.
+	 * @param name Name of experiment bean
+	 */
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+
+	//
+	//     OVERRIDES
+	//
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int doStartTag() throws JspException {
+		int rval = TagSupport.SKIP_BODY;
+		if (name != null && name.length() > 0) {
+			Object obj = pageContext.findAttribute(name);
+			if (obj != null) {
+				if (!(obj instanceof Experiment)) {
+					throw new JspException("Bean named '"
+							+ this.name + "' not of type Experiment");
+				}
+				Experiment exp = (Experiment) obj;
+				if (exp.isDerived()) {
+					rval = TagSupport.EVAL_BODY_INCLUDE;
+				}
+			}
+		}
+		return rval;
+	}
 }

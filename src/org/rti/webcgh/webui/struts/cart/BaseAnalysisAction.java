@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2007-03-06 02:06:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,58 +48,67 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.webui.struts.cart;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.BadUserConfigurablePropertyException;
+import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
- * Represents a property of an
- * <code>AnalyticOperation</code>
- * that can be configured by the user at run time.
+ * Base class for actions that perform analytic operations.
+ * This class mainly provides helper methods.
  * @author dhall
  *
  */
-public interface UserConfigurableProperty {
-
-	/**
-	 * Get name of property.
-	 * @return Name of property.
-	 */
-	String getName();
+public class BaseAnalysisAction extends BaseAction {
+	
+	// Recover user configurable analytic operation properties.
+	// Such properties will be passed in as query parameters
+	// with a prefix of 'prop_.'
 	
 	/**
-	 * Set name of property.
-	 * @param name Name of property.
+	 * Recover user specified parameters for given analytic
+	 * operation from the given request object and set these
+	 * properties in the operation.  Such parameters are passed
+	 * to the action as HTTP query parameters wint a prefix
+	 * of 'prop_'.
+	 * @param op Analytic operation whose user specified
+	 * parameters will be set
+	 * @param request The request
+	 * @param aForm Analytic operation parameters form
+	 * @return Action errors if any of the user specified
+	 * analytic operation parameters are not valid
 	 */
-	void setName(String name);
-	
-	/**
-	 * Get name that should be displayed to users.
-	 * @return Name that should be displayed to users.
-	 */
-	String getDisplayName();
-	
-	
-	/**
-	 * Set name that should be displayed to users.
-	 * @param displayName Name that should be displayed
-	 * to users.
-	 */
-	void setDisplayName(String displayName);
-	
-	/**
-	 * Create a clone of this object.
-	 * @return A clone of this object.
-	 */
-	UserConfigurableProperty createClone();
-	
-	/**
-	 * Get current value of property in string format.
-	 * @return Current value of property.
-	 */
-	String getCurrentValue();
-	
-	/**
-	 * Set current value of property.
-	 * @param value Current value
-	 */
-	void setCurrentValue(String value);
+	protected ActionErrors setUserSpecifiedParameters(
+			final AnalyticOperation op,
+			final HttpServletRequest request,
+			final AnalyticOperationParametersForm aForm) {
+		ActionErrors errors = null;
+    	Map paramMap = request.getParameterMap();
+    	boolean haveErrors = false;
+    	for (Object paramNameObj : paramMap.keySet()) {
+    		String paramName = (String) paramNameObj;
+    		if (paramName.indexOf("prop_") == 0) {
+    			String propName = paramName.substring("prop_".length());
+    			String propValue = request.getParameter(paramName);
+    			try {
+    				op.setProperty(propName, propValue);
+    			} catch (BadUserConfigurablePropertyException e) {
+    				haveErrors = true;
+    			}
+    		}
+    	}
+    	
+    	// If user input is invalid, return
+    	if (haveErrors) {
+    		errors = new ActionErrors();
+    	}
+    	
+    	return errors;
+	}
 }

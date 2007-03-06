@@ -1,6 +1,6 @@
 /*
-$Revision$
-$Date$
+$Revision: 1.1 $
+$Date: 2007-03-06 02:06:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,58 +48,66 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webcgh.analysis;
+package org.rti.webcgh.webui.struts.cart;
+
+import java.util.Collection;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.UserConfigurableProperty;
+import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.ShoppingCart;
+import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
- * Represents a property of an
- * <code>AnalyticOperation</code>
- * that can be configured by the user at run time.
+ * This action class is a set up for re-running
+ * an analytic operation on a an experiment that was
+ * previously derived through an analytic operation.
  * @author dhall
  *
  */
-public interface UserConfigurableProperty {
+public class ReRunAnalyticOperationSetupAction extends BaseAction {
 
 	/**
-	 * Get name of property.
-	 * @return Name of property.
+	 * {@inheritDoc}
 	 */
-	String getName();
-	
-	/**
-	 * Set name of property.
-	 * @param name Name of property.
-	 */
-	void setName(String name);
-	
-	/**
-	 * Get name that should be displayed to users.
-	 * @return Name that should be displayed to users.
-	 */
-	String getDisplayName();
-	
-	
-	/**
-	 * Set name that should be displayed to users.
-	 * @param displayName Name that should be displayed
-	 * to users.
-	 */
-	void setDisplayName(String displayName);
-	
-	/**
-	 * Create a clone of this object.
-	 * @return A clone of this object.
-	 */
-	UserConfigurableProperty createClone();
-	
-	/**
-	 * Get current value of property in string format.
-	 * @return Current value of property.
-	 */
-	String getCurrentValue();
-	
-	/**
-	 * Set current value of property.
-	 * @param value Current value
-	 */
-	void setCurrentValue(String value);
+	public ActionForward execute(
+	        final ActionMapping mapping, final ActionForm form,
+	        final HttpServletRequest request,
+	        final HttpServletResponse response
+	    ) throws Exception {
+		
+		// Get ID of experiment on which to re-run operation
+		Long expId = Long.parseLong(
+				request.getParameter("experimentId"));
+		
+		// Get experiment from shopping cart
+		ShoppingCart cart = PageContext.getShoppingCart(request);
+		Experiment exp = cart.getExperiment(expId);
+		if (exp == null) {
+			throw new WebcghApplicationException(
+					"Experiment no longer in shopping cart");
+		}
+		
+		// Retrieve analytic operation and associated
+		// user configurable properties and attach to request
+		AnalyticOperation op = exp.getSourceAnalyticOperation();
+		Collection<UserConfigurableProperty> props =
+			op.getUserConfigurableProperties(
+					exp.getQuantitationType());
+		request.setAttribute("analyticOperation", op);
+		request.setAttribute("userConfigurableProperties", props);
+		
+		// Put experiment ID on request for downstream JSP
+		request.setAttribute("experimentId", expId.toString());
+		
+		return mapping.findForward("success");
+	}
 }

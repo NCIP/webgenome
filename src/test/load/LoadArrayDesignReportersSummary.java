@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-02 15:23:02 $
+$Revision: 1.2 $
+$Date: 2007-03-06 02:06:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -104,18 +104,31 @@ public final class LoadArrayDesignReportersSummary {
 			sess.start(user, password);
 			
 			// Instantiate and configure search criteria
+			String searchUrl =
+				"//cbioqa102.nci.nih.gov:8999/SearchCriteriaHandler";
 			ArrayDesignReporterSummarySearchCriteria criteria =
 					EnhancedSearchCriteriaFactory.
 					new_ARRAYDESIGNREPORTERSUMMARY_SC();
-			((Directable) criteria).direct(sessionUrl);
+			((Directable) criteria).direct(searchUrl);
 			criteria.setSessionId(sess.getSessionId());
 			
 			// Perform search
-			SearchResult sr = null;
-			sr = criteria.search();
+			SearchResult sr = criteria.search();
 			ArrayDesignReporterSummary[] adrss = (ArrayDesignReporterSummary[])
 				sr.getResultSet();
-			System.out.println("Number of arrays: " + adrss.length);
+			System.out.println("Number of reporters: " + adrss.length);
+			ArrayDesignReporterSummary summary = adrss[0];
+			System.out.println(
+					summary.getArrayDesignName() + ", "
+					+ summary.getChromosomeName() + ", "
+					+ summary.getChromosomeValue() + ", "
+					+ summary.getKbPositionName() + ", "
+					+ summary.getKbPositionValue() + ", "
+					+ summary.getReporterName() + ", "
+					+ summary.getGb4Name() + ", "
+					+ summary.getGb4Value() + ", "
+					+ summary.getArrayDesignId()
+			);
 			sess.end();
 		} catch (Throwable e) {
 			while (e != null) {

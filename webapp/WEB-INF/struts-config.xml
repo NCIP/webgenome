@@ -227,6 +227,12 @@
 			validate="false">
 			<forward name="success" path="cart.analysis.params"/>
 		</action>
+		
+	<!-- Set up for re-running analytic operation -->
+		<action path="/cart/rerunAnalysisParams">
+			<forward name="success" path="cart.rerun.analysis.params"/>
+		</action>
+			
 
 	<!-- Perform analytic operation -->
 		<action
@@ -235,6 +241,15 @@
 			validate="false">
 			<forward name="success" path="/cart/showCart.do"/>
 			<forward name="errors" path="/cart/analysisParams.do"/>
+		</action>
+		
+	<!-- Rerun analytic operation -->
+		<action
+			path="/cart/rerunAnalysis"
+			name="analytic.operation.params.form"
+			validate="false">
+			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="errors" path="/cart/rerunAnalysisParams.do"/>
 		</action>
 
 	<!-- Show color chooser -->

@@ -59,6 +59,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.rti.webcgh.analysis.AnalyticOperation;
+import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.util.StringUtils;
 import org.rti.webcgh.util.SystemUtils;
@@ -111,14 +113,33 @@ public class Experiment implements Serializable {
      * Bioassay data constraints that have been of data
      * added from client application.
      */  
-    private final Collection<BioAssayDataConstraints> bioAssayDataConstraints =
+    private Collection<BioAssayDataConstraints> bioAssayDataConstraints =
     		new ArrayList<BioAssayDataConstraints>();
     
     /** Identifier of data source where experiment is stored. */
     private DataSourceProperties dataSourceProperties = null;
     
-    /** ShoppingCart. */
-    private ShoppingCart shoppingCart = null;
+    /**
+     * This attribute is the source experiment for this
+     * experiment if this experiment object was generated through
+     * an analytical operation.
+     */
+    private Experiment sourceExperiment = null;
+    
+    /**
+     * If this experiment object was generated through an
+     * analysic operation, this property is the class name
+     * of that analytic operation.
+     */
+    private String analyticOperationClassName = null;
+    
+    /**
+     * If this experiment object was generated through an
+     * analysic operation, this property is the user configurable
+     * properties for that operation.
+     */
+    private Collection<UserConfigurableProperty> userConfigurableProperties =
+    	new ArrayList<UserConfigurableProperty>();
 
         
     // ===============================
@@ -142,6 +163,72 @@ public class Experiment implements Serializable {
 	}
 	
 	
+	/**
+	 * Get source analytic operation.
+	 * If this experiment object was generated through an analytic
+     * operation, this property represents this operation.
+	 * @return Source analytic operation
+	 */
+	public final AnalyticOperation getSourceAnalyticOperation() {
+		AnalyticOperation op = null;
+		if (this.analyticOperationClassName != null
+				&& this.analyticOperationClassName.length() > 0) {
+			try {
+				Class clazz =
+					Class.forName(this.analyticOperationClassName);
+				op = (AnalyticOperation) clazz.newInstance();
+				for (UserConfigurableProperty prop
+						: this.userConfigurableProperties) {
+					op.setProperty(prop.getName(), prop.getCurrentValue());
+				}
+			} catch (Exception e) {
+				throw new WebcghSystemException(
+						"Error reconstituting analytic operation '"
+						+ this.analyticOperationClassName + "'", e);
+			}
+		}
+		return op;
+	}
+
+	
+	/**
+	 * Set source analytic operation.
+	 * If this experiment object was generated through an analytic
+     * operation, this property represents this operation.
+	 * @param sourceAnalyticOperation Source analytic operation.
+	 */
+	public final void setSourceAnalyticOperation(
+			final AnalyticOperation sourceAnalyticOperation) {
+		this.analyticOperationClassName =
+			sourceAnalyticOperation.getClass().getName();
+		this.userConfigurableProperties =
+			sourceAnalyticOperation.getUserConfigurableProperties(
+					this.quantitationType);
+	}
+
+	/**
+	 * Get source experiment.
+	 * This attribute is the source experiment for this
+     * experiment if this experiment object was generated through
+     * an analytical operation.
+	 * @return Source experiment
+	 */
+	public final Experiment getSourceExperiment() {
+		return sourceExperiment;
+	}
+
+	/**
+	 * Set source experiment.
+	 * This attribute is the source experiment for this
+     * experiment if this experiment object was generated through
+     * an analytical operation.
+	 * @param sourceExperiment Source experiment
+	 */
+	public final void setSourceExperiment(
+			final Experiment sourceExperiment) {
+		this.sourceExperiment = sourceExperiment;
+	}
+
 	/**
 	 * Get data source properties.
 	 * @return Data source properties
@@ -269,22 +356,6 @@ public class Experiment implements Serializable {
             final QuantitationType quantitationType) {
         this.quantitationType = quantitationType;
     }
-    
-    /**
-     * Get shoppingcar.
-     * @return ShoppingCart.
-     */
-    public final ShoppingCart getShoppingCart() {
-		return shoppingCart;
-	}
-
-    /**
-     * Set shoppingcar.
-     * @param shoppingCart A ShoppingCart.
-     */
-	public final void setShoppingCart(final ShoppingCart shoppingCart) {
-		this.shoppingCart = shoppingCart;
-	}
     
     // ==================================
     //       Constructors
@@ -468,6 +539,40 @@ public class Experiment implements Serializable {
     //        Business methods
     // ====================================
     
+    /**
+     * Bulk set the attributes of this experiment
+     * from the attributes of the given experiment
+     * using shallow copy.
+     * @param exp An experiment whose attributes
+     * will be used to set this experiments attributes
+     */
+    public void bulkSetShallow(final Experiment exp) {
+    	this.analyticOperationClassName =
+    		exp.analyticOperationClassName;
+    	this.bioAssayDataConstraints =
+    		exp.bioAssayDataConstraints;
+    	this.bioAssays = exp.bioAssays;
+    	this.dataSourceProperties = exp.dataSourceProperties;
+    	this.name = exp.name;
+    	this.organism = exp.organism;
+    	this.quantitationType = exp.quantitationType;
+    	this.sourceDbId = exp.sourceDbId;
+    	this.sourceExperiment = exp.sourceExperiment;
+    	this.terminal = exp.terminal;
+    	this.userConfigurableProperties =
+    		exp.userConfigurableProperties;
+    }
+    
+    /**
+     * Is this experiment derived from an analytic
+     * operation?
+     * @return T/F
+     */
+    public boolean isDerived() {
+    	return this.sourceExperiment != null
+    	&& this.analyticOperationClassName != null
+    	&& this.analyticOperationClassName.length() > 0;
+    }
     
     /**
      * Add data from given data transfer object.
@@ -512,14 +617,6 @@ public class Experiment implements Serializable {
      */
     public final void add(final BioAssay bioAssay) {
         this.bioAssays.add(bioAssay);
-    }
-    
-    /**
-     * Remove a bioassay from this experiment.
-     * @param bioAssay A bioassay.
-     */
-    public final void remove(final BioAssay bioAssay) {
-    	this.bioAssays.remove(bioAssay);
     }
     
     

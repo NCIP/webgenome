@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2006-12-21 03:56:53 $
+$Revision: 1.12 $
+$Date: 2007-03-06 02:06:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,14 +50,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.service.analysis;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.rti.webcgh.analysis.AnalyticException;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticPipeline;
+import org.rti.webcgh.analysis.BadUserConfigurablePropertyException;
 import org.rti.webcgh.analysis.MinimumCommonAlteredRegionOperation;
 import org.rti.webcgh.analysis.MultiExperimentStatelessOperation;
 import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
@@ -66,6 +70,7 @@ import org.rti.webcgh.analysis.IntraBioAssayStatefulOperation;
 import org.rti.webcgh.analysis.IntraExperimentStatefulOperation;
 import org.rti.webcgh.analysis.StatefulOperation;
 import org.rti.webcgh.analysis.StatelessOperation;
+import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.ChromosomeArrayData;
@@ -115,8 +120,75 @@ public abstract class DataTransformer {
             		input.getQuantitationType());
         output.setDataSourceProperties(DataSourceProperties.ANALYTIC_OPERATION);
         this.performAnalyticOperation(input, output, operation);
+        output.setSourceExperiment(input);
+        output.setSourceAnalyticOperation(operation);
         LOGGER.info("Completed operation");
         return output;
+    }
+    
+    
+    /**
+     * The given experiment must have been derived from an
+     * analytic operation.  This method re-does the original
+     * operation using different user configurable
+     * property settings.
+     * @param experiment An experiment, which must be
+     * derived from an analytic operation (i.e., the
+     * call to isDerived() returns true).
+     * @param analyticOperationProps Analytic operation
+     * user configurable properties to use in
+     * re-calculation.
+     * @throws AnalyticException If there is an error
+     * during computation
+     */
+    public void reCompute(final Experiment experiment,
+    		final Collection<UserConfigurableProperty>
+    		analyticOperationProps)
+    throws AnalyticException	 {
+    	
+    	// Retain experiment and bioassay names and
+    	// bioassay colors
+    	String expName = experiment.getName();
+    	Map<Long, String> bioAssayNames =
+    		new HashMap<Long, String>();
+    	Map<Long, Color> bioAssayColors =
+    		new HashMap<Long, Color>();
+    	for (BioAssay ba : experiment.getBioAssays()) {
+    		bioAssayNames.put(ba.getParentBioAssayId(), ba.getName());
+    		bioAssayColors.put(ba.getParentBioAssayId(), ba.getColor());
+    	}
+    	
+    	// Make sure experiment derived for analytic operation
+    	if (!experiment.isDerived()) {
+    		throw new IllegalArgumentException(
+    				"Cannot recompute experiment if it "
+    				+ "was not derived from an analytic "
+    				+ "operation to begin with");
+    	}
+    	
+    	// Get operation and set user parameters
+    	AnalyticOperation op = experiment.getSourceAnalyticOperation();
+    	for (UserConfigurableProperty prop : analyticOperationProps) {
+    		try {
+				op.setProperty(prop.getName(), prop.getCurrentValue());
+			} catch (BadUserConfigurablePropertyException e) {
+				throw new AnalyticException(
+						"Error setting analytic operation parameters", e);
+			}
+    	}
+    	
+    	// Perform operation
+    	Experiment newExp = this.perform(
+    			experiment.getSourceExperiment(), op);
+    	
+    	// Set a few properties of new experiment
+    	experiment.bulkSetShallow(newExp);
+    	experiment.setSourceAnalyticOperation(op);
+    	experiment.setName(expName);
+    	for (BioAssay ba : experiment.getBioAssays()) {
+    		ba.setName(bioAssayNames.get(ba.getParentBioAssayId()));
+    		ba.setColor(bioAssayColors.get(ba.getParentBioAssayId()));
+    	}
     }
     
     

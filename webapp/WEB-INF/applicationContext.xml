@@ -223,6 +223,10 @@
 	<bean name="/cart/analysisParams"
 		class="org.rti.webcgh.webui.struts.cart.AnalysisParamsSetupAction"/>
 		
+<!-- Set up for re-running an analytic operation -->
+	<bean name="/cart/rerunAnalysisParams"
+		class="org.rti.webcgh.webui.struts.cart.ReRunAnalyticOperationSetupAction"/>
+		
 <!-- Perform analytic operation -->
 	<bean name="/cart/analysis"
 		class="org.rti.webcgh.webui.struts.cart.AnalysisAction">
@@ -233,6 +237,10 @@
 			<ref bean="experimentIdGenerator"/>
 		</property>
 	</bean>
+	
+<!-- Rerun analytic operation -->
+	<bean name="/cart/rerunAnalysis"
+		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisAction"/>
 		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"

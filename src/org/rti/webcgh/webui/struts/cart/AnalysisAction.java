@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2006-12-18 18:13:18 $
+$Revision: 1.7 $
+$Date: 2007-03-06 02:06:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
 import org.rti.webcgh.analysis.AnalyticPipeline;
-import org.rti.webcgh.analysis.BadUserConfigurablePropertyException;
 import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
 import org.rti.webcgh.analysis.MultiExperimentStatelessOperation;
 import org.rti.webcgh.analysis.SingleBioAssayStatelessOperation;
@@ -79,7 +78,6 @@ import org.rti.webcgh.graphics.util.ColorChooser;
 import org.rti.webcgh.service.analysis.InMemoryDataTransformer;
 import org.rti.webcgh.service.util.IdGenerator;
 import org.rti.webcgh.webui.SessionTimeoutException;
-import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
 
@@ -91,7 +89,7 @@ import org.rti.webcgh.webui.util.SessionMode;
  * @author dhall
  *
  */
-public final class AnalysisAction extends BaseAction {
+public final class AnalysisAction extends BaseAnalysisAction {
 	
 	/** Colors for altered genome segments. */
 	private static final List<Color> ALTERATION_COLORS = new ArrayList<Color>();
@@ -151,38 +149,27 @@ public final class AnalysisAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Get shopping cart
+    	// Get shopping cart.  This is where data are.
     	ShoppingCart cart = PageContext.getShoppingCart(request);
     	
-    	// Generate analytic operation
+    	// Generate analytic operation instance
     	AnalyticOperationParametersForm aForm =
     		(AnalyticOperationParametersForm) form;
     	AnalyticOperation op = this.analyticOperationFactory.
     		newAnalyticOperation(aForm.getOperationKey());
     	
-    	// Set user configurable analytic operation properties
-    	Map paramMap = request.getParameterMap();
-    	boolean haveErrors = false;
-    	for (Object paramNameObj : paramMap.keySet()) {
-    		String paramName = (String) paramNameObj;
-    		if (paramName.indexOf("prop_") == 0) {
-    			String propName = paramName.substring("prop_".length());
-    			String propValue = request.getParameter(paramName);
-    			try {
-    				op.setProperty(propName, propValue);
-    			} catch (BadUserConfigurablePropertyException e) {
-    				haveErrors = true;
-    			}
-    		}
-    	}
-    	if (haveErrors) {
-        	ActionErrors errors = new ActionErrors();
+    	// Recover user configurable analytic operation properties.
+    	ActionErrors errors = this.setUserSpecifiedParameters(
+    			op, request, aForm);
+    	
+    	// If user input is invalid, return
+    	if (errors != null) {
         	errors.add("global", new ActionError("invalid.fields"));
     		this.saveErrors(request, errors);
     		return mapping.findForward("errors");
     	}
     	
-    	// Retrieve selected experiments form bean.
+    	// Retrieve form bean containing selected experiments.
     	// Note, this is not the form bean configured
     	// for this action in struts-config.xml.
     	SelectedExperimentsForm seForm =
@@ -203,6 +190,7 @@ public final class AnalysisAction extends BaseAction {
     		new HashMap<Long, String>();
     	Map<Long, String> outputExperimentNames =
     		new HashMap<Long, String>();
+    	Map paramMap = request.getParameterMap();
     	if (!(op instanceof MultiExperimentStatelessOperation)) {
 	    	for (Object paramNameObj : paramMap.keySet()) {
 	    		String paramName = (String) paramNameObj;
@@ -219,14 +207,16 @@ public final class AnalysisAction extends BaseAction {
 	    	}
     	}
     	
-    	// Perform operation if in client mode and put in cart
+    	// If client mode, perform operation and put output in cart
     	SessionMode mode = PageContext.getSessionMode(request);
     	ColorChooser colorChooser = PageContext.getColorChooser(
     			request, true);
     	if (mode == SessionMode.CLIENT) {
     		Collection<Experiment> experiments = cart.getExperiments(ids);
     		if (op instanceof MultiExperimentStatelessOperation) {
-    			Experiment output = this.inMemoryDataTransformer.performMultiExperimentStatelessOperation(
+    			Experiment output = this.
+    			inMemoryDataTransformer.
+    			performMultiExperimentStatelessOperation(
     					experiments,
     					(MultiExperimentStatelessOperation) op);
     			output.setId(this.experimentIdGenerator.nextId());

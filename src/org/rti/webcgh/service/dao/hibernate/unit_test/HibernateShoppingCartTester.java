@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-02-13 22:59:14 $
+$Revision: 1.2 $
+$Date: 2007-03-06 02:06:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,8 +94,10 @@ public final class HibernateShoppingCartTester extends TestCase {
     	Experiment exp2 = new Experiment(expName2);
     	exp1.setId((long) 1001);
     	exp2.setId((long) 1002);
-    	exp1.setShoppingCart(c1);
-    	exp2.setShoppingCart(c1);
+    	
+    	// Code below commented out by DHALL
+//    	exp1.setShoppingCart(c1);
+//    	exp2.setShoppingCart(c1);
     	c1.add(exp1);
     	c1.add(exp2);
     	DataSerializedBioAssay assay1 = new DataSerializedBioAssay();
@@ -132,7 +134,9 @@ public final class HibernateShoppingCartTester extends TestCase {
     	// add new experiment and update
     	Experiment exp3 = new Experiment(expName3);
     	exp3.setId((long) 1003);
-    	exp3.setShoppingCart(c1);
+    	
+    	// Code below commented out by DHALL
+//    	exp3.setShoppingCart(c1);
     	c1.add(exp3);
     	cartDao.update(c1);
     	c2 = cartDao.load(cartUser);
@@ -167,7 +171,9 @@ public final class HibernateShoppingCartTester extends TestCase {
     	assertEquals(2, c2.getExperiments().size()); //exp1 and 3 left
 
     	// Remove an assay and update
-    	exp3.remove(assay3);
+    	
+    	// Code below commented out by DHALL
+//    	exp3.remove(assay3);
     	cartDao.update(c1); // exp1 contains assay1, exp3 contains assay2
     	c2 = cartDao.load(cartUser);
     	it = c2.getExperiments().iterator();

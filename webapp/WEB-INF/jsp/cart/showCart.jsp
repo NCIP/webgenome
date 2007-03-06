@@ -111,6 +111,13 @@
 										title="Remove experiment" border="0"
 										width="15" height="15"
 								/></a>
+								<webcgh:onlyIfDerivedExperiment name="experiment">
+								[<html:link action="/cart/rerunAnalysisParams"
+									paramId="experimentId" paramName="experiment"
+									paramProperty="id">
+									Change parameters
+								</html:link>]
+								</webcgh:onlyIfDerivedExperiment>
 							</span>
 						</td>
 					</tr></table>
