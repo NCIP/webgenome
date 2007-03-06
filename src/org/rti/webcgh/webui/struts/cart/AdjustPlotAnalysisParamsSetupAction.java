@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-06 15:52:16 $
+$Revision: 1.2 $
+$Date: 2007-03-06 17:38:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,13 +50,24 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.analysis.UserConfigurableProperty;
+import org.rti.webcgh.core.WebcghApplicationException;
+import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Plot;
+import org.rti.webcgh.domain.QuantitationType;
+import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.webui.struts.BaseAction;
+import org.rti.webcgh.webui.util.PageContext;
 
 /**
  * Setup action for screen that enables the user to adjust
@@ -76,6 +87,34 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
             final HttpServletResponse response
         ) throws Exception {
     	
+		// Attach map of derived experiments to request
+		ShoppingCart cart = PageContext.getShoppingCart(request);
+		Long plotId = Long.parseLong(request.getParameter("id"));
+		Plot plot = cart.getPlot(plotId);
+		if (plot == null) {
+			throw new WebcghApplicationException(
+					"Unable to retrieve plot from shopping cart");
+		}
+		Collection<Long> expIds = plot.getExperimentIds();
+		Collection<Experiment> experiments = cart.getExperiments(expIds);
+		QuantitationType qType = Experiment.getQuantitationType(experiments);
+		Map<Experiment, Collection<UserConfigurableProperty>>
+			derivedExperiments = new HashMap<Experiment,
+				Collection<UserConfigurableProperty>>();
+		for (Long expId : expIds) {
+			Experiment exp = cart.getExperiment(expId);
+			if (exp == null) {
+				throw new WebcghApplicationException(
+						"Some experiments no longer in shopping cart");
+			}
+			if (exp.isDerived()) {
+				derivedExperiments.put(exp,
+						exp.getSourceAnalyticOperation().
+						getUserConfigurableProperties(qType));
+			}
+		}
+		request.setAttribute("derived.experiments", derivedExperiments);
+		
     	return mapping.findForward("success");
     }
 }

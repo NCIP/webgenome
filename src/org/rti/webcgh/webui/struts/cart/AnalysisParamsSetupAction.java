@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2006-11-29 03:13:59 $
+$Revision: 1.8 $
+$Date: 2007-03-06 17:38:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,11 +103,6 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     ) throws Exception {
     	ShoppingCart cart = PageContext.getShoppingCart(request);
     	
-    	// Get key of analytic operation
-    	AnalyticOperationParametersForm aForm =
-    		(AnalyticOperationParametersForm) form;
-    	String opKey = aForm.getOperationKey();
-    	
     	// Get selected experiments
     	SelectedExperimentsForm seForm =
     		PageContext.getSelectedExperimentsForm(request, false);
@@ -122,6 +117,9 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	QuantitationType qType = Experiment.getQuantitationType(experiments);
     	
     	// Get instance of analytic operation and attach to request
+    	AnalyticOperationParametersForm aForm =
+    		(AnalyticOperationParametersForm) form;
+    	String opKey = aForm.getOperationKey();
     	AnalyticOperation op =
     		this.analyticOperationFactory.newAnalyticOperation(opKey);
     	request.setAttribute("op", op);

@@ -2,6 +2,7 @@
 <%@ taglib uri="/WEB-INF/webGenome.tld" prefix="webGenome" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
 <script language="JavaScript">
 	function openPopUpWindow(url) {
@@ -18,11 +19,13 @@
 		paramName="plot" paramProperty="id"/>');">
 		Change Plot Parameters
 	</a>
+	<logic:present name="derived.data">
 	&nbsp;&nbsp;
 	<a href="javascript:openPopUpWindow('<html:rewrite page="/cart/adjustPlotAnalysisParamsSetup.do" paramId="id"
 		paramName="plot" paramProperty="id"/>');">
 		Change Analytic Parameters
 	</a>
+	</logic:present>
 </center>
 
 <h1 align="center"><bean:write name="plot" property="plotParameters.plotName"/></h1>

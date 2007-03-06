@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2006-10-08 21:51:28 $
+$Revision: 1.2 $
+$Date: 2007-03-06 17:38:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.webui.struts.BaseAction;
@@ -101,6 +104,21 @@ public final class ShowPlotSetupAction extends BaseAction {
     	
     	// Attache plot to request
     	request.setAttribute("plot", plot);
+    	
+    	// See if any plotted experiments were derived from
+    	// analytic operations.  If so, plant an attribute
+    	// to be used by JSP to enable the user to adjust
+    	// analytic parameters
+    	Collection<Long> expIds = plot.getExperimentIds();
+    	for (Long expId : expIds) {
+    		Experiment exp = cart.getExperiment(expId);
+    		if (exp != null) {
+    			if (exp.isDerived()) {
+    				request.setAttribute("derived.data", "1");
+    				break;
+    			}
+    		}
+    	}
     	
     	return mapping.findForward("success");
     }
