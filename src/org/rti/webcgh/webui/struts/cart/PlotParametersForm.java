@@ -1,6 +1,6 @@
 /*
-$Revision: 1.26 $
-$Date: 2006-12-16 05:22:20 $
+$Revision: 1.26.2.1 $
+$Date: 2007-03-13 19:06:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -232,10 +232,10 @@ public class PlotParametersForm extends BaseForm {
 	private String showAnnotation = "";
 	
 	/** Show gene names in mouseover? */
-	private String showGenes = "on";
+	private String showGenes = "";
 	
 	/** Show reporter anmes in mouseover? */
-	private String showReporterNames = "on";
+	private String showReporterNames = "";
 	
 	// ================================
 	//      Getters/setters
@@ -1003,8 +1003,8 @@ public class PlotParametersForm extends BaseForm {
 		this.interpolationType =
 			PlotParameters.DEF_INTERPOLATION_TYPE.toString();
 		this.showAnnotation = "";
-		this.showGenes = "on";
-		this.showReporterNames = "on";
+		this.showGenes = "";
+		this.showReporterNames = "";
 	}
 	
 	/**
