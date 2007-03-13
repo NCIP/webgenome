@@ -161,6 +161,11 @@
 		</property>
 	</bean>
 	
+<!-- Unique File Name generator -->
+	<bean id="uniqueFileNameGenerator"
+		class="org.rti.webcgh.service.io.UniqueFileNameGenerator">
+	</bean>
+	
 	<!-- ========================================== -->
 	<!--        Action beans                        -->
 	<!-- ========================================== -->
@@ -259,6 +264,14 @@
 		class="org.rti.webcgh.webui.struts.cart.RemovePlotAction">
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>
+		</property>
+	</bean>
+
+<!-- Perform file upload operation -->
+	<bean name="/cart/upload"
+		class="org.rti.webcgh.webui.struts.cart.FileUploadAction">
+		<property name="uniqueFileNameGenerator">
+			<ref bean="uniqueFileNameGenerator"/>
 		</property>
 	</bean>
 	
