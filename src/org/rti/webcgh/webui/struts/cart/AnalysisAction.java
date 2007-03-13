@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-03-06 02:06:28 $
+$Revision: 1.8 $
+$Date: 2007-03-13 18:32:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -160,7 +160,7 @@ public final class AnalysisAction extends BaseAnalysisAction {
     	
     	// Recover user configurable analytic operation properties.
     	ActionErrors errors = this.setUserSpecifiedParameters(
-    			op, request, aForm);
+    			op, request);
     	
     	// If user input is invalid, return
     	if (errors != null) {

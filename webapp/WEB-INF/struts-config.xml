@@ -257,6 +257,14 @@
 			<forward name="success" path="cart.adjust.plot.analysis.params"/>
 		</action>
 			
+	<!--
+		 Adjust analysis parameters for all derived experiments in
+		 a plot.
+	-->
+		<action path="/cart/adjustPlotAnalysisParams">
+			<forward name="success" path="/cart/newPlot.do"/>
+			<forward name="errors" path="/cart/adjustPlotAnalysisParamsSetup.do"/>
+		</action>
 
 	<!-- Show color chooser -->
 		<action

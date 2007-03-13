@@ -245,6 +245,10 @@
 <!-- Rerun analytic operation -->
 	<bean name="/cart/rerunAnalysis"
 		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisAction"/>
+
+<!-- Rerun analytic operation on all derived experiments in plot -->
+	<bean name="/cart/adjustPlotAnalysisParams"
+		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction"/>
 		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"

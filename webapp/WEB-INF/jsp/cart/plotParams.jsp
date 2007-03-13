@@ -9,7 +9,7 @@
 <html:form action="/cart/newPlot" target="mainwindow">
 
 	<logic:present parameter="id">
-		<input type="hidden" name="id" value="<%= request.getParameter("id") %>">
+		<input type="hidden" name="plotId" value="<%= request.getParameter("id") %>">
 	</logic:present>
 	
 	<table class="noBorder">

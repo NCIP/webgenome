@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2007-03-01 16:50:24 $
+$Revision: 1.14 $
+$Date: 2007-03-13 18:32:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -169,7 +169,7 @@ public final class NewPlotAction extends BaseAction {
     	// from the plot instance.
     	boolean isAReplot = false;
     	Collection<Experiment> experiments = null;
-	    if (request.getParameter("id") == null) {
+	    if (request.getParameter("plotId") == null) {
 	    	
 	    	// Retrieve selected experiments form bean.
 	    	// Note, this is not the form bean configured
@@ -189,7 +189,7 @@ public final class NewPlotAction extends BaseAction {
 	    	
 	    	// Get experiment names, which are actually IDs to
 	    	// the client application
-	    	Long plotId = Long.parseLong(request.getParameter("id"));
+	    	Long plotId = Long.parseLong(request.getParameter("plotId"));
 	    	plot = cart.getPlot(plotId);
 	    	Collection<Long> experimentIds = plot.getExperimentIds();
 	    	experiments = cart.getExperiments(experimentIds);

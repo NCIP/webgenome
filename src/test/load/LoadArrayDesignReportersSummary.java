@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-06 02:06:29 $
+$Revision: 1.3 $
+$Date: 2007-03-13 18:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import gov.nih.nci.mageom.search.ArrayDesign.enhanced.
 	ArrayDesignReporterSummary;
 import gov.nih.nci.mageom.search.ArrayDesign.enhanced.
 	ArrayDesignReporterSummarySearchCriteria;
+import gov.nih.nci.mageom.search.ArrayDesign.enhanced.ReporterSummary;
 
 /**
  * Class to test loading of
@@ -96,7 +97,7 @@ public final class LoadArrayDesignReportersSummary {
 			String user = "jlorenzcaarray";
 			String password = "";
 			String sessionUrl =
-				"//cbioqa102.nci.nih.gov:8999/SecureSessionManager";
+				"//cbioqa102.nci.nih.gov:9999/SecureSessionManager";
 			
 			// Instantiate, configure, and start session
 			SecureSession sess = SecureSessionFactory.defaultSecureSession();
@@ -105,7 +106,7 @@ public final class LoadArrayDesignReportersSummary {
 			
 			// Instantiate and configure search criteria
 			String searchUrl =
-				"//cbioqa102.nci.nih.gov:8999/SearchCriteriaHandler";
+				"//cbioqa102.nci.nih.gov:9999/SearchCriteriaHandler";
 			ArrayDesignReporterSummarySearchCriteria criteria =
 					EnhancedSearchCriteriaFactory.
 					new_ARRAYDESIGNREPORTERSUMMARY_SC();
@@ -116,19 +117,28 @@ public final class LoadArrayDesignReportersSummary {
 			SearchResult sr = criteria.search();
 			ArrayDesignReporterSummary[] adrss = (ArrayDesignReporterSummary[])
 				sr.getResultSet();
-			System.out.println("Number of reporters: " + adrss.length);
+			System.out.println("Number of array designs: " + adrss.length);
 			ArrayDesignReporterSummary summary = adrss[0];
 			System.out.println(
 					summary.getArrayDesignName() + ", "
-					+ summary.getChromosomeName() + ", "
-					+ summary.getChromosomeValue() + ", "
-					+ summary.getKbPositionName() + ", "
-					+ summary.getKbPositionValue() + ", "
-					+ summary.getReporterName() + ", "
-					+ summary.getGb4Name() + ", "
-					+ summary.getGb4Value() + ", "
 					+ summary.getArrayDesignId()
 			);
+			ReporterSummary[] reporters = summary.getReportersSummary();
+			System.out.println("Number of reporters: " + reporters.length);
+			int n = 10;
+			if (n > reporters.length) {
+				n = reporters.length;
+			}
+			for (int i = 0; i < n; i++) {
+				ReporterSummary rep = reporters[i];
+				System.out.println(
+					rep.getReporterName() + ", "
+					+ rep.getChromosomeName() + ", "
+					+ rep.getChromosomeValue() + ", "
+					+ rep.getKbPositionName() + ", "
+					+ rep.getKbPositionValue()
+				);
+			}
 			sess.end();
 		} catch (Throwable e) {
 			while (e != null) {

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2007-03-06 02:06:29 $
+$Revision: 1.13 $
+$Date: 2007-03-13 18:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -146,16 +146,20 @@ public abstract class DataTransformer {
     		analyticOperationProps)
     throws AnalyticException	 {
     	
-    	// Retain experiment and bioassay names and
-    	// bioassay colors
+    	// Retain various attributes of experiment and
+    	// bioassays so they can be retrieved and assigned
+    	// to newly-created objects
     	String expName = experiment.getName();
     	Map<Long, String> bioAssayNames =
     		new HashMap<Long, String>();
     	Map<Long, Color> bioAssayColors =
     		new HashMap<Long, Color>();
+    	Map<Long, Long> bioAssayIds =
+    		new HashMap<Long, Long>();
     	for (BioAssay ba : experiment.getBioAssays()) {
     		bioAssayNames.put(ba.getParentBioAssayId(), ba.getName());
     		bioAssayColors.put(ba.getParentBioAssayId(), ba.getColor());
+    		bioAssayIds.put(ba.getParentBioAssayId(), ba.getId());
     	}
     	
     	// Make sure experiment derived for analytic operation
@@ -188,6 +192,7 @@ public abstract class DataTransformer {
     	for (BioAssay ba : experiment.getBioAssays()) {
     		ba.setName(bioAssayNames.get(ba.getParentBioAssayId()));
     		ba.setColor(bioAssayColors.get(ba.getParentBioAssayId()));
+    		ba.setId(bioAssayIds.get(ba.getParentBioAssayId()));
     	}
     }
     

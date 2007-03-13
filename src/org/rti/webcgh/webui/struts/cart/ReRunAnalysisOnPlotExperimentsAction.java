@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-03-13 18:32:40 $
 
 The Web CGH Software License, Version 1.0
@@ -50,12 +50,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -64,6 +64,7 @@ import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.domain.Experiment;
+import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.analysis.DataTransformer;
@@ -72,12 +73,13 @@ import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
 
 /**
- * This action reruns an analytic operation on
- * an experiment using new user-supplied parameters.
+ * Rerun analytic operation on all derived
+ * experiments from a plot.
  * @author dhall
  *
  */
-public class ReRunAnalysisAction extends BaseAnalysisAction {
+public class ReRunAnalysisOnPlotExperimentsAction
+extends BaseAnalysisAction {
 
 	/**
 	 * {@inheritDoc}
@@ -88,39 +90,48 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 	        final HttpServletRequest request,
 	        final HttpServletResponse response)
 	throws Exception {
-	
-		// Get selected experiment
+		
+		// Recover plot
 		ShoppingCart cart = PageContext.getShoppingCart(request);
-		Long expId = Long.parseLong(request.getParameter("experimentId"));
-		Experiment exp = cart.getExperiment(expId);
-		if (exp == null) {
-			throw new WebcghApplicationException(
-					"Selected experiment no longer in workspace");
+		Long plotId = Long.parseLong(request.getParameter("plotId"));
+		Plot plot = cart.getPlot(plotId);
+		
+		// Recover derived experiments
+		Collection<Experiment> derivedExperiments =
+			new ArrayList<Experiment>();
+		for (Long expId : plot.getExperimentIds()) {
+			Experiment exp = cart.getExperiment(expId);
+			if (exp == null) {
+				throw new WebcghApplicationException(
+						"One or more experiments no longer workspace");
+			}
+			if (exp.isDerived()) {
+				derivedExperiments.add(exp);
+			}
 		}
 		
-		// Set properties of analytic operation to redo
-		AnalyticOperation op = exp.getSourceAnalyticOperation();
-		ActionErrors errors = this.setUserSpecifiedParameters(
-				op, request);
+		// Set new analytic parameters
+		ActionErrors errors = 
+			this.setUserSpecifiedParameters(derivedExperiments,
+					request);
+		if (errors != null) {
+			return mapping.findForward("errors");
+		}
 		
-    	// If user input is invalid, return
-    	if (errors != null) {
-        	errors.add("global", new ActionError("invalid.fields"));
-    		this.saveErrors(request, errors);
-    		return mapping.findForward("errors");
-    	}
-    	
-    	// Redo analysis
-    	SessionMode mode = PageContext.getSessionMode(request);
-    	QuantitationType qType = exp.getQuantitationType();
-    	Collection<UserConfigurableProperty> props =
-    		op.getUserConfigurableProperties(qType);
-    	if (mode == SessionMode.CLIENT) {
-    		DataTransformer inMemoryDataTransformer =
-    			new InMemoryDataTransformer();
-    		inMemoryDataTransformer.reCompute(exp, props);
-    	}
-	
+		// Redo analysis
+		SessionMode mode = PageContext.getSessionMode(request);
+		if (mode == SessionMode.CLIENT) {
+			DataTransformer inMemoryDataTransformer =
+				new InMemoryDataTransformer();
+			for (Experiment exp : derivedExperiments) {
+				AnalyticOperation op = exp.getSourceAnalyticOperation();
+				QuantitationType qType = exp.getQuantitationType();
+				Collection<UserConfigurableProperty> props =
+					op.getUserConfigurableProperties(qType);
+				inMemoryDataTransformer.reCompute(exp, props);
+			}
+		}
+		
 		return mapping.findForward("success");
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-06 17:38:01 $
+$Revision: 1.3 $
+$Date: 2007-03-13 18:32:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -114,6 +114,9 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
 			}
 		}
 		request.setAttribute("derived.experiments", derivedExperiments);
+		
+		// Attach plot to request
+		request.setAttribute("plot", plot);
 		
     	return mapping.findForward("success");
     }

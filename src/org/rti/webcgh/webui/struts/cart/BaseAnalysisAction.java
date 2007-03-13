@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-06 02:06:28 $
+$Revision: 1.2 $
+$Date: 2007-03-13 18:32:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,6 +58,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.BadUserConfigurablePropertyException;
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.webui.struts.BaseAction;
 
 /**
@@ -75,19 +77,17 @@ public class BaseAnalysisAction extends BaseAction {
 	 * Recover user specified parameters for given analytic
 	 * operation from the given request object and set these
 	 * properties in the operation.  Such parameters are passed
-	 * to the action as HTTP query parameters wint a prefix
+	 * to the action as HTTP query parameters with a prefix
 	 * of 'prop_'.
 	 * @param op Analytic operation whose user specified
 	 * parameters will be set
 	 * @param request The request
-	 * @param aForm Analytic operation parameters form
 	 * @return Action errors if any of the user specified
 	 * analytic operation parameters are not valid
 	 */
 	protected ActionErrors setUserSpecifiedParameters(
 			final AnalyticOperation op,
-			final HttpServletRequest request,
-			final AnalyticOperationParametersForm aForm) {
+			final HttpServletRequest request) {
 		ActionErrors errors = null;
     	Map paramMap = request.getParameterMap();
     	boolean haveErrors = false;
@@ -111,4 +111,58 @@ public class BaseAnalysisAction extends BaseAction {
     	
     	return errors;
 	}
+	
+	
+	/**
+	 * Set user specified analytic operation parameters
+	 * for all given derived experiments
+	 * extracted from request parameters.
+	 * Such parameters are passed
+	 * to the action as HTTP query parameters with a prefix
+	 * of 'prop_EXP-NO_' where EXP-NO is an integer value
+	 * corresponding to an experiment number.
+	 * @param experiments Derived experiments for which to
+	 * adjust parameters.
+	 * @param request Servlet request
+	 * @return Action errors if there are any invalid
+	 * user-supplied parameters or <code>null</code> otherwise.
+	 */
+	protected ActionErrors setUserSpecifiedParameters(
+			final Collection<Experiment> experiments,
+			final HttpServletRequest request) {
+		ActionErrors errors = null;
+    	Map paramMap = request.getParameterMap();
+    	boolean haveErrors = false;
+    	for (Experiment exp : experiments) {
+    		if (!exp.isDerived()) {
+    			throw new IllegalArgumentException(
+    					"Experiment not derived");
+    		}
+    		String prefix = "prop_exp_" + exp.getId() + "_";
+    		AnalyticOperation op = exp.getSourceAnalyticOperation();
+	    	for (Object paramNameObj : paramMap.keySet()) {
+	    		String paramName = (String) paramNameObj;
+	    		if (paramName.indexOf(prefix) == 0) {
+	    			String propName = paramName.substring(
+	    					prefix.length());
+	    			String propValue = request.getParameter(
+	    					paramName);
+	    			try {
+	    				op.setProperty(propName, propValue);
+	    			} catch (BadUserConfigurablePropertyException e) {
+	    				haveErrors = true;
+	    			}
+	    		}
+	    	}
+	    	exp.setSourceAnalyticOperation(op);
+    	}
+    	
+    	// If user input is invalid, return
+    	if (haveErrors) {
+    		errors = new ActionErrors();
+    	}
+    	
+    	return errors;
+	}
+			
 }

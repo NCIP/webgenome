@@ -3,6 +3,10 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
 
+<form action="<html:rewrite page="/cart/adjustPlotAnalysisParams.do"/>"
+	target="mainwindow">
+<bean:define id="plotId" name="plot" property="id"/>
+<input type="hidden" name="plotId" value="<%= plotId %>">
 <table>
 	<tr>
 		<td>Experiment</td>
@@ -30,3 +34,8 @@
 		<tr>
 	</logic:iterate>
 </table>
+
+<p align="center">
+	<input type="submit" value="OK" onclick="onLeave();"/>
+</p>
+</form>
