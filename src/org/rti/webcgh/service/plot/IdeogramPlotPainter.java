@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2006-12-21 04:50:19 $
+$Revision: 1.18.2.1 $
+$Date: 2007-03-16 21:16:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -234,14 +234,26 @@ public class IdeogramPlotPainter extends PlotPainter {
 			if (plotCount == 1) {
 				makeReferenceElement = true;
 			}
+			
+			// TODO: Define specific attributes for suppressing
+			// ideogram mouseover.
+			
+			// NEXT 2 METHOD CALLS CONTAINS BUG FIX CODE FOR RELEASE 2.3.
+			// THE PLOT PARAMETER ATTRIBUTE showAnnotation
+			// IS USED TO DETERMINE WHETHER MOUSEOVER TEXT IS
+			// ADDED TO RESULTING WEB GRAPHIC.  THIS SHOULD BE REFACTORED
+			// SUCH THAT DEDICATED ATTRIBUTES DETERMINING WHAT
+			// INFORMATION IS DISPLAYED IN MOUSEOVER ARE USED.
 			this.paintChromosomeIdeogram(row, cytologicalMap,
 					height, idSize, plotParameters.getIdeogramThickness(),
 					"CHR " + gi.getChromosome(),
-					makeReferenceElement, evtHandlerBoundaries);
+					makeReferenceElement, evtHandlerBoundaries,
+					plotParameters.isShowAnnotation());
 			
 			// Add data tracks
 			this.paintDataTracks(row, experiments, gi.getChromosome(),
-					height, plotParameters, evtHandlerBoundaries);
+					height, plotParameters, evtHandlerBoundaries,
+					plotParameters.isShowAnnotation());
 		}
 		
 		// Add final row
@@ -284,13 +296,16 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * reference element for the given plot panel in terms
 	 * of layout?
 	 * @param boundaries Event handler boundaries
+	 * @param addMouseover Will mouseover capabilities be
+	 * provided by the resulting web graphic?
 	 */
 	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
 			final CytologicalMap cytologicalMap,
 			final int height, final ChromosomeIdeogramSize idSize,
 			final int ideogramThickness,
 			final String chromosome, final boolean makeReferenceElement,
-			final EventHandlerGraphicBoundaries boundaries) {
+			final EventHandlerGraphicBoundaries boundaries,
+			final boolean addMouseover) {
 		PlotPanel idPanel = plotPanel.newChildPlotPanel();
 		
 		// Instantiate genome feature plot
@@ -309,7 +324,9 @@ public class IdeogramPlotPainter extends PlotPainter {
 		idPanel.add(plot, true);
 		
 		// Add graphic event boundaries
-		boundaries.add(plot.getMouseOverStripes());
+		if (addMouseover) {
+			boundaries.add(plot.getMouseOverStripes());
+		}
 		
 		// Add end caps
 		ChromosomeEndCap topCap = new ChromosomeEndCap(ideogramThickness,
@@ -345,18 +362,23 @@ public class IdeogramPlotPainter extends PlotPainter {
 	 * @param height Height of data tracks
 	 * @param plotParameters Plot parameters
 	 * @param boundaries Event handler boundaries
+	 * @param addMouseOver Will mouseover capabilities be
+	 * in resulting web graphic?
 	 */
 	private void paintDataTracks(final PlotPanel panel,
 			final Collection<Experiment> experiments, final short chromosome,
 			final int height, final IdeogramPlotParameters plotParameters,
-			final EventHandlerGraphicBoundaries boundaries) {
+			final EventHandlerGraphicBoundaries boundaries,
+			final boolean addMouseOver) {
 		HeatMapColorFactory fac = new HeatMapColorFactory(
 				plotParameters.getMinSaturation(),
 				plotParameters.getMaxSaturation(), NUM_BINS);
 		HeatMapPlot plot = new HeatMapPlot(experiments, chromosome, fac,
 				plotParameters, this.getChromosomeArrayDataGetter(),
 				panel.getDrawingCanvas());
-		boundaries.addAll(plot.getMouseOverStripes());
+		if (addMouseOver) {
+			boundaries.addAll(plot.getMouseOverStripes());
+		}
 		panel.add(plot, HorizontalAlignment.RIGHT_OF,
 				VerticalAlignment.TOP_JUSTIFIED);
 	}

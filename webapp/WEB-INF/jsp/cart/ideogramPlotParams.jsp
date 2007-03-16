@@ -212,6 +212,22 @@
 			</td>
 		</tr>
 		
+	<%-- Show annotations in mouseover --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-showAnnotation')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Display genomic location<br>
+				in mouseover text?
+			</td>
+			<td>
+				<html:checkbox property="showAnnotation"/>
+			</td>
+		</tr>
+		
 	</table>
 	
 	<p>
