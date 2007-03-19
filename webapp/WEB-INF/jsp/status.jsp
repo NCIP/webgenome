@@ -6,6 +6,7 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.io.InputStream,java.io.IOException" %>
 <%@ page import="org.rosuda.JRclient.Rconnection" %>
+<%@ page import="org.rosuda.JRclient.RSrvException" %>
 <%!
 boolean isEmpty ( String value ) {
     return value == null || value.length() < 1 ? true : false ;
@@ -74,30 +75,6 @@ out.println ( "    Free Heap Memory (bytes): " + heapFreeSize  ) ;
 out.println ( "                 Memory Used: " +  percentUsed + " %" ) ;
 %>
 </pre>
-<%-- DISABLED TEMPORARILY
-<h2>SMTP Server Status:</h2>
-<pre>
-<%
-String smtpHost = "not found" ;
-try {
-	smtpHost = SystemUtils.getApplicationProperty( "mail.smtp.host" ) ;
-	Properties props = new Properties() ;
-	props.put( "mail.smtp.host", smtpHost ) ;
-	
-	Session mailSession = Session.getDefaultInstance ( props, null ) ;
-	Transport ts = mailSession.getTransport() ;
-	ts.connect() ;
-	out.println ( "    host=" + smtpHost + " Connected?: " + ts.isConnected() ) ;
-}
-catch ( Exception e ) {
-	out.println ( "    Exception experienced trying to check whether SMTP Host [" + smtpHost +
-	              "] is available." ) ;
-	out.println ( "    Exception Message: " + e.getMessage() ) ;
-}
-
-%>
-</pre>
---%>
 
 <h2>RServe</h2>
 <pre>
@@ -108,11 +85,13 @@ Rconnection c = null ;
 try {
     rserveHost = SystemUtils.getApplicationProperty ( "rserve.ipAddress" ) ;
     rservePort = SystemUtils.getApplicationProperty ( "rserve.port" ) ;
-    
+    out.println ( "    rserve.ipAddress=" + rserveHost ) ;
+    out.println ( "         rserve.port=" + rservePort ) ;
+
     c = new Rconnection( rserveHost, Integer.parseInt(rservePort) ); 
-    out.println ( "    RServe IP=" + rserveHost + " Connected?: " + c.isConnected() ) ;
+    out.println ( "           Connected?:" + c.isConnected() ) ;
 }
-catch ( Exception e ) {
+catch ( RSrvException e ) {
 	out.println ( "    Exception experienced trying to check whether RServe [" + rserveHost +
 	              "] is connected." ) ;
 	out.println ( "    Exception Message: " + e.getMessage() ) ;
