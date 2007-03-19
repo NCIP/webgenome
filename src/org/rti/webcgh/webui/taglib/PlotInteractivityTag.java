@@ -1,52 +1,52 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.7 $
-$Date: 2006-12-21 17:26:17 $
+$Revision: 1.7.2.1 $
+$Date: 2007-03-19 18:17:39 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
+Copyright 2003 RTI. This software was developed in conjunction with the National
+Cancer Institute, and so to the extent government employees are co-authors, any
+rights in such works shall be subject to Title 17 of the United States Code,
 section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
+Redistribution and use in source and binary forms, with or without modification,
 are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this 
-list of conditions and the disclaimer of Article 3, below. Redistributions in 
-binary form must reproduce the above copyright notice, this list of conditions 
-and the following disclaimer in the documentation and/or other materials 
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the disclaimer of Article 3, below. Redistributions in
+binary form must reproduce the above copyright notice, this list of conditions
+and the following disclaimer in the documentation and/or other materials
 provided with the distribution.
 
-2. The end-user documentation included with the redistribution, if any, must 
+2. The end-user documentation included with the redistribution, if any, must
 include the following acknowledgment:
 
-"This product includes software developed by the RTI and the National Cancer 
+"This product includes software developed by the RTI and the National Cancer
 Institute."
 
-If no such end-user documentation is to be included, this acknowledgment shall 
-appear in the software itself, wherever such third-party acknowledgments 
+If no such end-user documentation is to be included, this acknowledgment shall
+appear in the software itself, wherever such third-party acknowledgments
 normally appear.
 
-3. The names "The National Cancer Institute", "NCI", 
-“Research Triangle Institute”, and "RTI" must not be used to endorse or promote 
+3. The names "The National Cancer Institute", "NCI",
+“Research Triangle Institute”, and "RTI" must not be used to endorse or promote
 products derived from this software.
 
-4. This license does not authorize the incorporation of this software into any 
-proprietary programs. This license does not authorize the recipient to use any 
+4. This license does not authorize the incorporation of this software into any
+proprietary programs. This license does not authorize the recipient to use any
 trademarks owned by either NCI or RTI.
 
-5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
-(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL
+CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
@@ -76,11 +76,11 @@ import org.rti.webcgh.webui.util.MouseOverStripes;
  * Grabs Shopping Cart from session.
  */
 public class PlotInteractivityTag extends TagSupport {
-    
+
 	private String plotAttributeName = "";
 	private static final Logger LOGGER = Logger.getLogger(PlotInteractivityTag.class);
-	
-	
+
+
 	/**
 	 * @return Returns the plotAttributeName.
 	 */
@@ -102,7 +102,7 @@ public class PlotInteractivityTag extends TagSupport {
 	 * @throws JspException
 	 */
 	public int doStartTag() throws JspException {
-		
+
 		// Get attached exception
 		//Exception ex = (Exception)pageContext.findAttribute(Attribute.EXCEPTION);
 
@@ -155,7 +155,7 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println("var scwA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes width array
 				out.println("var schA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes height array
 				out.println("var scA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes array
-				out.println("var sliA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes last index array 
+				out.println("var sliA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes last index array
 				out.println("var sfA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes range from coordinate array
 				out.println("var stA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes range to coordinate array
 				out.println("var svA=new Array(" + mouseOverStripesCol.size() + ");");	// mouseoverstripes range value array
@@ -183,7 +183,7 @@ public class PlotInteractivityTag extends TagSupport {
 				// Iterate through click boxes and output javascript
 				count = 0;	// reset counter
 				for(ClickBoxes clickBoxes : clickBoxesCol) {
-	
+
 					// ClickBoxes JavaScript variables
 					out.println("cbxo=" + clickBoxes.getOrigin().x + ";");
 					out.println("cbyo=" + clickBoxes.getOrigin().y + ";");
@@ -192,25 +192,25 @@ public class PlotInteractivityTag extends TagSupport {
 					out.println("cbbw=" + clickBoxes.getBoxWidth() + ";");
 					out.println("cbbh=" + clickBoxes.getBoxHeight() + ";");
 					out.println("cb=new Array(" + clickBoxes.getClickBox().length + ");");
-		
+
 					// loop through click boxes and output JavaScript variables
 					for(int i = 0 ; i < clickBoxes.getClickBox().length ; i++) {
-		
+
 						// init each new row as new array
 						out.println("cb[" + i + "]=new Array(" + clickBoxes.getClickBox()[i].length + ");");
-		
+
 						// loop through each row
 						for(int j = 0 ; j < clickBoxes.getClickBox()[i].length ; j++) {
-		
+
 							// grab image name
 							String tempImageName = imageFileMap.get(clickBoxes.getClickBox()[i][j]);
-		
+
 							// output blank if null, image name if not null
 							out.println("cb[" + i + "][" + j + "]='" + ((tempImageName == null) ? "" : tempImageName) + "';");
-		
+
 						}
 					}
-	
+
 					// store values into master array and increase related counter
 					out.println("cbxoA[" + count + "]=cbxo;");
 					out.println("cbyoA[" + count + "]=cbyo;");
@@ -227,9 +227,9 @@ public class PlotInteractivityTag extends TagSupport {
 				// Iterate through mouse over stripes and output javascript
 				count = 0;	// reset counter
 				for(MouseOverStripes mouseOverStripes : mouseOverStripesCol) {
-	
+
 					Collection<MouseOverStripe> mouseOverStripeCol = mouseOverStripes.getStripes();
-	
+
 					// MouseOver Stripe JavaScript variables
 					out.println("scxo=" + mouseOverStripes.getOrigin().x + ";");
 					out.println("scyo=" + mouseOverStripes.getOrigin().y + ";");
@@ -243,7 +243,7 @@ public class PlotInteractivityTag extends TagSupport {
 					out.println("sf=new Array(sc);");
 					out.println("st=new Array(sc);");
 					out.println("sv=new Array(sc);");
-		
+
 					// output list of MouseOverStripe JavaScript variables
 					int mosCount = 0;
 					for(MouseOverStripe mos : mouseOverStripeCol) {
@@ -251,7 +251,7 @@ public class PlotInteractivityTag extends TagSupport {
 								"]=" + mos.getEnd() + ";\tsv[" + mosCount + "]='" + mos.getText() + "';");
 						mosCount++;
 					}
-	
+
 					// store values into master array and increase related counter
 					out.println("scxoA[" + count + "]=scxo;");
 					out.println("scyoA[" + count + "]=scyo;");
@@ -267,9 +267,9 @@ public class PlotInteractivityTag extends TagSupport {
 				}
 			}
 
+			out.println("function captureClick(e) {");
 			if(clickBoxesCol != null) {
 				// ClickBoxes JavaScript functions - capture click
-				out.println("function captureClick(e) {");
 
 				// capture x and y coordinates
 				out.println(	"var x = (e.x == undefined) ? e.layerX : e.x;");
@@ -311,12 +311,13 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
 				out.println(	"}");
-				out.println("}");
 			}
+			out.println("}");
+
 
 			// MouseOver Stripe JavaScript functions - binary stripe search
+			out.println("function searchStripe(ct, value, left, right) {");
 			if(mouseOverStripesCol != null) {
-				out.println("function searchStripe(ct, value, left, right) {");
 				out.println(	"if(right < left)");
 				out.println(		"return -1;");
 				out.println(	"var mid = Math.floor((left+right)/2);");
@@ -326,11 +327,13 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(		"return searchStripe(ct, value, left, mid-1);");
 				out.println(	"else");
 				out.println(		"return mid;");
-				out.println("}");
-	
-				// MouseOver Stripe JavaScript functions - capture move
-				out.println("function captureMove(e) {");
+			}
+			out.println("}");
 
+
+			// MouseOver Stripe JavaScript functions - capture move
+			out.println("function captureMove(e) {");
+			if(mouseOverStripesCol != null) {
 				// capture x and y coordinates
 				out.println(	"var x = (e.x == undefined) ? e.layerX : e.x;");
 				out.println(	"var y = (e.y == undefined) ? e.layerY : e.y;");
@@ -377,21 +380,23 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(	"} else {");
 				out.println(		"popUp(e,'plotInteractivityTooltip'+ct,0);");
 				out.println(	"}");
-				out.println("}");
-	
-	
-				// Tooltip JavaScript functions
-				out.println("var DH = 0;var an = 0;var al = 0;var ai = 0;if (document.getElementById) {ai = 1; DH = 1;}else {if (document.all) {al = 1; DH = 1;} else { browserVersion = parseInt(navigator.appVersion); if ((navigator.appName.indexOf('Netscape') != -1) && (browserVersion == 4)) {an = 1; DH = 1;}}} function fd(oi, wS) {if (ai) return wS ? document.getElementById(oi).style:document.getElementById(oi); if (al) return wS ? document.all[oi].style: document.all[oi]; if (an) return document.layers[oi];}");
-				out.println("function pw() {return window.innerWidth != null? window.innerWidth: document.body.clientWidth != null? document.body.clientWidth:null;}");
-				out.println("function mouseX(evt) {if (evt.pageX) return evt.pageX; else if (evt.clientX)return evt.clientX + (document.documentElement.scrollLeft ?  document.documentElement.scrollLeft : document.body.scrollLeft); else return null;}");
-				out.println("function mouseY(evt) {if (evt.pageY) return evt.pageY; else if (evt.clientY)return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop); else return null;}");
-				out.println("function popUp(evt,oi,hh) { if (DH) { var wp = pw(); ds = fd(oi,1); dm = fd(oi,0); if (dm.offsetWidth) ew = dm.offsetWidth; else if (dm.clip.width) ew = dm.clip.width; if (hh == 0) { ds.visibility = 'hidden'; } else { tv = mouseY(evt) + 20; lv = mouseX(evt) - (ew/4); if (lv < 2) lv = 2; else if (lv + ew > wp) lv -= ew/2; if (!an) { lv += 'px'; tv += 'px'; } ds.left = lv; ds.top = tv; ds.visibility = 'visible';}}}");
 			}
+			out.println("}");
+
+			// Tooltip JavaScript functions
+			out.println("var DH = 0;var an = 0;var al = 0;var ai = 0;if (document.getElementById) {ai = 1; DH = 1;}else {if (document.all) {al = 1; DH = 1;} else { browserVersion = parseInt(navigator.appVersion); if ((navigator.appName.indexOf('Netscape') != -1) && (browserVersion == 4)) {an = 1; DH = 1;}}} function fd(oi, wS) {if (ai) return wS ? document.getElementById(oi).style:document.getElementById(oi); if (al) return wS ? document.all[oi].style: document.all[oi]; if (an) return document.layers[oi];}");
+			out.println("function pw() {return window.innerWidth != null? window.innerWidth: document.body.clientWidth != null? document.body.clientWidth:null;}");
+			out.println("function mouseX(evt) {if (evt.pageX) return evt.pageX; else if (evt.clientX)return evt.clientX + (document.documentElement.scrollLeft ?  document.documentElement.scrollLeft : document.body.scrollLeft); else return null;}");
+			out.println("function mouseY(evt) {if (evt.pageY) return evt.pageY; else if (evt.clientY)return evt.clientY + (document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop); else return null;}");
+			out.println("function popUp(evt,oi,hh) { if (DH) { var wp = pw(); ds = fd(oi,1); dm = fd(oi,0); if (dm.offsetWidth) ew = dm.offsetWidth; else if (dm.clip.width) ew = dm.clip.width; if (hh == 0) { ds.visibility = 'hidden'; } else { tv = mouseY(evt) + 20; lv = mouseX(evt) - (ew/4); if (lv < 2) lv = 2; else if (lv + ew > wp) lv -= ew/2; if (!an) { lv += 'px'; tv += 'px'; } ds.left = lv; ds.top = tv; ds.visibility = 'visible';}}}");
 
 			// close JavaScript and print tooltip div tags
 			out.println("</script>");
-			for(int i = 0 ; i < mouseOverStripesCol.size() ; i++)
-				out.println("<div id=\"plotInteractivityTooltip" + i + "\" class=\"tip\"></div>\n");
+			if ( mouseOverStripesCol.size() == 0 )
+				out.println ( "<div id=\"plotInteractivityTooltip0\" class=\"tip\"></div>\n" );
+			else
+				for(int i = 0 ; i < mouseOverStripesCol.size() ; i++)
+					out.println("<div id=\"plotInteractivityTooltip" + i + "\" class=\"tip\"></div>\n");
 
 
 			// print plots
