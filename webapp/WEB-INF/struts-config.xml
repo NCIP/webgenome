@@ -50,6 +50,11 @@
 		<form-bean
 			name="quantitation.type.form"
 			type="org.rti.webcgh.webui.struts.cart.QuantitationTypeForm"/>
+			
+	<!-- Form for uploading a data file -->
+		<form-bean
+			name="file.upload.form"
+			type="org.rti.webcgh.webui.struts.cart.FileUploadForm"/>
 	</form-beans>
 
 
@@ -110,6 +115,21 @@
 			parameter="home.page"/>
 
 		<!-- ============ Shopping cart actions ========= -->
+		
+	<!-- Upload form -->
+		<action
+			path="/cart/uploadForm"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="cart.upload.form"/>
+			
+	<!-- File upload -->
+		<action
+			path="/cart/upload"
+			name="file.upload.form"
+			validate="true"
+			input="/cart/uploadForm">
+			<forward name="success" path="/cart/showCart.do"/>
+		</action>
 
 	<!-- Show cart -->
 		<action path="/cart/showCart">

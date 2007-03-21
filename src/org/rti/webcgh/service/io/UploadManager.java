@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-13 20:02:07 $
+$Date: 2007-03-21 18:39:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,62 +49,116 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webcgh.webui.util;
+package org.rti.webcgh.service.io;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 
+import org.rti.webcgh.core.WebcghSystemException;
+import org.rti.webcgh.util.IOUtils;
+
 
 /**
- * Class containing utility methods for uploading files.
+ * This class manages the uploading of data files
+ * from a user into their session into a working directory.
+ * It is intended to be used as a singleton.
  */
-public final class UploadUtil {
+public class UploadManager {
 	
-	/** Size of buffer array. */
-	private static final int BUFFER_SIZE = 1000000; //1MB
-	
-	/** Directory name delimiter. */
-	private static final String DIRECTORY_DELIMITER = "/";
+	//
+	//     STATICS
+	//
 	
 	/**
-     * Upload file to specified directory.
-     * @param in Uploaded inputstream.
-     * @param directoryPath Directory path.
-     * @param fileName File name to save.
-     * @throws Exception if something crashes.
+	 * Size of buffer array used for streaming uploaded
+	 * bits to a file.
+	 */
+	private static final int BUFFER_SIZE = 1000000; //1MB
+	
+	/**
+	 * File name extension used for files saved in the
+	 * working directory.
+	 */
+	private static final String FILE_EXTENSION = ".smd";
+	
+
+	//
+	//     ATTRIBUTES
+	//
+	
+	/** Working directory for parsing data. */
+	private final File workingDir;
+	
+	/**
+	 * Generates unique file names for uploaded files in the
+	 * <code>workingDir</code> directory.
+	 */
+	private final UniqueFileNameGenerator fileNameGenerator;
+	
+	
+	//
+	//     CONSTRUCTORS
+	//
+	
+	/**
+	 * Constructor.
+	 * @param workingDirPath Path to working directory used
+	 * for parsing data.
+	 */
+	public UploadManager(final String workingDirPath) {
+		this.workingDir = new File(workingDirPath);
+		if (!this.workingDir.exists() || !this.workingDir.isDirectory()) {
+			throw new IllegalArgumentException(
+					"Working directory path does not reference a "
+					+ "real directory");
+		}
+		this.fileNameGenerator = new UniqueFileNameGenerator(
+				this.workingDir, FILE_EXTENSION);
+	}
+	
+	
+	//
+	//     BUSINESS METHODS
+	//
+	
+	
+	/**
+     * Upload data from given input stream into a new file in
+     * the working directory.
+     * @param in Upload inputstream.
+     * @return File containing uploaded data.  The name of this
+     * file will be a randomly-generated unique file name.
      */		
-	public void upload(final InputStream in, 
-		final String directoryPath, final String fileName) throws Exception {
+	public File upload(final InputStream in) {
 		
-		/** Buffer array to store uploading data. */
+		// Buffer for uploading
 		byte[] buffer = new byte[BUFFER_SIZE];
 		
-		File outputFile = null;
-		OutputStream out = null; 
+		// Generate file for holding uploaded data
+		String fname = this.fileNameGenerator.next();
+		String path =
+			this.workingDir.getAbsolutePath() + File.separator + fname;
+		File file = new File(path);
+		
+		// Stream data into file
+		OutputStream out = null;
 		try {
-			outputFile = 
-				new File(directoryPath + DIRECTORY_DELIMITER + fileName);
-		    out = new FileOutputStream(outputFile);
-		    while (true) {
-		    	synchronized (buffer) {
-		            int amountRead = in.read(buffer);
-		            if (amountRead == -1) {
-		               break;
-		            }
-		            out.write(buffer, 0, amountRead); 
-		        }
-		    } 
+			out = new FileOutputStream(file);
+			int bytesRead = in.read(buffer);
+			while (bytesRead > 0) {
+				out.write(buffer, 0, bytesRead);
+				bytesRead = in.read(buffer);
+			}
+			out.flush();
+		} catch (Exception e) {
+			throw new WebcghSystemException("Error uploading file", e);
 		} finally {
-			if (in != null) {
-				in.close();
-		    }
-		    if (out != null) {
-		        out.close();
-		    }
+			IOUtils.close(out);
 		}
 		
+		return file;
 	}
 
 

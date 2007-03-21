@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-13 20:01:51 $
+$Revision: 1.2 $
+$Date: 2007-03-21 18:39:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -102,9 +102,7 @@ public class FileUploadForm extends ActionForm {
 	// ===================================
 	
 	/**
-	 * Reset form fields.
-	 * @param mapping Action mapping
-	 * @param request Servlet request
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final void reset(final ActionMapping mapping,
@@ -114,24 +112,17 @@ public class FileUploadForm extends ActionForm {
 	
 	
 	/**
-	 * Validate form fields.
-	 * @param actionMappings Action mappings.
-	 * @param request Servlet request.
-	 * @return Action errors
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final ActionErrors validate(final ActionMapping actionMappings,
 			final HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
-        
-        if (this.getUploadFile() == null) {
-          errors.add("file", new ActionError("file.notfound"));  
-        } else if (this.getUploadFile().getFileName() == null) {
-          errors.add("file", new ActionError("filename.empty"));
-        } else if (this.getUploadFile().getFileName().length() < 1) {
-          errors.add("file", new ActionError("filename.invalid"));
-        } else if (this.getUploadFile().getFileSize() < 1) {
-          errors.add("file", new ActionError("filesize.invalid"));
+        if (this.uploadFile == null) {
+          errors.add("uploadFile", new ActionError("invalid.field"));  
+        }
+        if (errors.size() > 0) {
+        	errors.add("global", new ActionError("invalid.fields"));
         }
         return errors;
     }

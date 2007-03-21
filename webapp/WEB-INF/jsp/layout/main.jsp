@@ -95,7 +95,14 @@
 					</a>
 					|
 				</webcgh:onlyIfLoggedInAndStandAloneMode>
-
+				
+			<%-- File upload --%>
+				<webcgh:onlyIfLoggedInAndStandAloneMode>
+					<html:link action="/cart/uploadForm" styleClass="menuItem">
+						Upload File
+					</html:link>
+					|
+				</webcgh:onlyIfLoggedInAndStandAloneMode>
 			<%-- Login --%>
 				<webcgh:onlyIfUserLoggedOut>
 					<a class="menuItem" href="<html:rewrite page="/user/login.do"/>">

@@ -38,7 +38,14 @@
 	  	<put name="content" value="/WEB-INF/jsp/cart/showCart.jsp" />
 	  	<put name="helpTopic" value="cart" />
   	</definition>
-
+  	
+<!-- Show shopping cart -->
+  	<definition name="cart.upload.form" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/upload.jsp" />
+	  	<put name="helpTopic" value="cart" />
+  	</definition>
+  	
 <!-- Select plot type -->
   	<definition name="cart.select.plot.type" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Select plot type" />

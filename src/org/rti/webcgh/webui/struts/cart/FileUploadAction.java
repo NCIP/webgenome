@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-13 20:01:51 $
+$Revision: 1.2 $
+$Date: 2007-03-21 18:39:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,12 +59,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.rti.webcgh.service.io.UniqueFileNameGenerator;
-import org.rti.webcgh.util.SystemUtils;
-import org.rti.webcgh.webui.util.UploadUtil;
+import org.rti.webcgh.service.io.UploadManager;
 
 /**
- * Action for uploading files.
+ * Action for uploading files to a working directory.
  */
 public final class FileUploadAction extends Action {
 	
@@ -72,12 +70,8 @@ public final class FileUploadAction extends Action {
 	//     ATTRIBUTES
 	//
 	
-	/** Directory path to save uploaded files. */
-	private String directoryPath 
-		= SystemUtils.getApplicationProperty("fileupload.sub.context");
-	
-	/** Unique fileName generator. */
-	private UniqueFileNameGenerator uniqueFileNameGenerator = null;
+	/** Manager for uploading files to working directory. */
+	private UploadManager uploadManager = null;
 	
 	
 	//
@@ -85,23 +79,19 @@ public final class FileUploadAction extends Action {
 	//
 	
 	/**
-     * Set directory path.
-     * @param directoryPath Directory path
-     */
-	public void setDirectoryPath(final String directoryPath) {
-		this.directoryPath = directoryPath;
+	 * Sets upload manager for uploading files to working
+	 * directory.
+	 * @param uploadManager Manager for uploading files to
+	 * working directory.
+	 */
+	public void setUploadManager(final UploadManager uploadManager) {
+		this.uploadManager = uploadManager;
 	}
 	
-	/**
-     * Set unique file name generator.
-     * @param uniqueFileNameGenerator File name generator
-     */
-	public void setUniqueFileNameGenerator(
-			final UniqueFileNameGenerator uniqueFileNameGenerator) {
-		this.uniqueFileNameGenerator = uniqueFileNameGenerator;
-	}
-	
-	
+	//
+	//     OVERRIDES
+	//
+
 	/**
 	 * Performs action of uploading file.
 	 * @param mapping Routing information for downstream actions
@@ -118,30 +108,10 @@ public final class FileUploadAction extends Action {
 		final HttpServletRequest request,
 		final HttpServletResponse response
 	) throws Exception {
-		doUpload(form);
+		FormFile formFile = ((FileUploadForm) form).getUploadFile();
+		InputStream in = formFile.getInputStream();
+		this.uploadManager.upload(in);
+		in.close();
 		return mapping.findForward("success");
-	}
-	
-	/**
-	 * Upload file in responding to a form request.
-	 * @param form Data from calling form
-	 * @throws Exception if something crashes.
-	 */
-	public void doUpload(final ActionForm form)
-		throws Exception {
-
-		FileUploadForm fuForm = (FileUploadForm) form;
-		FormFile uFile = fuForm.getUploadFile();
-		InputStream in = uFile.getInputStream();
-		UploadUtil uUtil = new UploadUtil();
-		String nextUniqueFileName = this.uniqueFileNameGenerator.next();
-		try {
-			uUtil.upload(in, this.directoryPath, nextUniqueFileName);
-		} finally {
-			if (uFile != null) {
-				uFile.destroy();
-		    }
-		}
-		
 	}
 }

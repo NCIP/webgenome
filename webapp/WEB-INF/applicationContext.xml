@@ -161,9 +161,12 @@
 		</property>
 	</bean>
 	
-<!-- Unique File Name generator -->
-	<bean id="uniqueFileNameGenerator"
-		class="org.rti.webcgh.service.io.UniqueFileNameGenerator">
+<!-- File uploading manager -->
+	<bean id="uploadManager"
+		class="org.rti.webcgh.service.io.UploadManager">
+		<constructor-arg>
+			<value>${file.uploading.working.dir}</value>
+		</constructor-arg>
 	</bean>
 	
 	<!-- ========================================== -->
@@ -270,8 +273,8 @@
 <!-- Perform file upload operation -->
 	<bean name="/cart/upload"
 		class="org.rti.webcgh.webui.struts.cart.FileUploadAction">
-		<property name="uniqueFileNameGenerator">
-			<ref bean="uniqueFileNameGenerator"/>
+		<property name="uploadManager">
+			<ref bean="uploadManager"/>
 		</property>
 	</bean>
 	
