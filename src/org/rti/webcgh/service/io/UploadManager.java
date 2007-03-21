@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-21 18:39:24 $
+$Revision: 1.2 $
+$Date: 2007-03-21 21:59:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 
+import org.apache.log4j.Logger;
 import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.util.IOUtils;
 
@@ -82,6 +83,9 @@ public class UploadManager {
 	 * working directory.
 	 */
 	private static final String FILE_EXTENSION = ".smd";
+	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(UploadManager.class);
 	
 
 	//
@@ -128,10 +132,11 @@ public class UploadManager {
      * Upload data from given input stream into a new file in
      * the working directory.
      * @param in Upload inputstream.
-     * @return File containing uploaded data.  The name of this
+     * @return Name of file containing uploaded data.  The name of this
      * file will be a randomly-generated unique file name.
+     * The absolute path is not returned.
      */		
-	public File upload(final InputStream in) {
+	public String upload(final InputStream in) {
 		
 		// Buffer for uploading
 		byte[] buffer = new byte[BUFFER_SIZE];
@@ -158,8 +163,23 @@ public class UploadManager {
 			IOUtils.close(out);
 		}
 		
-		return file;
+		return fname;
 	}
-
-
+	
+	
+	/**
+	 * Delete file with given name form working directory.
+	 * @param fileName Name of file to delete (not absolute path).
+	 */
+	public void delete(final String fileName) {
+		String path =
+			this.workingDir.getAbsolutePath() + File.separator + fileName;
+		File file = new File(path);
+		if (!file.exists() || !file.isFile()) {
+			throw new WebcghSystemException("File '" + path + "' not valid");
+		}
+		if (!file.delete()) {
+			LOGGER.warn("Unable to delete uploaded file '" + path + "'");
+		}
+	}
 }

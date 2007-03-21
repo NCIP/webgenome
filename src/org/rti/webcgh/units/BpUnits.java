@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-10-21 05:34:56 $
+$Revision: 1.3 $
+$Date: 2007-03-21 21:59:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,8 +55,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.rti.webcgh.deprecated.graph.BPFormatter;
-import org.rti.webcgh.deprecated.graph.NumberFormatter;
+import org.rti.webcgh.graphics.util.BPFormatter;
+import org.rti.webcgh.graphics.util.NumberFormatter;
 
 /**
  * Units of measurement related to base pairs.

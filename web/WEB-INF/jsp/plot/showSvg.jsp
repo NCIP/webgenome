@@ -1,1 +1,0 @@
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %><webcgh:showSvg/>

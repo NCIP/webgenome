@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-21 18:39:24 $
+$Revision: 1.3 $
+$Date: 2007-03-21 21:59:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -93,14 +93,7 @@ public final class FileUploadAction extends Action {
 	//
 
 	/**
-	 * Performs action of uploading file.
-	 * @param mapping Routing information for downstream actions
-	 * @param form Data from calling form
-	 * @param request Servlet request object
-	 * @param response Servlet response object
-	 * @return Identification of downstream action as configured in the
-	 * struts-config.xml file
-	 * @throws Exception if something crashes.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ActionForward execute(

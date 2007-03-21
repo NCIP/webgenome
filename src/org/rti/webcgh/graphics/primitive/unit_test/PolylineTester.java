@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-15 21:21:01 $
+$Revision: 1.4 $
+$Date: 2007-03-21 21:59:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,7 @@ package org.rti.webcgh.graphics.primitive.unit_test;
 import java.awt.Color;
 import java.awt.Point;
 
-import org.rti.webcgh.deprecated.Line;
+import org.rti.webcgh.graphics.primitive.Line;
 import org.rti.webcgh.graphics.primitive.Polyline;
 
 import junit.framework.TestCase;

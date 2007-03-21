@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2006-09-23 05:02:23 $
+$Revision: 1.5 $
+$Date: 2007-03-21 21:59:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,11 +52,9 @@ package org.rti.webcgh.graphics.primitive;
 
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.rti.webcgh.deprecated.Line;
 
 /**
  * A polyline (i.e. open polygon)
@@ -200,18 +198,17 @@ public class Polyline extends GraphicPrimitive {
 	 */
 	public final boolean add(final Line line) {
 		boolean success = false;
-		Point2D p1 = line.getP1();
-		Point2D p2 = line.getP2();
 		if (!this.isFull()) {
 			if (points.size() > 0) {
 				Point temp = (Point) points.get(points.size() - 1);
-				if (temp.getX() != p1.getX() || temp.getY() != p1.getY()) {
-					this.add(new Point((int) p1.getX(), (int) p1.getY()));
+				if (temp.getX() != line.getX1()
+						|| temp.getY() != line.getY1()) {
+					this.add(new Point(line.getX1(), line.getY1()));
                 }
 			} else {
-				this.add(new Point((int) p1.getX(), (int) p1.getY()));
+				this.add(new Point(line.getX1(), line.getY1()));
             }
-			this.add(new Point((int) p2.getX(), (int) p2.getY()));
+			this.add(new Point(line.getX2(), line.getY2()));
 		}
 		return success;
 	}

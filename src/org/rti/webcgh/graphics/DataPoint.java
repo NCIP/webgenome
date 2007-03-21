@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/graphics/DataPoint.java,v $
-$Revision: 1.1 $
-$Date: 2006-10-26 03:50:16 $
+$Revision: 1.2 $
+$Date: 2007-03-21 21:59:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,13 +52,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webcgh.graphics;
 
-import org.rti.webcgh.deprecated.graph.Groupable;
 import org.rti.webcgh.domain.ArrayDatum;
 
 /**
  * A data point
  */
-public class DataPoint implements Groupable {
+public class DataPoint {
     
     
     // ==========================================

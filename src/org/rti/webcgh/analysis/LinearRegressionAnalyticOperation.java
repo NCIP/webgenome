@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2006-11-29 03:14:06 $
+$Revision: 1.6 $
+$Date: 2007-03-21 21:58:46 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.rti.webcgh.deprecated.analytic.AcghData;
 import org.rti.webcgh.domain.ChromosomeArrayData;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.service.analysis.RegressionService;
@@ -84,6 +83,8 @@ implements SingleBioAssayStatelessOperation {
     //  ==============================
     //      Attributes
     //  ==============================
+    
+    /** Data transformer. */
     private AcghAnalyticTransformer regChrDataTransformer =
     	new AcghAnalyticTransformer();
     
@@ -108,7 +109,7 @@ implements SingleBioAssayStatelessOperation {
 
         try {
         	AcghData acghData = this.regChrDataTransformer.transform(input);
-        	this.REG_SERVICE.runLinearRegression(acghData);
+        	REG_SERVICE.runLinearRegression(acghData);
         	output = this.regChrDataTransformer.transform(acghData, input);
         } catch (Exception e) {
             throw new AnalyticException(

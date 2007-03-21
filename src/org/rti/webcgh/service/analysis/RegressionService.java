@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/src/org/rti/webcgh/service/analysis/RegressionService.java,v $
-$Revision: 1.2 $
-$Date: 2006-11-03 22:39:15 $
+$Revision: 1.3 $
+$Date: 2007-03-21 21:59:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,8 @@ import org.rosuda.JRclient.REXP;
 import org.rosuda.JRclient.RList;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
+import org.rti.webcgh.analysis.AcghData;
 import org.rti.webcgh.core.WebcghSystemException;
-import org.rti.webcgh.deprecated.analytic.AcghData;
 import org.rti.webcgh.util.SystemUtils;
 
 

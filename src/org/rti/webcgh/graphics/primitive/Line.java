@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2006-09-19 02:09:30 $
+$Revision: 1.4 $
+$Date: 2007-03-21 21:59:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.graphics.primitive;
 
 import java.awt.Color;
+import java.awt.Point;
 
 
 /**
@@ -101,6 +102,32 @@ public class Line extends GraphicPrimitive {
 		this.x2 = x2;
 		this.y2 = y2;
 		this.width = width;
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param x1 X-coordinate of first end
+	 * @param y1 Y-coordinate of first end
+	 * @param x2 X-coordinate of second end
+	 * @param y2 X-coordinate of second end
+	 */
+	public Line(final int x1, final int y1, final int x2,
+			final int y2) {
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param p1 One endpoint of the line.
+	 * @param p2 The other endpoint of the line.
+	 */
+	public Line(final Point p1, final Point p2) {
+		this(p1.x, p1.y, p2.x, p2.y);
 	}
 
 	/**
