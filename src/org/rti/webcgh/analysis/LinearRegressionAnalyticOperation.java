@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-03-21 21:58:46 $
+$Revision: 1.7 $
+$Date: 2007-03-23 23:08:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import org.rti.webcgh.service.analysis.RegressionService;
  * @author Kungyen
  */
 public class LinearRegressionAnalyticOperation
-implements SingleBioAssayStatelessOperation {
+extends SingleBioAssayStatelessOperation.BaseSingleBioAssayStatelessOperation {
 
     /** Logger. */
     private static final Logger LOGGER =

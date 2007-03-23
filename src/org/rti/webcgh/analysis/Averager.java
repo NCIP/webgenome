@@ -62,7 +62,7 @@ import org.rti.webcgh.domain.Reporter;
 /**
  * Calculates mean reporter values for
  * a group of chromosome array data
- * objects.  Specificly, for each
+ * objects.  Specificaly, for each
  * unique reporter across all chromosome
  * array data objects, it averages the
  * corresponding array datum values.
@@ -70,7 +70,9 @@ import org.rti.webcgh.domain.Reporter;
  * @author dhall
  *
  */
-public final class Averager implements SingleExperimentStatelessOperation {
+public final class Averager
+extends SingleExperimentStatelessOperation.
+DefSingleExperimentStatelessOperation {
     
     /**
      * Perform operation.

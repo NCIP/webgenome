@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-12-18 18:13:19 $
+$Revision: 1.3 $
+$Date: 2007-03-23 23:08:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.Collection;
+
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.Experiment;
 
 /**
  * A anlaytic operation that maintains
@@ -90,4 +93,23 @@ public interface StatefulOperation extends AnalyticOperation {
     ChromosomeArrayData perform(
             final ChromosomeArrayData input)
         throws AnalyticException;
+    
+    /**
+     * Abstract base class for classes implementing
+     * {@link StatefulOperation} that provides some
+     * default implementations.
+     * @author dhall
+     *
+     */
+    abstract class DefStatefulOperation implements StatefulOperation {
+
+    	/**
+    	 * {@inheritDoc}
+    	 */
+		public int numResultingBioAssays(
+				final Collection<Experiment> experiments) {
+			return Experiment.countBioAssays(experiments);
+		}
+    	
+    }
 }

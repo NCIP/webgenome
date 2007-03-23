@@ -64,8 +64,8 @@ import org.rti.webcgh.domain.QuantitationType;
  * @author dhall
  *
  */
-public final class RangeBasedFilterer implements
-    SingleBioAssayStatelessOperation {
+public final class RangeBasedFilterer extends
+    SingleBioAssayStatelessOperation.BaseSingleBioAssayStatelessOperation {
     
     
     // =====================

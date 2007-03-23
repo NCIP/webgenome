@@ -125,10 +125,6 @@
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 		
-<!-- In-memory chromosome array data getter -->
-	<bean id="inMemoryChromosomeArrayDataGetter"
-		class="org.rti.webcgh.service.util.InMemoryChromosomeArrayDataGetter"/>
-		
 <!-- ID generator for bioassays not persisted and, hence, not given
 	 IDs by the DAO tier. -->
 	<bean id="bioAssayIdGenerator"
@@ -167,6 +163,19 @@
 		<constructor-arg>
 			<value>${file.uploading.working.dir}</value>
 		</constructor-arg>
+	</bean>
+	
+<!-- Job manager -->
+	<bean id="jobManager" class="org.rti.webcgh.service.job.JobManager">
+		<property name="bioAssayIdGenerator">
+			<ref bean="bioAssayIdGenerator"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
+		</property>
+		<property name="plotGenerator">
+			<ref bean="plotGenerator"/>
+		</property>
 	</bean>
 	
 	<!-- ========================================== -->
@@ -242,21 +251,26 @@
 <!-- Perform analytic operation -->
 	<bean name="/cart/analysis"
 		class="org.rti.webcgh.webui.struts.cart.AnalysisAction">
-		<property name="bioAssayIdGenerator">
-			<ref bean="bioAssayIdGenerator"/>
-		</property>
-		<property name="experimentIdGenerator">
-			<ref bean="experimentIdGenerator"/>
+		<property name="jobManager">
+			<ref bean="jobManager"/>
 		</property>
 	</bean>
 	
 <!-- Rerun analytic operation -->
 	<bean name="/cart/rerunAnalysis"
-		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisAction"/>
+		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisAction">
+		<property name="jobManager">
+			<ref bean="jobManager"/>
+		</property>
+	</bean>
 
 <!-- Rerun analytic operation on all derived experiments in plot -->
 	<bean name="/cart/adjustPlotAnalysisParams"
-		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction"/>
+		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction">
+		<property name="jobManager">
+			<ref bean="jobManager"/>
+		</property>
+	</bean>
 		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"
@@ -327,11 +341,8 @@
 <!-- New plot -->
 	<bean name="/cart/newPlot"
 		class="org.rti.webcgh.webui.struts.cart.NewPlotAction">
-		<property name="plotGenerator">
-			<ref bean="plotGenerator"/>
-		</property>
-		<property name="chromosomeArrayDataGetter">
-			<ref bean="inMemoryChromosomeArrayDataGetter"/>
+		<property name="jobManager">
+			<ref bean="jobManager"/>
 		</property>
 	</bean>
 

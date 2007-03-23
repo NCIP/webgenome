@@ -68,7 +68,8 @@ import org.rti.webcgh.domain.QuantitationType;
  * @author dhall
  *
  */
-public abstract class SimpleNormalizer implements StatefulOperation {
+public abstract class SimpleNormalizer extends
+StatefulOperation.DefStatefulOperation {
     
     
     // ===============================

@@ -50,8 +50,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.QuantitationType;
 
 
@@ -88,4 +90,15 @@ public interface AnalyticOperation {
      */
     void setProperty(String name, String value)
     throws BadUserConfigurablePropertyException;
+    
+    /**
+     * Determine the number of bioassays that would result
+     * from a proper running of the given experiments through
+     * this operation.
+     * @param experiments Some experiments
+     * @return The number of bioassays that would result
+     * from a proper running of the given experiments through
+     * this operation.
+     */
+    int numResultingBioAssays(Collection<Experiment> experiments);
 }

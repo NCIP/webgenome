@@ -309,6 +309,19 @@ public abstract class BioAssay implements Serializable {
     }
     
     
+    /**
+     * Return the number of datum in bioassay.
+     * @return Number of datum (i.e., individual data points).
+     */
+    public int numDatum() {
+    	int num = 0;
+    	for (short chrom : this.getChromosomes()) {
+    		num += this.numDatum(chrom);
+    	}
+    	return num;
+    }
+    
+    
     // ==============================
     //      Abstract methods
     // ==============================
@@ -363,4 +376,12 @@ public abstract class BioAssay implements Serializable {
      * @return Maximum value from the given chromosomes
      */
     public abstract float maxValue(Collection<Short> chromosomes);
+    
+    
+    /**
+     * Return number of datum on given chromosome.
+     * @param chromosome Chromosome number.
+     * @return Number of datum on given chromosome.
+     */
+    public abstract int numDatum(short chromosome);
 }

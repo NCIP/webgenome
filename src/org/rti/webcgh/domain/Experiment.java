@@ -456,6 +456,23 @@ public class Experiment implements Serializable {
     }
     
     
+	/**
+	 * Count the number of bioassays in the given collection of
+	 * experiments.
+	 * @param experiments Some experiments
+	 * @return Number of bioassays in the given collection of
+	 * experiments.
+	 */
+	public static int countBioAssays(
+			final Collection<Experiment> experiments) {
+		int num = 0;
+		for (Experiment exp : experiments) {
+			num += exp.getBioAssays().size();
+		}
+		return num;
+	}
+    
+    
     /**
      * Add given constraints to given collection in 'set-like'
      * fashion such that for any
@@ -538,6 +555,39 @@ public class Experiment implements Serializable {
     // ====================================
     //        Business methods
     // ====================================
+    
+    
+    /**
+     * Get sum total of all {@link org.rti.domain.ArrayDatum}
+     * objects within this experiment.
+     * @return Sum total of all {@link org.rti.domain.ArrayDatum}
+     * objects within this experiment.
+     */
+    public int numDatum() {
+    	int num = 0;
+    	for (BioAssay ba : this.bioAssays) {
+    		num += ba.numDatum();
+    	}
+    	return num;
+    }
+    
+    
+    /**
+     * Get sum total of all {@link org.rti.domain.ArrayDatum}
+     * objects within this experiment that are on the given
+     * chromosome.
+     * @param chromosome Chromosome number
+     * @return Sum total of all {@link org.rti.domain.ArrayDatum}
+     * objects within this experiment that are on the given
+     * chromosome.
+     */
+    public int numDatum(final short chromosome) {
+    	int num = 0;
+    	for (BioAssay ba : this.bioAssays) {
+    		num += ba.numDatum(chromosome);
+    	}
+    	return num;
+    }
     
     /**
      * Bulk set the attributes of this experiment

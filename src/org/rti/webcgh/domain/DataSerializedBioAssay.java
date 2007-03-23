@@ -107,6 +107,13 @@ public class DataSerializedBioAssay extends BioAssay {
      */
     private Map<Short, Float> maxValues = new HashMap<Short, Float>();
     
+    /**
+     * Maps chromosome numbers to the number of
+     * {@code ArrayDatum} objects on that chromosome.
+     */
+    private Map<Short, Integer> numDatum =
+    	new HashMap<Short, Integer>();
+    
     
     // ==============================
     //    Getters/setters
@@ -190,6 +197,8 @@ public class DataSerializedBioAssay extends BioAssay {
         this.chromosomeArrayDataFileIndex.put(chrom, fileName);
         this.minValues.put(chrom, chromosomeArrayData.getMinValue());
         this.maxValues.put(chrom, chromosomeArrayData.getMaxValue());
+        this.numDatum.put(chrom,
+        		chromosomeArrayData.getArrayData().size());
     }
     
     
@@ -302,5 +311,19 @@ public class DataSerializedBioAssay extends BioAssay {
     		}
     	}
     	return max;
+    }
+    
+    /**
+     * Return number of datum on given chromosome.
+     * @param chromosome Chromosome number.
+     * @return Number of datum on given chromosome.
+     */
+    public int numDatum(final short chromosome) {
+    	int num = 0;
+    	Integer numInt = this.numDatum.get(chromosome);
+    	if (numInt != null) {
+    		num = numInt.intValue();
+    	}
+    	return num;
     }
 }

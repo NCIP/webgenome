@@ -207,7 +207,7 @@
 			validate="true"
 			input="/cart/plotParameters.do"
 			scope="session">
-			<forward name="success" path="/cart/showPlot.do"/>
+			<forward name="non.batch" path="/cart/showPlot.do"/>
 		</action>
         
 	<!-- Show plot -->
@@ -259,7 +259,7 @@
 			path="/cart/analysis"
 			name="analytic.operation.params.form"
 			validate="false">
-			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="errors" path="/cart/analysisParams.do"/>
 		</action>
 		
@@ -268,7 +268,7 @@
 			path="/cart/rerunAnalysis"
 			name="analytic.operation.params.form"
 			validate="false">
-			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="errors" path="/cart/rerunAnalysisParams.do"/>
 		</action>
 		
@@ -282,7 +282,7 @@
 		 a plot.
 	-->
 		<action path="/cart/adjustPlotAnalysisParams">
-			<forward name="success" path="/cart/newPlot.do"/>
+			<forward name="non.batch" path="/cart/newPlot.do"/>
 			<forward name="errors" path="/cart/adjustPlotAnalysisParamsSetup.do"/>
 		</action>
 

@@ -51,8 +51,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webcgh.analysis;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.QuantitationType;
 
 /**
@@ -165,6 +167,28 @@ public class AnalyticPipeline implements AnalyticOperation {
     	// Set property of operation
     	AnalyticOperation op = this.operations.get(opNum);
     	op.setProperty(opPropName, value);
+    }
+    
+    
+    /**
+     * Determine the number of bioassays that would result
+     * from a proper running of the given experiments through
+     * this operation.
+     * @param experiments Some experiments
+     * @return The number of bioassays that would result
+     * from a proper running of the given experiments through
+     * this operation.
+     */
+    public int numResultingBioAssays(
+    		final Collection<Experiment> experiments) {
+    	int min = Experiment.countBioAssays(experiments);
+    	for (AnalyticOperation op : this.operations) {
+    		int candidateMin = op.numResultingBioAssays(experiments);
+    		if (candidateMin < min) {
+    			min = candidateMin;
+    		}
+    	}
+    	return min;
     }
     
     

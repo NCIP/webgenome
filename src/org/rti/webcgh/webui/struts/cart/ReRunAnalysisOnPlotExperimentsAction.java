@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-13 18:32:40 $
+$Revision: 1.2 $
+$Date: 2007-03-23 23:08:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,15 +60,11 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webcgh.analysis.AnalyticOperation;
-import org.rti.webcgh.analysis.UserConfigurableProperty;
 import org.rti.webcgh.core.WebcghApplicationException;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.Plot;
-import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
-import org.rti.webcgh.service.analysis.DataTransformer;
-import org.rti.webcgh.service.analysis.InMemoryDataTransformer;
+import org.rti.webcgh.service.job.JobManager;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
 
@@ -80,6 +76,35 @@ import org.rti.webcgh.webui.util.SessionMode;
  */
 public class ReRunAnalysisOnPlotExperimentsAction
 extends BaseAnalysisAction {
+	
+	//
+	//     ATTRIBUTES
+	//
+	
+	/**
+	 * Manages compute-intensive jobs such as--in this case--re-running
+	 * an analytic operation.
+	 */
+	private JobManager jobManager = null;
+	
+	
+	//
+	//     SETTERS
+	//
+	
+	/**
+	 * Setter for dependency injection of job manager.
+	 * @param jobManager Manages compute-intensive jobs
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
+	}
+	
+	
+	//
+	//     OVERRIDES
+	//
+
 
 	/**
 	 * {@inheritDoc}
@@ -120,18 +145,15 @@ extends BaseAnalysisAction {
 		
 		// Redo analysis
 		SessionMode mode = PageContext.getSessionMode(request);
-		if (mode == SessionMode.CLIENT) {
-			DataTransformer inMemoryDataTransformer =
-				new InMemoryDataTransformer();
-			for (Experiment exp : derivedExperiments) {
-				AnalyticOperation op = exp.getSourceAnalyticOperation();
-				QuantitationType qType = exp.getQuantitationType();
-				Collection<UserConfigurableProperty> props =
-					op.getUserConfigurableProperties(qType);
-				inMemoryDataTransformer.reCompute(exp, props);
-			}
-		}
+		boolean reranAlready =
+			this.jobManager.rePerform(derivedExperiments, mode);
 		
-		return mapping.findForward("success");
+		// Select forward
+    	ActionForward forward = null;
+    	if (reranAlready) {
+    		forward = mapping.findForward("non.batch");
+    	}
+	
+		return forward;
 	}
 }

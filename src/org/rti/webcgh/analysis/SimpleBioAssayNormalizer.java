@@ -60,7 +60,7 @@ package org.rti.webcgh.analysis;
  *
  */
 public final class SimpleBioAssayNormalizer extends SimpleNormalizer
-    implements IntraBioAssayStatefulOperation {
+implements IntraBioAssayStatefulOperation {
     
     /**
      * Get name of operation.

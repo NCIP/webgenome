@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-03-13 18:32:40 $
+$Revision: 1.9 $
+$Date: 2007-03-23 23:08:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.webui.struts.cart;
 
-import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,16 +64,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webcgh.analysis.AnalyticOperation;
 import org.rti.webcgh.analysis.AnalyticOperationFactory;
-import org.rti.webcgh.analysis.AnalyticPipeline;
-import org.rti.webcgh.analysis.SingleExperimentStatelessOperation;
 import org.rti.webcgh.analysis.MultiExperimentStatelessOperation;
-import org.rti.webcgh.analysis.SingleBioAssayStatelessOperation;
-import org.rti.webcgh.domain.BioAssay;
 import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.graphics.util.ColorChooser;
-import org.rti.webcgh.service.analysis.InMemoryDataTransformer;
-import org.rti.webcgh.service.util.IdGenerator;
+import org.rti.webcgh.service.job.JobManager;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.util.PageContext;
 import org.rti.webcgh.webui.util.SessionMode;
@@ -91,46 +83,36 @@ import org.rti.webcgh.webui.util.SessionMode;
  */
 public final class AnalysisAction extends BaseAnalysisAction {
 	
-	/** Colors for altered genome segments. */
-	private static final List<Color> ALTERATION_COLORS = new ArrayList<Color>();
-	static {
-		ALTERATION_COLORS.add(Color.DARK_GRAY);
-		ALTERATION_COLORS.add(Color.GRAY);
-	}
+	//
+	//     ATTRIBUTES
+	//
+	
+	
+	/** Manager for compute-intensive jobs. */
+	private JobManager jobManager = null;
 
 	/** Analytic operation factory. */
 	private final AnalyticOperationFactory analyticOperationFactory =
 		new AnalyticOperationFactory();
 	
-	/** Data transformer. */
-	private final InMemoryDataTransformer inMemoryDataTransformer =
-		new InMemoryDataTransformer();
 	
-    /** Experiment ID generator. */
-    private IdGenerator experimentIdGenerator = null;
-    
-    /** Bioassay ID generator. */
-    private IdGenerator bioAssayIdGenerator = null;
-    
-    /**
-     * Set bioassay ID generator.
-     * @param bioAssayIdGenerator ID generator
-     */
-	public void setBioAssayIdGenerator(
-			final IdGenerator bioAssayIdGenerator) {
-		this.bioAssayIdGenerator = bioAssayIdGenerator;
-	}
-
-
+	//
+	//     SETTERS
+	//
+	
 	/**
-	 * Set experiment ID generator.
-	 * @param experimentIdGenerator ID generator
+	 * Setter for dependency injection of job manager.
+	 * @param jobManager Manages compute-intensive jobs
 	 */
-	public void setExperimentIdGenerator(
-			final IdGenerator experimentIdGenerator) {
-		this.experimentIdGenerator = experimentIdGenerator;
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
 	}
 	
+	//
+	//     OVERRIDES
+	//
+
+
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -178,92 +160,72 @@ public final class AnalysisAction extends BaseAnalysisAction {
     		throw new SessionTimeoutException(
     				"Could not find selected experiments");
     	}
-    	Collection<Long> ids = seForm.getSelectedExperimentIds();
     	
-    	// Construct map of input bioassay and experiment
-    	// IDs to corresponding output bioassay and
-    	// experiment names.  If operation is of type
-    	// MultiExperimentToNonArrayDataAnalyticOperation,
-    	// then this will not be done as the user does not
-    	// name output experiments/bioassays.
+    	// Get experiments
+    	Collection<Long> ids = seForm.getSelectedExperimentIds();
+    	Collection<Experiment> experiments = cart.getExperiments(ids);
+    	
+    	// Map input to output bioassay and experiment names
     	Map<Long, String> outputBioAssayNames =
     		new HashMap<Long, String>();
     	Map<Long, String> outputExperimentNames =
     		new HashMap<Long, String>();
-    	Map paramMap = request.getParameterMap();
     	if (!(op instanceof MultiExperimentStatelessOperation)) {
-	    	for (Object paramNameObj : paramMap.keySet()) {
-	    		String paramName = (String) paramNameObj;
-	    		String paramValue = request.getParameter(paramName);
-	    		if (paramName.indexOf("eo_") == 0) {
-	    			Long experimentId = Long.parseLong(
-	    					paramName.substring("eo_".length()));
-	    			outputExperimentNames.put(experimentId, paramValue);
-	    		} else if (paramName.indexOf("bo_") == 0) {
-	    			Long bioAssayId = Long.parseLong(
-	    					paramName.substring("bo_".length()));
-	    			outputBioAssayNames.put(bioAssayId, paramValue);
-	    		}
-	    	}
+	    	this.constructNameMap(request, outputExperimentNames,
+	    			outputBioAssayNames);
     	}
     	
-    	// If client mode, perform operation and put output in cart
-    	SessionMode mode = PageContext.getSessionMode(request);
-    	ColorChooser colorChooser = PageContext.getColorChooser(
-    			request, true);
-    	if (mode == SessionMode.CLIENT) {
-    		Collection<Experiment> experiments = cart.getExperiments(ids);
-    		if (op instanceof MultiExperimentStatelessOperation) {
-    			Experiment output = this.
-    			inMemoryDataTransformer.
-    			performMultiExperimentStatelessOperation(
-    					experiments,
-    					(MultiExperimentStatelessOperation) op);
-    			output.setId(this.experimentIdGenerator.nextId());
-    			int count = 0;
-    			for (BioAssay ba : output.getBioAssays()) {
-    				ba.setId(this.bioAssayIdGenerator.nextId());
-    				ba.setColor(ALTERATION_COLORS.get(count++
-    						% ALTERATION_COLORS.size()));
-    			}
-    			cart.add(output);
-    		} else {
-	    		for (Experiment input : experiments) {
-	    			Experiment output =
-	    				this.inMemoryDataTransformer.perform(input, op);
-	    			output.setId(this.experimentIdGenerator.nextId());
-	    			for (BioAssay ba : output.getBioAssays()) {
-	    				ba.setId(this.bioAssayIdGenerator.nextId());
-	    				ba.setColor(colorChooser.nextColor());
-	    			}
-	    			cart.add(output);
-	    			String expName = outputExperimentNames.get(input.getId());
-	    			if (expName != null) {
-	    				output.setName(expName);
-	    			}
-	    			if (op instanceof SingleBioAssayStatelessOperation
-	    					|| (op instanceof AnalyticPipeline
-	    							&& ((AnalyticPipeline) op).
-	    							producesSingleBioAssayPerExperiment())) {
-	    				for (BioAssay ba : output.getBioAssays()) {
-	    					String bioAssayName =
-	    						outputBioAssayNames.get(
-	    								ba.getParentBioAssayId());
-	    					if (bioAssayName != null) {
-	    						ba.setName(bioAssayName);
-	    					}
-	    				}
-	    			} else if (op
-	    					instanceof SingleExperimentStatelessOperation) {
-	    				Collection<BioAssay> bioAssays = output.getBioAssays();
-	    				if (bioAssays.size() > 0) {
-	    					bioAssays.iterator().next().setName(expName);
-	    				}
-	    			}
-	    		}
+    	// Perform operation
+    	ColorChooser colorChooser = PageContext.getColorChooser(request, true);
+    	SessionMode sessionMode = PageContext.getSessionMode(request);
+    	boolean operationPerformed =
+    		this.jobManager.perform(experiments, op, colorChooser,
+    			sessionMode, cart, outputExperimentNames,
+    			outputBioAssayNames);
+    	
+    	// Determine forward
+    	ActionForward forward = null;
+    	if (operationPerformed) {
+    		forward = mapping.findForward("non.batch");
+    	}
+    	
+    	return forward;
+    }
+    
+     
+    
+    /**
+     * Construct map of input bioassay and experiment
+     * IDs to corresponding output bioassay and
+     * experiment names.  If operation is of type
+     * MultiExperimentToNonArrayDataAnalyticOperation,
+     * then this will not be done as the user does not
+     * name output experiments/bioassays.
+     * @param request Servlet request object.
+     * @param outputExperimentNames Map of input experiment
+     * names to output experiment names.  This parameter
+     * should be empty initially; this method populates the map.
+     * @param outputBioAssayNames Map of input bioassay names
+     * to output bioassay names.  This parameter
+     * should be empty initially; this method populates the map.
+     */
+    private void constructNameMap(
+    		final HttpServletRequest request,
+    		final Map<Long, String> outputExperimentNames,
+    		final Map<Long, String> outputBioAssayNames) {
+    	Map paramMap = request.getParameterMap();
+    	for (Object paramNameObj : paramMap.keySet()) {
+    		String paramName = (String) paramNameObj;
+    		String paramValue = request.getParameter(paramName);
+    		if (paramName.indexOf("eo_") == 0) {
+    			Long experimentId = Long.parseLong(
+    					paramName.substring("eo_".length()));
+    			outputExperimentNames.put(experimentId, paramValue);
+    		} else if (paramName.indexOf("bo_") == 0) {
+    			Long bioAssayId = Long.parseLong(
+    					paramName.substring("bo_".length()));
+    			outputBioAssayNames.put(bioAssayId, paramValue);
     		}
     	}
-    	
-    	return mapping.findForward("success");
     }
 }

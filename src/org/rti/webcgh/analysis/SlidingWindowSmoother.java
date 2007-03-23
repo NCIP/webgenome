@@ -70,7 +70,7 @@ import org.rti.webcgh.domain.QuantitationType;
  *
  */
 public final class SlidingWindowSmoother
-implements SingleBioAssayStatelessOperation {
+extends SingleBioAssayStatelessOperation.BaseSingleBioAssayStatelessOperation {
     
     /** Logger. */
     private static final Logger LOGGER =

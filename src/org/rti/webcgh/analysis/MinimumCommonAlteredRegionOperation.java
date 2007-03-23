@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2006-12-21 03:56:53 $
+$Revision: 1.11 $
+$Date: 2007-03-23 23:08:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,9 +57,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import org.rti.webcgh.core.WebcghSystemException;
 import org.rti.webcgh.domain.AnnotatedGenomeFeature;
 import org.rti.webcgh.domain.AnnotationType;
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.Experiment;
 import org.rti.webcgh.domain.GenomeInterval;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.util.ValidationUtils;
@@ -69,7 +71,7 @@ import org.rti.webcgh.util.ValidationUtils;
  * LOH, then these are the minimum common LOH segments.
  * If the data are copy number, then the minimum common
  * amplified and deleted regions are identified.
- * regions.  Each of these regions defines a genome interval
+ * Each of these regions defines a genome interval
  * of maximum size that is altered
  * in >= <code>minPercent</code>% bioassays.
  * @author dhall
@@ -482,6 +484,34 @@ implements MultiExperimentStatelessOperation {
     }
 	
 	
+    /**
+     * Determine the number of bioassays that would result
+     * from a proper running of the given experiments through
+     * this operation.
+     * @param experiments Some experiments
+     * @return The number of bioassays that would result
+     * from a proper running of the given experiments through
+     * this operation.
+     */
+    public int numResultingBioAssays(
+    		final Collection<Experiment> experiments) {
+    	int num = -1;
+    	QuantitationType qtype = Experiment.getQuantitationType(experiments);
+    	if (qtype == QuantitationType.COPY_NUMBER
+    			|| qtype == QuantitationType.LOG_2_RATIO_COPY_NUMBER
+    			|| qtype == QuantitationType.FOLD_CHANGE
+    			|| qtype == QuantitationType.LOG_2_RATIO_FOLD_CHANGE) {
+    		num = 2;
+    	} else if (qtype == QuantitationType.LOH) {
+    		num = 1;
+    	} else {
+    		throw new WebcghSystemException(
+    				"minimum common alteration operation "
+    				+ "not configured for quantitation type '"
+    				+ qtype + "'");
+    	}
+    	return num;
+    }
 
 	// =================================
 	//     Helper classes

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2006-12-18 18:13:19 $
+$Revision: 1.3 $
+$Date: 2007-03-23 23:08:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webcgh.analysis;
 
+import java.util.Collection;
+
 import org.rti.webcgh.domain.ChromosomeArrayData;
+import org.rti.webcgh.domain.Experiment;
 
 /**
  * An analytic operation performed on data from a 
@@ -73,4 +76,31 @@ public interface SingleBioAssayStatelessOperation extends StatelessOperation {
     ChromosomeArrayData perform(ChromosomeArrayData input)
         throws AnalyticException;
 
+    
+    /**
+     * Abstract base class for classes implementing this
+     * {@link SingleBioAssayStatelessOperation}
+     * that provides default implementations
+     * of some methods.
+     * @author dhall
+     *
+     */
+    abstract class BaseSingleBioAssayStatelessOperation
+    implements SingleBioAssayStatelessOperation {
+    	
+    	
+    	/**
+         * Determine the number of bioassays that would result
+         * from a proper running of the given experiments through
+         * this operation.
+         * @param experiments Some experiments
+         * @return The number of bioassays that would result
+         * from a proper running of the given experiments through
+         * this operation.
+         */
+        public int numResultingBioAssays(
+        		final Collection<Experiment> experiments) {
+        	return Experiment.countBioAssays(experiments);
+        }
+    }
 }

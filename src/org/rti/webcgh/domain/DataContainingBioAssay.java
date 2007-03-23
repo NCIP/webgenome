@@ -281,6 +281,22 @@ public class DataContainingBioAssay extends BioAssay {
     }
     
     
+    /**
+     * Return number of datum on given chromosome.
+     * @param chromosome Chromosome number.
+     * @return Number of datum on given chromosome.
+     */
+    public int numDatum(final short chromosome) {
+    	int num = 0;
+    	ChromosomeArrayData data =
+    		this.chromosomeArrayDataIndex.get(chromosome);
+    	if (data != null) {
+    		num = data.getArrayData().size();
+    	}
+    	return num;
+    }
+    
+    
     // =================================
     //    Additional business methods
     // =================================

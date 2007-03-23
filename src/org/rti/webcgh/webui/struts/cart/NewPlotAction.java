@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2007-03-13 18:32:40 $
+$Revision: 1.15 $
+$Date: 2007-03-23 23:08:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,11 +67,8 @@ import org.rti.webcgh.domain.Plot;
 import org.rti.webcgh.domain.QuantitationType;
 import org.rti.webcgh.domain.ShoppingCart;
 import org.rti.webcgh.service.client.ClientDataServiceManager;
-import org.rti.webcgh.service.plot.PlotGenerator;
+import org.rti.webcgh.service.job.JobManager;
 import org.rti.webcgh.service.plot.PlotParameters;
-import org.rti.webcgh.service.util.ChromosomeArrayDataGetter;
-import org.rti.webcgh.service.util.IdGenerator;
-import org.rti.webcgh.util.StringUtils;
 import org.rti.webcgh.webui.SessionTimeoutException;
 import org.rti.webcgh.webui.struts.BaseAction;
 import org.rti.webcgh.webui.util.PageContext;
@@ -99,42 +96,32 @@ public final class NewPlotAction extends BaseAction {
 	private static final Logger LOGGER =
 		Logger.getLogger(NewPlotAction.class);
 	
+	
 	//
 	//     ATTRIBUTES
 	//
 	
-	/** Plot generator. */
-	private PlotGenerator plotGenerator = null;
+	/** Oversees execution of plotting job. */
+	private JobManager jobManager = null;
 	
-	/** Chromosome array data getter. */
-	private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
 	
 	//
 	//     SETTERS
 	//
-		
-	/**
-	 * Set plot generator.
-	 * @param plotGenerator Plot generator.
-	 */
-	public void setPlotGenerator(final PlotGenerator plotGenerator) {
-		this.plotGenerator = plotGenerator;
-	}
-	
 	
 	/**
-	 * Set chromosome array data getter.
-	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 * Setter for the job manager used for dependency injection.
+	 * @param jobManager Manager for compute-intensive jobs.
 	 */
-	public void setChromosomeArrayDataGetter(
-			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
-		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
 	}
 
 	
 	//
 	//     OVERRIDES
 	//
+
 
 	/**
      * Execute action.
@@ -167,7 +154,6 @@ public final class NewPlotAction extends BaseAction {
     	// to update an existing plot (i.e., re-plot),
     	// the experiments are obtained
     	// from the plot instance.
-    	boolean isAReplot = false;
     	Collection<Experiment> experiments = null;
 	    if (request.getParameter("plotId") == null) {
 	    	
@@ -185,7 +171,6 @@ public final class NewPlotAction extends BaseAction {
 	    	Collection<Long> experimentIds = seForm.getSelectedExperimentIds();
 	    	experiments = cart.getExperiments(experimentIds);
 	    } else {
-	    	isAReplot = true;
 	    	
 	    	// Get experiment names, which are actually IDs to
 	    	// the client application
@@ -219,29 +204,16 @@ public final class NewPlotAction extends BaseAction {
 	    }
     	
     	// Create plot
-    	Long plotId = null;
-    	if (mode == SessionMode.CLIENT) {
-    		if (isAReplot) {
-    			this.plotGenerator.replot(plot, experiments, params,
-    					this.chromosomeArrayDataGetter);
-    			plotId = plot.getId();
-    		} else {
-    			IdGenerator plotIdGenerator =
-    				PageContext.getPlotIdGenerator(request, true);
-	    		plotId = plotIdGenerator.nextId();
-	    		plot = this.plotGenerator.newPlot(experiments, params,
-	    				this.chromosomeArrayDataGetter);
-	    		plot.setId(plotId);
-	    		if (StringUtils.isEmpty(params.getPlotName())) {
-	    			String plotName = "Plot " + plotId.toString();
-	    			params.setPlotName(plotName);
-	    		}
-	    		cart.add(plot);
-    		}
-    		request.setAttribute("plotId", plotId);
-    	}
+	    boolean plotCompleted =
+	    	this.jobManager.plot(plot, experiments, params, cart, mode);
     	
-        return mapping.findForward("success");
+	    // Determine forward
+	    ActionForward forward = null;
+	    if (plotCompleted) {
+	    	forward = mapping.findForward("non.batch");
+	    }
+	    
+        return forward;
     }
     
     
