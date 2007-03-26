@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-06 17:38:01 $
+$Revision: 1.3 $
+$Date: 2007-03-26 22:10:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,13 +94,16 @@ public final class ShowPlotSetupAction extends BaseAction {
     	String plotIdStr = request.getParameter("plotId");
     	if (plotIdStr != null) {
     		plotId = Long.parseLong(plotIdStr);
-    	} else {
-    		plotId = (Long) request.getAttribute("plotId");
     	}
     	
     	// Retrieve plot from shopping cart
     	ShoppingCart cart = PageContext.getShoppingCart(request);
-    	Plot plot = cart.getPlot(plotId);
+    	Plot plot = null;
+    	if (plotId != null) {
+    		plot = cart.getPlot(plotId);
+    	} else {
+    		plot = cart.getLastPlotIn();
+    	}
     	
     	// Attache plot to request
     	request.setAttribute("plot", plot);

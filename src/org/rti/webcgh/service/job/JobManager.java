@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-23 23:08:35 $
+$Revision: 1.2 $
+$Date: 2007-03-26 22:10:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -83,7 +83,7 @@ import org.rti.webcgh.webui.util.SessionMode;
  * This class is designed to run as a singleton.  It delegates
  * compute-intensive jobs to service objects.  These
  * jobs may be run on the application server if they are
- * small enough, or be dispatched to a bath
+ * small enough, or be dispatched to a batch
  * processing server otherwise.
  * @author dhall
  *
@@ -381,6 +381,7 @@ public class JobManager {
 	    		}
 	    		cart.add(newPlot);
     		}
+    		completed = true;
     	}
 		return completed;
 	}

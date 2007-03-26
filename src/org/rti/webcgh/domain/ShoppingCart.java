@@ -99,6 +99,12 @@ public class ShoppingCart implements Serializable {
      */
     private ImageFileManager imageFileManager;
     
+    /** Last experiment to be added to cart. */
+    private Experiment lastExperimentIn = null;
+    
+    /** Last plot to be added to cart. */
+    private Plot lastPlotIn = null;
+    
     // =============================
     //     Getters/setters
     // =============================
@@ -117,6 +123,15 @@ public class ShoppingCart implements Serializable {
      */
 	public final void setPlots(final Set<Plot> plots) {
 		this.plots = plots;
+	}
+	
+	
+	/**
+	 * Get last plot added to cart.
+	 * @return Last plot added to cart.
+	 */
+	public Plot getLastPlotIn() {
+		return lastPlotIn;
 	}
 
 	/**
@@ -186,6 +201,16 @@ public class ShoppingCart implements Serializable {
 			final ImageFileManager imageFileManager) {
 		this.imageFileManager = imageFileManager;
 	}
+	
+	
+	/**
+	 * Get the last experiment that was added to
+	 * the cart.
+	 * @return Last experiment added to cart.
+	 */
+	public Experiment getLastExperimentIn() {
+		return lastExperimentIn;
+	}
     
     // ================================
     //      Constructors
@@ -233,6 +258,7 @@ public class ShoppingCart implements Serializable {
     	}
     	
         this.experiments.add(experiment);
+        this.lastExperimentIn = experiment;
     }
     
     
@@ -262,6 +288,7 @@ public class ShoppingCart implements Serializable {
      */
     public final void add(final Plot plot) {
     	this.plots.add(plot);
+    	this.lastPlotIn = plot;
     }
     
     
