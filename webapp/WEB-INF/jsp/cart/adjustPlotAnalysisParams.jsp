@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <form action="<html:rewrite page="/cart/adjustPlotAnalysisParams.do"/>"
 	target="mainwindow">
@@ -27,7 +27,7 @@
 				<% String prefix = "prop_exp_" + expId + "_"; %>
 				<logic:iterate name="experiment" property="value" id="prop">
 					<bean:write name="prop" property="displayName"/>
-					<webcgh:userConfigurablePropertyInput name="prop"
+					<webgenome:userConfigurablePropertyInput name="prop"
 						prefix="<%= prefix %>"/><br>
 				</logic:iterate>
 			</td>

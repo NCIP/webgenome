@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <center>
 <p>
@@ -86,7 +86,7 @@
 		<%--   Parameters for genomic plots  --%>
 		<%-- =============================== --%>
 		 
-		<webcgh:onlyIfGenomicPlot plotTypeBeanName="plotType">
+		<webgenome:onlyIfGenomicPlot plotTypeBeanName="plotType">
 	
 	<%-- LOH threshold --%>
 		<tr>
@@ -216,13 +216,13 @@
 				</table>
 			</td>
 		</tr>
-		</webcgh:onlyIfGenomicPlot>
+		</webgenome:onlyIfGenomicPlot>
 		
 		<%-- ================================== --%>
 		<%--   Parameters for heat map plots    --%>
 		<%-- ================================== --%>
 		
-		<webcgh:onlyIfHeatMapPlot plotTypeBeanName="plotType">
+		<webgenome:onlyIfHeatMapPlot plotTypeBeanName="plotType">
 		
 	<%-- Minimum data mask --%>
 		<tr>
@@ -288,13 +288,13 @@
 			</td>
 		</tr>
 		
-		</webcgh:onlyIfHeatMapPlot>
+		</webgenome:onlyIfHeatMapPlot>
 		
 		<%-- ================================== --%>
 		<%--   Parameters for annotation plot   --%>
 		<%-- ================================== --%>
 		
-		<webcgh:onlyIfAnnotationPlot plotTypeBeanName="plotType">
+		<webgenome:onlyIfAnnotationPlot plotTypeBeanName="plotType">
 		
 	<!-- Annotation types -->
 		<tr>
@@ -346,13 +346,13 @@
 			</td>
 		</tr>
 		
-		</webcgh:onlyIfAnnotationPlot>
+		</webgenome:onlyIfAnnotationPlot>
 		
 		<%-- ================================== --%>
 		<%--   Parameters for bar plot          --%>
 		<%-- ================================== --%>
 		
-		<webcgh:onlyIfBarPlot plotTypeBeanName="plotType">
+		<webgenome:onlyIfBarPlot plotTypeBeanName="plotType">
 		
 	<%-- Bar width --%>
 		<tr>
@@ -386,13 +386,13 @@
 			</td>
 		</tr>
 		
-		</webcgh:onlyIfBarPlot>
+		</webgenome:onlyIfBarPlot>
 		
 		<%-- ================================== --%>
 		<%--   Parameters for ideogram plot     --%>
 		<%-- ================================== --%>
 		
-		<webcgh:onlyIfIdeogramPlot plotTypeBeanName="plotType">
+		<webgenome:onlyIfIdeogramPlot plotTypeBeanName="plotType">
 		
 	<%--
 	Ideogram size.  Note that values must correspond to
@@ -448,13 +448,13 @@
 			</td>
 		</tr>
 		
-		</webcgh:onlyIfIdeogramPlot>
+		</webgenome:onlyIfIdeogramPlot>
 		
 		<%-- ================================== --%>
 		<%--   Parameters for scatter plot      --%>
 		<%-- ================================== --%>
 		
-		<webcgh:onlyIfScatterPlot plotTypeBeanName="plotType">
+		<webgenome:onlyIfScatterPlot plotTypeBeanName="plotType">
 		
 	<%-- Minimum Y-axis value --%>
 		<tr>
@@ -580,7 +580,7 @@
 			</td>
 		</tr>
 		
-		</webcgh:onlyIfScatterPlot>
+		</webgenome:onlyIfScatterPlot>
 		
 	</table>
 	

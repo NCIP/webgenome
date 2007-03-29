@@ -20,84 +20,6 @@
 		<pathelement location="web/svg"/>
 		<pathelement location="etc"/>
 	</path>
-	
-	<!-- Compile -->
-	<target name="compile">
-		<echo>Creating build directories</echo>
-		<mkdir dir="${build.dir}"/>
-		<mkdir dir="${classes.dir}"/>
-		
-		<echo>Compling sources</echo>
-		<javac
-			srcdir="${src.dir}"
-			destdir="${classes.dir}"
-			classpathref="class.path"
-			debug="true"
-			target="1.5"
-			source="1.5"
-			excludes="org/rti/webcgh/sandbox/**"
-		/>
-	</target>
-	
-	<!-- Run unit tests -->
-	<target name="unit" depends="compile">
-
-		<echo>Creating directory for JUnit reports</echo>
-		<property name="junit.output.dir" value="${junit.report.dir}/temp"/>
-		<mkdir dir="${junit.report.dir}"/>
-		<mkdir dir="${junit.output.dir}"/>
-        
-        <echo>Copying xml and properties files to build directory - ${classes.dir}</echo>
-        <copy todir="${classes.dir}">
-            <fileset dir="${src.dir}" includes="**/*.xml"/>
-        </copy>
-        <copy todir="${classes.dir}">
-            <fileset dir="${src.dir}" includes="**/*.properties"/>
-        </copy>
-
-		<echo>Performing tests</echo>
-		<junit>
-			<formatter type="xml"/>
-			<classpath>
-				<path refid="class.path"/>
-				<pathelement location="${classes.dir}"/>
-			</classpath>
-			<batchtest fork="yes" todir="${junit.output.dir}">
-				<fileset dir="${classes.dir}"
-					includes="**/*Tester.class"
-					excludes="**/http_unit_test/*"/>
-			</batchtest>
-		</junit>
-		
-		<echo>Creating report</echo>
-		<junitreport todir="${junit.report.dir}">
-			<fileset dir="${junit.output.dir}" includes="TEST-*.xml"/>
-			<report format="frames" todir="${junit.report.dir}/html"/>
-		</junitreport>
-		
-		<echo>Cleaning up - deleting directory ${junit.output.dir}</echo>
-        <!-- You can comment this delete line out - and the files therein can be
-             actually quite useful. -->
-		<delete dir="${junit.output.dir}"/>
-		
-	</target>
-		
-	<!-- Generate Javadoc documentation -->
-	<target name="doc">
-		<echo>Creating javadoc directory</echo>
-		<mkdir dir="${javadoc.dir}"/>
-		
-		<echo>Generating documentation</echo>
-		<javadoc
-			sourcepath="${src.dir}"
-			packagenames="org.rti.*"
-			destdir="${javadoc.dir}"
-			excludepackagenames="**/*unit_test,org/rti/webcgh/sandbox,org/rti/webcgh/cron/**"
-			source="1.5"
-			Windowtitle="webGenome API"
-			Header="webGenome API"
-		/>
-	</target>
     
     <!-- Collate some environment information into a buildInformation.properties
          file which the Status Page can report on -->
@@ -159,38 +81,7 @@
 	</target>
 
 	
-	<!-- Create JAR files -->
-<!--	<target name="jar" depends="copyhttphibernatexmls, copy-config, compile"> -->
-    <target name="jar" depends="copy-config, compile">
-			
-		<echo>Creating lib directory</echo>
-		<mkdir dir="${lib.dir}"/>	
-			
-		<echo>Creating JAR files</echo>
-		<jar
-			destfile="${lib.dir}/webcgh.jar"
-			basedir="${classes.dir}"/>
-	</target>
-	
-	<!-- Create WAR file -->
-	<target name="war" depends="document-build-properties,jar">
-		<echo>Creating distribution directory</echo>
-		<mkdir dir="${dist.dir}"/>
-		
-		<echo>Creating WAR file</echo>
-		<war
-			destfile="${dist.dir}/${war.name}.war"
-			webxml="${web.dir}/WEB-INF/web.xml"
-			basedir="${web.dir}"
-			excludes="scratchpad/**">
-			<lib dir="${lib.dir}">
-				<include name="*.jar"/>
-			</lib>
-			<classes dir="${src.dir}">
-				<exclude name="**/*.java"/>			
-			</classes>
-		</war>
-	</target>
+
 	
 
 	  <target name="configure-props">
@@ -230,48 +121,14 @@
 
      </target>
 
-	<!-- Copy database files -->
-	<target name="db">
-		
-		<echo>Setting up databases</echo>
-		<delete dir="${db.home}"/>
-		<mkdir dir="${db.home}"/>
-		<copy todir="${db.home}/excel_files">
-			<fileset dir="${db.src.dir}/excel_files" includes="**/*.*"/>
-		</copy>
-		<copy todir="${db.home}/cloudscape_files">
-			<fileset dir="${db.src.dir}/cloudscape_files" includes="**/*.*"/>
-		</copy>
-		<copy todir="${db.home}/table_defs">
-			<fileset dir="${db.src.dir}/table_defs" includes="**/*.*"/>
-		</copy>
+<!-- Help -->
+	<target name="help" description="Print a usage statement">
+		<echo level="info" message="Usage: ant TARGET"/>
+		<echo level="info" message=""/>
+		<echo level="info" message="TARGET:"/>
+		<echo level="info" message="   help  - Print this help message"/>
+		<echo level="info" message="   usage - Print this help message"/>
 	</target>
-	
-	<!-- Clean up -->
-	<target name="clean">
-		<delete dir="${build.dir}"/>
-		<delete dir="${junit.report.dir}"/>
-		<delete dir="${dist.dir}"/>
-		<delete dir="${javadoc.dir}"/>
-	</target>
-
-
-	<!-- Print help message -->
-	<target name="help">
-		<echo>
-Targets:
-
-	help - Print this help message
-	unit - Compile and run unit tests
-	all  - Build the distribution
-	db   - Install database
-    doc  - Generate Javadoc
-    war  - Build War file
-		
-		</echo>
-	</target>
-	
-	<!-- Build the distribution -->
-	<target name="all" depends="clean,war,configure-props"/>
+	<target name="usage" depends="help"/>
 
 </project>

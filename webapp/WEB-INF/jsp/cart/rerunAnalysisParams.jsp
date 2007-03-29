@@ -1,7 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <%-- Analytic operation configurable properties --%>
 <p align="center">
@@ -19,7 +19,7 @@ value="<%= pageContext.findAttribute("experimentId") %>">
 		<bean:write name="prop" property="displayName"/>
 		</td>
 		<td>
-		<webcgh:userConfigurablePropertyInput name="prop"
+		<webgenome:userConfigurablePropertyInput name="prop"
 			prefix="prop_"/>
 		</td>
 	</tr>

@@ -14,47 +14,47 @@
 	<!-- Login form -->
 		<form-bean
 			name="login.form"
-			type="org.rti.webcgh.webui.struts.user.LoginForm"/>
+			type="org.rti.webgenome.webui.struts.user.LoginForm"/>
 
 	<!-- New account form -->
 		<form-bean
 			name="new.account.form"
-			type="org.rti.webcgh.webui.struts.user.NewAccountForm"/>
+			type="org.rti.webgenome.webui.struts.user.NewAccountForm"/>
 
 	<!-- Plot parameters form -->
 		<form-bean
 			name="plot.parameters.form"
-			type="org.rti.webcgh.webui.struts.cart.PlotParametersForm"/>
+			type="org.rti.webgenome.webui.struts.cart.PlotParametersForm"/>
 
 	<!-- Selected experiments form -->
 		<form-bean
 			name="selected.experiments.form"
-			type="org.rti.webcgh.webui.struts.cart.SelectedExperimentsForm"/>
+			type="org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm"/>
 
 	<!-- Name change form -->
 		<form-bean
 			name="name.change.form"
-			type="org.rti.webcgh.webui.struts.cart.NameChangeForm"/>
+			type="org.rti.webgenome.webui.struts.cart.NameChangeForm"/>
 
 	<!-- Analytic operation parameters form -->
 		<form-bean
 			name="analytic.operation.params.form"
-			type="org.rti.webcgh.webui.struts.cart.AnalyticOperationParametersForm"/>
+			type="org.rti.webgenome.webui.struts.cart.AnalyticOperationParametersForm"/>
 
 	<!-- Form for specifying annotation data to upload -->
 		<form-bean
 			name="annotation.upload.form"
-			type="org.rti.webcgh.webui.struts.admin.AnnotationUploadForm"/>
+			type="org.rti.webgenome.webui.struts.admin.AnnotationUploadForm"/>
 			
 	<!-- Form for specifying a quantitation type -->
 		<form-bean
 			name="quantitation.type.form"
-			type="org.rti.webcgh.webui.struts.cart.QuantitationTypeForm"/>
+			type="org.rti.webgenome.webui.struts.cart.QuantitationTypeForm"/>
 			
 	<!-- Form for uploading a data file -->
 		<form-bean
 			name="file.upload.form"
-			type="org.rti.webcgh.webui.struts.cart.FileUploadForm"/>
+			type="org.rti.webgenome.webui.struts.cart.FileUploadForm"/>
 	</form-beans>
 
 
@@ -64,38 +64,38 @@
 	<global-exceptions>
 
     <exception
-    	type="org.rti.webcgh.webui.SessionTimeoutException"
+    	type="org.rti.webgenome.webui.SessionTimeoutException"
     	path="session.timeout.exception.page"
     	key="session.timeout"
-    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
     	scope="request"/>
 
     <exception
-    	type="org.rti.webcgh.core.WebcghSecurityException"
+    	type="org.rti.webgenome.core.WebcghSecurityException"
     	path="security.exception.page"
     	key="security.exception"
-    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
     	scope="request"/>
 
     <exception
-    	type="org.rti.webcgh.core.WebcghSystemException"
+    	type="org.rti.webgenome.core.WebcghSystemException"
     	path="system.exception.page"
     	key="system.exception"
-    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
     	scope="request"/>
 
     <exception
-    	type="org.rti.webcgh.core.WebcghApplicationException"
+    	type="org.rti.webgenome.core.WebcghApplicationException"
     	path="application.exception.page"
     	key="application.exception"
-    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
     	scope="request"/>
 
     <exception
     	type="java.lang.Exception"
     	path="unknown.exception.page"
     	key="system.exception"
-    	handler="org.rti.webcgh.webui.struts.WebcghExceptionHandler"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
     	scope="request"/>
 
   	</global-exceptions>

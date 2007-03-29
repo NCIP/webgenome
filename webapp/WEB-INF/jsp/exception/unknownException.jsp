@@ -1,4 +1,4 @@
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <%@ page errorPage="/WEB-INF/jsp/exception/jspException.jsp" %>
 
@@ -10,7 +10,7 @@
 		</b>
 	</font>
 </p>
-<webcgh:errorEmail hideMessage="true"/>		
+<webgenome:errorEmail hideMessage="true"/>		
 <p>
 	The system administrator has been sent an error report.  We apologize
 	for the inconvenience.

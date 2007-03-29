@@ -1,5 +1,4 @@
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
-<%@ taglib uri="/WEB-INF/webGenome.tld" prefix="webGenome" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webGenome" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>

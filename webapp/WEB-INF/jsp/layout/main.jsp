@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <tiles:importAttribute name="selectedMenuItem" scope="request"/>
 <tiles:importAttribute name="helpTopic" scope="request"/>
@@ -13,7 +13,7 @@
 		<title><tiles:getAsString name="title"/></title>
 		
 	<%-- Style sheet --%>
-		<link href="<html:rewrite page="/webcgh.css"/>"
+		<link href="<html:rewrite page="/webgenome.css"/>"
 			rel="stylesheet" type="text/css" />
 			
 	<%-- Show help and onLeave Javascript functions --%>
@@ -73,59 +73,59 @@
 
 			<%-- Admin --%>
 
-				<webcgh:onlyIfAdmin>
+				<webgenome:onlyIfAdmin>
 					<a class="menuItem" href="<html:rewrite page="/admin/home.do"/>">
 						Admin
 					</a>
 					|
-				</webcgh:onlyIfAdmin>
+				</webgenome:onlyIfAdmin>
 
 			<%-- Workspace --%>
-				<webcgh:onlyIfShoppingCartExists>
+				<webgenome:onlyIfShoppingCartExists>
 					<a class="menuItem" href="<html:rewrite page="/cart/showCart.do"/>">
 						Workspace
 					</a>
 					|
-				</webcgh:onlyIfShoppingCartExists>
+				</webgenome:onlyIfShoppingCartExists>
 
 			<%-- Jobs table --%>
-				<webcgh:onlyIfLoggedInAndStandAloneMode>
+				<webgenome:onlyIfLoggedInAndStandAloneMode>
 					<a class="menuItem" href="<html:rewrite page="/cart/showJobsTable.do"/>">
 						Jobs Table
 					</a>
 					|
-				</webcgh:onlyIfLoggedInAndStandAloneMode>
+				</webgenome:onlyIfLoggedInAndStandAloneMode>
 				
 			<%-- File upload --%>
-				<webcgh:onlyIfLoggedInAndStandAloneMode>
+				<webgenome:onlyIfLoggedInAndStandAloneMode>
 					<html:link action="/cart/uploadForm" styleClass="menuItem">
 						Upload File
 					</html:link>
 					|
-				</webcgh:onlyIfLoggedInAndStandAloneMode>
+				</webgenome:onlyIfLoggedInAndStandAloneMode>
 			<%-- Login --%>
-				<webcgh:onlyIfUserLoggedOut>
+				<webgenome:onlyIfUserLoggedOut>
 					<a class="menuItem" href="<html:rewrite page="/user/login.do"/>">
 						Login
 					</a>
 					|
-				</webcgh:onlyIfUserLoggedOut>
+				</webgenome:onlyIfUserLoggedOut>
 
 			<%-- Profile --%>
-				<webcgh:onlyIfUserLoggedIn>
+				<webgenome:onlyIfUserLoggedIn>
 					<a class="menuItem" href="javascript:void(0);">
 						My Profile
 					</a>
 					|
-				</webcgh:onlyIfUserLoggedIn>
+				</webgenome:onlyIfUserLoggedIn>
 
 			<%-- Logout --%>
-				<webcgh:onlyIfUserLoggedIn>
+				<webgenome:onlyIfUserLoggedIn>
 					<a class="menuItem" href="<html:rewrite page="/user/logout.do"/>">
 						Logout
 					</a>
 					|
-				</webcgh:onlyIfUserLoggedIn>
+				</webgenome:onlyIfUserLoggedIn>
 
 			<%-- Help --%>
 				<a href="#" class="menuItem" 

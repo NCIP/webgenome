@@ -1,9 +1,9 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
-<%@ page import="org.rti.webcgh.domain.Experiment" %>
+<%@ page import="org.rti.webgenome.domain.Experiment" %>
 
 <script language="Javascript">
 
@@ -111,13 +111,13 @@
 										title="Remove experiment" border="0"
 										width="15" height="15"
 								/></a>
-								<webcgh:onlyIfDerivedExperiment name="experiment">
+								<webgenome:onlyIfDerivedExperiment name="experiment">
 								[<html:link action="/cart/rerunAnalysisParams"
 									paramId="experimentId" paramName="experiment"
 									paramProperty="id">
 									Change parameters
 								</html:link>]
-								</webcgh:onlyIfDerivedExperiment>
+								</webgenome:onlyIfDerivedExperiment>
 							</span>
 						</td>
 					</tr></table>
@@ -126,7 +126,7 @@
 					<logic:iterate name="experiment" property="bioAssays"
 						id="bioAssay">
 						<table class="noBorder" width="100%"><tr>
-							<td valign="middle" width="15" bgcolor="<webcgh:bioAssayColor name="bioAssay"/>">
+							<td valign="middle" width="15" bgcolor="<webgenome:bioAssayColor name="bioAssay"/>">
 								<html:img page="/images/spacer.gif"
 									border="0"
 									width="15" height="1"
@@ -175,12 +175,12 @@
 		
 		&nbsp;&nbsp;
 		
-		<webcgh:onlyIfClientMode>
+		<webgenome:onlyIfClientMode>
 			<html:radio property="operation" value="import"/>
 			Add data of different type
 			
 			&nbsp;&nbsp;
-		</webcgh:onlyIfClientMode>
+		</webgenome:onlyIfClientMode>
 		
 		<html:submit value="GO"/>
 	</p>

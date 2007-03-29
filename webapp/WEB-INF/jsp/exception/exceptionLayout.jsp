@@ -11,7 +11,7 @@
 		<title><tiles:getAsString name="title"/></title>
 
 	<%-- Style sheet --%>
-		<link href="<html:rewrite page="/webcgh.css"/>"
+		<link href="<html:rewrite page="/webgenome.css"/>"
 			rel="stylesheet" type="text/css" />
 
 	<%-- Show help and onLeave Javascript functions --%>

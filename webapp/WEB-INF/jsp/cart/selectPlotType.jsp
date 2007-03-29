@@ -7,7 +7,7 @@
 <%--
 	Form to select plot type.  The value of each radio
 	button input must be equivalent to the name of
-	some plot type defined in org.rti.webcgh.core.PlotType.
+	some plot type defined in org.rti.webgenome.core.PlotType.
 --%>
 	<html:form action="/cart/plotParameters">
 

@@ -4,7 +4,7 @@
 
 <%@ page errorPage="/WEB-INF/jsp/exception/jspException.jsp" %>
 
-<%@ page import="org.rti.webcgh.webui.util.Attribute" %>
+<%@ page import="org.rti.webgenome.webui.util.Attribute" %>
 
 <p><br></p>
 

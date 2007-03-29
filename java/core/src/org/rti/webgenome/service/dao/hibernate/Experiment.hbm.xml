@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.Experiment" table="EXPERIMENT">
+	
+		<id name="id" column="ID">
+		    
+		</id>
+	
+		<property name="name"/>
+		<many-to-one
+			name="shoppingCart"
+			column="shopping_cart_id"
+			class="org.rti.webgenome.domain.ShoppingCart"
+			not-null="true"
+			lazy="false"
+			insert="false" update="false"
+		/>
+		<set 
+		    name="bioAssays"
+		    cascade="all-delete-orphan"
+			lazy="false">
+            <key
+				column="experiment_id"
+				not-null="true"
+		    />
+            <one-to-many class="org.rti.webgenome.domain.DataSerializedBioAssay"/>
+        </set>
+		
+	</class>
+	
+
+</hibernate-mapping>

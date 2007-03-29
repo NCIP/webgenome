@@ -1,5 +1,5 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
-<%@ page import="org.rti.webcgh.util.SystemUtils" %>
+<%@ page import="org.rti.webgenome.util.SystemUtils" %>
 <%@ page import="java.util.Properties" %>
 <%@ page import="javax.mail.Session" %>
 <%@ page import="javax.mail.Transport" %>

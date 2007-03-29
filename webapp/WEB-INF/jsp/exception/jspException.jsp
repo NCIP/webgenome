@@ -1,7 +1,7 @@
 <%@page isErrorPage="true" %>
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
-<%@page import="org.rti.webcgh.util.Email" %>
-<%@page import="org.rti.webcgh.util.SystemUtils" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
+<%@page import="org.rti.webgenome.util.Email" %>
+<%@page import="org.rti.webgenome.util.SystemUtils" %>
 <p><br></p>
 <p align="center">
 	<font color="red">
@@ -17,7 +17,7 @@
   //
   --%>
 <center>
-<webcgh:errorEmail exceptionMsg="<%= exception.getMessage() %>"/>
+<webgenome:errorEmail exceptionMsg="<%= exception.getMessage() %>"/>
 <div style="border:1px solid gray;">	
 <h3>Error Log</h3>
 <p>

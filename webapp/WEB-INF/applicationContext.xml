@@ -4,7 +4,7 @@
 <beans>
 
 	<!-- ======================================================= -->
-	<!--   Import configurable values from 'webcgh.properties'   -->
+	<!--   Import configurable values from 'webgenome.properties'   -->
 	<!-- ======================================================= -->
 	
 	<bean
@@ -16,12 +16,12 @@
                  and comment out the external properties declaration immediately below.
 			<bean class="org.springframework.core.io.ClassPathResource">
 				<constructor-arg type="java.lang.String">
-					<value>conf/webcgh.properties</value>
+					<value>webgenome.properties</value>
 				</constructor-arg>
 			</bean>
             -->
             <!-- PROPERTY LOADING FROM EXTERNALIZED PROPERTIES FILE -->
-            <bean class="org.rti.webcgh.framework.spring.SysPropsFileSystemResource">
+            <bean class="org.rti.webgenome.framework.spring.SysPropsFileSystemResource">
                 <constructor-arg type="java.lang.String">
                 <value>webGenome.configFile</value>
                 </constructor-arg>
@@ -52,10 +52,10 @@
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webcgh/service/dao/hibernate</value></constructor-arg>
+        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/dao/hibernate</value></constructor-arg>
         		</bean>
                 <bean class="org.springframework.core.io.ClassPathResource">
-                    <constructor-arg type="java.lang.String"><value>org/rti/webcgh/standalone/dao/hibernate</value></constructor-arg>
+                    <constructor-arg type="java.lang.String"><value>org/rti/webgenome/standalone/dao/hibernate</value></constructor-arg>
                 </bean>
 	      	</list>
     	</property>
@@ -65,11 +65,11 @@
     	<!-- =============== Mapping files for 3.0 release ================= -->
     	<property name="mappingResources">
     		<list>
-    			<value>org/rti/webcgh/service/dao/hibernate/Principal.hbm.xml</value>
-    			<value>org/rti/webcgh/service/dao/hibernate/Organism.hbm.xml</value>
-    			<value>org/rti/webcgh/service/dao/hibernate/CytologicalMap.hbm.xml</value>
-    			<value>org/rti/webcgh/service/dao/hibernate/Cytoband.hbm.xml</value>
-    			<value>org/rti/webcgh/service/dao/hibernate/AnnotatedGenomeFeature.hbm.xml</value>
+    			<value>org/rti/webgenome/service/dao/hibernate/Principal.hbm.xml</value>
+    			<value>org/rti/webgenome/service/dao/hibernate/Organism.hbm.xml</value>
+    			<value>org/rti/webgenome/service/dao/hibernate/CytologicalMap.hbm.xml</value>
+    			<value>org/rti/webgenome/service/dao/hibernate/Cytoband.hbm.xml</value>
+    			<value>org/rti/webgenome/service/dao/hibernate/AnnotatedGenomeFeature.hbm.xml</value>
     		</list>
     	</property>
     	
@@ -81,37 +81,37 @@
   	</bean>
   	
 <!-- Principal DAO -->
-  	<bean id="principalDao" class="org.rti.webcgh.service.dao.hibernate.HibernatePrincipalDao">
+  	<bean id="principalDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePrincipalDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
 <!-- Shopping cart DAO -->
   	<bean id="shoppingCartDao"
-  		class="org.rti.webcgh.service.dao.hibernate.HibernateShoppingCartDao">
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
     
 <!-- Processing Job DAO (Standalone Mode) -->
     <bean id="processingJobDao"
-        class="org.rti.webcgh.standalone.dao.hibernate.ProcessingJobDaoImpl">
+        class="org.rti.webgenome.standalone.dao.hibernate.ProcessingJobDaoImpl">
         <property name="sessionFactory"><ref bean="sessionFactory"/></property>
     </bean>
     
 <!-- Organism DAO -->
     <bean id="organismDao"
-    	class="org.rti.webcgh.service.dao.hibernate.HibernateOrganismDao">
+    	class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 
 <!-- Cytological map DAO -->
 	<bean id="cytologicalMapDao"
-		class="org.rti.webcgh.service.dao.hibernate.HibernateCytologicalMapDao">
+		class="org.rti.webgenome.service.dao.hibernate.HibernateCytologicalMapDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
 <!-- Annotated genome feature DAO -->
   	<bean id="annotatedGenomeFeatureDao"
-		class="org.rti.webcgh.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
+		class="org.rti.webgenome.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   		<property name="dataSource"><ref bean="dataSource"/></property>
   	</bean>
@@ -121,23 +121,23 @@
   	<!-- =================================== -->
 
 <!-- Security manager -->
-	<bean id="securityMgr" class="org.rti.webcgh.service.mgr.SecurityMgrImpl">
+	<bean id="securityMgr" class="org.rti.webgenome.service.mgr.SecurityMgrImpl">
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 		
 <!-- ID generator for bioassays not persisted and, hence, not given
 	 IDs by the DAO tier. -->
 	<bean id="bioAssayIdGenerator"
-		class="org.rti.webcgh.service.util.IdGenerator"/>
+		class="org.rti.webgenome.service.util.IdGenerator"/>
 		
 <!-- ID generator for experiments not persisted and, hence, not given
 	 IDs by the DAO tier. -->
 	<bean id="experimentIdGenerator"
-		class="org.rti.webcgh.service.util.IdGenerator"/>
+		class="org.rti.webgenome.service.util.IdGenerator"/>
 		
 <!-- Image file manager -->
 	<bean id="imageFileManager"
-		class="org.rti.webcgh.service.io.ImageFileManager">
+		class="org.rti.webgenome.service.io.ImageFileManager">
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
@@ -145,7 +145,7 @@
 		
 <!-- Plot generator -->
 	<bean id="plotGenerator"
-		class="org.rti.webcgh.service.plot.PngPlotGenerator">
+		class="org.rti.webgenome.service.plot.PngPlotGenerator">
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>
 		</property>
@@ -159,14 +159,14 @@
 	
 <!-- File uploading manager -->
 	<bean id="uploadManager"
-		class="org.rti.webcgh.service.io.UploadManager">
+		class="org.rti.webgenome.service.io.UploadManager">
 		<constructor-arg>
 			<value>${file.uploading.working.dir}</value>
 		</constructor-arg>
 	</bean>
 	
 <!-- Job manager -->
-	<bean id="jobManager" class="org.rti.webcgh.service.job.JobManager">
+	<bean id="jobManager" class="org.rti.webgenome.service.job.JobManager">
 		<property name="bioAssayIdGenerator">
 			<ref bean="bioAssayIdGenerator"/>
 		</property>
@@ -184,35 +184,35 @@
 	
 <!-- Validate login -->
 	<bean name="/user/validateLogin"
-		class="org.rti.webcgh.webui.struts.user.LoginAction">
+		class="org.rti.webgenome.webui.struts.user.LoginAction">
 		<property name="securityMgr"><ref bean="securityMgr"/></property>
 	</bean>
 	
 <!-- Logout -->
 	<bean name="/user/logout"
-		class="org.rti.webcgh.webui.struts.user.LogoutAction"/>
+		class="org.rti.webgenome.webui.struts.user.LogoutAction"/>
 	
 <!-- Create new account -->
 	<bean name="/user/createAccount"
-		class="org.rti.webcgh.webui.struts.user.CreateAccountAction">
+		class="org.rti.webgenome.webui.struts.user.CreateAccountAction">
 		<property name="securityMgr"><ref bean="securityMgr"/></property>
 	</bean>
 
 <!-- Show shopping cart -->
 	<bean name="/cart/showCart"
-		class="org.rti.webcgh.webui.struts.cart.ShowCartSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.ShowCartSetupAction"/>
 		
 <!-- Route to operation page -->
 	<bean name="/cart/routeToOperationPage"
-		class="org.rti.webcgh.webui.struts.cart.RouteToOperationPageAction"/>
+		class="org.rti.webgenome.webui.struts.cart.RouteToOperationPageAction"/>
 		
 <!-- Get quantitation types -->
 	<bean name="/cart/selectImportDataType"
-		class="org.rti.webcgh.webui.struts.cart.GetQuantitationTypesAction"/>
+		class="org.rti.webgenome.webui.struts.cart.GetQuantitationTypesAction"/>
 		
 <!-- Import data from client -->
 	<bean name="/cart/import"
-		class="org.rti.webcgh.webui.struts.cart.ImportAction">
+		class="org.rti.webgenome.webui.struts.cart.ImportAction">
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
@@ -226,7 +226,7 @@
 		
 <!-- Route to specific plot parameters page -->
 	<bean name="/cart/plotParameters"
-		class="org.rti.webcgh.webui.struts.cart.PlotParametersSetupAction">
+		class="org.rti.webgenome.webui.struts.cart.PlotParametersSetupAction">
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
 		</property>
@@ -234,23 +234,23 @@
 		
 <!-- Select analytic operation -->
 	<bean name="/cart/selectAnalysis"
-		class="org.rti.webcgh.webui.struts.cart.SelectAnalysisSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.SelectAnalysisSetupAction"/>
 		
 <!-- Set analytic operation parameters -->
 	<bean name="/cart/analysisParams"
-		class="org.rti.webcgh.webui.struts.cart.AnalysisParamsSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.AnalysisParamsSetupAction"/>
 		
 <!-- Set up for re-running an analytic operation -->
 	<bean name="/cart/rerunAnalysisParams"
-		class="org.rti.webcgh.webui.struts.cart.ReRunAnalyticOperationSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalyticOperationSetupAction"/>
 		
 <!-- Set up for re-plotting using different analytic operation parameters -->
 	<bean name="/cart/adjustPlotAnalysisParamsSetup"
-		class="org.rti.webcgh.webui.struts.cart.AdjustPlotAnalysisParamsSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.AdjustPlotAnalysisParamsSetupAction"/>
 		
 <!-- Perform analytic operation -->
 	<bean name="/cart/analysis"
-		class="org.rti.webcgh.webui.struts.cart.AnalysisAction">
+		class="org.rti.webgenome.webui.struts.cart.AnalysisAction">
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
@@ -258,7 +258,7 @@
 	
 <!-- Rerun analytic operation -->
 	<bean name="/cart/rerunAnalysis"
-		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisAction">
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisAction">
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
@@ -266,7 +266,7 @@
 
 <!-- Rerun analytic operation on all derived experiments in plot -->
 	<bean name="/cart/adjustPlotAnalysisParams"
-		class="org.rti.webcgh.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction">
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction">
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
@@ -274,11 +274,11 @@
 		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"
-		class="org.rti.webcgh.webui.struts.cart.RemoveExperimentAction"/>
+		class="org.rti.webgenome.webui.struts.cart.RemoveExperimentAction"/>
 		
 <!-- Remove plot from cart -->
 	<bean name="/cart/removePlot"
-		class="org.rti.webcgh.webui.struts.cart.RemovePlotAction">
+		class="org.rti.webgenome.webui.struts.cart.RemovePlotAction">
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>
 		</property>
@@ -286,7 +286,7 @@
 
 <!-- Perform file upload operation -->
 	<bean name="/cart/upload"
-		class="org.rti.webcgh.webui.struts.cart.FileUploadAction">
+		class="org.rti.webgenome.webui.struts.cart.FileUploadAction">
 		<property name="uploadManager">
 			<ref bean="uploadManager"/>
 		</property>
@@ -294,19 +294,19 @@
 	
 <!-- Color chooser -->
 	<bean name="/cart/colorChooser"
-		class="org.rti.webcgh.webui.struts.cart.ColorChooserSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.ColorChooserSetupAction"/>
 		
 <!-- Change bioassay color -->
 	<bean name="/cart/changeBioAssayColor"
-		class="org.rti.webcgh.webui.struts.cart.ChangeBioAssayColorAction"/>
+		class="org.rti.webgenome.webui.struts.cart.ChangeBioAssayColorAction"/>
 		
 <!-- Change name of experiment, bioassay, or plot -->
 	<bean name="/cart/nameChange"
-		class="org.rti.webcgh.webui.struts.cart.NameChangeAction"/>
+		class="org.rti.webgenome.webui.struts.cart.NameChangeAction"/>
 		
 <!-- Client plot: entry point for application client -->
 	<bean name="/client/plot"
-		class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
+		class="org.rti.webgenome.webui.struts.client.ClientPlotAction">
 		<property name="imageFileManager">
 			<ref bean="imageFileManager"/>
 		</property>
@@ -323,7 +323,7 @@
     
 <!-- Client plot: test Plot action -->
     <bean name="/client/testPlot"
-        class="org.rti.webcgh.webui.struts.client.ClientPlotAction">
+        class="org.rti.webgenome.webui.struts.client.ClientPlotAction">
         <property name="imageFileManager">
             <ref bean="imageFileManager"/>
         </property>
@@ -340,7 +340,7 @@
 	
 <!-- New plot -->
 	<bean name="/cart/newPlot"
-		class="org.rti.webcgh.webui.struts.cart.NewPlotAction">
+		class="org.rti.webgenome.webui.struts.cart.NewPlotAction">
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
@@ -348,15 +348,15 @@
 
 <!-- Show plot -->
 	<bean name="/cart/showPlot"
-		class="org.rti.webcgh.webui.struts.cart.ShowPlotSetupAction"/>
+		class="org.rti.webgenome.webui.struts.cart.ShowPlotSetupAction"/>
 		
 <!-- View/change plot parameters -->
 	<bean name="/cart/changeParameters"
-		class="org.rti.webcgh.webui.struts.cart.SetPlotParametersAction"/>
+		class="org.rti.webgenome.webui.struts.cart.SetPlotParametersAction"/>
 		
 <!-- Load cytobands form -->
 	<bean name="/admin/loadCytobandsForm"
-		class="org.rti.webcgh.webui.struts.admin.LoadCytobandsFormSetupAction">
+		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsFormSetupAction">
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
@@ -367,7 +367,7 @@
 		
 <!-- Load cytobands -->
 	<bean name="/admin/loadCytobands"
-		class="org.rti.webcgh.webui.struts.admin.LoadCytobandsAction">
+		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsAction">
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
@@ -378,7 +378,7 @@
 	
 <!-- Delete cytobands -->
 	<bean name="/admin/deleteCytobands"
-		class="org.rti.webcgh.webui.struts.admin.DeleteCytobandsAction">
+		class="org.rti.webgenome.webui.struts.admin.DeleteCytobandsAction">
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
@@ -389,7 +389,7 @@
 	
 <!-- Load genes form -->
 	<bean name="/admin/loadGenesForm"
-		class="org.rti.webcgh.webui.struts.admin.LoadGenesFormSetupAction">
+		class="org.rti.webgenome.webui.struts.admin.LoadGenesFormSetupAction">
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
@@ -400,7 +400,7 @@
 	
 <!-- Load cytobands -->
 	<bean name="/admin/loadGenes"
-		class="org.rti.webcgh.webui.struts.admin.LoadGenesAction">
+		class="org.rti.webgenome.webui.struts.admin.LoadGenesAction">
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
@@ -411,7 +411,7 @@
 	
 <!-- Delete genes -->
 	<bean name="/admin/deleteGenes"
-		class="org.rti.webcgh.webui.struts.admin.DeleteGenesAction">
+		class="org.rti.webgenome.webui.struts.admin.DeleteGenesAction">
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
 		</property>

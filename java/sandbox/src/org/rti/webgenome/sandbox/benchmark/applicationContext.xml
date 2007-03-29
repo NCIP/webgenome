@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "src/test/benchmark/spring-beans.dtd">
+
+<beans>
+
+	<!-- ======================================================= -->
+	<!--   Import configurable values from 'webgenome.properties'   -->
+	<!-- ======================================================= -->
+	
+	<bean
+		id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+            <!-- PROPERTY LOADING FROM INTERNAL PROPERTIES FILE
+                 Uncomment to use the internal properties file
+                 and comment out the external properties declaration immediately below.
+			<bean class="org.springframework.core.io.ClassPathResource">
+				<constructor-arg type="java.lang.String">
+					<value>webgenome.properties</value>
+				</constructor-arg>
+			</bean>
+            -->
+            <!-- PROPERTY LOADING FROM EXTERNALIZED PROPERTIES FILE -->
+            <bean class="org.rti.webcgh.framework.spring.SysPropsFileSystemResource">
+                <constructor-arg type="java.lang.String">
+                <value>webGenome.configFile</value>
+                </constructor-arg>
+            </bean>
+		</property>
+	</bean>
+
+	<!-- =========================================== -->
+	<!--      Data access beans                      -->
+	<!-- =========================================== -->
+	
+<!-- Data source -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>${db.url}</value></property>
+		<property name="username"><value>${db.user.name}</value></property>
+		<property name="password"><value>${db.password}</value></property>
+	</bean>
+	
+<!-- Session factory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	    	
+    	<!-- =============== Mapping files for 3.0 release ================= -->
+    	<property name="mappingResources">
+    		<list>
+    			<value>org/rti/webcgh/service/dao/hibernate/Organism.hbm.xml</value>
+    			<value>org/rti/webcgh/service/dao/hibernate/AnnotatedGenomeFeature.hbm.xml</value>
+    		</list>
+    	</property>
+    	
+    	<property name="hibernateProperties">
+      		<props>
+        		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+      		</props>
+    	</property>
+  	</bean>
+  	
+  	<!-- Organism DAO -->
+    <bean id="organismDao"
+    	class="org.rti.webcgh.service.dao.hibernate.HibernateOrganismDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<!-- Annotated genome feature DAO -->
+  	<bean id="hibernateAnnotatedGenomeFeatureDao"
+		class="org.rti.webcgh.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource"><ref bean="dataSource"/></property>
+  	</bean>	
+</beans>

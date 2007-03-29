@@ -1,4 +1,4 @@
-<%@ taglib uri="/WEB-INF/webcgh.tld" prefix="webcgh" %>
+<%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <%@ page errorPage="/WEB-INF/jsp/exception/jspException.jsp" %>
 				
@@ -16,8 +16,8 @@
 	exception.  We apologize for the inconvenience.
 </p>
 		
-<webcgh:errorEmail/>		
+<webgenome:errorEmail/>		
 <h3>Error Log</h3>
 <p>
-	<webcgh:exceptionStackTrace/>
+	<webgenome:exceptionStackTrace/>
 </p>
