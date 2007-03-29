@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.graphics.RasterDrawingCanvas;
 import org.rti.webgenome.graphics.primitive.Circle;
 import org.rti.webgenome.util.MathUtils;
@@ -169,7 +169,7 @@ public final class DataPointSimulator {
         try {
             ImageIO.write(img, "png", file);
         } catch (IOException e) {
-            throw new WebcghSystemException("Error generating graphic", e);
+            throw new WebGenomeSystemException("Error generating graphic", e);
         }
     }
     

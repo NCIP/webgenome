@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,7 @@ import java.io.InputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Contains general utility methods used by multiple classes.
@@ -187,7 +187,7 @@ public final class SystemUtils {
         }
         
         if ( allProperties.size() == 0 ) {
-            throw new WebcghSystemException( "No External or Internal Properties were loaded." ) ;
+            throw new WebGenomeSystemException( "No External or Internal Properties were loaded." ) ;
         }
         else
             LOGGER.info( allProperties.size() + " Properties loaded" ) ;

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.rti.webgenome.core.DataFormatException;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Organism;
 
 /**
@@ -155,7 +155,7 @@ public final class ChromosomeCoder {
 		// Get aliases map for organism
 		Map<String, Short> aliases = CHROM_ALIASES.get(organism);
 		if (aliases == null) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Do not have chromosome aliases for "
 					+ organism.getGenus() + " "
 					+ organism.getSpecies());

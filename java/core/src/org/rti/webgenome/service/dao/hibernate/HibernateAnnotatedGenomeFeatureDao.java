@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import java.util.TreeSet;
 
 import javax.sql.DataSource;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.AnnotationType;
 import org.rti.webgenome.domain.Organism;
@@ -215,7 +215,7 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 				}
 			}
 		} catch (SQLException e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error recovering annotated genome features from database",
 					e);
 		} finally {
@@ -271,7 +271,7 @@ extends HibernateDaoSupport implements AnnotatedGenomeFeatureDao {
 				types.add(type);
 			}
 		} catch (SQLException e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error retrieving available annotation types", e);
 		}
 		return types;

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/XmlUtils.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,7 +71,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.rti.webgenome.core.SaxErrorHandler;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -88,10 +88,10 @@ public class XmlUtils {
 	 * @param fname Name of file
 	 * @param validate Validate document?
 	 * @return
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static Document loadDocument(String fname, boolean validate) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		Document doc = null;
 		try {
 			DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
@@ -115,7 +115,7 @@ public class XmlUtils {
 			String path = url.toString();
 			doc = builder.parse(path);
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error loading XML document from file", e);
+			throw new WebGenomeSystemException("Error loading XML document from file", e);
 		}
 		
 		return doc;
@@ -123,16 +123,16 @@ public class XmlUtils {
 	/**
 	 * Create new XML document de novo
 	 * @return XML document
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
-	public static Document createDocument() throws WebcghSystemException {
+	public static Document createDocument() throws WebGenomeSystemException {
 		Document doc = null;
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			doc = builder.newDocument();
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error creating XML document object", e);
+			throw new WebGenomeSystemException("Error creating XML document object", e);
 		}
 		return doc; 
 	}
@@ -140,10 +140,10 @@ public class XmlUtils {
 	 * Create XML document from String encoding
 	 * @param encoding String version of XML document
 	 * @return XML document
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static Document createDocument(String encoding) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		Document doc = null;
 		try {
 			DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
@@ -153,7 +153,7 @@ public class XmlUtils {
 			InputSource source = new InputSource(in);
 			doc = builder.parse(source);
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error creating new XML document object", e);
+			throw new WebGenomeSystemException("Error creating new XML document object", e);
 		}
 		return doc;
 	}
@@ -161,10 +161,10 @@ public class XmlUtils {
 	 * Create XML document from markup at given URL
 	 * @param url URL
 	 * @return XML document
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static Document createDocument(URL url) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		Document doc = null;
 		try {
 			HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -178,7 +178,7 @@ public class XmlUtils {
 			}
 			doc = createDocument(buff.toString());
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error creating XML document", e);
+			throw new WebGenomeSystemException("Error creating XML document", e);
 		}
 		return doc;
 	}
@@ -186,10 +186,10 @@ public class XmlUtils {
 	 * Forward an XML document to a stream
 	 * @param doc XML document
 	 * @param out Stream
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static void forwardDocument(Document doc, OutputStream out) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		StreamResult res = new StreamResult(out);
 		forwardDocument(doc, res);
 	}
@@ -198,13 +198,13 @@ public class XmlUtils {
 	 * @param docName Name of XML document
 	 * @param out Stream
 	 * @param validate Validate document?
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static void forwardDocument
 	(
 		String docName, OutputStream out, boolean validate
 	) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		Document doc = null;
 		doc = loadDocument(docName, validate);
 		forwardDocument(doc, out);
@@ -213,10 +213,10 @@ public class XmlUtils {
 	 * Forward an XML document to a writer
 	 * @param doc XML document
 	 * @param out Stream
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static void forwardDocument(Document doc, Writer out) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		StreamResult res = new StreamResult(out);
 		forwardDocument(doc, res);
 	}
@@ -225,10 +225,10 @@ public class XmlUtils {
 	 * @param docName Name of XML document
 	 * @param out Stream
 	 * @param validate Validate document?
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	public static void forwardDocument(String docName, Writer out, boolean validate) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		Document doc = loadDocument(docName, validate);
 		forwardDocument(doc, out);
 	}
@@ -236,17 +236,17 @@ public class XmlUtils {
 	 * Forward XML document to stream
 	 * @param doc XML document
 	 * @param res Stream
-	 * @throws WebcghSystemException
+	 * @throws WebGenomeSystemException
 	 */
 	private static void forwardDocument(Document doc, StreamResult res) 
-		throws WebcghSystemException {
+		throws WebGenomeSystemException {
 		try {
 			TransformerFactory fac = TransformerFactory.newInstance();
 			Transformer trans = fac.newTransformer();
 			DOMSource source = new DOMSource(doc);
 			trans.transform(source, res);
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error forwarding document", e);
+			throw new WebGenomeSystemException("Error forwarding document", e);
 		}
 	}
 	/**

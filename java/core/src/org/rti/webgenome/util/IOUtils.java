@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/IOUtils.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * I/O utility methods
@@ -132,7 +132,7 @@ public class IOUtils {
 			try {
 				writer.close();
 			} catch (IOException e) {
-				throw new WebcghSystemException("Error closing writer", e);
+				throw new WebGenomeSystemException("Error closing writer", e);
 			}
 		}
 	}
@@ -147,7 +147,7 @@ public class IOUtils {
 			try {
 				in.close();
 			} catch (IOException e) {
-				throw new WebcghSystemException("Error closing input stream", e);
+				throw new WebGenomeSystemException("Error closing input stream", e);
 			}
 		}
 	}
@@ -162,7 +162,7 @@ public class IOUtils {
 			try {
 				out.close();
 			} catch (IOException e) {
-				throw new WebcghSystemException("Error closing output stream", e);
+				throw new WebGenomeSystemException("Error closing output stream", e);
 			}
 		}
 	}

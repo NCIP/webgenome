@@ -4,7 +4,7 @@ package org.rti.webgenome.client;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * This class generates <code>BioAssayDatumDTO</code>
@@ -102,7 +102,7 @@ public class BioAssayDatumDTOGenerator {
 			ValueGenerator gen =
 				GENERATORS.get(constraint.getQuantitationType());
 			if (gen == null) {
-				throw new WebcghSystemException("Unknown quantitation type: '"
+				throw new WebGenomeSystemException("Unknown quantitation type: '"
 						+ constraint.getQuantitationType() + "'");
 			}
 			for (int j = 0; j < num && p < totalNum; j++) {

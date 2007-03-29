@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
@@ -186,7 +186,7 @@ public class SelectedExperimentsForm extends BaseForm {
     	this.values.clear();
     	for (Experiment exp : experiments) {
     		if (exp.getId() == null) {
-    			throw new WebcghSystemException("Experiment ID is null");
+    			throw new WebGenomeSystemException("Experiment ID is null");
     		}
     		String key = PageContext.EXPERIMENT_ID_PREFIX + exp.getId();
     		this.values.put(key, CHECKED);
@@ -232,7 +232,7 @@ public class SelectedExperimentsForm extends BaseForm {
 			try {
 				cart = PageContext.getShoppingCart(request);
 			} catch (SessionTimeoutException e) {
-				throw new WebcghSystemException(
+				throw new WebGenomeSystemException(
 						"Unable to obtain shopping cart", e);
 			}
 			Collection<Experiment> exps = cart.getExperiments(

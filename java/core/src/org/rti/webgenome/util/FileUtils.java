@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Class containing utility methods for manipulating
@@ -133,7 +133,7 @@ public final class FileUtils {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
         URL url = loader.getResource(absoluteName);
         if (url == null) {
-        	throw new WebcghSystemException("Cannot find file '"
+        	throw new WebGenomeSystemException("Cannot find file '"
         			+ fileName + "' in directory '" + directoryPath
         			+ "'");
         }
@@ -141,7 +141,7 @@ public final class FileUtils {
         try {
             file = new File(url.toURI());
         } catch (URISyntaxException e) {
-            throw new WebcghSystemException("Error finding file '"
+            throw new WebGenomeSystemException("Error finding file '"
             		+ absoluteName + "'");
         }
         return file;

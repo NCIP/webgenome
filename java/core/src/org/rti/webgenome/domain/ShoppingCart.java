@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -364,7 +364,7 @@ public class ShoppingCart implements Serializable {
     			}
     		}
     		if (exp == null) {
-    			throw new WebcghSystemException("Experiment '"
+    			throw new WebGenomeSystemException("Experiment '"
     					+ id + "' not in shopping cart");
     		}
     		experiments.add(exp);

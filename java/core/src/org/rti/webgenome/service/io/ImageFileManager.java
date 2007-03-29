@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,7 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -260,7 +260,7 @@ public class ImageFileManager implements Serializable {
 		try {
 			ImageIO.write(img, IMAGE_TYPE, file);
 		} catch (IOException e) {
-			throw new WebcghSystemException("Error writing image to file", e);
+			throw new WebGenomeSystemException("Error writing image to file", e);
 		}
 		return fileName;
 	}

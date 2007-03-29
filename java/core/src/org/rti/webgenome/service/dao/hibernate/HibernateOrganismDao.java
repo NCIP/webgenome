@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -141,7 +141,7 @@ public final class HibernateOrganismDao extends HibernateDaoSupport
         if (results != null && results.size() > 0) {
             org = (Organism) results.get(0);
         } else {
-            throw new WebcghSystemException(
+            throw new WebGenomeSystemException(
                     "Default organism not loaded in database");
         }
         return org;

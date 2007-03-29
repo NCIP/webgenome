@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ejb.EJBHome;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -90,7 +90,7 @@ public class ServiceLocator {
 		try {
 			this.initialContext = new InitialContext();
 		} catch (NamingException e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error getting initial context", e);
 		}
 	}

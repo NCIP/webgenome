@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:38 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Utility methods for JDBC.
@@ -86,7 +86,7 @@ public final class JdbcUtils {
 				stmt.close();
 			}
 		} catch (SQLException e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error closing JDBC result set and statement", e);
 		}
 	}

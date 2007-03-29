@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.core.PlotType;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.AnnotationType;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.GenomeIntervalFormatException;
@@ -1320,7 +1320,7 @@ public class PlotParametersForm extends BaseForm {
 			params.setGenomeIntervals(GenomeInterval.decode(
 					this.genomeIntervals));
 		} catch (GenomeIntervalFormatException e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error extracting plot parameters", e);
 		}
 		params.setUnits(BpUnits.getUnits(this.units));

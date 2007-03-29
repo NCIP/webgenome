@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/junit/org/rti/webgenome/util/UnitTestUtils.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,7 @@ package org.rti.webgenome.util;
 import java.io.File;
 import java.util.Properties;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.SystemUtils;
 
 
@@ -111,7 +111,7 @@ public final class UnitTestUtils {
 	    Properties props = SystemUtils.loadProperties(
 	            UNIT_TEST_PROPS_FILE );
 	    if (props == null) {
-	        throw new WebcghSystemException(
+	        throw new WebGenomeSystemException(
 	                "Cannot find 'unit_test.properties' file");
 	    }
 	    return props.getProperty(key);

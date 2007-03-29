@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.IOUtils;
 
 
@@ -158,7 +158,7 @@ public class UploadManager {
 			}
 			out.flush();
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error uploading file", e);
+			throw new WebGenomeSystemException("Error uploading file", e);
 		} finally {
 			IOUtils.close(out);
 		}
@@ -176,7 +176,7 @@ public class UploadManager {
 			this.workingDir.getAbsolutePath() + File.separator + fileName;
 		File file = new File(path);
 		if (!file.exists() || !file.isFile()) {
-			throw new WebcghSystemException("File '" + path + "' not valid");
+			throw new WebGenomeSystemException("File '" + path + "' not valid");
 		}
 		if (!file.delete()) {
 			LOGGER.warn("Unable to delete uploaded file '" + path + "'");

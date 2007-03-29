@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/service/analysis/RegressionService.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.rosuda.JRclient.RList;
 import org.rosuda.JRclient.RSrvException;
 import org.rosuda.JRclient.Rconnection;
 import org.rti.webgenome.analysis.AcghData;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.SystemUtils;
 
 
@@ -113,7 +113,7 @@ public class RegressionService {
             this.rservePort = rServeInteger.intValue() ;
         }
         catch ( NumberFormatException e ) {
-            throw new WebcghSystemException(
+            throw new WebGenomeSystemException(
                     "Error obtaining RServ Port Number from application properties file.", e);
         }
     }
@@ -187,7 +187,7 @@ public class RegressionService {
 			c.eval("regDataSet <- data.frame(kb, log2TR)");
 			
 		} catch (RSrvException e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error setting up RServe for aCGH run", e);
 		}
 		return c;

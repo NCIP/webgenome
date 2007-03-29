@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.analysis.AnalyticPipeline;
 import org.rti.webgenome.analysis.Averager;
 import org.rti.webgenome.analysis.SlidingWindowSmoother;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ExperimentGenerator;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
@@ -104,7 +104,7 @@ public final class SerializeDataTransformerTester extends TestCase {
 		String tempDirParent =
 			UnitTestUtils.getUnitTestProperty("temp.dir");
 		if (tempDirParent == null) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Unit test property 'temp.dir' must be set");
 		}
 		TEMP_DIR_PATH = tempDirParent + "/" + TEMP_DIR_NAME;

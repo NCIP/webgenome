@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.MathUtils;
 
 /**
@@ -472,7 +472,7 @@ public class PlotBoundaries {
         
         // Move given data point to closest of these intersecting points
         if (points.size() < 1) {
-        	throw new WebcghSystemException("Unable to find intersection "
+        	throw new WebGenomeSystemException("Unable to find intersection "
         			+ "with a line that should intersect the plot");
         }
         double minCart = Double.MAX_VALUE;

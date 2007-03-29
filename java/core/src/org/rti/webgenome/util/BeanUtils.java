@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/BeanUtils.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,8 +62,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghRuntimeException;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeRuntimeException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -183,7 +183,7 @@ public class BeanUtils {
 					}
 				}
 			} catch (Exception e) {
-				throw new WebcghRuntimeException("Error converting bean to XML", e);
+				throw new WebGenomeRuntimeException("Error converting bean to XML", e);
 			}
 		}
 		
@@ -241,7 +241,7 @@ public class BeanUtils {
 			}
 			
 		} catch (Exception e) {
-			throw new WebcghRuntimeException("Error converting XML to bean", e);
+			throw new WebGenomeRuntimeException("Error converting XML to bean", e);
 		}
 		
 		return obj;
@@ -312,7 +312,7 @@ public class BeanUtils {
 				}
 			}
 		} catch (Exception e) {
-			throw new WebcghRuntimeException("Error setting object property", e);
+			throw new WebGenomeRuntimeException("Error setting object property", e);
 		}
 	}
 	/**
@@ -347,7 +347,7 @@ public class BeanUtils {
 				}
 			}
 		} catch (Exception e) {
-			throw new WebcghRuntimeException("Error setting object property", e);
+			throw new WebGenomeRuntimeException("Error setting object property", e);
 		}
 	}
 	
@@ -409,7 +409,7 @@ public class BeanUtils {
 					try {
 						value = method.invoke(object, new Object[0]);
 					} catch (Exception e) {
-						throw new WebcghSystemException("Error getting property value", e);
+						throw new WebGenomeSystemException("Error getting property value", e);
 					}
 					props.put(propertyName, value);
 				}

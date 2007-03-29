@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.AnnotationType;
 import org.rti.webgenome.domain.ChromosomeArrayData;
@@ -505,7 +505,7 @@ implements MultiExperimentStatelessOperation {
     	} else if (qtype == QuantitationType.LOH) {
     		num = 1;
     	} else {
-    		throw new WebcghSystemException(
+    		throw new WebGenomeSystemException(
     				"minimum common alteration operation "
     				+ "not configured for quantitation type '"
     				+ qtype + "'");

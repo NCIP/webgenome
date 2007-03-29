@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.UserConfigurableProperty;
-import org.rti.webgenome.core.WebcghApplicationException;
+import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.QuantitationType;
@@ -92,7 +92,7 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
 		Long plotId = Long.parseLong(request.getParameter("id"));
 		Plot plot = cart.getPlot(plotId);
 		if (plot == null) {
-			throw new WebcghApplicationException(
+			throw new WebGenomeApplicationException(
 					"Unable to retrieve plot from shopping cart");
 		}
 		Collection<Long> expIds = plot.getExperimentIds();
@@ -104,7 +104,7 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
 		for (Long expId : expIds) {
 			Experiment exp = cart.getExperiment(expId);
 			if (exp == null) {
-				throw new WebcghApplicationException(
+				throw new WebGenomeApplicationException(
 						"Some experiments no longer in shopping cart");
 			}
 			if (exp.isDerived()) {

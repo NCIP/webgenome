@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.analysis.UserConfigurableProperty;
-import org.rti.webgenome.core.WebcghApplicationException;
+import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.webui.struts.BaseAction;
@@ -92,7 +92,7 @@ public class ReRunAnalyticOperationSetupAction extends BaseAction {
 		ShoppingCart cart = PageContext.getShoppingCart(request);
 		Experiment exp = cart.getExperiment(expId);
 		if (exp == null) {
-			throw new WebcghApplicationException(
+			throw new WebGenomeApplicationException(
 					"Experiment no longer in shopping cart");
 		}
 		

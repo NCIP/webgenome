@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import org.rti.webgenome.util.SystemUtils;
 /**
  * Thrown when user input invalid.
  */
-public class UserInputException extends WebcghApplicationException {
+public class UserInputException extends WebGenomeApplicationException {
     
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:35 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.BioAssayMgr;
 import org.rti.webgenome.client.BioAssayMgrHome;
 import org.rti.webgenome.client.ExperimentDTO;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.service.util.ServiceLocator;
 
@@ -132,7 +132,7 @@ public final class BioAssayMgrEjbClientDataService
 				this.serviceLocator.getLocalHome(this.jndiName, this.jndiProviderURL);
 			this.bioAssayMgr = home.create();
 		} catch (Exception e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
                     "Error accessing client EJB using JNDI Name [" + jndiName + "] JNDI Provider URL [" + 
                     jndiProviderURL + "].", e);
 		}
@@ -210,7 +210,7 @@ public final class BioAssayMgrEjbClientDataService
         	try {
 				Thread.sleep(THREAD_POLLING_WAIT_COUNT_MSEC);
 			} catch (InterruptedException e) {
-				throw new WebcghSystemException(e);
+				throw new WebGenomeSystemException(e);
 			}
         }
         LOGGER.debug ( "All Query Threads are finished" ) ;

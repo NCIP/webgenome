@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.rti.webgenome.client.BioAssayDataConstraints;
-import org.rti.webgenome.core.WebcghApplicationException;
+import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.units.BpUnits;
 
 
@@ -307,14 +307,14 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	 * to query client applications for data.
 	 * @param units Base pair units
 	 * @return Bioassay data constraints.
-	 * @throws WebcghApplicationException If endpoints of this
+	 * @throws WebGenomeApplicationException If endpoints of this
 	 * interval are not defined.
 	 */
 	public final BioAssayDataConstraints getBioAssayDataConstraints(
 			final BpUnits units)
-	throws WebcghApplicationException {
+	throws WebGenomeApplicationException {
 		if (this.startLocation < 0 || this.endLocation < 0) {
-			throw new WebcghApplicationException(
+			throw new WebGenomeApplicationException(
 					"Endpoints of genome interval must be specified");
 		}
 		BioAssayDataConstraints c = new BioAssayDataConstraints();
@@ -344,14 +344,14 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	 * @param units Base pair units
 	 * @param qType Quantitation type
 	 * @return Bioassay data constraints
-	 * @throws WebcghApplicationException If any of the bioassay data
+	 * @throws WebGenomeApplicationException If any of the bioassay data
 	 * constraints does not have defined endpoints.
 	 */
 	public static final BioAssayDataConstraints[] getBioAssayDataConstraints(
 			final Collection<GenomeInterval> genomeIntervals,
 			final BpUnits units,
 			final QuantitationType qType)
-	throws WebcghApplicationException {
+	throws WebGenomeApplicationException {
 		BioAssayDataConstraints[] c =
 			new BioAssayDataConstraints[genomeIntervals.size()];
 		int i = 0;

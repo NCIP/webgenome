@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.authentication;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.SystemUtils;
 
 /**
@@ -75,7 +75,7 @@ public final class AdminAuthenticator implements Authenticator {
 	    String adminPassword = SystemUtils.getApplicationProperty(
 	    		"sysadmin.password");
 	    if (adminPassword == null) {
-	        throw new WebcghSystemException("Property 'sysadmin.password' "
+	        throw new WebGenomeSystemException("Property 'sysadmin.password' "
 	        		+ "not set in 'webgenome.properties' file");
 	    }
 	    if (!adminPassword.equals(password)) {

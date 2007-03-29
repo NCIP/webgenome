@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webgenome.analysis.UserConfigurableProperty;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.ExperimentDTO;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.StringUtils;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -182,7 +182,7 @@ public class Experiment implements Serializable {
 					op.setProperty(prop.getName(), prop.getCurrentValue());
 				}
 			} catch (Exception e) {
-				throw new WebcghSystemException(
+				throw new WebGenomeSystemException(
 						"Error reconstituting analytic operation '"
 						+ this.analyticOperationClassName + "'", e);
 			}
@@ -521,7 +521,7 @@ public class Experiment implements Serializable {
     				this.add(new DataContainingBioAssay(dto));
     			} else {
     				if (!(ba instanceof DataContainingBioAssay)) {
-        				throw new WebcghSystemException(
+        				throw new WebGenomeSystemException(
         						"Cannot add BioAssayDTO data to a "
         						+ "non-DataContainingBioAssay object");
         			}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.client.BioAssayDataConstraints;
-import org.rti.webgenome.core.WebcghApplicationException;
+import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
@@ -179,7 +179,7 @@ public final class ImportAction extends Action {
 	    		numBioAssays += exp.getBioAssays().size();
 	    	}
 	    	if (numBioAssays < 1) {
-	    		throw new WebcghApplicationException("No bioassays found");
+	    		throw new WebGenomeApplicationException("No bioassays found");
 	    	}
     	} catch (Exception e) {
     		ActionErrors errors = new ActionErrors();

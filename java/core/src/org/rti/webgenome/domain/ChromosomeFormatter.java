@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Handles 2-way translation between chromosome numbers
@@ -85,7 +85,7 @@ public final class ChromosomeFormatter {
 			try {
 				num = Short.parseShort(chromosomeText);
 			} catch (NumberFormatException e) {
-				throw new WebcghSystemException("Unrecognized chromosome: '"
+				throw new WebGenomeSystemException("Unrecognized chromosome: '"
 						+ chromosomeText + "'");
 			}
 		}

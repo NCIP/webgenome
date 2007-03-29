@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,7 @@ package org.rti.webgenome.analysis;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Factory for <code>AnalyticOperation</code> objects.
@@ -107,14 +107,14 @@ public class AnalyticOperationFactory {
 	public final AnalyticOperation newAnalyticOperation(final String key) {
 		Class c = this.operationIndex.get(key);
 		if (c == null) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Analytic operation with key '" + key + "' not found");
 		}
 		AnalyticOperation op = null;
 		try {
 			op = (AnalyticOperation) c.newInstance();
 		} catch (Exception e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error instantiating analytic operation", e);
 		}
 		return op;

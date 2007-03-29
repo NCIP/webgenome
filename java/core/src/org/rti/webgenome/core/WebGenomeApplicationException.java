@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,25 +48,23 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 package org.rti.webgenome.core;
 
 import org.rti.webgenome.util.SystemUtils;
 
 /**
- * Thrown when user tries to perform an action for which they
- * lack sufficient credentials.
+ * Exceptions thrown when an business rule has been violated.
  */
-public class WebcghSecurityException extends WebcghApplicationException {
+public class WebGenomeApplicationException extends WebGenomeException {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
-    
+
 	/**
 	 * Constructor.
 	 */
-	public WebcghSecurityException() {
+	public WebGenomeApplicationException() {
 		super();
 	}
 	
@@ -74,7 +72,7 @@ public class WebcghSecurityException extends WebcghApplicationException {
 	 * Constructor.
 	 * @param msg Message
 	 */
-	public WebcghSecurityException(final String msg) {
+	public WebGenomeApplicationException(final String msg) {
 		super(msg);
 	}
 	
@@ -82,7 +80,7 @@ public class WebcghSecurityException extends WebcghApplicationException {
 	 * Constructor.
 	 * @param origThrowable Original throwable
 	 */
-	public WebcghSecurityException(final Throwable origThrowable) {
+	public WebGenomeApplicationException(final Throwable origThrowable) {
 		super(origThrowable);
 	}
 
@@ -91,7 +89,7 @@ public class WebcghSecurityException extends WebcghApplicationException {
 	 * @param msg Message
 	 * @param origThrowable Original throwable
 	 */
-	public WebcghSecurityException(final String msg,
+	public WebGenomeApplicationException(final String msg,
 			final Throwable origThrowable) {
 		super(msg, origThrowable);
 	}

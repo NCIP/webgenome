@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,7 +71,7 @@ import org.rti.webgenome.analysis.SingleExperimentStatelessOperation;
 import org.rti.webgenome.analysis.StatefulOperation;
 import org.rti.webgenome.analysis.StatelessOperation;
 import org.rti.webgenome.analysis.UserConfigurableProperty;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.DataContainingBioAssay;
@@ -241,7 +241,7 @@ public abstract class DataTransformer {
             this.performSingleExperimentStatelessOperation(input, output,
                     (SingleExperimentStatelessOperation) operation);
         } else {
-        	throw new WebcghSystemException(
+        	throw new WebGenomeSystemException(
         			"Unknown stateless operation '"
         			+ operation.getClass().getName() + "'");
         }
@@ -269,7 +269,7 @@ public abstract class DataTransformer {
     				output,
     				(IntraExperimentStatefulOperation) operation);
     	} else {
-    		throw new WebcghSystemException(
+    		throw new WebGenomeSystemException(
         			"Unknown stateful operation '"
         			+ operation.getClass().getName() + "'");
     	}

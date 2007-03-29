@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.IOUtils;
 
 /**
@@ -130,7 +130,7 @@ public final class FileSerializer implements Serializer {
 			out = new ObjectOutputStream(new FileOutputStream(path));
 			out.writeObject(serializable);
 		} catch (Exception e) {
-			throw new WebcghSystemException("Error serializing object", e);
+			throw new WebGenomeSystemException("Error serializing object", e);
 		} finally {
 			IOUtils.close(out);
 		}
@@ -147,7 +147,7 @@ public final class FileSerializer implements Serializer {
 		String path = this.getAbsolutePath(fileName);
 		File file = new File(path);
 		if (!file.exists()) {
-			throw new WebcghSystemException("Cannot find file '"
+			throw new WebGenomeSystemException("Cannot find file '"
                     + file + "'");
         }
 		Serializable serializable = null;
@@ -156,7 +156,7 @@ public final class FileSerializer implements Serializer {
 			in = new ObjectInputStream(new FileInputStream(file));
 			serializable = (Serializable) in.readObject();
 		} catch (Exception e) {
-			throw new WebcghSystemException(
+			throw new WebGenomeSystemException(
 					"Error de-serializing object from file '"
                     + fileName + "'", e);
 		} finally {

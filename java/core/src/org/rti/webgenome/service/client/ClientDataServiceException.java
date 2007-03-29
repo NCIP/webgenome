@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:35 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.client;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.util.SystemUtils;
 
 /**
@@ -59,7 +59,7 @@ import org.rti.webgenome.util.SystemUtils;
  * @author dhall
  *
  */
-public class ClientDataServiceException extends WebcghSystemException {
+public class ClientDataServiceException extends WebGenomeSystemException {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 

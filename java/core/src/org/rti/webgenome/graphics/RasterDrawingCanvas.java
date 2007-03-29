@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.graphics.event.GraphicEvent;
 import org.rti.webgenome.graphics.primitive.Arc;
 import org.rti.webgenome.graphics.primitive.Circle;
@@ -452,7 +452,7 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
             	try {
 					graphics.transform(transform.createInverse());
 				} catch (NoninvertibleTransformException e) {
-					throw new WebcghSystemException(
+					throw new WebGenomeSystemException(
 							"Error reversing affine transform", e);
 				}
             }

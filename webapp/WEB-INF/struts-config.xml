@@ -71,21 +71,14 @@
     	scope="request"/>
 
     <exception
-    	type="org.rti.webgenome.core.WebcghSecurityException"
-    	path="security.exception.page"
-    	key="security.exception"
-    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
-    	scope="request"/>
-
-    <exception
-    	type="org.rti.webgenome.core.WebcghSystemException"
+    	type="org.rti.webgenome.core.WebGenomeSystemException"
     	path="system.exception.page"
     	key="system.exception"
     	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
     	scope="request"/>
 
     <exception
-    	type="org.rti.webgenome.core.WebcghApplicationException"
+    	type="org.rti.webgenome.core.WebGenomeApplicationException"
     	path="application.exception.page"
     	key="application.exception"
     	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"

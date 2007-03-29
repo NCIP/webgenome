@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/util/AnalyticOperationUIHelper.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ package org.rti.webgenome.webui.util;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Helps in the user interface display of analytic operations
@@ -134,7 +134,7 @@ public class AnalyticOperationUIHelper {
             try {
                 currKlass = Class.forName(prop.getClassName());
             } catch (ClassNotFoundException e) {
-                throw new WebcghSystemException("Class '" + prop.getClassName() + "' not found", e);
+                throw new WebGenomeSystemException("Class '" + prop.getClassName() + "' not found", e);
             }
             if (klass.isAssignableFrom(currKlass))
                 propsCol.add(prop);

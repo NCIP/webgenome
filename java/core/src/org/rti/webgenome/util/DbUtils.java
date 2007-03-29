@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/DbUtils.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.rti.webgenome.core.WebcghRuntimeException;
+import org.rti.webgenome.core.WebGenomeRuntimeException;
 
 /**
  * Database utilities
@@ -74,7 +74,7 @@ public class DbUtils {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				throw new WebcghRuntimeException("Error closing database connection", e);
+				throw new WebGenomeRuntimeException("Error closing database connection", e);
 			}
 	}
 	
@@ -88,7 +88,7 @@ public class DbUtils {
 			try {
 				rset.close();
 			} catch (SQLException e) {
-				throw new WebcghRuntimeException("Error closing result set", e);
+				throw new WebGenomeRuntimeException("Error closing result set", e);
 			}
 	}
 	
@@ -103,7 +103,7 @@ public class DbUtils {
             	if (! con.isClosed())
             		con.close();
             } catch (SQLException e) {
-                throw new WebcghRuntimeException("Error closing database connection");
+                throw new WebGenomeRuntimeException("Error closing database connection");
             }
 	}
 	

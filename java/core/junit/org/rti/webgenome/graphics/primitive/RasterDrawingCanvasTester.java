@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-03-29 18:02:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
 
-import org.rti.webgenome.core.WebcghSystemException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.graphics.DrawingCanvas;
 import org.rti.webgenome.graphics.RasterDrawingCanvas;
 import org.rti.webgenome.graphics.io.GraphicFileUtils;
@@ -103,7 +103,7 @@ public final class RasterDrawingCanvasTester extends TestCase {
     public RasterDrawingCanvasTester() {
         String testDirPath = UnitTestUtils.getUnitTestProperty("temp.dir");
         if (testDirPath == null) {
-            throw new WebcghSystemException("Property 'temp.dir' missing from "
+            throw new WebGenomeSystemException("Property 'temp.dir' missing from "
                     + "'unit_test.properties' file");
         }
         String dirPath = testDirPath + "/" + TEST_DIR_NAME;

@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Date: 2007-03-29 18:02:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,95 +51,48 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.core;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
 import org.rti.webgenome.util.SystemUtils;
 
 /**
- * Base class for all unchecked exceptions.
+ * Represents failure of a system that webCGH depends on.
  */
-public class WebcghRuntimeException extends RuntimeException {
+public class WebGenomeSystemException extends WebGenomeRuntimeException {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
+
+	/**
+	 * Constructor.
+	 */
+	public WebGenomeSystemException() {
+		super();
+	}
 	
-	/** Divider between chained error messages. */
-	private static final String DIVIDER = "\n\n***** Nested throwable:\n\n";
-
-	/** Nested throwable. */
-	private Throwable nestedThrowable = null;
-
-
 	/**
-	 *  Constructor.
+	 * Constructor.
+	 * @param msg Message
 	 */
-	public WebcghRuntimeException() {
-		super();
+	public WebGenomeSystemException(final String msg) {
+		super(msg);
+	}
+	
+	/**
+	 * Constructor.
+	 * @param origThrowable Original throwable
+	 */
+	public WebGenomeSystemException(final Throwable origThrowable) {
+		super(origThrowable);
 	}
 
 	/**
 	 * Constructor.
-	 * @param message Message
+	 * @param msg Message
+	 * @param origThrowable Original throwable
 	 */
-	public WebcghRuntimeException(final String message) {
-		super(message);
-	}
-
-	/**
-	 * Constructor.
-	 * @param message Message
-	 * @param throwable Original throwable
-	 */
-	public WebcghRuntimeException(final String message,
-			final Throwable throwable) {
-		super(message);
-		nestedThrowable = throwable;
-	}
-
-	/**
-	 * Constructor.
-	 * @param throwable Original throwable
-	 */
-	public WebcghRuntimeException(final Throwable throwable) {
-		super();
-		nestedThrowable = throwable;
-	}
-
-	/**
-	 * Print stack trace.
-	 */
-	public final void printStackTrace() {
-		super.printStackTrace();
-		if (nestedThrowable != null) {
-			System.err.println(DIVIDER);
-		    nestedThrowable.printStackTrace();
-		}
-	}
-
-	/**
-	 * Print stack trace.
-	 * @param out Stream
-	 */
-	public final void printStackTrace(final PrintStream out) {
-		super.printStackTrace(out);
-		if (nestedThrowable != null) {
-			out.print(DIVIDER);
-			nestedThrowable.printStackTrace(out);
-		}
-	}
-
-	/**
-	 * Print stack trace.
-	 * @param out Stream
-	 */
-	public final void printStackTrace(final PrintWriter out) {
-		super.printStackTrace(out);
-		if (nestedThrowable != null) {
-			out.print(DIVIDER);
-			nestedThrowable.printStackTrace(out);
-		}
+	public WebGenomeSystemException(final String msg,
+			final Throwable origThrowable) {
+		super(msg, origThrowable);
 	}
 
 }
