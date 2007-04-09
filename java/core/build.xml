@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+
+<project name="webgenome-core" default="usage">
+	
+<!-- Description -->
+	<description>
+		This file builds the core WebGenome module
+		common to application server and analytic server
+		applications.  This file should not be invoked on its own through
+		ant, e.g., by calling ant in this directory.
+		Rather, it is intented to be invoked by a calling
+		build script, which passes in a number of required
+		properties.
+	</description>
+	
+	<!-- ======================================= -->
+	<!--        CONFIGURABLE PROPERTIES          -->
+	<!-- ======================================= -->
+	
+<!-- Directory that will contain compiled class files -->
+	<property name="core.classes.dir" location="${core.build.dir}/classes"/>
+	
+	<!-- Classpath for compiling sources -->
+	<path id="class.path">
+		<fileset dir="${lib.dir}" includes="*.*"/>
+	</path>
+	
+	<!-- ======================================= -->
+	<!--             TARGETS                     -->
+	<!-- ======================================= -->
+	
+<!-- Print usage statement -->
+	<target name="usage" description="Print usage statement">
+		<echo level="error" message="This build script is meant to be invoked from a parent script."/>
+		<echo level="error" message="It should not be invoked on its own."/>
+	</target>
+	<target name="help" depends="usage"/>
+	
+<!-- Setup -->
+	<target name="setup" description="Create build directories">
+		<echo level="info" message="Creating build directories"/>
+		<mkdir dir="${core.classes.dir}"/>
+	</target>
+	
+<!-- Compile sources -->
+	<target name="compile" depends="setup" description="Compile Java classes">
+		<echo level="info" message="Compiling sources"/>
+		<javac srcdir="${core.src.dir}" destdir="${core.classes.dir}"
+			classpathref="class.path" debug="false"/>
+	</target>
+	
+<!-- Build distributable JAR -->
+	<target name="dist" depends="compile"
+		description="Product distributable JAR file">
+		<echo level="info" message="Building distributable JAR"/>
+		<jar destfile="${build.lib.dir}/${core.jar.file.name}"
+			basedir="${core.classes.dir}"/>
+	</target>
+	
+</project>

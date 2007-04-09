@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,96 +49,29 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webgenome.service.authentication;
+package org.rti.webgenome.service.session;
 
-
-
-import gov.nih.nci.common.search.session.SecureSession;
 
 
 /**
- * Implementation of <code>UserProfile</code> interface for caArray.
- *
+ * Implementation of Authenticator interface that authenticates all users.
+ * This is used primarily for system testing and should not be used in
+ * production.
  */
-public final class CaArrayUserProfileImpl implements UserProfile {
+public final class PermissiveAuthenticator implements Authenticator {
 
-	/** Session. */
-	private SecureSession session = null;
-	
-	/** User name. */
-	private String name = "";
-	
-	/** Password. */
-	private String password = "";
 
 	/**
-	 * Default constructor.
+	 * Authenticate user.
+	 * @param loginName Login name
+	 * @param password Password
+	 * @return User profile
 	 */
-	public CaArrayUserProfileImpl() {
-		
-	}
-
-	
-	
-	/**
-	 * Constructor.
-	 * @param newSession A session
-	 * @param newName User Name
-	 * @param newPassword Password
-	 */
-	public CaArrayUserProfileImpl(final SecureSession newSession,
-			final String newName, final String newPassword) {
-		session = newSession;
-		name = newName;
-		password = newPassword;
-	}
-
-	/**
-	 * Get user name.
-	 * @return User name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Set user name.
-	 * @param newName the new User name
-	 */
-	public void setName(final String newName) {
-		name = newName;
-	}
-
-	/**
-	 * Get password.
-	 * @return password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * Set password.
-	 * @param newPassword the new password
-	 */
-	public void setPassword(final String newPassword) {
-		password = newPassword;
-	}
-
-	/**
-	 * Set session.
-	 * @param newSession New session
-	 */
-	public void setSession(final SecureSession newSession) {
-		session = newSession;
-	}
-
-	/**
-	 * Get session.
-	 * @return sesssion
-	 */
-	public SecureSession getSession() {
-		return session;
+	public UserProfile authenticate(final String loginName,
+			final String password) {
+		DefaultUserProfileImpl profile = new DefaultUserProfileImpl();
+		profile.setName(loginName);
+		return profile;
 	}
 
 }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,12 +64,12 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.Plot;
+import org.rti.webgenome.graphics.event.MouseOverStripe;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.units.Orientation;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.util.Attribute;
-import org.rti.webgenome.webui.util.ClickBoxes;
-import org.rti.webgenome.webui.util.MouseOverStripe;
-import org.rti.webgenome.webui.util.MouseOverStripes;
 
 /**
  * Print plot interactivity JavaScript elements.

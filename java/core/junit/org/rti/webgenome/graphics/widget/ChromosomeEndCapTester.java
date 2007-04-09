@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,6 @@ package org.rti.webgenome.graphics.widget;
 
 import java.awt.Color;
 
-import org.rti.webgenome.graphics.RasterFileTestPlotPanel;
 import org.rti.webgenome.graphics.widget.Background;
 import org.rti.webgenome.graphics.widget.ChromosomeEndCap;
 import org.rti.webgenome.graphics.widget.ChromosomeIdeogram;

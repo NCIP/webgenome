@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -84,7 +84,7 @@ public final class RasterDrawingCanvasTester extends TestCase {
     
     /** Directory where test output files will be written. */
     private static final File TEST_DIR =
-    	FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+    	UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME);
     
     /** Width in pixels of graphics generated during tests. */
     private static final int WIDTH = 500;

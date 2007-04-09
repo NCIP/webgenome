@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,7 @@ import org.rti.webgenome.graphics.primitive.Circle;
 import org.rti.webgenome.graphics.primitive.Rectangle;
 import org.rti.webgenome.graphics.primitive.Text;
 import org.rti.webgenome.units.HorizontalAlignment;
-import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 
@@ -80,7 +80,7 @@ public final class RasterTextTester extends TestCase {
 	
 	/** Directory where output test files will be written. */
 	private static final File TEST_DIR =
-		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME);
 	
 	/** Test string to render. */
 	private static final String TEST_STR = "Test_String";

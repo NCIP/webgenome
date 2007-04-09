@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,6 +77,7 @@ import org.rti.webgenome.service.client.ClientDataService;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.ImageFileManager;
+import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.SystemUtils;
@@ -85,7 +86,6 @@ import org.rti.webgenome.webui.struts.cart.PlotParametersForm;
 import org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm;
 import org.rti.webgenome.webui.util.ClientQueryParser;
 import org.rti.webgenome.webui.util.PageContext;
-import org.rti.webgenome.webui.util.SessionMode;
 
 /**
  * Action that is invoked when a user is initially directed

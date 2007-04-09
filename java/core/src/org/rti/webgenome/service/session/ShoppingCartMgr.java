@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,21 +48,23 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.authentication;
+package org.rti.webgenome.service.session;
 
+import org.rti.webgenome.domain.ShoppingCart;
 
 
 /**
- * Special user profile class representing administrator.
+ * Interface for managing shopping cart.
+ * @author dhall
+ *
  */
-public final class AdminUserProfile implements UserProfile {
+public interface ShoppingCartMgr {
     
-	/**
-	 * Get user name.
-	 * @return User name
-	 */
-	public String getName() {
-	    return "admin";
-	}
+    /**
+     * Get shopping cart associated with given user name.
+     * @param userName User name
+     * @return A shopping cart
+     */
+    ShoppingCart getShoppingCart(String userName);
 
 }

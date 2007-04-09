@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,8 +58,8 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ExperimentGenerator;
 import org.rti.webgenome.domain.GenomeInterval;
-import org.rti.webgenome.graphics.RasterFileTestPlotPanel;
 import org.rti.webgenome.graphics.widget.Caption;
+import org.rti.webgenome.graphics.widget.RasterFileTestPlotPanel;
 import org.rti.webgenome.service.plot.IdeogramPlotPainter;
 import org.rti.webgenome.service.plot.IdeogramPlotParameters;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
@@ -67,7 +67,7 @@ import org.rti.webgenome.units.ChromosomeIdeogramSize;
 import org.rti.webgenome.units.HorizontalAlignment;
 import org.rti.webgenome.units.Orientation;
 import org.rti.webgenome.units.VerticalAlignment;
-import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 
@@ -97,7 +97,7 @@ public final class IdeogramPlotPainterTester extends TestCase {
 	 * by the property 'temp.dir' in 'unit_test.properties.'
 	 */
 	private static final String TEMP_DIR_PATH =
-		FileUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
+		UnitTestUtils.createUnitTestDirectory(TEMP_DIR_NAME).getAbsolutePath();
 	
 	/** Number of bioassays to generate in tests. */
 	private static final int NUM_BIO_ASSAYS = 2;

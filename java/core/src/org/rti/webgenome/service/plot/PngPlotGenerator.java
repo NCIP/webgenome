@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,12 +57,12 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.graphics.RasterDrawingCanvas;
+import org.rti.webgenome.graphics.event.EventHandlerGraphicBoundaries;
 import org.rti.webgenome.graphics.widget.PlotPanel;
 import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webgenome.service.dao.CytologicalMapDao;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
-import org.rti.webgenome.webui.util.EventHandlerGraphicBoundaries;
 
 /**
  * Implementation of <code>PlotGenerator</code> that generates

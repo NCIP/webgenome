@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,27 +48,106 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.util;
+package org.rti.webgenome.graphics.event;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.rti.webgenome.graphics.io.ClickBoxes;
 
 /**
- * Mode of user session, which is either stand-alone
- * or plotting client.
+ * Constains graphic features that can be used to presentation
+ * tier code to create client-side event handling code.
  * @author dhall
  *
  */
-public enum SessionMode {
-	
-	/**
-	 * Indicates the user is using the system stand-alone.
-	 * In other words, they went directly to webGenome
-	 * and uploaded data.
-	 */
-	STAND_ALONE,
-	
-	/**
-	 * Indicates the users is using webGenome as a plotting
-	 * client for another application.
-	 */
-	CLIENT;
+public class EventHandlerGraphicBoundaries {
 
+	/** Mouseover stripes. */
+	private Collection<MouseOverStripes> mouseOverStripes =
+		new ArrayList<MouseOverStripes>();
+	
+	/** Click boxes. */
+	private Collection<ClickBoxes> clickBoxes = new ArrayList<ClickBoxes>();
+
+	/**
+	 * Get click boxes.
+	 * @return Click boxes.
+	 */
+	public final Collection<ClickBoxes> getClickBoxes() {
+		return clickBoxes;
+	}
+
+	/**
+	 * Set click boxes.
+	 * @param clickBoxes Click boxes.
+	 */
+	public final void setClickBoxes(
+			final Collection<ClickBoxes> clickBoxes) {
+		this.clickBoxes = clickBoxes;
+	}
+
+	/**
+	 * Get mouseover stripes.
+	 * @return Mouseover stripes.
+	 */
+	public final Collection<MouseOverStripes> getMouseOverStripes() {
+		return mouseOverStripes;
+	}
+
+	/**
+	 * Set mouseover stripes.
+	 * @param mouseOverStripes Mouseover stripes.
+	 */
+	public final void setMouseOverStripes(
+			final Collection<MouseOverStripes> mouseOverStripes) {
+		this.mouseOverStripes = mouseOverStripes;
+	}
+	
+	
+	/**
+	 * Constructor.
+	 */
+	public EventHandlerGraphicBoundaries() {
+		
+	}
+
+	/**
+	 * Constructor.
+	 * @param mouseOverStripes Mouseover stripes
+	 * @param clickBoxes Click boxes
+	 */
+	public EventHandlerGraphicBoundaries(
+			final Collection<MouseOverStripes> mouseOverStripes,
+			final Collection<ClickBoxes> clickBoxes) {
+		this.mouseOverStripes = mouseOverStripes;
+		this.clickBoxes = clickBoxes;
+	}
+	
+	
+	/**
+	 * Add mouseover stripes.
+	 * @param stripes Mouseover stripes.
+	 */
+	public final void add(final MouseOverStripes stripes) {
+		this.mouseOverStripes.add(stripes);
+	}
+	
+	
+	/**
+	 * Add mouseover stripes.
+	 * @param stripes Mouseover stripes
+	 */
+	public final void addAll(final Collection<MouseOverStripes> stripes) {
+		this.mouseOverStripes.addAll(stripes);
+	}
+	
+	
+	/**
+	 * Add click boxes.
+	 * @param clickBoxes Click boxes
+	 */
+	public final void add(final ClickBoxes clickBoxes) {
+		this.clickBoxes.add(clickBoxes);
+	}
 }

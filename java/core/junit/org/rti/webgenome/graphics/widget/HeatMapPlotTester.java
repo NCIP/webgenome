@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,14 +55,13 @@ import java.util.Collection;
 
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ExperimentGenerator;
-import org.rti.webgenome.graphics.RasterFileTestPlotPanel;
 import org.rti.webgenome.graphics.util.HeatMapColorFactory;
 import org.rti.webgenome.graphics.widget.HeatMapPlot;
 import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.plot.IdeogramPlotParameters;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
-import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 
@@ -115,7 +114,7 @@ public final class HeatMapPlotTester extends TestCase {
 		// Instantiate plot panel
 		RasterFileTestPlotPanel panel =
             new RasterFileTestPlotPanel(
-            		FileUtils.createUnitTestDirectory(TEST_DIR_NAME));
+            		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME));
 		
 		// Create experiments
 		ExperimentGenerator gen = new ExperimentGenerator(GAP);
@@ -155,7 +154,7 @@ public final class HeatMapPlotTester extends TestCase {
 	public void testPaintSerialized() {
 		
 		String testDirPath = 
-    		FileUtils.createUnitTestDirectory(TEST_DIR_NAME).getAbsolutePath();
+    		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME).getAbsolutePath();
 		
 		// Instantiate plot panel
 		RasterFileTestPlotPanel panel =

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,13 +66,13 @@ import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.Reporter;
-import org.rti.webgenome.graphics.RasterFileTestPlotPanel;
+import org.rti.webgenome.graphics.widget.RasterFileTestPlotPanel;
 import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webgenome.service.plot.AnnotationPlotPainter;
 import org.rti.webgenome.service.plot.AnnotationPlotParameters;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.units.BpUnits;
-import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 
@@ -98,7 +98,7 @@ public final class AnnotationPlotPainterTester extends TestCase {
 	
 	/** Directory that will hold test output files. */
 	private static final File TEST_DIR =
-		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME);
 	
 	/** Plot width in pixels. */
 	private static final int WIDTH = 500;

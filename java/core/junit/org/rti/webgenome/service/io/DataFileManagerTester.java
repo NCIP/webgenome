@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.io.SmdFormatException;
 import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 /**
  * Tester for <code>DataFileManager</code>.
@@ -120,7 +121,7 @@ public final class DataFileManagerTester extends TestCase {
         // Save data
         Organism org = new Organism();
         File testFile = FileUtils.getFile(TEST_DIRECTORY, fname);
-        File tempDir = FileUtils.createUnitTestDirectory(TEMP_DIR_NAME);
+        File tempDir = UnitTestUtils.createUnitTestDirectory(TEMP_DIR_NAME);
         DataFileManager mgr = new DataFileManager(tempDir.getAbsolutePath());
         Experiment exp = mgr.convertSmdData(testFile, org);
         

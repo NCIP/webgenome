@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,104 +48,40 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
+package org.rti.webgenome.service.session;
+
+import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.util.SystemUtils;
 
 /**
- * Constains graphic features that can be used to presentation
- * tier code to create client-side event handling code.
- * @author dhall
- *
+ * Authenticates system administrator.
  */
-public class EventHandlerGraphicBoundaries {
-
-	/** Mouseover stripes. */
-	private Collection<MouseOverStripes> mouseOverStripes =
-		new ArrayList<MouseOverStripes>();
-	
-	/** Click boxes. */
-	private Collection<ClickBoxes> clickBoxes = new ArrayList<ClickBoxes>();
-
+public final class AdminAuthenticator implements Authenticator {
+    
 	/**
-	 * Get click boxes.
-	 * @return Click boxes.
+	 * Authenticate user.
+	 * @param loginName Login name
+	 * @param password Password
+	 * @return User profile
+	 * @throws AuthenticationException if user cannot be authenticated
 	 */
-	public final Collection<ClickBoxes> getClickBoxes() {
-		return clickBoxes;
+	public UserProfile authenticate(
+			final String loginName, final String password)
+		throws AuthenticationException {
+	    if (password == null) {
+	        throw new IllegalArgumentException("Passwords cannot be null");
+	    }
+	    String adminPassword = SystemUtils.getApplicationProperty(
+	    		"sysadmin.password");
+	    if (adminPassword == null) {
+	        throw new WebGenomeSystemException("Property 'sysadmin.password' "
+	        		+ "not set in 'webgenome.properties' file");
+	    }
+	    if (!adminPassword.equals(password)) {
+	        return null;
+	    }
+	    return new AdminUserProfile();
 	}
 
-	/**
-	 * Set click boxes.
-	 * @param clickBoxes Click boxes.
-	 */
-	public final void setClickBoxes(
-			final Collection<ClickBoxes> clickBoxes) {
-		this.clickBoxes = clickBoxes;
-	}
-
-	/**
-	 * Get mouseover stripes.
-	 * @return Mouseover stripes.
-	 */
-	public final Collection<MouseOverStripes> getMouseOverStripes() {
-		return mouseOverStripes;
-	}
-
-	/**
-	 * Set mouseover stripes.
-	 * @param mouseOverStripes Mouseover stripes.
-	 */
-	public final void setMouseOverStripes(
-			final Collection<MouseOverStripes> mouseOverStripes) {
-		this.mouseOverStripes = mouseOverStripes;
-	}
-	
-	
-	/**
-	 * Constructor.
-	 */
-	public EventHandlerGraphicBoundaries() {
-		
-	}
-
-	/**
-	 * Constructor.
-	 * @param mouseOverStripes Mouseover stripes
-	 * @param clickBoxes Click boxes
-	 */
-	public EventHandlerGraphicBoundaries(
-			final Collection<MouseOverStripes> mouseOverStripes,
-			final Collection<ClickBoxes> clickBoxes) {
-		this.mouseOverStripes = mouseOverStripes;
-		this.clickBoxes = clickBoxes;
-	}
-	
-	
-	/**
-	 * Add mouseover stripes.
-	 * @param stripes Mouseover stripes.
-	 */
-	public final void add(final MouseOverStripes stripes) {
-		this.mouseOverStripes.add(stripes);
-	}
-	
-	
-	/**
-	 * Add mouseover stripes.
-	 * @param stripes Mouseover stripes
-	 */
-	public final void addAll(final Collection<MouseOverStripes> stripes) {
-		this.mouseOverStripes.addAll(stripes);
-	}
-	
-	
-	/**
-	 * Add click boxes.
-	 * @param clickBoxes Click boxes
-	 */
-	public final void add(final ClickBoxes clickBoxes) {
-		this.clickBoxes.add(clickBoxes);
-	}
 }

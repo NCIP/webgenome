@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,8 +51,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.mgr;
 
 import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.mgr.AccountAlreadyExistsException;
-import org.rti.webgenome.service.mgr.SecurityMgrImpl;
+import org.rti.webgenome.service.session.AccountAlreadyExistsException;
+import org.rti.webgenome.service.session.SecurityMgrImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

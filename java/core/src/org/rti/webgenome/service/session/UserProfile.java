@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,7 +49,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webgenome.service.authentication;
+package org.rti.webgenome.service.session;
 
 /**
  * Interface representing a registered system user.

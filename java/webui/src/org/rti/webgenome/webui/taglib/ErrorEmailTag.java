@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,12 +61,12 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.util.Email;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.Attribute;
 import org.rti.webgenome.webui.util.PageContext;
-import org.rti.webgenome.webui.util.SessionMode;
 
 /**
  * JSP Tag to control the sending of an Exception email to configured recipients

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.1 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,40 +48,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
-package org.rti.webgenome.service.authentication;
-
-import org.rti.webgenome.core.WebGenomeSystemException;
-import org.rti.webgenome.util.SystemUtils;
+package org.rti.webgenome.service.session;
 
 /**
- * Authenticates system administrator.
+ * Mode of user session, which is either stand-alone
+ * or plotting client.
+ * @author dhall
+ *
  */
-public final class AdminAuthenticator implements Authenticator {
-    
+public enum SessionMode {
+	
 	/**
-	 * Authenticate user.
-	 * @param loginName Login name
-	 * @param password Password
-	 * @return User profile
-	 * @throws AuthenticationException if user cannot be authenticated
+	 * Indicates the user is using the system stand-alone.
+	 * In other words, they went directly to webGenome
+	 * and uploaded data.
 	 */
-	public UserProfile authenticate(
-			final String loginName, final String password)
-		throws AuthenticationException {
-	    if (password == null) {
-	        throw new IllegalArgumentException("Passwords cannot be null");
-	    }
-	    String adminPassword = SystemUtils.getApplicationProperty(
-	    		"sysadmin.password");
-	    if (adminPassword == null) {
-	        throw new WebGenomeSystemException("Property 'sysadmin.password' "
-	        		+ "not set in 'webgenome.properties' file");
-	    }
-	    if (!adminPassword.equals(password)) {
-	        return null;
-	    }
-	    return new AdminUserProfile();
-	}
+	STAND_ALONE,
+	
+	/**
+	 * Indicates the users is using webGenome as a plotting
+	 * client for another application.
+	 */
+	CLIENT;
 
 }

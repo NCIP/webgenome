@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,9 +54,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.SessionTimeoutException;
-import org.rti.webgenome.webui.util.SessionMode;
 
 /**
  * Tag used to filter out page content that should

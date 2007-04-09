@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,12 +54,11 @@ import java.awt.Color;
 import java.io.File;
 import junit.framework.TestCase;
 
-import org.rti.webgenome.graphics.RasterFileTestPlotPanel;
 import org.rti.webgenome.graphics.widget.Background;
 import org.rti.webgenome.graphics.widget.PlotPanel;
 import org.rti.webgenome.units.HorizontalAlignment;
 import org.rti.webgenome.units.VerticalAlignment;
-import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 /**
  * Tester for <code>PlotPanel</code>.
@@ -78,7 +77,7 @@ public final class PlotPanelTester extends TestCase {
 	
 	/** Directory where test output files will be written. */
 	private static final File TEST_DIR =
-		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME);
 	
 	/** Width of test background widgets. */
 	private static final int WIDTH = 100;

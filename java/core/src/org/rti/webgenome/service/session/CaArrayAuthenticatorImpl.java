@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,23 +48,44 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.mgr;
 
-import org.rti.webgenome.domain.ShoppingCart;
+package org.rti.webgenome.service.session;
+
+
+import gov.nih.nci.common.search.session.SecureSession;
+import gov.nih.nci.common.search.session.SecureSessionFactory;
 
 
 /**
- * Interface for managing shopping cart.
- * @author dhall
- *
+ * Implements data access interface for array experiment data in caArray.
  */
-public interface ShoppingCartMgr {
-    
-    /**
-     * Get shopping cart associated with given user name.
-     * @param userName User name
-     * @return A shopping cart
-     */
-    ShoppingCart getShoppingCart(String userName);
+public final class CaArrayAuthenticatorImpl implements Authenticator {
 
+    
+    
+	/**
+	 * Authenticate user.
+	 * @param loginName Login name
+	 * @param password Password
+	 * @return User profile
+	 * @throws AuthenticationException if it fails to authenticate
+	 */
+	public UserProfile authenticate(final String loginName,
+			final String password)
+		throws AuthenticationException {
+		
+		
+		SecureSession sess = SecureSessionFactory.defaultSecureSession();
+		if (sess == null) {
+		  throw new AuthenticationException(
+				  "Could not create caArray session!");
+		}
+		  
+		CaArrayUserProfileImpl up = new CaArrayUserProfileImpl(sess,
+				loginName, password);
+		
+		return up;
+	}
+	
+	
 }

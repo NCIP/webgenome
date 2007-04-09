@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,10 +73,10 @@ import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
 import org.rti.webgenome.service.plot.PlotGenerator;
 import org.rti.webgenome.service.plot.PlotParameters;
+import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.util.StringUtils;
-import org.rti.webgenome.webui.util.SessionMode;
 
 
 /**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,10 +57,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.service.plot.PlotParameters;
 import org.rti.webgenome.util.SystemUtils;
-import org.rti.webgenome.webui.util.ClickBoxes;
-import org.rti.webgenome.webui.util.MouseOverStripes;
 
 /**
  * Represents a plot of data.  A plot is an

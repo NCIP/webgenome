@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,10 +60,10 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.mgr.SecurityMgr;
+import org.rti.webgenome.service.session.SecurityMgr;
+import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
-import org.rti.webgenome.webui.util.SessionMode;
 
 /**
  * Logs a user into the system.

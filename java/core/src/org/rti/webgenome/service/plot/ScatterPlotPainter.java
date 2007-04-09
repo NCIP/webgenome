@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,9 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.graphics.PlotBoundaries;
+import org.rti.webgenome.graphics.event.EventHandlerGraphicBoundaries;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.graphics.widget.Axis;
 import org.rti.webgenome.graphics.widget.Background;
 import org.rti.webgenome.graphics.widget.Caption;
@@ -72,9 +75,6 @@ import org.rti.webgenome.units.HorizontalAlignment;
 import org.rti.webgenome.units.Location;
 import org.rti.webgenome.units.Orientation;
 import org.rti.webgenome.units.VerticalAlignment;
-import org.rti.webgenome.webui.util.ClickBoxes;
-import org.rti.webgenome.webui.util.EventHandlerGraphicBoundaries;
-import org.rti.webgenome.webui.util.MouseOverStripes;
 
 /**
  * Manages the painting scatter plots by getting

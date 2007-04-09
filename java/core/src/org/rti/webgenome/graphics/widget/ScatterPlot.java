@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,14 +72,14 @@ import org.rti.webgenome.graphics.DataPoint;
 import org.rti.webgenome.graphics.DrawingCanvas;
 import org.rti.webgenome.graphics.InterpolationType;
 import org.rti.webgenome.graphics.PlotBoundaries;
+import org.rti.webgenome.graphics.event.MouseOverStripe;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.graphics.primitive.Circle;
 import org.rti.webgenome.graphics.primitive.Line;
 import org.rti.webgenome.graphics.util.PointListCompressor;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
 import org.rti.webgenome.units.Orientation;
-import org.rti.webgenome.webui.util.ClickBoxes;
-import org.rti.webgenome.webui.util.MouseOverStripe;
-import org.rti.webgenome.webui.util.MouseOverStripes;
 
 import flanagan.interpolation.CubicSpline;
 

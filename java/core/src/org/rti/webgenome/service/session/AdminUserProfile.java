@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,44 +48,21 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webgenome.service.session;
 
-package org.rti.webgenome.service.authentication;
-
-
-import gov.nih.nci.common.search.session.SecureSession;
-import gov.nih.nci.common.search.session.SecureSessionFactory;
 
 
 /**
- * Implements data access interface for array experiment data in caArray.
+ * Special user profile class representing administrator.
  */
-public final class CaArrayAuthenticatorImpl implements Authenticator {
-
-    
+public final class AdminUserProfile implements UserProfile {
     
 	/**
-	 * Authenticate user.
-	 * @param loginName Login name
-	 * @param password Password
-	 * @return User profile
-	 * @throws AuthenticationException if it fails to authenticate
+	 * Get user name.
+	 * @return User name
 	 */
-	public UserProfile authenticate(final String loginName,
-			final String password)
-		throws AuthenticationException {
-		
-		
-		SecureSession sess = SecureSessionFactory.defaultSecureSession();
-		if (sess == null) {
-		  throw new AuthenticationException(
-				  "Could not create caArray session!");
-		}
-		  
-		CaArrayUserProfileImpl up = new CaArrayUserProfileImpl(sess,
-				loginName, password);
-		
-		return up;
+	public String getName() {
+	    return "admin";
 	}
-	
-	
+
 }

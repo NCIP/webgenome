@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,9 +52,8 @@ package org.rti.webgenome.graphics.widget;
 
 import java.io.File;
 
-import org.rti.webgenome.graphics.RasterFileTestPlotPanel;
 import org.rti.webgenome.graphics.widget.ColorScale;
-import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 
@@ -86,7 +85,7 @@ public final class ColorScaleTester extends TestCase {
 	
 	/** Directory where test files will be written. */
 	private static final File TEST_DIR =
-		FileUtils.createUnitTestDirectory(TEST_DIR_NAME);
+		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME);
 	
 	
 	//

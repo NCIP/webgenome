@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.1 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,7 +48,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.graphics;
+package org.rti.webgenome.graphics.widget;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -59,6 +59,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.graphics.RasterDrawingCanvas;
 import org.rti.webgenome.graphics.widget.PlotPanel;
 import org.rti.webgenome.util.UnitTestUtils;
 

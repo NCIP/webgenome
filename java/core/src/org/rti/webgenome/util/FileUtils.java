@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -102,21 +102,6 @@ public final class FileUtils {
             }
         }
         return new File(path);
-    }
-    
-    
-    /**
-     * Creates a temp directory for unit tests.  The directory
-     * location is a subdirector with the given name
-     * off the main unit test temp directory specified
-     * by the property 'temp.dir' in the file 'unit_test.properties.'
-     * @param dirName Name of temp directory to create.
-     * @return Directory created.
-     */
-    public static File createUnitTestDirectory(final String dirName) {
-    	String parentPath = UnitTestUtils.getUnitTestProperty("temp.dir");
-    	String dirPath = parentPath + "/" + dirName;
-    	return createDirectory(dirPath);
     }
     
     

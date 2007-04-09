@@ -1,15 +1,13 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/java/core/junit/org/rti/webgenome/util/UnitTestUtils.java,v $
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-04-09 22:19:50 $
 
 The Web CGH Software License, Version 1.0
 
 Copyright 2003 RTI. This software was developed in conjunction with the
-National Cancer Institute, and so to the extent government employees 
-are co-authors, any rights in such works shall be subject to Title 17 
-of the United States Code, section 105.
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -41,23 +39,22 @@ trademarks owned by either NCI or RTI.
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
 FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
-NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
-(INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
+
+
 package org.rti.webgenome.util;
 
 import java.io.File;
 import java.util.Properties;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
-import org.rti.webgenome.util.SystemUtils;
 
 
 /**
@@ -109,12 +106,27 @@ public final class UnitTestUtils {
 	 */
 	public static String getUnitTestProperty(final String key) {
 	    Properties props = SystemUtils.loadProperties(
-	            UNIT_TEST_PROPS_FILE );
+	            UNIT_TEST_PROPS_FILE);
 	    if (props == null) {
 	        throw new WebGenomeSystemException(
 	                "Cannot find 'unit_test.properties' file");
 	    }
 	    return props.getProperty(key);
+	}
+
+
+	/**
+	 * Creates a temp directory for unit tests.  The directory
+	 * location is a subdirector with the given name
+	 * off the main unit test temp directory specified
+	 * by the property 'temp.dir' in the file 'unit_test.properties.'
+	 * @param dirName Name of temp directory to create.
+	 * @return Directory created.
+	 */
+	public static File createUnitTestDirectory(final String dirName) {
+		String parentPath = getUnitTestProperty("temp.dir");
+		String dirPath = parentPath + "/" + dirName;
+		return FileUtils.createDirectory(dirPath);
 	}
 
 }

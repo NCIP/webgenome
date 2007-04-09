@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.1 $
+$Date: 2007-04-09 22:19:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,52 +49,23 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 
-package org.rti.webgenome.service.authentication;
-
-import org.rti.webgenome.core.WebGenomeApplicationException;
-import org.rti.webgenome.util.SystemUtils;
+package org.rti.webgenome.service.session;
 
 
 /**
- * Exception thrown when clients try to obtain data they
- * are not entitled to access. 
+ * Authenticates user.
  */
-public class AuthenticationException extends WebGenomeApplicationException {
-	
-	/** Serialized version ID. */
-	private static final long serialVersionUID = 
-		SystemUtils.getLongApplicationProperty("serial.version.uid");
+public interface Authenticator {
 	
 	/**
-	 * Constructor.
+	 * Authenticate user.
+	 * @param loginName Login name
+	 * @param password Password
+	 * @return User profile
+	 * @throws AuthenticationException if user cannot be authenticated
 	 */
-	public AuthenticationException() {
-		super();
-	}
+	UserProfile authenticate(String loginName, String password)
+		throws AuthenticationException;
 	
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 */
-	public AuthenticationException(final String msg) {
-		super(msg);
-	}
-	
-	/**
-	 * Constructor.
-	 * @param origThrowable Original throwable
-	 */
-	public AuthenticationException(final Throwable origThrowable) {
-		super(origThrowable);
-	}
 
-	/**
-	 * Constructor.
-	 * @param msg Message
-	 * @param origThrowable Original throwable
-	 */
-	public AuthenticationException(final String msg,
-			final Throwable origThrowable) {
-		super(msg, origThrowable);
-	}
 }
