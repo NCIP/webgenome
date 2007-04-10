@@ -19,8 +19,9 @@
 	<!-- Home directory for core JAR product -->
 	<property name="core.home.dir" location="${src.parent.dir}/core"/>
 	
-	<!-- Source directory for core JAR product -->
-	<property name="core.src.dir" location="${core.home.dir}/src"/>
+	<!-- Directory containing configuration files to be copied into all
+	distributable components -->
+	<property name="config.dir" location="${src.parent.dir}/conf/src"/>
 	
 	<!-- Temporary directory used for building.  All
 	compiled class files, JAR files, etc. will be built

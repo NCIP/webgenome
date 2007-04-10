@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-04-10 22:32:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,7 +103,7 @@ extends TestCase {
 			new MinimumCommonAlteredRegionOperation();
 		op.setProperty("interpolate", "NO");
 		op.setProperty("threshold", "0.5");
-		op.setProperty("minPercent", "0.5");
+		op.setProperty("minPercent", "50");
 		op.setQuantitationType(QuantitationType.LOH);
 		
 		// Run test

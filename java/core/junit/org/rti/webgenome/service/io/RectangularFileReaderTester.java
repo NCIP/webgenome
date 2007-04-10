@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-04-10 22:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,6 @@ package org.rti.webgenome.service.io;
 import java.io.File;
 import java.util.List;
 
-import org.rti.webgenome.service.io.RectangularFileReader;
 import org.rti.webgenome.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -74,7 +73,7 @@ public final class RectangularFileReaderTester extends TestCase {
      * test files.
      */
     private static final String TEST_DIRECTORY =
-        "org/rti/webcgh/io/unit_test/rectangular_file_reader_test_files";
+        "org/rti/webgenome/service/io/rectangular_file_reader_test_files";
     
     /**
      * Test method getHeadings() on a CSV file.

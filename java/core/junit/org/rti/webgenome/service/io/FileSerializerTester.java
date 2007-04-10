@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-04-10 22:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.io;
 
-import org.rti.webgenome.service.io.FileSerializer;
 import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
@@ -71,7 +70,7 @@ public final class FileSerializerTester extends TestCase {
      */
 	public void setUp() {
         this.testDirName = UnitTestUtils.newTestDirectory(
-                "/file_serializer_tester");
+                "file_serializer_tester");
 		this.fs = new FileSerializer(this.testDirName);
 		this.fs.decommissionAllObjects();
 	}
@@ -98,24 +97,5 @@ public final class FileSerializerTester extends TestCase {
 		assertEquals(s1, s3);
 		s3 = (String) this.fs.deSerialize(oid2);
 		assertEquals(s2, s3);
-	}
-	
-    /**
-     * Test decomissioning.
-     *
-     */
-	public void testDecomission() {
-		String oid = this.fs.serialize("Hello");
-		assertEquals(0 + FileSerializer.FILE_EXTENSION, oid);
-		oid = this.fs.serialize("world!");
-		assertEquals("1" + FileSerializer.FILE_EXTENSION, oid);
-		this.fs.decommissionObject(oid);
-		FileSerializer fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again");
-		assertEquals(1 + FileSerializer.FILE_EXTENSION, oid);
-		fs2.decommissionAllObjects();
-		fs2 = new FileSerializer(this.testDirName);
-		oid = fs2.serialize("Hello again again");
-		assertEquals(0 + FileSerializer.FILE_EXTENSION, oid);
 	}
 }

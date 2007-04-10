@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/junit/org/rti/webgenome/analysis/RegressionAnalyticTester.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-04-10 22:32:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,7 @@ import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.service.analysis.RegressionService;
+import org.rti.webgenome.util.UnitTestUtils;
 
 import junit.framework.TestCase;
 
@@ -74,6 +75,24 @@ import junit.framework.TestCase;
  *
  */
 public final class RegressionAnalyticTester extends TestCase {
+	
+	/** RServe process required to run analytic operation. */
+	private Process rServeProcess = null;
+	
+	/**
+	 *  {@inheritDoc}
+	 */
+	public void setUp() throws Exception {
+		String rServePath = UnitTestUtils.getUnitTestProperty("rserve.path");
+		this.rServeProcess = Runtime.getRuntime().exec(rServePath);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void tearDown() {
+		this.rServeProcess.destroy();
+	}
     
 
     /**

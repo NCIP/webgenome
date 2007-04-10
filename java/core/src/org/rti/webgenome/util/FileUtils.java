@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.4 $
+$Date: 2007-04-10 22:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.util;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -115,7 +116,7 @@ public final class FileUtils {
     public static File getFile(final String directoryPath,
     		final String fileName) {
         String absoluteName = directoryPath + "/" + fileName;
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         URL url = loader.getResource(absoluteName);
         if (url == null) {
         	throw new WebGenomeSystemException("Cannot find file '"

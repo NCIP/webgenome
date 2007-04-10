@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-04-10 22:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,8 +58,6 @@ import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.service.io.DataFileManager;
-import org.rti.webgenome.service.io.SmdFormatException;
 import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.UnitTestUtils;
 
@@ -78,7 +76,7 @@ public final class DataFileManagerTester extends TestCase {
      * test files.
      */
     private static final String TEST_DIRECTORY =
-        "org/rti/webcgh/io/unit_test/data_file_manager_test_files";
+        "org/rti/webgenome/service/io/data_file_manager_test_files";
     
     
     /**
@@ -97,17 +95,7 @@ public final class DataFileManagerTester extends TestCase {
     public void testAllMethodsOnMediumLargeFile() throws Exception {
         this.runAllMethods("medium-large-smd.csv");
     }
-    
-    
-    /**
-     * Test all methods on large file.
-     * @throws Exception if there is any problem
-     */
-    public void testAllMethodsOnLargeFile() throws Exception {
-        this.runAllMethods("large-smd.csv");
-    }
-    
-    
+        
     
     /**
      * Run all methods on given file.

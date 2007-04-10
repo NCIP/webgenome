@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-04-10 22:32:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,6 @@ import java.util.List;
 
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssayData;
-import org.rti.webgenome.service.io.SmdFileReader;
 import org.rti.webgenome.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -72,7 +71,7 @@ public final class SmdFileReaderTester extends TestCase {
      * test files.
      */
     private static final String TEST_DIRECTORY =
-        "org/rti/webcgh/io/unit_test/smd_file_reader_test_files";
+        "org/rti/webgenome/service/io/smd_file_reader_test_files";
 
     
     /**

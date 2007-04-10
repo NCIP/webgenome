@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-04-10 22:32:42 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,6 +69,9 @@ public final class ExperimentGenerator {
 	/** Array datum generator. */
 	private ArrayDatumGenerator arrayDatumGenerator = null;
 	
+	/** Next bioassay ID. */
+	private long nextBioAssayId = 1;
+	
 	
 	// =========================
 	//     Constructors
@@ -117,6 +120,7 @@ public final class ExperimentGenerator {
 		Array array = new Array();
 		for (int i = 0; i < numBioAssays; i++) {
 			DataContainingBioAssay ba = new DataContainingBioAssay();
+			ba.setId(this.nextBioAssayId++);
 			exp.add(ba);
 			ba.setArray(array);
 			ba.setName("Bioassay " + i);
