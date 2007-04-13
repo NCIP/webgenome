@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-04-13 02:52:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,8 +72,8 @@ public final class HibernateOrganismDaoTester extends TestCase {
      *
      */
     public HibernateOrganismDaoTester() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(
-            "org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
+    	ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
         this.dao = (OrganismDao) ctx.getBean("organismDao");
     }
     

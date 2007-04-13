@@ -13,6 +13,14 @@
 <!--     Configurable properties       -->
 <!-- ================================= -->
 	
+	<!-- Import properties from 'build.properties' -->
+	<property file="build.properties"/>
+	
+	<!-- Directory containing third party JARs -->
+	<property name="lib.dir" location="webapp/WEB-INF/lib"/>
+	
+	<!-- ========== SOURCE DIRECTORIES ============ -->
+	
 	<!-- Parent of all source directories -->
 	<property name="src.parent.dir" location="java"/>
 	
@@ -23,6 +31,8 @@
 	distributable components -->
 	<property name="config.dir" location="${src.parent.dir}/conf/src"/>
 	
+	<!-- =========== BUILD DIRECTORIES ============ -->
+	
 	<!-- Temporary directory used for building.  All
 	compiled class files, JAR files, etc. will be built
 	in sub directories of this directory. -->
@@ -31,18 +41,14 @@
 	<!-- Directory containing all files created during build of core JAR -->
 	<property name="core.build.dir" location="${build.dir}/core"/>
 	
-	<!-- Directory that will contain the distributable
-	software products -->
-	<property name="dist.dir" location="dist"/>
-	
-	<!-- Import properties from 'build.properties' -->
-	<property file="build.properties"/>
-	
 	<!-- Location where JAR files are built during build -->
 	<property name="build.lib.dir" location="${build.dir}/lib"/>
 	
-	<!-- Directory containing third party JARs -->
-	<property name="lib.dir" location="webapp/WEB-INF/lib"/>
+	<!-- ====== DISTRIBUTION FILES AND DIRECTORIES ====== -->
+	
+	<!-- Directory that will contain the distributable
+			software products -->
+	<property name="dist.dir" location="dist"/>
 	
 	<!-- Name (not path) of core JAR file -->
 	<property name="core.jar.file.name" value="webgenome-core.jar"/>

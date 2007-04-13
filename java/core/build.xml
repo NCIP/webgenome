@@ -34,10 +34,6 @@
 	<property name="core.junit.output.dir"
 		location="${core.build.dir}/junit-out"/>
 	
-	<!-- Directory that will contain formatted JUnit test output -->
-	<property name="core.junit.formatted.output.dir"
-		location="${core.build.dir}/junit-formatted-out"/>
-	
 	<!-- Classpath for compiling sources -->
 	<path id="class.path">
 		<fileset dir="${lib.dir}" includes="*.*"/>
@@ -64,6 +60,12 @@
 <!-- Setup -->
 	<target name="setup" description="Create and initialize build directories">
 		<echo level="info" message="Creating build directories"/>
+		<tstamp>
+			<format property="build.time" pattern="yyyy-MM-dd-'TIME'-HH'h'-mm'm'-ss's'"/>
+		</tstamp>
+		<property name="core.junit.formatted.output.dir"
+			value="${report.dir}/core/${build.time}"/>
+		<mkdir dir="${core.junit.formatted.output.dir}"/>
 		<mkdir dir="${core.classes.dir}"/>
 		<mkdir dir="${core.junit.classes.dir}"/>
 		<mkdir dir="${core.junit.output.dir}"/>
@@ -74,6 +76,7 @@
 				<include name="*.properties"/>
 				<include name="*.R"/>
 				<include name="*.policy"/>
+				<include name="**/*.xml"/>
 			</fileset>
 		</copy>
 		<copy todir="${core.junit.classes.dir}">
@@ -81,6 +84,7 @@
 			<fileset dir="${core.junit.src.dir}" includes="**/*.txt"/>
 			<fileset dir="${config.dir}"/>
 			<fileset dir="${core.junit.src.dir}" includes="**/*.properties"/>
+			<fileset dir="${core.junit.src.dir}" includes="**/*.xml"/>
 		</copy>
 	</target>
 	

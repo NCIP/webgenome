@@ -13,14 +13,6 @@
 		</id>
 	
 		<property name="name"/>
-		<many-to-one
-			name="shoppingCart"
-			column="shopping_cart_id"
-			class="org.rti.webgenome.domain.ShoppingCart"
-			not-null="true"
-			lazy="false"
-			insert="false" update="false"
-		/>
 		<set 
 		    name="bioAssays"
 		    cascade="all-delete-orphan"

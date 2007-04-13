@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.1 $
+$Date: 2007-04-13 02:52:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,7 +48,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.mgr;
+package org.rti.webgenome.service.session;
 
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.service.session.AccountAlreadyExistsException;
@@ -73,7 +73,7 @@ public final class SecurityMgrImplTester extends TestCase {
 		String name = "Name";
 		String password = "Password";
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        	"org/rti/webcgh/service/mgr/unit_test/beans.xml");
+        	"org/rti/webgenome/service/session/beans.xml");
 		SecurityMgrImpl sm = (SecurityMgrImpl) ctx.getBean("securityMgr");
 		Principal p1 = sm.newAccount(name, password);
 		assertNotNull(p1);

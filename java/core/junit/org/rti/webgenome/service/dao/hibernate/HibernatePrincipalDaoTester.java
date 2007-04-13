@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-04-13 02:52:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.dao.hibernate;
 
 import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.dao.hibernate.HibernatePrincipalDao;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -71,7 +70,7 @@ public final class HibernatePrincipalDaoTester extends TestCase {
 		String name = "Name";
 		String password = "Password";
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        	"org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
 		HibernatePrincipalDao dao = (HibernatePrincipalDao)
 			ctx.getBean("principalDao");
 		Principal p1 = new Principal(name, password);

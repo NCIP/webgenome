@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-10 22:32:42 $
+$Revision: 1.3 $
+$Date: 2007-04-13 02:52:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,28 +76,34 @@ public final class SimpleNormalizerTester extends TestCase {
     static {
                 
         // Chromosome 1
-        Reporter r = new Reporter(null, (short) 1, (long) 0);
         ChromosomeArrayData cad = new ChromosomeArrayData((short) 1);
         TEST_DATA.add(cad);
-        cad.add(new ArrayDatum((float) 1.0, r));
-        cad.add(new ArrayDatum((float) 2.0, r));
-        cad.add(new ArrayDatum((float) 3.0, r));
+        cad.add(new ArrayDatum((float) 1.0,
+        		new Reporter(null, (short) 1, (long) 0)));
+        cad.add(new ArrayDatum((float) 2.0, 
+        		new Reporter(null, (short) 1, (long) 1)));
+        cad.add(new ArrayDatum((float) 3.0, 
+        		new Reporter(null, (short) 1, (long) 2)));
         
         // Chromosome 2
-        r = new Reporter(null, (short) 2, (long) 0);
         cad = new ChromosomeArrayData((short) 2);
         TEST_DATA.add(cad);
-        cad.add(new ArrayDatum((float) 4.0, r));
-        cad.add(new ArrayDatum((float) 5.0, r));
-        cad.add(new ArrayDatum((float) 6.0, r));
+        cad.add(new ArrayDatum((float) 4.0, 
+        		new Reporter(null, (short) 2, (long) 0)));
+        cad.add(new ArrayDatum((float) 5.0, 
+        		new Reporter(null, (short) 2, (long) 1)));
+        cad.add(new ArrayDatum((float) 6.0, 
+        		new Reporter(null, (short) 2, (long) 2)));
         
         // Chromosome 3
-        r = new Reporter(null, (short) 3, (long) 0);
         cad = new ChromosomeArrayData((short) 3);
         TEST_DATA.add(cad);
-        cad.add(new ArrayDatum((float) 7.0, r));
-        cad.add(new ArrayDatum((float) 8.0, r));
-        cad.add(new ArrayDatum((float) 9.0, r));
+        cad.add(new ArrayDatum((float) 7.0, 
+        		new Reporter(null, (short) 3, (long) 0)));
+        cad.add(new ArrayDatum((float) 8.0, 
+        		new Reporter(null, (short) 3, (long) 1)));
+        cad.add(new ArrayDatum((float) 9.0,  
+        		new Reporter(null, (short) 3, (long) 2)));
     }
     
     

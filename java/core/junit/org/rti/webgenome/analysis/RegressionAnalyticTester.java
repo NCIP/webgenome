@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/junit/org/rti/webgenome/analysis/RegressionAnalyticTester.java,v $
-$Revision: 1.2 $
-$Date: 2007-04-10 22:32:42 $
+$Revision: 1.3 $
+$Date: 2007-04-13 02:52:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,6 +76,13 @@ import junit.framework.TestCase;
  */
 public final class RegressionAnalyticTester extends TestCase {
 	
+	/**
+	 * Pause duration in milliseconds of test thread
+	 * after RServe started to
+	 * give it time to initialize.
+	 */
+	private static final long PAUSE = 10000;
+	
 	/** RServe process required to run analytic operation. */
 	private Process rServeProcess = null;
 	
@@ -85,6 +92,7 @@ public final class RegressionAnalyticTester extends TestCase {
 	public void setUp() throws Exception {
 		String rServePath = UnitTestUtils.getUnitTestProperty("rserve.path");
 		this.rServeProcess = Runtime.getRuntime().exec(rServePath);
+		Thread.sleep(PAUSE);
 	}
 	
 	/**

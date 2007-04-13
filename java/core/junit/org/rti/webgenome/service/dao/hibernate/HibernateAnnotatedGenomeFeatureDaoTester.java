@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-04-13 02:52:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,6 @@ import java.util.SortedSet;
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.AnnotationType;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -78,7 +77,7 @@ extends TestCase {
 		
 		// Get DAO bean
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        "org/rti/webcgh/service/dao/hibernate/unit_test/beans.xml");
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
 		HibernateAnnotatedGenomeFeatureDao dao =
 			(HibernateAnnotatedGenomeFeatureDao)
 			ctx.getBean("annotatedGenomeFeatureDao");

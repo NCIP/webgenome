@@ -21,7 +21,7 @@
 				column="shopping_cart_id"
 				not-null="true"
 			/>
-			<one-to-many class="org.rti.webcgh.domain.Plot"/>
+			<one-to-many class="org.rti.webgenome.domain.Plot"/>
 		</set>
 		<set 
 		    name="experiments"
@@ -31,7 +31,7 @@
 				column="shopping_cart_id"
 				not-null="true"
 		    />
-            <one-to-many class="org.rti.webcgh.domain.Experiment"/>
+            <one-to-many class="org.rti.webgenome.domain.Experiment"/>
         </set>
 		
 	</class>
