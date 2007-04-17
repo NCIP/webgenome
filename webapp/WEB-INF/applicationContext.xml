@@ -121,7 +121,7 @@
   	<!-- =================================== -->
 
 <!-- Security manager -->
-	<bean id="securityMgr" class="org.rti.webgenome.service.mgr.SecurityMgrImpl">
+	<bean id="securityMgr" class="org.rti.webgenome.service.session.SecurityMgrImpl">
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 		

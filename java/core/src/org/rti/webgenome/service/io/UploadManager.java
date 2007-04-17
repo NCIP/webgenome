@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-04-17 15:22:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.io.FileOutputStream;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.IOUtils;
 
 
@@ -113,7 +114,17 @@ public class UploadManager {
 	 */
 	public UploadManager(final String workingDirPath) {
 		this.workingDir = new File(workingDirPath);
-		if (!this.workingDir.exists() || !this.workingDir.isDirectory()) {
+		if (!this.workingDir.exists()) {
+			try {
+				LOGGER.info("Creating directory for file uploads: "
+						+ workingDirPath);
+				FileUtils.createDirectory(workingDirPath);
+			} catch (Exception e) {
+				throw new WebGenomeSystemException(
+						"Error creating file upload directory", e);
+			}
+		}
+		if (!this.workingDir.isDirectory()) {
 			throw new IllegalArgumentException(
 					"Working directory path does not reference a "
 					+ "real directory");

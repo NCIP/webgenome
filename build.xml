@@ -27,9 +27,11 @@
 	<!-- Home directory for core JAR product -->
 	<property name="core.home.dir" location="${src.parent.dir}/core"/>
 	
-	<!-- Directory containing configuration files to be copied into all
-	distributable components -->
-	<property name="config.dir" location="${src.parent.dir}/conf/src"/>
+	<!-- Home directory for UI component -->
+	<property name="webui.home.dir" location="${src.parent.dir}/webui"/>
+	
+	<!-- Home directory for system tests -->
+	<property name="systest.home.dir" location="${src.parent.dir}/systest"/>
 	
 	<!-- =========== BUILD DIRECTORIES ============ -->
 	
@@ -40,6 +42,9 @@
 	
 	<!-- Directory containing all files created during build of core JAR -->
 	<property name="core.build.dir" location="${build.dir}/core"/>
+	
+	<!-- Directory containing all files created during build of system tests -->
+	<property name="systest.build.dir" location="${build.dir}/systest"/>
 	
 	<!-- Location where JAR files are built during build -->
 	<property name="build.lib.dir" location="${build.dir}/lib"/>
@@ -63,11 +68,11 @@
 		<echo level="error" message=""/>
 		<echo level="error" message="  TARGET:"/>
 		<echo level="error" message=""/>
-		<echo level="error" message="  usage        - Print this usage statement"/>
-		<echo level="error" message="  help         - Print this usage statement"/>
-		<echo level="error" message="  clean        - Delete all generated files and directories"/>
-		<echo level="error" message="  setup        - Set up for build"/>
-		<echo level="error" message="  build-core   - Build core ZIP file"/>
+		<echo level="error" message="  usage      - Print this usage statement"/>
+		<echo level="error" message="  help       - Print this usage statement"/>
+		<echo level="error" message="  clean      - Delete all generated files and directories"/>
+		<echo level="error" message="  build-core - Build core ZIP file"/>
+		<echo level="error" message="  build-war  - Build WAR file"/>
 	</target>
 	<target name="help" description="Print usage statement" depends="usage"/>
 	
@@ -87,12 +92,68 @@
 		<mkdir dir="${core.build.dir}"/>
 		<mkdir dir="${build.lib.dir}"/>
 		<mkdir dir="${dist.dir}"/>
+		<tstamp>
+			<format property="build.time"
+				pattern="yyyy-MM-dd-'TIME'-HH'h'-mm'm'-ss's'"/>
+		</tstamp>
 	</target>
 	
 <!-- Build core JAR -->
 	<target name="build-core" depends="setup" description="Build core JAR">
-		<echo level="info" message="Build core JAR"/>
+		<echo level="info" message="Building core JAR"/>
 		<ant dir="${core.home.dir}" target="dist" inheritAll="true"
 			inheritRefs="true"/>
+	</target>
+	
+<!-- Build WAR file -->
+	<target name="build-war" depends="build-core" description="Build WAR file">
+		<echo level="info" message="Building WAR file"/>
+		<ant dir="${webui.home.dir}" target="dist" inheritAll="true"
+			inheritRefs="true"/>
+	</target>
+	
+<!-- Start Tomcat -->
+	<target name="tomcat-start" description="Start tomcat app server">
+		<echo level="info" message="Starting Tomcat"/>
+		<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true" spawn="true">
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	    </java>
+		<sleep seconds="${pause.seconds.after.start.tomcat.called}"/>
+	</target>
+	
+<!-- Stop Tomcat -->
+	<target name="tomcat-stop" description="Stop tomcat app server">
+		<echo level="info" message="Stopping Tomcat"/>
+	    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	        <arg line="stop"/>
+	    </java>
+	</target>
+	
+<!-- Perform system tests -->
+	<target name="system-tests" depends="tomcat-start"
+		description="Perform system tests">
+		<echo level="info" message="Executing system tests"/>
+	</target>
+	
+<!-- Take actions if any tests fail -->
+	<target name="all" description="Build and test all components">
+		<echo level="info" message="Sending email notification"/>
+		
+		<!-- Commented out b/c could not get email to work
+		with RTI SMTP -->
+		
+		<!--
+		<mail from="${notification.from}"
+			tolist="${notification.recipient.list}"
+			subject="${notification.success.subject}"
+			mailhost="${notification.smtp.host}"
+			messagemimetype="text/plain"
+			encoding="plain">
+			<message>
+				All WebGenome components successfully built and tested
+			</message>
+		</mail>
+		-->
 	</target>
 </project>
