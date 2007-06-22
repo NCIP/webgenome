@@ -19,6 +19,9 @@
 	<!-- Directory containing third party JARs -->
 	<property name="lib.dir" location="webapp/WEB-INF/lib"/>
 	
+	<!-- Directory containing web files (e.g., JSP, HTML, CSS) -->
+	<property name="web.dir" location="webapp"/>
+	
 	<!-- ========== SOURCE DIRECTORIES ============ -->
 	
 	<!-- Parent of all source directories -->
@@ -43,6 +46,9 @@
 	<!-- Directory containing all files created during build of core JAR -->
 	<property name="core.build.dir" location="${build.dir}/core"/>
 	
+	<!-- Directory containing all files creating build of webui JAR -->
+	<property name="webui.build.dir" location="${build.dir}/webui"/>
+	
 	<!-- Directory containing all files created during build of system tests -->
 	<property name="systest.build.dir" location="${build.dir}/systest"/>
 	
@@ -58,6 +64,21 @@
 	<!-- Name (not path) of core JAR file -->
 	<property name="core.jar.file.name" value="webgenome-core.jar"/>
 	
+	<!-- Name (not path) of webui JAR file -->
+	<property name="webui.jar.file.name" value="webgenome-webui.jar"/>
+	
+	<!-- Name (not path) of WAR file -->
+	<property name="war.file.name" value="webgenome.war"/>
+	
+	<!-- Name of context created by Tomcat when the WAR file
+	is expended.  This should normally be equal to the
+	property 'war.file.name' minus the file extension. -->
+	<property name="context.name" value="webgenome"/>
+	
+	<!-- Directory that will contain JUnit test output files -->
+	<property name="junit.output.dir"
+		location="${build.dir}/junit-out"/>
+	
 <!-- ================================== -->
 <!--           Targets                  -->
 <!-- ================================== -->
@@ -68,11 +89,12 @@
 		<echo level="error" message=""/>
 		<echo level="error" message="  TARGET:"/>
 		<echo level="error" message=""/>
-		<echo level="error" message="  usage      - Print this usage statement"/>
-		<echo level="error" message="  help       - Print this usage statement"/>
-		<echo level="error" message="  clean      - Delete all generated files and directories"/>
-		<echo level="error" message="  build-core - Build core ZIP file"/>
-		<echo level="error" message="  build-war  - Build WAR file"/>
+		<echo level="error" message="  usage          - Print this usage statement"/>
+		<echo level="error" message="  help           - Print this usage statement"/>
+		<echo level="error" message="  clean          - Delete all generated files and directories"/>
+		<echo level="error" message="  war            - Build WAR file"/>
+		<echo level="error" message="  war-no-tests   - Build WAR file without running unit tests"/>
+		<echo level="error" message="  all            - Build all components with testing"/>
 	</target>
 	<target name="help" description="Print usage statement" depends="usage"/>
 	
@@ -83,6 +105,8 @@
 		<echo level="info" message="Deleting generated files and directories"/>
 		<delete dir="${dist.dir}"/>
 		<delete dir="${build.dir}"/>
+		<delete file="${tomcat.webapp.dir}/${war.file.name}"/>
+		<delete dir="${tomcat.webapp.dir}/${context.name}"/>
 	</target>
 	
 <!-- Setup build directory structure -->
@@ -92,6 +116,7 @@
 		<mkdir dir="${core.build.dir}"/>
 		<mkdir dir="${build.lib.dir}"/>
 		<mkdir dir="${dist.dir}"/>
+		<mkdir dir="${junit.output.dir}"/>
 		<tstamp>
 			<format property="build.time"
 				pattern="yyyy-MM-dd-'TIME'-HH'h'-mm'm'-ss's'"/>
@@ -99,26 +124,87 @@
 	</target>
 	
 <!-- Build core JAR -->
-	<target name="build-core" depends="setup" description="Build core JAR">
+	<target name="core" depends="setup" description="Build core JAR">
 		<echo level="info" message="Building core JAR"/>
 		<ant dir="${core.home.dir}" target="dist" inheritAll="true"
 			inheritRefs="true"/>
 	</target>
 	
-<!-- Build WAR file -->
-	<target name="build-war" depends="build-core" description="Build WAR file">
-		<echo level="info" message="Building WAR file"/>
-		<ant dir="${webui.home.dir}" target="dist" inheritAll="true"
+<!-- Build core JAR without performing unit tests -->
+	<target name="core-no-tests" depends="setup"
+		description="Build core JAR without performing unit tests">
+		<echo level="info" message="Building core JAR"/>
+		<ant dir="${core.home.dir}" target="dist-no-tests" inheritAll="true"
 			inheritRefs="true"/>
 	</target>
 	
-<!-- Start Tomcat -->
-	<target name="tomcat-start" description="Start tomcat app server">
-		<echo level="info" message="Starting Tomcat"/>
-		<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true" spawn="true">
-	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
-	    </java>
-		<sleep seconds="${pause.seconds.after.start.tomcat.called}"/>
+<!-- Build webui JAR -->
+	<target name="webui" depends="core" description="Build webui JAR">
+		<echo level="info" message="Building webui JAR"/>
+		<ant dir="${webui.home.dir}" target="jar" inheritAll="true"
+			inheritRefs="true"/>
+	</target>
+	
+<!-- Build webui JAR without performing unit tests -->
+	<target name="webui-no-tests" depends="core-no-tests"
+		description="Build webui JAR">
+		<echo level="info" message="Building webui JAR"/>
+		<ant dir="${webui.home.dir}" target="jar" inheritAll="true"
+			inheritRefs="true"/>
+	</target>
+	
+<!-- Build WAR file without perform unit tests -->
+	<target name="war" depends="webui"
+		description="Build WAR file">
+		<echo level="info" message="Building WAR file"/>
+		<war destfile="${build.dir}/${war.file.name}" needxmlfile="false">
+			<fileset dir="${web.dir}">
+				<exclude name="**/CVS"/>
+				<exclude name="WEB-INF/classes/**"/>
+			</fileset>
+			<lib dir="${build.lib.dir}" includes="*.jar"/>
+		</war>
+	</target>
+	
+<!-- Build WAR file without perform unit tests -->
+	<target name="war-no-tests" depends="webui-no-tests"
+		description="Build WAR file without performing unit tests">
+		<echo level="info" message="Building WAR file"/>
+		<war destfile="${build.dir}/${war.file.name}" needxmlfile="false">
+			<fileset dir="${web.dir}">
+				<exclude name="**/CVS"/>
+				<exclude name="WEB-INF/classes/**"/>
+			</fileset>
+			<lib dir="${build.lib.dir}" includes="*.jar"/>
+		</war>
+	</target>
+	
+<!-- Deploy WAR file -->
+	<target name="deploy" depends="war" description="Deploy WAR file">
+		<echo level="info" message="Deploying WAR file"/>
+		<copy file="${build.dir}/${war.file.name}" todir="${tomcat.webapp.dir}"/>
+	</target>
+	
+<!-- Deploy WAR file without running unit tests -->
+	<target name="deploy-no-tests" depends="war-no-tests"
+		description="Deploy WAR file without performing unit tests">
+		<echo level="info" message="Deploying WAR file"/>
+		<copy file="${build.dir}/${war.file.name}" todir="${tomcat.webapp.dir}"/>
+	</target>
+	
+<!-- Build system tests -->
+	<target name="run-systest" depends="war" description="Run system tests">
+		<echo level="info" message="Building system tests"/>
+		<ant dir="${systest.home.dir}" target="run-tests" inheritAll="true"
+			inheritRefs="true"/>
+	</target>
+	
+<!-- Build system tests without performing unit tests -->
+	<target name="run-systest-no-unit-tests" depends="war-no-tests"
+		description="Run system tests without performing unit tests">
+		<echo level="info" message="Building system tests"/>
+		<ant dir="${systest.home.dir}" target="run-tests" inheritAll="true"
+			inheritRefs="true"/>
 	</target>
 	
 <!-- Stop Tomcat -->
@@ -130,20 +216,21 @@
 	    </java>
 	</target>
 	
-<!-- Perform system tests -->
-	<target name="system-tests" depends="tomcat-start"
-		description="Perform system tests">
-		<echo level="info" message="Executing system tests"/>
+<!-- Format JUnit test reports -->
+	<target name="format-test-reports" description="Format JUnit test reports">
+		<property name="junit.formatted.output.dir"
+			value="${report.dir}/${build.time}"/>
+		<mkdir dir="${junit.formatted.output.dir}"/>
+		<junitreport todir="${junit.formatted.output.dir}">
+			<fileset dir="${junit.output.dir}"/>
+			<report todir="${junit.formatted.output.dir}"/>
+		</junitreport>
 	</target>
 	
 <!-- Take actions if any tests fail -->
-	<target name="all" description="Build and test all components">
+	<target name="all" depends="run-systest,format-test-reports"
+		description="Build and test all components">		
 		<echo level="info" message="Sending email notification"/>
-		
-		<!-- Commented out b/c could not get email to work
-		with RTI SMTP -->
-		
-		<!--
 		<mail from="${notification.from}"
 			tolist="${notification.recipient.list}"
 			subject="${notification.success.subject}"
@@ -151,9 +238,8 @@
 			messagemimetype="text/plain"
 			encoding="plain">
 			<message>
-				All WebGenome components successfully built and tested
+All WebGenome components successfully built and tested on ${build.time}
 			</message>
 		</mail>
-		-->
 	</target>
 </project>

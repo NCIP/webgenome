@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-04-17 15:22:34 $
+$Date: 2007-06-22 22:39:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,62 +50,66 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.systests;
 
-import net.sourceforge.jwebunit.junit.WebTestCase;
-import net.sourceforge.jwebunit.util.TestingEngineRegistry;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.util.IOUtils;
 
 /**
- * Performs automated system tests against
- * web application.
+ * General utilities for system tests.
  * @author dhall
  *
  */
-public class SystemTests extends WebTestCase {
+public final class SystemTestUtils {
 	
 	//
-	//  S T A T I C S
+	//     S T A T I C S
 	//
 	
-	/** Key for system test property specifying base URL. */
-	private static final String BASE_URL_PROP_KEY = "base.url";
+	/** Classpath-relative path to system test properties file. */
+	private static final String SYSTEM_TEST_PROPERTIES_FILE =
+		"system_test.properties";
 	
 	
 	//
-	//  O V E R R I D E S
+	//     C O N S T R U C T O R S
 	//
 	
 	/**
-	 * {@inheritDoc}
+	 * Constructor.
 	 */
-	public void setUp() {
-		this.setTestingEngineKey(TestingEngineRegistry.TESTING_ENGINE_HTMLUNIT);
-		String baseUrl =
-			SystemTestUtils.getSystemTestProperty(BASE_URL_PROP_KEY);
-		this.getTestContext().setBaseUrl(baseUrl);
+	private SystemTestUtils() {
+		
 	}
-	
-	
-	//
-	//  T E S T    C A S E S
-	//
 
-	/**
-	 * Test that the context is up.
-	 */
-	public void testContextUp() {
-		this.beginAt("/home.do");
-		this.assertTitleEquals("webGenome: Overview");
-	}
+	
+	//
+	//     B U S I N E S S   M E T H O D S
+	//
 	
 	
 	/**
-	 * Test the creation of a basic copy number scatter
-	 * plot using simulated data.
-	 *
+	 * Get system test property.  These properties are set in the
+	 * file 'system_test.properties.'
+	 * @param key Property name
+	 * @return Property value
 	 */
-	public void testCopyNumberScatterPlot() {
-		this.beginAt("/home.do");
-		this.assertLinkPresentWithExactText("copy number");
-		this.clickLinkWithExactText("copy number");
-		this.assertTitleEquals("webGenome: Plot");
+	public static String getSystemTestProperty(final String key) {
+		Properties props = new Properties();
+		InputStream in = IOUtils.getInputStream(SYSTEM_TEST_PROPERTIES_FILE);
+		if (in == null) {
+			throw new WebGenomeSystemException(
+					"Cannot find system test properties file '"
+					+ SYSTEM_TEST_PROPERTIES_FILE + "'");
+		}
+		try {
+			props.load(in);
+		} catch (IOException e) {
+			throw new WebGenomeSystemException(
+					"Error accessing system test properties", e);
+		}
+		return props.getProperty(key);
 	}
 }

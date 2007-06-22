@@ -1,0 +1,120 @@
+<?xml version="1.0" ?>
+
+<project name="webgenome-systest" default="usage">
+	
+<!-- Description -->
+	<description>
+		This file builds the WebGenome system test module
+		which performs automated system tests against a
+		an instance of the application deployed on an application
+		server.  This file should not be invoked on its own through
+		ant, e.g., by calling ant in this directory.
+		Rather, it is intented to be invoked by a calling
+		build script, which passes in a number of required
+		properties.
+	</description>
+	
+	<!-- ======================================= -->
+	<!--        CONFIGURABLE PROPERTIES          -->
+	<!-- ======================================= -->
+	
+	<!-- Source directory for webui classes -->
+	<property name="systest.src.dir" location="${systest.home.dir}/src"/>
+	
+	<!-- Directory that will contain compiled webui class files -->
+	<property name="systest.classes.dir" location="${systest.build.dir}/classes"/>
+	
+	<!-- Classpath -->
+	<path id="class.path">
+		<fileset dir="${lib.dir}" includes="*.*"/>
+		<fileset dir="${build.lib.dir}" includes="*.*"/>
+		<pathelement location="${systest.classes.dir}"/>
+	</path>
+	
+	<!-- ======================================= -->
+	<!--             TARGETS                     -->
+	<!-- ======================================= -->
+	
+<!-- Print usage statement -->
+	<target name="usage" description="Print usage statement">
+		<echo level="error" message="This build script is meant to be invoked from a parent script."/>
+		<echo level="error" message="It should not be invoked on its own."/>
+	</target>
+	<target name="help" depends="usage"/>
+	
+<!-- Setup -->
+	<target name="setup" description="Create and initialize build directories">
+		<echo level="info" message="Creating build directories"/>
+		<mkdir dir="${systest.classes.dir}"/>
+		<copy todir="${systest.classes.dir}">
+			<fileset dir="${systest.src.dir}" includes="**/*.properties"/>
+		</copy>
+	</target>
+	
+<!-- Compile sources -->
+	<target name="compile" depends="setup" description="Compile Java classes">
+		<echo level="info" message="Compiling sources"/>
+		<javac srcdir="${systest.src.dir}" destdir="${systest.classes.dir}"
+			classpathref="class.path" debug="false"/>
+	</target>
+		
+<!-- Start Tomcat -->
+	<target name="tomcat-start" description="Start tomcat app server">
+		<echo level="info" message="Starting Tomcat"/>
+		<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true" spawn="true">
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	    </java>
+		<sleep seconds="${pause.seconds.after.start.tomcat.called}"/>
+	</target>
+	
+<!-- Stop Tomcat -->
+	<target name="tomcat-stop" description="Stop tomcat app server">
+		<echo level="info" message="Stopping Tomcat"/>
+	    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	        <arg line="stop"/>
+	    </java>
+	</target>
+	
+<!-- Perform system tests -->
+	<target name="systests" depends="compile,tomcat-start"
+		description="Perform system tests">
+		<echo level="info" message="Executing system tests"/>
+		<junit failureproperty="systest.failure">
+			<classpath>
+				<path refid="class.path"/>
+			</classpath>
+			<formatter type="xml"/>
+			<batchtest todir="${junit.output.dir}">
+				<fileset dir="${systest.classes.dir}" includes="**/*Tests.class"/>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- Take actions if any tests fail -->
+	<target name="check-test-failure" depends="systests"
+		if="systest.failure"
+		description="Take actions if any tests fail">
+		
+		<mail from="${notification.from}"
+			tolist="${notification.recipient.list}"
+			subject="${notification.test.failure.subject}"
+			mailhost="${notification.smtp.host}"
+			messagemimetype="text/plain"
+			encoding="plain">
+			<message>
+One or more systems tests failed during build on ${build.time}
+			</message>
+		</mail>
+		
+		<echo level="info" message="Stopping Tomcat"/>
+	    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	        <arg line="stop"/>
+	    </java>
+		<fail/>
+	</target>
+	
+<!-- Target that should be called by calling script -->
+	<target name="run-tests" depends="systests,check-test-failure,tomcat-stop"/>
+</project>

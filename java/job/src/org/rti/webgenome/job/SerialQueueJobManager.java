@@ -1,0 +1,343 @@
+/*
+$Revision: 1.1 $
+$Date: 2007-06-22 22:39:50 $
+
+The Web CGH Software License, Version 1.0
+
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this 
+list of conditions and the disclaimer of Article 3, below. Redistributions in 
+binary form must reproduce the above copyright notice, this list of conditions 
+and the following disclaimer in the documentation and/or other materials 
+provided with the distribution.
+
+2. The end-user documentation included with the redistribution, if any, must 
+include the following acknowledgment:
+
+"This product includes software developed by the RTI and the National Cancer 
+Institute."
+
+If no such end-user documentation is to be included, this acknowledgment shall 
+appear in the software itself, wherever such third-party acknowledgments 
+normally appear.
+
+3. The names "The National Cancer Institute", "NCI", 
+“Research Triangle Institute”, and "RTI" must not be used to endorse or promote 
+products derived from this software.
+
+4. This license does not authorize the incorporation of this software into any 
+proprietary programs. This license does not authorize the recipient to use any 
+trademarks owned by either NCI or RTI.
+
+5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+package org.rti.webgenome.job;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import org.apache.log4j.Logger;
+import org.rti.webgenome.core.WebGenomeSystemException;
+
+/**
+ * Implementation of {@link JobManager} where only
+ * one job is executed at a time (i.e., serially)
+ * in first-in-first-out (FIFO) order.
+ * @author dhall
+ *
+ */
+public class SerialQueueJobManager implements JobManager {
+	
+	//
+	//     C O N S T A N T S
+	//
+	
+	/** Priority given to thread that executes jobs. */
+	private static final int JOB_EXECUTION_THREAD_PRIORITY =
+		Thread.MIN_PRIORITY;
+	
+	/**
+	 * Time in milliseconds that the job execution thread
+	 * sleeps when the queue is empty before checking again
+	 * to see if there are any new jobs.
+	 */
+	private static final long JOB_EXECUTION_THREAD_SLEEP_TIME = 5000;
+	
+	/** Text status indicating a job has successfully executed. */
+	private static final String JOB_EXECUTION_SUCCESS_MESSAGE =
+		"Job successfully completed";
+	
+	/** Text status indicating a job has failed. */
+	private static final String JOB_EXECUTION_FAILURE_MESSAGE =
+		"FAILURE";
+	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(
+			SerialQueueJobManager.class);
+	
+	//
+	//     A T T R I B U T E S
+	//
+	
+	/** Job data access object. This should be injected. */
+	private JobDao jobDao = null;
+	
+	/** Set of current jobs sorted on instantiation date. */
+	private SortedSet<Job> jobs = new TreeSet<Job>(
+			new InstantiationDateJobComparator());
+	
+	/** Thread that executes jobs. */
+	private JobExecutionThread jobExecutionThread = new JobExecutionThread();
+	
+	
+	//
+	//     S E T T E R S
+	//
+	
+	
+	/**
+	 * Setter to inject job data access object.
+	 * @param jobDao Job data access object.
+	 */
+	public void setJobDao(final JobDao jobDao) {
+		this.jobDao = jobDao;
+	}
+	
+	
+	//
+	//     C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.
+	 */
+	public SerialQueueJobManager() {
+		
+		// Get all persisted jobs
+		Collection<Job> peristedJobs = this.jobDao.loadAll();
+		this.jobs.addAll(peristedJobs);
+		LOGGER.info("Retrieved " + peristedJobs.size() + " jobs from database");
+		
+		// Set start date/time to null since
+		// none of the jobs have started.  Any jobs
+		// executing when application was terminated
+		// should be restarted.
+		for (Job job : peristedJobs) {
+			job.setStartDate(null);
+		}
+		
+		// Start job execution thread
+		this.jobExecutionThread.start();
+	}
+	
+	
+	//
+	//     JobManager I N T E R F A C E
+	//
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void add(final Job job) {
+		LOGGER.info("Adding job '" + job.getId() + "' to queue");
+		this.jobs.add(job);
+		this.jobDao.saveOrUpdate(job);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<Job> getJobs(final String userId) {
+		if (userId == null || userId.length() == 0) {
+			throw new IllegalArgumentException("User ID cannot be empty");
+		}
+		Collection<Job> userJobs = new ArrayList<Job>();
+		for (Job job : this.jobs) {
+			if (userId.equals(job.getUserId())) {
+				userJobs.add(job);
+			}
+		}
+		return userJobs;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean remove(final Long jobId) {
+		if (jobId == null) {
+			throw new IllegalArgumentException("Job ID cannot be null");
+		}
+		boolean success = false;
+		Job targetJob = null;
+		for (Job job : this.jobs) {
+			if (jobId.equals(job.getId())) {
+				targetJob = job;
+				break;
+			}
+		}
+		if (targetJob != null) {
+			if (!this.jobRunning(targetJob)) {
+				LOGGER.info("Removing job '" + targetJob.getId() + "'");
+				this.jobs.remove(targetJob);
+				this.jobDao.delete(targetJob);
+				success = true;
+			} else {
+				LOGGER.info("Could not remove job '" + targetJob.getId()
+						+ "'.  It is running.");
+			}
+		} else {
+			LOGGER.info("Could not remove job '" + targetJob.getId()
+					+ "'.  Job not found.");
+		}
+		return success;
+	}
+	
+	
+	/**
+	 * Is given job running?
+	 * @param job A job
+	 * @return {@code true} if job is executing, {@code false} otherwise
+	 */
+	private boolean jobRunning(final Job job) {
+		return job.getStartDate() != null && job.getEndDate() == null;
+	}
+
+	
+	/**
+	 * Comparator for sorting {@link Job} objects on the
+	 * attribute {@code instantiationDate}.
+	 * @author dhall
+	 *
+	 */
+	private static class InstantiationDateJobComparator
+	implements Comparator<Job> {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		public int compare(final Job job1, final Job job2) {
+			return job1.getInstantiationDate().
+			compareTo(job2.getInstantiationDate());
+		}
+	}
+	
+	
+	/**
+	 * A thread that executes jobs by looping over queue
+	 * of jobs and grabbing the next one on the queue whenever
+	 * the previous job has completed.
+	 * @author dhall
+	 *
+	 */
+	private class JobExecutionThread extends Thread {
+		
+		/**
+		 * Constructor.
+		 */
+		public JobExecutionThread() {
+			super();
+			this.setPriority(JOB_EXECUTION_THREAD_PRIORITY);
+		}
+		
+		
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public synchronized void run() {
+			LOGGER.info("Starting job execution queue");
+			this.monitorJobQueue();
+		}
+
+
+
+		/**
+		 * Monitor the job queue by executing jobs
+		 * in the order that they were added to the queue
+		 * and waiting if there are no jobs until the next
+		 * one is added.
+		 */
+		private void monitorJobQueue() {
+			while (true) {
+				
+				// Get next job from queue
+				Job job = this.next();
+				while (job == null) {
+					try {
+						Thread.sleep(JOB_EXECUTION_THREAD_SLEEP_TIME);
+					} catch (InterruptedException e) {
+						throw new WebGenomeSystemException(
+								"Error putting job execution "
+								+ "thread to sleep", e);
+					}
+					job = this.next();
+				}
+				
+				// Set start time and persist
+				LOGGER.info("Starting job with id '" + job.getId() + "'");
+				job.setStartDate(new Date());
+				jobDao.saveOrUpdate(job);
+				
+				// Execute job
+				try {
+					job.execute();
+					job.setTerminationMessage(JOB_EXECUTION_SUCCESS_MESSAGE);
+					LOGGER.info("Job '" + job.getId()
+							+ "' successfully completed");
+				} catch (Exception e) {
+					LOGGER.warn("Job '" + job.getId() + "' failed");
+					LOGGER.warn(e);
+					String exceptionMsg = e.getMessage();
+					String msg = JOB_EXECUTION_FAILURE_MESSAGE;
+					if (exceptionMsg != null && exceptionMsg.length() > 0) {
+						msg += ": " + exceptionMsg;
+					}
+					job.setTerminationMessage(msg);
+				}
+				
+				// Set end time and persist
+				job.setEndDate(new Date());
+				jobDao.saveOrUpdate(job);
+			}
+		}
+		
+		
+		/**
+		 * Get next job on queue.  This will be the first
+		 * job in the iteration which has a start date
+		 * of null.
+		 * @return Next job on queue.
+		 */
+		private Job next() {
+			Job nextJob = null;
+			for (Job job : jobs) {
+				if (job.getStartDate() == null) {
+					nextJob = job;
+					break;
+				}
+			}
+			return nextJob;
+		}
+	}
+}

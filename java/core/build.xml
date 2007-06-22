@@ -17,10 +17,6 @@
 	<!--        CONFIGURABLE PROPERTIES          -->
 	<!-- ======================================= -->
 	
-	<!-- Directory that will contain JUnit test output files -->
-		<property name="core.junit.output.dir"
-			location="${core.build.dir}/junit-out"/>
-	
 	<!-- ================= Source directories ============= -->
 	<!-- Source directory for business classes -->
 	<property name="core.src.dir" location="${core.home.dir}/src"/>
@@ -65,13 +61,8 @@
 <!-- Setup -->
 	<target name="setup" description="Create and initialize build directories">
 		<echo level="info" message="Creating build directories"/>
-		<property name="core.junit.formatted.output.dir"
-			value="${report.dir}/core/${build.time}"/>
-		<mkdir dir="${core.junit.formatted.output.dir}"/>
 		<mkdir dir="${core.classes.dir}"/>
 		<mkdir dir="${core.junit.classes.dir}"/>
-		<mkdir dir="${core.junit.output.dir}"/>
-		<mkdir dir="${core.junit.formatted.output.dir}"/>
 		<copy todir="${core.classes.dir}">
 			<fileset dir="${core.src.dir}">
 				<include name="*.properties"/>
@@ -112,14 +103,10 @@
 				<path refid="junit.class.path"/>
 			</classpath>
 			<formatter type="xml"/>
-			<batchtest todir="${core.junit.output.dir}">
+			<batchtest todir="${junit.output.dir}">
 				<fileset dir="${core.junit.classes.dir}" includes="**/*Tester.class"/>
 			</batchtest>
 		</junit>
-		<junitreport todir="${core.junit.formatted.output.dir}">
-			<fileset dir="${core.junit.output.dir}"/>
-			<report todir="${core.junit.formatted.output.dir}"/>
-		</junitreport>
 	</target>
 		
 <!-- Take actions if any tests fail -->
@@ -129,33 +116,46 @@
 		
 		<!-- Below code commented out because of current inability
 		to get <mail> tag working with RTI SMPT server propertly -->
-		<!--
-		<mail from="${notification.from"
+		<mail from="${notification.from}"
 			tolist="${notification.recipient.list}"
-			subject="${notification.test.failure.subject}">
+			subject="${notification.test.failure.subject}"
+			mailhost="${notification.smtp.host}"
+			messagemimetype="text/plain"
+			encoding="plain">
 			<message>
-				One or more unit tests failed during build on ${build.time}
+One or more unit tests failed during build on ${build.time}
 			</message>
 		</mail>
-		-->
 		
 		<fail/>
 	</target>
 	
-<!-- Build distributable JAR -->
-	<target name="jar" depends="run-tests,check-test-failure"
+<!-- Create JAR in build directory -->
+	<target name="jar" depends="compile"
 		description="Product distributable JAR file">
 		<echo level="info" message="Building distributable JAR"/>
 		<jar destfile="${build.lib.dir}/${core.jar.file.name}"
 			basedir="${core.classes.dir}"/>
 	</target>
 	
-<!-- Copy JAR to distribution directory -->
-	<target name="dist" depends="jar"
-		description="Copy JAR to distribution directory">
+<!-- Build distributable JAR file in distribution
+directory.  This target may be called
+from another ant script. -->
+	<target name="dist" depends="run-tests,check-test-failure,jar"
+		description="Copying JAR to distribution directory.">
 		<echo level="info" message="Copying JAR to distribution directory"/>
 		<copy file="${build.lib.dir}/${core.jar.file.name}"
 			todir="${dist.dir}"/>
 	</target>
 	
+<!-- Build distributable JAR file in distribution
+directory without first executing
+unit tests.  This target may be called
+from another ant script. -->
+	<target name="dist-no-tests" depends="jar"
+		description="Copying JAR to distribution directory.">
+		<echo level="info" message="Copying JAR to distribution directory"/>
+		<copy file="${build.lib.dir}/${core.jar.file.name}"
+			todir="${dist.dir}"/>
+	</target>
 </project>

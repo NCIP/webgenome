@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-04-17 15:22:34 $
+$Date: 2007-06-22 22:39:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,68 +48,44 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.systests;
+package org.rti.webgenome.job;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.Collection;
 
-import org.rti.webgenome.core.WebGenomeSystemException;
-import org.rti.webgenome.util.IOUtils;
 
 /**
- * General utilities for system tests.
+ * This interface is intended to be used as a singleton
+ * that manages all {@link Job} objects within the application.
+ * Object implementing this interface are expected to manage the
+ * execution of jobs.
  * @author dhall
  *
  */
-public final class SystemTestUtils {
-	
-	//
-	//     S T A T I C S
-	//
-	
-	/** Classpath-relative path to system test properties file. */
-	private static final String SYSTEM_TEST_PROPERTIES_FILE =
-		"system_test.properties";
-	
-	
-	//
-	//     C O N S T R U C T O R S
-	//
-	
-	/**
-	 * Constructor.
-	 */
-	private SystemTestUtils() {
-		
-	}
+public interface JobManager {
 
-	
-	//
-	//     B U S I N E S S   M E T H O D S
-	//
-	
+	/**
+	 * Removes {@link Job} with given
+	 * {@code jobId} from the manager.
+	 * @param jobId Unique identifier of job under management
+	 * of this manager.
+	 * @return {@code true} if the job was successfully
+	 * removed, {@code false} otherwise.  A job cannot be
+	 * removed if it is either executing or it is not
+	 * under management by this manager.
+	 */
+	boolean remove(Long jobId);
 	
 	/**
-	 * Get system test property.  These properties are set in the
-	 * file 'system_test.properties.'
-	 * @param key Property name
-	 * @return Property value
+	 * Add given job to the manager.  The manager will execute
+	 * the job when resources are available.
+	 * @param job Job to add to management
 	 */
-	public static String getSystemTestProperty(final String key) {
-		Properties props = new Properties();
-		InputStream in = IOUtils.getInputStream(SYSTEM_TEST_PROPERTIES_FILE);
-		if (in == null) {
-			throw new WebGenomeSystemException(
-					"Cannot find system test properties file '"
-					+ SYSTEM_TEST_PROPERTIES_FILE + "'");
-		}
-		try {
-			props.load(in);
-		} catch (IOException e) {
-			throw new WebGenomeSystemException(
-					"Error accessing system test properties", e);
-		}
-		return props.getProperty(key);
-	}
+	void add(Job job);
+	
+	/**
+	 * Get all current jobs associated with given user.
+	 * @param userId Id (i.e., user name) of a user
+	 * @return All current jobs associated with given user
+	 */
+	Collection<Job> getJobs(String userId);
 }
