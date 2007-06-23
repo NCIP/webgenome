@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-22 22:39:50 $
+$Revision: 1.2 $
+$Date: 2007-06-23 04:49:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -112,27 +112,15 @@ public class SerialQueueJobManager implements JobManager {
 	
 	
 	//
-	//     S E T T E R S
-	//
-	
-	
-	/**
-	 * Setter to inject job data access object.
-	 * @param jobDao Job data access object.
-	 */
-	public void setJobDao(final JobDao jobDao) {
-		this.jobDao = jobDao;
-	}
-	
-	
-	//
 	//     C O N S T R U C T O R S
 	//
 	
 	/**
 	 * Constructor.
+	 * @param jobDao Job data access object
 	 */
-	public SerialQueueJobManager() {
+	public SerialQueueJobManager(final JobDao jobDao) {
+		this.jobDao = jobDao;
 		
 		// Get all persisted jobs
 		Collection<Job> peristedJobs = this.jobDao.loadAll();
@@ -160,9 +148,10 @@ public class SerialQueueJobManager implements JobManager {
 	 * {@inheritDoc}
 	 */
 	public void add(final Job job) {
+		this.jobDao.saveOrUpdate(job);
 		LOGGER.info("Adding job '" + job.getId() + "' to queue");
 		this.jobs.add(job);
-		this.jobDao.saveOrUpdate(job);
+		LOGGER.info("Queue size = " + this.jobs.size());
 	}
 
 	/**
@@ -226,7 +215,9 @@ public class SerialQueueJobManager implements JobManager {
 	
 	/**
 	 * Comparator for sorting {@link Job} objects on the
-	 * attribute {@code instantiationDate}.
+	 * attribute {@code instantiationDate}.  If jobs have same
+	 * instantiation date, tie is broken by
+	 * attribute {@code id}.
 	 * @author dhall
 	 *
 	 */
@@ -237,8 +228,12 @@ public class SerialQueueJobManager implements JobManager {
 		 * {@inheritDoc}
 		 */
 		public int compare(final Job job1, final Job job2) {
-			return job1.getInstantiationDate().
+			int val = job1.getInstantiationDate().
 			compareTo(job2.getInstantiationDate());
+			if (val == 0) {
+				val = job1.getId().compareTo(job2.getId());
+			}
+			return val;
 		}
 	}
 	
