@@ -64,3 +64,35 @@ CREATE TABLE annotated_genome_feature (
 	PRIMARY KEY (id),
 	FOREIGN KEY (organism_id) REFERENCES organism(id)
 );
+
+--
+-- Job
+--
+CREATE TABLE job (
+	id NUMBER(38) NOT NULL,
+	type VARCHAR(16),
+	user_id VARCHAR(64),
+	instantiation_date TIMESTAMP,
+	start_date TIMESTAMP,
+	end_date TIMESTAMP,
+	termination_message VARCHAR(256),
+	PRIMARY KEY (id)
+);
+
+--
+-- BioAssay
+--
+CREATE TABLE bio_assay (
+	id NUMBER(38) NOT NULL,
+	name VARCHAR(256),
+	PRIMARY KEY (id)
+);
+
+--
+-- Experiment
+--
+CREATE TABLE experiment (
+	id NUMBER(38) NOT NULL,
+	name VARCHAR(256),
+	PRIMARY KEY (id)
+);

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-06-25 18:41:55 $
 
 The Web CGH Software License, Version 1.0
 
@@ -133,8 +133,8 @@ public class JobManager {
 	inMemoryChromosomeArrayDataGetter = new InMemoryChromosomeArrayDataGetter();
 	
 	/** Plot ID generator. */
-	private IdGenerator plotIdGenerator = new IdGenerator();
-
+	private IdGenerator plotIdGenerator = null;
+	
     
     //
     //     SETTERS
@@ -175,7 +175,6 @@ public class JobManager {
 	
 	// TODO: refactor to use processing mode decider
 
-
 	// TODO: refactor actions to take different forwards based
 	// on the return value
 	/**
@@ -202,7 +201,7 @@ public class JobManager {
 	 * @throws AnalyticException if the analytic operation is
 	 * unable to complete due to improper data
 	 */
-	public boolean perform(
+	public boolean performAnalyticOperation(
 			final Collection<Experiment> experiments,
 			final AnalyticOperation operation,
 			final ColorChooser colorChooser,
@@ -284,7 +283,7 @@ public class JobManager {
 	 * @throws AnalyticException if a bad data value causes the
 	 * operation to fail
 	 */
-	public boolean rePerform(
+	public boolean rePerformAnalyticOperation(
 			final Experiment experiment,
 			final AnalyticOperation operation, final SessionMode mode)
 	throws AnalyticException {
@@ -319,7 +318,7 @@ public class JobManager {
 	 * @throws AnalyticException if a bad data value causes the
 	 * operation to fail
 	 */
-	public boolean rePerform(
+	public boolean rePerformAnalyticOperation(
 			final Collection<Experiment> experiments,
 			final SessionMode mode)
 	throws AnalyticException {
@@ -361,7 +360,7 @@ public class JobManager {
 	 * application server}, or {@code false} if the plot generation
 	 * was offloaded to the analytic server for batch processing.
 	 */
-	public boolean plot(final Plot plot,
+	public boolean plotExperiments(final Plot plot,
 			final Collection<Experiment> experiments,
 			final PlotParameters params, final ShoppingCart cart,
 			final SessionMode mode) {

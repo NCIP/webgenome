@@ -125,15 +125,21 @@
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 		
-<!-- ID generator for bioassays not persisted and, hence, not given
-	 IDs by the DAO tier. -->
+<!-- ID generator for bioassays -->
 	<bean id="bioAssayIdGenerator"
-		class="org.rti.webgenome.service.util.IdGenerator"/>
+		class="org.rti.webgenome.service.util.IdGenerator">
+		<constructor-arg index="0" value="bio_assay"/>
+		<constructor-arg index="1" value="id"/>
+		<constructor-arg index="2"><ref bean="dataSource"/></constructor-arg>
+	</bean>
 		
-<!-- ID generator for experiments not persisted and, hence, not given
-	 IDs by the DAO tier. -->
+<!-- ID generator for experiments -->
 	<bean id="experimentIdGenerator"
-		class="org.rti.webgenome.service.util.IdGenerator"/>
+		class="org.rti.webgenome.service.util.IdGenerator">
+		<constructor-arg index="0" value="experiment"/>
+		<constructor-arg index="1" value="id"/>
+		<constructor-arg index="2"><ref bean="dataSource"/></constructor-arg>
+	</bean>
 		
 <!-- Image file manager -->
 	<bean id="imageFileManager"

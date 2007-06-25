@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -205,7 +205,7 @@ public final class NewPlotAction extends BaseAction {
     	
     	// Create plot
 	    boolean plotCompleted =
-	    	this.jobManager.plot(plot, experiments, params, cart, mode);
+	    	this.jobManager.plotExperiments(plot, experiments, params, cart, mode);
     	
 	    // Determine forward
 	    ActionForward forward = null;

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -570,6 +570,22 @@ public class Experiment implements Serializable {
     	}
     	return num;
     }
+    
+    
+    /**
+     * Get total number of datum (i.e., {@link org.rti.domain.ArrayDatum}
+     * objects in given experiments.
+     * @param experiments Experiments
+     * @return Total number
+     */
+    public static int numDatum(final Collection<Experiment> experiments) {
+    	int total = 0;
+    	for (Experiment exp : experiments) {
+    		total += exp.numDatum();
+    	}
+    	return total;
+    }
+    
     
     
     /**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-22 22:39:50 $
+$Revision: 1.2 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,6 +91,12 @@ public interface Job {
 	 * @return Date/time that job was instantiated
 	 */
 	Date getInstantiationDate();
+	
+	/**
+	 * Set date/time that job was instantiated.
+	 * @param date Date/time job was instantiated.
+	 */
+	void setInstantiationDate(Date date);
 
 	
 	/**
@@ -135,6 +141,18 @@ public interface Job {
 	 * @return A message
 	 */
 	String getTerminationMessage();
+	
+	/**
+	 * Set ID of shopping cart.
+	 * @param id Shopping cart ID
+	 */
+	void setShoppingCartId(Long id);
+	
+	/**
+	 * Get ID of shopping cart.
+	 * @return ID of shopping cart
+	 */
+	Long getShoppingCartId();
 	
 	
 	/**

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.job.Job"
+		table="job">
+	
+	<!-- id -->
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+	<!-- endDate -->
+		<property name="endDate" column="end_date"/>
+		
+	<!-- instantiationDate -->
+		<property name="instantiationDate" column="instantiation_date"/>
+		
+	<!-- startDate -->
+		<property name="startDate" column="start_date"/>
+		
+	<!-- terminationMesssage -->
+		<property name="terminationMessage" column="termination_message"/>
+		
+	<!-- userId -->
+		<property name="userId" column="user_id"/>
+		
+	</class>
+
+</hibernate-mapping>

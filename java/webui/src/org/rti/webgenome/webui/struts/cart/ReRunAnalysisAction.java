@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.4 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -135,7 +135,7 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
     	
     	// Redo analysis
     	SessionMode mode = PageContext.getSessionMode(request);
-    	boolean reranAlready = this.jobManager.rePerform(exp, op, mode);
+    	boolean reranAlready = this.jobManager.rePerformAnalyticOperation(exp, op, mode);
     	
     	// Select forward
     	ActionForward forward = null;

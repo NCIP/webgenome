@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.util.SystemUtils;
@@ -73,8 +72,6 @@ public class ShoppingCart implements Serializable {
     private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
-    /** Logger. */
-    private static final Logger LOGGER = Logger.getLogger(ShoppingCart.class);
     
     // ====================================
     //       Attributes

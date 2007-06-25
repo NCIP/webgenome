@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
@@ -48,25 +48,31 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.session;
-
-import org.rti.webgenome.domain.ShoppingCart;
-
+package org.rti.webgenome.job;
 
 /**
- * Interface for managing shopping cart.
+ * This is a job for importing data in a file into
+ * the shopping cart.  The data are typically uploaded
+ * and temporarily saved in a directory.  During importing
+ * the data are transformed into the domain object model.
  * @author dhall
  *
  */
-public interface ShoppingCartMgr {
-    
-    /**
-     * Get shopping cart associated with given user name.
-     * If a cart with given user name has not been
-     * instantiated, a new cart will be created
-     * and persisted.
-     * @param userName User name
-     * @return A shopping cart
-     */
-    ShoppingCart getShoppingCart(String userName);
+public class DataImportJob extends AbstractJob {
+
+	
+
+	
+	//
+	//     A T T R I B U T E S
+	//
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 }

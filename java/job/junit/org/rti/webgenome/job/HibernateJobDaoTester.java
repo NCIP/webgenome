@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
@@ -48,25 +48,46 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.session;
+package org.rti.webgenome.job;
 
-import org.rti.webgenome.domain.ShoppingCart;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import junit.framework.TestCase;
 
 /**
- * Interface for managing shopping cart.
+ * Tester for {@link HibernateJobDao}.
  * @author dhall
  *
  */
-public interface ShoppingCartMgr {
-    
-    /**
-     * Get shopping cart associated with given user name.
-     * If a cart with given user name has not been
-     * instantiated, a new cart will be created
-     * and persisted.
-     * @param userName User name
-     * @return A shopping cart
-     */
-    ShoppingCart getShoppingCart(String userName);
+public final class HibernateJobDaoTester extends TestCase {
+
+	
+	/**
+	 * Test all methods.
+	 */
+	public void testAllMethods() {
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/job/beans.xml");
+		HibernateJobDao dao = (HibernateJobDao) ctx.getBean("jobDao");
+		JobImpl job1 = new JobImpl();
+		dao.saveOrUpdate(job1);
+	}
+	
+	
+	/**
+	 * Mock implementation of {@link Job} for testing.
+	 * @author dhall
+	 */
+	private static final class JobImpl extends AbstractJob {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void execute() {
+			
+		}
+	}
 }

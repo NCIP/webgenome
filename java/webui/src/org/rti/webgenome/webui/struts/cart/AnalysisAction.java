@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -179,7 +179,7 @@ public final class AnalysisAction extends BaseAnalysisAction {
     	ColorChooser colorChooser = PageContext.getColorChooser(request, true);
     	SessionMode sessionMode = PageContext.getSessionMode(request);
     	boolean operationPerformed =
-    		this.jobManager.perform(experiments, op, colorChooser,
+    		this.jobManager.performAnalyticOperation(experiments, op, colorChooser,
     			sessionMode, cart, outputExperimentNames,
     			outputBioAssayNames);
     	

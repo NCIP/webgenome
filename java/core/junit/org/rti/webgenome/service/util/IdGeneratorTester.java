@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
@@ -48,25 +48,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.session;
+package org.rti.webgenome.service.util;
 
-import org.rti.webgenome.domain.ShoppingCart;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import junit.framework.TestCase;
 
 /**
- * Interface for managing shopping cart.
+ * Tester for {@link IdGenerator}.
  * @author dhall
  *
  */
-public interface ShoppingCartMgr {
-    
-    /**
-     * Get shopping cart associated with given user name.
-     * If a cart with given user name has not been
-     * instantiated, a new cart will be created
-     * and persisted.
-     * @param userName User name
-     * @return A shopping cart
-     */
-    ShoppingCart getShoppingCart(String userName);
+public class IdGeneratorTester extends TestCase {
+
+	/**
+	 * Test {@code nextId()} method.
+	 */
+	public void testNextId() {
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+				"org/rti/webgenome/service/util/beans.xml");
+		IdGenerator gen = (IdGenerator) ctx.getBean("experimentIdGenerator");
+		assertEquals(1, gen.nextId().intValue());
+	}
 }

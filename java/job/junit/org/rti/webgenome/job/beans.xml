@@ -31,7 +31,7 @@
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/dao/hibernate</value></constructor-arg>
+        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/job</value></constructor-arg>
         		</bean>
 	      	</list>
     	</property>
@@ -42,27 +42,7 @@
     	</property>
   	</bean>
   	
-  	<bean id="organismDao" class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
+  	<bean id="jobDao" class="org.rti.webgenome.job.HibernateJobDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
-  	
-  	<bean id="shoppingCartDao" class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
-  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
-  	</bean>
-  	
-  	<bean id="principalDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePrincipalDao">
-  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
-  	</bean>
-  	
-  	<bean id="cytologicalMapDao" class="org.rti.webgenome.service.dao.hibernate.HibernateCytologicalMapDao">
-  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
-  	</bean>
-
-	<bean id="annotatedGenomeFeatureDao"
-		class="org.rti.webgenome.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
-  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
-  		<property name="dataSource"><ref bean="dataSource"/></property>
-  	</bean>
-	
-
 </beans>

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
@@ -48,25 +48,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.session;
+package org.rti.webgenome.job;
 
-import org.rti.webgenome.domain.ShoppingCart;
+import java.util.Collection;
 
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Interface for managing shopping cart.
+ * Implementation of {@link JobDao} using Hibernate.
  * @author dhall
  *
  */
-public interface ShoppingCartMgr {
-    
-    /**
-     * Get shopping cart associated with given user name.
-     * If a cart with given user name has not been
-     * instantiated, a new cart will be created
-     * and persisted.
-     * @param userName User name
-     * @return A shopping cart
-     */
-    ShoppingCart getShoppingCart(String userName);
+public class HibernateJobDao extends HibernateDaoSupport
+implements JobDao {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void delete(final Job job) {
+		this.getHibernateTemplate().delete(job);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<Job> loadAll() {
+		return this.getHibernateTemplate().loadAll(
+				org.rti.webgenome.job.AbstractJob.class);
+	}
+
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void saveOrUpdate(final Job job) {
+		this.getHibernateTemplate().saveOrUpdate(job);
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-23 04:49:13 $
+$Revision: 1.2 $
+$Date: 2007-06-25 18:41:54 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,6 +82,9 @@ public abstract class AbstractJob implements Job {
 	/** Message giving state of job upon termination. */
 	private String terminationMessage = null;
 	
+	/** ID of shopping cart. */
+	private Long shoppingCartId = null;
+	
 	//
 	//     C O N S T R U C T O R S
 	//
@@ -122,6 +125,13 @@ public abstract class AbstractJob implements Job {
 	 */
 	public Date getInstantiationDate() {
 		return this.instantiationDate;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setInstantiationDate(final Date date) {
+		this.instantiationDate = date;
 	}
 
 	/**
@@ -178,5 +188,21 @@ public abstract class AbstractJob implements Job {
 	 */
 	public void setUserId(final String userId) {
 		this.userId = userId;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Long getShoppingCartId() {
+		return shoppingCartId;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setShoppingCartId(final Long shoppingCartId) {
+		this.shoppingCartId = shoppingCartId;
 	}
 }
