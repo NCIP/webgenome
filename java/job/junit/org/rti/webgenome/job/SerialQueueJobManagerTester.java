@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-23 04:49:13 $
+$Revision: 1.2 $
+$Date: 2007-06-25 09:48:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,10 +65,19 @@ import junit.framework.TestCase;
 public class SerialQueueJobManagerTester extends TestCase {
 	
 	/** Duration of mock job in milliseconds. */
-	private static final long JOB_DURATION = 3000;
+	private static final long JOB_DURATION = 2000;
 	
-	/** Number of jobs to instantiate during testing. */
-	private static final int NUM_JOBS = 5;
+	/** Number of jobs to instantiate at one time during testing. */
+	private static final int NUM_JOBS = 6;
+	
+	/** User name to associated with jobs. */
+	private static final String USER = "user";
+	
+	/**
+	 * User name of "wrong" user.  No jobs will be associated
+	 * with this user.
+	 */
+	private static final String WRONG_USER = "wrong.user";
 	
 	
 	/**
@@ -82,17 +91,68 @@ public class SerialQueueJobManagerTester extends TestCase {
 			new SerialQueueJobManager(new JobDaoImpl());
 		
 		// Add several jobs
-		for (int i = 0; i < NUM_JOBS / 2; i++) {
-			man.add(new JobImpl());
+		for (int i = 0; i < NUM_JOBS; i++) {
+			man.add(new JobImpl(USER));
 		}
 		
-		Thread.sleep(JOB_DURATION * 5);
-		
-		for (int i = 0; i < NUM_JOBS / 2; i++) {
-			man.add(new JobImpl());
+		// Get jobs from manager and examine
+		Collection<Job> jobs = man.getJobs(USER);
+		assertNotNull(jobs);
+		assertEquals(NUM_JOBS, jobs.size());
+		for (Job job : jobs) {
+			assertNotNull(job.getInstantiationDate());
+			assertNull(job.getStartDate());
+			assertNull(job.getEndDate());
 		}
+		jobs = man.getJobs(WRONG_USER);
+		assertNotNull(jobs);
+		assertEquals(0, jobs.size());
 		
-		Thread.sleep(JOB_DURATION * 5);
+		// Let some jobs execute and examine
+		Thread.sleep(JOB_DURATION * NUM_JOBS / 2);
+		jobs = man.getJobs(USER);
+		assertNotNull(jobs);
+		assertEquals(NUM_JOBS, jobs.size());
+		boolean someFinished = false;
+		boolean someNotFinished = false;
+		boolean someStarted = false;
+		boolean someNotStarted = false;
+		for (Job job : jobs) {
+			if (job.getStartDate() != null) {
+				someStarted = true;
+			} else {
+				someNotStarted = true;
+			}
+			if (job.getEndDate() != null) {
+				someFinished = true;
+			} else {
+				someNotFinished = true;
+			}
+		}
+		assertTrue(someStarted);
+		assertTrue(someNotStarted);
+		assertTrue(someFinished);
+		assertTrue(someNotFinished);
+		
+		// Let all jobs finish and examine
+		Thread.sleep(JOB_DURATION * NUM_JOBS);
+		jobs = man.getJobs(USER);
+		assertNotNull(jobs);
+		assertEquals(NUM_JOBS, jobs.size());
+		boolean allFinished = true;
+		for (Job job : jobs) {
+			if (job.getEndDate() == null) {
+				allFinished = false;
+			}
+		}
+		assertTrue(allFinished);
+		
+		// Remove job and examine
+		Job job = jobs.iterator().next();
+		man.remove(job.getId());
+		jobs = man.getJobs(USER);
+		assertNotNull(jobs);
+		assertEquals(NUM_JOBS - 1, jobs.size());
 	}
 	
 	
@@ -100,7 +160,15 @@ public class SerialQueueJobManagerTester extends TestCase {
 	 * Mock oject class implementing {@link org.rti.webgenome.job.Job}.
 	 * @author dhall
 	 */
-	private static class JobImpl extends AbstractJob {
+	private static final class JobImpl extends AbstractJob {
+		
+		/**
+		 * Constructor.
+		 * @param user User id (i.e. user name)
+		 */
+		private JobImpl(final String user) {
+			this.setUserId(user);
+		}
 
 		/**
 		 * {@inheritDoc}
@@ -120,7 +188,7 @@ public class SerialQueueJobManagerTester extends TestCase {
 	 * Jobs are "persisted" in memory.
 	 * @author dhall
 	 */
-	private static class JobDaoImpl implements JobDao {
+	private static final class JobDaoImpl implements JobDao {
 		
 		/** Map of Job.id to Job. */
 		private Map<Long, Job> jobMap = new HashMap<Long, Job>();
