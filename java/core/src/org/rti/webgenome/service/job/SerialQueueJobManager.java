@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-23 04:49:13 $
+$Revision: 1.1 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,7 +48,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.job;
 
 import java.util.ArrayList;
 import java.util.Collection;

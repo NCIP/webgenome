@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.4 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,7 @@ import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.service.job.JobFactory;
 import org.rti.webgenome.service.plot.PlotParameters;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -101,8 +101,8 @@ public final class NewPlotAction extends BaseAction {
 	//     ATTRIBUTES
 	//
 	
-	/** Oversees execution of plotting job. */
-	private JobManager jobManager = null;
+	/** Generates plotting jobs. */
+	private JobFactory jobFactory = null;
 	
 	
 	//
@@ -110,11 +110,11 @@ public final class NewPlotAction extends BaseAction {
 	//
 	
 	/**
-	 * Setter for the job manager used for dependency injection.
-	 * @param jobManager Manager for compute-intensive jobs.
+	 * Setter for the job factory used for dependency injection.
+	 * @param jobManager Factory for compute-intensive jobs.
 	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
+	public void setJobFactory(final JobFactory jobManager) {
+		this.jobFactory = jobManager;
 	}
 
 	
@@ -205,7 +205,8 @@ public final class NewPlotAction extends BaseAction {
     	
     	// Create plot
 	    boolean plotCompleted =
-	    	this.jobManager.plotExperiments(plot, experiments, params, cart, mode);
+	    	this.jobFactory.plotExperiments(plot, experiments,
+	    			params, cart, mode);
     	
 	    // Determine forward
 	    ActionForward forward = null;

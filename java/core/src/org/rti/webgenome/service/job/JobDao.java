@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.1 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,115 +48,34 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.job;
 
-import java.util.Date;
-
+import java.util.Collection;
 
 /**
- * This interface represents a compute job that
- * can be placed on a queue and run in the background.
+ * This interface defines methods for dealing
+ * with persistence of {@link Job} objects.
  * @author dhall
  *
  */
-public interface Job {
+public interface JobDao {
 	
 	/**
-	 * Get unique identifier for job.
-	 * @return Identifier
+	 * Persist given job if not persisted or
+	 * updates if it already is.
+	 * @param job Job to persist or update
 	 */
-	Long getId();
-	
-	/**
-	 * Set unique identifier for job.
-	 * @param id Unique identifier
-	 */
-	void setId(Long id);
+	void saveOrUpdate(Job job);
 
+	/**
+	 * Load all jobs.
+	 * @return All jobs
+	 */
+	Collection<Job> loadAll();
 	
 	/**
-	 * Get user identifier (i.e., user name).
-	 * @return User identifier
+	 * Delete given job for persistence.
+	 * @param job Job to delete
 	 */
-	String getUserId();
-	
-	/**
-	 * Set user identifier (i.e., user name).
-	 * @param userId User identifier
-	 */
-	void setUserId(String userId);
-	
-	/**
-	 * Get date/time that the job was instantiated.
-	 * @return Date/time that job was instantiated
-	 */
-	Date getInstantiationDate();
-	
-	/**
-	 * Set date/time that job was instantiated.
-	 * @param date Date/time job was instantiated.
-	 */
-	void setInstantiationDate(Date date);
-
-	
-	/**
-	 * Get date/time that job was started.
-	 * @return Date/time that job was started.
-	 */
-	Date getStartDate();
-	
-	/**
-	 * Set date/time that job was started.
-	 * @param date Date/time job was started.
-	 */
-	void setStartDate(Date date);
-	
-	/**
-	 * Get date/time that job ended.
-	 * @return Date/time that job ended.
-	 */
-	Date getEndDate();
-	
-	/**
-	 * Set date/time that job ended.
-	 * @param date Date/time that job ended.
-	 */
-	void setEndDate(Date date);
-	
-	/**
-	 * Set the message that describes the
-	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
-	 * @param message A message
-	 */
-	void setTerminationMessage(String message);
-	
-	
-	/**
-	 * Get the message that describes the
-	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
-	 * @return A message
-	 */
-	String getTerminationMessage();
-	
-	/**
-	 * Set ID of shopping cart.
-	 * @param id Shopping cart ID
-	 */
-	void setShoppingCartId(Long id);
-	
-	/**
-	 * Get ID of shopping cart.
-	 * @return ID of shopping cart
-	 */
-	Long getShoppingCartId();
-	
-	
-	/**
-	 * Execute job.
-	 */
-	void execute();
+	void delete(Job job);
 }

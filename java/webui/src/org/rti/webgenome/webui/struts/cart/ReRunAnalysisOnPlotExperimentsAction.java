@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.5 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.service.job.JobFactory;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -82,10 +82,10 @@ extends BaseAnalysisAction {
 	//
 	
 	/**
-	 * Manages compute-intensive jobs such as--in this case--re-running
+	 * Generates compute-intensive jobs such as--in this case--re-running
 	 * an analytic operation.
 	 */
-	private JobManager jobManager = null;
+	private JobFactory jobFactory = null;
 	
 	
 	//
@@ -93,11 +93,11 @@ extends BaseAnalysisAction {
 	//
 	
 	/**
-	 * Setter for dependency injection of job manager.
-	 * @param jobManager Manages compute-intensive jobs
+	 * Setter for dependency injection of job factory.
+	 * @param jobManager Generates compute-intensive jobs
 	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
+	public void setJobFactory(final JobFactory jobManager) {
+		this.jobFactory = jobManager;
 	}
 	
 	
@@ -146,7 +146,8 @@ extends BaseAnalysisAction {
 		// Redo analysis
 		SessionMode mode = PageContext.getSessionMode(request);
 		boolean reranAlready =
-			this.jobManager.rePerformAnalyticOperation(derivedExperiments, mode);
+			this.jobFactory.rePerformAnalyticOperation(
+					derivedExperiments, mode);
 		
 		// Select forward
     	ActionForward forward = null;

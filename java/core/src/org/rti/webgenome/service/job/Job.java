@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.1 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,161 +48,115 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.job;
 
 import java.util.Date;
 
+
 /**
- * Abstract base class providing default implementations
- * for methods in the {@link Job} interface.
+ * This interface represents a compute job that
+ * can be placed on a queue and run in the background.
  * @author dhall
  *
  */
-public abstract class AbstractJob implements Job {
-	
-	//
-	//     A T T R I B U T E S
-	//
-	
-	/** Date/time object was instantiated. */
-	private Date instantiationDate = null;
-	
-	/** Date/time job was started. */
-	private Date startDate = null;
-	
-	/** Date/time job ended. */
-	private Date endDate = null;
-	
-	/** Unique ID of job. */
-	private Long id = null;
-	
-	/** Identifier of user to whom job is associated. */
-	private String userId = null;
-	
-	/** Message giving state of job upon termination. */
-	private String terminationMessage = null;
-	
-	/** ID of shopping cart. */
-	private Long shoppingCartId = null;
-	
-	//
-	//     C O N S T R U C T O R S
-	//
+public interface Job {
 	
 	/**
-	 * Constructor.
+	 * Get unique identifier for job.
+	 * @return Identifier
 	 */
-	protected AbstractJob() {
-		this.instantiationDate = new Date();
-	}
-	
-	
-	//
-	//     I N T E R F A C E : Job
-	//
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public abstract void execute();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Date getEndDate() {
-		return this.endDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Long getId() {
-		return this.id;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Date getInstantiationDate() {
-		return this.instantiationDate;
-	}
+	Long getId();
 	
 	/**
-	 * {@inheritDoc}
+	 * Set unique identifier for job.
+	 * @param id Unique identifier
 	 */
-	public void setInstantiationDate(final Date date) {
-		this.instantiationDate = date;
-	}
+	void setId(Long id);
 
+	
 	/**
-	 * {@inheritDoc}
+	 * Get user identifier (i.e., user name).
+	 * @return User identifier
 	 */
-	public Date getStartDate() {
-		return this.startDate;
-	}
-
+	String getUserId();
+	
 	/**
-	 * {@inheritDoc}
+	 * Set user identifier (i.e., user name).
+	 * @param userId User identifier
 	 */
-	public String getTerminationMessage() {
-		return this.terminationMessage;
-	}
-
+	void setUserId(String userId);
+	
 	/**
-	 * {@inheritDoc}
+	 * Get date/time that the job was instantiated.
+	 * @return Date/time that job was instantiated
 	 */
-	public String getUserId() {
-		return this.userId;
-	}
-
+	Date getInstantiationDate();
+	
 	/**
-	 * {@inheritDoc}
+	 * Set date/time that job was instantiated.
+	 * @param date Date/time job was instantiated.
 	 */
-	public void setEndDate(final Date date) {
-		this.endDate = date;
-	}
+	void setInstantiationDate(Date date);
 
+	
 	/**
-	 * {@inheritDoc}
+	 * Get date/time that job was started.
+	 * @return Date/time that job was started.
 	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
+	Date getStartDate();
+	
 	/**
-	 * {@inheritDoc}
+	 * Set date/time that job was started.
+	 * @param date Date/time job was started.
 	 */
-	public void setStartDate(final Date date) {
-		this.startDate = date;
-	}
-
+	void setStartDate(Date date);
+	
 	/**
-	 * {@inheritDoc}
+	 * Get date/time that job ended.
+	 * @return Date/time that job ended.
 	 */
-	public void setTerminationMessage(final String message) {
-		this.terminationMessage = message;
-	}
-
+	Date getEndDate();
+	
 	/**
-	 * {@inheritDoc}
+	 * Set date/time that job ended.
+	 * @param date Date/time that job ended.
 	 */
-	public void setUserId(final String userId) {
-		this.userId = userId;
-	}
-
-
+	void setEndDate(Date date);
+	
 	/**
-	 * {@inheritDoc}
+	 * Set the message that describes the
+	 * state of the job upon termination
+	 * if it finished successfullly or threw
+	 * and exception.
+	 * @param message A message
 	 */
-	public Long getShoppingCartId() {
-		return shoppingCartId;
-	}
-
-
+	void setTerminationMessage(String message);
+	
+	
 	/**
-	 * {@inheritDoc}
+	 * Get the message that describes the
+	 * state of the job upon termination
+	 * if it finished successfullly or threw
+	 * and exception.
+	 * @return A message
 	 */
-	public void setShoppingCartId(final Long shoppingCartId) {
-		this.shoppingCartId = shoppingCartId;
-	}
+	String getTerminationMessage();
+	
+	/**
+	 * Set ID of shopping cart.
+	 * @param id Shopping cart ID
+	 */
+	void setShoppingCartId(Long id);
+	
+	/**
+	 * Get ID of shopping cart.
+	 * @return ID of shopping cart
+	 */
+	Long getShoppingCartId();
+	
+	
+	/**
+	 * Execute job.
+	 */
+	void execute();
 }

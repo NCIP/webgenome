@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.4 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,7 @@ import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
-import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.service.job.JobFactory;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.PageContext;
@@ -88,8 +88,8 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	//
 	
 	
-	/** Manager for compute-intensive jobs. */
-	private JobManager jobManager = null;
+	/** Factory for compute-intensive jobs. */
+	private JobFactory jobFactory = null;
 
 	/** Analytic operation factory. */
 	private final AnalyticOperationFactory analyticOperationFactory =
@@ -101,11 +101,11 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	//
 	
 	/**
-	 * Setter for dependency injection of job manager.
-	 * @param jobManager Manages compute-intensive jobs
+	 * Setter for dependency injection of job factory.
+	 * @param jobManager Generates compute-intensive jobs
 	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
+	public void setJobFactory(final JobFactory jobManager) {
+		this.jobFactory = jobManager;
 	}
 	
 	//
@@ -179,7 +179,8 @@ public final class AnalysisAction extends BaseAnalysisAction {
     	ColorChooser colorChooser = PageContext.getColorChooser(request, true);
     	SessionMode sessionMode = PageContext.getSessionMode(request);
     	boolean operationPerformed =
-    		this.jobManager.performAnalyticOperation(experiments, op, colorChooser,
+    		this.jobFactory.performAnalyticOperation(
+    				experiments, op, colorChooser,
     			sessionMode, cart, outputExperimentNames,
     			outputBioAssayNames);
     	

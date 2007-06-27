@@ -172,7 +172,7 @@
 	</bean>
 	
 <!-- Job manager -->
-	<bean id="jobManager" class="org.rti.webgenome.service.job.JobManager">
+	<bean id="jobFactory" class="org.rti.webgenome.service.job.JobFactory">
 		<property name="bioAssayIdGenerator">
 			<ref bean="bioAssayIdGenerator"/>
 		</property>
@@ -257,24 +257,24 @@
 <!-- Perform analytic operation -->
 	<bean name="/cart/analysis"
 		class="org.rti.webgenome.webui.struts.cart.AnalysisAction">
-		<property name="jobManager">
-			<ref bean="jobManager"/>
+		<property name="jobFactory">
+			<ref bean="jobFactory"/>
 		</property>
 	</bean>
 	
 <!-- Rerun analytic operation -->
 	<bean name="/cart/rerunAnalysis"
 		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisAction">
-		<property name="jobManager">
-			<ref bean="jobManager"/>
+		<property name="jobFactory">
+			<ref bean="jobFactory"/>
 		</property>
 	</bean>
 
 <!-- Rerun analytic operation on all derived experiments in plot -->
 	<bean name="/cart/adjustPlotAnalysisParams"
 		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction">
-		<property name="jobManager">
-			<ref bean="jobManager"/>
+		<property name="jobFactory">
+			<ref bean="jobFactory"/>
 		</property>
 	</bean>
 		
@@ -347,8 +347,8 @@
 <!-- New plot -->
 	<bean name="/cart/newPlot"
 		class="org.rti.webgenome.webui.struts.cart.NewPlotAction">
-		<property name="jobManager">
-			<ref bean="jobManager"/>
+		<property name="jobFactory">
+			<ref bean="jobFactory"/>
 		</property>
 	</bean>
 

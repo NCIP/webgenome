@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-06-25 18:41:54 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,46 +48,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.dao;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import junit.framework.TestCase;
+import org.rti.webgenome.domain.Array;
 
 /**
- * Tester for {@link HibernateJobDao}.
+ * Data access object for persisting {@link org.rti.webgenome.domain.Array}
+ * objects.
  * @author dhall
  *
  */
-public final class HibernateJobDaoTester extends TestCase {
+public interface ArrayDao {
 
+	/**
+	 * Persist given array.
+	 * @param array An array
+	 */
+	void save(Array array);
 	
 	/**
-	 * Test all methods.
+	 * Delete given array from persistent storage.
+	 * @param array An array
 	 */
-	public void testAllMethods() {
-		// Get DAO bean
-		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        "org/rti/webgenome/job/beans.xml");
-		HibernateJobDao dao = (HibernateJobDao) ctx.getBean("jobDao");
-		JobImpl job1 = new JobImpl();
-		dao.saveOrUpdate(job1);
-	}
-	
-	
-	/**
-	 * Mock implementation of {@link Job} for testing.
-	 * @author dhall
-	 */
-	private static final class JobImpl extends AbstractJob {
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void execute() {
-			
-		}
-	}
+	void delete(Array array);
 }

@@ -4,5 +4,7 @@ DROP TABLE job;
 DROP TABLE annotated_genome_feature
 DROP TABLE cytoband;
 DROP TABLE cytological_map;
+DROP TABLE reporters_file_names;
+DROP TABLE array;
 DROP TABLE organism;
 DROP TABLE principal;

@@ -22,6 +22,26 @@ CREATE TABLE organism (
 INSERT INTO organism (id, genus, species) VALUES (1, 'Homo', 'sapiens');
 
 --
+-- Array
+--
+CREATE TABLE array (
+	id NUMBER(38) NOT NULL,
+	name VARCHAR(128),
+	PRIMARY KEY (id)
+);
+
+--
+-- Array.chromosomeReportersFileNames map
+--
+CREATE TABLE reporters_file_names (
+	array_id NUMBER(38) NOT NULL,
+	chromosome INT NOT NULL,
+	file_name VARCHAR(512),
+	PRIMARY KEY (array_id, chromosome),
+	FOREIGN KEY (array_id) REFERENCES array(id)
+);
+
+--
 -- CytologicalMap
 --
 CREATE TABLE cytological_map (

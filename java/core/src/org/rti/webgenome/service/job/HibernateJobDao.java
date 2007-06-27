@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-06-22 22:39:50 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,44 +48,41 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.job;
 
 import java.util.Collection;
 
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * This interface is intended to be used as a singleton
- * that manages all {@link Job} objects within the application.
- * Object implementing this interface are expected to manage the
- * execution of jobs.
+ * Implementation of {@link JobDao} using Hibernate.
  * @author dhall
  *
  */
-public interface JobManager {
+public class HibernateJobDao extends HibernateDaoSupport
+implements JobDao {
 
 	/**
-	 * Removes {@link Job} with given
-	 * {@code jobId} from the manager.
-	 * @param jobId Unique identifier of job under management
-	 * of this manager.
-	 * @return {@code true} if the job was successfully
-	 * removed, {@code false} otherwise.  A job cannot be
-	 * removed if it is either executing or it is not
-	 * under management by this manager.
+	 * {@inheritDoc}
 	 */
-	boolean remove(Long jobId);
+	public void delete(final Job job) {
+		this.getHibernateTemplate().delete(job);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public Collection<Job> loadAll() {
+		return this.getHibernateTemplate().loadAll(
+				org.rti.webgenome.service.job.AbstractJob.class);
+	}
+
 	
 	/**
-	 * Add given job to the manager.  The manager will execute
-	 * the job when resources are available.
-	 * @param job Job to add to management
+	 * {@inheritDoc}
 	 */
-	void add(Job job);
-	
-	/**
-	 * Get all current jobs associated with given user.
-	 * @param userId Id (i.e., user name) of a user
-	 * @return All current jobs associated with given user
-	 */
-	Collection<Job> getJobs(String userId);
+	public void saveOrUpdate(final Job job) {
+		this.getHibernateTemplate().saveOrUpdate(job);
+	}
 }

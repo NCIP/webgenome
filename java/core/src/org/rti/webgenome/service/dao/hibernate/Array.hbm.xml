@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.Array" table="ARRAY">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+		<property name="name"/>
+		
+		<map name="chromosomeReportersFileNames" table="reporters_file_names"
+			lazy="false" cascade="all,delete-orphan" sort="natural">
+			<key column="array_id"/>
+			<map-key column="chromosome" type="java.lang.Short"/>
+			<element column="file_name" type="java.lang.String"/>
+		
+		</map>
+		
+	</class>
+
+</hibernate-mapping>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,9 +85,6 @@ public abstract class BioAssay implements Serializable {
     
     /** Organism that was tested. */
     private Organism organism = null;
-    
-    /** Experiment. */
-    private Experiment experiment = null;
     
     /** Microarray model used in bioassay. */
     private Array array = null;
@@ -238,21 +235,6 @@ public abstract class BioAssay implements Serializable {
         this.organism = organism;
     }
     
-    /**
-     * Get experiment.
-     * @return An experiment
-     */
-    public final Experiment getExperiment() {
-        return experiment;
-    }
-
-    /**
-     * Set experiment.
-     * @param experiment An experiment
-     */
-    public final void setExperiment(final Experiment experiment) {
-        this.experiment = experiment;
-    }
 
     // =======================================
     //         Constructors

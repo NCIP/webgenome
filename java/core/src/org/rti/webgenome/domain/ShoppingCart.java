@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.4 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -95,9 +95,6 @@ public class ShoppingCart implements Serializable {
      * it will delete associated image files.
      */
     private ImageFileManager imageFileManager;
-    
-    /** Last experiment to be added to cart. */
-    private Experiment lastExperimentIn = null;
     
     /** Last plot to be added to cart. */
     private Plot lastPlotIn = null;
@@ -200,14 +197,6 @@ public class ShoppingCart implements Serializable {
 	}
 	
 	
-	/**
-	 * Get the last experiment that was added to
-	 * the cart.
-	 * @return Last experiment added to cart.
-	 */
-	public Experiment getLastExperimentIn() {
-		return lastExperimentIn;
-	}
     
     // ================================
     //      Constructors
@@ -255,7 +244,6 @@ public class ShoppingCart implements Serializable {
     	}
     	
         this.experiments.add(experiment);
-        this.lastExperimentIn = experiment;
     }
     
     

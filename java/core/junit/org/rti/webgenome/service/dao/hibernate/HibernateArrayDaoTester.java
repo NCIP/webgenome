@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-06-25 18:41:54 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,31 +48,43 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.dao.hibernate;
+
+import org.rti.webgenome.domain.Array;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import junit.framework.TestCase;
 
 /**
- * This is a job for importing data in a file into
- * the shopping cart.  The data are typically uploaded
- * and temporarily saved in a directory.  During importing
- * the data are transformed into the domain object model.
+ * Tester for {@link org.rti.webgenome.service.dao.HibernateArrayDao}.
  * @author dhall
  *
  */
-public class DataImportJob extends AbstractJob {
-
-	
-
-	
-	//
-	//     A T T R I B U T E S
-	//
+public class HibernateArrayDaoTester extends TestCase {
 	
 	/**
-	 * {@inheritDoc}
+	 * Test all methods.
+	 *
 	 */
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public void testAllMethods() {
 		
+		// Get bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
+		HibernateArrayDao dao =
+			(HibernateArrayDao)
+			ctx.getBean("arrayDao");
+		
+		// Instantiate test objects
+		Array array = new Array();
+		array.setName("array");
+		array.setChromosomeReportersFileName((short) 1, "file1");
+		array.setChromosomeReportersFileName((short) 2, "file2");
+		
+		// Run tests
+		dao.save(array);
+		dao.delete(array);
 	}
+
 }

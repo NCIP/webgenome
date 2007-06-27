@@ -1,5 +1,5 @@
 /*
-$Revision: 1.4 $
+$Revision: 1.1 $
 $Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
@@ -50,42 +50,29 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
-import java.util.Collection;
-
-
 /**
- * This interface is intended to be used as a singleton
- * that manages all {@link Job} objects within the application.
- * Object implementing this interface are expected to manage the
- * execution of jobs.
+ * This is a job for importing data in a file into
+ * the shopping cart.  The data are typically uploaded
+ * and temporarily saved in a directory.  During importing
+ * the data are transformed into the domain object model.
  * @author dhall
  *
  */
-public interface JobManager {
+public class DataImportJob extends AbstractJob {
 
-	/**
-	 * Removes {@link Job} with given
-	 * {@code jobId} from the manager.
-	 * @param jobId Unique identifier of job under management
-	 * of this manager.
-	 * @return {@code true} if the job was successfully
-	 * removed, {@code false} otherwise.  A job cannot be
-	 * removed if it is either executing or it is not
-	 * under management by this manager.
-	 */
-	boolean remove(Long jobId);
+	
+
+	
+	//
+	//     A T T R I B U T E S
+	//
 	
 	/**
-	 * Add given job to the manager.  The manager will execute
-	 * the job when resources are available.
-	 * @param job Job to add to management
+	 * {@inheritDoc}
 	 */
-	void add(Job job);
-	
-	/**
-	 * Get all current jobs associated with given user.
-	 * @param userId Id (i.e., user name) of a user
-	 * @return All current jobs associated with given user
-	 */
-	Collection<Job> getJobs(String userId);
+	@Override
+	public void execute() {
+		// TODO Auto-generated method stub
+		
+	}
 }

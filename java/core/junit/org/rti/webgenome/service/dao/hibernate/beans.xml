@@ -64,5 +64,8 @@
   		<property name="dataSource"><ref bean="dataSource"/></property>
   	</bean>
 	
+	<bean id="arrayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateArrayDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
 
 </beans>

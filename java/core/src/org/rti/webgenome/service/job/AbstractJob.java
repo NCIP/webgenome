@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-06-25 18:41:54 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,41 +48,161 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.job;
 
-import java.util.Collection;
-
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import java.util.Date;
 
 /**
- * Implementation of {@link JobDao} using Hibernate.
+ * Abstract base class providing default implementations
+ * for methods in the {@link Job} interface.
  * @author dhall
  *
  */
-public class HibernateJobDao extends HibernateDaoSupport
-implements JobDao {
+public abstract class AbstractJob implements Job {
+	
+	//
+	//     A T T R I B U T E S
+	//
+	
+	/** Date/time object was instantiated. */
+	private Date instantiationDate = null;
+	
+	/** Date/time job was started. */
+	private Date startDate = null;
+	
+	/** Date/time job ended. */
+	private Date endDate = null;
+	
+	/** Unique ID of job. */
+	private Long id = null;
+	
+	/** Identifier of user to whom job is associated. */
+	private String userId = null;
+	
+	/** Message giving state of job upon termination. */
+	private String terminationMessage = null;
+	
+	/** ID of shopping cart. */
+	private Long shoppingCartId = null;
+	
+	//
+	//     C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.
+	 */
+	protected AbstractJob() {
+		this.instantiationDate = new Date();
+	}
+	
+	
+	//
+	//     I N T E R F A C E : Job
+	//
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void delete(final Job job) {
-		this.getHibernateTemplate().delete(job);
+	public abstract void execute();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getEndDate() {
+		return this.endDate;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
-	public Collection<Job> loadAll() {
-		return this.getHibernateTemplate().loadAll(
-				org.rti.webgenome.job.AbstractJob.class);
+	public Long getId() {
+		return this.id;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getInstantiationDate() {
+		return this.instantiationDate;
+	}
 	
 	/**
 	 * {@inheritDoc}
 	 */
-	public void saveOrUpdate(final Job job) {
-		this.getHibernateTemplate().saveOrUpdate(job);
+	public void setInstantiationDate(final Date date) {
+		this.instantiationDate = date;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Date getStartDate() {
+		return this.startDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getTerminationMessage() {
+		return this.terminationMessage;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUserId() {
+		return this.userId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setEndDate(final Date date) {
+		this.endDate = date;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setStartDate(final Date date) {
+		this.startDate = date;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setTerminationMessage(final String message) {
+		this.terminationMessage = message;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setUserId(final String userId) {
+		this.userId = userId;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Long getShoppingCartId() {
+		return shoppingCartId;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setShoppingCartId(final Long shoppingCartId) {
+		this.shoppingCartId = shoppingCartId;
 	}
 }

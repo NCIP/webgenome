@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-25 09:48:02 $
+$Revision: 1.1 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,12 +48,17 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.job;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.rti.webgenome.service.job.AbstractJob;
+import org.rti.webgenome.service.job.Job;
+import org.rti.webgenome.service.job.JobDao;
+import org.rti.webgenome.service.job.SerialQueueJobManager;
 
 import junit.framework.TestCase;
 
@@ -157,7 +162,7 @@ public class SerialQueueJobManagerTester extends TestCase {
 	
 	
 	/**
-	 * Mock oject class implementing {@link org.rti.webgenome.job.Job}.
+	 * Mock oject class implementing {@link org.rti.webgenome.service.job.Job}.
 	 * @author dhall
 	 */
 	private static final class JobImpl extends AbstractJob {
@@ -184,7 +189,7 @@ public class SerialQueueJobManagerTester extends TestCase {
 	}
 
 	/**
-	 * Mock object class implementing {@link org.rti.webgenome.job.JobDao}.
+	 * Mock object class implementing {@link org.rti.webgenome.service.job.JobDao}.
 	 * Jobs are "persisted" in memory.
 	 * @author dhall
 	 */

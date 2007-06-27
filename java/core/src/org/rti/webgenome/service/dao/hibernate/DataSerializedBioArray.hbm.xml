@@ -13,20 +13,13 @@
 		</id>
 		
 		<property name="name"/>
+		
 		<many-to-one
 			name="organism"
 			column="organism_id"
 			class="org.rti.webgenome.domain.Organism"
 			not-null="true"
 			lazy="false"
-		/>
-		<many-to-one
-			name="experiment"
-			column="experiment_id"
-			class="org.rti.webgenome.domain.Experiment"
-			not-null="true"
-			lazy="false"
-			insert="false" update="false"
 		/>
 		
 	</class>

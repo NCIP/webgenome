@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-06-22 22:39:50 $
+$Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,34 +48,33 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.job;
+package org.rti.webgenome.service.dao.hibernate;
 
-import java.util.Collection;
+import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.service.dao.ArrayDao;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * This interface defines methods for dealing
- * with persistence of {@link Job} objects.
+ * Implementation of {@link org.rti.webgenome.service.dao.ArrayDao}
+ * using Hibernate.
  * @author dhall
  *
  */
-public interface JobDao {
-	
-	/**
-	 * Persist given job if not persisted or
-	 * updates if it already is.
-	 * @param job Job to persist or update
-	 */
-	void saveOrUpdate(Job job);
+public class HibernateArrayDao extends HibernateDaoSupport
+implements ArrayDao {
 
 	/**
-	 * Load all jobs.
-	 * @return All jobs
+	 * {@inheritDoc}
 	 */
-	Collection<Job> loadAll();
-	
+	public void delete(final Array array) {
+		this.getHibernateTemplate().delete(array);
+	}
+
 	/**
-	 * Delete given job for persistence.
-	 * @param job Job to delete
+	 * {@inheritDoc}
 	 */
-	void delete(Job job);
+	public void save(final Array array) {
+		this.getHibernateTemplate().save(array);
+	}
+
 }

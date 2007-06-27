@@ -1,5 +1,5 @@
 /*
-$Revision: 1.4 $
+$Revision: 1.1 $
 $Date: 2007-06-27 12:53:56 $
 
 The Web CGH Software License, Version 1.0
@@ -50,42 +50,47 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
-import java.util.Collection;
+import org.rti.webgenome.service.job.AbstractJob;
+import org.rti.webgenome.service.job.HibernateJobDao;
+import org.rti.webgenome.service.job.Job;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import junit.framework.TestCase;
 
 /**
- * This interface is intended to be used as a singleton
- * that manages all {@link Job} objects within the application.
- * Object implementing this interface are expected to manage the
- * execution of jobs.
+ * Tester for {@link HibernateJobDao}.
  * @author dhall
  *
  */
-public interface JobManager {
+public final class HibernateJobDaoTester extends TestCase {
 
-	/**
-	 * Removes {@link Job} with given
-	 * {@code jobId} from the manager.
-	 * @param jobId Unique identifier of job under management
-	 * of this manager.
-	 * @return {@code true} if the job was successfully
-	 * removed, {@code false} otherwise.  A job cannot be
-	 * removed if it is either executing or it is not
-	 * under management by this manager.
-	 */
-	boolean remove(Long jobId);
 	
 	/**
-	 * Add given job to the manager.  The manager will execute
-	 * the job when resources are available.
-	 * @param job Job to add to management
+	 * Test all methods.
 	 */
-	void add(Job job);
+	public void testAllMethods() {
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/job/beans.xml");
+		HibernateJobDao dao = (HibernateJobDao) ctx.getBean("jobDao");
+		JobImpl job1 = new JobImpl();
+		dao.saveOrUpdate(job1);
+	}
+	
 	
 	/**
-	 * Get all current jobs associated with given user.
-	 * @param userId Id (i.e., user name) of a user
-	 * @return All current jobs associated with given user
+	 * Mock implementation of {@link Job} for testing.
+	 * @author dhall
 	 */
-	Collection<Job> getJobs(String userId);
+	private static final class JobImpl extends AbstractJob {
+
+		/**
+		 * {@inheritDoc}
+		 */
+		@Override
+		public void execute() {
+			
+		}
+	}
 }
