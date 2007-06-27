@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-27 17:51:51 $
 
 The Web CGH Software License, Version 1.0
@@ -48,116 +48,34 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.domain;
+package org.rti.webgenome.service.dao.hibernate;
+
+import org.rti.webgenome.domain.DataSourceProperties;
+import org.rti.webgenome.service.dao.DataSourcePropertiesDao;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Properties of a data source.  It is necessary for
- * <code>Experiment</code>s to retain information that can be used
- * by data services to obtain additional data.  Classes that implement
- * this interface should override <code>equals</code> and <code>hashCode</code>
- * methods.
+ * Implementation of
+ * {@link org.rti.webgenome.service.dao.DataSourcePropertiesDao}
+ * using Hibernate.
  * @author dhall
  *
  */
-public interface DataSourceProperties {
-	
-	/** Client ID for data that originate in analytic operations. */
-	String ANALYTIC_OPERATION_CLIENT_ID =
-		"analytic.operation";
-	
-	/** Data source consisting of an analytic operation. */
-	DataSourceProperties ANALYTIC_OPERATION =
-		new BaseDataSourceProperties(ANALYTIC_OPERATION_CLIENT_ID);
-	
-	/**
-	 * Set primary key value used for persistence.
-	 * @param id Primary key value
-	 */
-	void setId(Long id);
-	
-	/**
-	 * Get primary key value used for persistence.
-	 * @return Primary key value
-	 */
-	Long getId();
+public class HibernateDataSourcePropertiesDao extends HibernateDaoSupport
+		implements DataSourcePropertiesDao {
 
 	/**
-	 * Get ID of application client.
-	 * @return ID of application client
+	 * {@inheritDoc}
 	 */
-	String getClientId();
-	
-	/**
-	 * Set ID of application client.
-	 * @param clientId Application client.
-	 */
-	void setClientId(String clientId);
-	
-	
-	/**
-	 * Base class for <code>DataSourceProperties</code>-implementing
-	 * classes.
-	 * @author dhall
-	 *
-	 */
-	public class BaseDataSourceProperties implements DataSourceProperties {
-		
-		/** Primary key for persistence. */
-		private Long id = null;
-		
-		/** Id of client application. */
-		private String clientId;
-
-		/**
-		 * Get ID of application client.
-		 * @return ID of application client
-		 */
-		public final String getClientId() {
-			return clientId;
-		}
-		
-		
-		/**
-		 * Set ID of application client.
-		 * @param clientId ID of application client
-		 */
-		public final void setClientId(final String clientId) {
-			this.clientId = clientId;
-		}
-		
-		
-		/**
-		 * Get primary key value for persistence.
-		 * @return Primary key value
-		 */
-		public final Long getId() {
-			return id;
-		}
-
-
-		/**
-		 * Set primary key value for persistence.
-		 * @param id Primary key value
-		 */
-		public final void setId(final Long id) {
-			this.id = id;
-		}
-		
-		
-		/**
-		 * Constructor.
-		 */
-		public BaseDataSourceProperties() {
-			
-		}
-
-
-		/**
-		 * Constructor.
-		 * @param clientId ID of application client
-		 */
-		public BaseDataSourceProperties(final String clientId) {
-			this.clientId = clientId;
-		}
+	public void delete(final DataSourceProperties props) {
+		this.getHibernateTemplate().delete(props);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void save(final DataSourceProperties props) {
+		this.getHibernateTemplate().save(props);
+	}
+
 }

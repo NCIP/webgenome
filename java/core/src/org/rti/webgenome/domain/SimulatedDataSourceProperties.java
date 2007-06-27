@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-06-27 17:51:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,13 @@ package org.rti.webgenome.domain;
  */
 public class SimulatedDataSourceProperties
 extends DataSourceProperties.BaseDataSourceProperties {
+	
+	/**
+	 * Constructor.
+	 */
+	public SimulatedDataSourceProperties() {
+		
+	}
 	
 	/**
 	 * Constructor.

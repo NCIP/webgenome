@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-27 17:51:51 $
 
 The Web CGH Software License, Version 1.0
@@ -48,116 +48,46 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.domain;
+package org.rti.webgenome.service.dao.hibernate;
+
+import org.rti.webgenome.domain.EjbDataSourceProperties;
+import org.rti.webgenome.domain.SimulatedDataSourceProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import junit.framework.TestCase;
 
 /**
- * Properties of a data source.  It is necessary for
- * <code>Experiment</code>s to retain information that can be used
- * by data services to obtain additional data.  Classes that implement
- * this interface should override <code>equals</code> and <code>hashCode</code>
- * methods.
+ * Tester for
+ * {@link org.rti.webgenome.service.dao.hibernate.
+ * HibernateDataSourcePropertiesDao}
  * @author dhall
  *
  */
-public interface DataSourceProperties {
-	
-	/** Client ID for data that originate in analytic operations. */
-	String ANALYTIC_OPERATION_CLIENT_ID =
-		"analytic.operation";
-	
-	/** Data source consisting of an analytic operation. */
-	DataSourceProperties ANALYTIC_OPERATION =
-		new BaseDataSourceProperties(ANALYTIC_OPERATION_CLIENT_ID);
-	
-	/**
-	 * Set primary key value used for persistence.
-	 * @param id Primary key value
-	 */
-	void setId(Long id);
-	
-	/**
-	 * Get primary key value used for persistence.
-	 * @return Primary key value
-	 */
-	Long getId();
+public class HibernateDataSourcePropertiesDaoTester extends TestCase {
 
 	/**
-	 * Get ID of application client.
-	 * @return ID of application client
+	 * Test all methods.
 	 */
-	String getClientId();
-	
-	/**
-	 * Set ID of application client.
-	 * @param clientId Application client.
-	 */
-	void setClientId(String clientId);
-	
-	
-	/**
-	 * Base class for <code>DataSourceProperties</code>-implementing
-	 * classes.
-	 * @author dhall
-	 *
-	 */
-	public class BaseDataSourceProperties implements DataSourceProperties {
+	public void testAllMethods() {
 		
-		/** Primary key for persistence. */
-		private Long id = null;
+		// Get bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
+		HibernateDataSourcePropertiesDao dao =
+			(HibernateDataSourcePropertiesDao)
+			ctx.getBean("dataSourcePropertiesDao");
 		
-		/** Id of client application. */
-		private String clientId;
-
-		/**
-		 * Get ID of application client.
-		 * @return ID of application client
-		 */
-		public final String getClientId() {
-			return clientId;
-		}
+		// Instantiate test objects
+		SimulatedDataSourceProperties p1 =
+			new SimulatedDataSourceProperties("client1");
+		EjbDataSourceProperties p2 =
+			new EjbDataSourceProperties("jndiName1",
+					"jndiProvider1", "client2");
 		
-		
-		/**
-		 * Set ID of application client.
-		 * @param clientId ID of application client
-		 */
-		public final void setClientId(final String clientId) {
-			this.clientId = clientId;
-		}
-		
-		
-		/**
-		 * Get primary key value for persistence.
-		 * @return Primary key value
-		 */
-		public final Long getId() {
-			return id;
-		}
-
-
-		/**
-		 * Set primary key value for persistence.
-		 * @param id Primary key value
-		 */
-		public final void setId(final Long id) {
-			this.id = id;
-		}
-		
-		
-		/**
-		 * Constructor.
-		 */
-		public BaseDataSourceProperties() {
-			
-		}
-
-
-		/**
-		 * Constructor.
-		 * @param clientId ID of application client
-		 */
-		public BaseDataSourceProperties(final String clientId) {
-			this.clientId = clientId;
-		}
+		dao.save(p1);
+		dao.save(p2);
+		dao.delete(p1);
+		dao.delete(p2);
 	}
 }

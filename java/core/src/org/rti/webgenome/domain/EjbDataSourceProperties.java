@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-06-27 17:51:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,10 +59,10 @@ public class EjbDataSourceProperties
 extends DataSourceProperties.BaseDataSourceProperties {
 	
 	/** Name of JNDI service. */
-	private final String jndiName;
+	private String jndiName;
 	
 	/** JNDI provider URL. */
-	private final String jndiProviderURL;
+	private String jndiProviderURL;
 	
 	/**
 	 * Get JNDI service name.
@@ -78,6 +78,30 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 */
 	public final String getJndiProviderURL() {
 		return jndiProviderURL;
+	}
+	
+	
+	/**
+	 * Set JNDI service name.
+	 * @param jndiName JNDI service name
+	 */
+	public void setJndiName(final String jndiName) {
+		this.jndiName = jndiName;
+	}
+
+	/**
+	 * Set JNDI provider URL.
+	 * @param jndiProviderURL JNDI provider URL
+	 */
+	public void setJndiProviderURL(final String jndiProviderURL) {
+		this.jndiProviderURL = jndiProviderURL;
+	}
+	
+	/**
+	 * Constructor.
+	 */
+	public EjbDataSourceProperties() {
+		
 	}
 
 	/**

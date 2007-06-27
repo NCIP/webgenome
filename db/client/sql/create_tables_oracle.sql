@@ -139,6 +139,28 @@ CREATE TABLE prop_options (
 	FOREIGN KEY (user_conf_prop_opt_id) REFERENCES user_conf_prop_opt(id)
 );
 
+CREATE SEQUENCE seq_ds_props_id START WITH 1 INCREMENT BY 1;
+
+--
+-- SimulatedDataSourceProperties
+--
+CREATE TABLE sim_data_src_props (
+	id NUMBER(38) NOT NULL,
+	client_id VARCHAR(128),
+	PRIMARY KEY (id)
+);
+
+--
+-- EjbDataSourceProperties
+--
+CREATE TABLE ejb_data_src_props (
+	id NUMBER(38) NOT NULL,
+	client_id VARCHAR(128),
+	jndi_name VARCHAR(256),
+	jndi_provider_url VARCHAR(1024),
+	PRIMARY KEY (id)
+);
+
 --
 -- BioAssay
 --

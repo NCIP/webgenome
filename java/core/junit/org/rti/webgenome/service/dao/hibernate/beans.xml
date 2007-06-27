@@ -28,6 +28,16 @@
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
     	<property name="dataSource" ref="dataSource"/>
+    	
+    	<!-- Comment below property out if uncommenting the following -->
+    	<property name="mappingResources">
+	      <list>
+	        <value>org/rti/webgenome/service/dao/hibernate/DataSourceProperties.hbm.xml</value>
+	      </list>
+	    </property>
+    	
+    	<!-- Commented out for faster processing of this file -->
+    	<!--
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
@@ -35,6 +45,8 @@
         		</bean>
 	      	</list>
     	</property>
+    	-->
+    	
     	<property name="hibernateProperties">
       		<props>
         		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
@@ -42,6 +54,7 @@
     	</property>
   	</bean>
   	
+  	<!--
   	<bean id="organismDao" class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
@@ -69,6 +82,10 @@
   	</bean>
   	
   	<bean id="userConfigurablePropertyDao" class="org.rti.webgenome.service.dao.hibernate.HibernateUserConfigurablePropertyDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	-->
+  	<bean id="dataSourcePropertiesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateDataSourcePropertiesDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 
