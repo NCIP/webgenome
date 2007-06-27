@@ -100,6 +100,46 @@ CREATE TABLE job (
 );
 
 --
+-- Sequence used to assign unique IDs to all
+-- subclasses of UserConfigurableProperty
+--
+CREATE SEQUENCE seq_prop_id START WITH 1 INCREMENT BY 1;
+
+--
+-- SimpleUserConfigurableProperty
+--
+CREATE TABLE simp_user_conf_prop (
+	id NUMBER(38) NOT NULL,
+	current_value VARCHAR(128),
+	display_name VARCHAR(128),
+	name VARCHAR(128),
+	PRIMARY KEY (id)
+);
+
+--
+-- UserConfigurablePropertyWithOptions
+--
+CREATE TABLE user_conf_prop_opt (
+	id NUMBER(38) NOT NULL,
+	current_value VARCHAR(128),
+	display_name VARCHAR(128),
+	name VARCHAR(128),
+	PRIMARY KEY (id)
+);
+
+--
+-- Specific options for a UserConfigurablePropertyWithOptions
+-- (i.e, the 'options' attribute.
+--
+CREATE TABLE prop_options (
+	code VARCHAR(128),
+	display_name VARCHAR(128),
+	user_conf_prop_opt_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (user_conf_prop_opt_id, code),
+	FOREIGN KEY (user_conf_prop_opt_id) REFERENCES user_conf_prop_opt(id)
+);
+
+--
 -- BioAssay
 --
 CREATE TABLE bio_assay (

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-27 15:47:15 $
 
 The Web CGH Software License, Version 1.0
@@ -48,70 +48,50 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.analysis;
+package org.rti.webgenome.service.dao.hibernate;
+
+import junit.framework.TestCase;
+
+import org.rti.webgenome.analysis.SimpleUserConfigurableProperty;
+import org.rti.webgenome.analysis.UserConfigurablePropertyWithOptions;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Represents a property of an
- * <code>AnalyticOperation</code>
- * that can be configured by the user at run time.
+ * Tester for
+ * {@link org.rti.webgenome.service.dao.hibernate.
+ * HibernateUserConfigurableProperty}.
  * @author dhall
  *
  */
-public interface UserConfigurableProperty {
+public class HibernateUserConfigurablePropertyTester extends TestCase {
 
 	/**
-	 * Get name of property.
-	 * @return Name of property.
+	 * Test all methods.
 	 */
-	String getName();
-	
-	/**
-	 * Set name of property.
-	 * @param name Name of property.
-	 */
-	void setName(String name);
-	
-	/**
-	 * Get name that should be displayed to users.
-	 * @return Name that should be displayed to users.
-	 */
-	String getDisplayName();
-	
-	
-	/**
-	 * Set name that should be displayed to users.
-	 * @param displayName Name that should be displayed
-	 * to users.
-	 */
-	void setDisplayName(String displayName);
-	
-	/**
-	 * Create a clone of this object.
-	 * @return A clone of this object.
-	 */
-	UserConfigurableProperty createClone();
-	
-	/**
-	 * Get current value of property in string format.
-	 * @return Current value of property.
-	 */
-	String getCurrentValue();
-	
-	/**
-	 * Set current value of property.
-	 * @param value Current value
-	 */
-	void setCurrentValue(String value);
-	
-	/**
-	 * Set primary key used for persistence.
-	 * @param id Primary key
-	 */
-	void setId(Long id);
-	
-	/**
-	 * Get primary key used for persistence.
-	 * @return Primary key
-	 */
-	Long getId();
+	public void testAllMethods() {
+		
+		// Get bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
+		HibernateUserConfigurablePropertyDao dao =
+			(HibernateUserConfigurablePropertyDao)
+			ctx.getBean("userConfigurablePropertyDao");
+		
+		// Instantiate test objects
+		UserConfigurablePropertyWithOptions p1 =
+			new UserConfigurablePropertyWithOptions("name1",
+					"displayName1", "value1");
+		p1.addOption("code1", "displayName1");
+		p1.addOption("code2", "displayName2");
+		SimpleUserConfigurableProperty p2 =
+			new SimpleUserConfigurableProperty("name2",
+					"displayName2", "value2");
+		
+		// Perform tests
+		dao.save(p1);
+		dao.save(p2);
+		dao.delete(p1);
+		dao.delete(p2);
+	}
 }

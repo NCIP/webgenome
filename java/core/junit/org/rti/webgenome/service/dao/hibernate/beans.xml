@@ -67,5 +67,9 @@
 	<bean id="arrayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateArrayDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
+  	
+  	<bean id="userConfigurablePropertyDao" class="org.rti.webgenome.service.dao.hibernate.HibernateUserConfigurablePropertyDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
 
 </beans>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.analysis.UserConfigurableProperty">
+	
+		<id name="id" column="ID">
+		    <generator class="sequence">
+		    	<param name="sequence">seq_prop_id</param>
+		    </generator>
+		</id>
+		
+		<property name="currentValue" column="current_value"/>
+		
+		<property name="displayName" column="display_name"/>
+		
+		<property name="name"/>
+		
+		<union-subclass
+			name="org.rti.webgenome.analysis.SimpleUserConfigurableProperty"
+			table="simp_user_conf_prop"/>
+			
+		<union-subclass
+			name="org.rti.webgenome.analysis.UserConfigurablePropertyWithOptions"
+			table="user_conf_prop_opt">
+			<map name="options" table="prop_options"
+				lazy="false" cascade="all,delete-orphan">
+				<key column="user_conf_prop_opt_id"/>
+				<map-key column="code" type="java.lang.String"/>
+				<element column="display_name" type="java.lang.String"/>
+			</map>
+		</union-subclass>
+		
+	</class>
+
+</hibernate-mapping>

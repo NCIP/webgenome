@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-06-27 15:47:15 $
 
 The Web CGH Software License, Version 1.0
 
@@ -78,6 +78,9 @@ implements UserConfigurableProperty {
     /** Current value of property. */
     private String currentValue = null;
     
+    /** Primary key used for persistence. */
+    private Long id = null;
+    
     
     // ========================================
     //     UserConfigurableProperty interface
@@ -127,10 +130,26 @@ implements UserConfigurableProperty {
 	public final String getCurrentValue() {
 		return this.currentValue;
 	}
+	
+    /**
+     * Get primary key used for persistence.
+     * @return Primary key
+     */
+    public final Long getId() {
+		return id;
+	}
+
+    /**
+     * Set primary key used for persistence.
+     * @param id Primary key
+     */
+	public final void setId(final Long id) {
+		this.id = id;
+	}
     
-    // ============================
-    //    Additional setters
-    // ============================
+    // =====================================
+    //    Additional getters and setters
+    // =====================================
     
     /**
      * Set name of the property.  This should
@@ -157,7 +176,8 @@ implements UserConfigurableProperty {
     //      Constructors
     // ============================
     
-    /**
+
+	/**
      * Constructor.
      */
     public AbstractUserConfigurableProperty() {

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-27 15:47:15 $
 
 The Web CGH Software License, Version 1.0
@@ -48,70 +48,28 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.analysis;
+package org.rti.webgenome.service.dao;
+
+import org.rti.webgenome.analysis.UserConfigurableProperty;
 
 /**
- * Represents a property of an
- * <code>AnalyticOperation</code>
- * that can be configured by the user at run time.
+ * Data access class for
+ * {@link org.rti.webgenome.analysis.UserConfigurableProperty}
+ * and implementing classes.
  * @author dhall
  *
  */
-public interface UserConfigurableProperty {
+public interface UserConfigurablePropertyDao {
 
 	/**
-	 * Get name of property.
-	 * @return Name of property.
+	 * Save given property.
+	 * @param prop Property to save
 	 */
-	String getName();
+	void save(UserConfigurableProperty prop);
 	
 	/**
-	 * Set name of property.
-	 * @param name Name of property.
+	 * Delete given property.
+	 * @param prop Property to delete.
 	 */
-	void setName(String name);
-	
-	/**
-	 * Get name that should be displayed to users.
-	 * @return Name that should be displayed to users.
-	 */
-	String getDisplayName();
-	
-	
-	/**
-	 * Set name that should be displayed to users.
-	 * @param displayName Name that should be displayed
-	 * to users.
-	 */
-	void setDisplayName(String displayName);
-	
-	/**
-	 * Create a clone of this object.
-	 * @return A clone of this object.
-	 */
-	UserConfigurableProperty createClone();
-	
-	/**
-	 * Get current value of property in string format.
-	 * @return Current value of property.
-	 */
-	String getCurrentValue();
-	
-	/**
-	 * Set current value of property.
-	 * @param value Current value
-	 */
-	void setCurrentValue(String value);
-	
-	/**
-	 * Set primary key used for persistence.
-	 * @param id Primary key
-	 */
-	void setId(Long id);
-	
-	/**
-	 * Get primary key used for persistence.
-	 * @return Primary key
-	 */
-	Long getId();
+	void delete(UserConfigurableProperty prop);
 }
