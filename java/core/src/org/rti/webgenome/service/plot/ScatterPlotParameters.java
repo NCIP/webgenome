@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
+import org.rti.webgenome.core.Constants;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.util.SystemUtils;
@@ -63,7 +64,7 @@ import org.rti.webgenome.util.SystemUtils;
  * @author dhall
  *
  */
-public final class ScatterPlotParameters
+public class ScatterPlotParameters
 extends BaseGenomicPlotParameters implements Serializable {
 	
 	/** Serialized version ID. */
@@ -75,10 +76,10 @@ extends BaseGenomicPlotParameters implements Serializable {
     // ============================
     
     /** Minimum Y-axis value specified by user. */
-    private float minY = Float.NaN;
+    private float minY = Constants.FLOAT_NAN;
 
     /** Maximum Y-axis value specified by user. */
-    private float maxY = Float.NaN;
+    private float maxY = Constants.FLOAT_NAN;
     
     /**
      * Width of plot area in pixels.  Plot area

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,9 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.plot;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
@@ -77,12 +77,14 @@ public abstract class PlotParameters {
 	//     ATTRIBUTES
 	//
 	
+	/** Primary key value for persistence. */
+	private Long id = null;
+	
     /** Plot name. */
     private String plotName = null;
     
     /** Number of plots in a row of plots. */
     private int numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
-    
     
     /**
      * Units for <code>startLocation</code>
@@ -91,8 +93,8 @@ public abstract class PlotParameters {
     private BpUnits units = BpUnits.BP;
     
     /** Genome intervals to plot. */
-    private List<GenomeInterval> genomeIntervals =
-    	new ArrayList<GenomeInterval>();
+    private SortedSet<GenomeInterval> genomeIntervals =
+    	new TreeSet<GenomeInterval>();
     
     
     //
@@ -100,6 +102,24 @@ public abstract class PlotParameters {
     //
 
     
+    /**
+     * Get primary key value for persistence.
+     * @return Primary key value.
+     */
+	public final Long getId() {
+		return id;
+	}
+
+
+	/**
+	 * Set primary key value for persistence.
+	 * @param id Primary key value.
+	 */
+	public void setId(final Long id) {
+		this.id = id;
+	}
+
+
 	/**
 	 * Get plot name.
 	 * @return Plot name.
@@ -140,7 +160,7 @@ public abstract class PlotParameters {
      * Get genome intervals to plot.
      * @return Genome intervals to plot
      */
-    public final List<GenomeInterval> getGenomeIntervals() {
+    public final SortedSet<GenomeInterval> getGenomeIntervals() {
 		return genomeIntervals;
 	}
 
@@ -150,7 +170,7 @@ public abstract class PlotParameters {
      * @param genomeIntervals Genome intervals to plot
      */
 	public final void setGenomeIntervals(
-			final List<GenomeInterval> genomeIntervals) {
+			final SortedSet<GenomeInterval> genomeIntervals) {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
@@ -234,6 +254,25 @@ public abstract class PlotParameters {
 				gi.setEndLocation(end);
 			}
 		}
+    }
+    
+    /**
+     * Get name of units.  This method is used only for persisting
+     * the units.
+     * @return Name of units (i.e. String equivalent)
+     */
+    public final String getBpUnitsByName() {
+    	return this.units.getName();
+    }
+    
+    
+    /**
+     * Set {@code units} property by specifying a
+     * name.
+     * @param name String equivalent of units.
+     */
+    public final void setBpUnitsByName(final String name) {
+    	this.units = BpUnits.getUnits(name);
     }
     
     

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,9 +65,6 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	// ===================================
 	//        Attributes
 	// ===================================
-	
-	/** ID used as primary key for persistence. */
-	private Long id = null;
 	
 	/** Display name of feature. */
 	private String name = null;
@@ -149,24 +146,6 @@ public class AnnotatedGenomeFeature extends GenomeInterval {
 	 */
 	public final void setOrganism(final Organism organism) {
 		this.organism = organism;
-	}
-
-
-	/**
-	 * Get primary key ID used for persistence.
-	 * @return ID
-	 */
-	public final Long getId() {
-		return id;
-	}
-
-
-	/**
-	 * Set primary key ID used for persistence.
-	 * @param id ID
-	 */
-	public final void setId(final Long id) {
-		this.id = id;
 	}
 
 

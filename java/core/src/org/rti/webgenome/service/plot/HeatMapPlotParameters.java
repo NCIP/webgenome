@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webgenome.service.plot;
 import java.util.Collection;
 import java.util.Set;
 
+import org.rti.webgenome.core.Constants;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 
@@ -91,7 +92,7 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 	 * <code>minMask</code> and <code>maxMask</code>
 	 * are filtered out of plot.
 	 */
-	public static final float DEF_MIN_MASK = (float) Float.MAX_VALUE;
+	public static final float DEF_MIN_MASK = Constants.BIG_FLOAT;
 	
 	/**
 	 * Default maximum mask value.
@@ -99,7 +100,7 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 	 * <code>minMask</code> and <code>maxMask</code>
 	 * are filtered out of plot.
 	 */
-	public static final float DEF_MAX_MASK = (float) Float.MIN_VALUE;
+	public static final float DEF_MAX_MASK = Constants.SMALL_FLOAT;
 	
 	
 	//

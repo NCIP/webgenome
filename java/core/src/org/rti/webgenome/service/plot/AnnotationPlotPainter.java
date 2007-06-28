@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,7 +52,6 @@ package org.rti.webgenome.service.plot;
 
 import java.awt.Color;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -179,7 +178,7 @@ public class AnnotationPlotPainter extends PlotPainter {
 		if (params == null) {
 			throw new IllegalArgumentException("Plot parameters are null");
 		}
-		List<GenomeInterval> intervals = params.getGenomeIntervals();
+		SortedSet<GenomeInterval> intervals = params.getGenomeIntervals();
 		if (intervals == null || intervals.size() < 1) {
 			throw new IllegalArgumentException("Genome interval undefined");
 		}
@@ -190,7 +189,7 @@ public class AnnotationPlotPainter extends PlotPainter {
 		
 		// Retrieve genome interval.  If more than one given in plot
 		// parameters, take first.
-		GenomeInterval interval = intervals.get(0);
+		GenomeInterval interval = intervals.first();
 		BpUnits units = params.getUnits();
 		short chromosome = interval.getChromosome();
 		long startLoc = units.toBp(interval.getStartLocation());

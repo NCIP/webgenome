@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.plot;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -163,6 +164,32 @@ public class AnnotationPlotParameters extends HeatMapPlotParameters {
 	 */
 	public final void add(final AnnotationType type) {
 		this.annotationTypes.add(type);
+	}
+	
+	
+	/**
+	 * Get annotatation types by name.  This is used to persist
+	 * the enumeration values.
+	 * @return Annotation types by name.
+	 */
+	public final Set<String> getAnnotationTypesByName() {
+		Set<String> names = new HashSet<String>();
+		for (AnnotationType type : this.annotationTypes) {
+			names.add(type.name());
+		}
+		return names;
+	}
+	
+	
+	/**
+	 * Set annotation types by names of enumeration values.
+	 * @param names Names of enumeration values
+	 */
+	public final void setAnnotationTypesByName(
+			final Collection<String> names) {
+		for (String name : names) {
+			this.add(AnnotationType.valueOf(name));
+		}
 	}
 	
 	

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.webui.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -168,7 +169,7 @@ public final class ClientQueryParser {
     throws InvalidClientQueryParametersException {
     	List<BioAssayDataConstraints> constraints =
     		new ArrayList<BioAssayDataConstraints>();
-        List<GenomeInterval> intervals = null;
+        Collection<GenomeInterval> intervals = null;
         try {
 			intervals = GenomeInterval.decode(encodedIntervals);
 		} catch (GenomeIntervalFormatException e) {

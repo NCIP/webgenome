@@ -32,7 +32,8 @@
     	<!-- Comment below property out if uncommenting the following -->
     	<property name="mappingResources">
 	      <list>
-	        <value>org/rti/webgenome/service/dao/hibernate/DataSourceProperties.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/GenomeInterval.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/PlotParameters.hbm.xml</value>
 	      </list>
 	    </property>
     	
@@ -84,9 +85,13 @@
   	<bean id="userConfigurablePropertyDao" class="org.rti.webgenome.service.dao.hibernate.HibernateUserConfigurablePropertyDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
-  	-->
+  	
   	<bean id="dataSourcePropertiesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateDataSourcePropertiesDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
-
+  	-->
+  	
+	<bean id="plotParametersDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePlotParametersDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
 </beans>

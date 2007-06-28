@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -304,5 +304,22 @@ public abstract class BaseGenomicPlotParameters extends PlotParameters {
     public void deriveMissingAttributes(
     		final Collection<Experiment> experiments) {
 		super.deriveMissingAttributes(experiments);
+    }
+    
+    /**
+     * Get string equivalent of interpolation type.
+     * @return String equivalent of interpolation type
+     */
+    public String getInterpolationTypeByName() {
+    	return this.interpolationType.name();
+    }
+    
+    
+    /**
+     * Set interpolation type by specifying string equivalent.
+     * @param name String equivalent of interpolation type
+     */
+    public void setInterpolationTypeByName(final String name) {
+    	this.interpolationType = InterpolationType.valueOf(name);
     }
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -309,7 +309,8 @@ public class ScatterPlotPainter extends PlotPainter {
     	 * @param params Plot parameters
     	 */
     	public ScatterPlotSizer(final ScatterPlotParameters params) {
-    		List<GenomeInterval> intervals = params.getGenomeIntervals();
+    		List<GenomeInterval> intervals =
+    			new ArrayList<GenomeInterval>(params.getGenomeIntervals());
     		int numRows = (int) Math.ceil((double) intervals.size()
     				/ (double) params.getNumPlotsPerRow());
     		this.height = params.getHeight() / numRows;

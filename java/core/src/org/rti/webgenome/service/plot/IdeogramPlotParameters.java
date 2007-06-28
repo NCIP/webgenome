@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,7 +85,6 @@ public class IdeogramPlotParameters extends HeatMapPlotParameters {
 	private int trackWidth = DEF_TRACK_WIDTH;
 	
 
-	
 	/** Ideogram thickness in pixels. */
 	private int ideogramThickness = DEF_IDEOGRAM_THICKNESS;
 	
@@ -168,6 +167,28 @@ public class IdeogramPlotParameters extends HeatMapPlotParameters {
 		this.ideogramSize = params.ideogramSize;
 		this.ideogramThickness = params.ideogramThickness;
 		this.trackWidth = params.trackWidth;
+	}
+	
+	//
+	//     BUSINESS METHODS
+	//
+	
+	/**
+	 * Get name of ideogram size.
+	 * @return String equivalent of ideogram size.
+	 */
+	public final String getIdeogramSizeByName() {
+		return this.ideogramSize.getName();
+	}
+	
+	
+	/**
+	 * Set ideogram size by name.
+	 * @param name String equivalent of ideogram size.
+	 */
+	public final void setIdeogramSizeByName(final String name) {
+		this.ideogramSize =
+			ChromosomeIdeogramSize.getChromosomeIdeogramSize(name);
 	}
 	
 	

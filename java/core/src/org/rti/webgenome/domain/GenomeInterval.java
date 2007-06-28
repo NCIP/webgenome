@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,6 @@ package org.rti.webgenome.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -80,6 +79,9 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	//      Attributes
 	// =========================
 	
+	/** Primary key value for persistence. */
+	private Long id = null;
+	
 	/** Chromosome number. */
 	private short chromosome = (short) -1;
 	
@@ -93,6 +95,22 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	// =========================
 	//     Getters/setters
 	// =========================
+
+	/**
+	 * Get primary key value for persistence.
+	 * @return Primary key value
+	 */
+	public final Long getId() {
+		return id;
+	}
+
+	/**
+	 * Set primary key value for persistence.
+	 * @param id Primary key value
+	 */
+	public final void setId(final Long id) {
+		this.id = id;
+	}
 
 	/**
 	 * Get chromosome number.
@@ -221,12 +239,37 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 		return value;
 	}
 	
+	// ==================================
+	//      Overrides
+	// ==================================
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		boolean equal = false;
+		if (obj instanceof GenomeInterval) {
+			equal = this.compareTo((GenomeInterval) obj) == 0;
+		}
+		return equal;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		return ("" + this.chromosome + this.endLocation
+				+ this.startLocation).hashCode();
+	}
 	
 	// =================================
 	//     Business methods
 	// =================================
 	
-	
+
 	/**
 	 * Does given interval overlap this?
 	 * @param ival A genome interval
@@ -373,13 +416,13 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	 * @throws GenomeIntervalFormatException if intervals are
 	 * not well-formed.
 	 */
-	public static final List<GenomeInterval> decode(final String encoding)
+	public static final Collection<GenomeInterval> decode(final String encoding)
 	throws GenomeIntervalFormatException {
 		if (encoding == null) {
 			throw new IllegalArgumentException("Genome intervals are null");
 		}
 		GenomeIntervalCoder coder = new GenomeIntervalCoder();
-		List<GenomeInterval> intervals = new ArrayList<GenomeInterval>();
+		Collection<GenomeInterval> intervals = new ArrayList<GenomeInterval>();
 		StringTokenizer tok = new StringTokenizer(encoding, DELIMITER);
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
@@ -397,7 +440,8 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	 * @param intervals Genome intervals
 	 * @return Encoded genome intervals
 	 */
-	public static final String encode(final List<GenomeInterval> intervals) {
+	public static final String encode(
+			final Collection<GenomeInterval> intervals) {
 		if (intervals == null) {
 			throw new IllegalArgumentException("Genome intervals are null");
 		}

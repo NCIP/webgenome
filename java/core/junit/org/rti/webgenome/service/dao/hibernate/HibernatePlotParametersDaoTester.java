@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
@@ -48,98 +48,62 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.util;
+package org.rti.webgenome.service.dao.hibernate;
 
-import org.apache.log4j.Logger;
-import org.rti.webgenome.core.Constants;
-import org.rti.webgenome.util.StringUtils;
+import org.rti.webgenome.domain.AnnotationType;
+import org.rti.webgenome.domain.GenomeInterval;
+import org.rti.webgenome.service.plot.AnnotationPlotParameters;
+import org.rti.webgenome.service.plot.BarPlotParameters;
+import org.rti.webgenome.service.plot.IdeogramPlotParameters;
+import org.rti.webgenome.service.plot.ScatterPlotParameters;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import junit.framework.TestCase;
 
 /**
- * This class contains utility methods for working with
- * web forms.
+ * Tester for
+ * {@link org.rti.webgenome.service.dao.Hibernate.
+ * HibernatePlotParametersDao}.
  * @author dhall
  *
  */
-public final class FormUtils {
-	
-	/** Logger. */
-	private static final Logger LOGGER = Logger.getLogger(FormUtils.class);
-
+public class HibernatePlotParametersDaoTester extends TestCase {
 	
 	/**
-	 * Constructor.
+	 * Test all methods.
 	 */
-	private FormUtils() {
+	public void testAllMethods() {
 		
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
+		HibernatePlotParametersDao dao =
+			(HibernatePlotParametersDao)
+			ctx.getBean("plotParametersDao");
+		
+		// Instantiate test objects
+		AnnotationPlotParameters p1 = new AnnotationPlotParameters();
+		p1.add(AnnotationType.GENE);
+		p1.add(AnnotationType.LOH_SEGMENT);
+		p1.add(new GenomeInterval((short) 1, 1, 10));
+		p1.add(new GenomeInterval((short) 1, 11, 50));
+		BarPlotParameters p2 = new BarPlotParameters();
+		p2.add(new GenomeInterval((short) 2, 10, 50));
+		IdeogramPlotParameters p3 = new IdeogramPlotParameters();
+		p3.add(new GenomeInterval((short) 3, 1, 50));
+		ScatterPlotParameters p4 = new ScatterPlotParameters();
+		p4.add(new GenomeInterval((short) 4, 100, 200));
+		
+		// Run tests
+		dao.save(p1);
+		dao.save(p2);
+		dao.save(p3);
+		dao.save(p4);
+		dao.delete(p1);
+		dao.delete(p2);
+		dao.delete(p3);
+		dao.delete(p4);
 	}
-	
-	
-	/**
-	 * Translate the string value from a checkbox into
-	 * a boolean.
-	 * @param checkBoxValue String checkbox value
-	 * @return Boolean equivalent
-	 */
-	public static boolean checkBoxToBoolean(final String checkBoxValue) {
-		return "on".equals(checkBoxValue);
-	}
-	
-	
-	/**
-	 * Translate the given boolean value into a checkbox
-	 * string equivalent.
-	 * @param value A boolean value
-	 * @return Checkbox string equivalent
-	 */
-	public static String booleanToCheckBox(final boolean value) {
-		String checkBoxVal = "";
-		if (value) {
-			checkBoxVal = "on";
-		}
-		return checkBoxVal;
-	}
-	
-	
-	/**
-	 * Extract float value from given text box string.  If a number
-	 * cannot be extracted, return default value.  This method
-	 * traps number format exceptions.
-	 * @param textBoxString String from numeric text box
-	 * @param defaultValue Default value to return if a valid float
-	 * cannot be parsed
-	 * @return Float equivalent
-	 */
-	public static float textBoxToFloat(final String textBoxString,
-			final float defaultValue) {
-		float val = defaultValue;
-		if (!StringUtils.isEmpty(textBoxString)) {
-			try {
-				val = Float.parseFloat(textBoxString);
-			} catch (NumberFormatException e) {
-				LOGGER.warn("Cannot parse float from '" + textBoxString + "'");
-			}
-		}
-		return val;
-	}
-	
-	
-	/**
-	 * Converts given float to text box value.
-	 * @param value A value to convert
-	 * @return Empty string if the given value is NaN,
-	 * infinite, or equal to the minimum or maximum floating point
-	 * number; or the String equivalent of the given argument
-	 * otherwise
-	 */
-	public static String floatToTextBox(final float value) {
-		String text = "";
-		if (!Float.isNaN(value) && !Float.isInfinite(value)
-				&& value != Float.MIN_VALUE && value != Float.MAX_VALUE
-				&& value != Constants.SMALL_FLOAT
-				&& value != Constants.BIG_FLOAT
-				&& value != Constants.FLOAT_NAN) {
-			text = String.valueOf(value);
-		}
-		return text;
-	}
+
 }

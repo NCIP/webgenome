@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-06-28 22:12:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,15 +50,17 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.core.Constants;
 import org.rti.webgenome.core.PlotType;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.AnnotationType;
@@ -958,7 +960,7 @@ public class PlotParametersForm extends BaseForm {
 		// genomeIntervals
 		if (this.genomeIntervals != null && this.genomeIntervals.length() > 0) {
 			try {
-				List<GenomeInterval> intervals = GenomeInterval.decode(
+				Collection<GenomeInterval> intervals = GenomeInterval.decode(
 						this.genomeIntervals);
 				for (GenomeInterval interval : intervals) {
 					short chrom = interval.getChromosome();
@@ -1294,8 +1296,10 @@ public class PlotParametersForm extends BaseForm {
 	private ScatterPlotParameters newScatterPlotParameters() {
 		ScatterPlotParameters params = new ScatterPlotParameters();
 		this.transferCommonGenomicPlotParameters(params);
-		params.setMinY(FormUtils.textBoxToFloat(this.minY, Float.NaN));
-		params.setMaxY(FormUtils.textBoxToFloat(this.maxY, Float.NaN));
+		params.setMinY(FormUtils.textBoxToFloat(this.minY,
+				Constants.FLOAT_NAN));
+		params.setMaxY(FormUtils.textBoxToFloat(this.maxY,
+				Constants.FLOAT_NAN));
 		params.setWidth(Integer.parseInt(this.width));
 		params.setHeight(Integer.parseInt(this.height));
 		params.setDrawHorizGridLines(
@@ -1317,8 +1321,9 @@ public class PlotParametersForm extends BaseForm {
 	private void transferCommonPlotParameters(final PlotParameters params) {
 		params.setPlotName(this.name);
 		try {
-			params.setGenomeIntervals(GenomeInterval.decode(
-					this.genomeIntervals));
+			params.setGenomeIntervals(new TreeSet<GenomeInterval>(
+					GenomeInterval.decode(
+					this.genomeIntervals)));
 		} catch (GenomeIntervalFormatException e) {
 			throw new WebGenomeSystemException(
 					"Error extracting plot parameters", e);
@@ -1362,11 +1367,11 @@ public class PlotParametersForm extends BaseForm {
 			final HeatMapPlotParameters params) {
 		this.transferCommonGenomicPlotParameters(params);
 		params.setMaxMask(FormUtils.textBoxToFloat(
-				this.maxMask, Float.MIN_VALUE));
+				this.maxMask, Constants.SMALL_FLOAT));
 		params.setMaxSaturation(FormUtils.textBoxToFloat(
 				this.maxSaturation, Float.NaN));
 		params.setMinMask(FormUtils.textBoxToFloat(
-				this.minMask, Float.MAX_VALUE));
+				this.minMask, Constants.BIG_FLOAT));
 		params.setMinSaturation(FormUtils.textBoxToFloat(
 				this.minSaturation, Float.NaN));
 	}
