@@ -1,3 +1,4 @@
+DROP TABLE click_boxes;
 DROP TABLE ann_plot_params_types;
 DROP TABLE plot_params_ivals;
 DROP TABLE plot_params;

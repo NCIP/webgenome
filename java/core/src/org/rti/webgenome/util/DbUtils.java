@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/DbUtils.java,v $
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-06-29 21:47:51 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,18 +52,37 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webgenome.util;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.StringTokenizer;
 
+import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.core.WebGenomeRuntimeException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Database utilities
  */
 public class DbUtils {
+	
+	/**
+	 * A delimiting character for encoding/decoding
+	 * rectangular data.
+	 */
+	private static final char DELIMITER = ',';
     
+	/**
+	 * An escape character for representing a delimiter
+	 * character within a field.
+	 */
+	private static final char ESCAPE = '\\';
+	
+	/** String encoding of null. */
+	private static final String NULL = "N*U*L*L";
     
 	/**
 	 * Close a statement
@@ -119,7 +138,7 @@ public class DbUtils {
 	
 	
 	/**
-	 * Decode an integer as a boolean value
+	 * Decode an integer as a boolean value.
 	 * @param value An integer encoded boolean value
 	 * @return Boolean equivalent
 	 */
@@ -127,4 +146,112 @@ public class DbUtils {
 	    return (value == 0)? false : true;
 	}
 
+	
+	/**
+	 * Encode given matrix as a single string representation
+	 * for storing in a CLOB field.
+	 * @param matrix A matrix to store
+	 * @return CLOB representation of given matrix
+	 */
+	public static String encodeClob(final String[][] matrix) {
+		StringBuffer buff = new StringBuffer();
+		
+		// Special case: matrix with dimension 0, 0
+		if (matrix == null || matrix.length < 1
+				|| matrix[0].length < 1) {
+			buff.append("0" + DELIMITER + "0");
+			
+		// General case
+		} else {
+		
+			// Encode dimensions in first line
+			buff.append(String.valueOf(matrix.length) + DELIMITER
+					+ String.valueOf(matrix[0].length) + "\n");
+			for (int i = 0; i < matrix.length; i++) {
+				for (int j = 0; j < matrix[i].length; j++) {
+					String text = matrix[i][j];
+					if (text != null) {
+						for (int k = 0; k < text.length(); k++) {
+							char c = text.charAt(k);
+							if (c == DELIMITER || c == ESCAPE) {
+								buff.append(ESCAPE);
+							}
+						buff.append(c);
+						}
+					} else {
+						buff.append(NULL);
+					}
+					if (j < matrix[i].length - 1) {
+						buff.append(DELIMITER);
+					}
+				}
+				buff.append("\n");
+			}
+		}
+		
+		return buff.toString();
+	}
+	
+	
+	/**
+	 * Decode CLOB-encoded matrix encoded using
+	 * {@code encodeClob} method.
+	 * @param clob CLOB-encoded matrix
+	 * @return Decoded matrix
+	 * @throws WebGenomeApplicationException If the format
+	 * of the given clob cannot be parsed.
+	 */
+	public static String[][] decodeClob(final String clob)
+	throws WebGenomeApplicationException {
+		String[][] matrix = null;
+		try {
+			
+			// Read dimensions of matrix from first line
+			BufferedReader in = new BufferedReader(new StringReader(clob));
+			String line = in.readLine();
+			StringTokenizer tok = new StringTokenizer(line,
+					String.valueOf(DELIMITER));
+			int numRows = Integer.parseInt(tok.nextToken());
+			int numCols = Integer.parseInt(tok.nextToken());
+			
+			// Instantiate and fill in matrix
+			matrix = new String[numRows][];
+			for (int i = 0; i < numRows; i++) {
+				line = in.readLine();
+				matrix[i] = new String[numCols];
+				int j = 0, k = 0;
+				boolean lastCharIsEscape = false;
+				StringBuffer buff = new StringBuffer();
+				while (k < line.length()) {
+					char c = line.charAt(k++);
+					if (lastCharIsEscape) {
+						lastCharIsEscape = false;
+						buff.append(c);
+					} else {
+						if (c == ESCAPE) {
+							lastCharIsEscape = true;
+						} else {
+							if (c == DELIMITER || k == line.length()) {
+								if (c != DELIMITER) {
+									buff.append(c);
+								}
+								String value = buff.toString();
+								if (NULL.equals(value)) {
+									value = null;
+								}
+								matrix[i][j++] = value;
+								buff = new StringBuffer();
+							} else {
+								buff.append(c);
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			throw new WebGenomeApplicationException(
+					"Error decoding CLOB field value", e);
+		}
+		return matrix;
+	}
 }

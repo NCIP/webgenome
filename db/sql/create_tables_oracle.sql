@@ -233,3 +233,16 @@ CREATE TABLE ann_plot_params_types (
 	PRIMARY KEY (plot_params_id, name),
 	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
 );
+
+--
+-- ClickBoxes
+--
+CREATE TABLE click_boxes (
+	id NUMBER(38) NOT NULL,
+	origin_x INT,
+	origin_y INT,
+	box_width INT,
+	box_height INT,
+	click_box CLOB,
+	PRIMARY KEY (id)
+);
