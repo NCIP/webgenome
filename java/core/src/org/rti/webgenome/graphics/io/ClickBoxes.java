@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-29 21:47:51 $
+$Revision: 1.3 $
+$Date: 2007-06-29 21:49:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,10 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.graphics.io;
 
 import java.awt.Point;
-import java.io.BufferedReader;
 import java.io.Serializable;
-import java.io.StringReader;
-import java.util.StringTokenizer;
 
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.core.WebGenomeSystemException;
