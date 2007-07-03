@@ -246,3 +246,30 @@ CREATE TABLE click_boxes (
 	click_box CLOB,
 	PRIMARY KEY (id)
 );
+
+--
+-- MouseOverStripes
+--
+CREATE TABLE mouse_over_stripes (
+	id NUMBER(38) NOT NULL,
+	orientation VARCHAR2(16),
+	width INT,
+	height INT,
+	origin_x INT,
+	origin_y INT,
+	PRIMARY KEY (id)
+);
+
+--
+-- MouseOverStripes
+--
+CREATE TABLE mouse_over_stripe (
+	id NUMBER(38) NOT NULL,
+	mouse_over_stripes_id NUMBER(38),
+	start_pix INT,
+	end_pix INT,
+	text VARCHAR2(1024),
+	list_index INT,
+	PRIMARY KEY (id),
+	FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes (id)
+);
