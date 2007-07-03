@@ -32,7 +32,8 @@
     	<!-- Comment below property out if uncommenting the following -->
     	<property name="mappingResources">
 	      <list>
-	        <value>org/rti/webgenome/service/dao/hibernate/ClickBoxes.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/MouseOverStripe.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/MouseOverStripes.hbm.xml</value>
 	      </list>
 	    </property>
     	
@@ -93,9 +94,13 @@
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
+  	<bean id="clickBoxesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateClickBoxesDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
   	-->
   	
-  	<bean id="clickBoxesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateClickBoxesDao">
+  	<bean id="mouseOverStripesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateMouseOverStripesDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 </beans>

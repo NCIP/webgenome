@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.2 $
+$Date: 2007-07-03 17:44:00 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,6 +68,9 @@ public final class MouseOverStripe implements Serializable {
     // =============================
     //       Attributes
     // =============================
+	
+	/** Primary key value for persistence. */
+	private Long id = null;
 
     /**
      * Start coordinate.  This may be an
@@ -116,6 +119,23 @@ public final class MouseOverStripe implements Serializable {
     // =========================================
     
     /**
+     * Get primary key value for persistence.
+     * @return Primary key value
+     */
+    public Long getId() {
+		return id;
+	}
+    
+    /**
+     * Set primary key value for persistence.
+     * @param id Primary key value
+     */
+	public void setId(final Long id) {
+		this.id = id;
+	}
+	
+	
+	/**
      * Get end coordinate.  This may be an
      * X- or Y-coordinate, depending on the
      * orientation of the container <code>MouseOverStripes</code>.

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.2 $
+$Date: 2007-07-03 17:44:00 $
 
 The Web CGH Software License, Version 1.0
 
@@ -78,6 +78,9 @@ public class MouseOverStripes implements Serializable {
 	//     Attributes
 	// ==========================
 	
+	/** Primary key value used for persistence. */
+	private Long id = null;
+	
 	/**
 	 * Orientation of stripes.  If horizontal,
 	 * then the <code>start</code> and <code>end</code>
@@ -86,16 +89,16 @@ public class MouseOverStripes implements Serializable {
 	 * If vertical, the these properties will correspond
 	 * to Y-coordinates.
 	 */
-	private final Orientation orientation;
+	private Orientation orientation;
 	
 	/** Width of mouseover area in pixels. */
-	private final int width;
+	private int width;
 	
 	/** Height of mouseover area in pixels. */
-	private final int height;
+	private int height;
 	
 	/** Origin of mouseover area relative to entire graphic. */
-	private final Point origin;
+	private Point origin = new Point(0, 0);
 	
 	/**
 	 * Individual mouseover "stripes."  The start and end
@@ -103,13 +106,53 @@ public class MouseOverStripes implements Serializable {
 	 * <code>origin</code>--i.e., they are not absolute
 	 * coordinates relative to the entire graphic.
 	 */
-	private final List<MouseOverStripe> stripes =
+	private List<MouseOverStripe> stripes =
 		new ArrayList<MouseOverStripe>();
 	
 	
 	// ===============================
-	//      Getters
+	//      Getters and setters
 	// ===============================
+
+	/**
+	 * Get primary key value for persistence.
+	 * @return Primary key value for persistence.
+	 */
+	public final Long getId() {
+		return id;
+	}
+
+	/**
+	 * Set primary key value for persistence.
+	 * @param id Primary key value for persistence.
+	 */
+	public final void setId(final Long id) {
+		this.id = id;
+	}
+
+	/**
+	 * Set height.
+	 * @param height Height in pixels.
+	 */
+	public final void setHeight(final int height) {
+		this.height = height;
+	}
+
+	/**
+	 * Set individual stripes.
+	 * @param stripes Stripes.
+	 */
+	public final void setStripes(final List<MouseOverStripe> stripes) {
+		this.stripes = stripes;
+	}
+
+	/**
+	 * Set width.
+	 * @param width Width in pixels
+	 */
+	public final void setWidth(final int width) {
+		this.width = width;
+	}
 
 	/**
 	 * Get height of mouseover area.
@@ -225,5 +268,59 @@ public class MouseOverStripes implements Serializable {
 	 */
 	public final void add(final MouseOverStripe stripe) {
 		this.stripes.add(stripe);
+	}
+	
+	
+	/**
+	 * Get orientation by name.  This is used for persistence.
+	 * @return Name of orientation.
+	 */
+	public String getOrientationByName() {
+		return this.orientation.name();
+	}
+	
+	
+	/**
+	 * Set orientation using name.  This is used for persistence.
+	 * @param name Name of orientation
+	 */
+	public void setOrientationByName(final String name) {
+		this.orientation = Orientation.valueOf(name);
+	}
+	
+	
+	/**
+	 * Set X-coordinate of origin.
+	 * @param x X-coordinate of origin in pixels.
+	 */
+	public void setOriginX(final int x) {
+		this.origin.x = x;
+	}
+	
+	
+	/**
+	 * Get X-coordinate of origin.
+	 * @return X-coordinate of origin in pixels.
+	 */
+	public int getOriginX() {
+		return this.origin.x;
+	}
+	
+	
+	/**
+	 * Set Y-coordinate of origin.
+	 * @param y Y-coordinate of origin in pixels.
+	 */
+	public void setOriginY(final int y) {
+		this.origin.y = y;
+	}
+	
+	
+	/**
+	 * Get Y-coordinate of origin.
+	 * @return Y-coordinate of origin in pixels
+	 */
+	public int getOriginY() {
+		return this.origin.y;
 	}
 }

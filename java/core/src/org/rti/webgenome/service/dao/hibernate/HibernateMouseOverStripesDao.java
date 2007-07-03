@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-07-03 17:44:00 $
 
 The Web CGH Software License, Version 1.0
@@ -48,84 +48,34 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webgenome.service.dao.hibernate;
 
-package org.rti.webgenome.units;
-
-import java.io.Serializable;
-
-import org.rti.webgenome.util.SystemUtils;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.service.dao.MouseOverStripesDao;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Represents orientation of some graphic element.
+ * Implementation of
+ * {@link org.rti.webgenome.service.dao.MouseOverStripesDao}
+ * using Hibernate.
+ * @author dhall
+ *
  */
-public final class Orientation implements Serializable {
-	
-	/** Serialized version ID. */
-    private static final long serialVersionUID = 
-		SystemUtils.getLongApplicationProperty("serial.version.uid");
-    
-    /** Name of orientation. */
-    private final String name;
-	
+public class HibernateMouseOverStripesDao extends HibernateDaoSupport implements
+		MouseOverStripesDao {
+
 	/**
-	 * Constructor.
-	 * @param name Name of orientation
+	 * {@inheritDoc}
 	 */
-	private Orientation(final String name) {
-		this.name = name;
+	public void delte(final MouseOverStripes stripes) {
+		this.getHibernateTemplate().delete(stripes);
 	}
 
 	/**
-	 * Horizontal orientation.
+	 * {@inheritDoc}
 	 */
-	public static final Orientation
-		HORIZONTAL = new Orientation("HORIZONTAL");
-	
-	/**
-	 * Vertical orientation.
-	 */
-	public static final Orientation
-		VERTICAL = new Orientation("VERTICAL");
-	
-	
-	/**
-	 * Return opposite orientation.
-	 * @param orientation An orientation
-	 * @return The opposite orientation
-	 */
-	public static Orientation opposite(final Orientation orientation) {
-	    Orientation opposite = null;
-	    if (orientation == HORIZONTAL) {
-	        opposite = VERTICAL;
-	    } else if (orientation == VERTICAL) {
-	        opposite = HORIZONTAL;
-	    }
-	    return opposite;
+	public void save(final MouseOverStripes stripes) {
+		this.getHibernateTemplate().save(stripes);
 	}
-	
-	
-	/**
-	 * Get orientation associated with given name.
-	 * @param name Name of orientation.
-	 * @return An orientation corresponding to given
-	 * name.
-	 */
-	public static Orientation valueOf(final String name) {
-		Orientation orientation = null;
-		if ("VERTICAL".equals(name)) {
-			orientation = VERTICAL;
-		} else if ("HORIZONTAL".equals(name)) {
-			orientation = HORIZONTAL;
-		}
-		return orientation;
-	}
-	
-	
-	/**
-	 * Get name of orientation.
-	 * @return Name of orientation.
-	 */
-	public String name() {
-		return this.name;
-	}
+
 }

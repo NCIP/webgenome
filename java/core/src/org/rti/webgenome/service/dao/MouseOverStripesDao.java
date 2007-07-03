@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-07-03 17:44:00 $
 
 The Web CGH Software License, Version 1.0
@@ -48,84 +48,30 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+package org.rti.webgenome.service.dao;
 
-package org.rti.webgenome.units;
-
-import java.io.Serializable;
-
-import org.rti.webgenome.util.SystemUtils;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
 
 /**
- * Represents orientation of some graphic element.
+ * Data access class for
+ * {@link org.rti.webgenome.graphics.event.MouseOverStripes}.
+ * @author dhall
+ *
  */
-public final class Orientation implements Serializable {
-	
-	/** Serialized version ID. */
-    private static final long serialVersionUID = 
-		SystemUtils.getLongApplicationProperty("serial.version.uid");
-    
-    /** Name of orientation. */
-    private final String name;
+public interface MouseOverStripesDao {
 	
 	/**
-	 * Constructor.
-	 * @param name Name of orientation
+	 * Save given mouseover stripes to persistent
+	 * storage.
+	 * @param stripes Mouseover stripes to persist.
 	 */
-	private Orientation(final String name) {
-		this.name = name;
-	}
+	void save(MouseOverStripes stripes);
+	
+	/**
+	 * Delete given mouseover stripes from persistent
+	 * storage.
+	 * @param stripes Stripes to delete.
+	 */
+	void delte(MouseOverStripes stripes);
 
-	/**
-	 * Horizontal orientation.
-	 */
-	public static final Orientation
-		HORIZONTAL = new Orientation("HORIZONTAL");
-	
-	/**
-	 * Vertical orientation.
-	 */
-	public static final Orientation
-		VERTICAL = new Orientation("VERTICAL");
-	
-	
-	/**
-	 * Return opposite orientation.
-	 * @param orientation An orientation
-	 * @return The opposite orientation
-	 */
-	public static Orientation opposite(final Orientation orientation) {
-	    Orientation opposite = null;
-	    if (orientation == HORIZONTAL) {
-	        opposite = VERTICAL;
-	    } else if (orientation == VERTICAL) {
-	        opposite = HORIZONTAL;
-	    }
-	    return opposite;
-	}
-	
-	
-	/**
-	 * Get orientation associated with given name.
-	 * @param name Name of orientation.
-	 * @return An orientation corresponding to given
-	 * name.
-	 */
-	public static Orientation valueOf(final String name) {
-		Orientation orientation = null;
-		if ("VERTICAL".equals(name)) {
-			orientation = VERTICAL;
-		} else if ("HORIZONTAL".equals(name)) {
-			orientation = HORIZONTAL;
-		}
-		return orientation;
-	}
-	
-	
-	/**
-	 * Get name of orientation.
-	 * @return Name of orientation.
-	 */
-	public String name() {
-		return this.name;
-	}
 }
