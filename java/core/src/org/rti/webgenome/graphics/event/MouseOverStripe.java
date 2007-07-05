@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-03 17:44:00 $
+$Revision: 1.3 $
+$Date: 2007-07-05 13:23:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,7 @@ import org.rti.webgenome.util.SystemUtils;
 /**
  * MouseOver Stripe information.
  */
-public final class MouseOverStripe implements Serializable {
+public class MouseOverStripe implements Serializable {
 	
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
@@ -101,6 +101,7 @@ public final class MouseOverStripe implements Serializable {
     public MouseOverStripe() {
 
     }
+    
     /**
      * Constructor.
      * @param start Start coordinate

@@ -12,6 +12,47 @@
 		    <generator class="increment"/>
 		</id>
 		
+		<property name="defaultImageFileName" column="def_img_file_name"/>
+		
+		<property name="width"/>
+		
+		<property name="height"/>
+		
+		<map name="imageFileMap" table="img_file_map"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="plot_id"/>
+			<map-key column="img_name" type="java.lang.String"/>
+			<element column="file_name" type="java.lang.String"/>
+		</map>
+		
+		<set name="experimentIds" table="plot_exp_ids"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="plot_id"/>
+			<element column="exp_id" type="java.lang.Long"/>
+		</set>
+		
+		<set name="clickBoxes" table="plot_click_boxes"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="plot_id"/>
+			<many-to-many column="click_boxes_id"
+				class="org.rti.webgenome.graphics.io.ClickBoxes"/>
+		</set>
+		
+		<set name="mouseOverStripes" table="plot_mouse_over_stripes"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="plot_id"/>
+			<many-to-many column="mouse_over_stripes_id"
+				class="org.rti.webgenome.graphics.event.MouseOverStripes"/>
+		</set>
+		
+		<join table="plot_plot_params" optional="true">
+			<key column="plot_id" unique="true"/>
+			<many-to-one name="plotParameters" column="plot_params_id"
+				class="org.rti.webgenome.service.plot.PlotParameters"
+				cascade="all-delete-orphan" unique="true"
+				not-null="true" lazy="false"/>
+		</join>
+		
 	</class>
 
 </hibernate-mapping>

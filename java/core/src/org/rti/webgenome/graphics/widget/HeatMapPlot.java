@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-05 13:23:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,8 +56,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.ArrayDatum;
@@ -162,8 +164,8 @@ public final class HeatMapPlot implements PlotElement {
     private int trackMaxY = 0;
   
     /** Mouseover stripes. */
-    private final Collection<MouseOverStripes> mouseOverStripes =
-    	new ArrayList<MouseOverStripes>();
+    private final Set<MouseOverStripes> mouseOverStripes =
+    	new HashSet<MouseOverStripes>();
     
     
     // ==========================
@@ -174,7 +176,7 @@ public final class HeatMapPlot implements PlotElement {
      * Get mouseover stripes.
      * @return Mouseover stripes.
      */
-    public Collection<MouseOverStripes> getMouseOverStripes() {
+    public Set<MouseOverStripes> getMouseOverStripes() {
 		return mouseOverStripes;
 	}
     

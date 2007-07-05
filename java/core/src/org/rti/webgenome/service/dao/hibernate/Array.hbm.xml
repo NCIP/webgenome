@@ -19,7 +19,6 @@
 			<key column="array_id"/>
 			<map-key column="chromosome" type="java.lang.Short"/>
 			<element column="file_name" type="java.lang.String"/>
-		
 		</map>
 		
 	</class>

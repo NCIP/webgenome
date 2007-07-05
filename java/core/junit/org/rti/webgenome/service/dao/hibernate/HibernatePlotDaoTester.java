@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-05 13:23:30 $
+$Revision: 1.1 $
+$Date: 2007-07-05 13:23:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,106 +48,71 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.graphics.event;
+package org.rti.webgenome.service.dao.hibernate;
 
+import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.rti.webgenome.domain.Plot;
+import org.rti.webgenome.graphics.event.MouseOverStripe;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
 import org.rti.webgenome.graphics.io.ClickBoxes;
+import org.rti.webgenome.service.plot.ScatterPlotParameters;
+import org.rti.webgenome.units.Orientation;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import junit.framework.TestCase;
 
 /**
- * Constains graphic features that can be used to presentation
- * tier code to create client-side event handling code.
+ * Tester for
+ * {@link org.rti.webgenome.service.dao.hibernate.HibernatePlotDao}.
  * @author dhall
  *
  */
-public class EventHandlerGraphicBoundaries {
-
-	/** Mouseover stripes. */
-	private Set<MouseOverStripes> mouseOverStripes =
-		new HashSet<MouseOverStripes>();
-	
-	/** Click boxes. */
-	private Set<ClickBoxes> clickBoxes = new HashSet<ClickBoxes>();
+public class HibernatePlotDaoTester extends TestCase {
 
 	/**
-	 * Get click boxes.
-	 * @return Click boxes.
+	 * Test all methods.
+	 *
 	 */
-	public final Set<ClickBoxes> getClickBoxes() {
-		return clickBoxes;
-	}
-
-	/**
-	 * Set click boxes.
-	 * @param clickBoxes Click boxes.
-	 */
-	public final void setClickBoxes(
-			final Set<ClickBoxes> clickBoxes) {
-		this.clickBoxes = clickBoxes;
-	}
-
-	/**
-	 * Get mouseover stripes.
-	 * @return Mouseover stripes.
-	 */
-	public final Set<MouseOverStripes> getMouseOverStripes() {
-		return mouseOverStripes;
-	}
-
-	/**
-	 * Set mouseover stripes.
-	 * @param mouseOverStripes Mouseover stripes.
-	 */
-	public final void setMouseOverStripes(
-			final Set<MouseOverStripes> mouseOverStripes) {
-		this.mouseOverStripes = mouseOverStripes;
-	}
-	
-	
-	/**
-	 * Constructor.
-	 */
-	public EventHandlerGraphicBoundaries() {
+	public void testAllMethods() {
 		
-	}
-
-	/**
-	 * Constructor.
-	 * @param mouseOverStripes Mouseover stripes
-	 * @param clickBoxes Click boxes
-	 */
-	public EventHandlerGraphicBoundaries(
-			final Set<MouseOverStripes> mouseOverStripes,
-			final Set<ClickBoxes> clickBoxes) {
-		this.mouseOverStripes = mouseOverStripes;
-		this.clickBoxes = clickBoxes;
-	}
-	
-	
-	/**
-	 * Add mouseover stripes.
-	 * @param stripes Mouseover stripes.
-	 */
-	public final void add(final MouseOverStripes stripes) {
-		this.mouseOverStripes.add(stripes);
-	}
-	
-	
-	/**
-	 * Add mouseover stripes.
-	 * @param stripes Mouseover stripes
-	 */
-	public final void addAll(final Set<MouseOverStripes> stripes) {
-		this.mouseOverStripes.addAll(stripes);
-	}
-	
-	
-	/**
-	 * Add click boxes.
-	 * @param clickBoxes Click boxes
-	 */
-	public final void add(final ClickBoxes clickBoxes) {
-		this.clickBoxes.add(clickBoxes);
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
+		HibernatePlotDao dao =
+			(HibernatePlotDao)
+			ctx.getBean("plotDao");
+		
+		// Instantiate test object
+		Plot plot = new Plot();
+		plot.setDefaultImageFileName("file1");
+		plot.setWidth(100);
+		plot.setHeight(100);
+		plot.addImageFile("img2", "file2");
+		plot.addImageFile("img3", "file3");
+		plot.addExperimentId(new Long(5));
+		plot.addExperimentId(new Long(6));
+		ClickBoxes cb = new ClickBoxes(100, 100, 10, 10, new Point(0, 0));
+		cb.addClickBoxText("box1", 25, 10);
+		cb.addClickBoxText("box2", 50, 50);
+		Set<ClickBoxes> cbs = new HashSet<ClickBoxes>();
+		cbs.add(cb);
+		plot.setClickBoxes(cbs);
+		MouseOverStripes mos = new MouseOverStripes(
+				Orientation.HORIZONTAL, 100, 100, new Point(0, 0));
+		mos.add(new MouseOverStripe(0, 10, "stripe1"));
+		mos.add(new MouseOverStripe(11, 20, "stripe2"));
+		Set<MouseOverStripes> moss = new HashSet<MouseOverStripes>();
+		moss.add(mos);
+		plot.setMouseOverStripes(moss);
+		ScatterPlotParameters params = new ScatterPlotParameters();
+		plot.setPlotParameters(params);
+		
+		// Run tests
+		dao.save(plot);
+		dao.delete(plot);
 	}
 }

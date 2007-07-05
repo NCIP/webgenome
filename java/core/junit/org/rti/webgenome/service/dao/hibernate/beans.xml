@@ -29,16 +29,19 @@
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
     	<property name="dataSource" ref="dataSource"/>
     	
-    	<!-- Comment below property out if uncommenting the following -->
+    	<!-- Code below can be used to quickly load only specific
+    	Hibernate mapping files for faster loads. It should only
+    	be used temporarily as it will cause tests to fail
+    	for DAOs corresponding to unmapped classes. -->
+    	<!--
     	<property name="mappingResources">
 	      <list>
-	        <value>org/rti/webgenome/service/dao/hibernate/MouseOverStripe.hbm.xml</value>
-	        <value>org/rti/webgenome/service/dao/hibernate/MouseOverStripes.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/Plot.hbm.xml</value>
 	      </list>
 	    </property>
+	    -->
     	
-    	<!-- Commented out for faster processing of this file -->
-    	<!--
+    	<!-- Comment out if uncommented above -->
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
@@ -46,7 +49,7 @@
         		</bean>
 	      	</list>
     	</property>
-    	-->
+    	<!-- End of comment-out -->
     	
     	<property name="hibernateProperties">
       		<props>
@@ -55,6 +58,10 @@
     	</property>
   	</bean>
   	
+  	<!-- Code below commented out for fast testing of specific
+  	DAO classes.  It should be commented in after DAO development
+  	so all DAO unit tests can be run.
+  	-->
   	<!--
   	<bean id="organismDao" class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
@@ -98,9 +105,13 @@
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
-  	-->
-  	
   	<bean id="mouseOverStripesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateMouseOverStripesDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+ 	-->
+  	
+  	<bean id="plotDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePlotDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 </beans>

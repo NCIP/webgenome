@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.4 $
+$Date: 2007-07-05 13:23:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,9 @@ package org.rti.webgenome.service.plot;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
@@ -272,9 +274,9 @@ public class ScatterPlotPainter extends PlotPainter {
                 VerticalAlignment.BELOW);
         
         // Gather up click boxes and mouseover stripes
-        Collection<ClickBoxes> boxes = new ArrayList<ClickBoxes>();
-        Collection<MouseOverStripes> stripes =
-        	new ArrayList<MouseOverStripes>();
+        Set<ClickBoxes> boxes = new HashSet<ClickBoxes>();
+        Set<MouseOverStripes> stripes =
+        	new HashSet<MouseOverStripes>();
         for (ScatterPlot plot : plots) {
         	boxes.add(plot.getClickBoxes());
         	stripes.add(plot.getMouseOverStripes());

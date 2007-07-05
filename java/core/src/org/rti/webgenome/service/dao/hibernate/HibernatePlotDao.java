@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-05 13:23:30 $
+$Revision: 1.1 $
+$Date: 2007-07-05 13:23:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,106 +48,33 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.graphics.event;
+package org.rti.webgenome.service.dao.hibernate;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.rti.webgenome.graphics.io.ClickBoxes;
+import org.rti.webgenome.domain.Plot;
+import org.rti.webgenome.service.dao.PlotDao;
+import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
- * Constains graphic features that can be used to presentation
- * tier code to create client-side event handling code.
+ * Implementation of
+ * {@link org.rti.webgenome.service.dao.PlotDao}
+ * using Hibernate.
  * @author dhall
  *
  */
-public class EventHandlerGraphicBoundaries {
-
-	/** Mouseover stripes. */
-	private Set<MouseOverStripes> mouseOverStripes =
-		new HashSet<MouseOverStripes>();
-	
-	/** Click boxes. */
-	private Set<ClickBoxes> clickBoxes = new HashSet<ClickBoxes>();
+public class HibernatePlotDao extends HibernateDaoSupport implements PlotDao {
 
 	/**
-	 * Get click boxes.
-	 * @return Click boxes.
+	 * {@inheritDoc}
 	 */
-	public final Set<ClickBoxes> getClickBoxes() {
-		return clickBoxes;
+	public void delete(final Plot plot) {
+		this.getHibernateTemplate().delete(plot);
 	}
 
 	/**
-	 * Set click boxes.
-	 * @param clickBoxes Click boxes.
+	 * {@inheritDoc}
 	 */
-	public final void setClickBoxes(
-			final Set<ClickBoxes> clickBoxes) {
-		this.clickBoxes = clickBoxes;
+	public void save(final Plot plot) {
+		this.getHibernateTemplate().save(plot);
 	}
 
-	/**
-	 * Get mouseover stripes.
-	 * @return Mouseover stripes.
-	 */
-	public final Set<MouseOverStripes> getMouseOverStripes() {
-		return mouseOverStripes;
-	}
-
-	/**
-	 * Set mouseover stripes.
-	 * @param mouseOverStripes Mouseover stripes.
-	 */
-	public final void setMouseOverStripes(
-			final Set<MouseOverStripes> mouseOverStripes) {
-		this.mouseOverStripes = mouseOverStripes;
-	}
-	
-	
-	/**
-	 * Constructor.
-	 */
-	public EventHandlerGraphicBoundaries() {
-		
-	}
-
-	/**
-	 * Constructor.
-	 * @param mouseOverStripes Mouseover stripes
-	 * @param clickBoxes Click boxes
-	 */
-	public EventHandlerGraphicBoundaries(
-			final Set<MouseOverStripes> mouseOverStripes,
-			final Set<ClickBoxes> clickBoxes) {
-		this.mouseOverStripes = mouseOverStripes;
-		this.clickBoxes = clickBoxes;
-	}
-	
-	
-	/**
-	 * Add mouseover stripes.
-	 * @param stripes Mouseover stripes.
-	 */
-	public final void add(final MouseOverStripes stripes) {
-		this.mouseOverStripes.add(stripes);
-	}
-	
-	
-	/**
-	 * Add mouseover stripes.
-	 * @param stripes Mouseover stripes
-	 */
-	public final void addAll(final Set<MouseOverStripes> stripes) {
-		this.mouseOverStripes.addAll(stripes);
-	}
-	
-	
-	/**
-	 * Add click boxes.
-	 * @param clickBoxes Click boxes
-	 */
-	public final void add(final ClickBoxes clickBoxes) {
-		this.clickBoxes.add(clickBoxes);
-	}
 }

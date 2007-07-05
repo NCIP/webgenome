@@ -1,3 +1,9 @@
+DROP TABLE plot_exp_ids;
+DROP TABLE plot_plot_params;
+DROP TABLE plot_mouse_over_stripes;
+DROP TABLE plot_click_boxes;
+DROP TABLE img_file_map;
+DROP TABLE plot;
 DROP TABLE mouse_over_stripe;
 DROP TABLE mouse_over_stripes;
 DROP TABLE click_boxes;

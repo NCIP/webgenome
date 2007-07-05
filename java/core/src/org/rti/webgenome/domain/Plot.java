@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-05 13:23:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.rti.webgenome.graphics.event.MouseOverStripes;
 import org.rti.webgenome.graphics.io.ClickBoxes;
@@ -100,7 +102,7 @@ public class Plot implements Serializable {
      * give the names of images that should be displayed
      * when the user clicks in the regions.
      */
-    private Collection<ClickBoxes> clickBoxes = null;
+    private Set<ClickBoxes> clickBoxes = null;
     
     /**
      * Mouse over stripes reprsenting rectangular
@@ -108,7 +110,7 @@ public class Plot implements Serializable {
      * of each strip gives mouseover text (reporter
      * names).
      */
-    private Collection<MouseOverStripes> mouseOverStripes = null;
+    private Set<MouseOverStripes> mouseOverStripes = null;
     
     /** Width of entire plot image in pixels. */
     private int width = 0;
@@ -120,7 +122,7 @@ public class Plot implements Serializable {
     private PlotParameters plotParameters = null;
     
     /** IDs of experiments in plot. */
-    private Collection<Long> experimentIds = new ArrayList<Long>();
+    private Set<Long> experimentIds = new HashSet<Long>();
     
     // ================================
     //       Getters/setters
@@ -147,7 +149,7 @@ public class Plot implements Serializable {
 	 * Get IDs of experiments in plot.
 	 * @return Experiment IDs
 	 */
-	public final Collection<Long> getExperimentIds() {
+	public final Set<Long> getExperimentIds() {
 		return experimentIds;
 	}
 
@@ -155,7 +157,7 @@ public class Plot implements Serializable {
 	 * Set IDs of experiments in plot.
 	 * @param experimentIds Experiment IDs
 	 */
-	public final void setExperimentIds(final Collection<Long> experimentIds) {
+	public final void setExperimentIds(final Set<Long> experimentIds) {
 		this.experimentIds = experimentIds;
 	}
 
@@ -257,7 +259,7 @@ public class Plot implements Serializable {
      * when the user clicks in the regions.
 	 * @return Click boxes
 	 */
-	public final Collection<ClickBoxes> getClickBoxes() {
+	public final Set<ClickBoxes> getClickBoxes() {
 		return clickBoxes;
 	}
 
@@ -269,7 +271,7 @@ public class Plot implements Serializable {
      * when the user clicks in the regions.
 	 * @param clickBoxes Click boxes
 	 */
-	public final void setClickBoxes(final Collection<ClickBoxes> clickBoxes) {
+	public final void setClickBoxes(final Set<ClickBoxes> clickBoxes) {
 		this.clickBoxes = clickBoxes;
 	}
 
@@ -280,7 +282,7 @@ public class Plot implements Serializable {
      * names).
 	 * @return Mouse over stripes.
 	 */
-	public final Collection<MouseOverStripes> getMouseOverStripes() {
+	public final Set<MouseOverStripes> getMouseOverStripes() {
 		return mouseOverStripes;
 	}
 
@@ -292,7 +294,7 @@ public class Plot implements Serializable {
 	 * @param mouseOverStripes Mouse over stripes
 	 */
 	public final void setMouseOverStripes(
-			final Collection<MouseOverStripes> mouseOverStripes) {
+			final Set<MouseOverStripes> mouseOverStripes) {
 		this.mouseOverStripes = mouseOverStripes;
 	}
 	

@@ -273,3 +273,68 @@ CREATE TABLE mouse_over_stripe (
 	PRIMARY KEY (id),
 	FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes (id)
 );
+
+--
+-- Plot
+--
+CREATE TABLE plot (
+	id NUMBER(38) NOT NULL,
+	def_img_file_name VARCHAR2(256),
+	width INT,
+	height INT,
+	PRIMARY KEY (id)
+);
+
+--
+-- Property Plot.imageFileMap
+--
+CREATE TABLE img_file_map (
+	plot_id NUMBER(38) NOT NULL,
+	img_name VARCHAR2(256),
+	file_name VARCHAR2(256),
+	PRIMARY KEY (plot_id, img_name, file_name),
+	FOREIGN KEY (plot_id) REFERENCES plot(id)
+);
+
+--
+-- Property Plot.clickBoxes
+--
+CREATE TABLE plot_click_boxes (
+	plot_id NUMBER(38) NOT NULL,
+	click_boxes_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (plot_id, click_boxes_id),
+	FOREIGN KEY (plot_id) REFERENCES plot(id),
+	FOREIGN KEY (click_boxes_id) REFERENCES click_boxes(id)
+);
+
+--
+-- Property Plot.mouseOverStripes
+--
+CREATE TABLE plot_mouse_over_stripes (
+	plot_id NUMBER(38) NOT NULL,
+	mouse_over_stripes_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (plot_id, mouse_over_stripes_id),
+	FOREIGN KEY (plot_id) REFERENCES plot(id),
+	FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes(id)
+);
+
+--
+-- Property Plot.plotParameters
+--
+CREATE TABLE plot_plot_params (
+	plot_id NUMBER(38) NOT NULL,
+	plot_params_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (plot_id, plot_params_id),
+	FOREIGN KEY (plot_id) REFERENCES plot(id),
+	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
+);
+
+--
+-- Property Plot.experimentIds
+--
+CREATE TABLE plot_exp_ids (
+	exp_id NUMBER(38) NOT NULL,
+	plot_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (exp_id, plot_id),
+	FOREIGN KEY (plot_id) REFERENCES plot(id)
+);
