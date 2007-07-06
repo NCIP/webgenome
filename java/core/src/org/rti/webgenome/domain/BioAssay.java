@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.3 $
+$Date: 2007-07-06 14:41:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -301,6 +301,25 @@ public abstract class BioAssay implements Serializable {
     		num += this.numDatum(chrom);
     	}
     	return num;
+    }
+    
+    /**
+     * Get color property as RGB integer equivalent.
+     * This method is used for persisting the color.
+     * @return Integer equivalent of color property.
+     */
+    public final int getColorAsInt() {
+    	return this.color.getRGB();
+    }
+    
+    
+    /**
+     * Set color using RGB integer equivalent.
+     * @param rgb RGB integer equivalent
+     * of color.
+     */
+    public final void setColorAsInt(final int rgb) {
+    	this.color = new Color(rgb);
     }
     
     

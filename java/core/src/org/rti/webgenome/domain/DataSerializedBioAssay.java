@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-07-06 14:41:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -119,8 +119,96 @@ public class DataSerializedBioAssay extends BioAssay {
     //    Getters/setters
     // ==============================
     
-    
     /**
+     * Get map of chromosome numbers to chromosome sizes.
+     * @return Map of chromosome numbers to chromosome sizes.
+     */
+    public final Map<Short, Long> getChromosomeSizes() {
+		return chromosomeSizes;
+	}
+
+
+    /**
+     * Set map of chromosome numbers to chromosome sizes.
+     * @param chromosomeSizes Map of chromosome numbers
+     * to chromosome sizes.
+     */
+	public final void setChromosomeSizes(
+			final Map<Short, Long> chromosomeSizes) {
+		this.chromosomeSizes = chromosomeSizes;
+	}
+
+
+	/**
+	 * Get map of chromosome numbers to maximum data
+	 * values on corresponding chromosomes.
+	 * @return Map of chromosome numbers to maximum data
+	 * values on corresponding chromosomes.
+	 */
+	public final Map<Short, Float> getMaxValues() {
+		return maxValues;
+	}
+
+
+	/**
+	 * Set map of chromosome numbers to maximum data
+	 * values on corresponding chromosomes.
+	 * @param maxValues Map of chromosome numbers to maximum data
+	 * values on corresponding chromosomes.
+	 */
+	public final void setMaxValues(
+			final Map<Short, Float> maxValues) {
+		this.maxValues = maxValues;
+	}
+
+
+	/**
+	 * Get map of chromosome numbers to minimum data
+	 * values on corresponding chromosomes.
+	 * @return Map of chromosome numbers to minimum data
+	 * values on corresponding chromosomes.
+	 */
+	public final Map<Short, Float> getMinValues() {
+		return minValues;
+	}
+
+
+	/**
+	 * Set map of chromosome numbers to minimum data
+	 * values on corresponding chromosomes.
+	 * @param minValues Map of chromosome numbers to minimum data
+	 * values on corresponding chromosomes.
+	 */
+	public final void setMinValues(
+			final Map<Short, Float> minValues) {
+		this.minValues = minValues;
+	}
+
+
+	/**
+	 * Get map of chromosome numbers to number of
+	 * data elements on corresponding chromosomes.
+	 * @return Map of chromosome numbers to number of
+	 * data elements on corresponding chromosomes.
+	 */
+	public final Map<Short, Integer> getNumDatum() {
+		return numDatum;
+	}
+
+
+	/**
+	 * Set map of chromosome numbers to number of
+	 * data elements on corresponding chromosomes.
+	 * @param numDatum Map of chromosome numbers to number of
+	 * data elements on corresponding chromosomes.
+	 */
+	public final void setNumDatum(
+			final Map<Short, Integer> numDatum) {
+		this.numDatum = numDatum;
+	}
+
+
+	/**
      * Set map of chromosome numbers to relative names
      * of files containg chromosome array data.
      * @return Map
@@ -195,6 +283,8 @@ public class DataSerializedBioAssay extends BioAssay {
             final String fileName) {
     	short chrom = chromosomeArrayData.getChromosome();
         this.chromosomeArrayDataFileIndex.put(chrom, fileName);
+        this.chromosomeSizes.put(chrom,
+        		chromosomeArrayData.inferredChromosomeSize());
         this.minValues.put(chrom, chromosomeArrayData.getMinValue());
         this.maxValues.put(chrom, chromosomeArrayData.getMaxValue());
         this.numDatum.put(chrom,

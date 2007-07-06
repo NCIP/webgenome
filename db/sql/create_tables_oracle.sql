@@ -338,3 +338,95 @@ CREATE TABLE plot_exp_ids (
 	PRIMARY KEY (exp_id, plot_id),
 	FOREIGN KEY (plot_id) REFERENCES plot(id)
 );
+
+--
+-- BioAssay.  Actually only the DataSerializedBioAssay
+-- subclass of BioAssay is currently persisted.
+--
+CREATE TABLE bioassay (
+	id NUMBER(38) NOT NULL,
+	type VARCHAR2(16),
+	name VARCHAR2(128),
+	color_int INT,
+	selected VARCHAR2(8),
+	parent_bioassay_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (parent_bioassay_id) REFERENCES bioassay(id)
+);
+
+--
+-- BioAssay.organism property
+--
+CREATE TABLE bioassay_organism (
+	bioassay_id NUMBER(38) NOT NULL,
+	organism_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (bioassay_id, organism_id),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id),
+	FOREIGN KEY (organism_id) REFERENCES organism(id)
+);
+
+--
+-- BioAssay.array property
+--
+CREATE TABLE bioassay_array (
+	bioassay_id NUMBER(38) NOT NULL,
+	array_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (bioassay_id, array_id),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id),
+	FOREIGN KEY (array_id) REFERENCES array(id)
+);
+
+--
+-- Property DataSerializedBioAssay.chromosomeArrayDataFileIndex.
+--
+CREATE TABLE array_data_file_index (
+	bioassay_id NUMBER(38) NOT NULL,
+	chromosome INT NOT NULL,
+	file_name VARCHAR2(512),
+	PRIMARY KEY (bioassay_id, chromosome),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+);
+
+--
+-- Property DataSerializedBioAssay.chromosomeSizes.
+--
+CREATE TABLE chrom_sizes (
+	bioassay_id NUMBER(38) NOT NULL,
+	chromosome INT NOT NULL,
+	chrom_size NUMBER(38),
+	PRIMARY KEY (bioassay_id, chromosome),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+);
+
+--
+-- Property DataSerializedBioAssay.minValues
+--
+CREATE TABLE min_values (
+	bioassay_id NUMBER(38) NOT NULL,
+	chromosome INT NOT NULL,
+	min_value NUMBER(38,6),
+	PRIMARY KEY (bioassay_id, chromosome),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+);
+
+--
+-- Property DataSerializedBioAssay.maxValues
+--
+CREATE TABLE max_values (
+	bioassay_id NUMBER(38) NOT NULL,
+	chromosome INT NOT NULL,
+	max_value NUMBER(38,6),
+	PRIMARY KEY (bioassay_id, chromosome),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+);
+
+--
+-- Property DataSerializedBioAssay.numDatum
+--
+CREATE TABLE num_datum (
+	bioassay_id NUMBER(38) NOT NULL,
+	chromosome INT NOT NULL,
+	num_datum INT,
+	PRIMARY KEY (bioassay_id, chromosome),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+);

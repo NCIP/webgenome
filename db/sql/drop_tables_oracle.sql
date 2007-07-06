@@ -1,3 +1,11 @@
+DROP TABLE num_datum;
+DROP TABLE max_values;
+DROP TABLE min_values;
+DROP TABLE chrom_sizes;
+DROP TABLE array_data_file_index;
+DROP TABLE bioassay_array;
+DROP TABLE bioassay_organism;
+DROP TABLE bioassay;
 DROP TABLE plot_exp_ids;
 DROP TABLE plot_plot_params;
 DROP TABLE plot_mouse_over_stripes;

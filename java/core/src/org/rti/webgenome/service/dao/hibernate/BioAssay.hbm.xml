@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.BioAssay"
+		table="bioassay">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<discriminator column="type" type="java.lang.String"/>
+		<property name="name" column="name"/>
+		<property name="colorAsInt" column="color_int"/>
+		<property name="selected" column="selected"/>
+		<property name="parentBioAssayId" column="parent_bioassay_id"/>
+		<join table="bioassay_organism" optional="true">
+			<key column="bioassay_id" unique="true"/>
+			<many-to-one name="organism" column="organism_id"
+				class="org.rti.webgenome.domain.Organism"
+				cascade="save-update" unique="true"
+				not-null="true" lazy="false"/>
+		</join>
+		<join table="bioassay_array" optional="true">
+			<key column="bioassay_id" unique="true"/>
+			<many-to-one name="array" column="array_id"
+				class="org.rti.webgenome.domain.Array"
+				cascade="all-delete-orphan" unique="true"
+				not-null="true" lazy="false"/>
+		</join>
+		<subclass name="org.rti.webgenome.domain.DataSerializedBioAssay"
+			discriminator-value="data.serialized">
+			<map name="chromosomeArrayDataFileIndex"
+				table="array_data_file_index"
+				lazy="false" cascade="all-delete-orphan" sort="natural">
+				<key column="bioassay_id"/>
+				<map-key column="chromosome" type="java.lang.Short"/>
+				<element column="file_name" type="java.lang.String"/>
+			</map>
+			<map name="chromosomeSizes"
+				table="chrom_sizes"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="bioassay_id"/>
+				<map-key column="chromosome" type="java.lang.Short"/>
+				<element column="chrom_size" type="java.lang.Long"/>
+			</map>
+			<map name="minValues"
+				table="min_values"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="bioassay_id"/>
+				<map-key column="chromosome" type="java.lang.Short"/>
+				<element column="min_value" type="java.lang.Float"/>
+			</map>
+			<map name="maxValues"
+				table="max_values"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="bioassay_id"/>
+				<map-key column="chromosome" type="java.lang.Short"/>
+				<element column="max_value" type="java.lang.Float"/>
+			</map>
+			<map name="numDatum"
+				table="num_datum"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="bioassay_id"/>
+				<map-key column="chromosome" type="java.lang.Short"/>
+				<element column="num_datum" type="java.lang.Integer"/>
+			</map>
+		</subclass>
+	</class>
+
+</hibernate-mapping>

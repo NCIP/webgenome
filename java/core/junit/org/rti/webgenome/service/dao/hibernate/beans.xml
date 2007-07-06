@@ -109,9 +109,13 @@
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
- 	-->
-  	
   	<bean id="plotDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePlotDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	-->
+  	
+  	<bean id="bioAssayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateBioAssayDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 </beans>
