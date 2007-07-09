@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-07-09 22:29:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -158,11 +158,11 @@ public final class QuantitationType implements Serializable {
     
     /**
      * Get quantitation type that corresponds to given name.
-     * @param name Name of quantitation type
+     * @param id ID of quantitation type
      * @return Quantitation type
      */
-    public static QuantitationType getQuantitationType(final String name) {
-    	return INDEX.get(name);
+    public static QuantitationType getQuantitationType(final String id) {
+    	return INDEX.get(id);
     }
     
     

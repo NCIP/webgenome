@@ -58,16 +58,7 @@
     	</property>
   	</bean>
   	
-  	<!-- Code below commented out for fast testing of specific
-  	DAO classes.  It should be commented in after DAO development
-  	so all DAO unit tests can be run.
-  	-->
-  	<!--
   	<bean id="organismDao" class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
-  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
-  	</bean>
-  	
-  	<bean id="shoppingCartDao" class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
@@ -113,9 +104,12 @@
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
-  	-->
-  	
   	<bean id="bioAssayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateBioAssayDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="bioAssayDataConstraintsDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateBioAssayDataConstraintsWrapperDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 </beans>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-09 22:29:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,8 +62,6 @@ import org.rti.webgenome.client.ExperimentDTOGenerator;
 import org.rti.webgenome.client.QuantitationTypes;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.graphics.widget.RasterFileTestPlotPanel;
-import org.rti.webgenome.service.plot.BarPlotPainter;
-import org.rti.webgenome.service.plot.BarPlotParameters;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.util.UnitTestUtils;
 

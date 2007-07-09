@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.4 $
+$Date: 2007-07-09 22:29:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -113,8 +113,8 @@ public class Experiment implements Serializable {
      * Bioassay data constraints that have been of data
      * added from client application.
      */  
-    private Collection<BioAssayDataConstraints> bioAssayDataConstraints =
-    		new ArrayList<BioAssayDataConstraints>();
+    private Set<BioAssayDataConstraints> bioAssayDataConstraints =
+    		new HashSet<BioAssayDataConstraints>();
     
     /** Identifier of data source where experiment is stored. */
     private DataSourceProperties dataSourceProperties = null;
@@ -302,7 +302,7 @@ public class Experiment implements Serializable {
      * Get bioassay data constraints of data added from client.
      * @return Bioassay data constraints
      */
-    public final Collection<BioAssayDataConstraints>
+    public final Set<BioAssayDataConstraints>
     getBioAssayDataConstraints() {
 		return bioAssayDataConstraints;
 	}
@@ -556,6 +556,61 @@ public class Experiment implements Serializable {
     //        Business methods
     // ====================================
     
+    /**
+     * Get bioassay data constraint wrapper objects.
+     * This method is used for persisting the
+     * {@code bioAssayDataConstraints} property.
+     * @return Bioassay data constraints wrappers
+     */
+    public final Set<BioAssayDataConstraintsWrapper>
+    getBioAssayDataConstraintsWrappers() {
+    	Set<BioAssayDataConstraintsWrapper> wrappers =
+    		new HashSet<BioAssayDataConstraintsWrapper>();
+    	for (BioAssayDataConstraints c : this.bioAssayDataConstraints) {
+    		wrappers.add(new BioAssayDataConstraintsWrapper(c));
+    	}
+    	return wrappers;
+    }
+    
+    
+    /**
+     * Set {@code bioAssayDataConstraints} using
+     * persistable wrapper objects.
+     * @param wrappers Persistable wrappers for bioassay
+     * data constraints.
+     */
+    public final void setBioAssayDataConstraintsWrapper(
+    		final Set<BioAssayDataConstraintsWrapper> wrappers) {
+    	this.bioAssayDataConstraints = new HashSet<BioAssayDataConstraints>();
+    	for (BioAssayDataConstraintsWrapper w : wrappers) {
+    		BioAssayDataConstraints c = new BioAssayDataConstraints();
+    		c.setChromosome(w.getChromosome());
+    		c.setPositions(w.getStartPosition(), w.getEndPosition());
+    		c.setQuantitationType(w.getQuantitationType());
+    	}
+    }
+    
+    
+    /**
+     * Get string equivalent of quantitation type.
+     * This method is used for persisting the
+     * {@code quantitationType}.
+     * @return String equivalent of quantitation type
+     */
+    public final String getQuantitationTypeAsString() {
+    	return this.quantitationType.getId();
+    }
+    
+    
+    /**
+     * Set string equivalent of quantitation type.
+     * This method is used for persisting the
+     * {@code quantitationType property}.
+     * @param id String equivalent of quantitation type
+     */
+    public final void setQuantitationTypeAsString(final String id) {
+    	this.quantitationType = QuantitationType.getQuantitationType(id);
+    }
     
     /**
      * Get sum total of all {@link org.rti.domain.ArrayDatum}
@@ -1133,5 +1188,82 @@ public class Experiment implements Serializable {
     		}
     	}
     	return experiments;
+    }
+    
+    
+    /**
+     * Wrapper around
+     * {@code org.rti.webgenome.client.BioAssayDataConstraints}
+     * designed for persistence of {@code Experiment} objects.
+     * This class simply provides additional setter methods
+     * needed by persistent frameworks, like Hibernate,
+     * as well as a primary key property.
+     * @author dhall
+     *
+     */
+    public static class BioAssayDataConstraintsWrapper
+    extends BioAssayDataConstraints {
+    	
+    	/** Serialized version ID. */
+        private static final long serialVersionUID = 
+    		SystemUtils.getLongApplicationProperty("serial.version.uid");
+        
+        /** Primary key value for persistence. */
+        private Long id = null;
+        
+        /**
+         * Constructor.
+         */
+        public BioAssayDataConstraintsWrapper() {
+        	
+        }
+        
+        /**
+         * Constructor.
+         * @param constraints Bioassay data constraints whose
+         * properties will be copied to this.
+         */
+        public BioAssayDataConstraintsWrapper(
+        		final BioAssayDataConstraints constraints) {
+        	super();
+        	this.setChromosome(constraints.getChromosome());
+        	this.setPositions(constraints.getStartPosition(),
+        			constraints.getEndPosition());
+        	this.setQuantitationType(constraints.getQuantitationType());
+        }
+    	
+        
+        /**
+         * Get primary key value.
+         * @return Primary key value
+         */
+    	public final Long getId() {
+			return id;
+		}
+
+    	/**
+    	 * Set primary key value.
+    	 * @param id Primary key value
+    	 */
+		public final void setId(final Long id) {
+			this.id = id;
+		}
+
+		/**
+    	 * Set start position in genome.
+    	 * @param pos Start position in genome.
+    	 */
+    	public final void setStartPosition(final Long pos) {
+    		this.setPositions(pos, this.getEndPosition());
+    	}
+    	
+    	
+    	/**
+    	 * Set end position in genome.
+    	 * @param pos End position in genome.
+    	 */
+    	public final void setEndPosition(final Long pos) {
+    		this.setPositions(this.getStartPosition(), pos);
+    	}
     }
 }

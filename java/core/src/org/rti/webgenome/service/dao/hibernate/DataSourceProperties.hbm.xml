@@ -5,30 +5,21 @@
 
 
 <hibernate-mapping>
-
-	<class name="org.rti.webgenome.domain.DataSourceProperties">
-	
+	<class name="org.rti.webgenome.domain.DataSourceProperties"
+		table="data_src_props">
 		<id name="id" column="ID">
-		    <generator class="sequence">
-		    	<param name="sequence">seq_ds_props_id</param>
-		    </generator>
+		    <generator class="increment"/>
 		</id>
-		
+		<discriminator column="type" type="java.lang.String"/>
 		<property name="clientId" column="client_id"/>
-		
-		<union-subclass
+		<subclass
 			name="org.rti.webgenome.domain.SimulatedDataSourceProperties"
-			table="sim_data_src_props"/>
-			
-		<union-subclass
+			discriminator-value="simulated"/>
+		<subclass
 			name="org.rti.webgenome.domain.EjbDataSourceProperties"
-			table="ejb_data_src_props">
-			
+			discriminator-value="ejb">
 			<property name="jndiName" column="jndi_name"/>
-			
 			<property name="jndiProviderURL" column="jndi_provider_url"/>
-			
-		</union-subclass>
+		</subclass>
 	</class>
-
 </hibernate-mapping>

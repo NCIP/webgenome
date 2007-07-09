@@ -100,21 +100,11 @@ CREATE TABLE job (
 );
 
 --
--- SimpleUserConfigurableProperty
+-- UserConfigurableProperty
 --
-CREATE TABLE simp_user_conf_prop (
+CREATE TABLE user_conf_prop (
 	id NUMBER(38) NOT NULL,
-	current_value VARCHAR2(128),
-	display_name VARCHAR2(128),
-	name VARCHAR2(128),
-	PRIMARY KEY (id)
-);
-
---
--- UserConfigurablePropertyWithOptions
---
-CREATE TABLE user_conf_prop_opt (
-	id NUMBER(38) NOT NULL,
+	type VARCHAR2(16),
 	current_value VARCHAR2(128),
 	display_name VARCHAR2(128),
 	name VARCHAR2(128),
@@ -123,33 +113,32 @@ CREATE TABLE user_conf_prop_opt (
 
 --
 -- Specific options for a UserConfigurablePropertyWithOptions
--- (i.e, the 'options' attribute.
+-- (i.e, the 'options' attribute).
 --
 CREATE TABLE prop_options (
 	code VARCHAR2(128),
 	display_name VARCHAR2(128),
-	user_conf_prop_opt_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (user_conf_prop_opt_id, code),
-	FOREIGN KEY (user_conf_prop_opt_id) REFERENCES user_conf_prop_opt(id)
-);
-
---
--- SimulatedDataSourceProperties
---
-CREATE TABLE sim_data_src_props (
-	id NUMBER(38) NOT NULL,
-	client_id VARCHAR2(128),
-	PRIMARY KEY (id)
+	user_conf_prop_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (user_conf_prop_id, code),
+	FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id)
 );
 
 --
 -- EjbDataSourceProperties
 --
-CREATE TABLE ejb_data_src_props (
+CREATE TABLE data_src_props (
+
+	-- Common properties
 	id NUMBER(38) NOT NULL,
 	client_id VARCHAR2(128),
+	
+	-- Discriminator
+	type VARCHAR2(16),
+	
+	-- EjbDataSourceProperties
 	jndi_name VARCHAR2(256),
 	jndi_provider_url VARCHAR2(1024),
+	
 	PRIMARY KEY (id)
 );
 
@@ -430,3 +419,53 @@ CREATE TABLE num_datum (
 	PRIMARY KEY (bioassay_id, chromosome),
 	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
 );
+
+--
+-- BioAssayDataConstraints
+--
+CREATE TABLE bioassay_data_constraints (
+	id NUMBER(38) NOT NULL,
+	chromosome VARCHAR2(64),
+	start_point NUMBER(38),
+	end_point NUMBER(38),
+	quant_type varchar2(64),
+	PRIMARY KEY (id)
+);
+
+--
+-- Experiment
+--
+CREATE TABLE experiment (
+	id NUMBER(38) NOT NULL,
+	name VARCHAR2(128),
+	source_db_id VARCHAR2(256),
+	quant_type VARCHAR2(128),
+	terminal VARCHAR2(8),
+	an_op_class_name VARCHAR2(256),
+	PRIMARY KEY (id)
+);
+
+--
+-- Experiment.bioAssays property
+--
+CREATE TABLE experiment_bioassay (
+	experiment_id NUMBER(38) NOT NULL,
+	bioassay_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (experiment_id, bioassay_id),
+	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
+	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+);
+
+--
+-- Experiment.organism property
+--
+CREATE TABLE experiment_organism (
+	experiment_id NUMBER(38) NOT NULL,
+	organism_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (experiment_id, organism_id),
+	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
+	FOREIGN KEY (organism_id) REFERENCES organism(id)
+);
+
+
+
