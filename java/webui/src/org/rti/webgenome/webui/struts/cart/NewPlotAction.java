@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.5 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -176,8 +176,7 @@ public final class NewPlotAction extends BaseAction {
 	    	// the client application
 	    	Long plotId = Long.parseLong(request.getParameter("plotId"));
 	    	plot = cart.getPlot(plotId);
-	    	Collection<Long> experimentIds = plot.getExperimentIds();
-	    	experiments = cart.getExperiments(experimentIds);
+	    	experiments = plot.getExperiments();
 	    	QuantitationType qType =
 	    		Experiment.getQuantitationType(experiments);
 	    	

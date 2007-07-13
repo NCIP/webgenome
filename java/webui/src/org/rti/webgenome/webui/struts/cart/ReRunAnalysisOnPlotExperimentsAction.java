@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.6 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -124,8 +124,8 @@ extends BaseAnalysisAction {
 		// Recover derived experiments
 		Collection<Experiment> derivedExperiments =
 			new ArrayList<Experiment>();
-		for (Long expId : plot.getExperimentIds()) {
-			Experiment exp = cart.getExperiment(expId);
+		Collection<Experiment> experiments = plot.getExperiments();
+		for (Experiment exp : experiments) {
 			if (exp == null) {
 				throw new WebGenomeApplicationException(
 						"One or more experiments no longer workspace");

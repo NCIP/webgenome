@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.ShoppingCart"
+		table="shopping_cart">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<property name="userName" column="user_name"/>
+		<set name="experiments" table="shopping_cart_experiments"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="shopping_cart_id" not-null="true"/>
+			<many-to-many column="experiment_id"
+				class="org.rti.webgenome.domain.Experiment"/>
+		</set>
+		<set name="plots" table="shopping_cart_plots"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="shopping_cart_id" not-null="true"/>
+			<many-to-many column="plot_id"
+				class="org.rti.webgenome.domain.Plot"/>
+		</set>
+		<many-to-one name="lastPlotIn" column="last_plot_in_id"
+			class="org.rti.webgenome.domain.Plot"
+			cascade="all-delete-orphan"
+			lazy="false"/>
+	</class>
+
+</hibernate-mapping>

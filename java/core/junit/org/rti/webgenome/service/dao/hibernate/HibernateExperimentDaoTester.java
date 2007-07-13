@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
@@ -50,9 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.dao.hibernate;
 
-
 import java.awt.Color;
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -68,36 +66,31 @@ import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.EjbDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.QuantitationType;
-import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.graphics.event.MouseOverStripe;
-import org.rti.webgenome.graphics.event.MouseOverStripes;
-import org.rti.webgenome.graphics.io.ClickBoxes;
-import org.rti.webgenome.service.plot.ScatterPlotParameters;
-import org.rti.webgenome.units.Orientation;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import junit.framework.TestCase;
 
 /**
- * Tester for <code>HibernateExperimentDao</code>.
+ * Tester for
+ * {@link org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao}.
  * @author dhall
+ *
  */
-public final class HibernateShoppingCartDaoTester extends TestCase {
-    
-    /**
-     * Test all methods.
-     */
-    public void testAllMethods() {
-    	
-    	// Get DAO bean
-    	ApplicationContext ctx = new ClassPathXmlApplicationContext(
+public class HibernateExperimentDaoTester extends TestCase {
+
+	/**
+	 * Test all methods.
+	 */
+	public void testAllMethods() {
+		
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
         "org/rti/webgenome/service/dao/hibernate/beans.xml");
-		HibernateShoppingCartDao dao =
-			(HibernateShoppingCartDao)
-			ctx.getBean("shoppingCartDao");
+		HibernateExperimentDao dao =
+			(HibernateExperimentDao)
+			ctx.getBean("experimentDao");
 		
 		// Instantiate test object
 		Organism org = new Organism("Genus", "species");
@@ -154,33 +147,9 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 		EjbDataSourceProperties ejbProps = new EjbDataSourceProperties(
 				"jndiName", "jndiProviderUrl", "clientId");
 		exp.setDataSourceProperties(ejbProps);
-		Plot plot = new Plot();
-		plot.setDefaultImageFileName("file1");
-		plot.setWidth(100);
-		plot.setHeight(100);
-		plot.addImageFile("img2", "file2");
-		plot.addImageFile("img3", "file3");
-		ClickBoxes cb = new ClickBoxes(100, 100, 10, 10, new Point(0, 0));
-		cb.addClickBoxText("box1", 25, 10);
-		cb.addClickBoxText("box2", 50, 50);
-		Set<ClickBoxes> cbs = new HashSet<ClickBoxes>();
-		cbs.add(cb);
-		plot.setClickBoxes(cbs);
-		MouseOverStripes mos = new MouseOverStripes(
-				Orientation.HORIZONTAL, 100, 100, new Point(0, 0));
-		mos.add(new MouseOverStripe(0, 10, "stripe1"));
-		mos.add(new MouseOverStripe(11, 20, "stripe2"));
-		Set<MouseOverStripes> moss = new HashSet<MouseOverStripes>();
-		moss.add(mos);
-		plot.setMouseOverStripes(moss);
-		ScatterPlotParameters params = new ScatterPlotParameters();
-		plot.setPlotParameters(params);
-		plot.addExperiment(exp);
-		ShoppingCart cart = new ShoppingCart("user");
-		cart.add(exp);
-		cart.add(plot);
 		
 		// Run tests
-		dao.save(cart);
-    }
+		dao.save(exp);
+		dao.delete(exp);
+	}
 }

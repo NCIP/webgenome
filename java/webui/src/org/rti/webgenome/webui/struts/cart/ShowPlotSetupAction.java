@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -112,9 +112,8 @@ public final class ShowPlotSetupAction extends BaseAction {
     	// analytic operations.  If so, plant an attribute
     	// to be used by JSP to enable the user to adjust
     	// analytic parameters
-    	Collection<Long> expIds = plot.getExperimentIds();
-    	for (Long expId : expIds) {
-    		Experiment exp = cart.getExperiment(expId);
+    	Collection<Experiment> experiments = plot.getExperiments();
+    	for (Experiment exp : experiments) {
     		if (exp != null) {
     			if (exp.isDerived()) {
     				request.setAttribute("derived.data", "1");

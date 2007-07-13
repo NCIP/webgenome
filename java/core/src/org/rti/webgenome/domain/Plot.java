@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-05 13:23:29 $
+$Revision: 1.4 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,8 +121,9 @@ public class Plot implements Serializable {
     /** Plot parameters. */
     private PlotParameters plotParameters = null;
     
-    /** IDs of experiments in plot. */
-    private Set<Long> experimentIds = new HashSet<Long>();
+    /** Experiments in plot. */
+    private Set<Experiment> experiments = new HashSet<Experiment>();
+    
     
     // ================================
     //       Getters/setters
@@ -146,19 +147,19 @@ public class Plot implements Serializable {
 
 	
 	/**
-	 * Get IDs of experiments in plot.
+	 * Get experiments in plot.
 	 * @return Experiment IDs
 	 */
-	public final Set<Long> getExperimentIds() {
-		return experimentIds;
+	public final Set<Experiment> getExperiments() {
+		return experiments;
 	}
 
 	/**
-	 * Set IDs of experiments in plot.
-	 * @param experimentIds Experiment IDs
+	 * Set experiments in plot.
+	 * @param experiments Experiments
 	 */
-	public final void setExperimentIds(final Set<Long> experimentIds) {
-		this.experimentIds = experimentIds;
+	public final void setExperiments(final Set<Experiment> experiments) {
+		this.experiments = experiments;
 	}
 
 	/**
@@ -341,10 +342,10 @@ public class Plot implements Serializable {
 	
 	
 	/**
-	 * Add experiment ID.
-	 * @param id Experiment ID.
+	 * Add experiment to plot.
+	 * @param experiment Experiment.
 	 */
-	public final void addExperimentId(final Long id) {
-		this.experimentIds.add(id);
+	public final void addExperiment(final Experiment experiment) {
+		this.experiments.add(experiment);
 	}
 }

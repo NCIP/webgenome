@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.5 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,6 +121,15 @@ public class ShoppingCart implements Serializable {
 	
 	
 	/**
+	 * Set last plot in.
+	 * @param lastPlotIn Last plot to be added to shopping
+	 * cart.
+	 */
+	public final void setLastPlotIn(final Plot lastPlotIn) {
+		this.lastPlotIn = lastPlotIn;
+	}
+
+	/**
 	 * Get last plot added to cart.
 	 * @return Last plot added to cart.
 	 */
@@ -227,22 +236,6 @@ public class ShoppingCart implements Serializable {
      * @param experiment An experiment
      */
     public final void add(final Experiment experiment) {
-    	
-    	// Make sure experiment has an ID
-    	if (experiment.getId() == null) {
-    		throw new IllegalArgumentException("Experiment has no ID");
-    	}
-    	
-    	// Make sure there is not an existing experiment with the
-    	// same ID
-    	for (Experiment exp : this.experiments) {
-    		if (exp.getId().equals(experiment.getId())) {
-    			throw new IllegalArgumentException(
-    					"Shopping cart already contains an experiment with ID '"
-    					+ exp.getId() + "'");
-    		}
-    	}
-    	
         this.experiments.add(experiment);
     }
     

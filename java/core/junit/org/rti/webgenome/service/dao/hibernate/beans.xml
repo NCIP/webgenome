@@ -112,4 +112,14 @@
   		class="org.rti.webgenome.service.dao.hibernate.HibernateBioAssayDataConstraintsWrapperDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
+  	
+  	<bean id="experimentDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="shoppingCartDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
 </beans>

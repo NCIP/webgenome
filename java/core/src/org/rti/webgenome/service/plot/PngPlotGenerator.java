@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -159,7 +159,7 @@ public class PngPlotGenerator implements PlotGenerator {
 		Plot plot = new Plot();
 		plot.setPlotParameters(plotParameters);
 		for (Experiment exp : experiments) {
-			plot.addExperimentId(exp.getId());
+			plot.addExperiment(exp);
 		}
 		
 		// Provide missing plot parameters not supplied by user

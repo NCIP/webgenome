@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-25 18:41:54 $
+$Revision: 1.1 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,25 +48,27 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.session;
+package org.rti.webgenome.service.dao;
 
-import org.rti.webgenome.domain.ShoppingCart;
-
+import org.rti.webgenome.domain.Experiment;
 
 /**
- * Interface for managing shopping cart.
+ * Data access class for
+ * {@link org.rti.webgenome.domain.Experiment}.
  * @author dhall
  *
  */
-public interface ShoppingCartMgr {
-    
-    /**
-     * Get shopping cart associated with given user name.
-     * If a cart with given user name has not been
-     * instantiated, a new cart will be created
-     * and persisted.
-     * @param userName User name
-     * @return A shopping cart
-     */
-    ShoppingCart getShoppingCart(String userName);
+public interface ExperimentDao {
+
+	/**
+	 * Save given experiment to persistent storage.
+	 * @param experiment Experiment to save
+	 */
+	void save(Experiment experiment);
+	
+	/**
+	 * Delete given experiment from persistent storage.
+	 * @param experiment Experiment to delete.
+	 */
+	void delete(Experiment experiment);
 }

@@ -271,7 +271,9 @@ CREATE TABLE plot (
 	def_img_file_name VARCHAR2(256),
 	width INT,
 	height INT,
-	PRIMARY KEY (id)
+	plot_params_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
 );
 
 --
@@ -308,18 +310,7 @@ CREATE TABLE plot_mouse_over_stripes (
 );
 
 --
--- Property Plot.plotParameters
---
-CREATE TABLE plot_plot_params (
-	plot_id NUMBER(38) NOT NULL,
-	plot_params_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (plot_id, plot_params_id),
-	FOREIGN KEY (plot_id) REFERENCES plot(id),
-	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
-);
-
---
--- Property Plot.experimentIds
+-- Property Plot.experiments
 --
 CREATE TABLE plot_exp_ids (
 	exp_id NUMBER(38) NOT NULL,
@@ -339,29 +330,11 @@ CREATE TABLE bioassay (
 	color_int INT,
 	selected VARCHAR2(8),
 	parent_bioassay_id NUMBER(38),
+	organism_id NUMBER(38),
+	array_id NUMBER(38),
 	PRIMARY KEY (id),
-	FOREIGN KEY (parent_bioassay_id) REFERENCES bioassay(id)
-);
-
---
--- BioAssay.organism property
---
-CREATE TABLE bioassay_organism (
-	bioassay_id NUMBER(38) NOT NULL,
-	organism_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (bioassay_id, organism_id),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id),
-	FOREIGN KEY (organism_id) REFERENCES organism(id)
-);
-
---
--- BioAssay.array property
---
-CREATE TABLE bioassay_array (
-	bioassay_id NUMBER(38) NOT NULL,
-	array_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (bioassay_id, array_id),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id),
+	FOREIGN KEY (parent_bioassay_id) REFERENCES bioassay(id),
+	FOREIGN KEY (organism_id) REFERENCES organism(id),
 	FOREIGN KEY (array_id) REFERENCES array(id)
 );
 
@@ -442,7 +415,13 @@ CREATE TABLE experiment (
 	quant_type VARCHAR2(128),
 	terminal VARCHAR2(8),
 	an_op_class_name VARCHAR2(256),
-	PRIMARY KEY (id)
+	organism_id NUMBER(38),
+	data_src_props_id NUMBER(38),
+	source_experiment_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (organism_id) REFERENCES organism(id),
+	FOREIGN KEY (data_src_props_id) REFERENCES data_src_props(id),
+	FOREIGN KEY (source_experiment_ID) REFERENCES experiment(id)
 );
 
 --
@@ -457,15 +436,56 @@ CREATE TABLE experiment_bioassay (
 );
 
 --
--- Experiment.organism property
+-- Experiment.bioAssayDataConstraints property
 --
-CREATE TABLE experiment_organism (
+CREATE TABLE exp_bioassay_data_constr (
 	experiment_id NUMBER(38) NOT NULL,
-	organism_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (experiment_id, organism_id),
+	bioassay_data_constraints_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (experiment_id, bioassay_data_constraints_id),
 	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
-	FOREIGN KEY (organism_id) REFERENCES organism(id)
+	FOREIGN KEY (bioassay_data_constraints_id) REFERENCES bioassay_data_constraints(id)
 );
 
+--
+-- Experiment.userConfigurableProperties property
+--
+CREATE TABLE exp_user_conf_prop (
+	experiment_id NUMBER(38) NOT NULL,
+	user_conf_prop_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (experiment_id, user_conf_prop_id),
+	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
+	FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id)
+);
 
+--
+-- ShoppingCart
+--
+CREATE TABLE shopping_cart (
+	id NUMBER(38) NOT NULL,
+	user_name VARCHAR2(128),
+	last_plot_in_id NUMBER(38),
+	PRIMARY KEY (id),
+	FOREIGN KEY (last_plot_in_id) REFERENCES plot(id)
+);
 
+--
+-- ShoppingCart.experiments property
+--
+CREATE TABLE shopping_cart_experiments (
+	shopping_cart_id NUMBER(38) NOT NULL,
+	experiment_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (shopping_cart_id, experiment_id),
+	FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart(id),
+	FOREIGN KEY (experiment_id) REFERENCES experiment(id)
+);
+
+--
+-- ShoppingCart.plots property
+--
+CREATE TABLE shopping_cart_plots (
+	shopping_cart_id NUMBER(38) NOT NULL,
+	plot_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (shopping_cart_id, plot_id),
+	FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart(id),
+	FOREIGN KEY (plot_id) REFERENCES plot(id)
+);

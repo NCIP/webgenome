@@ -25,10 +25,11 @@
 			<element column="file_name" type="java.lang.String"/>
 		</map>
 		
-		<set name="experimentIds" table="plot_exp_ids"
+		<set name="experiments" table="plot_exp_ids"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="plot_id"/>
-			<element column="exp_id" type="java.lang.Long"/>
+			<many-to-many column="exp_id"
+				class="org.rti.webgenome.domain.Experiment"/>
 		</set>
 		
 		<set name="clickBoxes" table="plot_click_boxes"
@@ -45,13 +46,10 @@
 				class="org.rti.webgenome.graphics.event.MouseOverStripes"/>
 		</set>
 		
-		<join table="plot_plot_params" optional="true">
-			<key column="plot_id" unique="true"/>
-			<many-to-one name="plotParameters" column="plot_params_id"
-				class="org.rti.webgenome.service.plot.PlotParameters"
-				cascade="all-delete-orphan" unique="true"
-				not-null="true" lazy="false"/>
-		</join>
+		<many-to-one name="plotParameters" column="plot_params_id"
+			class="org.rti.webgenome.service.plot.PlotParameters"
+			cascade="all-delete-orphan"
+			not-null="true" lazy="false"/>
 		
 	</class>
 

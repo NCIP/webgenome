@@ -16,20 +16,13 @@
 		<property name="colorAsInt" column="color_int"/>
 		<property name="selected" column="selected"/>
 		<property name="parentBioAssayId" column="parent_bioassay_id"/>
-		<join table="bioassay_organism" optional="true">
-			<key column="bioassay_id" unique="true"/>
-			<many-to-one name="organism" column="organism_id"
-				class="org.rti.webgenome.domain.Organism"
-				cascade="save-update" unique="true"
-				not-null="true" lazy="false"/>
-		</join>
-		<join table="bioassay_array" optional="true">
-			<key column="bioassay_id" unique="true"/>
-			<many-to-one name="array" column="array_id"
-				class="org.rti.webgenome.domain.Array"
-				cascade="all-delete-orphan" unique="true"
-				not-null="true" lazy="false"/>
-		</join>
+		<many-to-one name="organism" column="organism_id"
+			class="org.rti.webgenome.domain.Organism"
+			cascade="save-update" not-null="true" lazy="false"/>
+		<many-to-one name="array" column="array_id"
+			class="org.rti.webgenome.domain.Array"
+			cascade="all-delete-orphan" unique="true"
+			not-null="true" lazy="false"/>
 		<subclass name="org.rti.webgenome.domain.DataSerializedBioAssay"
 			discriminator-value="data.serialized">
 			<map name="chromosomeArrayDataFileIndex"

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-09 22:29:43 $
+$Revision: 1.5 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -116,6 +116,14 @@ public class Experiment implements Serializable {
     private Set<BioAssayDataConstraints> bioAssayDataConstraints =
     		new HashSet<BioAssayDataConstraints>();
     
+    /**
+     * Wrappers around bioassay data constraints enabling
+     * persistence of those constraints.
+     */
+    private Set<BioAssayDataConstraintsWrapper>
+    	bioAssayDataConstraintsWrappers =
+    	new HashSet<BioAssayDataConstraintsWrapper>();
+    
     /** Identifier of data source where experiment is stored. */
     private DataSourceProperties dataSourceProperties = null;
     
@@ -138,8 +146,8 @@ public class Experiment implements Serializable {
      * analysic operation, this property is the user configurable
      * properties for that operation.
      */
-    private Collection<UserConfigurableProperty> userConfigurableProperties =
-    	new ArrayList<UserConfigurableProperty>();
+    private Set<UserConfigurableProperty> userConfigurableProperties =
+    	new HashSet<UserConfigurableProperty>();
 
         
     // ===============================
@@ -163,6 +171,58 @@ public class Experiment implements Serializable {
 	}
 	
 	
+	/**
+	 * Get name of analytic operation class, if any, that
+	 * generated this experiment.
+	 * @return Full analytic operation class name
+	 */
+	public final String getAnalyticOperationClassName() {
+		return analyticOperationClassName;
+	}
+
+	/**
+	 * Set name of analytic operation class that generated
+	 * this experiment.
+	 * @param analyticOperationClassName Full name of
+	 * analytic operation class
+	 */
+	public final void setAnalyticOperationClassName(
+			final String analyticOperationClassName) {
+		this.analyticOperationClassName = analyticOperationClassName;
+	}
+
+	/**
+	 * Get user configurable properties assocaited with analytic
+	 * operation that generated this experiment.
+	 * @return User configurable properties
+	 */
+	public final Set<UserConfigurableProperty>
+	getUserConfigurableProperties() {
+		return userConfigurableProperties;
+	}
+
+	/**
+	 * Set user configurable properties associated with analytic
+	 * operation that generated this experiment.
+	 * @param userConfigurableProperties User configurable properties
+	 */
+	public final void setUserConfigurableProperties(final
+			Set<UserConfigurableProperty> userConfigurableProperties) {
+		this.userConfigurableProperties = userConfigurableProperties;
+	}
+
+	/**
+	 * Set bioassay data constraints for query made to a client
+	 * application that returned this experiment.
+	 * @param bioAssayDataConstraints Bioassay data constraints.
+	 */
+	public final void setBioAssayDataConstraints(
+			final Set<BioAssayDataConstraints> bioAssayDataConstraints) {
+		this.bioAssayDataConstraints = bioAssayDataConstraints;
+		this.bioAssayDataConstraintsWrappers =
+			this.newBioAssayDataConstraintWrappers(bioAssayDataConstraints);
+	}
+
 	/**
 	 * Get source analytic operation.
 	 * If this experiment object was generated through an analytic
@@ -201,9 +261,9 @@ public class Experiment implements Serializable {
 			final AnalyticOperation sourceAnalyticOperation) {
 		this.analyticOperationClassName =
 			sourceAnalyticOperation.getClass().getName();
-		this.userConfigurableProperties =
+		this.userConfigurableProperties = new HashSet<UserConfigurableProperty>(
 			sourceAnalyticOperation.getUserConfigurableProperties(
-					this.quantitationType);
+					this.quantitationType));
 	}
 
 	/**
@@ -433,6 +493,9 @@ public class Experiment implements Serializable {
     		}
     	}
     	addAll(this.bioAssayDataConstraints, bioAssayDataConstraints);
+    	this.bioAssayDataConstraintsWrappers =
+    		this.newBioAssayDataConstraintWrappers(
+    				this.bioAssayDataConstraints);
     }
     
     
@@ -564,9 +627,22 @@ public class Experiment implements Serializable {
      */
     public final Set<BioAssayDataConstraintsWrapper>
     getBioAssayDataConstraintsWrappers() {
+     	return this.bioAssayDataConstraintsWrappers;
+    }
+    
+    
+    /**
+     * Generate a set of wrapper objects around the given
+     * bioassay data constraints.
+     * @param constraints Constraints
+     * @return Set of wrapper objects.
+     */
+    private Set<BioAssayDataConstraintsWrapper>
+    newBioAssayDataConstraintWrappers(
+    		final Set<BioAssayDataConstraints> constraints) {
     	Set<BioAssayDataConstraintsWrapper> wrappers =
     		new HashSet<BioAssayDataConstraintsWrapper>();
-    	for (BioAssayDataConstraints c : this.bioAssayDataConstraints) {
+    	for (BioAssayDataConstraints c : constraints) {
     		wrappers.add(new BioAssayDataConstraintsWrapper(c));
     	}
     	return wrappers;
@@ -574,19 +650,22 @@ public class Experiment implements Serializable {
     
     
     /**
-     * Set {@code bioAssayDataConstraints} using
+     * Set {@code bioAssayDataConstraints}
+     * and {@code bioAssayDataConstraintWrappers} using
      * persistable wrapper objects.
      * @param wrappers Persistable wrappers for bioassay
      * data constraints.
      */
-    public final void setBioAssayDataConstraintsWrapper(
+    public final void setBioAssayDataConstraintsWrappers(
     		final Set<BioAssayDataConstraintsWrapper> wrappers) {
+    	this.bioAssayDataConstraintsWrappers = wrappers;
     	this.bioAssayDataConstraints = new HashSet<BioAssayDataConstraints>();
     	for (BioAssayDataConstraintsWrapper w : wrappers) {
     		BioAssayDataConstraints c = new BioAssayDataConstraints();
     		c.setChromosome(w.getChromosome());
     		c.setPositions(w.getStartPosition(), w.getEndPosition());
     		c.setQuantitationType(w.getQuantitationType());
+    		this.bioAssayDataConstraints.add(c);
     	}
     }
     
@@ -672,6 +751,8 @@ public class Experiment implements Serializable {
     		exp.analyticOperationClassName;
     	this.bioAssayDataConstraints =
     		exp.bioAssayDataConstraints;
+    	this.bioAssayDataConstraintsWrappers =
+    		exp.bioAssayDataConstraintsWrappers;
     	this.bioAssays = exp.bioAssays;
     	this.dataSourceProperties = exp.dataSourceProperties;
     	this.name = exp.name;
@@ -728,6 +809,8 @@ public class Experiment implements Serializable {
     		}
 			if (!found) {
 				this.bioAssayDataConstraints.add(c);
+				this.bioAssayDataConstraintsWrappers.add(
+						new BioAssayDataConstraintsWrapper(c));
 			}
     	}
     }

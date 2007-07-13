@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-07-13 19:35:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,7 +53,6 @@ package org.rti.webgenome.service.dao.hibernate;
 import java.util.Collection;
 import java.util.List;
 
-import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -94,11 +93,8 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      */
     public ShoppingCart load(final String userName) {
         String query = "from ShoppingCart cart where cart.userName = ?";
-    	//String query = "from SHOPPING_CART cart where cart.userName = ?";
         Object[] args = new Object[] {userName};
-        //query = "from ShoppingCart cart where cart.id = ?";
         List carts = this.getHibernateTemplate().find(query, args);
-        //List carts = this.getHibernateTemplate().find(query, userName);
         ShoppingCart cart = null;
         if (carts != null && carts.size() > 0) {
             cart = (ShoppingCart) carts.get(0);

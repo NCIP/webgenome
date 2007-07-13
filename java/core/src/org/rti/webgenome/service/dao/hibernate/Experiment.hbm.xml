@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.Experiment"
+		table="experiment">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<property name="name" column="name"/>
+		<property name="sourceDbId" column="source_db_id"/>
+		<property name="quantitationTypeAsString" column="quant_type"/>
+		<property name="terminal" column="terminal"/>
+		<property name="analyticOperationClassName" column="an_op_class_name"/>
+		<set name="bioAssays" table="experiment_bioassay"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="experiment_id" not-null="true"/>
+			<many-to-many column="bioassay_id"
+				class="org.rti.webgenome.domain.BioAssay"/>
+		</set>
+		<many-to-one name="organism" column="organism_id"
+			class="org.rti.webgenome.domain.Organism"
+			cascade="save-update"
+			lazy="false"/>
+		<many-to-one name="dataSourceProperties" column="data_src_props_id"
+			class="org.rti.webgenome.domain.DataSourceProperties"
+			cascade="all-delete-orphan"
+			lazy="false"/>
+		<set name="bioAssayDataConstraintsWrappers" lazy="false"
+			table="exp_bioassay_data_constr"
+			cascade="all-delete-orphan">
+			<key column="experiment_id" not-null="true"/>
+			<many-to-many column="bioassay_data_constraints_id"
+				class="org.rti.webgenome.domain.Experiment$BioAssayDataConstraintsWrapper"/>
+		</set>
+		<set name="userConfigurableProperties" lazy="false"
+			table="exp_user_conf_prop"
+			cascade="all-delete-orphan">
+			<key column="experiment_id" not-null="true"/>
+			<many-to-many column="user_conf_prop_id"
+				class="org.rti.webgenome.analysis.UserConfigurableProperty"/>
+		</set>
+	</class>
+
+</hibernate-mapping>

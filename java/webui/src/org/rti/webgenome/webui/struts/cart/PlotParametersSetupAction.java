@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-13 19:35:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -140,12 +140,12 @@ public final class PlotParametersSetupAction extends BaseAction {
     	// any are derived from an analytic operation.
     	// The downstream JSP needs to know this because
     	// some form elements must be de-activated.
-    	Collection<Long> expIds = null;
+    	Collection<Experiment> experiments = null;
     	ShoppingCart cart = PageContext.getShoppingCart(request);
     	if (plotIdStr != null) {
     		Long plotId = Long.parseLong(plotIdStr);
     		Plot plot = cart.getPlot(plotId);
-    		expIds = plot.getExperimentIds();
+    		experiments = plot.getExperiments();
     	} else {
     		SelectedExperimentsForm seForm =
 	    		PageContext.getSelectedExperimentsForm(request, false);
@@ -153,9 +153,9 @@ public final class PlotParametersSetupAction extends BaseAction {
 	    		throw new SessionTimeoutException(
 	    				"Could not find selected experiments");
 	    	}
-	    	expIds = seForm.getSelectedExperimentIds();
+	    	Collection<Long> expIds = seForm.getSelectedExperimentIds();
+	    	experiments = cart.getExperiments(expIds);
     	}
-    	Collection<Experiment> experiments = cart.getExperiments(expIds);
     	for (Experiment exp : experiments) {
     		if (exp.getDataSourceProperties()
     				== DataSourceProperties.ANALYTIC_OPERATION) {
