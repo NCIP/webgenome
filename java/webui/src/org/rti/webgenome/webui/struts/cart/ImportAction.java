@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,6 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -72,6 +71,7 @@ import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.webui.SessionTimeoutException;
+import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
@@ -80,7 +80,7 @@ import org.rti.webgenome.webui.util.PageContext;
  * @author dhall
  *
  */
-public final class ImportAction extends Action {
+public final class ImportAction extends BaseAction {
 	
     /** Experiment ID generator. */
     private IdGenerator experimentIdGenerator = null;
@@ -149,7 +149,7 @@ public final class ImportAction extends Action {
     	Collection<Long> ids = seForm.getSelectedExperimentIds();
     	
     	// Get selected experiments from cart
-    	ShoppingCart cart = PageContext.getShoppingCart(request, true);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	Collection<Experiment> selectedExperiments =
     		cart.getExperiments(ids);
     	

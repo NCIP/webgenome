@@ -1,5 +1,5 @@
 /*
-$Revision: 1.4 $
+$Revision: 1.1 $
 $Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
@@ -48,74 +48,38 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.struts.cart;
+package org.rti.webgenome.service.dao.hibernate;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import org.rti.webgenome.graphics.util.ColorChooser;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.analysis.UserConfigurableProperty;
-import org.rti.webgenome.core.WebGenomeApplicationException;
-import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.Plot;
-import org.rti.webgenome.domain.QuantitationType;
-import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.webui.struts.BaseAction;
-
+import junit.framework.TestCase;
 
 /**
- * Setup action for screen that enables the user to adjust
- * analysis parameters from within a plot screen.
+ * Tester for
+ * {@link org.rti.webgenome.service.dao.hibernate.HibernateColorChooserDao}.
  * @author dhall
  *
  */
-public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
+public class HibernateColorChooserDaoTester extends TestCase {
 
 	/**
-	 * {@inheritDoc}
+	 * Test all methods.
 	 */
-	@Override
-    public ActionForward execute(
-            final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request,
-            final HttpServletResponse response
-        ) throws Exception {
-    	
-		// Attach map of derived experiments to request
-		ShoppingCart cart = this.getShoppingCart(request);
-		Long plotId = Long.parseLong(request.getParameter("id"));
-		Plot plot = cart.getPlot(plotId);
-		if (plot == null) {
-			throw new WebGenomeApplicationException(
-					"Unable to retrieve plot from shopping cart");
-		}
-		Collection<Experiment> experiments = plot.getExperiments();
-		QuantitationType qType = Experiment.getQuantitationType(experiments);
-		Map<Experiment, Collection<UserConfigurableProperty>>
-			derivedExperiments = new HashMap<Experiment,
-				Collection<UserConfigurableProperty>>();
-		for (Experiment exp : experiments) {
-			if (exp == null) {
-				throw new WebGenomeApplicationException(
-						"Some experiments no longer in shopping cart");
-			}
-			if (exp.isDerived()) {
-				derivedExperiments.put(exp,
-						exp.getSourceAnalyticOperation().
-						getUserConfigurableProperties(qType));
-			}
-		}
-		request.setAttribute("derived.experiments", derivedExperiments);
+	public void testAllMethods() {
 		
-		// Attach plot to request
-		request.setAttribute("plot", plot);
+		// Get DAO bean
+		ApplicationContext ctx = new ClassPathXmlApplicationContext(
+        "org/rti/webgenome/service/dao/hibernate/beans.xml");
+		HibernateColorChooserDao dao =
+			(HibernateColorChooserDao)
+			ctx.getBean("colorChooserDao");
 		
-    	return mapping.findForward("success");
-    }
+		// Instantiate test object
+		ColorChooser cc = new ColorChooser();
+		
+		// Run tests
+		dao.saveOrUpdate(cc);
+	}
 }

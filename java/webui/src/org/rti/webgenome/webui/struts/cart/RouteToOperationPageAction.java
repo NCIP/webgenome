@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,7 @@ import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Determines which operation a use has selected
+ * Determines which operation a user has selected
  * to perform on selected experiments and forwards
  * to the appropriate action.  Possible operations
  * are creating a new plot and performing an analytic

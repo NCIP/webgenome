@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.Action;
+import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.session.SessionMode;
+import org.rti.webgenome.webui.SessionTimeoutException;
+import org.rti.webgenome.webui.util.PageContext;
 
 
 /**
@@ -60,4 +68,60 @@ import org.apache.struts.action.Action;
  */
 public abstract class BaseAction extends Action {
 	
+	/** Data access object for shopping carts. */
+	private ShoppingCartDao shoppingCartDao = null;
+
+
+	/**
+	 * Set shopping cart data access object.  This method
+	 * will be used primarily for dependency injection.
+	 * @param shoppingCartDao Shopping cart data access object.
+	 */
+	public void setShoppingCartDao(final ShoppingCartDao shoppingCartDao) {
+		this.shoppingCartDao = shoppingCartDao;
+	}
+	
+	
+	/**
+	 * Get shopping cart.  If the session mode is
+	 * {@code CLIENT}, the cart will be cached in the
+	 * session object.  If the mode is {@code STAND_ALONE},
+	 * the cart will be obtained from persistent storage.
+	 * @param request Servlet request
+	 * @return Shopping cart
+	 * @throws SessionTimeoutException If any necessary
+	 * session attributes are not found, which indicates the
+	 * session has timed ouit.
+	 */
+	protected ShoppingCart getShoppingCart(
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		ShoppingCart cart = null;
+		SessionMode mode = PageContext.getSessionMode(request);
+		if (mode == SessionMode.CLIENT) {
+			cart = PageContext.getShoppingCart(request);
+		} else if (mode == SessionMode.STAND_ALONE) {
+			Principal principal = PageContext.getPrincipal(request);
+			cart = this.shoppingCartDao.load(principal.getName());
+		}
+		return cart;
+	}
+	
+	/**
+	 * Persist changes made to given shopping cart.  If the
+	 * session mode is CLIENT, no action will actually be
+	 * performed.
+	 * @param cart Shopping cart
+	 * @param request Servlet request
+	 * @throws SessionTimeoutException If the method cannot
+	 * determine the session mode, which would occur if
+	 * for some reason the session timed out.
+	 */
+	protected void persistShoppingCartChanges(final ShoppingCart cart,
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		if (PageContext.getSessionMode(request) == SessionMode.STAND_ALONE) {
+			this.shoppingCartDao.update(cart);
+		}
+	}
 }

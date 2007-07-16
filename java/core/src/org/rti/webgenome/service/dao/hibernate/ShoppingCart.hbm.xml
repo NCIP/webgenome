@@ -28,6 +28,11 @@
 			class="org.rti.webgenome.domain.Plot"
 			cascade="all-delete-orphan"
 			lazy="false"/>
+		<many-to-one name="bioassayColorChooser"
+			column="color_chooser_id"
+			class="org.rti.webgenome.graphics.util.ColorChooser"
+			cascade="all-delete-orphan"
+			lazy="false"/>
 	</class>
 
 </hibernate-mapping>

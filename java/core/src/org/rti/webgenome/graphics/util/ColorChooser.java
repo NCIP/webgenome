@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,8 +72,11 @@ public class ColorChooser {
 	//      Attributes
 	// ============================
 	
+	/** Primary key value for persistence. */
+	private Long id = null;
+	
 	/** List of colors which are assigned in sequence. */
-	private final List<Color> colors = new ArrayList<Color>();
+	private List<Color> colors = new ArrayList<Color>();
 	
 	/**
 	 * Counts how many times each color is being used in
@@ -86,14 +89,91 @@ public class ColorChooser {
 	 * the color has been assigned by using the incrementColorCount(Color)
 	 * method.  
 	 */
-	private final Map<Color, Integer> colorCounts =
+	private Map<Color, Integer> colorCounts =
 		new HashMap<Color, Integer>();
 	
+	//
+	//  G E T T E R S  /  S E T T E R S
+	//
+	
+	/**
+	 * Get counts of how many times a particular color
+	 * has been assigned.
+	 * @return Map of color integer equivalents
+	 * (i.e. RBG value) to counts.
+	 */
+	public final Map<Integer, Integer> getColorCounts() {
+		Map<Integer, Integer> intColorCounts =
+			new HashMap<Integer, Integer>();
+		for (Color c : this.colorCounts.keySet()) {
+			intColorCounts.put(c.getRGB(), this.colorCounts.get(c));
+		}
+		return intColorCounts;
+	}
+
+
+	/**
+	 * Set counts of how many times a particular color
+	 * has been assigned.
+	 * @param colorCounts Map of color integer equivalents
+	 * (i.e. RGB value) to counts.
+	 */
+	public final void setColorCounts(final Map<Integer, Integer> colorCounts) {
+		this.colorCounts = new HashMap<Color, Integer>();
+		for (Integer colorInt : colorCounts.keySet()) {
+			Color c = new Color(colorInt);
+			this.colorCounts.put(c, colorCounts.get(colorInt));
+		}
+	}
+
+
+	/**
+	 * Get list of available colors.
+	 * @return Available colors as integer equivalents (i.e., RGB values)
+	 */
+	public final List<Integer> getColors() {
+		List<Integer> colorInts = new ArrayList<Integer>();
+		for (Color c : this.colors) {
+			colorInts.add(c.getRGB());
+		}
+		return colorInts;
+	}
+
+
+	/**
+	 * Set list of available colors.
+	 * @param colors Available colors as integer
+	 * equivalents (i.e., RGB values).
+	 */
+	public final void setColors(final List<Integer> colors) {
+		this.colors = new ArrayList<Color>();
+		for (int colorInt : colors) {
+			this.colors.add(new Color(colorInt));
+		}
+	}
+
+
+	/**
+	 * Get primary key value used for persistence.
+	 * @return Primary key value.
+	 */
+	public final Long getId() {
+		return id;
+	}
+
+
+	/**
+	 * Set primary key value used for persistence.
+	 * @param id Primary key value.
+	 */
+	public final void setId(final Long id) {
+		this.id = id;
+	}
 	
 	// ==============================
 	//      Constructors
 	// ==============================
-	
+
 	/**
 	 * Constructor.
 	 */
@@ -272,6 +352,12 @@ public class ColorChooser {
 			int p = (int) Math.floor((double) count / 7.0);
 			int component = componentValueSequence[p];
 			int combination = count % 7;
+			
+			// "All 245s" too light
+			if (combination == 6 && component >= 245) {
+				component = 180;
+			}
+			
 			setComponents(component, combination);
 		}
 		
@@ -283,7 +369,7 @@ public class ColorChooser {
 		 * components get set the component value.  Components that
 		 * don't get set this value get set to 0.
 		 */
-		private void setComponents(int value,
+		private void setComponents(final int value,
 				final int combinationNumber) {
 			switch (combinationNumber) {
 				case 0 :
@@ -305,8 +391,6 @@ public class ColorChooser {
 					this.setComponents(0, value, value);
 					break;
 				case 6 :
-                    if ( value >= 245 ) // reduce the value of the color, as all 245's make
-                        value = 180 ;   // a color which is too light.
 					this.setComponents(value, value, value);
 					break;
 				default: setComponents(0, 0, 0);
@@ -316,13 +400,13 @@ public class ColorChooser {
 		
 		/**
 		 * Set individual color components.
-		 * @param a Value of first component (i.e. red)
-		 * @param b Value of second component (i.e. green)
-		 * @param c Value of third component (i.e. blue)
+		 * @param redValue Value of first component (i.e. red)
+		 * @param greenValue Value of second component (i.e. green)
+		 * @param blueValue Value of third component (i.e. blue)
 		 */
-		private void setComponents( final int redValue,
-                                    final int greenValue,
-                                    final int blueValue) {
+		private void setComponents(final int redValue,
+                                   final int greenValue,
+                                   final int blueValue) {
 			components[0] = redValue;
 			components[1] = greenValue;
 			components[2] = blueValue;

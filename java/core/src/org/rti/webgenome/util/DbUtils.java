@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/DbUtils.java,v $
-$Revision: 1.3 $
-$Date: 2007-06-29 21:47:51 $
+$Revision: 1.4 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,16 +38,17 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
+
+
 package org.rti.webgenome.util;
 
 import java.io.BufferedReader;
@@ -62,12 +61,18 @@ import java.util.StringTokenizer;
 
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.core.WebGenomeRuntimeException;
-import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
- * Database utilities
+ * Database utilities.
  */
-public class DbUtils {
+public final class DbUtils {
+	
+	/**
+	 * Constructor.
+	 */
+	private DbUtils() {
+		
+	}
 	
 	/**
 	 * A delimiting character for encoding/decoding
@@ -85,55 +90,62 @@ public class DbUtils {
 	private static final String NULL = "N*U*L*L";
     
 	/**
-	 * Close a statement
+	 * Close a statement.
 	 * @param stmt A statement
 	 */
-	public static void close(Statement stmt) {
-		if (stmt != null)
+	public static void close(final Statement stmt) {
+		if (stmt != null) {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
-				throw new WebGenomeRuntimeException("Error closing database connection", e);
+				throw new WebGenomeRuntimeException(
+						"Error closing database connection", e);
 			}
+		}
 	}
 	
 	
 	/**
-	 * Close a result set
+	 * Close a result set.
 	 * @param rset A result set
 	 */
-	public static void close(ResultSet rset) {
-		if (rset != null)
+	public static void close(final ResultSet rset) {
+		if (rset != null) {
 			try {
 				rset.close();
 			} catch (SQLException e) {
-				throw new WebGenomeRuntimeException("Error closing result set", e);
+				throw new WebGenomeRuntimeException(
+						"Error closing result set", e);
 			}
+		}
 	}
 	
 	
 	/**
-	 * Close a database connections
+	 * Close a database connections.
 	 * @param con A connection
 	 */
-	public static void close(Connection con) {
-	    if (con != null)
+	public static void close(final Connection con) {
+	    if (con != null) {
             try {
-            	if (! con.isClosed())
+            	if (!con.isClosed()) {
             		con.close();
+            	}
             } catch (SQLException e) {
-                throw new WebGenomeRuntimeException("Error closing database connection");
+                throw new WebGenomeRuntimeException(
+                		"Error closing database connection");
             }
+	    }
 	}
 	
 	
 	/**
-	 * Encode a boolean value as an integer
+	 * Encode a boolean value as an integer.
 	 * @param value Boolean value
 	 * @return Integer equivalent
 	 */
-	public static int encodeBoolean(boolean value) {
-	    return value? 1 : 0;
+	public static int encodeBoolean(final boolean value) {
+	    return value ? 1 : 0;
 	}
 	
 	
@@ -142,8 +154,8 @@ public class DbUtils {
 	 * @param value An integer encoded boolean value
 	 * @return Boolean equivalent
 	 */
-	public static boolean decodeBoolean(int value) {
-	    return (value == 0)? false : true;
+	public static boolean decodeBoolean(final int value) {
+	    return (value == 0) ? false : true;
 	}
 
 	

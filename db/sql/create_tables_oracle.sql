@@ -458,14 +458,46 @@ CREATE TABLE exp_user_conf_prop (
 );
 
 --
+-- ColorChooser
+--
+CREATE TABLE color_chooser (
+	id NUMBER(38) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+--
+-- ColorChooser.colors propery
+-- 
+CREATE TABLE color_chooser_color (
+	color_chooser_id NUMBER(38) NOT NULL,
+	list_index INT NOT NULL,
+	color INT,
+	PRIMARY KEY (color_chooser_id, list_index),
+	FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id)
+);
+
+--
+-- ColorChooser.colorCounts property
+--
+CREATE TABLE color_chooser_color_count (
+	color_chooser_id NUMBER(38) NOT NULL,
+	color INT NOT NULL,
+	usage_count INT,
+	PRIMARY KEY (color_chooser_id, color),
+	FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id)
+);
+
+--
 -- ShoppingCart
 --
 CREATE TABLE shopping_cart (
 	id NUMBER(38) NOT NULL,
 	user_name VARCHAR2(128),
 	last_plot_in_id NUMBER(38),
+	color_chooser_id NUMBER(38) NOT NULL,
 	PRIMARY KEY (id),
-	FOREIGN KEY (last_plot_in_id) REFERENCES plot(id)
+	FOREIGN KEY (last_plot_in_id) REFERENCES plot(id),
+	FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id)
 );
 
 --

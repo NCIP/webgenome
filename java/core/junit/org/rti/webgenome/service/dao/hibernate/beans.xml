@@ -122,4 +122,9 @@
   		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
+  	
+  	<bean id="colorChooserDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateColorChooserDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
 </beans>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -81,6 +81,7 @@ import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.SystemUtils;
+import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.struts.cart.PlotParametersForm;
 import org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm;
@@ -237,8 +238,16 @@ public final class ClientPlotAction extends BaseAction {
         	}
         }
         
-        // Put data in shopping cart
-        ShoppingCart cart = PageContext.getShoppingCart(request, true);
+        // If session is new, instantiate new cart
+        ShoppingCart cart = null;
+        try {
+        	cart = this.getShoppingCart(request);
+        } catch (SessionTimeoutException e) {
+        	cart = new ShoppingCart();
+        	PageContext.setShoppingCart(request, cart);
+        }
+        
+        // Put data in cart
         cart.add(experiments);
         
         // TODO: Make this cleaner.

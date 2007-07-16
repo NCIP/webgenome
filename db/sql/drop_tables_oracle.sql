@@ -1,6 +1,9 @@
 DROP TABLE shopping_cart_plots;
 DROP TABLE shopping_cart_experiments;
 DROP TABLE shopping_cart;
+DROP TABLE color_chooser_color_count;
+DROP TABLE color_chooser_color;
+DROP TABLE color_chooser;
 DROP TABLE exp_user_conf_prop;
 DROP TABLE exp_bioassay_data_constr;
 DROP TABLE experiment_bioassay;

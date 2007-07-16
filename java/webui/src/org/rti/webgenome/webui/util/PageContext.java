@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:49 $
+$Revision: 1.3 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -187,35 +187,12 @@ public final class PageContext {
 	public static ShoppingCart getShoppingCart(
 			final HttpServletRequest request)
 	throws SessionTimeoutException {
-		return getShoppingCart(request, false);
-	}
-	
-	
-	/**
-	 * Get shopping cart associated with session.
-	 * @param request Servlet request.
-	 * @param createIfMissing Create a new shopping cart if
-	 * it cannot be found.
-	 * @return Shopping cart associated with session.
-	 * @throws SessionTimeoutException If attribute not
-	 * found in session and <code>createIfMissing</code>
-	 * is <code>false</code>.
-	 */
-	public static ShoppingCart getShoppingCart(
-			final HttpServletRequest request,
-			final boolean createIfMissing)
-	throws SessionTimeoutException {
 		ShoppingCart cart = (ShoppingCart)
-			request.getSession().getAttribute(KEY_SHOPPING_CART);
+		request.getSession().getAttribute(KEY_SHOPPING_CART);
 		if (cart == null) {
-			if (createIfMissing) {
-				cart = new ShoppingCart();
-				setShoppingCart(request, cart);
-			} else {
-				throw new SessionTimeoutException("Session has expired");
-			}
+			throw new SessionTimeoutException("Session has expired");
 		}
-		return cart;
+	return cart;
 	}
 	
 	

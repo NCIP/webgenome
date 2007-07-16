@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.6 $
+$Date: 2007-07-16 16:25:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -99,6 +100,9 @@ public class ShoppingCart implements Serializable {
     /** Last plot to be added to cart. */
     private Plot lastPlotIn = null;
     
+    /** Color chooser for assigning bioassay colors. */
+    private ColorChooser bioassayColorChooser = new ColorChooser();
+    
     // =============================
     //     Getters/setters
     // =============================
@@ -120,6 +124,23 @@ public class ShoppingCart implements Serializable {
 	}
 	
 	
+	/**
+	 * Get color chooser for bioassays.
+	 * @return Color chooser
+	 */
+	public final ColorChooser getBioassayColorChooser() {
+		return bioassayColorChooser;
+	}
+
+	/**
+	 * Set color chooser for bioassays.
+	 * @param bioassayColorChooser Color chooser
+	 */
+	public final void setBioassayColorChooser(
+			final ColorChooser bioassayColorChooser) {
+		this.bioassayColorChooser = bioassayColorChooser;
+	}
+
 	/**
 	 * Set last plot in.
 	 * @param lastPlotIn Last plot to be added to shopping
