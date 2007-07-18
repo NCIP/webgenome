@@ -13,14 +13,14 @@
 		</id>
 		<map name="colorCounts"
 			table="color_chooser_color_count"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false">
 			<key column="color_chooser_id"/>
 			<map-key column="color" type="java.lang.Integer"/>
 			<element column="usage_count" type="java.lang.Integer"/>
 		</map>
 		<list name="colors"
 			table="color_chooser_color"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false">
 			<key column="color_chooser_id"/>
 			<list-index column="list_index"/>
 			<element column="color" type="java.lang.Integer"/>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -84,7 +85,10 @@ public class OnlyIfLoggedInAndStandAloneModeTag extends TagSupport {
 			SessionMode mode =
 				org.rti.webgenome.webui.util.PageContext.getSessionMode(
 					(HttpServletRequest) pageContext.getRequest());
-			if (mode == SessionMode.STAND_ALONE) {
+			Principal principal =
+				org.rti.webgenome.webui.util.PageContext.getPrincipal(
+						(HttpServletRequest) pageContext.getRequest());
+			if (mode == SessionMode.STAND_ALONE && principal != null) {
 				rVal = TagSupport.EVAL_BODY_INCLUDE;
 			}
 		} catch (SessionTimeoutException e) {

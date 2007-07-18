@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.4 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,6 @@ import javax.servlet.http.HttpSession;
 
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -95,9 +94,6 @@ public final class PageContext {
 	 */
 	private static final String KEY_SELECTED_EXPERIMENTS_FORM =
 		"selected.experiments.form";
-	
-	/** Key of color chooser. */
-	private static final String KEY_COLOR_CHOOSER = "key.color.chooser";
 	
 	/** Key of client data service manager. */
 	private static final String KEY_CLIENT_DATA_SERVICE_MANAGER =
@@ -234,33 +230,6 @@ public final class PageContext {
 			final HttpServletRequest request,
 			final SelectedExperimentsForm form) {
 		request.getSession().setAttribute(KEY_SELECTED_EXPERIMENTS_FORM, form);
-	}
-	
-	
-	/**
-	 * Get color chooser from session.
-	 * @param request Servlet request
-	 * @param createIfMissing Create if missing from session
-	 * @return Color chooser
-	 * @throws SessionTimeoutException if session has timed
-	 * out and cannot find color chooser.
-	 */
-	public static ColorChooser getColorChooser(
-			final HttpServletRequest request,
-			final boolean createIfMissing)
-	throws SessionTimeoutException {
-		HttpSession s = request.getSession();
-		ColorChooser cc = (ColorChooser)
-			s.getAttribute(KEY_COLOR_CHOOSER);
-		if (cc == null) {
-			if (createIfMissing) {
-				cc = new ColorChooser();
-				s.setAttribute(KEY_COLOR_CHOOSER, cc);
-			} else {
-				throw new SessionTimeoutException("Session timed out");
-			}
-		}
-		return cc;
 	}
 	
 	

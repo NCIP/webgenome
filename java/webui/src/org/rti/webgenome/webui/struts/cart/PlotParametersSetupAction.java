@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -141,7 +141,7 @@ public final class PlotParametersSetupAction extends BaseAction {
     	// The downstream JSP needs to know this because
     	// some form elements must be de-activated.
     	Collection<Experiment> experiments = null;
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	if (plotIdStr != null) {
     		Long plotId = Long.parseLong(plotIdStr);
     		Plot plot = cart.getPlot(plotId);

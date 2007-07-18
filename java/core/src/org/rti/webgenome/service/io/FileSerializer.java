@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import java.io.Serializable;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.IOUtils;
 
 /**
@@ -99,10 +100,22 @@ public final class FileSerializer implements Serializer {
 	public FileSerializer(final String directoryPath) {
 		this.directory = new File(directoryPath);
 		
-		// Make sure directory exists
-		if (!this.directory.exists() || !this.directory.isDirectory()) {
-			throw new IllegalArgumentException("Directory '"
-                    + directory + "' does not exist");
+		// Create directory if missing
+		if (!this.directory.exists()) {
+			LOGGER.info("Creating directory '" + directoryPath
+					+ "' for serializing files");
+			try {
+				FileUtils.createDirectory(directoryPath);
+			} catch (Exception e) {
+				throw new WebGenomeSystemException(
+						"Failed to create directory '"
+						+ directoryPath + "' for serializing data", e);
+			}
+		}
+		if (!this.directory.isDirectory()) {
+			throw new WebGenomeSystemException(
+					"Directory path '" + directoryPath
+					+ "' does not reference a real directory");
         }
 		
 		// Set properties

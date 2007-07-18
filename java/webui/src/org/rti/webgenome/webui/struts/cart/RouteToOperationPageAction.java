@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,9 +61,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.webui.struts.BaseAction;
-import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Determines which operation a user has selected
@@ -93,9 +93,29 @@ public final class RouteToOperationPageAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+    	SelectedExperimentsForm seForm = (SelectedExperimentsForm) form;
+    	
+    	// Make sure selected experiments not of different
+		// quantitation types
+		ShoppingCart cart = this.getShoppingCart(request);
+		Collection<Experiment> exps = cart.getExperiments(
+				seForm.getSelectedExperimentIds());
+		QuantitationType qType = null;
+		for (Experiment exp : exps) {
+			if (qType == null) {
+				qType = exp.getQuantitationType();
+			} else {
+				if (qType != exp.getQuantitationType()) {
+					ActionErrors errors = new ActionErrors();
+					errors.add("global",
+							new ActionError("mixed.quantitation.types"));
+					this.saveErrors(request, errors);
+					return mapping.findForward("error");
+				}
+			}
+		}
     	
     	// Recover which operation the user has selected
-    	SelectedExperimentsForm seForm = (SelectedExperimentsForm) form;
     	String operation = seForm.getOperation();
     	
     	// Determine forward
@@ -104,7 +124,6 @@ public final class RouteToOperationPageAction extends BaseAction {
     		forward = mapping.findForward("plot");
     	} else if ("analysis".equals(operation)) {
     		Collection<Long> ids = seForm.getSelectedExperimentIds();
-    		ShoppingCart cart = PageContext.getShoppingCart(request);
     		for (Long id : ids) {
     			Experiment exp = cart.getExperiment(id);
     			if (exp.isTerminal()) {

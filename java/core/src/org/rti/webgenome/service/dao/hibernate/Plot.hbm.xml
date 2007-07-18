@@ -8,9 +8,7 @@
 
 	<class name="org.rti.webgenome.domain.Plot" table="PLOT">
 	
-		<id name="id" column="ID">
-		    <generator class="increment"/>
-		</id>
+		<id name="id" column="ID"/>
 		
 		<property name="defaultImageFileName" column="def_img_file_name"/>
 		

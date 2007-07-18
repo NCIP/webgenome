@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.6 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,12 +68,17 @@ import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.job.JobFactory;
+import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.plot.PlotParameters;
+import org.rti.webgenome.service.plot.PlotService;
 import org.rti.webgenome.service.session.SessionMode;
+import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
+import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
+import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
+import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
  * Action that creates a plot.  This action may be called
@@ -101,8 +106,16 @@ public final class NewPlotAction extends BaseAction {
 	//     ATTRIBUTES
 	//
 	
-	/** Generates plotting jobs. */
-	private JobFactory jobFactory = null;
+	/**
+	 * Service for creating plots.  This service is
+	 * only used directly when session is CLIENT mode
+	 * or the size of the data set is sufficiently small
+	 * to generate the plot immediately.
+	 */
+	private PlotService plotService = null;
+	
+	/** Manages serialized data files. */
+	private DataFileManager dataFileManager = null;
 	
 	
 	//
@@ -110,13 +123,20 @@ public final class NewPlotAction extends BaseAction {
 	//
 	
 	/**
-	 * Setter for the job factory used for dependency injection.
-	 * @param jobManager Factory for compute-intensive jobs.
+	 * Set service for creating plots.
+	 * @param plotService Plot service
 	 */
-	public void setJobFactory(final JobFactory jobManager) {
-		this.jobFactory = jobManager;
+	public void setPlotService(final PlotService plotService) {
+		this.plotService = plotService;
 	}
-
+	
+	/**
+	 * Set manager for serialized data files.
+	 * @param dataFileManager Data file manager
+	 */
+	public void setDataFileManager(final DataFileManager dataFileManager) {
+		this.dataFileManager = dataFileManager;
+	}
 	
 	//
 	//     OVERRIDES
@@ -142,7 +162,7 @@ public final class NewPlotAction extends BaseAction {
     ) throws Exception {
     	
     	// Setup
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	Plot plot = null;
     	PlotParametersForm pForm = (PlotParametersForm) form;
     	PlotParameters params = pForm.getPlotParameters();
@@ -201,15 +221,21 @@ public final class NewPlotAction extends BaseAction {
 		    	}
 	    	}
 	    }
-    	
-    	// Create plot
-	    boolean plotCompleted =
-	    	this.jobFactory.plotExperiments(plot, experiments,
-	    			params, cart, mode);
-    	
-	    // Determine forward
+	    
 	    ActionForward forward = null;
-	    if (plotCompleted) {
+	    
+	    // Case: Plot immediately
+	    if (!ProcessingModeDecider.processInBackground(experiments,
+	    		params.getGenomeIntervals())) {
+	    	ChromosomeArrayDataGetter getter = null;
+	    	if (this.dataInMemory(request)) {
+	    		getter = new InMemoryChromosomeArrayDataGetter();
+	    	} else {
+	    		getter = new SerializedChromosomeArrayDataGetter(
+	    				this.dataFileManager);
+	    	}
+	    	this.plotService.plotExperiments(plot, experiments, params, cart,
+	    			getter);
 	    	forward = mapping.findForward("non.batch");
 	    }
 	    

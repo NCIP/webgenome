@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,6 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.webui.struts.BaseAction;
-import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Action to remove an experiment from the shopping cart.
@@ -89,13 +88,13 @@ public final class RemoveExperimentAction extends BaseAction {
     ) throws Exception {
     	
     	// Get shopping cart
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	
     	// Get ID of experiment to remove
     	long id = Long.parseLong(request.getParameter("id"));
     	
     	// Relinquish colors in experiment
-    	ColorChooser cc = PageContext.getColorChooser(request, false);
+    	ColorChooser cc = cart.getBioassayColorChooser();
     	Experiment exp = cart.getExperiment(id);
     	for (BioAssay ba : exp.getBioAssays()) {
     		cc.decrementCount(ba.getColor());

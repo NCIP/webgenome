@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,10 +62,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.QuantitationType;
-import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.util.SystemUtils;
-import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseForm;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -224,31 +221,6 @@ public class SelectedExperimentsForm extends BaseForm {
 		// Make sure at least one experiment selected
 		if (this.values.size() < 1) {
 			errors.add("global", new ActionError("no.experiments.selected"));
-		} else {
-		
-			// Make sure selected experiments not of different
-			// quantitation types
-			ShoppingCart cart = null;
-			try {
-				cart = PageContext.getShoppingCart(request);
-			} catch (SessionTimeoutException e) {
-				throw new WebGenomeSystemException(
-						"Unable to obtain shopping cart", e);
-			}
-			Collection<Experiment> exps = cart.getExperiments(
-					this.getSelectedExperimentIds());
-			QuantitationType qType = null;
-			for (Experiment exp : exps) {
-				if (qType == null) {
-					qType = exp.getQuantitationType();
-				} else {
-					if (qType != exp.getQuantitationType()) {
-						errors.add("global",
-								new ActionError("mixed.quantitation.types"));
-						break;
-					}
-				}
-			}
 		}
 			
 		return errors;

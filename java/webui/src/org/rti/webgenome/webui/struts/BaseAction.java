@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -123,5 +123,19 @@ public abstract class BaseAction extends Action {
 		if (PageContext.getSessionMode(request) == SessionMode.STAND_ALONE) {
 			this.shoppingCartDao.update(cart);
 		}
+	}
+	
+	
+	/**
+	 * Are data in memory for this session?
+	 * @param request A request
+	 * @return T/F
+	 * @throws SessionTimeoutException If the method cannot
+	 * determine the session mode, which would occur if
+	 * for some reason the session timed out.
+	 */
+	protected boolean dataInMemory(final HttpServletRequest request)
+	throws SessionTimeoutException {
+		return PageContext.getSessionMode(request) == SessionMode.CLIENT;
 	}
 }

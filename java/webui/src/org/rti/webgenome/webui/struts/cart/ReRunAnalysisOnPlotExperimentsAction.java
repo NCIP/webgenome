@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.7 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,9 +64,9 @@ import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.job.JobFactory;
-import org.rti.webgenome.service.session.SessionMode;
-import org.rti.webgenome.webui.util.PageContext;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
+import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
  * Rerun analytic operation on all derived
@@ -81,11 +81,8 @@ extends BaseAnalysisAction {
 	//     ATTRIBUTES
 	//
 	
-	/**
-	 * Generates compute-intensive jobs such as--in this case--re-running
-	 * an analytic operation.
-	 */
-	private JobFactory jobFactory = null;
+	/** Service for performing analyses. */
+	private AnalysisService analysisService = null;
 	
 	
 	//
@@ -93,11 +90,11 @@ extends BaseAnalysisAction {
 	//
 	
 	/**
-	 * Setter for dependency injection of job factory.
-	 * @param jobManager Generates compute-intensive jobs
+	 * Set service for performing analysis via injection.
+	 * @param analysisService Service for performing analysis.
 	 */
-	public void setJobFactory(final JobFactory jobManager) {
-		this.jobFactory = jobManager;
+	public void setAnalysisService(final AnalysisService analysisService) {
+		this.analysisService = analysisService;
 	}
 	
 	
@@ -117,7 +114,7 @@ extends BaseAnalysisAction {
 	throws Exception {
 		
 		// Recover plot
-		ShoppingCart cart = PageContext.getShoppingCart(request);
+		ShoppingCart cart = this.getShoppingCart(request);
 		Long plotId = Long.parseLong(request.getParameter("plotId"));
 		Plot plot = cart.getPlot(plotId);
 		
@@ -143,17 +140,14 @@ extends BaseAnalysisAction {
 			return mapping.findForward("errors");
 		}
 		
-		// Redo analysis
-		SessionMode mode = PageContext.getSessionMode(request);
-		boolean reranAlready =
-			this.jobFactory.rePerformAnalyticOperation(
-					derivedExperiments, mode);
+		ActionForward forward = null;
 		
-		// Select forward
-    	ActionForward forward = null;
-    	if (reranAlready) {
-    		forward = mapping.findForward("non.batch");
-    	}
+		// Case: Process imediately
+		if (!ProcessingModeDecider.processInBackground(derivedExperiments)) {
+			this.analysisService.rePerformAnalyticOperation(
+					derivedExperiments, new InMemoryDataTransformer());
+			forward = mapping.findForward("non.batch");
+		}
 	
 		return forward;
 	}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,11 +56,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.QuantitationType;
+import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
  * Action that retrieves the available types of quantitation
@@ -68,7 +68,7 @@ import org.rti.webgenome.domain.QuantitationType;
  * @author dhall
  *
  */
-public final class GetQuantitationTypesAction extends Action {
+public final class GetQuantitationTypesAction extends BaseAction {
 
 	
 	/**

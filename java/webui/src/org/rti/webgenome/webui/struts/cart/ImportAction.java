@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.4 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -190,8 +190,7 @@ public final class ImportAction extends BaseAction {
     	
     	// Give each experiment a unique ID and default
         // organism.  Give each bioassay a color and ID
-        ColorChooser colorChooser = PageContext.getColorChooser(
-        		request, true);
+        ColorChooser colorChooser = cart.getBioassayColorChooser();
         Organism org = this.organismDao.loadDefault();
         for (Experiment exp : experiments) {
         	Long expId = this.experimentIdGenerator.nextId();

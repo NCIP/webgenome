@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -74,6 +74,9 @@ public class FileUploadForm extends ActionForm {
     
     /** File to upload. */
     private FormFile uploadFile;
+    
+    /** Primary key ID of an organism in database. */
+    private String organismId = null;
 
 	
 	// ===================================
@@ -96,11 +99,27 @@ public class FileUploadForm extends ActionForm {
  	    this.uploadFile = uploadFile;
     }
 
+    /**
+     * Get primary key value of organism in database.
+     * @return Organism primary key
+     */
+    public final String getOrganismId() {
+		return organismId;
+	}
+
+    /**
+     * Set primary key value of organism in database.
+     * @param organismId Organism primary key value
+     */
+	public final void setOrganismId(final String organismId) {
+		this.organismId = organismId;
+	}
 	
 	// ===================================
 	//       Overrides
 	// ===================================
 	
+
 	/**
 	 * {@inheritDoc}
 	 */

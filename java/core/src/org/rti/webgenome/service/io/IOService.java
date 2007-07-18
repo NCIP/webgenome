@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-04-17 15:22:34 $
+$Revision: 1.1 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,16 +58,22 @@ import java.io.FileOutputStream;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.graphics.util.ColorChooser;
+import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.IOUtils;
 
 
 /**
- * This class manages the uploading of data files
- * from a user into their session into a working directory.
- * It is intended to be used as a singleton.
+ * Facade class for performing IO of data files.  Normally
+ * clients will only interact with this class for IO.
+ * @author dhall
  */
-public class UploadManager {
+public class IOService {
 	
 	//
 	//     STATICS
@@ -86,7 +92,7 @@ public class UploadManager {
 	private static final String FILE_EXTENSION = ".smd";
 	
 	/** Logger. */
-	private static final Logger LOGGER = Logger.getLogger(UploadManager.class);
+	private static final Logger LOGGER = Logger.getLogger(IOService.class);
 	
 
 	//
@@ -102,17 +108,52 @@ public class UploadManager {
 	 */
 	private final UniqueFileNameGenerator fileNameGenerator;
 	
+	/** Data file manager. */
+	private final DataFileManager dataFileManager;
+	
+	/** Generator of primary key values for experiments. */
+	private IdGenerator experimentIdGenerator = null;
+	
+	/** Generator of primary key values for bioassays. */
+	private IdGenerator bioAssayIdGenerator = null;
+	
+	//
+	//  S E T T E R S
+	//
+	
+	/**
+	 * Set generator for bioassay primary key values.
+	 * @param bioassayIdGenerator Generator of IDs
+	 */
+	public void setBioAssayIdGenerator(
+			final IdGenerator bioassayIdGenerator) {
+		this.bioAssayIdGenerator = bioassayIdGenerator;
+	}
+
+
+	/**
+	 * Set generator for experiment primary key values.
+	 * @param experimentIdGenerator Generator of IDs
+	 */
+	public void setExperimentIdGenerator(
+			final IdGenerator experimentIdGenerator) {
+		this.experimentIdGenerator = experimentIdGenerator;
+	}
 	
 	//
 	//     CONSTRUCTORS
 	//
-	
+
+
 	/**
 	 * Constructor.
 	 * @param workingDirPath Path to working directory used
 	 * for parsing data.
+	 * @param dataFileManager Manages serialization/deserialization
+	 * of array data
 	 */
-	public UploadManager(final String workingDirPath) {
+	public IOService(final String workingDirPath,
+			final DataFileManager dataFileManager) {
 		this.workingDir = new File(workingDirPath);
 		if (!this.workingDir.exists()) {
 			try {
@@ -131,6 +172,7 @@ public class UploadManager {
 		}
 		this.fileNameGenerator = new UniqueFileNameGenerator(
 				this.workingDir, FILE_EXTENSION);
+		this.dataFileManager = dataFileManager;
 	}
 	
 	
@@ -143,11 +185,10 @@ public class UploadManager {
      * Upload data from given input stream into a new file in
      * the working directory.
      * @param in Upload inputstream.
-     * @return Name of file containing uploaded data.  The name of this
+     * @return File containing uploaded data.  The name of this
      * file will be a randomly-generated unique file name.
-     * The absolute path is not returned.
      */		
-	public String upload(final InputStream in) {
+	public File upload(final InputStream in) {
 		
 		// Buffer for uploading
 		byte[] buffer = new byte[BUFFER_SIZE];
@@ -174,7 +215,7 @@ public class UploadManager {
 			IOUtils.close(out);
 		}
 		
-		return fname;
+		return file;
 	}
 	
 	
@@ -192,5 +233,29 @@ public class UploadManager {
 		if (!file.delete()) {
 			LOGGER.warn("Unable to delete uploaded file '" + path + "'");
 		}
+	}
+	
+	/**
+	 * Load SMD format data from named file and put in shopping cart.
+	 * @param fileName Name of file containing SMD format data.
+	 * This is not an absolute path.
+	 * @param organism Organism associated with data
+	 * @param shoppingCart Shopping cart
+	 * @throws SmdFormatException If file does not contain
+	 * valid SMD format data
+	 */
+	public void loadSmdData(final String fileName,
+			final Organism organism, final ShoppingCart shoppingCart)
+	throws SmdFormatException {
+		String path = this.workingDir.getAbsolutePath() + "/" + fileName;
+		File file = new File(path);
+		Experiment exp = this.dataFileManager.convertSmdData(file, organism);
+		exp.setId(this.experimentIdGenerator.nextId());
+		ColorChooser colorChooser = shoppingCart.getBioassayColorChooser();
+		for (BioAssay ba : exp.getBioAssays()) {
+			ba.setId(this.bioAssayIdGenerator.nextId());
+			ba.setColor(colorChooser.nextColor());
+		}
+		shoppingCart.add(exp);
 	}
 }

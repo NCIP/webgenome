@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.4 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -182,5 +182,6 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 		
 		// Run tests
 		dao.save(cart);
+		dao.delete(cart);
     }
 }

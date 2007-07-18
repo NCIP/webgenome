@@ -4,8 +4,19 @@
 
 <center>
 	<html:form action="/cart/upload" method="POST" enctype="multipart/form-data">
-		File:
-		<html:file property="uploadFile"/>
-		<html:submit value="Upload"/>
+		<p>
+			Organism:
+			<html:select property="organismId">
+				<html:options collection="organisms" property="id"
+					labelProperty="displayName"/>
+			</html:select>
+			&nbsp;&nbsp;&nbsp;
+			File:
+			<html:file property="uploadFile"/>
+		</p>
+		
+		<p>
+			<html:submit value="Upload"/>
+		</p>
 	</html:form>
 </center>

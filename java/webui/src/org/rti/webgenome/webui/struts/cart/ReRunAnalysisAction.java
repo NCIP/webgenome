@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.6 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,8 +53,6 @@ package org.rti.webgenome.webui.struts.cart;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -62,9 +60,9 @@ import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.job.JobFactory;
-import org.rti.webgenome.service.session.SessionMode;
-import org.rti.webgenome.webui.util.PageContext;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
+import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
  * This action reruns an analytic operation on
@@ -78,11 +76,8 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 	//     ATTRIBUTES
 	//
 	
-	/**
-	 * Generates compute-intensive jobs such as--in this case--re-running
-	 * an analytic operation.
-	 */
-	private JobFactory jobFactory = null;
+	/** Service for performing analyses. */
+	private AnalysisService analysisService = null;
 	
 	
 	//
@@ -90,11 +85,11 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 	//
 	
 	/**
-	 * Setter for dependency injection of job factory.
-	 * @param jobManager Generates compute-intensive jobs
+	 * Set service for performing analysis via injection.
+	 * @param analysisService Service for performing analysis.
 	 */
-	public void setJobFactory(final JobFactory jobManager) {
-		this.jobFactory = jobManager;
+	public void setAnalysisService(final AnalysisService analysisService) {
+		this.analysisService = analysisService;
 	}
 	
 	
@@ -113,7 +108,7 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 	throws Exception {
 	
 		// Get selected experiment
-		ShoppingCart cart = PageContext.getShoppingCart(request);
+		ShoppingCart cart = this.getShoppingCart(request);
 		Long expId = Long.parseLong(request.getParameter("experimentId"));
 		Experiment exp = cart.getExperiment(expId);
 		if (exp == null) {
@@ -123,27 +118,16 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 		
 		// Set properties of analytic operation to redo
 		AnalyticOperation op = exp.getSourceAnalyticOperation();
-		ActionErrors errors = this.setUserSpecifiedParameters(
-				op, request);
 		
-    	// If user input is invalid, return
-    	if (errors != null) {
-        	errors.add("global", new ActionError("invalid.fields"));
-    		this.saveErrors(request, errors);
-    		return mapping.findForward("errors");
-    	}
+		ActionForward forward = null;
     	
     	// Redo analysis
-    	SessionMode mode = PageContext.getSessionMode(request);
-    	boolean reranAlready = this.jobFactory.rePerformAnalyticOperation(
-    			exp, op, mode);
-    	
-    	// Select forward
-    	ActionForward forward = null;
-    	if (reranAlready) {
-    		forward = mapping.findForward("non.batch");
+    	if (!ProcessingModeDecider.processInBackground(exp)) {
+	    	this.analysisService.rePerformAnalyticOperation(exp, op,
+	    			new InMemoryDataTransformer());
+	    	forward = mapping.findForward("non.batch");
     	}
-	
+    	
 		return forward;
 	}
 }

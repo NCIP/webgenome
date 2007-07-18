@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -96,6 +96,7 @@ public class HibernateExperimentDaoTester extends TestCase {
 		Organism org = new Organism("Genus", "species");
 		DataSerializedBioAssay ba = new DataSerializedBioAssay(
 				"bioassay1", org);
+		ba.setId(new Long(1));
 		ba.setColor(Color.RED);
 		ba.setSelected(true);
 		SortedMap<Short, String> dataFileIdx = new TreeMap<Short, String>();
@@ -124,6 +125,7 @@ public class HibernateExperimentDaoTester extends TestCase {
 		ba.setNumDatum(nums);
 		Experiment exp = new Experiment("experiment1", org,
 				QuantitationType.COPY_NUMBER);
+		exp.setId(new Long(1));
 		exp.add(ba);
 		exp.setAnalyticOperationClassName("className");
 		exp.setSourceDbId("sourceDB");

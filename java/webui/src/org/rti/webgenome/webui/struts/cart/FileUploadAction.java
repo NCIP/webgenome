@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,27 +51,36 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.io.File;
 import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.rti.webgenome.service.io.UploadManager;
+import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.dao.OrganismDao;
+import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
  * Action for uploading files to a working directory.
  */
-public final class FileUploadAction extends Action {
+public final class FileUploadAction extends BaseAction {
 	
 	//
 	//     ATTRIBUTES
 	//
 	
-	/** Manager for uploading files to working directory. */
-	private UploadManager uploadManager = null;
+	/** Service for performing file IO. */
+	private IOService ioService = null;
+	
+	/** Organism data access object. */
+	private OrganismDao organismDao = null;
 	
 	
 	//
@@ -79,13 +88,19 @@ public final class FileUploadAction extends Action {
 	//
 	
 	/**
-	 * Sets upload manager for uploading files to working
-	 * directory.
-	 * @param uploadManager Manager for uploading files to
-	 * working directory.
+	 * Sets service for performing IO.
+	 * @param ioService File IO service.
 	 */
-	public void setUploadManager(final UploadManager uploadManager) {
-		this.uploadManager = uploadManager;
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
+	
+	/**
+	 * Set organism data access object.
+	 * @param organismDao Organism data access object
+	 */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
 	}
 	
 	//
@@ -101,10 +116,29 @@ public final class FileUploadAction extends Action {
 		final HttpServletRequest request,
 		final HttpServletResponse response
 	) throws Exception {
+		
+		// Get organism selected by user
+		Long orgId = Long.parseLong(((FileUploadForm) form).getOrganismId());
+		Organism organism = this.organismDao.load(orgId);
+		
+		// Stream bits to temporary file
 		FormFile formFile = ((FileUploadForm) form).getUploadFile();
 		InputStream in = formFile.getInputStream();
-		this.uploadManager.upload(in);
+		File tempFile = this.ioService.upload(in);
 		in.close();
-		return mapping.findForward("success");
+		
+		ShoppingCart cart = this.getShoppingCart(request);
+		ActionForward forward = null;
+		
+		// If file small enough, go ahead an parse
+		if (!ProcessingModeDecider.processInBackground(tempFile)) {
+			this.ioService.loadSmdData(tempFile.getName(),
+					organism, cart);
+			forward = mapping.findForward("non.batch");
+		}
+		
+		this.persistShoppingCartChanges(cart, request);
+		
+		return forward;
 	}
 }

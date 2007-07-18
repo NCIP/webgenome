@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,7 +101,7 @@ public final class AnalysisParamsSetupAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	
     	// Get selected experiments
     	SelectedExperimentsForm seForm =

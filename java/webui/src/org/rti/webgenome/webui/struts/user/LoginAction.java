@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.user;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,6 +62,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.service.session.SecurityMgr;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.struts.BaseAction;
@@ -76,13 +80,11 @@ public final class LoginAction extends BaseAction {
 	private SecurityMgr securityMgr = null;
 	
 	/**
-	 * Get account manager.
-	 * @return Account manager.
+	 * Shopping cart data access object.  This property should
+	 * be injected.
 	 */
-	public SecurityMgr getSecurityMgr() {
-		return securityMgr;
-	}
-
+	private ShoppingCartDao shoppingCartDao = null;
+	
 
 	/**
 	 * Set account manager.
@@ -91,20 +93,32 @@ public final class LoginAction extends BaseAction {
 	public void setSecurityMgr(final SecurityMgr securityMgr) {
 		this.securityMgr = securityMgr;
 	}
+	
+	
+	/**
+	 * Set shoppig cart data access object.
+	 * @param shoppingCartDao Shopping cart data access object.
+	 */
+	public void setShoppingCartDao(final ShoppingCartDao shoppingCartDao) {
+		this.shoppingCartDao = shoppingCartDao;
+	}
+	
+	/** Image file manager. */
+    private ImageFileManager imageFileManager = null;
+    
+    /**
+     * Set image file manager.
+     * @param imageFileManager Image file manager.
+     */
+    public void setImageFileManager(
+    		final ImageFileManager imageFileManager) {
+		this.imageFileManager = imageFileManager;
+	}
 
 
 	/**
-     * Execute action.
-     * @param mapping Routing information for downstream actions
-     * @param form Form data
-     * @param request Servlet request object
-     * @param response Servlet response object
-     * @return Identification of downstream action as configured in the
-     * struts-config.xml file
-     * @throws Exception All exceptions thrown by classes in
-     * the method are passed up to a registered exception
-     * handler configured in the struts-config.xml file
-     */
+	 * {@inheritDoc}
+	 */
     public ActionForward execute(
         final ActionMapping mapping, final ActionForm form,
         final HttpServletRequest request,
@@ -126,10 +140,23 @@ public final class LoginAction extends BaseAction {
     	// Set session mode
     	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
     	
-    	// Get shopping cart
-    	// TODO: Add DAO
-    	ShoppingCart cart = new ShoppingCart(p.getName());
-    	PageContext.setShoppingCart(request, cart);
+    	// Instantiate shopping cart if null
+    	ShoppingCart cart = this.shoppingCartDao.load(p.getName());
+    	if (cart == null) {
+    		cart = new ShoppingCart(p.getName());
+    		this.shoppingCartDao.save(cart);
+    	}
+    	
+        // TODO: Make this cleaner.
+        // Initialize image file manager.  This manager needs
+        // to know the absolute path to the directory containing
+        // plot files with URL <DOMAIN>:<PORT>/<CONTEXT>/plots
+        if (!this.imageFileManager.isInitialized()) {
+	        String absPlotPath = this.getServlet().
+	        	getServletContext().getRealPath("/plots");
+	        File imageDir = new File(absPlotPath);
+	        this.imageFileManager.init(imageDir);
+        }
     	
         return mapping.findForward("success");
     }

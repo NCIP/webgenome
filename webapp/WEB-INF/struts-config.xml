@@ -111,17 +111,17 @@
 		
 	<!-- Upload form -->
 		<action
-			path="/cart/uploadForm"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.upload.form"/>
-			
+			path="/cart/uploadForm">
+			<forward name="success" path="cart.upload.form"/>	
+		</action>
+		
 	<!-- File upload -->
 		<action
 			path="/cart/upload"
 			name="file.upload.form"
 			validate="true"
 			input="/cart/uploadForm">
-			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="non.batch" path="/cart/showCart.do"/>
 		</action>
 
 	<!-- Show cart -->
@@ -150,6 +150,7 @@
 			<forward name="analysis" path="/cart/selectAnalysis.do"/>
 			<forward name="import" path="/cart/selectImportDataType.do"/>
 			<forward name="cart" path="/cart/showCart.do"/>
+			<forward name="error" path="/cart/showCart.do"/>
 		</action>
 		
 	<!-- Select type of data to import from client -->
@@ -251,18 +252,18 @@
 		<action
 			path="/cart/analysis"
 			name="analytic.operation.params.form"
-			validate="false">
+			validate="true"
+			input="/cart/analysisParams.do">
 			<forward name="non.batch" path="/cart/showCart.do"/>
-			<forward name="errors" path="/cart/analysisParams.do"/>
 		</action>
 		
 	<!-- Rerun analytic operation -->
 		<action
 			path="/cart/rerunAnalysis"
 			name="analytic.operation.params.form"
-			validate="false">
+			validate="true"
+			input="/cart/rerunAnalysisParams.do">
 			<forward name="non.batch" path="/cart/showCart.do"/>
-			<forward name="errors" path="/cart/rerunAnalysisParams.do"/>
 		</action>
 		
 	<!-- Adjust analysis parameters from a plot screen -->

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,49 +68,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public class BaseAnalysisAction extends BaseAction {
-	
-	// Recover user configurable analytic operation properties.
-	// Such properties will be passed in as query parameters
-	// with a prefix of 'prop_.'
-	
-	/**
-	 * Recover user specified parameters for given analytic
-	 * operation from the given request object and set these
-	 * properties in the operation.  Such parameters are passed
-	 * to the action as HTTP query parameters with a prefix
-	 * of 'prop_'.
-	 * @param op Analytic operation whose user specified
-	 * parameters will be set
-	 * @param request The request
-	 * @return Action errors if any of the user specified
-	 * analytic operation parameters are not valid
-	 */
-	protected ActionErrors setUserSpecifiedParameters(
-			final AnalyticOperation op,
-			final HttpServletRequest request) {
-		ActionErrors errors = null;
-    	Map paramMap = request.getParameterMap();
-    	boolean haveErrors = false;
-    	for (Object paramNameObj : paramMap.keySet()) {
-    		String paramName = (String) paramNameObj;
-    		if (paramName.indexOf("prop_") == 0) {
-    			String propName = paramName.substring("prop_".length());
-    			String propValue = request.getParameter(paramName);
-    			try {
-    				op.setProperty(propName, propValue);
-    			} catch (BadUserConfigurablePropertyException e) {
-    				haveErrors = true;
-    			}
-    		}
-    	}
-    	
-    	// If user input is invalid, return
-    	if (haveErrors) {
-    		errors = new ActionErrors();
-    	}
-    	
-    	return errors;
-	}
 	
 	
 	/**

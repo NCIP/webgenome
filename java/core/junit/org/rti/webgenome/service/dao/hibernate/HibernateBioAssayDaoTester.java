@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-06 14:41:41 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -88,6 +88,7 @@ public class HibernateBioAssayDaoTester extends TestCase {
 		Organism org = new Organism("Genus", "species");
 		DataSerializedBioAssay ba = new DataSerializedBioAssay(
 				"bioassay1", org);
+		ba.setId(new Long(1));
 		ba.setColor(Color.RED);
 		ba.setSelected(true);
 		SortedMap<Short, String> dataFileIdx = new TreeMap<Short, String>();

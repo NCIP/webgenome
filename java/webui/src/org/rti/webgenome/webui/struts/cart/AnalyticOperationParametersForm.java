@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,14 @@ package org.rti.webgenome.webui.struts.cart;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.analysis.AnalyticOperation;
+import org.rti.webgenome.analysis.AnalyticOperationFactory;
+import org.rti.webgenome.analysis.BadUserConfigurablePropertyException;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.struts.BaseForm;
 
@@ -68,6 +76,7 @@ public class AnalyticOperationParametersForm extends BaseForm {
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
+	
 	// =====================================
 	//      Attributes
 	// =====================================
@@ -80,6 +89,10 @@ public class AnalyticOperationParametersForm extends BaseForm {
 	 * name-value pairs.
 	 */ 
 	private Map<String, Object> params = new HashMap<String, Object>();
+	
+	/** Analytic operation factory. */
+	private final AnalyticOperationFactory analyticOperationFactory =
+		new AnalyticOperationFactory();
 	
 	
 	// ==================================
@@ -121,5 +134,34 @@ public class AnalyticOperationParametersForm extends BaseForm {
 	 */
 	public final Object getParamValue(final String name) {
 		return this.params.get(name);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ActionErrors validate(final ActionMapping mapping,
+			final HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		AnalyticOperation op =
+			this.analyticOperationFactory.newAnalyticOperation(
+					this.operationKey);
+		Map paramMap = request.getParameterMap();
+		for (Object paramNameObj : paramMap.keySet()) {
+    		String paramName = (String) paramNameObj;
+    		if (paramName.indexOf("prop_") == 0) {
+    			String propName = paramName.substring("prop_".length());
+    			String propValue = request.getParameter(paramName);
+    			try {
+    				op.setProperty(propName, propValue);
+    			} catch (BadUserConfigurablePropertyException e) {
+    				errors.add("global",
+    						new ActionError("invalid.fields"));
+    				break;
+    			}
+    		}
+    	}
+		return errors;
 	}
 }

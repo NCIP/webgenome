@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,7 +63,6 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.util.ColorUtils;
 import org.rti.webgenome.webui.struts.BaseAction;
-import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Change color of a bioassay.
@@ -91,7 +90,7 @@ public final class ChangeBioAssayColorAction extends BaseAction {
     ) throws Exception {
     	
     	// Retrieve shopping cart
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	
     	// Retrieve bioassay id and color
     	Long id = Long.parseLong(request.getParameter("id"));
@@ -102,12 +101,15 @@ public final class ChangeBioAssayColorAction extends BaseAction {
     	BioAssay ba = cart.getBioAssay(id);
     	
     	// Relinquish old bioassay color
-    	ColorChooser cc = PageContext.getColorChooser(request, false);
+    	ColorChooser cc = cart.getBioassayColorChooser();
     	cc.decrementCount(ba.getColor());
     	
     	// Change bioassay color and register with color chooser
     	ba.setColor(color);
     	cc.incrementCount(color);
+    	
+    	// Persist state
+    	this.persistShoppingCartChanges(cart, request);
     	
     	return mapping.findForward("success");
     }

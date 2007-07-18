@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,7 +54,6 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.graphics.event.MouseOverStripe;
 import org.rti.webgenome.graphics.event.MouseOverStripes;
@@ -89,6 +88,7 @@ public class HibernatePlotDaoTester extends TestCase {
 		
 		// Instantiate test object
 		Plot plot = new Plot();
+		plot.setId(new Long(1));
 		plot.setDefaultImageFileName("file1");
 		plot.setWidth(100);
 		plot.setHeight(100);

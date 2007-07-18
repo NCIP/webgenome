@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.4 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -223,10 +223,18 @@ public final class ClientPlotAction extends BaseAction {
         // TODO: In the future the organism should come from the
         // client query string
         
+        // If session is new, instantiate new cart
+        ShoppingCart cart = null;
+        try {
+        	cart = this.getShoppingCart(request);
+        } catch (SessionTimeoutException e) {
+        	cart = new ShoppingCart();
+        	PageContext.setShoppingCart(request, cart);
+        }
+        
         // Give each experiment a unique ID and default
         // organism.  Give each bioassay a color and ID
-        ColorChooser colorChooser = PageContext.getColorChooser(
-        		request, true);
+        ColorChooser colorChooser = cart.getBioassayColorChooser();
         Organism org = this.organismDao.loadDefault();
         for (Experiment exp : experiments) {
         	Long expId = this.experimentIdGenerator.nextId();
@@ -238,20 +246,13 @@ public final class ClientPlotAction extends BaseAction {
         	}
         }
         
-        // If session is new, instantiate new cart
-        ShoppingCart cart = null;
-        try {
-        	cart = this.getShoppingCart(request);
-        } catch (SessionTimeoutException e) {
-        	cart = new ShoppingCart();
-        	PageContext.setShoppingCart(request, cart);
-        }
-        
         // Put data in cart
         cart.add(experiments);
         
         // TODO: Make this cleaner.
-        // Initialize image file manager
+        // Initialize image file manager.  This manager needs
+        // to know the absolute path to the directory containing
+        // plot files with URL <DOMAIN>:<PORT>/<CONTEXT>/plots
         if (!this.imageFileManager.isInitialized()) {
 	        String absPlotPath = this.getServlet().
 	        	getServletContext().getRealPath("/plots");

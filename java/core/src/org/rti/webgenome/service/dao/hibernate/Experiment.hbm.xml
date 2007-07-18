@@ -8,9 +8,7 @@
 
 	<class name="org.rti.webgenome.domain.Experiment"
 		table="experiment">
-		<id name="id" column="ID">
-		    <generator class="increment"/>
-		</id>
+		<id name="id" column="ID"/>
 		<property name="name" column="name"/>
 		<property name="sourceDbId" column="source_db_id"/>
 		<property name="quantitationTypeAsString" column="quant_type"/>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,12 @@ import org.rti.webgenome.webui.SessionTimeoutException;
 
 /**
  * Shows tag body content only if there is a shopping
- * cart associated with the session.
+ * cart associated with the session.  If the session mode
+ * is STAND_ALONE, the shopping cart will not be an attribute
+ * of the session.  If there is a shopping cart associated
+ * with the session, the session attribute sessionMode will have
+ * been set, so that is used as a surrogate for determining
+ * whether these is a shopping cart.
  * @author dhall
  *
  */
@@ -79,7 +84,7 @@ public class OnlyIfShoppingCartExistsTag extends TagSupport {
 	public final int doStartTag() throws JspException {
 		int rVal = TagSupport.SKIP_BODY;
 		try {
-			if (org.rti.webgenome.webui.util.PageContext.getShoppingCart(
+			if (org.rti.webgenome.webui.util.PageContext.getSessionMode(
 					(HttpServletRequest) pageContext.getRequest())
 					!= null) {
 				rVal = TagSupport.EVAL_BODY_INCLUDE;

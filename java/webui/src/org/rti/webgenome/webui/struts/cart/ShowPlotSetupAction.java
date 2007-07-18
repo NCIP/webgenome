@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.3 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,6 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.webui.struts.BaseAction;
-import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Setup action for displaying a plot.
@@ -97,7 +96,7 @@ public final class ShowPlotSetupAction extends BaseAction {
     	}
     	
     	// Retrieve plot from shopping cart
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	Plot plot = null;
     	if (plotId != null) {
     		plot = cart.getPlot(plotId);

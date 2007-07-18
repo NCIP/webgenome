@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.5 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,8 +57,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -67,11 +65,11 @@ import org.rti.webgenome.analysis.AnalyticOperationFactory;
 import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.graphics.util.ColorChooser;
-import org.rti.webgenome.service.job.JobFactory;
-import org.rti.webgenome.service.session.SessionMode;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.PageContext;
+import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
  * Performs analytic operation on selected experiments.
@@ -88,8 +86,8 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	//
 	
 	
-	/** Factory for compute-intensive jobs. */
-	private JobFactory jobFactory = null;
+	/** Service for performing analyses. */
+	private AnalysisService analysisService = null;
 
 	/** Analytic operation factory. */
 	private final AnalyticOperationFactory analyticOperationFactory =
@@ -101,17 +99,16 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	//
 	
 	/**
-	 * Setter for dependency injection of job factory.
-	 * @param jobManager Generates compute-intensive jobs
+	 * Set service for performing analysis via injection.
+	 * @param analysisService Service for performing analysis.
 	 */
-	public void setJobFactory(final JobFactory jobManager) {
-		this.jobFactory = jobManager;
+	public void setAnalysisService(final AnalysisService analysisService) {
+		this.analysisService = analysisService;
 	}
 	
 	//
 	//     OVERRIDES
 	//
-
 
 	/**
      * Execute action.
@@ -131,25 +128,11 @@ public final class AnalysisAction extends BaseAnalysisAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Get shopping cart.  This is where data are.
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
-    	
     	// Generate analytic operation instance
     	AnalyticOperationParametersForm aForm =
     		(AnalyticOperationParametersForm) form;
     	AnalyticOperation op = this.analyticOperationFactory.
     		newAnalyticOperation(aForm.getOperationKey());
-    	
-    	// Recover user configurable analytic operation properties.
-    	ActionErrors errors = this.setUserSpecifiedParameters(
-    			op, request);
-    	
-    	// If user input is invalid, return
-    	if (errors != null) {
-        	errors.add("global", new ActionError("invalid.fields"));
-    		this.saveErrors(request, errors);
-    		return mapping.findForward("errors");
-    	}
     	
     	// Retrieve form bean containing selected experiments.
     	// Note, this is not the form bean configured
@@ -161,9 +144,8 @@ public final class AnalysisAction extends BaseAnalysisAction {
     				"Could not find selected experiments");
     	}
     	
-    	// Get experiments
+    	// Get experiment IDs
     	Collection<Long> ids = seForm.getSelectedExperimentIds();
-    	Collection<Experiment> experiments = cart.getExperiments(ids);
     	
     	// Map input to output bioassay and experiment names
     	Map<Long, String> outputBioAssayNames =
@@ -175,19 +157,16 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	    			outputBioAssayNames);
     	}
     	
-    	// Perform operation
-    	ColorChooser colorChooser = PageContext.getColorChooser(request, true);
-    	SessionMode sessionMode = PageContext.getSessionMode(request);
-    	boolean operationPerformed =
-    		this.jobFactory.performAnalyticOperation(
-    				experiments, op, colorChooser,
-    			sessionMode, cart, outputExperimentNames,
-    			outputBioAssayNames);
-    	
-    	// Determine forward
     	ActionForward forward = null;
-    	if (operationPerformed) {
-    		forward = mapping.findForward("non.batch");
+    	ShoppingCart cart = this.getShoppingCart(request);
+		Collection<Experiment> experiments = cart.getExperiments(ids);
+
+		// Case: Perform immediately
+    	if (!ProcessingModeDecider.processInBackground(experiments)) {
+	    	this.analysisService.performAnalyticOperation(experiments, op,
+	    			cart, outputExperimentNames, outputBioAssayNames,
+	    			new InMemoryDataTransformer());
+	    	forward = mapping.findForward("non.batch");
     	}
     	
     	return forward;

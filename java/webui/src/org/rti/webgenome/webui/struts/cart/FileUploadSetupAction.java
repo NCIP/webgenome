@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:49 $
+$Revision: 1.1 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,30 +48,53 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.job;
+package org.rti.webgenome.webui.struts.cart;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.service.dao.OrganismDao;
+import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
- * This is a job for importing data in a file into
- * the shopping cart.  The data are typically uploaded
- * and temporarily saved in a directory.  During importing
- * the data are transformed into the domain object model.
+ * Sets up for display of file upload form.
  * @author dhall
  *
  */
-public class DataImportJob extends AbstractJob {
+public class FileUploadSetupAction extends BaseAction {
 
+	/** Organism data access object. */
+	private OrganismDao organismDao = null;
+
+	/**
+	 * Injector method for the organism data access object.
+	 * @param organismDao Organism data access object
+	 */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
+	}
 	
-	
-	//
-	//     A T T R I B U T E S
-	//
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
+	public ActionForward execute(
+		final ActionMapping mapping, final ActionForm form,
+		final HttpServletRequest request,
+		final HttpServletResponse response
+	) throws Exception {
 		
+		// Get list of all organisms and attach to request
+		List<Organism> organisms = this.organismDao.loadAll();
+		request.setAttribute("organisms", organisms);
+		
+		return mapping.findForward("success");
 	}
 }

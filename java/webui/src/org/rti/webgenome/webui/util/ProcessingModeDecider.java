@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -145,6 +145,31 @@ public final class ProcessingModeDecider {
 	//
 	//     BUSINESS METHODS
 	//
+	
+	/**
+	 * Determines whether some compute-intensive process
+	 * should be performed in the background.  It does this
+	 * by determining if the total number of
+	 * {@link org.rti.webgenome.domain.ArrayDatum}
+	 * objects is greater than a threshold.  This treshold
+	 * may be set using the system property
+	 * {@code bg.processing.datum.threshold}.  If this
+	 * property is not set, then the threshold is set
+	 * to {@link java.lang.Integer.MAX_VALUE}, so
+	 * the method will always return {@code false}.
+	 * @param experiment Experiment that will be processed
+	 * by process in question.
+	 * @return {@code true} if the total number of
+	 * enclosed {@link org.rti.webgenome.domain.ArrayDatum}
+	 * objects is greater than a threshold and should, hence,
+	 * indicate that the process in question should be
+	 * performed in the background.  Returns {@code false}
+	 * otherwise.
+	 */
+	public static boolean processInBackground(
+			final Experiment experiment) {
+		return experiment.numDatum() >= BG_PROCESSING_DATUM_THRESHOLD;
+	}
 	
 	/**
 	 * Determines whether some compute-intensive process

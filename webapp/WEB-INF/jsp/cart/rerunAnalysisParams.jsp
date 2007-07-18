@@ -9,8 +9,8 @@
 </p>
 
 <html:form action="/cart/rerunAnalysis">
-<input type="hidden" name="experimentId"
-value="<%= pageContext.findAttribute("experimentId") %>">
+<html:hidden name="experimentId" property="experimentId"/>
+<html:hidden name="operationKey" property="operationKey"/>
 <center>
 <table border="0">
 <logic:iterate name="userConfigurableProperties" id="prop">

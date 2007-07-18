@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:49 $
 
 The Web CGH Software License, Version 1.0
 
@@ -93,6 +93,29 @@ public final class SerializedChromosomeArrayDataGetter implements
 	 * @param dataFileManager Data file manager
 	 */
 	public void setDataFileManager(final DataFileManager dataFileManager) {
+		this.dataFileManager = dataFileManager;
+	}
+	
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.
+	 */
+	public SerializedChromosomeArrayDataGetter() {
+		
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param dataFileManager Manager of serialized
+	 * data files
+	 */
+	public SerializedChromosomeArrayDataGetter(
+			final DataFileManager dataFileManager) {
 		this.dataFileManager = dataFileManager;
 	}
 	

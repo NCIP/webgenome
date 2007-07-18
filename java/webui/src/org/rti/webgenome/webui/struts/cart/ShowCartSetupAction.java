@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:29 $
+$Revision: 1.2 $
+$Date: 2007-07-18 21:42:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.webui.struts.BaseAction;
-import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * This class sets up for a downstream
@@ -88,7 +87,7 @@ public final class ShowCartSetupAction extends BaseAction {
     ) throws Exception {
     	
     	// Get shopping cart
-    	ShoppingCart cart = PageContext.getShoppingCart(request);
+    	ShoppingCart cart = this.getShoppingCart(request);
     	
     	// Add shopping cart to request
     	request.setAttribute("shopping.cart", cart);

@@ -8,9 +8,7 @@
 
 	<class name="org.rti.webgenome.domain.BioAssay"
 		table="bioassay">
-		<id name="id" column="ID">
-		    <generator class="increment"/>
-		</id>
+		<id name="id" column="ID"/>
 		<discriminator column="type" type="java.lang.String"/>
 		<property name="name" column="name"/>
 		<property name="colorAsInt" column="color_int"/>
