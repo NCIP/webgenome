@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.5 $
+$Date: 2007-07-20 22:07:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -204,6 +204,7 @@ public final class ImportAction extends BaseAction {
         
         // Put data in shopping cart
         cart.add(experiments);
+        this.persistShoppingCartChanges(cart, request);
 
     	return mapping.findForward("success");
     }

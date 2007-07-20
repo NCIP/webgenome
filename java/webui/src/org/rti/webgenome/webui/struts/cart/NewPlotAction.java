@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.7 $
+$Date: 2007-07-20 22:07:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -236,6 +236,7 @@ public final class NewPlotAction extends BaseAction {
 	    	}
 	    	this.plotService.plotExperiments(plot, experiments, params, cart,
 	    			getter);
+	    	this.persistShoppingCartChanges(cart, request);
 	    	forward = mapping.findForward("non.batch");
 	    }
 	    

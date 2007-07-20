@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.7 $
+$Date: 2007-07-20 22:07:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -301,6 +301,9 @@ public class ShoppingCart implements Serializable {
     		for (String fName : plot.getAllImageFileNames()) {
     			this.imageFileManager.deleteImageFile(fName);
     		}
+    	}
+    	if (this.lastPlotIn == plot) {
+    		this.lastPlotIn = null;
     	}
     }
     

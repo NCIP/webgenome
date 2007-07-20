@@ -14,7 +14,9 @@
 		<property name="originY" column="origin_y"/>
 		<property name="boxWidth" column="box_width"/>
 		<property name="boxHeight" column="box_height"/>
+		<!--
 		<property name="clickBoxAsClob" column="click_box"/>
+		-->
 	</class>
 
 </hibernate-mapping>

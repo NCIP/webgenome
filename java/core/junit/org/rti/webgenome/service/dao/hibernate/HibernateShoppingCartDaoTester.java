@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.5 $
+$Date: 2007-07-20 22:07:15 $
 
 The Web CGH Software License, Version 1.0
 
@@ -103,6 +103,7 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 		Organism org = new Organism("Genus", "species");
 		DataSerializedBioAssay ba = new DataSerializedBioAssay(
 				"bioassay1", org);
+		ba.setId(new Long(1));
 		ba.setColor(Color.RED);
 		ba.setSelected(true);
 		SortedMap<Short, String> dataFileIdx = new TreeMap<Short, String>();
@@ -131,6 +132,7 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 		ba.setNumDatum(nums);
 		Experiment exp = new Experiment("experiment1", org,
 				QuantitationType.COPY_NUMBER);
+		exp.setId(new Long(1));
 		exp.add(ba);
 		exp.setAnalyticOperationClassName("className");
 		exp.setSourceDbId("sourceDB");
@@ -155,6 +157,7 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 				"jndiName", "jndiProviderUrl", "clientId");
 		exp.setDataSourceProperties(ejbProps);
 		Plot plot = new Plot();
+		plot.setId(new Long(1));
 		plot.setDefaultImageFileName("file1");
 		plot.setWidth(100);
 		plot.setHeight(100);
@@ -177,11 +180,16 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 		plot.setPlotParameters(params);
 		plot.addExperiment(exp);
 		ShoppingCart cart = new ShoppingCart("user");
-		cart.add(exp);
-		cart.add(plot);
 		
 		// Run tests
 		dao.save(cart);
+		cart.add(exp);
+		cart.add(plot);
+		dao.update(cart);
+		cart.remove(plot);
+		dao.update(cart);
+		cart.remove(exp);
+		dao.update(cart);
 		dao.delete(cart);
     }
 }

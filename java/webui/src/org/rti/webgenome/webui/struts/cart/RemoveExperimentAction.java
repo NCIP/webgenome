@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.3 $
+$Date: 2007-07-20 22:07:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,6 +105,7 @@ public final class RemoveExperimentAction extends BaseAction {
     	
     	// TODO: Stand-alone specific actions
     	
+    	this.persistShoppingCartChanges(cart, request);
         return mapping.findForward("success");
     }
 }

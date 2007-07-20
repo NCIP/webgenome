@@ -24,7 +24,7 @@
 		</map>
 		
 		<set name="experiments" table="plot_exp_ids"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false">
 			<key column="plot_id"/>
 			<many-to-many column="exp_id"
 				class="org.rti.webgenome.domain.Experiment"/>

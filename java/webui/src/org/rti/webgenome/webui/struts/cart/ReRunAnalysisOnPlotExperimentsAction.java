@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.8 $
+$Date: 2007-07-20 22:07:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -149,6 +149,7 @@ extends BaseAnalysisAction {
 			forward = mapping.findForward("non.batch");
 		}
 	
+		this.persistShoppingCartChanges(cart, request);
 		return forward;
 	}
 }

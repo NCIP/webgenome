@@ -37,8 +37,7 @@ CREATE TABLE reporters_file_names (
 	array_id NUMBER(38) NOT NULL,
 	chromosome INT NOT NULL,
 	file_name VARCHAR2(512),
-	PRIMARY KEY (array_id, chromosome),
-	FOREIGN KEY (array_id) REFERENCES array(id)
+	PRIMARY KEY (array_id, chromosome)
 );
 
 --
@@ -50,8 +49,7 @@ CREATE TABLE cytological_map (
 	centromere_start NUMBER(38),
 	centromere_end NUMBER(38),
 	organism_id number(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (organism_id) REFERENCES organism(id)
+	PRIMARY KEY (id)
 );
 
 --
@@ -64,8 +62,7 @@ CREATE TABLE cytoband (
 	end_loc NUMBER(38),
 	stain VARCHAR2(16),
 	cytological_map_id NUMBER(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (cytological_map_id) REFERENCES cytological_map(id)
+	PRIMARY KEY (id)
 );
 
 --
@@ -81,8 +78,7 @@ CREATE TABLE annotated_genome_feature (
 	end_loc NUMBER(38),
 	parent_id NUMBER(38),
 	organism_id NUMBER(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (organism_id) REFERENCES organism(id)
+	PRIMARY KEY (id)
 );
 
 --
@@ -119,8 +115,7 @@ CREATE TABLE prop_options (
 	code VARCHAR2(128),
 	display_name VARCHAR2(128),
 	user_conf_prop_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (user_conf_prop_id, code),
-	FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id)
+	PRIMARY KEY (user_conf_prop_id, code)
 );
 
 --
@@ -208,8 +203,7 @@ CREATE TABLE plot_params_ivals (
 	chromosome NUMBER(2),
 	start_location NUMBER(38),
 	end_location NUMBER(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
+	PRIMARY KEY (id)
 );
 
 --
@@ -219,8 +213,7 @@ CREATE TABLE plot_params_ivals (
 CREATE TABLE ann_plot_params_types (
 	plot_params_id NUMBER(38),
 	name VARCHAR2(256),
-	PRIMARY KEY (plot_params_id, name),
-	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
+	PRIMARY KEY (plot_params_id, name)
 );
 
 --
@@ -259,8 +252,7 @@ CREATE TABLE mouse_over_stripe (
 	end_pix INT,
 	text VARCHAR2(1024),
 	list_index INT,
-	PRIMARY KEY (id),
-	FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes (id)
+	PRIMARY KEY (id)
 );
 
 --
@@ -272,8 +264,8 @@ CREATE TABLE plot (
 	width INT,
 	height INT,
 	plot_params_id NUMBER(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (plot_params_id) REFERENCES plot_params(id)
+	shopping_cart_id NUMBER(38),
+	PRIMARY KEY (id)
 );
 
 --
@@ -283,8 +275,7 @@ CREATE TABLE img_file_map (
 	plot_id NUMBER(38) NOT NULL,
 	img_name VARCHAR2(256),
 	file_name VARCHAR2(256),
-	PRIMARY KEY (plot_id, img_name, file_name),
-	FOREIGN KEY (plot_id) REFERENCES plot(id)
+	PRIMARY KEY (plot_id, img_name, file_name)
 );
 
 --
@@ -293,9 +284,7 @@ CREATE TABLE img_file_map (
 CREATE TABLE plot_click_boxes (
 	plot_id NUMBER(38) NOT NULL,
 	click_boxes_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (plot_id, click_boxes_id),
-	FOREIGN KEY (plot_id) REFERENCES plot(id),
-	FOREIGN KEY (click_boxes_id) REFERENCES click_boxes(id)
+	PRIMARY KEY (plot_id, click_boxes_id)
 );
 
 --
@@ -304,9 +293,7 @@ CREATE TABLE plot_click_boxes (
 CREATE TABLE plot_mouse_over_stripes (
 	plot_id NUMBER(38) NOT NULL,
 	mouse_over_stripes_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (plot_id, mouse_over_stripes_id),
-	FOREIGN KEY (plot_id) REFERENCES plot(id),
-	FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes(id)
+	PRIMARY KEY (plot_id, mouse_over_stripes_id)
 );
 
 --
@@ -315,8 +302,7 @@ CREATE TABLE plot_mouse_over_stripes (
 CREATE TABLE plot_exp_ids (
 	exp_id NUMBER(38) NOT NULL,
 	plot_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (exp_id, plot_id),
-	FOREIGN KEY (plot_id) REFERENCES plot(id)
+	PRIMARY KEY (exp_id, plot_id)
 );
 
 --
@@ -332,10 +318,7 @@ CREATE TABLE bioassay (
 	parent_bioassay_id NUMBER(38),
 	organism_id NUMBER(38),
 	array_id NUMBER(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (parent_bioassay_id) REFERENCES bioassay(id),
-	FOREIGN KEY (organism_id) REFERENCES organism(id),
-	FOREIGN KEY (array_id) REFERENCES array(id)
+	PRIMARY KEY (id)
 );
 
 --
@@ -345,8 +328,7 @@ CREATE TABLE array_data_file_index (
 	bioassay_id NUMBER(38) NOT NULL,
 	chromosome INT NOT NULL,
 	file_name VARCHAR2(512),
-	PRIMARY KEY (bioassay_id, chromosome),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+	PRIMARY KEY (bioassay_id, chromosome)
 );
 
 --
@@ -356,8 +338,7 @@ CREATE TABLE chrom_sizes (
 	bioassay_id NUMBER(38) NOT NULL,
 	chromosome INT NOT NULL,
 	chrom_size NUMBER(38),
-	PRIMARY KEY (bioassay_id, chromosome),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+	PRIMARY KEY (bioassay_id, chromosome)
 );
 
 --
@@ -367,8 +348,7 @@ CREATE TABLE min_values (
 	bioassay_id NUMBER(38) NOT NULL,
 	chromosome INT NOT NULL,
 	min_value NUMBER(38,6),
-	PRIMARY KEY (bioassay_id, chromosome),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+	PRIMARY KEY (bioassay_id, chromosome)
 );
 
 --
@@ -378,8 +358,7 @@ CREATE TABLE max_values (
 	bioassay_id NUMBER(38) NOT NULL,
 	chromosome INT NOT NULL,
 	max_value NUMBER(38,6),
-	PRIMARY KEY (bioassay_id, chromosome),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+	PRIMARY KEY (bioassay_id, chromosome)
 );
 
 --
@@ -389,8 +368,7 @@ CREATE TABLE num_datum (
 	bioassay_id NUMBER(38) NOT NULL,
 	chromosome INT NOT NULL,
 	num_datum INT,
-	PRIMARY KEY (bioassay_id, chromosome),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+	PRIMARY KEY (bioassay_id, chromosome)
 );
 
 --
@@ -418,10 +396,8 @@ CREATE TABLE experiment (
 	organism_id NUMBER(38),
 	data_src_props_id NUMBER(38),
 	source_experiment_id NUMBER(38),
-	PRIMARY KEY (id),
-	FOREIGN KEY (organism_id) REFERENCES organism(id),
-	FOREIGN KEY (data_src_props_id) REFERENCES data_src_props(id),
-	FOREIGN KEY (source_experiment_ID) REFERENCES experiment(id)
+	shopping_cart_id NUMBER(38),
+	PRIMARY KEY (id)
 );
 
 --
@@ -430,9 +406,7 @@ CREATE TABLE experiment (
 CREATE TABLE experiment_bioassay (
 	experiment_id NUMBER(38) NOT NULL,
 	bioassay_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (experiment_id, bioassay_id),
-	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
-	FOREIGN KEY (bioassay_id) REFERENCES bioassay(id)
+	PRIMARY KEY (experiment_id, bioassay_id)
 );
 
 --
@@ -441,9 +415,7 @@ CREATE TABLE experiment_bioassay (
 CREATE TABLE exp_bioassay_data_constr (
 	experiment_id NUMBER(38) NOT NULL,
 	bioassay_data_constraints_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (experiment_id, bioassay_data_constraints_id),
-	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
-	FOREIGN KEY (bioassay_data_constraints_id) REFERENCES bioassay_data_constraints(id)
+	PRIMARY KEY (experiment_id, bioassay_data_constraints_id)
 );
 
 --
@@ -452,9 +424,7 @@ CREATE TABLE exp_bioassay_data_constr (
 CREATE TABLE exp_user_conf_prop (
 	experiment_id NUMBER(38) NOT NULL,
 	user_conf_prop_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (experiment_id, user_conf_prop_id),
-	FOREIGN KEY (experiment_id) REFERENCES experiment(id),
-	FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id)
+	PRIMARY KEY (experiment_id, user_conf_prop_id)
 );
 
 --
@@ -472,8 +442,7 @@ CREATE TABLE color_chooser_color (
 	color_chooser_id NUMBER(38) NOT NULL,
 	list_index INT NOT NULL,
 	color INT,
-	PRIMARY KEY (color_chooser_id, list_index),
-	FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id)
+	PRIMARY KEY (color_chooser_id, list_index)
 );
 
 --
@@ -483,8 +452,7 @@ CREATE TABLE color_chooser_color_count (
 	color_chooser_id NUMBER(38) NOT NULL,
 	color INT NOT NULL,
 	usage_count INT,
-	PRIMARY KEY (color_chooser_id, color),
-	FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id)
+	PRIMARY KEY (color_chooser_id, color)
 );
 
 --
@@ -495,29 +463,157 @@ CREATE TABLE shopping_cart (
 	user_name VARCHAR2(128),
 	last_plot_in_id NUMBER(38),
 	color_chooser_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY (last_plot_in_id) REFERENCES plot(id),
-	FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id)
+	PRIMARY KEY (id)
 );
 
---
--- ShoppingCart.experiments property
---
-CREATE TABLE shopping_cart_experiments (
-	shopping_cart_id NUMBER(38) NOT NULL,
-	experiment_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (shopping_cart_id, experiment_id),
-	FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart(id),
-	FOREIGN KEY (experiment_id) REFERENCES experiment(id)
-);
+ALTER TABLE reporters_file_names
+ADD CONSTRAINT fk_rpf_array_id
+FOREIGN KEY (array_id) REFERENCES array(id);
 
---
--- ShoppingCart.plots property
---
-CREATE TABLE shopping_cart_plots (
-	shopping_cart_id NUMBER(38) NOT NULL,
-	plot_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (shopping_cart_id, plot_id),
-	FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart(id),
-	FOREIGN KEY (plot_id) REFERENCES plot(id)
-);
+ALTER TABLE cytological_map
+ADD CONSTRAINT fk_cm_organism_id
+FOREIGN KEY (organism_id) REFERENCES organism(id);
+
+ALTER TABLE cytoband
+ADD CONSTRAINT fk_cb_cyt_map_id
+FOREIGN KEY (cytological_map_id) REFERENCES cytological_map(id);
+
+ALTER TABLE annotated_genome_feature
+ADD CONSTRAINT fk_agf_org_id
+FOREIGN KEY (organism_id) REFERENCES organism(id);
+
+ALTER TABLE prop_options
+ADD CONSTRAINT fk_po_ucpi
+FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id);
+
+ALTER TABLE plot_params_ivals
+ADD CONSTRAINT fk_ppi_plot_params_id
+FOREIGN KEY (plot_params_id) REFERENCES plot_params(id);
+
+ALTER TABLE mouse_over_stripe
+ADD CONSTRAINT fk_mos_mosid
+FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes (id);
+
+ALTER TABLE plot
+ADD CONSTRAINT fk_plot_plot_params_id
+FOREIGN KEY (plot_params_id) REFERENCES plot_params(id);
+
+ALTER TABLE img_file_map
+ADD CONSTRAINT fk_ifm_plot_id
+FOREIGN KEY (plot_id) REFERENCES plot(id);
+
+ALTER TABLE plot_click_boxes
+ADD CONSTRAINT fk_pcb_plot_id
+FOREIGN KEY (plot_id) REFERENCES plot(id);
+
+ALTER TABLE plot_click_boxes
+ADD CONSTRAINT fk_pcb_cbi
+FOREIGN KEY (click_boxes_id) REFERENCES click_boxes(id);
+
+ALTER TABLE plot_mouse_over_stripes
+ADD CONSTRAINT fk_pmos_plot_id
+FOREIGN KEY (plot_id) REFERENCES plot(id);
+
+ALTER TABLE plot_mouse_over_stripes
+ADD CONSTRAINT fk_pmos_mosi
+FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes(id);
+
+ALTER TABLE plot_exp_ids
+ADD CONSTRAINT fk_pei_plot_id
+FOREIGN KEY (plot_id) REFERENCES plot(id);
+
+ALTER TABLE bioassay
+ADD CONSTRAINT fk_bioassay_pbi
+FOREIGN KEY (parent_bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE bioassay
+ADD CONSTRAINT fk_bioassay_org_id
+FOREIGN KEY (organism_id) REFERENCES organism(id);
+
+ALTER TABLE bioassay
+ADD CONSTRAINT fk_bioassay_array_id
+FOREIGN KEY (array_id) REFERENCES array(id);
+
+ALTER TABLE array_data_file_index
+ADD CONSTRAINT fk_adfi_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE chrom_sizes
+ADD CONSTRAINT fk_cs_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE min_values
+ADD CONSTRAINT fk_min_values_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE max_values
+ADD CONSTRAINT fk_max_values_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE num_datum
+ADD CONSTRAINT fk_nd_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE experiment
+ADD CONSTRAINT fk_experiment_org_id
+FOREIGN KEY (organism_id) REFERENCES organism(id);
+
+ALTER TABLE experiment
+ADD CONSTRAINT fk_experiment_dspi
+FOREIGN KEY (data_src_props_id) REFERENCES data_src_props(id);
+
+ALTER TABLE experiment
+ADD CONSTRAINT fk_experiment_sei
+FOREIGN KEY (source_experiment_ID) REFERENCES experiment(id);
+
+ALTER TABLE experiment_bioassay
+ADD CONSTRAINT fk_eb_ei
+FOREIGN KEY (experiment_id) REFERENCES experiment(id);
+
+ALTER TABLE experiment_bioassay
+ADD CONSTRAINT fk_eb_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay(id);
+
+ALTER TABLE exp_bioassay_data_constr
+ADD CONSTRAINT fk_ebdc_ei
+FOREIGN KEY (experiment_id) REFERENCES experiment(id);
+
+ALTER TABLE exp_bioassay_data_constr
+ADD CONSTRAINT fk_ebdc_bdci
+FOREIGN KEY (bioassay_data_constraints_id) REFERENCES bioassay_data_constraints(id);
+
+ALTER TABLE exp_user_conf_prop
+ADD CONSTRAINT fk_eucp_ei
+FOREIGN KEY (experiment_id) REFERENCES experiment(id);
+
+ALTER TABLE exp_user_conf_prop
+ADD CONSTRAINT fk_eucp_ucpi
+FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id);
+
+ALTER TABLE color_chooser_color
+ADD CONSTRAINT fk_ccc_cci
+FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id);
+
+ALTER TABLE color_chooser_color_count
+ADD CONSTRAINT fk_cccc_cci
+FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id);
+
+ALTER TABLE shopping_cart
+ADD CONSTRAINT fk_sc_lpii
+FOREIGN KEY (last_plot_in_id) REFERENCES plot (id);
+
+ALTER TABLE shopping_cart
+ADD CONSTRAINT fk_sc_cci
+FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id);
+
+ALTER TABLE ann_plot_params_types
+ADD CONSTRAINT fk_appt_ppi
+FOREIGN KEY (plot_params_id) REFERENCES plot_params(id);
+
+ALTER TABLE plot
+ADD CONSTRAINT fk_plot_sci
+FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart (id);
+
+ALTER TABLE experiment
+ADD CONSTRAINT fk_experiment_sci
+FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart (id);
