@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.8 $
+$Date: 2007-07-24 20:51:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
@@ -85,7 +86,7 @@ public class ShoppingCart implements Serializable {
     private Set<Experiment> experiments = new HashSet<Experiment>();
     
     /** Plots in shopping cart. */
-    private Set<Plot> plots = new HashSet<Plot>();
+    private List<Plot> plots = new ArrayList<Plot>();
    
     /** User name associated with cart. */
     private String userName = null;
@@ -96,9 +97,6 @@ public class ShoppingCart implements Serializable {
      * it will delete associated image files.
      */
     private ImageFileManager imageFileManager;
-    
-    /** Last plot to be added to cart. */
-    private Plot lastPlotIn = null;
     
     /** Color chooser for assigning bioassay colors. */
     private ColorChooser bioassayColorChooser = new ColorChooser();
@@ -111,7 +109,7 @@ public class ShoppingCart implements Serializable {
      * Get plots in cart.
      * @return Plots in cart.
      */
-    public final Set<Plot> getPlots() {
+    public final List<Plot> getPlots() {
 		return plots;
 	}
 
@@ -119,7 +117,7 @@ public class ShoppingCart implements Serializable {
      * Set plots in cart.
      * @param plots Plots in cart.
      */
-	public final void setPlots(final Set<Plot> plots) {
+	public final void setPlots(final List<Plot> plots) {
 		this.plots = plots;
 	}
 	
@@ -142,20 +140,15 @@ public class ShoppingCart implements Serializable {
 	}
 
 	/**
-	 * Set last plot in.
-	 * @param lastPlotIn Last plot to be added to shopping
-	 * cart.
-	 */
-	public final void setLastPlotIn(final Plot lastPlotIn) {
-		this.lastPlotIn = lastPlotIn;
-	}
-
-	/**
 	 * Get last plot added to cart.
 	 * @return Last plot added to cart.
 	 */
 	public Plot getLastPlotIn() {
-		return lastPlotIn;
+		Plot last = null;
+		if (this.plots.size() > 0) {
+			last = this.plots.get(this.plots.size() - 1);
+		}
+		return last;
 	}
 
 	/**
@@ -287,7 +280,6 @@ public class ShoppingCart implements Serializable {
      */
     public final void add(final Plot plot) {
     	this.plots.add(plot);
-    	this.lastPlotIn = plot;
     }
     
     
@@ -301,9 +293,6 @@ public class ShoppingCart implements Serializable {
     		for (String fName : plot.getAllImageFileNames()) {
     			this.imageFileManager.deleteImageFile(fName);
     		}
-    	}
-    	if (this.lastPlotIn == plot) {
-    		this.lastPlotIn = null;
     	}
     }
     

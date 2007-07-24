@@ -18,16 +18,13 @@
 			<one-to-many
 				class="org.rti.webgenome.domain.Experiment"/>
 		</set>
-		<set name="plots"
+		<list name="plots"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="shopping_cart_id" not-null="true"/>
+			<list-index column="list_index"/>
 			<one-to-many
 				class="org.rti.webgenome.domain.Plot"/>
-		</set>
-		<many-to-one name="lastPlotIn" column="last_plot_in_id"
-			class="org.rti.webgenome.domain.Plot"
-			cascade="all"
-			lazy="false"/>
+		</list>
 		<many-to-one name="bioassayColorChooser"
 			column="color_chooser_id"
 			class="org.rti.webgenome.graphics.util.ColorChooser"

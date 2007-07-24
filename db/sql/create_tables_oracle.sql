@@ -278,6 +278,7 @@ CREATE TABLE plot (
 	height INT,
 	plot_params_id NUMBER(38),
 	shopping_cart_id NUMBER(38),
+	list_index INT,
 	PRIMARY KEY (id)
 );
 
@@ -474,7 +475,6 @@ CREATE TABLE color_chooser_color_count (
 CREATE TABLE shopping_cart (
 	id NUMBER(38) NOT NULL,
 	user_name VARCHAR2(128),
-	last_plot_in_id NUMBER(38),
 	color_chooser_id NUMBER(38) NOT NULL,
 	PRIMARY KEY (id)
 );
@@ -610,10 +610,6 @@ FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id);
 ALTER TABLE color_chooser_color_count
 ADD CONSTRAINT fk_cccc_cci
 FOREIGN KEY (color_chooser_id) REFERENCES color_chooser(id);
-
-ALTER TABLE shopping_cart
-ADD CONSTRAINT fk_sc_lpii
-FOREIGN KEY (last_plot_in_id) REFERENCES plot (id);
 
 ALTER TABLE shopping_cart
 ADD CONSTRAINT fk_sc_cci
