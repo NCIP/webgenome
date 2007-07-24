@@ -25,7 +25,7 @@
 			<property name="lohThreshold" column="loh_threshold"/>
 			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
 			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
-			<property name="interpolationType" column="intplt_type"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
 			<property name="showAnnotation" column="show_annotation"/>
 			<property name="showGenes" column="show_genes"/>
 			<property name="showReporterNames" column="show_reporter_names"/>
@@ -51,7 +51,7 @@
 			<property name="lohThreshold" column="loh_threshold"/>
 			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
 			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
-			<property name="interpolationType" column="intplt_type"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
 			<property name="showAnnotation" column="show_annotation"/>
 			<property name="showGenes" column="show_genes"/>
 			<property name="showReporterNames" column="show_reporter_names"/>
@@ -68,7 +68,7 @@
 			<property name="lohThreshold" column="loh_threshold"/>
 			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
 			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
-			<property name="interpolationType" column="intplt_type"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
 			<property name="showAnnotation" column="show_annotation"/>
 			<property name="showGenes" column="show_genes"/>
 			<property name="showReporterNames" column="show_reporter_names"/>

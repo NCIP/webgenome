@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-29 21:49:08 $
+$Revision: 1.4 $
+$Date: 2007-07-24 20:08:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,9 +52,6 @@ package org.rti.webgenome.graphics.io;
 import java.awt.Point;
 import java.io.Serializable;
 
-import org.rti.webgenome.core.WebGenomeApplicationException;
-import org.rti.webgenome.core.WebGenomeSystemException;
-import org.rti.webgenome.util.DbUtils;
 import org.rti.webgenome.util.SystemUtils;
 
 
@@ -93,17 +90,21 @@ public class ClickBoxes implements Serializable {
     private int boxHeight = 0;
 
     /**
-     * Two-dimensional array of click boxes,
-     * Indexes represent x,y box position,
-     * Value is plot image key.
+     * Array holding click box text.
      */
-    private String[][] clickBox = null;
+    private String[] clickBox = null;
     
     /** Number of rows in clickBox matrix. */
     private int numRows = 0;
     
     /** Number of columns in clickBox matrix. */
     private int numCols = 0;
+    
+    /** Width of entire click box area in pixels. */
+    private int width = 0;
+    
+    /** Height of entire click box area in pixels. */
+    private int height = 0;
 
 
 	// =========================================
@@ -140,16 +141,15 @@ public class ClickBoxes implements Serializable {
      */
     public ClickBoxes(final int width, final int height, final int boxWidth,
     		final int boxHeight, final Point origin) {
+    	this.width = width;
+    	this.height = height;
     	this.boxWidth = boxWidth;
     	this.boxHeight = boxHeight;
     	this.numRows = (int) Math.ceil((double) height
     			/ (double) boxHeight) + 1;
     	this.numCols = (int) Math.ceil((double) width
     			/ (double) boxWidth) + 1;
-    	this.clickBox = new String[this.numCols][];
-    	for (int i = 0; i < this.numCols; i++) {
-    		clickBox[i] = new String[this.numRows];
-    	}
+    	this.clickBox = new String[this.numCols * this.numRows];
     	this.origin = origin;
     }
 
@@ -175,6 +175,87 @@ public class ClickBoxes implements Serializable {
 	}
 
 	/**
+	 * Get array of click box text.
+	 * @return Click box text
+	 */
+	public String[] getClickBox() {
+		return clickBox;
+	}
+
+	/**
+	 * Set array of click box text.
+	 * @param clickBox Click box text
+	 */
+	public void setClickBox(final String[] clickBox) {
+		this.clickBox = clickBox;
+	}
+
+	/**
+	 * Set height of click box area.
+	 * @param height Height in pixels.
+	 */
+	public void setHeight(final int height) {
+		this.height = height;
+	}
+
+	/**
+	 * Set width of click box area.
+	 * @param width Width in pixels.
+	 */
+	public void setWidth(final int width) {
+		this.width = width;
+	}
+	
+	/**
+	 * Get height of entire click box area in pixels.
+	 * @return Height in pixels
+	 */
+	public int getHeight() {
+		return this.height;
+	}
+	
+	/**
+	 * Get width of entire click box area in pixels.
+	 * @return Width in pixels
+	 */
+	public int getWidth() {
+		return this.width;
+	}
+
+	/**
+	 * Get number of columns.
+	 * @return Number of columns in click box area.
+	 */
+	public int getNumCols() {
+		return numCols;
+	}
+
+	/**
+	 * Set number of columns.
+	 * @param numCols Number of columns in click box area.
+	 */
+	public void setNumCols(final int numCols) {
+		this.numCols = numCols;
+	}
+
+	/**
+	 * Get number of rows in click box area.
+	 * @return Number of rows.
+	 */
+	public int getNumRows() {
+		return numRows;
+	}
+
+	/**
+	 * Set number of rows in click box area.
+	 * @param numRows Number of rows
+	 */
+	public void setNumRows(final int numRows) {
+		this.numRows = numRows;
+	}
+	
+
+	/**
      * Set height of individual boxes.
      * @param boxHeight Height of boxes in pixels.
      */
@@ -198,14 +279,6 @@ public class ClickBoxes implements Serializable {
 	 */
 	public Point getOrigin() {
 		return origin;
-	}
-	
-		
-    /**
-	 * @return Returns the clickBox.
-	 */
-	public String[][] getClickBox() {
-		return clickBox;
 	}
 	
 	
@@ -236,10 +309,9 @@ public class ClickBoxes implements Serializable {
 	 * @param y Y-coordinate of some point in the click boxes
 	 */
 	public void addClickBoxText(final String text, final int x, final int y) {
-		int row = this.getRowNum(y);
-		int col = this.getColNum(x);
-		if (row < this.numRows && col < this.numCols && row >= 0 && col >= 0) {
-			this.clickBox[col][row] = text;
+		int idx = this.getIndex(x, y);
+		if (idx >= 0 && idx < this.clickBox.length) {
+			this.clickBox[idx] = text;
 		}
 	}
 	
@@ -251,40 +323,11 @@ public class ClickBoxes implements Serializable {
 	 */
 	public String getClickBoxText(final int x, final int y) {
 		String text = null;
-		int row = this.getRowNum(y);
-		int col = this.getColNum(x);
-		if (row < this.numRows && col < this.numCols && row > 0 && col > 0) {
-			text = this.clickBox[col][row];
+		int idx = this.getIndex(x, y);
+		if (idx >= 0 && idx < this.clickBox.length) {
+			text = this.clickBox[idx];
 		}
 		return text;
-	}
-	
-	/**
-	 * Get click boxes in a text format for storing
-	 * as a CLOB.  This text can be decoded by the method
-	 * {@code setClickBoxesAsClob}.
-	 * @return CLOB representation for attribute
-	 * {@code clickBox}
-	 */
-	public String getClickBoxAsClob() {
-		return DbUtils.encodeClob(this.clickBox);
-	}
-	
-	
-	/**
-	 * Set the values of the {@code clickBox} matrix property
-	 * with a CLOB-encoded varsion generated by method
-	 * {@code getClickBoxAsClob}.
-	 * @param clob CLOB-encoding of {@code clickBox}
-	 * property value.
-	 */
-	public void setClickBoxAsClob(final String clob) {
-		try {
-			this.clickBox = DbUtils.decodeClob(clob);
-		} catch (WebGenomeApplicationException e) {
-			throw new WebGenomeSystemException(
-					"Error un-persisting click box text", e);
-		}
 	}
 	
 	
@@ -320,32 +363,6 @@ public class ClickBoxes implements Serializable {
 		this.origin.y = y;
 	}
 	
-	/**
-	 * Get height of entire click box area in pixels.
-	 * @return Height in pixels
-	 */
-	public int getHeight() {
-		int height = 0;
-		if (this.clickBox != null) {
-			height = this.boxHeight * this.clickBox.length;
-		}
-		return height;
-	}
-	
-	/**
-	 * Get width of entire click box area in pixels.
-	 * @return Width in pixels
-	 */
-	public int getWidth() {
-		int width = 0;
-		if (this.clickBox != null) {
-			if (this.clickBox[0] != null && this.clickBox[0].length > 0) {
-				width = this.boxWidth * this.clickBox[0].length; 
-			}
-		}
-		return width;
-	}
-	
 	
 	/**
 	 * Debug method that generates readable string
@@ -355,19 +372,40 @@ public class ClickBoxes implements Serializable {
 	public String toPrettyString() {
 		StringBuffer buff = new StringBuffer();
 		if (this.clickBox != null) {
+			int col = 0;
 			for (int i = 0; i < this.clickBox.length; i++) {
-				if (this.clickBox[i] != null) {
-					for (int j = 0; j < this.clickBox[i].length; j++) {
-						buff.append(this.clickBox[i][j]);
-						if (j < this.clickBox[i].length - 1) {
-							buff.append(",");
-						}
-					}
+				buff.append(this.clickBox[i]);
+				col++;
+				if (col % this.numCols == 0) {
+					buff.append("\n");
+					col = 0;
+				} else {
+					buff.append(",");
 				}
-				buff.append("\n");
 			}
+			buff.append("\n");
 		}
 		return buff.toString();
+	}
+	
+	
+	/**
+	 * Get number of click box areas.
+	 * @return Number of individual boxes.
+	 */
+	public int numBoxes() {
+		return this.numRows * this.numCols;
+	}
+	
+	/**
+	 * Get index of cell in {@code clickBox} containing
+	 * text corresponding to point at pixel location (x, y).
+	 * @param x X-pixel coordinate
+	 * @param y Y-pixel coordinate
+	 * @return Text at corresponding pixel location
+	 */
+	private int getIndex(final int x, final int y) {
+		return this.getRowNum(y) * this.getColNum(x);
 	}
 	
 	/**

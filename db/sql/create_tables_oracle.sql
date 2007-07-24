@@ -225,8 +225,21 @@ CREATE TABLE click_boxes (
 	origin_y INT,
 	box_width INT,
 	box_height INT,
-	click_box CLOB,
+	width INT,
+	height INT,
+	num_rows INT,
+	num_cols INT,
 	PRIMARY KEY (id)
+);
+
+--
+-- ClickBoxes.clickBox property
+--
+CREATE TABLE click_boxes_text (
+	click_boxes_id NUMBER(38) NOT NULL,
+	list_index INT,
+	text_value VARCHAR2(128),
+	PRIMARY KEY (click_boxes_id, list_index)
 );
 
 --
@@ -617,3 +630,7 @@ FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart (id);
 ALTER TABLE experiment
 ADD CONSTRAINT fk_experiment_sci
 FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart (id);
+
+ALTER TABLE click_boxes_text
+ADD CONSTRAINT fk_cbt_cbi
+FOREIGN KEY (click_boxes_id) REFERENCES click_boxes (id);

@@ -15,14 +15,14 @@
 		<property name="width"/>
 		
 		<property name="height"/>
-		
+
 		<map name="imageFileMap" table="img_file_map"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="plot_id"/>
 			<map-key column="img_name" type="java.lang.String"/>
 			<element column="file_name" type="java.lang.String"/>
 		</map>
-		
+
 		<set name="experiments" table="plot_exp_ids"
 			lazy="false">
 			<key column="plot_id"/>
@@ -43,12 +43,12 @@
 			<many-to-many column="mouse_over_stripes_id"
 				class="org.rti.webgenome.graphics.event.MouseOverStripes"/>
 		</set>
-		
+
 		<many-to-one name="plotParameters" column="plot_params_id"
 			class="org.rti.webgenome.service.plot.PlotParameters"
 			cascade="all-delete-orphan"
 			not-null="true" lazy="false"/>
-		
+
 	</class>
 
 </hibernate-mapping>

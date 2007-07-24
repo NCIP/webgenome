@@ -14,9 +14,15 @@
 		<property name="originY" column="origin_y"/>
 		<property name="boxWidth" column="box_width"/>
 		<property name="boxHeight" column="box_height"/>
-		<!--
-		<property name="clickBoxAsClob" column="click_box"/>
-		-->
+		<property name="width" column="width"/>
+		<property name="height" column="height"/>
+		<property name="numRows" column="num_rows"/>
+		<property name="numCols" column="num_cols"/>
+		<array name="clickBox" table="click_boxes_text">
+			<key column="click_boxes_id"/>
+			<list-index column="list_index"/>
+			<element column="text_value" type="java.lang.String"/>
+		</array>
 	</class>
 
 </hibernate-mapping>
