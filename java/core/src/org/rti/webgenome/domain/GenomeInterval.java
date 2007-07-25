@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.4 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -410,13 +410,16 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	 * Decode genome intervals encoded like '1:1000-2000;2:50-150'.
 	 * This string encodes two genome intervals.  The first
 	 * is chromosome 1 from position 1000 to 2000.  The positions
-	 * units may be base pairs or a larger multiple of base pairs.
+	 * units may be base pairs or a larger multiple of base pairs
+	 * given by the {@code units} parameter.
 	 * @param encoding Encoded genome interval
+	 * @param units Units applicable to start and end locations
 	 * @return Genome intervals
 	 * @throws GenomeIntervalFormatException if intervals are
 	 * not well-formed.
 	 */
-	public static final Collection<GenomeInterval> decode(final String encoding)
+	public static final Collection<GenomeInterval> decode(
+			final String encoding, final BpUnits units)
 	throws GenomeIntervalFormatException {
 		if (encoding == null) {
 			throw new IllegalArgumentException("Genome intervals are null");
@@ -427,8 +430,9 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 		while (tok.hasMoreTokens()) {
 			String token = tok.nextToken();
 			GenomeInterval interval = new GenomeInterval(
-					coder.parseChromosome(token), coder.parseStart(token), 
-					coder.parseEnd(token));
+					coder.parseChromosome(token),
+					units.toBp(coder.parseStart(token)), 
+					units.toBp(coder.parseEnd(token)));
 			intervals.add(interval);
 		}
 		return intervals;
@@ -438,10 +442,15 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	/**
 	 * Encode list of genome intervals as a string.
 	 * @param intervals Genome intervals
+	 * @param units Base pair units used for encoding
+	 * start and end positions of intervals.
 	 * @return Encoded genome intervals
+	 * @see org.rti.webgenome.domain.GenomeInterval#decode(String, BpUnits)
+	 * for a description of the encoded format.
 	 */
 	public static final String encode(
-			final Collection<GenomeInterval> intervals) {
+			final Collection<GenomeInterval> intervals,
+			final BpUnits units) {
 		if (intervals == null) {
 			throw new IllegalArgumentException("Genome intervals are null");
 		}
@@ -451,7 +460,7 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 			if (count++ > 0) {
 				buffer.append(DELIMITER);
 			}
-			buffer.append(encode(i));
+			buffer.append(encode(i, units));
 		}
 		return buffer.toString();
 	}
@@ -459,7 +468,9 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	
 	/**
 	 * Encode given bioassay data constraints into
-	 * a string of form '1:100-200,3:500-600'.
+	 * a string of form '1:100-200;3:500-600'.
+	 * The start and end points of the intervals will
+	 * be in base pair units.
 	 * @param constraints Bioassay data constraints
 	 * @return Encoded constraints
 	 */
@@ -483,15 +494,20 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	/**
 	 * Encode a genome interval as a string of form 1:100-200.
 	 * @param interval Genome interval to encode
+	 * @param units Units to use for encoding start and end
+	 * locations on chromosome
 	 * @return Encoded genome interval
 	 */
-	private static String encode(final GenomeInterval interval) {
+	private static String encode(final GenomeInterval interval,
+			final BpUnits units) {
 		StringBuffer buff =
 			new StringBuffer(String.valueOf(interval.chromosome));
 		if (interval.getStartLocation() >= 0
 				&& interval.getEndLocation() >= 0) {
-			buff.append(":" + interval.getStartLocation()
-					+ "-" + interval.getEndLocation());
+			buff.append(":"
+					+ units.fromBp(interval.getStartLocation())
+					+ "-"
+					+ units.fromBp(interval.getEndLocation()));
 		}
 		return buff.toString();
 	}
@@ -499,7 +515,8 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	
 	/**
 	 * Encode given constraints into a string of format
-	 * '1:100-200'.
+	 * '1:100-200'.  Chromosome start and end positions
+	 * will be in base pair units.
 	 * @param constraints Bioassay data constraints
 	 * @return Encoded bioassay data constraints
 	 */

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-05 13:23:29 $
+$Revision: 1.5 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -160,7 +160,6 @@ public class ScatterPlotPainter extends PlotPainter {
 		int plotCount = 0;
 		int rowCount = 1;
 		PlotPanel row = panel.newChildPlotPanel();
-		BpUnits units = plotParameters.getUnits();
 		for (GenomeInterval gi : plotParameters.getGenomeIntervals()) {
 			if (plotCount++ >=  plotParameters.getNumPlotsPerRow()) {
 				VerticalAlignment va = null;
@@ -174,12 +173,10 @@ public class ScatterPlotPainter extends PlotPainter {
 				plotCount = 1;
 			}
 			row.setName("row");
-			long start = units.toBp(gi.getStartLocation());
-			long end = units.toBp(gi.getEndLocation());
 	        PlotBoundaries pb = new PlotBoundaries(
-	                (double) start,
+	                (double) gi.getStartLocation(),
 	                (double) plotParameters.getMinY(),
-	                (double) end,
+	                (double) gi.getEndLocation(),
 	                (double) plotParameters.getMaxY());
 	        ScatterPlot scatterPlot =
 	            new ScatterPlot(experiments, gi.getChromosome(),
@@ -216,8 +213,11 @@ public class ScatterPlotPainter extends PlotPainter {
 		        row.add(yCaption, HorizontalAlignment.LEFT_OF,
 		                VerticalAlignment.CENTERED);
 	        }
-	        Axis xAxis = new Axis(gi.getStartLocation(),
-	                gi.getEndLocation(), scatterPlot.width(),
+	        BpUnits units = plotParameters.getUnits();
+	        long start = units.fromBp(gi.getStartLocation());
+	        long end = units.fromBp(gi.getEndLocation());
+	        Axis xAxis = new Axis(start,
+	                end, scatterPlot.width(),
 	                Orientation.HORIZONTAL, Location.BELOW,
 	                col.getDrawingCanvas());
 	        

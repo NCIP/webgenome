@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -298,11 +298,13 @@ extends BaseGenomicPlotParameters implements Serializable {
     	super.deriveMissingAttributes(experiments);
     	Set<Short> chromosomes = GenomeInterval.getChromosomes(
 				this.getGenomeIntervals());
-		if (Float.isNaN(this.getMinY())) {
+		if (Float.isNaN(this.getMinY())
+				|| this.getMinY() == Constants.FLOAT_NAN) {
 			float min = Experiment.findMinValue(experiments, chromosomes);
 			this.setMinY(min);
 		}
-		if (Float.isNaN(this.getMaxY())) {
+		if (Float.isNaN(this.getMaxY())
+				|| this.getMaxY() == Constants.FLOAT_NAN) {
 			float max = Experiment.findMaxValue(experiments, chromosomes);
 			this.setMaxY(max);
 		}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.4 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -958,10 +958,12 @@ public class PlotParametersForm extends BaseForm {
 		}
 		
 		// genomeIntervals
+		BpUnits units = BpUnits.getUnits(this.units);
 		if (this.genomeIntervals != null && this.genomeIntervals.length() > 0) {
 			try {
-				Collection<GenomeInterval> intervals = GenomeInterval.decode(
-						this.genomeIntervals);
+				Collection<GenomeInterval> intervals =
+					GenomeInterval.decode(
+						this.genomeIntervals, units);
 				for (GenomeInterval interval : intervals) {
 					short chrom = interval.getChromosome();
 					long start = interval.getStartLocation();
@@ -1320,15 +1322,16 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	private void transferCommonPlotParameters(final PlotParameters params) {
 		params.setPlotName(this.name);
+		BpUnits units = BpUnits.getUnits(this.units);
 		try {
 			params.setGenomeIntervals(new TreeSet<GenomeInterval>(
 					GenomeInterval.decode(
-					this.genomeIntervals)));
+					this.genomeIntervals, units)));
 		} catch (GenomeIntervalFormatException e) {
 			throw new WebGenomeSystemException(
 					"Error extracting plot parameters", e);
 		}
-		params.setUnits(BpUnits.getUnits(this.units));
+		params.setUnits(units);
 		params.setNumPlotsPerRow(Integer.parseInt(this.numPlotsPerRow));
 	}
 	
@@ -1425,9 +1428,10 @@ public class PlotParametersForm extends BaseForm {
 	private void bulkSetCommontPlotAttributes(
 			final PlotParameters plotParameters) {
 		this.name = plotParameters.getPlotName();
-		this.genomeIntervals = GenomeInterval.encode(
-				plotParameters.getGenomeIntervals());
 		this.units = plotParameters.getUnits().getName();
+		this.genomeIntervals = GenomeInterval.encode(
+				plotParameters.getGenomeIntervals(),
+				plotParameters.getUnits());
 		this.numPlotsPerRow =
 			String.valueOf(plotParameters.getNumPlotsPerRow());
 	}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -271,11 +271,13 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 		super.deriveMissingAttributes(experiments);
 		Set<Short> chromosomes = GenomeInterval.getChromosomes(
 				this.getGenomeIntervals());
-		if (Float.isNaN(this.getMinSaturation())) {
+		if (Float.isNaN(this.getMinSaturation())
+				|| this.getMinSaturation() == Constants.FLOAT_NAN) {
 			float min = Experiment.findMinValue(experiments, chromosomes);
 			this.setMinSaturation(min);
 		}
-		if (Float.isNaN(this.getMaxSaturation())) {
+		if (Float.isNaN(this.getMaxSaturation())
+				|| this.getMinSaturation() == Constants.FLOAT_NAN) {
 			float max = Experiment.findMaxValue(experiments, chromosomes);
 			this.setMaxSaturation(max);
 		}

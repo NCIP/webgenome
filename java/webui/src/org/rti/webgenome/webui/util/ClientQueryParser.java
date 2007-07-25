@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.core.InvalidClientQueryParametersException;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.GenomeIntervalFormatException;
+import org.rti.webgenome.units.BpUnits;
 
 /**
  * Parses query parameters given to webGenome by client.
@@ -171,7 +172,8 @@ public final class ClientQueryParser {
     		new ArrayList<BioAssayDataConstraints>();
         Collection<GenomeInterval> intervals = null;
         try {
-			intervals = GenomeInterval.decode(encodedIntervals);
+			intervals = GenomeInterval.decode(encodedIntervals,
+					BpUnits.BP);
 		} catch (GenomeIntervalFormatException e) {
 			throw new InvalidClientQueryParametersException(
 					"Invalid genome intervals: " + encodedIntervals, e);

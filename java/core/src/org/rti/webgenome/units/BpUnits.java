@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:35 $
+$Revision: 1.2 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -169,6 +169,17 @@ public final class BpUnits {
 	 */
 	public long toBp(final double value) {
 		return (long) (value * this.numericBase);
+	}
+	
+	
+	/**
+	 * Convert given value in BP units to an equivalent
+	 * value in these units.
+	 * @param bpValue Base pair value
+	 * @return Equivalent value in these units
+	 */
+	public long fromBp(final double bpValue) {
+		return (long) (bpValue / (double) this.numericBase);
 	}
 	
 	// =====================================

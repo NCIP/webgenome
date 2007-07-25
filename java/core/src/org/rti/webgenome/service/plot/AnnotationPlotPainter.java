@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-07-25 18:37:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,7 +72,6 @@ import org.rti.webgenome.graphics.widget.Grid;
 import org.rti.webgenome.graphics.widget.PlotPanel;
 import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
-import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.units.HorizontalAlignment;
 import org.rti.webgenome.units.Location;
 import org.rti.webgenome.units.Orientation;
@@ -190,24 +189,24 @@ public class AnnotationPlotPainter extends PlotPainter {
 		// Retrieve genome interval.  If more than one given in plot
 		// parameters, take first.
 		GenomeInterval interval = intervals.first();
-		BpUnits units = params.getUnits();
-		short chromosome = interval.getChromosome();
-		long startLoc = units.toBp(interval.getStartLocation());
-		long endLoc = units.toBp(interval.getEndLocation());
 		
 		// Add axis
+		long start = params.getUnits().fromBp(interval.getStartLocation());
+		long end = params.getUnits().fromBp(interval.getEndLocation());
 		Axis axis = this.paintAxis(childPanel, params,
-				chromosome, startLoc, endLoc,
+				interval.getChromosome(), start, end,
 				childPanel.getDrawingCanvas());
 		
 		// Construct annotation tracks
-		this.paintAnnotationTracks(childPanel, params, chromosome,
-				startLoc, endLoc,
+		this.paintAnnotationTracks(childPanel, params,
+				interval.getChromosome(),
+				interval.getStartLocation(), interval.getEndLocation(),
 				Experiment.getOrganism(experiments));
 		
 		// Construct data tracks
 		this.paintDataTracks(childPanel, experiments, params,
-				chromosome, startLoc, endLoc);
+				interval.getChromosome(), interval.getStartLocation(),
+				interval.getEndLocation());
 		
 		// Add grid
 		Grid grid = axis.newGrid(params.getWidth(),
