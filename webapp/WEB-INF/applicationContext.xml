@@ -350,6 +350,9 @@
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="ioService">
+			<ref bean="ioService"/>
+		</property>
 	</bean>
 		
 <!-- Remove plot from cart -->

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.4 $
+$Date: 2007-07-26 16:45:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,8 @@ import java.io.File;
 import java.io.InputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -70,6 +72,10 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  * Action for uploading files to a working directory.
  */
 public final class FileUploadAction extends BaseAction {
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(FileUploadAction.class);
 	
 	//
 	//     ATTRIBUTES
@@ -125,6 +131,8 @@ public final class FileUploadAction extends BaseAction {
 		InputStream in = formFile.getInputStream();
 		File tempFile = this.ioService.upload(in);
 		in.close();
+		LOGGER.info("Uploaded data into temp file '"
+				+ tempFile.getAbsolutePath() + "'");
 		
 		ShoppingCart cart = this.getShoppingCart(request);
 		ActionForward forward = null;

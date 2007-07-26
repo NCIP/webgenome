@@ -134,6 +134,9 @@ CREATE TABLE data_src_props (
 	jndi_name VARCHAR2(256),
 	jndi_provider_url VARCHAR2(1024),
 	
+	-- FileUploadDataSourceProperties
+	file_name VARCHAR2 (256),
+	
 	PRIMARY KEY (id)
 );
 
@@ -229,6 +232,7 @@ CREATE TABLE click_boxes (
 	height INT,
 	num_rows INT,
 	num_cols INT,
+	plot_id NUMBER(38),
 	PRIMARY KEY (id)
 );
 
@@ -252,11 +256,12 @@ CREATE TABLE mouse_over_stripes (
 	height INT,
 	origin_x INT,
 	origin_y INT,
+	plot_id NUMBER(38),
 	PRIMARY KEY (id)
 );
 
 --
--- MouseOverStripes
+-- MouseOverStripe
 --
 CREATE TABLE mouse_over_stripe (
 	id NUMBER(38) NOT NULL,
@@ -290,24 +295,6 @@ CREATE TABLE img_file_map (
 	img_name VARCHAR2(256),
 	file_name VARCHAR2(256),
 	PRIMARY KEY (plot_id, img_name, file_name)
-);
-
---
--- Property Plot.clickBoxes
---
-CREATE TABLE plot_click_boxes (
-	plot_id NUMBER(38) NOT NULL,
-	click_boxes_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (plot_id, click_boxes_id)
-);
-
---
--- Property Plot.mouseOverStripes
---
-CREATE TABLE plot_mouse_over_stripes (
-	plot_id NUMBER(38) NOT NULL,
-	mouse_over_stripes_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (plot_id, mouse_over_stripes_id)
 );
 
 --
@@ -515,22 +502,6 @@ ALTER TABLE img_file_map
 ADD CONSTRAINT fk_ifm_plot_id
 FOREIGN KEY (plot_id) REFERENCES plot(id);
 
-ALTER TABLE plot_click_boxes
-ADD CONSTRAINT fk_pcb_plot_id
-FOREIGN KEY (plot_id) REFERENCES plot(id);
-
-ALTER TABLE plot_click_boxes
-ADD CONSTRAINT fk_pcb_cbi
-FOREIGN KEY (click_boxes_id) REFERENCES click_boxes(id);
-
-ALTER TABLE plot_mouse_over_stripes
-ADD CONSTRAINT fk_pmos_plot_id
-FOREIGN KEY (plot_id) REFERENCES plot(id);
-
-ALTER TABLE plot_mouse_over_stripes
-ADD CONSTRAINT fk_pmos_mosi
-FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes(id);
-
 ALTER TABLE plot_exp_ids
 ADD CONSTRAINT fk_pei_plot_id
 FOREIGN KEY (plot_id) REFERENCES plot(id);
@@ -630,3 +601,11 @@ FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart (id);
 ALTER TABLE click_boxes_text
 ADD CONSTRAINT fk_cbt_cbi
 FOREIGN KEY (click_boxes_id) REFERENCES click_boxes (id);
+
+ALTER TABLE mouse_over_stripes
+ADD CONSTRAINT fk_mos_pi
+FOREIGN KEY (plot_id) REFERENCES plot (id);
+
+ALTER TABLE click_boxes
+ADD CONSTRAINT fk_cb_pi
+FOREIGN KEY (plot_id) REFERENCES plot (id);

@@ -21,5 +21,10 @@
 			<property name="jndiName" column="jndi_name"/>
 			<property name="jndiProviderURL" column="jndi_provider_url"/>
 		</subclass>
+		<subclass
+			name="org.rti.webgenome.domain.FileUploadDataSourceProperties"
+			discriminator-value="file">
+			<property name="uploadTempFileName" column="file_name"/>
+		</subclass>
 	</class>
 </hibernate-mapping>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-24 20:08:32 $
+$Revision: 1.5 $
+$Date: 2007-07-26 16:45:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webgenome.graphics.io;
 import java.awt.Point;
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
 import org.rti.webgenome.util.SystemUtils;
 
 
@@ -68,6 +69,10 @@ public class ClickBoxes implements Serializable {
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(ClickBoxes.class);
 	
     // =============================
     //       Attributes
@@ -311,23 +316,51 @@ public class ClickBoxes implements Serializable {
 	public void addClickBoxText(final String text, final int x, final int y) {
 		int idx = this.getIndex(x, y);
 		if (idx >= 0 && idx < this.clickBox.length) {
+			System.out.println("  ***Adding***");
 			this.clickBox[idx] = text;
+		} else {
+			System.out.println();
 		}
 	}
 	
 	/**
 	 * Get click box text.
 	 * @param x X-coordinate of some point in the click boxes
+	 * in pixels
 	 * @param y Y-coordinate of some point in the click boxes
+	 * in pixels
 	 * @return Click box text
 	 */
-	public String getClickBoxText(final int x, final int y) {
+	public String getClickBoxTextOfPixel(final int x, final int y) {
 		String text = null;
 		int idx = this.getIndex(x, y);
 		if (idx >= 0 && idx < this.clickBox.length) {
 			text = this.clickBox[idx];
+		} else {
+			LOGGER.warn("Pixel (" + x + ", " + y + ") out of range");
 		}
 		return text;
+	}
+	
+	
+	/**
+	 * Get text that maps to box with given logical
+	 * {@code row} and {@code col} number.
+	 * @param row Logical row number
+	 * @param col Logical column number
+	 * @return Associated click box text
+	 */
+	public String getClickBoxTextOfBox(final int row, final int col) {
+		String value = "";
+		int idx = row * this.numCols + col;
+		if (idx >= 0 && idx < this.clickBox.length) {
+			value = this.clickBox[idx];
+		} else {
+			LOGGER.warn("Box [" + row + "][" + col
+					+ "] out of range (index = " + idx + " out of "
+					+ this.clickBox.length + ")");
+		}
+		return value;
 	}
 	
 	
@@ -405,7 +438,10 @@ public class ClickBoxes implements Serializable {
 	 * @return Text at corresponding pixel location
 	 */
 	private int getIndex(final int x, final int y) {
-		return this.getRowNum(y) * this.getColNum(x);
+		int row = this.getRowNum(y);
+		int col = this.getColNum(x);
+		System.out.println("Index [" + row + "][" + col + "]");
+		return row * this.numCols + col;
 	}
 	
 	/**

@@ -1,18 +1,16 @@
 /*
-
-$Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/util/IOUtils.java,v $
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:01 $
+$Revision: 1.3 $
+$Date: 2007-07-26 16:45:34 $
 
 The Web CGH Software License, Version 1.0
 
-Copyright 2003 RTI. This software was developed in conjunction with the National 
-Cancer Institute, and so to the extent government employees are co-authors, any 
-rights in such works shall be subject to Title 17 of the United States Code, 
-section 105.
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
 
-Redistribution and use in source and binary forms, with or without modification, 
-are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
 1. Redistributions of source code must retain the above copyright notice, this 
 list of conditions and the disclaimer of Article 3, below. Redistributions in 
@@ -40,15 +38,14 @@ trademarks owned by either NCI or RTI.
 
 5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
 (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
-FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL 
-CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT, INDIRECT, 
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT 
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
 LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
 OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 */
 
 package org.rti.webgenome.util;
@@ -65,28 +62,36 @@ import java.net.URL;
 import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
- * I/O utility methods
+ * I/O utility methods.
  */
-public class IOUtils {
+public final class IOUtils {
+	
+	/**
+	 * Constructor.
+	 */
+	private IOUtils() {
+		
+	}
 
 	/**
-	 * Get input reader to given file
+	 * Get input reader to given file.
 	 * @param fileName File name
 	 * @return Reader
 	 */
-	public static BufferedReader getReader(String fileName) {
+	public static BufferedReader getReader(final String fileName) {
 		InputStream stream = getInputStream(fileName);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(stream));
 		return reader;
 	}
 	
 	
 	/**
-	 * Get input stream for specified file name
+	 * Get input stream for specified file name.
 	 * @param fileName Relative file name (not full path)
 	 * @return An input stream
 	 */
-	public static InputStream getInputStream(String fileName) {
+	public static InputStream getInputStream(final String fileName) {
 		Thread curThread = Thread.currentThread();
 		ClassLoader loader = curThread.getContextClassLoader();
 		return loader.getResourceAsStream(fileName);
@@ -94,11 +99,11 @@ public class IOUtils {
 	
 	
 	/**
-	 * Get URL associated with given file name
+	 * Get URL associated with given file name.
 	 * @param fileName Name of file
 	 * @return URL to file
 	 */
-	public static URL getFileUrl(String fileName) {
+	public static URL getFileUrl(final String fileName) {
 		Thread curThread = Thread.currentThread();
 		ClassLoader loader = curThread.getContextClassLoader();
 		return loader.getResource(fileName);
@@ -106,16 +111,17 @@ public class IOUtils {
 	
 	
 	/**
-	 * Load contents of a text file into memory
+	 * Load contents of a text file into memory.
 	 * @param in A reader
 	 * @return String containing file contents
-	 * @throws IOException
+	 * @throws IOException If an io error occurs
 	 */
-	public static String loadFileContents(Reader in) throws IOException {
+	public static String loadFileContents(
+			final Reader in) throws IOException {
 		StringBuffer buff = new StringBuffer();
 		int nextChar = in.read();
 		while (nextChar != -1) {
-			buff.append((char)nextChar);
+			buff.append((char) nextChar);
 			nextChar = in.read();
 		}
 		return buff.toString();
@@ -125,9 +131,9 @@ public class IOUtils {
 	/**
 	 * Null tolerant method for closing a writer.  Also catches
 	 * checked exceptions and rethrows as unchecked.
-	 * @param writer
+	 * @param writer Writer to close
 	 */
-	public static void close(Writer writer) {
+	public static void close(final Writer writer) {
 		if (writer != null) {
 			try {
 				writer.close();
@@ -139,30 +145,48 @@ public class IOUtils {
 	
 	
 	/**
-	 * Close input stream re-throwing any exceptions as unchecked
+	 * Close input stream re-throwing any exceptions as unchecked.
 	 * @param in Input stream
 	 */
-	public static void close(InputStream in) {
+	public static void close(final InputStream in) {
 		if (in != null) {
 			try {
 				in.close();
 			} catch (IOException e) {
-				throw new WebGenomeSystemException("Error closing input stream", e);
+				throw new WebGenomeSystemException(
+						"Error closing input stream", e);
 			}
 		}
 	}
 	
 	
 	/**
-	 * Close input stream re-throwing any exceptions as unchecked
+	 * Close input stream re-throwing any exceptions as unchecked.
 	 * @param out Output stream
 	 */
-	public static void close(OutputStream out) {
+	public static void close(final OutputStream out) {
 		if (out != null) {
 			try {
 				out.close();
 			} catch (IOException e) {
-				throw new WebGenomeSystemException("Error closing output stream", e);
+				throw new WebGenomeSystemException(
+						"Error closing output stream", e);
+			}
+		}
+	}
+	
+	
+	/**
+	 * Close given reader while re-throwing {@code IOException}s
+	 * as unchecked.
+	 * @param reader Reader to close.
+	 */
+	public static void close(final Reader reader) {
+		if (reader != null) {
+			try {
+				reader.close();
+			} catch (IOException e) {
+				throw new WebGenomeSystemException("Error closing reader", e);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.3 $
+$Date: 2007-07-26 16:45:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.util.ColorUtils;
 
 /**
@@ -270,6 +272,18 @@ public class ColorChooser {
 	 */
 	public static String[][] getWebColorPalette() {
 		return ColorGenerator.getWebColorPalette();
+	}
+	
+	
+	/**
+	 * Relinquish colors in given experiment, i.e.,
+	 * decrement color counts for all embeded bioassays.
+	 * @param exp An experiment
+	 */
+	public void relinquishColors(final Experiment exp) {
+		for (BioAssay ba : exp.getBioAssays()) {
+			this.decrementCount(ba.getColor());
+		}
 	}
 	
 	

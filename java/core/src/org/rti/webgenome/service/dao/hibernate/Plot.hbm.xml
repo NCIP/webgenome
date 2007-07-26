@@ -30,17 +30,17 @@
 				class="org.rti.webgenome.domain.Experiment"/>
 		</set>
 		
-		<set name="clickBoxes" table="plot_click_boxes"
+		<set name="clickBoxes"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="plot_id"/>
-			<many-to-many column="click_boxes_id"
+			<one-to-many
 				class="org.rti.webgenome.graphics.io.ClickBoxes"/>
 		</set>
 		
-		<set name="mouseOverStripes" table="plot_mouse_over_stripes"
+		<set name="mouseOverStripes"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="plot_id"/>
-			<many-to-many column="mouse_over_stripes_id"
+			<one-to-many
 				class="org.rti.webgenome.graphics.event.MouseOverStripes"/>
 		</set>
 

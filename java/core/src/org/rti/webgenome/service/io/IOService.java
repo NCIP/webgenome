@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.2 $
+$Date: 2007-07-26 16:45:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,9 @@ import java.io.FileOutputStream;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.FileUploadDataSourceProperties;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
@@ -230,6 +232,8 @@ public class IOService {
 		if (!file.exists() || !file.isFile()) {
 			throw new WebGenomeSystemException("File '" + path + "' not valid");
 		}
+		LOGGER.info("Deleting serialized data file '"
+				+ file.getAbsolutePath() + "'");
 		if (!file.delete()) {
 			LOGGER.warn("Unable to delete uploaded file '" + path + "'");
 		}
@@ -251,11 +255,42 @@ public class IOService {
 		File file = new File(path);
 		Experiment exp = this.dataFileManager.convertSmdData(file, organism);
 		exp.setId(this.experimentIdGenerator.nextId());
+		DataSourceProperties dsProps =
+			new FileUploadDataSourceProperties(fileName);
+		exp.setDataSourceProperties(dsProps);
 		ColorChooser colorChooser = shoppingCart.getBioassayColorChooser();
 		for (BioAssay ba : exp.getBioAssays()) {
 			ba.setId(this.bioAssayIdGenerator.nextId());
 			ba.setColor(colorChooser.nextColor());
 		}
 		shoppingCart.add(exp);
+	}
+	
+	
+	/**
+	 * Delete all serialized data files associated with
+	 * given experiment. 
+	 * @param exp An experiment
+	 */
+	public void deleteDataFiles(final Experiment exp) {
+		if (!exp.dataInMemory()) {
+			
+			// If data originated from file upload, there
+			// will be one reporter file for upload which
+			// will not be used by any other data.  Thus,
+			// it should be deleted.  Also delete temp
+			// upload file.
+			boolean deleteReporters = false;
+			DataSourceProperties props = exp.getDataSourceProperties();
+			if (props instanceof FileUploadDataSourceProperties) {
+				deleteReporters = true;
+				String uploadFileName = ((FileUploadDataSourceProperties)
+						props).getUploadTempFileName();
+				this.delete(uploadFileName);
+			}
+			
+			// Delete files and possibly reporters
+			this.dataFileManager.deleteDataFiles(exp, deleteReporters);
+		}
 	}
 }

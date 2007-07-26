@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-07-26 16:45:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.util.IOUtils;
 
 /**
  * Reads files of rectangular data providing access to
@@ -151,6 +152,8 @@ public final class RectangularFileReader {
             throw new WebGenomeSystemException("Error reading file '"
                     + this.file.getAbsolutePath()
                     + "'", e);
+        } finally {
+        	IOUtils.close(in);
         }
         return headings;
     }
@@ -179,6 +182,8 @@ public final class RectangularFileReader {
             throw new WebGenomeSystemException("Error reading file '"
                     + this.file.getAbsolutePath()
                     + "'", e);
+        } finally {
+        	IOUtils.close(in);
         }
         return col;
     }

@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.3 $
-$Date: 2007-07-24 20:08:32 $
+$Revision: 1.4 $
+$Date: 2007-07-26 16:45:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -193,6 +193,10 @@ public class PlotInteractivityTag extends TagSupport {
 					out.println("cbbh=" + clickBoxes.getBoxHeight() + ";");
 					out.println("cb=new Array(" + clickBoxes.numBoxes() + ");");
 		
+					System.out.println("Received click box dimensions = "
+							+ clickBoxes.getNumRows() + " X "
+							+ clickBoxes.getNumCols());
+					
 					// loop through click boxes and output JavaScript variables
 					for(int i = 0 ; i < clickBoxes.getNumRows() ; i++) {
 		
@@ -200,10 +204,15 @@ public class PlotInteractivityTag extends TagSupport {
 						out.println("cb[" + i + "]=new Array(" + clickBoxes.getNumCols() + ");");
 		
 						// loop through each row
-						for(int j = 0 ; j < clickBoxes.getNumRows() ; j++) {
+						for(int j = 0 ; j < clickBoxes.getNumCols() ; j++) {
 		
 							// grab image name
-							String tempImageName = imageFileMap.get(clickBoxes.getClickBoxText(i, j));
+							String tempImageName = imageFileMap.get(clickBoxes.getClickBoxTextOfBox(i, j));
+							
+							String text = clickBoxes.getClickBoxTextOfBox(i, j);
+							if (text != null && text.length() > 0) {
+								System.out.println("Text [" + i + "][" + j + "]");
+							}
 		
 							// output blank if null, image name if not null
 							out.println("cb[" + i + "][" + j + "]='" + ((tempImageName == null) ? "" : tempImageName) + "';");

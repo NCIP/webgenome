@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.4 $
+$Date: 2007-07-26 16:45:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,10 +56,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
+import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -68,6 +68,17 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public final class RemoveExperimentAction extends BaseAction {
+	
+	/** Service for performing file IO. */
+	private IOService ioService = null;
+	
+	/**
+	 * Sets service for performing IO.
+	 * @param ioService File IO service.
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
 
 	/**
      * Execute action.
@@ -96,12 +107,15 @@ public final class RemoveExperimentAction extends BaseAction {
     	// Relinquish colors in experiment
     	ColorChooser cc = cart.getBioassayColorChooser();
     	Experiment exp = cart.getExperiment(id);
-    	for (BioAssay ba : exp.getBioAssays()) {
-    		cc.decrementCount(ba.getColor());
-    	}
+    	cc.relinquishColors(exp);
     	
-    	// Remove experiment
+    	// Remove experiment from cart
     	cart.removeExperiment(id);
+    	
+    	// Delete all serialized data files, if any
+    	if (!exp.dataInMemory()) {
+    		ioService.deleteDataFiles(exp);
+    	}
     	
     	// TODO: Stand-alone specific actions
     	
