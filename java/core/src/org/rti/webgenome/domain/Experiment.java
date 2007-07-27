@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.6 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.rti.webgenome.analysis.AnalyticOperation;
-import org.rti.webgenome.analysis.UserConfigurableProperty;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.ExperimentDTO;
@@ -126,28 +124,6 @@ public class Experiment implements Serializable {
     
     /** Identifier of data source where experiment is stored. */
     private DataSourceProperties dataSourceProperties = null;
-    
-    /**
-     * This attribute is the source experiment for this
-     * experiment if this experiment object was generated through
-     * an analytical operation.
-     */
-    private Experiment sourceExperiment = null;
-    
-    /**
-     * If this experiment object was generated through an
-     * analysic operation, this property is the class name
-     * of that analytic operation.
-     */
-    private String analyticOperationClassName = null;
-    
-    /**
-     * If this experiment object was generated through an
-     * analysic operation, this property is the user configurable
-     * properties for that operation.
-     */
-    private Set<UserConfigurableProperty> userConfigurableProperties =
-    	new HashSet<UserConfigurableProperty>();
 
         
     // ===============================
@@ -169,47 +145,6 @@ public class Experiment implements Serializable {
 	public final void setOrganism(final Organism organism) {
 		this.organism = organism;
 	}
-	
-	
-	/**
-	 * Get name of analytic operation class, if any, that
-	 * generated this experiment.
-	 * @return Full analytic operation class name
-	 */
-	public final String getAnalyticOperationClassName() {
-		return analyticOperationClassName;
-	}
-
-	/**
-	 * Set name of analytic operation class that generated
-	 * this experiment.
-	 * @param analyticOperationClassName Full name of
-	 * analytic operation class
-	 */
-	public final void setAnalyticOperationClassName(
-			final String analyticOperationClassName) {
-		this.analyticOperationClassName = analyticOperationClassName;
-	}
-
-	/**
-	 * Get user configurable properties assocaited with analytic
-	 * operation that generated this experiment.
-	 * @return User configurable properties
-	 */
-	public final Set<UserConfigurableProperty>
-	getUserConfigurableProperties() {
-		return userConfigurableProperties;
-	}
-
-	/**
-	 * Set user configurable properties associated with analytic
-	 * operation that generated this experiment.
-	 * @param userConfigurableProperties User configurable properties
-	 */
-	public final void setUserConfigurableProperties(final
-			Set<UserConfigurableProperty> userConfigurableProperties) {
-		this.userConfigurableProperties = userConfigurableProperties;
-	}
 
 	/**
 	 * Set bioassay data constraints for query made to a client
@@ -223,71 +158,6 @@ public class Experiment implements Serializable {
 			this.newBioAssayDataConstraintWrappers(bioAssayDataConstraints);
 	}
 
-	/**
-	 * Get source analytic operation.
-	 * If this experiment object was generated through an analytic
-     * operation, this property represents this operation.
-	 * @return Source analytic operation
-	 */
-	public final AnalyticOperation getSourceAnalyticOperation() {
-		AnalyticOperation op = null;
-		if (this.analyticOperationClassName != null
-				&& this.analyticOperationClassName.length() > 0) {
-			try {
-				Class clazz =
-					Class.forName(this.analyticOperationClassName);
-				op = (AnalyticOperation) clazz.newInstance();
-				for (UserConfigurableProperty prop
-						: this.userConfigurableProperties) {
-					op.setProperty(prop.getName(), prop.getCurrentValue());
-				}
-			} catch (Exception e) {
-				throw new WebGenomeSystemException(
-						"Error reconstituting analytic operation '"
-						+ this.analyticOperationClassName + "'", e);
-			}
-		}
-		return op;
-	}
-
-	
-	/**
-	 * Set source analytic operation.
-	 * If this experiment object was generated through an analytic
-     * operation, this property represents this operation.
-	 * @param sourceAnalyticOperation Source analytic operation.
-	 */
-	public final void setSourceAnalyticOperation(
-			final AnalyticOperation sourceAnalyticOperation) {
-		this.analyticOperationClassName =
-			sourceAnalyticOperation.getClass().getName();
-		this.userConfigurableProperties = new HashSet<UserConfigurableProperty>(
-			sourceAnalyticOperation.getUserConfigurableProperties(
-					this.quantitationType));
-	}
-
-	/**
-	 * Get source experiment.
-	 * This attribute is the source experiment for this
-     * experiment if this experiment object was generated through
-     * an analytical operation.
-	 * @return Source experiment
-	 */
-	public final Experiment getSourceExperiment() {
-		return sourceExperiment;
-	}
-
-	/**
-	 * Set source experiment.
-	 * This attribute is the source experiment for this
-     * experiment if this experiment object was generated through
-     * an analytical operation.
-	 * @param sourceExperiment Source experiment
-	 */
-	public final void setSourceExperiment(
-			final Experiment sourceExperiment) {
-		this.sourceExperiment = sourceExperiment;
-	}
 
 	/**
 	 * Get data source properties.
@@ -747,8 +617,6 @@ public class Experiment implements Serializable {
      * will be used to set this experiments attributes
      */
     public void bulkSetShallow(final Experiment exp) {
-    	this.analyticOperationClassName =
-    		exp.analyticOperationClassName;
     	this.bioAssayDataConstraints =
     		exp.bioAssayDataConstraints;
     	this.bioAssayDataConstraintsWrappers =
@@ -759,10 +627,7 @@ public class Experiment implements Serializable {
     	this.organism = exp.organism;
     	this.quantitationType = exp.quantitationType;
     	this.sourceDbId = exp.sourceDbId;
-    	this.sourceExperiment = exp.sourceExperiment;
     	this.terminal = exp.terminal;
-    	this.userConfigurableProperties =
-    		exp.userConfigurableProperties;
     }
     
     /**
@@ -771,9 +636,8 @@ public class Experiment implements Serializable {
      * @return T/F
      */
     public boolean isDerived() {
-    	return this.sourceExperiment != null
-    	&& this.analyticOperationClassName != null
-    	&& this.analyticOperationClassName.length() > 0;
+    	return this.dataSourceProperties != null
+    	&& this.dataSourceProperties instanceof AnalysisDataSourceProperties;
     }
     
     /**

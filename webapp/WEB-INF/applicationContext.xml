@@ -320,6 +320,9 @@
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dataFileManager">
+			<ref bean="dataFileManager"/>
+		</property>
 	</bean>
 	
 <!-- Rerun analytic operation -->

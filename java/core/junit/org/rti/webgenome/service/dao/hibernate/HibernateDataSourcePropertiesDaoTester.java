@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 17:51:51 $
+$Revision: 1.2 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.dao.hibernate;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.rti.webgenome.analysis.SimpleExperimentNormalizer;
+import org.rti.webgenome.analysis.SlidingWindowSmoother;
 import org.rti.webgenome.domain.EjbDataSourceProperties;
+import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.FileUploadDataSourceProperties;
+import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
+import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.SimulatedDataSourceProperties;
+import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -71,23 +81,54 @@ public class HibernateDataSourcePropertiesDaoTester extends TestCase {
 	 */
 	public void testAllMethods() {
 		
-		// Get bean
+		// Get beans
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
         "org/rti/webgenome/service/dao/hibernate/beans.xml");
 		HibernateDataSourcePropertiesDao dao =
 			(HibernateDataSourcePropertiesDao)
 			ctx.getBean("dataSourcePropertiesDao");
+		HibernateExperimentDao expDao =
+			(HibernateExperimentDao) ctx.getBean("experimentDao");
 		
 		// Instantiate test objects
 		SimulatedDataSourceProperties p1 =
-			new SimulatedDataSourceProperties("client1");
+			new SimulatedDataSourceProperties();
 		EjbDataSourceProperties p2 =
 			new EjbDataSourceProperties("jndiName1",
 					"jndiProvider1", "client2");
+		FileUploadDataSourceProperties p3 =
+			new FileUploadDataSourceProperties("file1");
+		Experiment exp1 = new Experiment("exp1");
+		Experiment exp2 = new Experiment("exp2");
+		Experiment exp3 = new Experiment("exp3");
+		exp1.setId(new Long(1));
+		exp2.setId(new Long(2));
+		exp3.setId(new Long(3));
+		expDao.save(exp1);
+		expDao.save(exp2);
+		expDao.save(exp3);
+		SingleAnalysisDataSourceProperties p4 =
+			new SingleAnalysisDataSourceProperties(exp1,
+					new SlidingWindowSmoother());
+		Set<Experiment> experiments = new HashSet<Experiment>();
+		experiments.add(exp2);
+		experiments.add(exp3);
+		MultiAnalysisDataSourceProperties p5 =
+			new MultiAnalysisDataSourceProperties(experiments,
+					new SimpleExperimentNormalizer());
 		
 		dao.save(p1);
 		dao.save(p2);
+		dao.save(p3);
+		dao.save(p4);
+		dao.save(p5);
 		dao.delete(p1);
 		dao.delete(p2);
+		dao.delete(p3);
+		dao.delete(p4);
+		dao.delete(p5);
+		expDao.delete(exp1);
+		expDao.delete(exp2);
+		expDao.delete(exp3);
 	}
 }

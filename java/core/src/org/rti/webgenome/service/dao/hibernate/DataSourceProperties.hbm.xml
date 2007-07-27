@@ -11,7 +11,6 @@
 		    <generator class="increment"/>
 		</id>
 		<discriminator column="type" type="java.lang.String"/>
-		<property name="clientId" column="client_id"/>
 		<subclass
 			name="org.rti.webgenome.domain.SimulatedDataSourceProperties"
 			discriminator-value="simulated"/>
@@ -20,11 +19,42 @@
 			discriminator-value="ejb">
 			<property name="jndiName" column="jndi_name"/>
 			<property name="jndiProviderURL" column="jndi_provider_url"/>
+			<property name="clientId" column="client_id"/>
 		</subclass>
 		<subclass
 			name="org.rti.webgenome.domain.FileUploadDataSourceProperties"
 			discriminator-value="file">
 			<property name="uploadTempFileName" column="file_name"/>
+		</subclass>
+		<subclass
+			name="org.rti.webgenome.domain.SingleAnalysisDataSourceProperties"
+			discriminator-value="single.analysis">
+			<property name="analyticOperationClassName" column="an_op_class_name"/>
+			<many-to-one name="inputExperiment" column="input_experiment_id"
+				class="org.rti.webgenome.domain.Experiment" lazy="false"/>
+			<set name="userConfigurableProperties"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="data_src_props_id"/>
+				<one-to-many
+					class="org.rti.webgenome.analysis.UserConfigurableProperty"/>
+			</set>
+		</subclass>
+		<subclass
+			name="org.rti.webgenome.domain.MultiAnalysisDataSourceProperties"
+			discriminator-value="multi.analysis">
+			<property name="analyticOperationClassName" column="an_op_class_name"/>
+			<set name="inputExperiments" table="dsp_experiments"
+				cascade="save-update">
+				<key column="data_src_props_id"/>
+				<many-to-many column="experiment_id"
+					class="org.rti.webgenome.domain.Experiment"/>
+			</set>
+			<set name="userConfigurableProperties"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="data_src_props_id"/>
+				<one-to-many
+					class="org.rti.webgenome.analysis.UserConfigurableProperty"/>
+			</set>
 		</subclass>
 	</class>
 </hibernate-mapping>

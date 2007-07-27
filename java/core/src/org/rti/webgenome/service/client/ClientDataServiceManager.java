@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:35 $
+$Revision: 1.2 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -159,15 +159,15 @@ public class ClientDataServiceManager {
 		
 		// Get set of distinct data source properties from input
 		// experiments
-		Set<DataSourceProperties> props =
-			this.findDistinctDataSourceProperties(inputExperiments);
+		Set<EjbDataSourceProperties> props =
+			this.findDistinctEjbDataSourceProperties(inputExperiments);
 		
 		// Collect new data
 		Collection<Experiment> outputExperiments =
 			new ArrayList<Experiment>();
 		BioAssayDataConstraints[] conArr = new BioAssayDataConstraints[0];
 		conArr = constraints.toArray(conArr);
-		for (DataSourceProperties p : props) {
+		for (EjbDataSourceProperties p : props) {
 			String[] expIds = this.findExperimentSourceDbIds(
 					inputExperiments, p);
 			ClientDataService service = this.getClientDataService(p);
@@ -224,11 +224,11 @@ public class ClientDataServiceManager {
 		
 		// Get set of distinct data source properties from input
 		// experiments
-		Set<DataSourceProperties> props =
-			this.findDistinctDataSourceProperties(experiments);
+		Set<EjbDataSourceProperties> props =
+			this.findDistinctEjbDataSourceProperties(experiments);
 		
 		// Add data
-		for (DataSourceProperties prop : props) {
+		for (EjbDataSourceProperties prop : props) {
 			ClientDataService service = this.getClientDataService(prop);
 			Collection<Experiment> exps =
 				this.findExperiments(experiments, prop);
@@ -238,19 +238,22 @@ public class ClientDataServiceManager {
 	
 	
 	/**
-	 * Finds all distinct data source properties in input experiments.
+	 * Finds all distinct EJB data source properties in input experiments.
 	 * @param experiments Experiments
 	 * @return Distinct data source properties
 	 */
-	private Set<DataSourceProperties> findDistinctDataSourceProperties(
+	private Set<EjbDataSourceProperties> findDistinctEjbDataSourceProperties(
 			final Collection<Experiment> experiments) {
-		Set<DataSourceProperties> props = new HashSet<DataSourceProperties>();
+		Set<EjbDataSourceProperties> props =
+			new HashSet<EjbDataSourceProperties>();
 		for (Experiment exp : experiments) {
 			DataSourceProperties prop = exp.getDataSourceProperties();
 			if (prop == null) {
 				throw new IllegalArgumentException("Unknown data source");
 			}
-			props.add(prop);
+			if (prop instanceof EjbDataSourceProperties) {
+				props.add((EjbDataSourceProperties) prop);
+			}
 		}
 		return props;
 	}

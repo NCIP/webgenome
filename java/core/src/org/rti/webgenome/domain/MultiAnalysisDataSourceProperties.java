@@ -1,5 +1,5 @@
 /*
-$Revision: 1.5 $
+$Revision: 1.1 $
 $Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
@@ -48,73 +48,75 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.struts.cart;
+package org.rti.webgenome.domain;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.AnalyticOperation;
-import org.rti.webgenome.analysis.AnalyticOperationFactory;
-import org.rti.webgenome.analysis.UserConfigurableProperty;
-import org.rti.webgenome.core.WebGenomeApplicationException;
-import org.rti.webgenome.domain.AnalysisDataSourceProperties;
-import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
- * This action class is a set up for re-running
- * an analytic operation on a an experiment that was
- * previously derived through an analytic operation.
+ * Source of data for an experiment derived through
+ * an analytic operation where there were multiple
+ * input experiments.
  * @author dhall
  *
  */
-public class ReRunAnalyticOperationSetupAction extends BaseAction {
+public class MultiAnalysisDataSourceProperties
+extends AnalysisDataSourceProperties {
+	
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Input experiments that were run through analytic operation. */
+	private Set<Experiment> inputExperiments =
+		new HashSet<Experiment>();
+
+	
+	//
+	//  G E T T E R S  /  S E T T E R S
+	//
+	
+	/**
+	 * Get input experiments that were run through analytic operation.
+	 * @return Input experiments that were run through analytic operation.
+	 */
+	public Set<Experiment> getInputExperiments() {
+		return inputExperiments;
+	}
 
 	/**
-	 * {@inheritDoc}
+	 * Set input experiments that were run through analytic operation.
+	 * @param inputExperiments Input experiments that were run through
+	 * analytic operation.
 	 */
-	public ActionForward execute(
-	        final ActionMapping mapping, final ActionForm form,
-	        final HttpServletRequest request,
-	        final HttpServletResponse response
-	    ) throws Exception {
+	public void setInputExperiments(
+			final Set<Experiment> inputExperiments) {
+		this.inputExperiments = inputExperiments;
+	}
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.
+	 */
+	public MultiAnalysisDataSourceProperties() {
 		
-		// Get ID of experiment on which to re-run operation
-		Long expId = Long.parseLong(
-				request.getParameter("experimentId"));
-		
-		// Get experiment from shopping cart
-		ShoppingCart cart = this.getShoppingCart(request);
-		Experiment exp = cart.getExperiment(expId);
-		if (exp == null) {
-			throw new WebGenomeApplicationException(
-					"Experiment no longer in shopping cart");
-		}
-		
-		// Retrieve analytic operation and associated
-		// user configurable properties and attach to request
-		AnalysisDataSourceProperties dsProps =
-			(AnalysisDataSourceProperties) exp.getDataSourceProperties();
-		AnalyticOperation op = dsProps.getSourceAnalyticOperation();
-		Collection<UserConfigurableProperty> props =
-			op.getUserConfigurableProperties(
-					exp.getQuantitationType());
-		request.setAttribute("analyticOperation", op);
-		request.setAttribute("userConfigurableProperties", props);
-		
-		// Put experiment ID and anlaytic operation key
-		// on request for downstream JSP
-		String opKey = AnalyticOperationFactory.getKey(op.getClass());
-		request.setAttribute("experimentId", expId.toString());
-		request.setAttribute("operationKey", opKey);
-		
-		this.persistShoppingCartChanges(cart, request);
-		return mapping.findForward("success");
+	}
+	
+	/**
+	 * Constructor.
+	 * @param inputExperiments Input experiments that were run through
+	 * analytic operation.
+	 * @param operation Analytic operation performed on input experiments.
+	 */
+	public MultiAnalysisDataSourceProperties(
+			final Set<Experiment> inputExperiments,
+			final AnalyticOperation operation) {
+		super(operation, Experiment.getQuantitationType(inputExperiments));
+		this.inputExperiments = inputExperiments;
 	}
 }

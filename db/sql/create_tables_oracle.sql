@@ -1,4 +1,4 @@
---
+---
 -- Principal
 --
 CREATE TABLE principal (
@@ -96,7 +96,45 @@ CREATE TABLE job (
 );
 
 --
--- UserConfigurableProperty
+-- DataSourceProperties
+--
+CREATE TABLE data_src_props (
+
+	-- Common properties
+	id NUMBER(38) NOT NULL,
+	
+	-- Discriminator
+	type VARCHAR2(16),
+	
+	-- EjbDataSourceProperties
+	jndi_name VARCHAR2(256),
+	jndi_provider_url VARCHAR2(1024),
+	client_id VARCHAR2(128),
+	
+	-- FileUploadDataSourceProperties
+	file_name VARCHAR2 (256),
+	
+	-- AnalysisDataSourceProperties
+	an_op_class_name VARCHAR2(256),
+	
+	-- SingleAnalysisDataSourceProperties
+	input_experiment_id NUMBER(38),
+	
+	PRIMARY KEY (id)
+);
+
+--
+-- MultiAnalysisDataSourceProperties.inputExperiments property
+--
+CREATE TABLE dsp_experiments (
+	data_src_props_id NUMBER(38) NOT NULL,
+	experiment_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (data_src_props_id, experiment_id)
+);
+
+--
+-- AnalysisDataSourceProperties.userConfigurableProperties
+-- property
 --
 CREATE TABLE user_conf_prop (
 	id NUMBER(38) NOT NULL,
@@ -104,6 +142,7 @@ CREATE TABLE user_conf_prop (
 	current_value VARCHAR2(128),
 	display_name VARCHAR2(128),
 	name VARCHAR2(128),
+	data_src_props_id NUMBER(38),
 	PRIMARY KEY (id)
 );
 
@@ -116,28 +155,6 @@ CREATE TABLE prop_options (
 	display_name VARCHAR2(128),
 	user_conf_prop_id NUMBER(38) NOT NULL,
 	PRIMARY KEY (user_conf_prop_id, code)
-);
-
---
--- EjbDataSourceProperties
---
-CREATE TABLE data_src_props (
-
-	-- Common properties
-	id NUMBER(38) NOT NULL,
-	client_id VARCHAR2(128),
-	
-	-- Discriminator
-	type VARCHAR2(16),
-	
-	-- EjbDataSourceProperties
-	jndi_name VARCHAR2(256),
-	jndi_provider_url VARCHAR2(1024),
-	
-	-- FileUploadDataSourceProperties
-	file_name VARCHAR2 (256),
-	
-	PRIMARY KEY (id)
 );
 
 --
@@ -384,6 +401,8 @@ CREATE TABLE bioassay_data_constraints (
 	PRIMARY KEY (id)
 );
 
+-- ################################################
+
 --
 -- Experiment
 --
@@ -393,10 +412,8 @@ CREATE TABLE experiment (
 	source_db_id VARCHAR2(256),
 	quant_type VARCHAR2(128),
 	terminal VARCHAR2(8),
-	an_op_class_name VARCHAR2(256),
 	organism_id NUMBER(38),
 	data_src_props_id NUMBER(38),
-	source_experiment_id NUMBER(38),
 	shopping_cart_id NUMBER(38),
 	PRIMARY KEY (id)
 );
@@ -419,14 +436,7 @@ CREATE TABLE exp_bioassay_data_constr (
 	PRIMARY KEY (experiment_id, bioassay_data_constraints_id)
 );
 
---
--- Experiment.userConfigurableProperties property
---
-CREATE TABLE exp_user_conf_prop (
-	experiment_id NUMBER(38) NOT NULL,
-	user_conf_prop_id NUMBER(38) NOT NULL,
-	PRIMARY KEY (experiment_id, user_conf_prop_id)
-);
+-- #########################################################3
 
 --
 -- ColorChooser
@@ -546,10 +556,6 @@ ALTER TABLE experiment
 ADD CONSTRAINT fk_experiment_dspi
 FOREIGN KEY (data_src_props_id) REFERENCES data_src_props(id);
 
-ALTER TABLE experiment
-ADD CONSTRAINT fk_experiment_sei
-FOREIGN KEY (source_experiment_ID) REFERENCES experiment(id);
-
 ALTER TABLE experiment_bioassay
 ADD CONSTRAINT fk_eb_ei
 FOREIGN KEY (experiment_id) REFERENCES experiment(id);
@@ -565,14 +571,6 @@ FOREIGN KEY (experiment_id) REFERENCES experiment(id);
 ALTER TABLE exp_bioassay_data_constr
 ADD CONSTRAINT fk_ebdc_bdci
 FOREIGN KEY (bioassay_data_constraints_id) REFERENCES bioassay_data_constraints(id);
-
-ALTER TABLE exp_user_conf_prop
-ADD CONSTRAINT fk_eucp_ei
-FOREIGN KEY (experiment_id) REFERENCES experiment(id);
-
-ALTER TABLE exp_user_conf_prop
-ADD CONSTRAINT fk_eucp_ucpi
-FOREIGN KEY (user_conf_prop_id) REFERENCES user_conf_prop(id);
 
 ALTER TABLE color_chooser_color
 ADD CONSTRAINT fk_ccc_cci
@@ -609,3 +607,19 @@ FOREIGN KEY (plot_id) REFERENCES plot (id);
 ALTER TABLE click_boxes
 ADD CONSTRAINT fk_cb_pi
 FOREIGN KEY (plot_id) REFERENCES plot (id);
+
+ALTER TABLE data_src_props
+ADD CONSTRAINT fk_dsp_iei
+FOREIGN KEY (input_experiment_id) REFERENCES experiment (id);
+
+ALTER TABLE dsp_experiments
+ADD CONSTRAINT fk_de_ei
+FOREIGN KEY (experiment_id) REFERENCES experiment (id);
+
+ALTER TABLE dsp_experiments
+ADD CONSTRAINT fk_de_dspi
+FOREIGN KEY (data_src_props_id) REFERENCES data_src_props (id);
+
+ALTER TABLE user_conf_prop
+ADD CONSTRAINT fk_ucp_dspi
+FOREIGN KEY (data_src_props_id) REFERENCES data_src_props (id);

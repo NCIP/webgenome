@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.7 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,7 +66,10 @@ import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
+import org.rti.webgenome.service.analysis.SerializedDataTransformer;
+import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
@@ -93,6 +96,9 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	private final AnalyticOperationFactory analyticOperationFactory =
 		new AnalyticOperationFactory();
 	
+	/** Manages serialized data files. */
+	private DataFileManager dataFileManager = null;
+	
 	
 	//
 	//     SETTERS
@@ -104,6 +110,14 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	 */
 	public void setAnalysisService(final AnalysisService analysisService) {
 		this.analysisService = analysisService;
+	}
+	
+	/**
+	 * Set manager for serialized data files.
+	 * @param dataFileManager Data file manager
+	 */
+	public void setDataFileManager(final DataFileManager dataFileManager) {
+		this.dataFileManager = dataFileManager;
 	}
 	
 	//
@@ -163,13 +177,20 @@ public final class AnalysisAction extends BaseAnalysisAction {
 
 		// Case: Perform immediately
     	if (!ProcessingModeDecider.processInBackground(experiments)) {
+    		DataTransformer transformer = null;
+	    	if (this.dataInMemory(request)) {
+	    		transformer = new InMemoryDataTransformer();
+	    	} else {
+	    		transformer = new SerializedDataTransformer(
+	    				this.dataFileManager);
+	    	}
 	    	this.analysisService.performAnalyticOperation(experiments, op,
 	    			cart, outputExperimentNames, outputBioAssayNames,
-	    			new InMemoryDataTransformer());
+	    			transformer);
+	    	this.persistShoppingCartChanges(cart, request);
 	    	forward = mapping.findForward("non.batch");
     	}
     	
-    	this.persistShoppingCartChanges(cart, request);
     	return forward;
     }
     

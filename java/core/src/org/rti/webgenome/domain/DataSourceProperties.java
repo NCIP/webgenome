@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-26 16:45:33 $
+$Revision: 1.4 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,15 +61,6 @@ package org.rti.webgenome.domain;
  */
 public interface DataSourceProperties {
 	
-	/** Client ID for data that originate in analytic operations. */
-	String ANALYTIC_OPERATION_CLIENT_ID =
-		"analytic.operation";
-	
-	
-	/** Data source consisting of an analytic operation. */
-	DataSourceProperties ANALYTIC_OPERATION =
-		new BaseDataSourceProperties(ANALYTIC_OPERATION_CLIENT_ID);
-	
 	
 	/**
 	 * Set primary key value used for persistence.
@@ -82,18 +73,6 @@ public interface DataSourceProperties {
 	 * @return Primary key value
 	 */
 	Long getId();
-
-	/**
-	 * Get ID of application client.
-	 * @return ID of application client
-	 */
-	String getClientId();
-	
-	/**
-	 * Set ID of application client.
-	 * @param clientId Application client.
-	 */
-	void setClientId(String clientId);
 	
 	
 	/**
@@ -106,26 +85,6 @@ public interface DataSourceProperties {
 		
 		/** Primary key for persistence. */
 		private Long id = null;
-		
-		/** Id of client application. */
-		private String clientId;
-
-		/**
-		 * Get ID of application client.
-		 * @return ID of application client
-		 */
-		public final String getClientId() {
-			return clientId;
-		}
-		
-		
-		/**
-		 * Set ID of application client.
-		 * @param clientId ID of application client
-		 */
-		public final void setClientId(final String clientId) {
-			this.clientId = clientId;
-		}
 		
 		
 		/**
@@ -144,24 +103,5 @@ public interface DataSourceProperties {
 		public final void setId(final Long id) {
 			this.id = id;
 		}
-		
-		
-		/**
-		 * Constructor.
-		 */
-		public BaseDataSourceProperties() {
-			
-		}
-
-
-		/**
-		 * Constructor.
-		 * @param clientId ID of application client
-		 */
-		public BaseDataSourceProperties(final String clientId) {
-			this.clientId = clientId;
-		}
-		
-		
 	}
 }

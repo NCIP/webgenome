@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-26 16:45:33 $
+$Revision: 1.2 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,10 +58,6 @@ package org.rti.webgenome.domain;
 public class FileUploadDataSourceProperties
 extends DataSourceProperties.BaseDataSourceProperties {
 	
-	/** Client ID for data that was uploaded from file. */
-	private static final String
-		FILE_UPLOAD_CLIENT_ID = "data.file.upload";
-
 	/**
 	 * Name (not absolute path) of temporary file
 	 * created to hold uploaded data.
@@ -90,7 +86,7 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 * Constructor.
 	 */
 	public FileUploadDataSourceProperties() {
-		super(FILE_UPLOAD_CLIENT_ID);
+	
 	}
 	
 	/**
@@ -99,7 +95,6 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 */
 	public FileUploadDataSourceProperties(
 			final String uploadTempFileName) {
-		super(FILE_UPLOAD_CLIENT_ID);
 		this.uploadTempFileName = uploadTempFileName;
 	}
 }

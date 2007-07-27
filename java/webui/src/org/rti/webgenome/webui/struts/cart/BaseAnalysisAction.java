@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.3 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionErrors;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.analysis.BadUserConfigurablePropertyException;
+import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -96,7 +97,9 @@ public class BaseAnalysisAction extends BaseAction {
     					"Experiment not derived");
     		}
     		String prefix = "prop_exp_" + exp.getId() + "_";
-    		AnalyticOperation op = exp.getSourceAnalyticOperation();
+    		AnalysisDataSourceProperties props =
+    			(AnalysisDataSourceProperties) exp.getDataSourceProperties();
+    		AnalyticOperation op = props.getSourceAnalyticOperation();
 	    	for (Object paramNameObj : paramMap.keySet()) {
 	    		String paramName = (String) paramNameObj;
 	    		if (paramName.indexOf(prefix) == 0) {
@@ -111,7 +114,7 @@ public class BaseAnalysisAction extends BaseAction {
 	    			}
 	    		}
 	    	}
-	    	exp.setSourceAnalyticOperation(op);
+	    	props.setSourceAnalyticOperation(op, exp.getQuantitationType());
     	}
     	
     	// If user input is invalid, return

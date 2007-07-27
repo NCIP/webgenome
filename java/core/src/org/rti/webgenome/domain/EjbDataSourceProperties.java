@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-27 17:51:51 $
+$Revision: 1.3 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,26 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	/** JNDI provider URL. */
 	private String jndiProviderURL;
 	
+	/** Id of client application. */
+	private String clientId;
+
+	/**
+	 * Get ID of application client.
+	 * @return ID of application client
+	 */
+	public final String getClientId() {
+		return clientId;
+	}
+	
+	
+	/**
+	 * Set ID of application client.
+	 * @param clientId ID of application client
+	 */
+	public final void setClientId(final String clientId) {
+		this.clientId = clientId;
+	}
+	
 	/**
 	 * Get JNDI service name.
 	 * @return JNDI service name
@@ -112,14 +132,15 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 */
 	public EjbDataSourceProperties(final String jndiName,
 			final String jndiProviderURL, final String clientId) {
-		super(clientId);
-		if (jndiName == null || jndiProviderURL == null
-				|| jndiName.length() < 1 || jndiProviderURL.length() < 1) {
+		if (jndiName == null || jndiProviderURL == null || clientId == null
+				|| jndiName.length() < 1 || jndiProviderURL.length() < 1
+				|| clientId.length() < 1) {
 			throw new IllegalArgumentException(
-					"Both JNDI name and provider URL must be specified");
+				"Client ID and JNDI name and provider URL must be specified");
 		}
 		this.jndiName = jndiName;
 		this.jndiProviderURL = jndiProviderURL;
+		this.clientId = clientId;
 	}
 
 	/**

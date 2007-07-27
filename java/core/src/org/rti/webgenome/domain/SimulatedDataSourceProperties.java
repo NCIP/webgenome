@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-27 17:51:51 $
+$Revision: 1.3 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,14 +63,6 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 */
 	public SimulatedDataSourceProperties() {
 		
-	}
-	
-	/**
-	 * Constructor.
-	 * @param clientId ID of application client
-	 */
-	public SimulatedDataSourceProperties(final String clientId) {
-		super(clientId);
 	}
 	
 	/**

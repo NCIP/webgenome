@@ -1,6 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
-<h1 align="center">Login</h1>
+<h1 align="center">Create Account</h1>
 
 <center>
 	<html:errors property="global"/>

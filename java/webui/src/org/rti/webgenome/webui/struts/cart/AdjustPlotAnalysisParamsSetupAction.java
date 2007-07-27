@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.5 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.UserConfigurableProperty;
 import org.rti.webgenome.core.WebGenomeApplicationException;
+import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.QuantitationType;
@@ -106,8 +107,11 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
 						"Some experiments no longer in shopping cart");
 			}
 			if (exp.isDerived()) {
+				AnalysisDataSourceProperties props =
+					(AnalysisDataSourceProperties)
+					exp.getDataSourceProperties();
 				derivedExperiments.put(exp,
-						exp.getSourceAnalyticOperation().
+						props.getSourceAnalyticOperation().
 						getUserConfigurableProperties(qType));
 			}
 		}

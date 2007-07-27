@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.8 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.core.WebGenomeApplicationException;
+import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.AnalysisService;
@@ -117,7 +118,9 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 		}
 		
 		// Set properties of analytic operation to redo
-		AnalyticOperation op = exp.getSourceAnalyticOperation();
+		AnalysisDataSourceProperties props =
+			(AnalysisDataSourceProperties) exp.getDataSourceProperties();
+		AnalyticOperation op = props.getSourceAnalyticOperation();
 		
 		ActionForward forward = null;
     	

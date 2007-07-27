@@ -36,7 +36,7 @@
     	<!--
     	<property name="mappingResources">
 	      <list>
-	        <value>org/rti/webgenome/service/dao/hibernate/Plot.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/Experiment.hbm.xml</value>
 	      </list>
 	    </property>
 	    -->

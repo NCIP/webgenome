@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -78,7 +79,9 @@ import org.rti.webgenome.domain.DataContainingBioAssay;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
 import org.rti.webgenome.domain.QuantitationType;
+import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.rti.webgenome.service.util.ChromosomeArrayDataIterator;
 
 
@@ -118,10 +121,11 @@ public abstract class DataTransformer {
         Experiment output =
             new Experiment(experimentName, input.getOrganism(),
             		input.getQuantitationType());
-        output.setDataSourceProperties(DataSourceProperties.ANALYTIC_OPERATION);
+        SingleAnalysisDataSourceProperties props =
+        	new SingleAnalysisDataSourceProperties(
+        		input, operation);
+        output.setDataSourceProperties(props);
         this.performAnalyticOperation(input, output, operation);
-        output.setSourceExperiment(input);
-        output.setSourceAnalyticOperation(operation);
         LOGGER.info("Completed operation");
         return output;
     }
@@ -162,16 +166,24 @@ public abstract class DataTransformer {
     		bioAssayIds.put(ba.getParentBioAssayId(), ba.getId());
     	}
     	
-    	// Make sure experiment derived for analytic operation
-    	if (!experiment.isDerived()) {
+    	// Make sure experiment derived from analytic operation
+    	// with a single input experiment
+    	DataSourceProperties dataSourceProperties =
+    		experiment.getDataSourceProperties();
+    	if (!experiment.isDerived()
+    			|| !(dataSourceProperties
+    					instanceof SingleAnalysisDataSourceProperties)) {
     		throw new IllegalArgumentException(
     				"Cannot recompute experiment if it "
     				+ "was not derived from an analytic "
-    				+ "operation to begin with");
+    				+ "operation with a single input experiment");
     	}
     	
     	// Get operation and set user parameters
-    	AnalyticOperation op = experiment.getSourceAnalyticOperation();
+    	SingleAnalysisDataSourceProperties props =
+    		(SingleAnalysisDataSourceProperties)
+    		experiment.getDataSourceProperties();
+    	AnalyticOperation op = props.getSourceAnalyticOperation();
     	for (UserConfigurableProperty prop : analyticOperationProps) {
     		try {
 				op.setProperty(prop.getName(), prop.getCurrentValue());
@@ -183,11 +195,12 @@ public abstract class DataTransformer {
     	
     	// Perform operation
     	Experiment newExp = this.perform(
-    			experiment.getSourceExperiment(), op);
+    			props.getInputExperiment(), op);
     	
     	// Set a few properties of new experiment
     	experiment.bulkSetShallow(newExp);
-    	experiment.setSourceAnalyticOperation(op);
+    	props.setSourceAnalyticOperation(op,
+    			props.getInputExperiment().getQuantitationType());
     	experiment.setName(expName);
     	for (BioAssay ba : experiment.getBioAssays()) {
     		ba.setName(bioAssayNames.get(ba.getParentBioAssayId()));
@@ -469,7 +482,10 @@ public abstract class DataTransformer {
         output.setQuantitationType(Experiment.getQuantitationType(input));
         output.setTerminal(true);
         output.setOrganism(Experiment.getOrganism(input));
-        output.setDataSourceProperties(DataSourceProperties.ANALYTIC_OPERATION);
+        MultiAnalysisDataSourceProperties props =
+        	new MultiAnalysisDataSourceProperties(
+        			new HashSet<Experiment>(input), operation);
+        output.setDataSourceProperties(props);
         List<BioAssay> bioAssays = new ArrayList<BioAssay>();
         for (Short chromosome : Experiment.chromosomes(input)) {
             List<ChromosomeArrayData> inCads =

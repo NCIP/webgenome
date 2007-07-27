@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.4 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.core.PlotType;
 import org.rti.webgenome.domain.AnnotationType;
-import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Plot;
@@ -157,8 +156,7 @@ public final class PlotParametersSetupAction extends BaseAction {
 	    	experiments = cart.getExperiments(expIds);
     	}
     	for (Experiment exp : experiments) {
-    		if (exp.getDataSourceProperties()
-    				== DataSourceProperties.ANALYTIC_OPERATION) {
+    		if (exp.isDerived()) {
     			request.setAttribute("derivedFromAnalysis", "1");
     			break;
     		}

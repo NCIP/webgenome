@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,6 +101,27 @@ public final class SerializedDataTransformer
             final DataFileManager dataFileManager) {
         this.dataFileManager = dataFileManager;
     }
+    
+    //
+    //  C O N S T R U C T O R S
+    //
+    
+    /**
+     * Constructor.
+     */
+    public SerializedDataTransformer() {
+    	
+    }
+    
+    /**
+     * Constructor.
+     * @param dataFileManager Manages files containing serialized
+     * data (i.e., {@code ChromosomeArrayData} objects.
+     */
+    public SerializedDataTransformer(final DataFileManager dataFileManager) {
+    	this.dataFileManager = dataFileManager;
+    }
+    
 	
     /**
      * Create new bioassay of same type as given bioassay

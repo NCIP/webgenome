@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.8 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.client.BioAssayDataConstraints;
-import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.Plot;
@@ -261,9 +260,7 @@ public final class NewPlotAction extends BaseAction {
     		BioAssayDataConstraints c = inputConstraints[i];
     		boolean allContains = true;
     		for (Experiment exp : experiments) {
-    			if (exp.getDataSourceProperties()
-    					!= DataSourceProperties.ANALYTIC_OPERATION
-    					&& !exp.containsData(c)) {
+    			if (!exp.isDerived() && !exp.containsData(c)) {
     				allContains = false;
     				break;
     			}

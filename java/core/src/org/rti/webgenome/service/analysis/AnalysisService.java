@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.2 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.rti.webgenome.service.util.IdGenerator;
 
 
@@ -238,7 +239,14 @@ public class AnalysisService {
 			final DataTransformer dataTransformer)
 	throws AnalyticException {
 		for (Experiment exp : experiments) {
-			AnalyticOperation op = exp.getSourceAnalyticOperation();
+			if (!exp.isDerived()) {
+				throw new IllegalArgumentException(
+						"Experiments must be derived");
+			}
+			SingleAnalysisDataSourceProperties dsProps =
+				(SingleAnalysisDataSourceProperties)
+				exp.getDataSourceProperties();
+			AnalyticOperation op = dsProps.getSourceAnalyticOperation();
 			QuantitationType qType = exp.getQuantitationType();
 			Collection<UserConfigurableProperty> props =
 				op.getUserConfigurableProperties(qType);

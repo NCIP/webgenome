@@ -13,7 +13,6 @@
 		<property name="sourceDbId" column="source_db_id"/>
 		<property name="quantitationTypeAsString" column="quant_type"/>
 		<property name="terminal" column="terminal"/>
-		<property name="analyticOperationClassName" column="an_op_class_name"/>
 		<set name="bioAssays" table="experiment_bioassay"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="experiment_id" not-null="true"/>
@@ -34,13 +33,6 @@
 			<key column="experiment_id" not-null="true"/>
 			<many-to-many column="bioassay_data_constraints_id"
 				class="org.rti.webgenome.domain.Experiment$BioAssayDataConstraintsWrapper"/>
-		</set>
-		<set name="userConfigurableProperties" lazy="false"
-			table="exp_user_conf_prop"
-			cascade="all-delete-orphan">
-			<key column="experiment_id" not-null="true"/>
-			<many-to-many column="user_conf_prop_id"
-				class="org.rti.webgenome.analysis.UserConfigurableProperty"/>
 		</set>
 	</class>
 

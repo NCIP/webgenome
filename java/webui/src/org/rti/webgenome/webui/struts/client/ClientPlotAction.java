@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.5 $
+$Date: 2007-07-27 22:21:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -204,7 +204,7 @@ public final class ClientPlotAction extends BaseAction {
         		constraints[i].setQuantitationType(INIT_QUANTITATION_TYPE);
         	}
         } else {
-        	props = new SimulatedDataSourceProperties(clientID);
+        	props = new SimulatedDataSourceProperties();
         }
         
         // Get client data service

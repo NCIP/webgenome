@@ -14,7 +14,7 @@
 		<property name="userName" column="user_name"/>
 		<set name="experiments"
 			lazy="false" cascade="all-delete-orphan">
-			<key column="shopping_cart_id" not-null="true"/>
+			<key column="shopping_cart_id"/>
 			<one-to-many
 				class="org.rti.webgenome.domain.Experiment"/>
 		</set>
