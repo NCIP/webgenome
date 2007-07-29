@@ -20,7 +20,7 @@
 			</td>
 			<td>
 				<bean:write name="experiment"
-					property="key.sourceAnalyticOperation.name"/>
+					property="key.dataSourceProperties.sourceAnalyticOperation.name"/>
 			</td>
 			<td>
 				<bean:define id="expId" name="experiment" property="key.id"/>

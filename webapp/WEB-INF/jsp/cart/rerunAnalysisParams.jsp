@@ -9,8 +9,10 @@
 </p>
 
 <html:form action="/cart/rerunAnalysis">
-<html:hidden name="experimentId" property="experimentId"/>
-<html:hidden name="operationKey" property="operationKey"/>
+<bean:define name="experimentId" id="experimentId" type="java.lang.String"/>
+<bean:define name="operationKey" id="operationKey" type="java.lang.String"/>
+<html:hidden property="experimentId" value="<%= experimentId%>"/>
+<html:hidden property="operationKey" value="<%= operationKey%>"/>
 <center>
 <table border="0">
 <logic:iterate name="userConfigurableProperties" id="prop">

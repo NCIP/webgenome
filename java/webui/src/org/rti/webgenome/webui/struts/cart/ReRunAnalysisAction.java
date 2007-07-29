@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.9 $
+$Date: 2007-07-29 19:53:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,8 +61,7 @@ import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.analysis.AnalysisService;
-import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
+import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
@@ -72,26 +71,6 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  *
  */
 public class ReRunAnalysisAction extends BaseAnalysisAction {
-	
-	//
-	//     ATTRIBUTES
-	//
-	
-	/** Service for performing analyses. */
-	private AnalysisService analysisService = null;
-	
-	
-	//
-	//     SETTERS
-	//
-	
-	/**
-	 * Set service for performing analysis via injection.
-	 * @param analysisService Service for performing analysis.
-	 */
-	public void setAnalysisService(final AnalysisService analysisService) {
-		this.analysisService = analysisService;
-	}
 	
 	
 	//
@@ -110,7 +89,8 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 	
 		// Get selected experiment
 		ShoppingCart cart = this.getShoppingCart(request);
-		Long expId = Long.parseLong(request.getParameter("experimentId"));
+		Long expId = Long.parseLong(
+				((AnalyticOperationParametersForm) form).getExperimentId());
 		Experiment exp = cart.getExperiment(expId);
 		if (exp == null) {
 			throw new WebGenomeApplicationException(
@@ -125,9 +105,10 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 		ActionForward forward = null;
     	
     	// Redo analysis
+		DataTransformer transformer = this.getDataTransformer(request);
     	if (!ProcessingModeDecider.processInBackground(exp)) {
-	    	this.analysisService.rePerformAnalyticOperation(exp, op,
-	    			new InMemoryDataTransformer());
+	    	this.getAnalysisService().rePerformAnalyticOperation(
+	    			exp, op, transformer);
 	    	forward = mapping.findForward("non.batch");
     	}
     	

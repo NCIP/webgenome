@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.4 $
+$Date: 2007-07-29 19:53:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,9 +57,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts.action.ActionErrors;
 import org.rti.webgenome.analysis.AnalyticOperation;
+import org.rti.webgenome.analysis.AnalyticOperationFactory;
 import org.rti.webgenome.analysis.BadUserConfigurablePropertyException;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.DataTransformer;
+import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
+import org.rti.webgenome.service.analysis.SerializedDataTransformer;
+import org.rti.webgenome.service.io.DataFileManager;
+import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -70,6 +77,48 @@ import org.rti.webgenome.webui.struts.BaseAction;
  */
 public class BaseAnalysisAction extends BaseAction {
 	
+	/** Service for performing analyses. */
+	private AnalysisService analysisService = null;
+
+	/** Analytic operation factory. */
+	private final AnalyticOperationFactory analyticOperationFactory =
+		new AnalyticOperationFactory();
+	
+	/** Manages serialized data files. */
+	private DataFileManager dataFileManager = null;
+	
+	/**
+	 * Set service for performing analysis via injection.
+	 * @param analysisService Service for performing analysis.
+	 */
+	public void setAnalysisService(final AnalysisService analysisService) {
+		this.analysisService = analysisService;
+	}
+	
+	/**
+	 * Set manager for serialized data files.
+	 * @param dataFileManager Data file manager
+	 */
+	public void setDataFileManager(final DataFileManager dataFileManager) {
+		this.dataFileManager = dataFileManager;
+	}
+	
+	
+	/**
+	 * Get a factory for creating anlaytic operations.
+	 * @return Analytic operation factory
+	 */
+	protected AnalyticOperationFactory getAnalyticOperationFactory() {
+		return this.analyticOperationFactory;
+	}
+	
+	/**
+	 * Get service for performing analytic operations.
+	 * @return Analysis service
+	 */
+	protected AnalysisService getAnalysisService() {
+		return this.analysisService;
+	}
 	
 	/**
 	 * Set user specified analytic operation parameters
@@ -124,5 +173,26 @@ public class BaseAnalysisAction extends BaseAction {
     	
     	return errors;
 	}
-			
+		
+	
+	/**
+	 * Get a data transformer, which may be for
+	 * in-memory or serialized data.
+	 * @param request Servlet request
+	 * @return An appropriate data transformer
+	 * @throws SessionTimeoutException If the session mode
+	 * cannot be detected indicating a timeout
+	 */
+	protected DataTransformer getDataTransformer(
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		DataTransformer transformer = null;
+		if (this.dataInMemory(request)) {
+    		transformer = new InMemoryDataTransformer();
+    	} else {
+    		transformer = new SerializedDataTransformer(
+    				this.dataFileManager);
+    	}
+		return transformer;
+	}
 }

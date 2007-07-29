@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.3 $
+$Date: 2007-07-29 19:53:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,6 @@ import org.rti.webgenome.domain.EjbDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.FileUploadDataSourceProperties;
 import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
-import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.SimulatedDataSourceProperties;
 import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.springframework.context.ApplicationContext;

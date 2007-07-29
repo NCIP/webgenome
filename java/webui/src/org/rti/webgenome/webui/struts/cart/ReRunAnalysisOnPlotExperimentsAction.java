@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.9 $
+$Date: 2007-07-29 19:53:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,8 +64,7 @@ import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.analysis.AnalysisService;
-import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
+import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
@@ -76,26 +75,6 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  */
 public class ReRunAnalysisOnPlotExperimentsAction
 extends BaseAnalysisAction {
-	
-	//
-	//     ATTRIBUTES
-	//
-	
-	/** Service for performing analyses. */
-	private AnalysisService analysisService = null;
-	
-	
-	//
-	//     SETTERS
-	//
-	
-	/**
-	 * Set service for performing analysis via injection.
-	 * @param analysisService Service for performing analysis.
-	 */
-	public void setAnalysisService(final AnalysisService analysisService) {
-		this.analysisService = analysisService;
-	}
 	
 	
 	//
@@ -143,9 +122,10 @@ extends BaseAnalysisAction {
 		ActionForward forward = null;
 		
 		// Case: Process imediately
+		DataTransformer transformer = this.getDataTransformer(request);
 		if (!ProcessingModeDecider.processInBackground(derivedExperiments)) {
-			this.analysisService.rePerformAnalyticOperation(
-					derivedExperiments, new InMemoryDataTransformer());
+			this.getAnalysisService().rePerformAnalyticOperation(
+					derivedExperiments, transformer);
 			forward = mapping.findForward("non.batch");
 		}
 	

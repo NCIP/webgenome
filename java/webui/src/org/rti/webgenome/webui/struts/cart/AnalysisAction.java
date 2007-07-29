@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.8 $
+$Date: 2007-07-29 19:53:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,15 +61,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.AnalyticOperation;
-import org.rti.webgenome.analysis.AnalyticOperationFactory;
 import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.DataTransformer;
-import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
-import org.rti.webgenome.service.analysis.SerializedDataTransformer;
-import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
@@ -84,45 +79,6 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  */
 public final class AnalysisAction extends BaseAnalysisAction {
 	
-	//
-	//     ATTRIBUTES
-	//
-	
-	
-	/** Service for performing analyses. */
-	private AnalysisService analysisService = null;
-
-	/** Analytic operation factory. */
-	private final AnalyticOperationFactory analyticOperationFactory =
-		new AnalyticOperationFactory();
-	
-	/** Manages serialized data files. */
-	private DataFileManager dataFileManager = null;
-	
-	
-	//
-	//     SETTERS
-	//
-	
-	/**
-	 * Set service for performing analysis via injection.
-	 * @param analysisService Service for performing analysis.
-	 */
-	public void setAnalysisService(final AnalysisService analysisService) {
-		this.analysisService = analysisService;
-	}
-	
-	/**
-	 * Set manager for serialized data files.
-	 * @param dataFileManager Data file manager
-	 */
-	public void setDataFileManager(final DataFileManager dataFileManager) {
-		this.dataFileManager = dataFileManager;
-	}
-	
-	//
-	//     OVERRIDES
-	//
 
 	/**
      * Execute action.
@@ -145,7 +101,7 @@ public final class AnalysisAction extends BaseAnalysisAction {
     	// Generate analytic operation instance
     	AnalyticOperationParametersForm aForm =
     		(AnalyticOperationParametersForm) form;
-    	AnalyticOperation op = this.analyticOperationFactory.
+    	AnalyticOperation op = this.getAnalyticOperationFactory().
     		newAnalyticOperation(aForm.getOperationKey());
     	
     	// Retrieve form bean containing selected experiments.
@@ -177,14 +133,9 @@ public final class AnalysisAction extends BaseAnalysisAction {
 
 		// Case: Perform immediately
     	if (!ProcessingModeDecider.processInBackground(experiments)) {
-    		DataTransformer transformer = null;
-	    	if (this.dataInMemory(request)) {
-	    		transformer = new InMemoryDataTransformer();
-	    	} else {
-	    		transformer = new SerializedDataTransformer(
-	    				this.dataFileManager);
-	    	}
-	    	this.analysisService.performAnalyticOperation(experiments, op,
+    		DataTransformer transformer = this.getDataTransformer(request);
+	    	this.getAnalysisService().performAnalyticOperation(
+	    			experiments, op,
 	    			cart, outputExperimentNames, outputBioAssayNames,
 	    			transformer);
 	    	this.persistShoppingCartChanges(cart, request);

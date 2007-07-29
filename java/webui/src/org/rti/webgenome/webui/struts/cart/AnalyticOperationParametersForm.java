@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.3 $
+$Date: 2007-07-29 19:53:34 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,6 +85,13 @@ public class AnalyticOperationParametersForm extends BaseForm {
 	private String operationKey = "";
 	
 	/**
+	 * Experiment primary key identifier. This property is
+	 * only set when an operation is being redone on an
+	 * experiment.
+	 */
+	private String experimentId = "";
+	
+	/**
 	 * Map containing user-input configurable parameter
 	 * name-value pairs.
 	 */ 
@@ -134,6 +141,28 @@ public class AnalyticOperationParametersForm extends BaseForm {
 	 */
 	public final Object getParamValue(final String name) {
 		return this.params.get(name);
+	}
+	
+	
+	/**
+	 * Get primary key ID of an experiment.  This property
+	 * is only used if operation is being rerun on an
+	 * experiment.
+	 * @return Experiment ID.
+	 */
+	public final String getExperimentId() {
+		return experimentId;
+	}
+
+
+	/**
+	 * Set primary key ID of an experiment.  This property
+	 * is only used if operation is being rerun on an
+	 * experiment.
+	 * @param experimentId Experiment ID
+	 */
+	public final void setExperimentId(final String experimentId) {
+		this.experimentId = experimentId;
 	}
 
 
