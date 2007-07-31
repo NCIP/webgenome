@@ -85,6 +85,8 @@ CREATE TABLE annotated_genome_feature (
 -- Job
 --
 CREATE TABLE job (
+
+	-- Common fields
 	id NUMBER(38) NOT NULL,
 	type VARCHAR2(16),
 	user_id VARCHAR2(64),
@@ -92,7 +94,40 @@ CREATE TABLE job (
 	start_date TIMESTAMP,
 	end_date TIMESTAMP,
 	termination_message VARCHAR2(256),
+	
+	-- AnalysisJob and ReRunAnalysisJob
+	data_src_props_id NUMBER(38),
+	
 	PRIMARY KEY (id)
+);
+
+--
+-- AnalysisJob.outputBioAssayNames property
+--
+CREATE TABLE job_out_bioassay_names (
+	job_id NUMBER(38) NOT NULL,
+	bioassay_id NUMBER(38) NOT NULL,
+	name VARCHAR2(128),
+	PRIMARY KEY (job_id, bioassay_id)
+);
+
+--
+-- AnalysisJob.outputExperimentNames property
+--
+CREATE TABLE job_out_experiment_names (
+	job_id NUMBER(38) NOT NULL,
+	experiment_id NUMBER(38) NOT NULL,
+	name VARCHAR2(128),
+	PRIMARY KEY (job_id, experiment_id)
+);
+
+--
+-- ReRunAnalysisOnPlotExperimentsJob.experiments
+--
+CREATE TABLE job_experiments (
+	job_id NUMBER(38) NOT NULL,
+	experiment_id NUMBER(38) NOT NULL,
+	PRIMARY KEY (job_id, experiment_id)
 );
 
 --
@@ -623,3 +658,31 @@ FOREIGN KEY (data_src_props_id) REFERENCES data_src_props (id);
 ALTER TABLE user_conf_prop
 ADD CONSTRAINT fk_ucp_dspi
 FOREIGN KEY (data_src_props_id) REFERENCES data_src_props (id);
+
+ALTER TABLE job
+ADD CONSTRAINT fk_job_dspi
+FOREIGN KEY (data_src_props_id) REFERENCES data_src_props (id);
+
+ALTER TABLE job_out_bioassay_names
+ADD CONSTRAINT fk_jobn_ji
+FOREIGN KEY (job_id) REFERENCES job (id);
+
+ALTER TABLE job_out_bioassay_names
+ADD CONSTRAINT fk_jobn_bi
+FOREIGN KEY (bioassay_id) REFERENCES bioassay (id);
+
+ALTER TABLE job_out_experiment_names
+ADD CONSTRAINT fk_joen_ji
+FOREIGN KEY (job_id) REFERENCES job (id);
+
+ALTER TABLE job_out_experiment_names
+ADD CONSTRAINT fk_joen_bi
+FOREIGN KEY (experiment_id) REFERENCES experiment (id);
+
+ALTER TABLE job_experiments
+ADD CONSTRAINT fk_je_ji
+FOREIGN KEY (job_id) REFERENCES job (id);
+
+ALTER TABLE job_experiments
+ADD CONSTRAINT fk_je_ei
+FOREIGN KEY (experiment_id) REFERENCES experiment (id);

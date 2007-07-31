@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-26 16:45:33 $
+$Revision: 1.5 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -138,7 +138,7 @@ public final class FileUploadAction extends BaseAction {
 		ActionForward forward = null;
 		
 		// If file small enough, go ahead an parse
-		if (!ProcessingModeDecider.processInBackground(tempFile)) {
+		if (!ProcessingModeDecider.processInBackground(tempFile, request)) {
 			this.ioService.loadSmdData(tempFile.getName(),
 					organism, cart);
 			forward = mapping.findForward("non.batch");

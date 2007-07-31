@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.2 $
+$Date: 2007-07-31 16:28:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,10 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.service.plot.PlotService;
 
 /**
  * Implementation of {@link JobManager} where only
@@ -110,11 +114,72 @@ public class SerialQueueJobManager implements JobManager {
 	/** Thread that executes jobs. */
 	private JobExecutionThread jobExecutionThread = new JobExecutionThread();
 	
+	/** Service providing I/O of data files. */
+	private IOService ioService = null;
+	
+	/** Service that runs analytic operations. */
+	private AnalysisService analysisService = null;
+	
+	/** Service that generates plots. */
+	private PlotService plotService = null;
+	
+	/** Shopping cart data access object. */
+	private ShoppingCartDao shoppingCartDao = null;
+	
+	//
+	//  S E T T E R S
+	//
+	
+	/**
+	 * Set service to perform analytic operations.
+	 * @param analysisService Service to perform analytic operations.
+	 */
+	public void setAnalysisService(final AnalysisService analysisService) {
+		this.analysisService = analysisService;
+	}
+
+
+	/**
+	 * Set service to perform data file I/O.
+	 * @param ioService Service to perform data file I/O.
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
+
+
+	/**
+	 * Set job data access object.
+	 * @param jobDao Job data access object.
+	 */
+	public void setJobDao(final JobDao jobDao) {
+		this.jobDao = jobDao;
+	}
+
+
+	/**
+	 * Set service to perform plots.
+	 * @param plotService Service to perform plots.
+	 */
+	public void setPlotService(final PlotService plotService) {
+		this.plotService = plotService;
+	}
+	
+	
+	/**
+	 * Set shopping cart data access object.
+	 * @param shoppingCartDao Shopping cart data access object.
+	 */
+	public void setShoppingCartDao(
+			final ShoppingCartDao shoppingCartDao) {
+		this.shoppingCartDao = shoppingCartDao;
+	}
 	
 	//
 	//     C O N S T R U C T O R S
 	//
-	
+
+
 	/**
 	 * Constructor.
 	 * @param jobDao Job data access object
@@ -274,6 +339,9 @@ public class SerialQueueJobManager implements JobManager {
 		 * one is added.
 		 */
 		private void monitorJobQueue() {
+			JobServices jobServices = new JobServices(
+					ioService, analysisService, plotService,
+					shoppingCartDao);
 			while (true) {
 				
 				// Get next job from queue
@@ -296,7 +364,7 @@ public class SerialQueueJobManager implements JobManager {
 				
 				// Execute job
 				try {
-					job.execute();
+					job.execute(jobServices);
 					job.setTerminationMessage(JOB_EXECUTION_SUCCESS_MESSAGE);
 					LOGGER.info("Job '" + job.getId()
 							+ "' successfully completed");

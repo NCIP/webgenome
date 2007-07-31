@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-07-29 19:53:34 $
+$Revision: 1.9 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,8 +63,11 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.DataTransformer;
+import org.rti.webgenome.service.job.AnalysisJob;
+import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
@@ -132,7 +135,8 @@ public final class AnalysisAction extends BaseAnalysisAction {
 		Collection<Experiment> experiments = cart.getExperiments(ids);
 
 		// Case: Perform immediately
-    	if (!ProcessingModeDecider.processInBackground(experiments)) {
+    	if (!ProcessingModeDecider.processInBackground(
+    			experiments, request)) {
     		DataTransformer transformer = this.getDataTransformer(request);
 	    	this.getAnalysisService().performAnalyticOperation(
 	    			experiments, op,
@@ -140,6 +144,16 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	    			transformer);
 	    	this.persistShoppingCartChanges(cart, request);
 	    	forward = mapping.findForward("non.batch");
+	    	
+	    // Case: Perform in background
+    	} else {
+    		Principal principal = PageContext.getPrincipal(request);
+    		JobManager jobManager = this.getJobManager();
+    		AnalysisJob job = new AnalysisJob(experiments, op,
+    				outputBioAssayNames, outputExperimentNames,
+    				principal.getName());
+    		jobManager.add(job);
+    		forward = mapping.findForward("batch");
     	}
     	
     	return forward;

@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-07-31 16:28:13 $
 
 The Web CGH Software License, Version 1.0
@@ -50,103 +50,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
-import java.util.Date;
-
-
 /**
- * This interface represents a compute job that
- * can be placed on a queue and run in the background.
+ * A job that generates a plot.
  * @author dhall
  *
  */
-public interface Job {
-	
-	/**
-	 * Get unique identifier for job.
-	 * @return Identifier
-	 */
-	Long getId();
-	
-	/**
-	 * Set unique identifier for job.
-	 * @param id Unique identifier
-	 */
-	void setId(Long id);
+public class PlotJob {
 
-	
-	/**
-	 * Get user identifier (i.e., user name).
-	 * @return User identifier
-	 */
-	String getUserId();
-	
-	/**
-	 * Set user identifier (i.e., user name).
-	 * @param userId User identifier
-	 */
-	void setUserId(String userId);
-	
-	/**
-	 * Get date/time that the job was instantiated.
-	 * @return Date/time that job was instantiated
-	 */
-	Date getInstantiationDate();
-	
-	/**
-	 * Set date/time that job was instantiated.
-	 * @param date Date/time job was instantiated.
-	 */
-	void setInstantiationDate(Date date);
-
-	
-	/**
-	 * Get date/time that job was started.
-	 * @return Date/time that job was started.
-	 */
-	Date getStartDate();
-	
-	/**
-	 * Set date/time that job was started.
-	 * @param date Date/time job was started.
-	 */
-	void setStartDate(Date date);
-	
-	/**
-	 * Get date/time that job ended.
-	 * @return Date/time that job ended.
-	 */
-	Date getEndDate();
-	
-	/**
-	 * Set date/time that job ended.
-	 * @param date Date/time that job ended.
-	 */
-	void setEndDate(Date date);
-	
-	/**
-	 * Set the message that describes the
-	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
-	 * @param message A message
-	 */
-	void setTerminationMessage(String message);
-	
-	
-	/**
-	 * Get the message that describes the
-	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
-	 * @return A message
-	 */
-	String getTerminationMessage();
-	
-	
-	/**
-	 * Execute job.
-	 * @param jobServices Services needed by job
-	 * to execute
-	 */
-	void execute(JobServices jobServices);
 }

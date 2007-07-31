@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.2 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,9 +50,20 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
-import org.rti.webgenome.service.job.AbstractJob;
-import org.rti.webgenome.service.job.HibernateJobDao;
-import org.rti.webgenome.service.job.Job;
+import java.awt.Color;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.rti.webgenome.analysis.AnalyticOperation;
+import org.rti.webgenome.analysis.SlidingWindowSmoother;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.DataSerializedBioAssay;
+import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao;
+import org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -72,25 +83,56 @@ public final class HibernateJobDaoTester extends TestCase {
 	public void testAllMethods() {
 		// Get DAO bean
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        "org/rti/webgenome/job/beans.xml");
+        "org/rti/webgenome/service/job/beans.xml");
 		HibernateJobDao dao = (HibernateJobDao) ctx.getBean("jobDao");
-		JobImpl job1 = new JobImpl();
+		HibernateOrganismDao oDao = (HibernateOrganismDao)
+			ctx.getBean("organismDao");
+		HibernateExperimentDao expDao = (HibernateExperimentDao)
+			ctx.getBean("experimentDao");
+		
+		// Instantiate test objects
+		Organism org = oDao.loadDefault();
+		Experiment exp1 = new Experiment("exp1");
+		Experiment exp2 = new Experiment("exp2");
+		BioAssay ba1 = new DataSerializedBioAssay("ba1", org);
+		BioAssay ba2 = new DataSerializedBioAssay("ba2", org);
+		ba1.setColor(Color.BLACK);
+		ba2.setColor(Color.BLUE);
+		exp1.add(ba1);
+		exp2.add(ba2);
+		exp1.setId(new Long(1));
+		exp2.setId(new Long(2));
+		ba1.setId(new Long(1));
+		ba2.setId(new Long(2));
+		expDao.save(exp1);
+		expDao.save(exp2);
+		Set<Experiment> experiments = new HashSet<Experiment>();
+		experiments.add(exp1);
+		experiments.add(exp2);
+		AnalyticOperation op = new SlidingWindowSmoother();
+		Map<Long, String> outputBioAssayNames = new HashMap<Long, String>();
+		outputBioAssayNames.put(new Long(1), "ba1-smoothed");
+		outputBioAssayNames.put(new Long(2), "ba2-smoothed");
+		Map<Long, String> outputExperimentNames =
+			new HashMap<Long, String>();
+		outputExperimentNames.put(new Long(1), "exp1-smoothed");
+		outputExperimentNames.put(new Long(2), "exp2-smoothed");
+		AnalysisJob job1 = new AnalysisJob(experiments, op,
+				outputBioAssayNames, outputExperimentNames, "user");
+		ReRunAnalysisJob job2 = new ReRunAnalysisJob(exp1, op, "user");
+		ReRunAnalysisOnPlotExperimentsJob job3 =
+			new ReRunAnalysisOnPlotExperimentsJob(experiments, "user");
+		
+		// Perform tests
 		dao.saveOrUpdate(job1);
-	}
-	
-	
-	/**
-	 * Mock implementation of {@link Job} for testing.
-	 * @author dhall
-	 */
-	private static final class JobImpl extends AbstractJob {
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public void execute() {
-			
-		}
+		dao.saveOrUpdate(job2);
+		dao.saveOrUpdate(job3);
+		dao.delete(job1);
+		dao.delete(job2);
+		dao.delete(job3);
+		
+		// Clean up
+		expDao.delete(exp1);
+		expDao.delete(exp2);
 	}
 }

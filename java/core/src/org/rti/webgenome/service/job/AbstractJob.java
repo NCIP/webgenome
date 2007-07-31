@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.2 $
+$Date: 2007-07-31 16:28:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webgenome.service.job;
 
 import java.util.Date;
 
+
 /**
  * Abstract base class providing default implementations
  * for methods in the {@link Job} interface.
@@ -82,8 +83,6 @@ public abstract class AbstractJob implements Job {
 	/** Message giving state of job upon termination. */
 	private String terminationMessage = null;
 	
-	/** ID of shopping cart. */
-	private Long shoppingCartId = null;
 	
 	//
 	//     C O N S T R U C T O R S
@@ -97,6 +96,16 @@ public abstract class AbstractJob implements Job {
 	}
 	
 	
+	/**
+	 * Constructor.
+	 * @param userId User account name.
+	 */
+	protected AbstractJob(final String userId) {
+		this();
+		this.userId = userId;
+	}
+	
+	
 	//
 	//     I N T E R F A C E : Job
 	//
@@ -104,7 +113,7 @@ public abstract class AbstractJob implements Job {
 	/**
 	 * {@inheritDoc}
 	 */
-	public abstract void execute();
+	public abstract void execute(JobServices jobServices);
 
 	/**
 	 * {@inheritDoc}
@@ -188,21 +197,5 @@ public abstract class AbstractJob implements Job {
 	 */
 	public void setUserId(final String userId) {
 		this.userId = userId;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Long getShoppingCartId() {
-		return shoppingCartId;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setShoppingCartId(final Long shoppingCartId) {
-		this.shoppingCartId = shoppingCartId;
 	}
 }

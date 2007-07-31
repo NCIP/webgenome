@@ -122,6 +122,7 @@
 			validate="true"
 			input="/cart/uploadForm">
 			<forward name="non.batch" path="/cart/showCart.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
 
 	<!-- Show cart -->
@@ -202,6 +203,7 @@
 			input="/cart/plotParameters.do"
 			scope="session">
 			<forward name="non.batch" path="/cart/showPlot.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
         
 	<!-- Show plot -->
@@ -255,6 +257,7 @@
 			validate="true"
 			input="/cart/analysisParams.do">
 			<forward name="non.batch" path="/cart/showCart.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
 		
 	<!-- Rerun analytic operation -->
@@ -264,6 +267,7 @@
 			validate="true"
 			input="/cart/rerunAnalysisParams.do">
 			<forward name="non.batch" path="/cart/showCart.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
 		
 	<!-- Adjust analysis parameters from a plot screen -->
@@ -278,6 +282,7 @@
 		<action path="/cart/adjustPlotAnalysisParams">
 			<forward name="non.batch" path="/cart/newPlot.do"/>
 			<forward name="errors" path="/cart/adjustPlotAnalysisParamsSetup.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
 
 	<!-- Show color chooser -->

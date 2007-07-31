@@ -5,16 +5,56 @@
 
 
 <hibernate-mapping>
-	<class name="org.rti.webgenome.job.Job"
+	<class name="org.rti.webgenome.service.job.Job"
 		table="job">
 		<id name="id" column="ID">
 		    <generator class="increment"/>
 		</id>
+		<discriminator column="type" type="java.lang.String"/>
 		<property name="endDate" column="end_date"/>
 		<property name="instantiationDate" column="instantiation_date"/>
 		<property name="startDate" column="start_date"/>
 		<property name="terminationMessage" column="termination_message"/>
-		<property name="userId" column="user_id"/>	
+		<property name="userId" column="user_id"/>
+		<subclass name="org.rti.webgenome.service.job.AnalysisJob"
+			discriminator-value="analysis">
+			<many-to-one name="dataSourceProperties"
+				column="data_src_props_id"
+				class="org.rti.webgenome.domain.DataSourceProperties"
+				cascade="all-delete-orphan"
+				lazy="false"/>
+			<map name="outputBioAssayNames"
+				table="job_out_bioassay_names"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="job_id"/>
+				<map-key column="bioassay_id" type="java.lang.Long"/>
+				<element column="name" type="java.lang.String"/>
+			</map>
+			<map name="outputExperimentNames"
+				table="job_out_experiment_names"
+				lazy="false" cascade="all-delete-orphan">
+				<key column="job_id"/>
+				<map-key column="experiment_id" type="java.lang.Long"/>
+				<element column="name" type="java.lang.String"/>
+			</map>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.job.ReRunAnalysisJob"
+			discriminator-value="rerun">
+			<many-to-one name="dataSourceProperties"
+				column="data_src_props_id"
+				class="org.rti.webgenome.domain.DataSourceProperties"
+				cascade="all-delete-orphan"
+				lazy="false"/>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.job.ReRunAnalysisOnPlotExperimentsJob"
+			discriminator-value="rerunOnPlot">
+			<set name="experiments" table="job_experiments"
+				lazy="false">
+				<key column="job_id"/>
+				<many-to-many column="experiment_id"
+					class="org.rti.webgenome.domain.Experiment"/>
+			</set>
+		</subclass>
 	</class>
 
 </hibernate-mapping>

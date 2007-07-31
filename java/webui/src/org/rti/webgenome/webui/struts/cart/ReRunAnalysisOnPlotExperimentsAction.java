@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-07-29 19:53:34 $
+$Revision: 1.10 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webgenome.webui.struts.cart;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,8 +64,11 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.DataTransformer;
+import org.rti.webgenome.service.job.ReRunAnalysisOnPlotExperimentsJob;
+import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
@@ -123,13 +127,25 @@ extends BaseAnalysisAction {
 		
 		// Case: Process imediately
 		DataTransformer transformer = this.getDataTransformer(request);
-		if (!ProcessingModeDecider.processInBackground(derivedExperiments)) {
+		if (!ProcessingModeDecider.processInBackground(derivedExperiments,
+				request)) {
 			this.getAnalysisService().rePerformAnalyticOperation(
 					derivedExperiments, transformer);
+			this.persistShoppingCartChanges(cart, request);
 			forward = mapping.findForward("non.batch");
+			
+		// Case: Process in background
+		} else {
+			Principal principal = PageContext.getPrincipal(request);
+			ReRunAnalysisOnPlotExperimentsJob job =
+				new ReRunAnalysisOnPlotExperimentsJob(
+						new HashSet<Experiment>(experiments),
+						principal.getName());
+			this.getJobManager().add(job);
+			forward = mapping.findForward("batch");
 		}
 	
-		this.persistShoppingCartChanges(cart, request);
+		
 		return forward;
 	}
 }

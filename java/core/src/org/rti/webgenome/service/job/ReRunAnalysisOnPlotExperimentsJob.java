@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-07-31 16:28:13 $
 
 The Web CGH Software License, Version 1.0
@@ -50,85 +50,104 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
-import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.analysis.AnalyticException;
+import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
-import org.rti.webgenome.service.io.IOService;
-import org.rti.webgenome.service.io.SmdFormatException;
 
 /**
- * This is a job for importing data in a file into
- * the shopping cart.  The data are typically uploaded
- * and temporarily saved in a directory.  During importing
- * the data are transformed into the domain object model.
+ * A job to re-run all producing analytic operations on
+ * all derived experiments in a single plot.
  * @author dhall
  *
  */
-public class DataImportJob extends AbstractJob {
-
+public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
+	
 	/** Logger. */
-	private static final Logger LOGGER =
-		Logger.getLogger(DataImportJob.class);
+	private static final Logger LOGGER = Logger.getLogger(
+			ReRunAnalysisOnPlotExperimentsJob.class);
 	
 	//
 	//  A T T R I B U T E S
 	//
 	
 	/**
-	 * Name of file to be parsed.  This is not an absolute
-	 * path.  The job will be able to construct the
+	 * Experiments that will be re-generated.  All
+	 * experiments must be derived from an analytic
+	 * operation.  Furthermore, the data source property
+	 * in each experiment should include new user-specified
+	 * analytic operation parameter values.
 	 */
-	private String fileName = null;
-	
-	/**
-	 * Organism associated with data.
-	 */
-	private Organism organism = null;
+	private Set<Experiment> experiments = null;
 	
 	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
 	
-
 	/**
-	 * Get name of file to parse.
-	 * @return File name, not absolute path.
+	 * Get experiments that will be re-generated.  All
+	 * experiments must be derived from an analytic
+	 * operation.  Furthermore, the data source property
+	 * in each experiment should include new user-specified
+	 * analytic operation parameter values.
+	 * @return Experiments that will be re-generated.
 	 */
-	public String getFileName() {
-		return fileName;
+	public Set<Experiment> getExperiments() {
+		return experiments;
 	}
 
-	/**
-	 * Set name of file to parse.
-	 * @param fileName File name, not absolute path.
-	 */
-	public void setFileName(final String fileName) {
-		this.fileName = fileName;
-	}
 
 	/**
-	 * Get organism associated with data.
-	 * @return Organism associated with data.
+	 * Set experiments that will be re-generated.  All
+	 * experiments must be derived from an analytic
+	 * operation.  Furthermore, the data source property
+	 * in each experiment should include new user-specified
+	 * analytic operation parameter values.
+	 * @param experiments Experiments that will be re-generated
 	 */
-	public Organism getOrganism() {
-		return organism;
+	public void setExperiments(final Set<Experiment> experiments) {
+		this.experiments = experiments;
 	}
 
+
+	//
+	//  C O N S T R U C T O R S
+	//
+	
 	/**
-	 * Set organism associated with data.
-	 * @param organism Organism associated with data.
+	 * Constructor.  This should only be used by the
+	 * persistence framework.
 	 */
-	public void setOrganism(final Organism organism) {
-		this.organism = organism;
+	public ReRunAnalysisOnPlotExperimentsJob() {
+		
 	}
-
+	
+	/**
+	 * Constructor.
+	 * @param experiments Experiments that will be re-generated.  All
+	 * experiments must be derived from an analytic
+	 * operation.  Furthermore, the data source property
+	 * in each experiment should include new user-specified
+	 * analytic operation parameter values.
+	 * @param userId User login name
+	 */
+	public ReRunAnalysisOnPlotExperimentsJob(
+			final Set<Experiment> experiments,
+			final String userId) {
+		super(userId);
+		this.experiments = experiments;
+	}
 	
 	//
 	//  O V E R R I D E S
 	//
-
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -136,18 +155,22 @@ public class DataImportJob extends AbstractJob {
 	public void execute(final JobServices jobServices) {
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
 		ShoppingCart cart = sDao.load(this.getUserId());
-		IOService ioService = jobServices.getIoService();
+		SerializedDataTransformer transformer =
+			jobServices.getIoService().getSerializedDataTransformer();
+		AnalysisService aService = jobServices.getAnalysisService();
 		try {
-			LOGGER.info("Data import job starting for user "
+			LOGGER.info("Plot re-analysis job starting for user "
 					+ this.getUserId());
-			ioService.loadSmdData(this.fileName, this.organism, cart);
+			aService.rePerformAnalyticOperation(
+					this.experiments, transformer);
 			sDao.update(cart);
 			this.setTerminationMessage("Succeeded");
-			LOGGER.info("Data import job completed for user "
+			LOGGER.info("Plot re-analysis job completed for user "
 					+ this.getUserId());
-		} catch (SmdFormatException e) {
-			this.setTerminationMessage("Bad file format");
-			LOGGER.info("Data import failed for user " + this.getUserId());
+		} catch (AnalyticException e) {
+			this.setTerminationMessage("Failed: " + e.getMessage());
+			LOGGER.info("Plot re-analysis job failed for user "
+					+ this.getUserId());
 			LOGGER.info(e);
 		}
 	}

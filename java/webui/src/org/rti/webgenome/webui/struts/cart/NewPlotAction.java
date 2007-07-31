@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.9 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -225,7 +225,7 @@ public final class NewPlotAction extends BaseAction {
 	    
 	    // Case: Plot immediately
 	    if (!ProcessingModeDecider.processInBackground(experiments,
-	    		params.getGenomeIntervals())) {
+	    		params.getGenomeIntervals(), request)) {
 	    	ChromosomeArrayDataGetter getter = null;
 	    	if (this.dataInMemory(request)) {
 	    		getter = new InMemoryChromosomeArrayDataGetter();

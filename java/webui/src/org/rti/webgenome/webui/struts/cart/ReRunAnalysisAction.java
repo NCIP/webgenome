@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-07-29 19:53:34 $
+$Revision: 1.10 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,8 +60,11 @@ import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.DataTransformer;
+import org.rti.webgenome.service.job.ReRunAnalysisJob;
+import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
@@ -101,18 +104,28 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 		AnalysisDataSourceProperties props =
 			(AnalysisDataSourceProperties) exp.getDataSourceProperties();
 		AnalyticOperation op = props.getSourceAnalyticOperation();
+		this.setUserSpecifiedParameters(op, request);
 		
 		ActionForward forward = null;
     	
-    	// Redo analysis
 		DataTransformer transformer = this.getDataTransformer(request);
-    	if (!ProcessingModeDecider.processInBackground(exp)) {
+		
+		// Case: perform immediately
+    	if (!ProcessingModeDecider.processInBackground(exp, request)) {
 	    	this.getAnalysisService().rePerformAnalyticOperation(
 	    			exp, op, transformer);
+	    	this.persistShoppingCartChanges(cart, request);
 	    	forward = mapping.findForward("non.batch");
+	    	
+	    // Case: perform in background
+    	} else {
+    		Principal principal = PageContext.getPrincipal(request);
+    		ReRunAnalysisJob job = new ReRunAnalysisJob(exp, op,
+    				principal.getName());
+    		this.getJobManager().add(job);
+    		forward = mapping.findForward("batch");
     	}
     	
-    	this.persistShoppingCartChanges(cart, request);
 		return forward;
 	}
 }

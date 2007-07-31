@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-29 19:53:34 $
+$Revision: 1.5 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.analysis.AnalyticOperationFactory;
@@ -66,6 +67,7 @@ import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.io.DataFileManager;
+import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -77,6 +79,10 @@ import org.rti.webgenome.webui.struts.BaseAction;
  */
 public class BaseAnalysisAction extends BaseAction {
 	
+	//
+	//  A T T R I B U T E S
+	//
+	
 	/** Service for performing analyses. */
 	private AnalysisService analysisService = null;
 
@@ -86,6 +92,13 @@ public class BaseAnalysisAction extends BaseAction {
 	
 	/** Manages serialized data files. */
 	private DataFileManager dataFileManager = null;
+	
+	/** Manages analysis jobs performed in the background. */
+	private JobManager jobManager = null;
+	
+	//
+	//  G E T T E R S / S E T T E R S
+	//
 	
 	/**
 	 * Set service for performing analysis via injection.
@@ -120,6 +133,26 @@ public class BaseAnalysisAction extends BaseAction {
 		return this.analysisService;
 	}
 	
+	/**
+	 * Get manager for operations performed in background.
+	 * @return Job manager.
+	 */
+	protected JobManager getJobManager() {
+		return jobManager;
+	}
+
+	/**
+	 * Set manager for jobs performed in background.
+	 * @param jobManager Job manager.
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
+	}
+	
+	//
+	//  O T H E R    M E T H O D S
+	//
+
 	/**
 	 * Set user specified analytic operation parameters
 	 * for all given derived experiments
@@ -164,6 +197,53 @@ public class BaseAnalysisAction extends BaseAction {
 	    		}
 	    	}
 	    	props.setSourceAnalyticOperation(op, exp.getQuantitationType());
+    	}
+    	
+    	// If user input is invalid, return
+    	if (haveErrors) {
+    		errors = new ActionErrors();
+    	}
+    	
+    	return errors;
+	}
+	
+	
+	// TODO: The body of the below method contains code that was
+	// coped and pasted from
+	// {@code AnalyticOperationParametersForm}.  This could
+	// be refactored out into a common method.
+	
+	/**
+	 * Set user specified analytic operation parameters.
+	 * Such parameters are passed
+	 * to the action as HTTP query parameters with a prefix
+	 * of 'prop_'.
+	 * @param request Servlet request
+	 * @param op An analytic operation whose user specified
+	 * properties will be reset based on form input field
+	 * values.
+	 * @return Action errors if there are any invalid
+	 * user-supplied parameters or <code>null</code> otherwise.
+	 */
+	protected ActionErrors setUserSpecifiedParameters(
+			final AnalyticOperation op,
+			final HttpServletRequest request) {
+		ActionErrors errors = null;
+    	Map paramMap = request.getParameterMap();
+    	boolean haveErrors = false;
+		for (Object paramNameObj : paramMap.keySet()) {
+    		String paramName = (String) paramNameObj;
+    		if (paramName.indexOf("prop_") == 0) {
+    			String propName = paramName.substring("prop_".length());
+    			String propValue = request.getParameter(paramName);
+    			try {
+    				op.setProperty(propName, propValue);
+    			} catch (BadUserConfigurablePropertyException e) {
+    				errors.add("global",
+    						new ActionError("invalid.fields"));
+    				break;
+    			}
+    		}
     	}
     	
     	// If user input is invalid, return

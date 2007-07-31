@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.3 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -118,9 +118,6 @@ public class AnalysisService {
 
 	/**
 	 * Perform given analytic operation on given experiments.
-	 * The operation may be performed on either the analytic
-	 * server or application server, depending on how much
-	 * data are contained in the experiments.
 	 * @param experiments Experiments to process
 	 * @param operation Operation to perform
 	 * @param cart Shopping cart to deposit new data into
@@ -200,9 +197,6 @@ public class AnalysisService {
 	 * Re-run given analytic operation on given experiment.  This
 	 * operation was previously run on the experiment.  This time
 	 * it may have different user-configured parameter settings.
-	 * The operation will either execute immediately (i.e., on the
-	 * application server) or be offloaded to the analysis server
-	 * for batch processing if there are enough data.
 	 * @param experiment Experiment to run through operation
 	 * @param operation Operation to perform.
 	 * @param dataTransformer Data transformer
@@ -225,9 +219,6 @@ public class AnalysisService {
 	 * Re-run analytic operation on given derived experiments.  These
 	 * operations were previously run on the experiments.  This time
 	 * they may have different user-configured parameter settings.
-	 * The operation will either execute immediately (i.e., on the
-	 * application server) or be offloaded to the analysis server
-	 * for batch processing if there are enough data.
 	 * @param experiments Derived experiments to run through
 	 * their operation again
 	 * @param dataTransformer Data transformer

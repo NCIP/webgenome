@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2007-07-31 16:28:13 $
 
 The Web CGH Software License, Version 1.0
@@ -51,83 +51,90 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.job;
 
 import org.apache.log4j.Logger;
-import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.analysis.AnalyticException;
+import org.rti.webgenome.analysis.AnalyticOperation;
+import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
-import org.rti.webgenome.service.io.IOService;
-import org.rti.webgenome.service.io.SmdFormatException;
 
 /**
- * This is a job for importing data in a file into
- * the shopping cart.  The data are typically uploaded
- * and temporarily saved in a directory.  During importing
- * the data are transformed into the domain object model.
+ * A job that re-runs an analytic operation on a single
+ * experiment with new user-supplied parameters.
  * @author dhall
  *
  */
-public class DataImportJob extends AbstractJob {
-
+public class ReRunAnalysisJob extends AbstractJob {
+	
 	/** Logger. */
 	private static final Logger LOGGER =
-		Logger.getLogger(DataImportJob.class);
+		Logger.getLogger(ReRunAnalysisJob.class);
 	
 	//
 	//  A T T R I B U T E S
 	//
 	
 	/**
-	 * Name of file to be parsed.  This is not an absolute
-	 * path.  The job will be able to construct the
+	 * Data source properties providing experiment and
+	 * analytic operation to perform.  The operation should
+	 * contain new user-supplied parameter settings.
 	 */
-	private String fileName = null;
-	
-	/**
-	 * Organism associated with data.
-	 */
-	private Organism organism = null;
-	
+	private SingleAnalysisDataSourceProperties dataSourceProperties = null;
 	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
 	
-
 	/**
-	 * Get name of file to parse.
-	 * @return File name, not absolute path.
+	 * Get data source properties providing experiment and
+	 * analytic operation to perform.  The operation should
+	 * contain new user-supplied parameter settings.
+	 * @return Data source properties.
 	 */
-	public String getFileName() {
-		return fileName;
+	public SingleAnalysisDataSourceProperties getDataSourceProperties() {
+		return dataSourceProperties;
 	}
 
-	/**
-	 * Set name of file to parse.
-	 * @param fileName File name, not absolute path.
-	 */
-	public void setFileName(final String fileName) {
-		this.fileName = fileName;
-	}
 
 	/**
-	 * Get organism associated with data.
-	 * @return Organism associated with data.
+	 * Set data source properties providing experiment and
+	 * analytic operation to perform.  The operation should
+	 * contain new user-supplied parameter settings.
+	 * @param dataSourceProperties Data source properties
 	 */
-	public Organism getOrganism() {
-		return organism;
+	public void setDataSourceProperties(
+			final SingleAnalysisDataSourceProperties dataSourceProperties) {
+		this.dataSourceProperties = dataSourceProperties;
 	}
 
-	/**
-	 * Set organism associated with data.
-	 * @param organism Organism associated with data.
-	 */
-	public void setOrganism(final Organism organism) {
-		this.organism = organism;
-	}
 
+	//
+	//  C O N S T R U C T O R S
+	//
 	
-	//
-	//  O V E R R I D E S
-	//
+	/**
+	 * Constructor.
+	 */
+	public ReRunAnalysisJob() {
+		
+	}
+	
+	/**
+	 * Constructor.
+	 * @param experiment Input experiment for operation.
+	 * @param operation Operation to re-run.  New user-specified
+	 * parameter values must be previously set.
+	 * @param userId Login name of user.
+	 */
+	public ReRunAnalysisJob(final Experiment experiment,
+			final AnalyticOperation operation,
+			final String userId) {
+		super(userId);
+		this.dataSourceProperties = new SingleAnalysisDataSourceProperties(
+				experiment, operation);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -136,19 +143,27 @@ public class DataImportJob extends AbstractJob {
 	public void execute(final JobServices jobServices) {
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
 		ShoppingCart cart = sDao.load(this.getUserId());
-		IOService ioService = jobServices.getIoService();
+		SerializedDataTransformer transformer =
+			jobServices.getIoService().getSerializedDataTransformer();
+		AnalysisService aService = jobServices.getAnalysisService();
+		Experiment experiment =
+			this.dataSourceProperties.getInputExperiment();
+		AnalyticOperation operation =
+			this.dataSourceProperties.getSourceAnalyticOperation();
 		try {
-			LOGGER.info("Data import job starting for user "
+			LOGGER.info("Re-nalysis job starting for user "
 					+ this.getUserId());
-			ioService.loadSmdData(this.fileName, this.organism, cart);
+			aService.rePerformAnalyticOperation(
+					experiment, operation, transformer);
 			sDao.update(cart);
 			this.setTerminationMessage("Succeeded");
-			LOGGER.info("Data import job completed for user "
+			LOGGER.info("Re-analysis job completed for user "
 					+ this.getUserId());
-		} catch (SmdFormatException e) {
-			this.setTerminationMessage("Bad file format");
-			LOGGER.info("Data import failed for user " + this.getUserId());
+		} catch (AnalyticException e) {
+			this.setTerminationMessage("Failed: " + e.getMessage());
+			LOGGER.info("Re-analysis job failed for user "
+					+ this.getUserId());
 			LOGGER.info(e);
 		}
-	}
+	}	
 }

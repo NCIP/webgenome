@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-07-31 16:28:13 $
 
 The Web CGH Software License, Version 1.0
@@ -50,103 +50,92 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
-import java.util.Date;
-
+import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.service.plot.PlotService;
 
 /**
- * This interface represents a compute job that
- * can be placed on a queue and run in the background.
+ * Provides a set of services to jobs that they
+ * need to execute.
  * @author dhall
- *
  */
-public interface Job {
+public class JobServices {
+
+	//
+	//  A T T R I B U T E S
+	//
 	
-	/**
-	 * Get unique identifier for job.
-	 * @return Identifier
-	 */
-	Long getId();
+	/** Provides file input/output. */
+	private final IOService ioService;
 	
-	/**
-	 * Set unique identifier for job.
-	 * @param id Unique identifier
-	 */
-	void setId(Long id);
+	/** Performs analytic operations. */
+	private final AnalysisService analysisService;
+	
+	/** Plots data. */
+	private final PlotService plotService;
+	
+	/** Shopping cart data access object. */
+	private final ShoppingCartDao shoppingCartDao;
 
 	
-	/**
-	 * Get user identifier (i.e., user name).
-	 * @return User identifier
-	 */
-	String getUserId();
+	//
+	//  G E T T E R S
+	//
 	
 	/**
-	 * Set user identifier (i.e., user name).
-	 * @param userId User identifier
+	 * Get service to perform analytic operations.
+	 * @return Serive to perform analytic operations.
 	 */
-	void setUserId(String userId);
-	
-	/**
-	 * Get date/time that the job was instantiated.
-	 * @return Date/time that job was instantiated
-	 */
-	Date getInstantiationDate();
-	
-	/**
-	 * Set date/time that job was instantiated.
-	 * @param date Date/time job was instantiated.
-	 */
-	void setInstantiationDate(Date date);
+	public AnalysisService getAnalysisService() {
+		return analysisService;
+	}
 
+	/**
+	 * Get service to perform data file I/O.
+	 * @return Service to perform data file I/O.
+	 */
+	public IOService getIoService() {
+		return ioService;
+	}
+
+	/**
+	 * Get service to perform data plotting.
+	 * @return Service to perform data plotting.
+	 */
+	public PlotService getPlotService() {
+		return plotService;
+	}
 	
 	/**
-	 * Get date/time that job was started.
-	 * @return Date/time that job was started.
+	 * Get shopping cart data access object.
+	 * @return Shopping cart data access object
 	 */
-	Date getStartDate();
-	
+	public ShoppingCartDao getShoppingCartDao() {
+		return shoppingCartDao;
+	}
+
+	//
+	//  C O N S T R U C T O R S
+	//
+
 	/**
-	 * Set date/time that job was started.
-	 * @param date Date/time job was started.
+	 * Constructor.
+	 * @param ioService Service to perform data file I/O.
+	 * @param analytisService Service to run analytic operations.
+	 * @param plotService Service to plot data.
+	 * @param shoppingCartDao Shopping cart data access object
 	 */
-	void setStartDate(Date date);
-	
-	/**
-	 * Get date/time that job ended.
-	 * @return Date/time that job ended.
-	 */
-	Date getEndDate();
-	
-	/**
-	 * Set date/time that job ended.
-	 * @param date Date/time that job ended.
-	 */
-	void setEndDate(Date date);
-	
-	/**
-	 * Set the message that describes the
-	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
-	 * @param message A message
-	 */
-	void setTerminationMessage(String message);
+	public JobServices(final IOService ioService,
+			final AnalysisService analytisService,
+			final PlotService plotService,
+			final ShoppingCartDao shoppingCartDao) {
+		super();
+		this.ioService = ioService;
+		this.analysisService = analytisService;
+		this.plotService = plotService;
+		this.shoppingCartDao = shoppingCartDao;
+	}
 	
 	
-	/**
-	 * Get the message that describes the
-	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
-	 * @return A message
-	 */
-	String getTerminationMessage();
-	
-	
-	/**
-	 * Execute job.
-	 * @param jobServices Services needed by job
-	 * to execute
-	 */
-	void execute(JobServices jobServices);
 }

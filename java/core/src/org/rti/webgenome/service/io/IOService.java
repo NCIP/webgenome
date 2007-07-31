@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-26 16:45:33 $
+$Revision: 1.3 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,7 @@ import org.rti.webgenome.domain.FileUploadDataSourceProperties;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
+import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.IOUtils;
@@ -292,5 +293,14 @@ public class IOService {
 			// Delete files and possibly reporters
 			this.dataFileManager.deleteDataFiles(exp, deleteReporters);
 		}
+	}
+	
+	/**
+	 * Get a serialized data transformer that is configured to
+	 * use the same data file directory as this.
+	 * @return Serialized data transformer.
+	 */
+	public SerializedDataTransformer getSerializedDataTransformer() {
+		return new SerializedDataTransformer(this.dataFileManager);
 	}
 }

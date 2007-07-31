@@ -31,7 +31,10 @@
     	<property name="mappingDirectoryLocations">
 	      	<list>
         		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/job</value></constructor-arg>
+        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/job</value></constructor-arg>
+        		</bean>
+        		<bean class="org.springframework.core.io.ClassPathResource">
+        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/dao/hibernate</value></constructor-arg>
         		</bean>
 	      	</list>
     	</property>
@@ -42,7 +45,16 @@
     	</property>
   	</bean>
   	
-  	<bean id="jobDao" class="org.rti.webgenome.job.HibernateJobDao">
+  	<bean id="organismDao" class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="experimentDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="jobDao" class="org.rti.webgenome.service.job.HibernateJobDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
 </beans>

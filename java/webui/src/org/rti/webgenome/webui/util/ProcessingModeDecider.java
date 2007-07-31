@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.3 $
+$Date: 2007-07-31 16:28:14 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,10 +53,14 @@ package org.rti.webgenome.webui.util;
 import java.io.File;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
+import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.util.SystemUtils;
+import org.rti.webgenome.webui.SessionTimeoutException;
 
 /**
  * This class is responsible for deciding if
@@ -157,18 +161,28 @@ public final class ProcessingModeDecider {
 	 * property is not set, then the threshold is set
 	 * to {@link java.lang.Integer.MAX_VALUE}, so
 	 * the method will always return {@code false}.
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
 	 * @param experiment Experiment that will be processed
 	 * by process in question.
+	 * @param request Servlet request
 	 * @return {@code true} if the total number of
 	 * enclosed {@link org.rti.webgenome.domain.ArrayDatum}
 	 * objects is greater than a threshold and should, hence,
 	 * indicate that the process in question should be
 	 * performed in the background.  Returns {@code false}
 	 * otherwise.
+	 * @throws SessionTimeoutException If the session mode cannot
+	 * be determined indicating a timeout
 	 */
 	public static boolean processInBackground(
-			final Experiment experiment) {
-		return experiment.numDatum() >= BG_PROCESSING_DATUM_THRESHOLD;
+			final Experiment experiment, final HttpServletRequest request)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			background = experiment.numDatum() >= BG_PROCESSING_DATUM_THRESHOLD;
+		}
+		return background;
 	}
 	
 	/**
@@ -182,22 +196,33 @@ public final class ProcessingModeDecider {
 	 * property is not set, then the threshold is set
 	 * to {@link java.lang.Integer.MAX_VALUE}, so
 	 * the method will always return {@code false}.
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
 	 * @param experiments Experiments that will be processed
 	 * by process in question.
+	 * @param request Servlet request
 	 * @return {@code true} if the total number of
 	 * enclosed {@link org.rti.webgenome.domain.ArrayDatum}
 	 * objects is greater than a threshold and should, hence,
 	 * indicate that the process in question should be
 	 * performed in the background.  Returns {@code false}
 	 * otherwise.
+	 * @throws SessionTimeoutException If the session mode cannot
+	 * be determined indicating a timeout
 	 */
 	public static boolean processInBackground(
-			final Collection<Experiment> experiments) {
-		int numDatum = 0;
-		for (Experiment exp : experiments) {
-			numDatum += exp.numDatum();
+			final Collection<Experiment> experiments,
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			int numDatum = 0;
+			for (Experiment exp : experiments) {
+				numDatum += exp.numDatum();
+			}
+			background = numDatum >= BG_PROCESSING_DATUM_THRESHOLD;
 		}
-		return numDatum >= BG_PROCESSING_DATUM_THRESHOLD;
+		return background;
 	}
 	
 	
@@ -221,31 +246,42 @@ public final class ProcessingModeDecider {
 	 * objects on each chromosome referenced by the
 	 * genome intervals by the fraction of the entire
 	 * chromosome each interval covers.
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
 	 * @param experiments Experiments that will be processed
 	 * by process in question.
 	 * @param genomeIntervals Genome intervals that will
 	 * be processed
+	 * @param request Servlet request
 	 * @return {@code true} if the total number of
 	 * enclosed {@link org.rti.webgenome.domain.ArrayDatum}
 	 * objects is greater than a threshold and should, hence,
 	 * indicate that the process in question should be
 	 * performed in the background.  Returns {@code false}
 	 * otherwise.
+	 * @throws SessionTimeoutException If the session mode cannot
+	 * be determined indicating a timeout
 	 */
 	public static boolean processInBackground(
 			final Collection<Experiment> experiments,
-			final Collection<GenomeInterval> genomeIntervals) {
-		int numDatum = 0;
-		for (Experiment exp : experiments) {
-			for (GenomeInterval interval : genomeIntervals) {
-				int totalNum = exp.numDatum(interval.getChromosome());
-				double fraction = (double) interval.length()
-					/ (double) exp.inferredChromosomeSize(
-							interval.getChromosome());
-				numDatum += (int) ((double) totalNum * fraction);
+			final Collection<GenomeInterval> genomeIntervals,
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			int numDatum = 0;
+			for (Experiment exp : experiments) {
+				for (GenomeInterval interval : genomeIntervals) {
+					int totalNum = exp.numDatum(interval.getChromosome());
+					double fraction = (double) interval.length()
+						/ (double) exp.inferredChromosomeSize(
+								interval.getChromosome());
+					numDatum += (int) ((double) totalNum * fraction);
+				}
 			}
+			background = numDatum >= BG_PROCESSING_DATUM_THRESHOLD;
 		}
-		return numDatum >= BG_PROCESSING_DATUM_THRESHOLD;
+		return background;
 	}
 	
 	
@@ -260,15 +296,26 @@ public final class ProcessingModeDecider {
 	 * property is not set, then the threshold is set
 	 * to {@link java.lang.Long.MAX_VALUE}, so
 	 * the method will always return {@code false}.
+	 * 
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
 	 * @param file File that will be processed
+	 * @param request Servlet request
 	 * @return {@code true} if the total file
 	 * size is greater than a threshold and should, hence,
 	 * indicate that the process in question should be
 	 * performed in the background.  Returns {@code false}
 	 * otherwise.
+	 * @throws SessionTimeoutException If the session mode cannot
+	 * be determined indicating a timeout
 	 */
 	public static boolean processInBackground(
-			final File file) {
-		return file.length() > BG_PROCESSING_FILE_SIZE_THRESHOLD;
+			final File file, final HttpServletRequest request)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			background = file.length() > BG_PROCESSING_FILE_SIZE_THRESHOLD;
+		}
+		return background;
 	}
 }
