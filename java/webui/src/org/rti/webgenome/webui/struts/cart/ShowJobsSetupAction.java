@@ -1,5 +1,5 @@
 /*
-$Revision: 1.5 $
+$Revision: 1.1 $
 $Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
@@ -48,51 +48,44 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.job;
+package org.rti.webgenome.webui.struts.cart;
 
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.service.job.Job;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * This interface is intended to be used as a singleton
- * that manages all {@link Job} objects within the application.
- * Object implementing this interface are expected to manage the
- * execution of jobs.
+ * Setup action for showing list of a user's
+ * compute jobs.
  * @author dhall
  *
  */
-public interface JobManager {
+public class ShowJobsSetupAction extends BaseJobAction {
 
-	/**
-	 * Removes {@link Job} with given
-	 * {@code jobId} from the manager.
-	 * @param jobId Unique identifier of job under management
-	 * of this manager.
-	 * @return {@code true} if the job was successfully
-	 * removed, {@code false} otherwise.  A job cannot be
-	 * removed if it is either executing or it is not
-	 * under management by this manager.
-	 */
-	boolean remove(Long jobId);
 	
 	/**
-	 * Add given job to the manager.  The manager will execute
-	 * the job when resources are available.
-	 * @param job Job to add to management
+	 * {@inheritDoc}
 	 */
-	void add(Job job);
-	
-	/**
-	 * Get all current jobs associated with given user.
-	 * @param userId Id (i.e., user name) of a user
-	 * @return All current jobs associated with given user
-	 */
-	Collection<Job> getJobs(String userId);
-	
-	/**
-	 * Purge all copleted job records associated with
-	 * given user.
-	 * @param userId User login name
-	 */
-	void purge(String userId);
+	public ActionForward execute(
+	        final ActionMapping mapping, final ActionForm form,
+	        final HttpServletRequest request,
+	        final HttpServletResponse response
+	    ) throws Exception {
+		
+		// Get list of users jobs and attach to request
+		Principal principal = PageContext.getPrincipal(request);
+		Collection<Job> jobs =
+			this.getJobManager().getJobs(principal.getName());
+		request.setAttribute("jobs", jobs);
+		
+		return mapping.findForward("success");
+	}
 }

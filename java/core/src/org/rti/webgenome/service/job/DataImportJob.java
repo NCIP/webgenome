@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.4 $
+$Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -123,7 +123,33 @@ public class DataImportJob extends AbstractJob {
 	public void setOrganism(final Organism organism) {
 		this.organism = organism;
 	}
-
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.  This should only be used by the
+	 * persistence framework.
+	 */
+	public DataImportJob() {
+		
+	}
+	
+	
+	/**
+	 * Constructor.
+	 * @param fileName Name of data file to parse.
+	 * @param organism Organism associated with data.
+	 * @param userId User login name.
+	 */
+	public DataImportJob(final String fileName,
+			final Organism organism,
+			final String userId) {
+		super(userId);
+		this.fileName = fileName;
+		this.organism = organism;
+	}
 	
 	//
 	//  O V E R R I D E S
@@ -146,7 +172,7 @@ public class DataImportJob extends AbstractJob {
 			LOGGER.info("Data import job completed for user "
 					+ this.getUserId());
 		} catch (SmdFormatException e) {
-			this.setTerminationMessage("Bad file format");
+			this.setTerminationMessage("Failed: " + e.getMessage());
 			LOGGER.info("Data import failed for user " + this.getUserId());
 			LOGGER.info(e);
 		}

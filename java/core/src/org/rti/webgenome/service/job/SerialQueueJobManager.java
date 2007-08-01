@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.3 $
+$Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -192,12 +192,15 @@ public class SerialQueueJobManager implements JobManager {
 		this.jobs.addAll(peristedJobs);
 		LOGGER.info("Retrieved " + peristedJobs.size() + " jobs from database");
 		
-		// Set start date/time to null since
+		// For any jobs with no end date,
+		// set start date/time to null since
 		// none of the jobs have started.  Any jobs
 		// executing when application was terminated
 		// should be restarted.
 		for (Job job : peristedJobs) {
-			job.setStartDate(null);
+			if (job.getEndDate() == null) {
+				job.setStartDate(null);
+			}
 		}
 		
 		// Start job execution thread
@@ -268,6 +271,17 @@ public class SerialQueueJobManager implements JobManager {
 	}
 	
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void purge(final String userId) {
+		Collection<Job> userJobs = this.getJobs(userId);
+		for (Job job : userJobs) {
+			this.remove(job.getId());
+		}
+	}
+
+
 	/**
 	 * Is given job running?
 	 * @param job A job

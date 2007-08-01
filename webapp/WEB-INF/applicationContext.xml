@@ -49,6 +49,9 @@
         		<bean class="org.springframework.core.io.ClassPathResource">
         			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/dao/hibernate</value></constructor-arg>
         		</bean>
+        		<bean class="org.springframework.core.io.ClassPathResource">
+        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/job</value></constructor-arg>
+        		</bean>
 	      	</list>
     	</property>    	
     	<property name="hibernateProperties">
@@ -208,9 +211,9 @@
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
-		<property name="jobDao">
+		<constructor-arg>
 			<ref bean="jobDao"/>
-		</property>
+		</constructor-arg>
 	</bean>
 	
 	<!-- ========================================== -->
@@ -251,6 +254,22 @@
 		class="org.rti.webgenome.webui.struts.cart.ShowCartSetupAction">
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
+		</property>
+	</bean>
+	
+<!-- Show jobs -->
+	<bean name="/cart/showJobs"
+		class="org.rti.webgenome.webui.struts.cart.ShowJobsSetupAction">
+		<property name="jobManager">
+			<ref bean="jobManager"/>
+		</property>
+	</bean>
+	
+<!-- Purge jobs -->
+	<bean name="/cart/purgeJobs"
+		class="org.rti.webgenome.webui.struts.cart.PurgeJobsAction">
+		<property name="jobManager">
+			<ref bean="jobManager"/>
 		</property>
 	</bean>
 		
@@ -425,6 +444,9 @@
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="jobManager">
+			<ref bean="jobManager"/>
+		</property>
 	</bean>
 	
 <!-- Color chooser -->
@@ -502,6 +524,9 @@
 		</property>
 		<property name="dataFileManager">
 			<ref bean="dataFileManager"/>
+		</property>
+		<property name="jobManager">
+			<ref bean="jobManager"/>
 		</property>
 	</bean>
 

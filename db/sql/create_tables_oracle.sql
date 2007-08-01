@@ -93,10 +93,18 @@ CREATE TABLE job (
 	instantiation_date TIMESTAMP,
 	start_date TIMESTAMP,
 	end_date TIMESTAMP,
-	termination_message VARCHAR2(256),
+	termination_message VARCHAR2(1024),
 	
 	-- AnalysisJob and ReRunAnalysisJob
 	data_src_props_id NUMBER(38),
+	
+	-- PlotJob
+	plot_params_id NUMBER(38),
+	plot_id NUMBER(38),
+	
+	-- DataImportJob
+	file_name VARCHAR2(128),
+	organism_id NUMBER(38),
 	
 	PRIMARY KEY (id)
 );
@@ -686,3 +694,15 @@ FOREIGN KEY (job_id) REFERENCES job (id);
 ALTER TABLE job_experiments
 ADD CONSTRAINT fk_je_ei
 FOREIGN KEY (experiment_id) REFERENCES experiment (id);
+
+ALTER TABLE job
+ADD CONSTRAINT fk_job_ppi
+FOREIGN KEY (plot_params_id) REFERENCES plot_params (id);
+
+ALTER TABLE job
+ADD CONSTRAINT fk_job_pi
+FOREIGN KEY (plot_id) REFERENCES plot (id);
+
+ALTER TABLE job
+ADD constraint fk_job_oi
+FOREIGN KEY (organism_id) REFERENCES organism (id);

@@ -213,16 +213,19 @@
 		</action>
 
 	<!-- Show jobs table -->
-		<action
-			path="/cart/showJobsTable"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.show.jobs.table"/>
+		<action path="/cart/showJobs">
+			<forward name="success" path="cart.show.jobs"/>
+		</action>
 
 	<!-- Job details -->
-		<action
-			path="/cart/jobDetails"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.job.details"/>
+		<action path="/cart/jobDetails">
+			<forward name="success" path="cart.job.details"/>
+		</action>
+		
+	<!-- Purge jobs -->
+		<action path="/cart/purgeJobs">
+			<forward name="success" path="/cart/showJobs.do"/>
+		</action>
 
 	<!-- Set display names of experiments and bioassays -->
 		<action

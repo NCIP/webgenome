@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.6 $
+$Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,10 +62,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.service.job.DataImportJob;
+import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
@@ -87,6 +91,9 @@ public final class FileUploadAction extends BaseAction {
 	/** Organism data access object. */
 	private OrganismDao organismDao = null;
 	
+	/** Manages jobs run in background. */
+	private JobManager jobManager = null;
+	
 	
 	//
 	//     SETTERS
@@ -106,6 +113,16 @@ public final class FileUploadAction extends BaseAction {
 	 */
 	public void setOrganismDao(final OrganismDao organismDao) {
 		this.organismDao = organismDao;
+	}
+	
+	
+	/**
+	 * Set job manager.
+	 * @param jobManager Manager of jobs performed in
+	 * background.
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
 	}
 	
 	//
@@ -137,14 +154,22 @@ public final class FileUploadAction extends BaseAction {
 		ShoppingCart cart = this.getShoppingCart(request);
 		ActionForward forward = null;
 		
-		// If file small enough, go ahead an parse
+		// Case: parse immediately
 		if (!ProcessingModeDecider.processInBackground(tempFile, request)) {
 			this.ioService.loadSmdData(tempFile.getName(),
 					organism, cart);
+			this.persistShoppingCartChanges(cart, request);
 			forward = mapping.findForward("non.batch");
+			
+		// Case: parse in background
+		} else {
+			Principal principal = PageContext.getPrincipal(request);
+			DataImportJob job = new DataImportJob(tempFile.getName(),
+					organism, principal.getName());
+			this.jobManager.add(job);
+			forward = mapping.findForward("batch");
 		}
 		
-		this.persistShoppingCartChanges(cart, request);
 		
 		return forward;
 	}

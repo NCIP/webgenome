@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.10 $
+$Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webgenome.webui.struts.cart;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,10 +65,14 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.Plot;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.io.DataFileManager;
+import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.service.job.JobServices;
+import org.rti.webgenome.service.job.PlotJob;
 import org.rti.webgenome.service.plot.PlotParameters;
 import org.rti.webgenome.service.plot.PlotService;
 import org.rti.webgenome.service.session.SessionMode;
@@ -116,6 +121,14 @@ public final class NewPlotAction extends BaseAction {
 	/** Manages serialized data files. */
 	private DataFileManager dataFileManager = null;
 	
+	/**
+	 * Manager for creating plots in background.
+	 * This service is used when the session is not
+	 * CLIENT mode and there is a large amount of
+	 * data to plot.
+	 */
+	private JobManager jobManager = null;
+	
 	
 	//
 	//     SETTERS
@@ -137,10 +150,19 @@ public final class NewPlotAction extends BaseAction {
 		this.dataFileManager = dataFileManager;
 	}
 	
+	
+	/**
+	 * Set manager to perform compute-intensive plotting
+	 * in background.
+	 * @param jobManager Job manager
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
+	}
+	
 	//
 	//     OVERRIDES
 	//
-
 
 	/**
      * Execute action.
@@ -237,6 +259,14 @@ public final class NewPlotAction extends BaseAction {
 	    			getter);
 	    	this.persistShoppingCartChanges(cart, request);
 	    	forward = mapping.findForward("non.batch");
+	    	
+	    // Case: Generate plot in background
+	    } else {
+	    	Principal principal = PageContext.getPrincipal(request);
+	    	PlotJob job = new PlotJob(plot,
+	    			new HashSet<Experiment>(experiments), params,
+	    			principal.getName());
+	    	this.jobManager.add(job);
 	    }
 	    
         return forward;

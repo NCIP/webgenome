@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.4 $
+$Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,6 +67,7 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.util.IdGenerator;
+import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
 import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.IOUtils;
 
@@ -302,5 +303,15 @@ public class IOService {
 	 */
 	public SerializedDataTransformer getSerializedDataTransformer() {
 		return new SerializedDataTransformer(this.dataFileManager);
+	}
+	
+	/**
+	 * Get a serialized chromosome array data getter that is
+	 * configured to use the same data file directory as this.
+	 * @return Serialized chromosome array data getter
+	 */
+	public SerializedChromosomeArrayDataGetter
+	getSerializedChromosomeArrayDataGetter() {
+		return new SerializedChromosomeArrayDataGetter(this.dataFileManager);
 	}
 }

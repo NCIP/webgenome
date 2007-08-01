@@ -1,5 +1,5 @@
 /*
-$Revision: 1.5 $
+$Revision: 1.1 $
 $Date: 2007-08-01 23:05:01 $
 
 The Web CGH Software License, Version 1.0
@@ -48,51 +48,33 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.job;
+package org.rti.webgenome.webui.struts.cart;
 
-import java.util.Collection;
-
+import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
- * This interface is intended to be used as a singleton
- * that manages all {@link Job} objects within the application.
- * Object implementing this interface are expected to manage the
- * execution of jobs.
+ * Base class for all actions involving compute jobs.
  * @author dhall
  *
  */
-public interface JobManager {
+public class BaseJobAction extends BaseAction {
+	
+	/** Singleton that manages all jobs. */
+	private JobManager jobManager = null;
+
+	/** Set job manager.
+	 * @param jobManager Singleton that manages all jobs
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
+	}
 
 	/**
-	 * Removes {@link Job} with given
-	 * {@code jobId} from the manager.
-	 * @param jobId Unique identifier of job under management
-	 * of this manager.
-	 * @return {@code true} if the job was successfully
-	 * removed, {@code false} otherwise.  A job cannot be
-	 * removed if it is either executing or it is not
-	 * under management by this manager.
+	 * Get job manager.
+	 * @return Singleton that manages all jobs
 	 */
-	boolean remove(Long jobId);
-	
-	/**
-	 * Add given job to the manager.  The manager will execute
-	 * the job when resources are available.
-	 * @param job Job to add to management
-	 */
-	void add(Job job);
-	
-	/**
-	 * Get all current jobs associated with given user.
-	 * @param userId Id (i.e., user name) of a user
-	 * @return All current jobs associated with given user
-	 */
-	Collection<Job> getJobs(String userId);
-	
-	/**
-	 * Purge all copleted job records associated with
-	 * given user.
-	 * @param userId User login name
-	 */
-	void purge(String userId);
+	protected JobManager getJobManager() {
+		return this.jobManager;
+	}
 }

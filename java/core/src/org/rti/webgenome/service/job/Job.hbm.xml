@@ -55,6 +55,32 @@
 					class="org.rti.webgenome.domain.Experiment"/>
 			</set>
 		</subclass>
+		<subclass name="org.rti.webgenome.service.job.PlotJob"
+			discriminator-value="plot">
+			<many-to-one name="plot"
+				column="plot_id"
+				class="org.rti.webgenome.domain.Plot"
+				lazy="false"/>
+			<set name="experiments" table="job_experiments"
+				lazy="false">
+				<key column="job_id"/>
+				<many-to-many column="experiment_id"
+					class="org.rti.webgenome.domain.Experiment"/>
+			</set>
+			<many-to-one name="plotParameters"
+				column="plot_params_id"
+				class="org.rti.webgenome.service.plot.PlotParameters"
+				cascade="save-update"
+				lazy="false"/>	
+		</subclass>
+		<subclass name="org.rti.webgenome.service.job.DataImportJob"
+			discriminator-value="import">
+			<property name="fileName" column="file_name"/>
+			<many-to-one name="organism"
+				column="organism_id"
+				class="org.rti.webgenome.domain.Organism"
+				lazy="false"/>	
+		</subclass>
 	</class>
 
 </hibernate-mapping>

@@ -90,7 +90,7 @@
 
 			<%-- Jobs table --%>
 				<webgenome:onlyIfLoggedInAndStandAloneMode>
-					<a class="menuItem" href="<html:rewrite page="/cart/showJobsTable.do"/>">
+					<a class="menuItem" href="<html:rewrite page="/cart/showJobs.do"/>">
 						Jobs Table
 					</a>
 					|

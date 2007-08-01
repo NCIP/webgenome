@@ -82,9 +82,9 @@
   	</definition>
 
 <!-- Show jobs table -->
-  	<definition name="cart.show.jobs.table" extends="cart.layout" >
+  	<definition name="cart.show.jobs" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Jobs table" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/showJobsTable.jsp" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/showJobs.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
 
