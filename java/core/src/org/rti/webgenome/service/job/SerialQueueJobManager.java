@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.4 $
+$Date: 2007-08-14 22:42:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.plot.PlotService;
@@ -72,6 +73,7 @@ import org.rti.webgenome.service.plot.PlotService;
  *
  */
 public class SerialQueueJobManager implements JobManager {
+	
 	
 	//
 	//     C O N S T A N T S
@@ -126,6 +128,9 @@ public class SerialQueueJobManager implements JobManager {
 	/** Shopping cart data access object. */
 	private ShoppingCartDao shoppingCartDao = null;
 	
+	/** Array data access object. */
+	private ArrayDao arrayDao = null;
+	
 	//
 	//  S E T T E R S
 	//
@@ -166,6 +171,15 @@ public class SerialQueueJobManager implements JobManager {
 	}
 	
 	
+	/**
+	 * Set array data access object.
+	 * @param arrayDao Array data access object
+	 */
+	public void setArrayDao(final ArrayDao arrayDao) {
+		this.arrayDao = arrayDao;
+	}
+
+
 	/**
 	 * Set shopping cart data access object.
 	 * @param shoppingCartDao Shopping cart data access object.
@@ -355,7 +369,7 @@ public class SerialQueueJobManager implements JobManager {
 		private void monitorJobQueue() {
 			JobServices jobServices = new JobServices(
 					ioService, analysisService, plotService,
-					shoppingCartDao);
+					shoppingCartDao, arrayDao);
 			while (true) {
 				
 				// Get next job from queue
@@ -385,6 +399,11 @@ public class SerialQueueJobManager implements JobManager {
 				} catch (Exception e) {
 					LOGGER.warn("Job '" + job.getId() + "' failed");
 					LOGGER.warn(e);
+					Throwable throwable = e;
+					while (throwable != null) {
+						e.printStackTrace(System.err);
+						throwable = throwable.getCause();
+					}
 					String exceptionMsg = e.getMessage();
 					String msg = JOB_EXECUTION_FAILURE_MESSAGE;
 					if (exceptionMsg != null && exceptionMsg.length() > 0) {

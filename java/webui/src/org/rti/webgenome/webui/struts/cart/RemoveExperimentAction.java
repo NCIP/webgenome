@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-26 16:45:33 $
+$Revision: 1.5 $
+$Date: 2007-08-14 22:42:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,15 +50,21 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
+import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -72,6 +78,9 @@ public final class RemoveExperimentAction extends BaseAction {
 	/** Service for performing file IO. */
 	private IOService ioService = null;
 	
+	/** Array data access object. */
+	private ArrayDao arrayDao = null;
+	
 	/**
 	 * Sets service for performing IO.
 	 * @param ioService File IO service.
@@ -79,6 +88,16 @@ public final class RemoveExperimentAction extends BaseAction {
 	public void setIoService(final IOService ioService) {
 		this.ioService = ioService;
 	}
+	
+	/**
+	 * Set array data access object.
+	 * @param arrayDao Array data access object
+	 */
+	public void setArrayDao(final ArrayDao arrayDao) {
+		this.arrayDao = arrayDao;
+	}
+
+
 
 	/**
      * Execute action.
@@ -117,9 +136,23 @@ public final class RemoveExperimentAction extends BaseAction {
     		ioService.deleteDataFiles(exp);
     	}
     	
-    	// TODO: Stand-alone specific actions
-    	
+    	// Update shopping cart persistent state
     	this.persistShoppingCartChanges(cart, request);
+    	
+    	// Remove array objects if necessary
+    	Set<Array> removeList = new HashSet<Array>();
+    	for (BioAssay ba : exp.getBioAssays()) {
+    		Array array = ba.getArray();
+    		if (array.isDisposable()) {
+    			removeList.add(array);
+    		}
+    	}
+    	for (Array a : removeList) {
+    		if (!this.arrayDao.isReferenced(a)) {
+    			this.arrayDao.delete(a);
+    		}
+    	}
+    	
         return mapping.findForward("success");
     }
 }

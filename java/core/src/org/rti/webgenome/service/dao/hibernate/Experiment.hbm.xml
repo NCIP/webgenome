@@ -21,7 +21,6 @@
 		</set>
 		<many-to-one name="organism" column="organism_id"
 			class="org.rti.webgenome.domain.Organism"
-			cascade="save-update"
 			lazy="false"/>
 		<many-to-one name="dataSourceProperties" column="data_src_props_id"
 			class="org.rti.webgenome.domain.DataSourceProperties"

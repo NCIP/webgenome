@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.2 $
+$Date: 2007-08-14 22:42:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.dao.hibernate;
 
+import java.util.List;
+
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.service.dao.ArrayDao;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -77,4 +79,14 @@ implements ArrayDao {
 		this.getHibernateTemplate().save(array);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isReferenced(final Array array) {
+		String query = "from BioAssay ba where ba.array = ?";
+		Object[] args = new Object[]{array};
+		List bioAssays =
+			this.getHibernateTemplate().find(query, args);
+		return bioAssays != null && bioAssays.size() > 0;
+	}
 }

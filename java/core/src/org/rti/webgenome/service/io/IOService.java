@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.5 $
+$Date: 2007-08-14 22:42:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -247,10 +247,13 @@ public class IOService {
 	 * This is not an absolute path.
 	 * @param organism Organism associated with data
 	 * @param shoppingCart Shopping cart
+	 * @return New experiment that was added to shopping cart.
+	 * Clients should not subquently add this experiment object to
+	 * the cart.  It has already been added.
 	 * @throws SmdFormatException If file does not contain
 	 * valid SMD format data
 	 */
-	public void loadSmdData(final String fileName,
+	public Experiment loadSmdData(final String fileName,
 			final Organism organism, final ShoppingCart shoppingCart)
 	throws SmdFormatException {
 		String path = this.workingDir.getAbsolutePath() + "/" + fileName;
@@ -266,6 +269,7 @@ public class IOService {
 			ba.setColor(colorChooser.nextColor());
 		}
 		shoppingCart.add(exp);
+		return exp;
 	}
 	
 	

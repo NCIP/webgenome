@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.2 $
+$Date: 2007-08-14 22:42:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.job;
 
 import org.rti.webgenome.service.analysis.AnalysisService;
+import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.plot.PlotService;
@@ -77,6 +78,9 @@ public class JobServices {
 	
 	/** Shopping cart data access object. */
 	private final ShoppingCartDao shoppingCartDao;
+	
+	/** Array data access object. */
+	private final ArrayDao arrayDao;
 
 	
 	//
@@ -114,6 +118,14 @@ public class JobServices {
 	public ShoppingCartDao getShoppingCartDao() {
 		return shoppingCartDao;
 	}
+	
+	/**
+	 * Get array data access object.
+	 * @return Array data access object
+	 */
+	public ArrayDao getArrayDao() {
+		return arrayDao;
+	}
 
 	//
 	//  C O N S T R U C T O R S
@@ -125,16 +137,19 @@ public class JobServices {
 	 * @param analytisService Service to run analytic operations.
 	 * @param plotService Service to plot data.
 	 * @param shoppingCartDao Shopping cart data access object
+	 * @param arrayDao Array data access object
 	 */
 	public JobServices(final IOService ioService,
 			final AnalysisService analytisService,
 			final PlotService plotService,
-			final ShoppingCartDao shoppingCartDao) {
+			final ShoppingCartDao shoppingCartDao,
+			final ArrayDao arrayDao) {
 		super();
 		this.ioService = ioService;
 		this.analysisService = analytisService;
 		this.plotService = plotService;
 		this.shoppingCartDao = shoppingCartDao;
+		this.arrayDao = arrayDao;
 	}
 	
 	

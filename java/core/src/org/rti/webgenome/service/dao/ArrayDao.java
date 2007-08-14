@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.2 $
+$Date: 2007-08-14 22:42:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,4 +71,12 @@ public interface ArrayDao {
 	 * @param array An array
 	 */
 	void delete(Array array);
+	
+	/**
+	 * Determines if the given array object is referenced by
+	 * any other persistent objects.
+	 * @param array An array
+	 * @return T/F
+	 */
+	boolean isReferenced(Array array);
 }

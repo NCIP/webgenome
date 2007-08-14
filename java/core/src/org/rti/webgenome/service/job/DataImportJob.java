@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.5 $
+$Date: 2007-08-14 22:42:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,9 +50,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.io.SmdFormatException;
@@ -163,11 +169,24 @@ public class DataImportJob extends AbstractJob {
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
 		ShoppingCart cart = sDao.load(this.getUserId());
 		IOService ioService = jobServices.getIoService();
+		ArrayDao aDao = jobServices.getArrayDao();
 		try {
 			LOGGER.info("Data import job starting for user "
 					+ this.getUserId());
-			ioService.loadSmdData(this.fileName, this.organism, cart);
+			
+			// Load data into shopping cart
+			Experiment exp = ioService.loadSmdData(
+					this.fileName, this.organism, cart);
+			
+			// Persist new array object
+			Array array = this.getArray(exp);
+			array.setDisposable(true);
+			assert array != null;
+			aDao.save(array);
+			
+			// Persist shopping cart changes
 			sDao.update(cart);
+			
 			this.setTerminationMessage("Succeeded");
 			LOGGER.info("Data import job completed for user "
 					+ this.getUserId());
@@ -176,5 +195,21 @@ public class DataImportJob extends AbstractJob {
 			LOGGER.info("Data import failed for user " + this.getUserId());
 			LOGGER.info(e);
 		}
+	}
+	
+	/**
+	 * Extract array object associated with all contained bioassays.
+	 * That will have been the case for data uploaded from a file.
+	 * @param exp An experiment
+	 * @return Array object associated with bioassays contained in
+	 * the experiment.
+	 */
+	private Array getArray(final Experiment exp) {
+		Array array = null;
+		Set<BioAssay> bioAssays = exp.getBioAssays();
+		if (bioAssays.size() > 0) {
+			array = bioAssays.iterator().next().getArray();
+		}
+		return array;
 	}
 }

@@ -66,6 +66,11 @@
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
+<!-- Array DAO -->
+  	<bean id="arrayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateArrayDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
 <!-- Shopping cart DAO -->
   	<bean id="shoppingCartDao"
   		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
@@ -210,6 +215,9 @@
 		</property>
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
+		</property>
+		<property name="arrayDao">
+			<ref bean="arrayDao"/>
 		</property>
 		<constructor-arg>
 			<ref bean="jobDao"/>
@@ -405,6 +413,9 @@
 		class="org.rti.webgenome.webui.struts.cart.RemoveExperimentAction">
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
+		</property>
+		<property name="arrayDao">
+			<ref bean="arrayDao"/>
 		</property>
 		<property name="ioService">
 			<ref bean="ioService"/>

@@ -27,6 +27,7 @@ INSERT INTO organism (id, genus, species) VALUES (1, 'Homo', 'sapiens');
 CREATE TABLE array (
 	id NUMBER(38) NOT NULL,
 	name VARCHAR2(128),
+	disposable VARCHAR2(8),
 	PRIMARY KEY (id)
 );
 

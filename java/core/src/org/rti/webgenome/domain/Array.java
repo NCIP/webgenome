@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-08-14 22:42:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.io.Serializable;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.rti.webgenome.util.StringUtils;
 import org.rti.webgenome.util.SystemUtils;
 
 /**
@@ -83,6 +84,20 @@ public class Array implements Serializable {
     
     /** Array name. */
     private String name = null;
+    
+    /**
+     * Some arrays may be persisted in the database for
+     * an indefinate time.  These would typically correspond
+     * to well-known array designs from a commercial vendor.
+     * Special system functionality will be used to load
+     * and delete such arrays from the database.  Such array
+     * objects are not "disposable."  In contrast, some
+     * array objects are used by single experiments, such as
+     * when a user uploads an SMD file.  Such arrays are considered
+     * "disposable" and are removed from the database when the
+     * corresponding experiment is removed.
+     */
+    private boolean isDisposable = false;
     
     /**
      * Map providing index to names of files containing
@@ -121,8 +136,44 @@ public class Array implements Serializable {
             final SortedMap<Short, String> chromosomeReportersFileNames) {
         this.chromosomeReportersFileNames = chromosomeReportersFileNames;
     }
+    
+    
+    /**
+     * Some arrays may be persisted in the database for
+     * an indefinate time.  These would typically correspond
+     * to well-known array designs from a commercial vendor.
+     * Special system functionality will be used to load
+     * and delete such arrays from the database.  Such array
+     * objects are not "disposable."  In contrast, some
+     * array objects are used by single experiments, such as
+     * when a user uploads an SMD file.  Such arrays are considered
+     * "disposable" and are removed from the database when the
+     * corresponding experiment is removed.
+     * @return {@code true} if the array is disposable,
+     * {@code false} otherwise
+     */
+    public boolean isDisposable() {
+		return isDisposable;
+	}
 
     /**
+     * Some arrays may be persisted in the database for
+     * an indefinate time.  These would typically correspond
+     * to well-known array designs from a commercial vendor.
+     * Special system functionality will be used to load
+     * and delete such arrays from the database.  Such array
+     * objects are not "disposable."  In contrast, some
+     * array objects are used by single experiments, such as
+     * when a user uploads an SMD file.  Such arrays are considered
+     * "disposable" and are removed from the database when the
+     * corresponding experiment is removed.
+     * @param isDisposable Is the array disposable?
+     */
+	public void setDisposable(final boolean isDisposable) {
+		this.isDisposable = isDisposable;
+	}
+
+	/**
      * Get primary key identifier used for persistence.
      * @return Primary key identifier
      */
@@ -206,5 +257,50 @@ public class Array implements Serializable {
             final short chromosome) {
         return this.chromosomeReportersFileNames.get(chromosome);
     }
+    
+    //
+    //  O V E R R I D E S
+    //
 
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public boolean equals(final Object obj) {
+		System.out.println("Equals");
+		boolean equals = false;
+		if (obj instanceof Array) {
+			Array array = (Array) obj;
+			if (StringUtils.equal(this.name, array.name)) {
+				equals = true;
+				for (Short key : this.chromosomeReportersFileNames.keySet()) {
+					String fname1 = this.chromosomeReportersFileNames.get(key);
+					String fname2 = array.chromosomeReportersFileNames.get(key);
+					if (!StringUtils.equal(fname1, fname2)) {
+						equals = false;
+						break;
+					}
+				}
+			}
+		}
+		return equals;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		System.out.println("Hashcode");
+		StringBuffer buff = new StringBuffer();
+		if (this.name != null) {
+			buff.append(this.name);
+		}
+		for (Short key : this.chromosomeReportersFileNames.keySet()) {
+			String value = this.chromosomeReportersFileNames.get(key);
+			buff.append(key);
+			buff.append(value);
+		}
+		return buff.toString().hashCode();
+	}
 }

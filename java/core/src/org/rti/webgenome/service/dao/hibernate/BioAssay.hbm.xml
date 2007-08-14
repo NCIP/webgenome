@@ -16,10 +16,9 @@
 		<property name="parentBioAssayId" column="parent_bioassay_id"/>
 		<many-to-one name="organism" column="organism_id"
 			class="org.rti.webgenome.domain.Organism"
-			cascade="save-update" lazy="false"/>
+			lazy="false"/>
 		<many-to-one name="array" column="array_id"
 			class="org.rti.webgenome.domain.Array"
-			cascade="all-delete-orphan"
 			lazy="false"/>
 		<subclass name="org.rti.webgenome.domain.DataSerializedBioAssay"
 			discriminator-value="data.serialized">
