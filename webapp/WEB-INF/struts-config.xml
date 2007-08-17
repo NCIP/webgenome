@@ -133,6 +133,7 @@
 	<!-- Remove experiment -->
 		<action path="/cart/removeExperiment">
 			<forward name="success" path="/cart/showCart.do"/>
+			<forward name="referenced" path="cart.deny.remove.experiment"/>
 		</action>
 
 	<!-- Remove plot -->

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-14 22:42:07 $
+$Revision: 1.3 $
+$Date: 2007-08-17 19:02:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -267,7 +267,6 @@ public class Array implements Serializable {
      */
 	@Override
 	public boolean equals(final Object obj) {
-		System.out.println("Equals");
 		boolean equals = false;
 		if (obj instanceof Array) {
 			Array array = (Array) obj;
@@ -291,7 +290,6 @@ public class Array implements Serializable {
 	 */
 	@Override
 	public int hashCode() {
-		System.out.println("Hashcode");
 		StringBuffer buff = new StringBuffer();
 		if (this.name != null) {
 			buff.append(this.name);

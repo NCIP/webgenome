@@ -71,6 +71,13 @@
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   	</bean>
   	
+<!-- Experiment DAO -->
+  	<bean id="experimentDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
+  	
 <!-- Shopping cart DAO -->
   	<bean id="shoppingCartDao"
   		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
@@ -416,6 +423,9 @@
 		</property>
 		<property name="arrayDao">
 			<ref bean="arrayDao"/>
+		</property>
+		<property name="experimentDao">
+			<ref bean="experimentDao"/>
 		</property>
 		<property name="ioService">
 			<ref bean="ioService"/>

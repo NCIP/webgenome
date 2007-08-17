@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.11 $
+$Date: 2007-08-17 19:02:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,7 +71,6 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.job.JobManager;
-import org.rti.webgenome.service.job.JobServices;
 import org.rti.webgenome.service.job.PlotJob;
 import org.rti.webgenome.service.plot.PlotParameters;
 import org.rti.webgenome.service.plot.PlotService;

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-14 22:42:07 $
+$Revision: 1.6 $
+$Date: 2007-08-17 19:02:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,7 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.dao.ArrayDao;
+import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -80,6 +81,9 @@ public final class RemoveExperimentAction extends BaseAction {
 	
 	/** Array data access object. */
 	private ArrayDao arrayDao = null;
+	
+	/** Experiment data access object. */
+	private ExperimentDao experimentDao = null;
 	
 	/**
 	 * Sets service for performing IO.
@@ -98,6 +102,13 @@ public final class RemoveExperimentAction extends BaseAction {
 	}
 
 
+	/**
+	 * Set experiment data access object.
+	 * @param experimentDao Experiment data access object
+	 */
+	public void setExperimentDao(final ExperimentDao experimentDao) {
+		this.experimentDao = experimentDao;
+	}
 
 	/**
      * Execute action.
@@ -123,9 +134,15 @@ public final class RemoveExperimentAction extends BaseAction {
     	// Get ID of experiment to remove
     	long id = Long.parseLong(request.getParameter("id"));
     	
+    	// If experiment referenced by other objects
+    	// in database, deny request to delete
+    	if (this.experimentDao.isReferenced(id)) {
+    		return mapping.findForward("referenced");
+    	}
+    	
     	// Relinquish colors in experiment
-    	ColorChooser cc = cart.getBioassayColorChooser();
     	Experiment exp = cart.getExperiment(id);
+    	ColorChooser cc = cart.getBioassayColorChooser();
     	cc.relinquishColors(exp);
     	
     	// Remove experiment from cart

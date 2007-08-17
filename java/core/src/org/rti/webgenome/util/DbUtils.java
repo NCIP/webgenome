@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-16 16:25:14 $
+$Revision: 1.5 $
+$Date: 2007-08-17 19:02:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.StringTokenizer;
 
+import javax.sql.DataSource;
+
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.core.WebGenomeRuntimeException;
+import org.rti.webgenome.core.WebGenomeSystemException;
 
 /**
  * Database utilities.
@@ -265,5 +268,40 @@ public final class DbUtils {
 					"Error decoding CLOB field value", e);
 		}
 		return matrix;
+	}
+	
+	
+	/**
+	 * Is there a record in the database with a given field value?
+	 * @param dataSource Data source
+	 * @param tableName Name of table
+	 * @param fieldName Name of field
+	 * @param value Value to query
+	 * @return T/F
+	 */
+	public static boolean recordWithFieldValueExists(
+			final DataSource dataSource, final String tableName,
+			final String fieldName, final Long value) {
+		boolean exists = false;
+		Statement stmt = null;
+		ResultSet rset = null;
+		String sql =
+			"SELECT * "
+			+ " FROM " + tableName
+			+ " WHERE " + fieldName + " = " + value;
+		try {
+			Connection con = dataSource.getConnection();
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(sql);
+			exists = rset.next();
+		} catch (SQLException e) {
+			throw new WebGenomeSystemException(
+					"Error querying database table '" + tableName
+					+ "' field '" + fieldName + "'", e);
+		} finally {
+			DbUtils.close(rset);
+			DbUtils.close(stmt);
+		}
+		return exists;
 	}
 }

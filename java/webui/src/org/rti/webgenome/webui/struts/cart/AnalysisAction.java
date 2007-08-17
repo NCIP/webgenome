@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.10 $
+$Date: 2007-08-17 19:02:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -106,6 +106,9 @@ public final class AnalysisAction extends BaseAnalysisAction {
     		(AnalyticOperationParametersForm) form;
     	AnalyticOperation op = this.getAnalyticOperationFactory().
     		newAnalyticOperation(aForm.getOperationKey());
+    	
+    	// Set user specified parameters for operation
+    	this.setUserSpecifiedParameters(op, request);
     	
     	// Retrieve form bean containing selected experiments.
     	// Note, this is not the form bean configured

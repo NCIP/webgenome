@@ -116,6 +116,7 @@
   	<bean id="experimentDao"
   		class="org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
   	</bean>
   	
   	<bean id="shoppingCartDao"

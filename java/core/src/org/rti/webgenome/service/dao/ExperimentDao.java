@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.2 $
+$Date: 2007-08-17 19:02:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -67,8 +67,25 @@ public interface ExperimentDao {
 	void save(Experiment experiment);
 	
 	/**
+	 * Load experiment with given ID.
+	 * @param id Experiment ID
+	 * @return An experiment with given ID or
+	 * {@code null} if there is no experiment with given
+	 * ID.
+	 */
+	Experiment load(Long id);
+	
+	/**
 	 * Delete given experiment from persistent storage.
 	 * @param experiment Experiment to delete.
 	 */
 	void delete(Experiment experiment);
+	
+	/**
+	 * Method determines if there are references
+	 * to the given experiment object.
+	 * @param experimentId An experiment identifier
+	 * @return T/F
+	 */
+	boolean isReferenced(Long experimentId);
 }

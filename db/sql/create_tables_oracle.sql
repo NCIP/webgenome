@@ -560,6 +560,10 @@ ALTER TABLE plot_exp_ids
 ADD CONSTRAINT fk_pei_plot_id
 FOREIGN KEY (plot_id) REFERENCES plot(id);
 
+ALTER TABLE plot_exp_ids
+ADD CONSTRAINT fk_pei_exp_id
+FOREIGN KEY (exp_id) REFERENCES experiment(id);
+
 ALTER TABLE bioassay
 ADD CONSTRAINT fk_bioassay_pbi
 FOREIGN KEY (parent_bioassay_id) REFERENCES bioassay(id);
