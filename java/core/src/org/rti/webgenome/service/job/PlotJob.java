@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.3 $
+$Date: 2007-08-17 20:05:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -191,8 +191,16 @@ public class PlotJob extends AbstractJob {
 		LOGGER.info("Plot job starting for user "
 				+ this.getUserId());
 		try {
+			
+			// Clone plot parameters attribute so that there will
+			// be a different persistent object associated with
+			// plot.  This makes it possible to delete plot objects
+			// without first deleting the associated jobs.
+			PlotParameters newParamsObj = this.plotParameters.deepCopy();
+			
+			// Plot and persist
 			jobServices.getPlotService().plotExperiments(this.plot,
-					this.experiments, this.plotParameters,
+					this.experiments, newParamsObj,
 					cart, dataGetter);
 			sDao.update(cart);
 		} catch (Exception e) {

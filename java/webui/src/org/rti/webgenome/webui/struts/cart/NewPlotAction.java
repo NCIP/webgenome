@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2007-08-17 19:02:16 $
+$Revision: 1.12 $
+$Date: 2007-08-17 20:05:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -266,6 +266,7 @@ public final class NewPlotAction extends BaseAction {
 	    			new HashSet<Experiment>(experiments), params,
 	    			principal.getName());
 	    	this.jobManager.add(job);
+	    	forward = mapping.findForward("batch");
 	    }
 	    
         return forward;

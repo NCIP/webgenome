@@ -78,6 +78,13 @@
   		<property name="dataSource" ref="dataSource"/>
   	</bean>
   	
+<!-- Plot DAO -->
+  	<bean id="plotDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernatePlotDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
+  	
 <!-- Shopping cart DAO -->
   	<bean id="shoppingCartDao"
   		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
@@ -440,6 +447,9 @@
 		</property>
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
+		</property>
+		<property name="plotDao">
+			<ref bean="plotDao"/>
 		</property>
 	</bean>
 	

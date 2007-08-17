@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.4 $
+$Date: 2007-08-17 20:05:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.dao.PlotDao;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -71,6 +72,9 @@ public final class RemovePlotAction extends BaseAction {
 	/** Image file manager. */
 	private ImageFileManager imageFileManager = null;
 	
+	/** Plot data access object. */
+	private PlotDao plotDao = null;
+	
 	/**
 	 * Set image file manager.
 	 * @param imageFileManager Image file manager
@@ -78,6 +82,15 @@ public final class RemovePlotAction extends BaseAction {
 	public void setImageFileManager(
 			final ImageFileManager imageFileManager) {
 		this.imageFileManager = imageFileManager;
+	}
+
+
+	/**
+	 * Set plot data access object.
+	 * @param plotDao Plot data access object
+	 */
+	public void setPlotDao(final PlotDao plotDao) {
+		this.plotDao = plotDao;
 	}
 
 
@@ -105,6 +118,11 @@ public final class RemovePlotAction extends BaseAction {
     	
     	// Get ID of plot to remove
     	long id = Long.parseLong(request.getParameter("id"));
+    	
+    	// If there are references to plot, deny request to delete
+    	if (this.plotDao.isReferenced(id)) {
+    		return mapping.findForward("referenced");
+    	}
     	
     	// Retrieve plot
     	Plot plot = cart.getPlot(id);

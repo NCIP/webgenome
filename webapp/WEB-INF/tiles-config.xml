@@ -138,9 +138,9 @@
   	</definition>
   	
 <!-- Deny request to remove an experiment -->
-	<definition name="cart.deny.remove.experiment" extends="cart.layout" >
+	<definition name="cart.deny.remove" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Action denied" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/denyRemoveExperiment.jsp" />
+	  	<put name="content" value="/WEB-INF/jsp/cart/denyRemove.jsp" />
 	  	<put name="helpTopic" value="operations" />
   	</definition>
   	
