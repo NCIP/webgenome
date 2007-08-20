@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2007-08-17 20:05:05 $
+$Revision: 1.13 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,8 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
@@ -266,6 +268,9 @@ public final class NewPlotAction extends BaseAction {
 	    			new HashSet<Experiment>(experiments), params,
 	    			principal.getName());
 	    	this.jobManager.add(job);
+	    	ActionMessages messages = new ActionMessages();
+	    	messages.add("global", new ActionMessage("plot.job"));
+	    	this.saveMessages(request, messages);
 	    	forward = mapping.findForward("batch");
 	    }
 	    

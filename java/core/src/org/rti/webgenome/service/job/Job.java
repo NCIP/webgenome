@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.3 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -142,6 +142,35 @@ public interface Job {
 	 */
 	String getTerminationMessage();
 	
+	/**
+	 * Set description of job.
+	 * @param description Job description.
+	 */
+	void setDescription(String description);
+	
+	/**
+	 * Get description of job.
+	 * @return Description of job.
+	 */
+	String getDescription();
+	
+	/**
+	 * Set property that indicates user has been notified that
+	 * the job is complete.
+	 * @param notified Has the user been notified that the job
+	 * is complete?  This should only be set to true if the
+	 * job is complete and the user has been notified.
+	 */
+	void setUserNotifiedOfCompletion(boolean notified);
+	
+	/**
+	 * Has the user been notified that the job is complete?
+	 * @return {@code true} if the job is complete and the user
+	 * has been notified.  Returns {@code false} if the job
+	 * is not complete or it is complete but the user has not
+	 * been notified.
+	 */
+	boolean isUserNotifiedOfCompletion();
 	
 	/**
 	 * Execute job.

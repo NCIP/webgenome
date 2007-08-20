@@ -46,6 +46,109 @@
 
 			<% } %>
 		</script>
+		
+		<%--
+		==================================================
+		  The following scipts use AJAX to check for
+		  recently completed compute jobs and notify
+		  the user.
+		==================================================
+		--%>
+		<script language="Javascript">
+		
+			window.setInterval("updateJobStatus()", 5000);
+			var messageLeftPix;
+			var intervalId;
+			
+			// Get XMLHttp object for AJAX calls
+			function getXmlHttpObject() {
+				var xmlHttp;
+			  	try {
+			    	xmlHttp = new XMLHttpRequest();
+			    } catch (e) {
+			    	try {
+			    		xmlHttp = new ActiveXObject("Msxml2.XMLHTTP");
+			    	} catch (e) {
+			    		try {
+			    			xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+			    		} catch (e) {
+			    			// Do nothing
+			    		}
+			    	}
+			    }
+			    return xmlHttp;
+			}
+			
+			// Update job statuses in jobs table JSP using AJAX.
+			// If the user is not on this page, nothing happens
+			// client-side.
+			function updateJobStatus() {
+				var xmlHttp = getXmlHttpObject();
+				if (xmlHttp != null) {
+				    xmlHttp.onreadystatechange=function() {
+				    	if(xmlHttp.readyState == 4) {
+				    		var xmlDoc = xmlHttp.responseXML.documentElement;
+				    		updateTable(xmlDoc);
+				    		//showJobCompletionMessage(xmlDoc);
+				    	}
+				    }
+				    xmlHttp.open("GET",
+				    	"<html:rewrite page="/ajax/newlyCompletedJobs.do"/>",
+				    	true);
+				    xmlHttp.send(null);
+				}
+				return false;
+			}
+		
+			// Parse server response and update HTML table on the
+			// jobs JSP, if it is showing.
+			function updateTable(doc) {
+				var elements = doc.getElementsByTagName("update");
+				for (var i = 0; i < elements.length; i++) {
+					var element = elements.item(i);
+					var id = element.getAttribute("elementId");
+					var value = element.getAttribute("elementValue");
+					var td = document.getElementById(id);
+					if (td != null) {
+						var text = td.firstChild;
+						text.nodeValue = value;
+						td.className = "finishedJob";
+					}
+				}
+			}
+
+			// Show message that jobs have completed, if any
+			// jobs have in fact been newly completed.  This will
+			// be displayed on all screens.
+			function showJobCompletionMessage(doc) {
+				if (doc.getElementsByTagName("update").length > 0) {
+					closeMessage();
+					var msg = document.getElementById("jobCompletionMessage");
+					msg.style.left = messageLeftPix;
+					intervalId = setInterval("moveMessageRight()", 7);
+				}
+			}
+	
+			// Move job complation message in from left side of the
+			// screen a pixel at a time.
+			function moveMessageRight() {
+				messageLeftPix++;
+				if (messageLeftPix >= 0) {
+					clearInterval(intervalId);
+				} else {
+					var msg = document.getElementById("jobCompletionMessage");
+					msg.style.left = messageLeftPix;
+				}
+			}
+	
+			// Close job completion message.
+			function closeMessage() {
+				messageLeftPix = -400;
+				var msg = document.getElementById("jobCompletionMessage");
+				msg.style.left = messageLeftPix;
+			}
+		</script>
+		
 	</head>
 
 
@@ -153,11 +256,20 @@
 		</tr>
 	<% } %>
 
-
 	<%-- Page content --%>
 		<tr>
 			<td class="content" align="left" valign="top" background="<html:rewrite page="/images/ui-body-tile.gif"/>" width="800">
 
+				<%-- Job completion message, which is initially off the screen --%>
+				<table id="jobCompletionMessage" class="message">
+					<tr>
+						<td>One or more jobs have completed
+						&nbsp;
+						<a href="#" onclick="closeMessage()" class="transientLink">[ok]</a></td>
+					</tr>
+				</table>
+		
+				<%-- Content tile --%>
 				<div class="contentItem">
 					<tiles:get name="content"/><br>
 				</div>

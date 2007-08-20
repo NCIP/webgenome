@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-14 22:42:06 $
+$Revision: 1.5 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -293,6 +293,23 @@ public class SerialQueueJobManager implements JobManager {
 		for (Job job : userJobs) {
 			this.remove(job.getId());
 		}
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<Job> getNewlyCompletedJobs(final String userId) {
+		Collection<Job> completedJobs = new ArrayList<Job>();
+		Collection<Job> allJobs = this.getJobs(userId);
+		for (Job job : allJobs) {
+			if (job.getEndDate() != null && !job.isUserNotifiedOfCompletion()) {
+				completedJobs.add(job);
+				job.setUserNotifiedOfCompletion(true);
+				this.jobDao.saveOrUpdate(job);
+			}
+		}
+		return completedJobs;
 	}
 
 

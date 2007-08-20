@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.11 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
@@ -142,6 +144,9 @@ extends BaseAnalysisAction {
 						new HashSet<Experiment>(experiments),
 						principal.getName());
 			this.getJobManager().add(job);
+			ActionMessages messages = new ActionMessages();
+	    	messages.add("global", new ActionMessage("plot.job"));
+	    	this.saveMessages(request, messages);
 			forward = mapping.findForward("batch");
 		}
 	

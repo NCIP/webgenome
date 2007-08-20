@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.6 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -95,4 +95,14 @@ public interface JobManager {
 	 * @param userId User login name
 	 */
 	void purge(String userId);
+	
+	/**
+	 * This method returns a list of jobs associated
+	 * with given user ID that have completed
+	 * since the last call of this method.
+	 * @param userId User login name
+	 * @return List of user jobs that have completed sicne the
+	 * last call of this method.
+	 */
+	Collection<Job> getNewlyCompletedJobs(String userId);
 }

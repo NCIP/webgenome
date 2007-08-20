@@ -95,6 +95,8 @@ CREATE TABLE job (
 	start_date TIMESTAMP,
 	end_date TIMESTAMP,
 	termination_message VARCHAR2(1024),
+	description VARCHAR2(256),
+	user_notified_complete VARCHAR2(8),
 	
 	-- AnalysisJob and ReRunAnalysisJob
 	data_src_props_id NUMBER(38),

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.2 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -142,6 +142,16 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 			final String userId) {
 		super(userId);
 		this.experiments = experiments;
+		StringBuffer buff = new StringBuffer(
+				"Regenerating plot with experiments ");
+		int count = 0;
+		for (Experiment exp : experiments) {
+			if (count++ > 0) {
+				buff.append(" ,");
+			}
+			buff.append(exp.getName());
+		}
+		this.setDescription(buff.toString());
 	}
 	
 	//

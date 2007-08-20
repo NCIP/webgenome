@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.2 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -134,6 +134,9 @@ public class ReRunAnalysisJob extends AbstractJob {
 		super(userId);
 		this.dataSourceProperties = new SingleAnalysisDataSourceProperties(
 				experiment, operation);
+		this.setDescription("Re-running analytic operation "
+				+ operation.getName() + " on experiment "
+				+ experiment.getName());
 	}
 
 	/**

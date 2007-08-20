@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-31 16:28:13 $
+$Revision: 1.3 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,6 +82,15 @@ public abstract class AbstractJob implements Job {
 	
 	/** Message giving state of job upon termination. */
 	private String terminationMessage = null;
+	
+	/** Job description. */
+	private String description = null;
+	
+	/**
+	 * Has the user been notified of the jobs completion?  If
+	 * the job is not complete, this should be set to false.
+	 */
+	private boolean userNotifiedOfCompletion = false;
 	
 	
 	//
@@ -197,5 +206,38 @@ public abstract class AbstractJob implements Job {
 	 */
 	public void setUserId(final String userId) {
 		this.userId = userId;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDescription(final String description) {
+		this.description = description;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isUserNotifiedOfCompletion() {
+		return userNotifiedOfCompletion;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setUserNotifiedOfCompletion(
+			final boolean userNotifiedOfCompletion) {
+		this.userNotifiedOfCompletion = userNotifiedOfCompletion;
 	}
 }

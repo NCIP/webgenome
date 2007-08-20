@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.7 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,8 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Principal;
@@ -167,6 +169,9 @@ public final class FileUploadAction extends BaseAction {
 			DataImportJob job = new DataImportJob(tempFile.getName(),
 					organism, principal.getName());
 			this.jobManager.add(job);
+			ActionMessages messages = new ActionMessages();
+    		messages.add("global", new ActionMessage("import.job"));
+    		this.saveMessages(request, messages);
 			forward = mapping.findForward("batch");
 		}
 		

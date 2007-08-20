@@ -1,5 +1,5 @@
 /*
-$Revision: 1.11 $
+$Revision: 1.1 $
 $Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
@@ -48,89 +48,76 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.struts.cart;
+package org.rti.webgenome.webui.struts.ajax;
+
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.rti.webgenome.analysis.AnalyticOperation;
-import org.rti.webgenome.core.WebGenomeApplicationException;
-import org.rti.webgenome.domain.AnalysisDataSourceProperties;
-import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.analysis.DataTransformer;
-import org.rti.webgenome.service.job.ReRunAnalysisJob;
+import org.rti.webgenome.service.job.Job;
+import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
-import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
- * This action reruns an analytic operation on
- * an experiment using new user-supplied parameters.
+ * This class identifies any jobs that have completed since
+ * the last call to this class.
  * @author dhall
  *
  */
-public class ReRunAnalysisAction extends BaseAnalysisAction {
+public class NewlyCompletedJobsAction extends BaseAction {
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(NewlyCompletedJobsAction.class);
+	
+	/** Manager of compute-intensive jobs. */
+	private JobManager jobManager = null;
 	
 	
-	//
-	//     OVERRIDES
-	//
+	/**
+	 * Set manager of compute-intensive jobs.
+	 * @param jobManager Job manager
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
+	}
+
+
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public ActionForward execute(
 	        final ActionMapping mapping, final ActionForm form,
 	        final HttpServletRequest request,
-	        final HttpServletResponse response)
-	throws Exception {
-	
-		// Get selected experiment
-		ShoppingCart cart = this.getShoppingCart(request);
-		Long expId = Long.parseLong(
-				((AnalyticOperationParametersForm) form).getExperimentId());
-		Experiment exp = cart.getExperiment(expId);
-		if (exp == null) {
-			throw new WebGenomeApplicationException(
-					"Selected experiment no longer in workspace");
+	        final HttpServletResponse response
+	    ) throws Exception {
+		LOGGER.info("Looking for newly completed jobs");
+		Principal principal = PageContext.getPrincipal(request);
+		Collection<Job> jobs = this.jobManager.getNewlyCompletedJobs(
+				principal.getName());
+		if (jobs.size() > 0) {
+			StringBuffer jobIds = new StringBuffer();
+			int count = 0;
+			for (Job job : jobs) {
+				if (count++ > 0) {
+					jobIds.append(", ");
+				}
+				jobIds.append(job.getId());
+			}
+			LOGGER.info("The following jobs have recently completed: "
+					+ jobIds.toString());
+		} else {
+			LOGGER.info("No newly completed jobs to report");
 		}
-		
-		// Set properties of analytic operation to redo
-		AnalysisDataSourceProperties props =
-			(AnalysisDataSourceProperties) exp.getDataSourceProperties();
-		AnalyticOperation op = props.getSourceAnalyticOperation();
-		this.setUserSpecifiedParameters(op, request);
-		
-		ActionForward forward = null;
-    	
-		DataTransformer transformer = this.getDataTransformer(request);
-		
-		// Case: perform immediately
-    	if (!ProcessingModeDecider.processInBackground(exp, request)) {
-	    	this.getAnalysisService().rePerformAnalyticOperation(
-	    			exp, op, transformer);
-	    	this.persistShoppingCartChanges(cart, request);
-	    	forward = mapping.findForward("non.batch");
-	    	
-	    // Case: perform in background
-    	} else {
-    		Principal principal = PageContext.getPrincipal(request);
-    		ReRunAnalysisJob job = new ReRunAnalysisJob(exp, op,
-    				principal.getName());
-    		this.getJobManager().add(job);
-    		ActionMessages messages = new ActionMessages();
-    		messages.add("global", new ActionMessage("analysis.job"));
-    		this.saveMessages(request, messages);
-    		forward = mapping.findForward("batch");
-    	}
-    	
-		return forward;
+		request.setAttribute("jobs", jobs);
+		return mapping.findForward("success");
 	}
 }

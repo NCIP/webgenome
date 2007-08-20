@@ -445,6 +445,13 @@
             path="/status"
             type="org.apache.struts.actions.ForwardAction"
             parameter="status.page"/>
+            
+         <!-- ========= AJAX actions ============== -->
+         
+         <action path="/ajax/newlyCompletedJobs">
+         	<forward name="success"
+         		path="/WEB-INF/jsp/ajax/newlyCompletedJobs.jsp"/>
+         </action>
 
 	</action-mappings>
 

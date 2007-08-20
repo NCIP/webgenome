@@ -642,4 +642,10 @@
 			<ref bean="organismDao"/>
 		</property>
 	</bean>
+	
+<!-- AJAX action to retrieve newly completed jobs -->
+	<bean name="/ajax/newlyCompletedJobs"
+		class="org.rti.webgenome.webui.struts.ajax.NewlyCompletedJobsAction">
+		<property name="jobManager" ref="jobManager"/>
+	</bean>
 </beans>

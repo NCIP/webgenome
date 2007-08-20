@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-17 20:05:05 $
+$Revision: 1.4 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,6 +173,7 @@ public class PlotJob extends AbstractJob {
 		this.plot = plot;
 		this.experiments = experiments;
 		this.plotParameters = plotParameters;
+		this.setDescription("Generating plot " + plotParameters.getPlotName());
 	}
 
 	//

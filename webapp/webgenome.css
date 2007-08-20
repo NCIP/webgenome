@@ -382,3 +382,26 @@ li {
 .pointer {
 	cursor: pointer;
 }
+
+.finishedJob {
+	font-weight: bold;
+	background-color: #bbbbbb;
+}
+
+.message {
+	background-color: #ffffcc;
+	font-weight: bold;
+	position: relative;
+	top: 0px;
+	left: -400px;
+}
+
+a.transientLink {
+	font-weight: bold;
+	text-decoration: none;
+	color: #555555;
+}
+
+a.transientLink:hover {
+	color: #999999;
+}

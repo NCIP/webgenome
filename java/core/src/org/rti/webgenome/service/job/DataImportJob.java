@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-14 22:42:07 $
+$Revision: 1.6 $
+$Date: 2007-08-20 22:09:37 $
 
 The Web CGH Software License, Version 1.0
 
@@ -155,6 +155,7 @@ public class DataImportJob extends AbstractJob {
 		super(userId);
 		this.fileName = fileName;
 		this.organism = organism;
+		this.setDescription("Importing file " + fileName);
 	}
 	
 	//
