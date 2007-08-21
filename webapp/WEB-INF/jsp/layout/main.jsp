@@ -56,7 +56,14 @@
 		--%>
 		<script language="Javascript">
 		
-			window.setInterval("updateJobStatus()", 5000);
+			<%--
+			If user logged in, continually poll for recently
+			completed jobs.
+			--%>
+			<webgenome:onlyIfLoggedInAndStandAloneMode>
+				window.setInterval("updateJobStatus()", 5000);
+			</webgenome:onlyIfLoggedInAndStandAloneMode>
+			
 			var messageLeftPix;
 			var intervalId;
 			
@@ -88,8 +95,10 @@
 				    xmlHttp.onreadystatechange=function() {
 				    	if(xmlHttp.readyState == 4) {
 				    		var xmlDoc = xmlHttp.responseXML.documentElement;
-				    		updateTable(xmlDoc);
-				    		//showJobCompletionMessage(xmlDoc);
+				    		if (xmlDoc != null) {
+					    		updateTable(xmlDoc);
+					    		showJobCompletionMessage(xmlDoc);
+					    	}
 				    	}
 				    }
 				    xmlHttp.open("GET",
@@ -123,9 +132,7 @@
 			function showJobCompletionMessage(doc) {
 				if (doc.getElementsByTagName("update").length > 0) {
 					closeMessage();
-					var msg = document.getElementById("jobCompletionMessage");
-					msg.style.left = messageLeftPix;
-					intervalId = setInterval("moveMessageRight()", 7);
+					intervalId = setInterval("moveMessageRight()", 3);
 				}
 			}
 	
