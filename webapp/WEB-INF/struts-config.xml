@@ -55,6 +55,15 @@
 		<form-bean
 			name="file.upload.form"
 			type="org.rti.webgenome.webui.struts.cart.FileUploadForm"/>
+			
+	<!-- Form for attaching a data or reporter file to an upload -->
+		<form-bean
+			name="attach.data.form"
+			type="org.rti.webgenome.webui.struts.upload.AttachDataForm"/>
+			
+		<form-bean
+			name="reporter.column.name.form"
+			type="org.rti.webgenome.webui.struts.upload.ReporterColumnNameForm"/>
 	</form-beans>
 
 
@@ -390,7 +399,54 @@
             validate="false">
             <forward name="success" path="/cart/newPlot.do"/>
         </action>
-
+        
+        <!-- ============ Upload actions ============= -->
+        
+     <!-- Initialize upload form -->
+        <action path="/upload/initializeUploadForm">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        </action>
+        
+     <!-- Show upload form -->
+        <action path="/upload/showUploadForm">
+        	<forward name="success" path="upload.main.upload.form"/>
+        </action>
+	
+	<!-- Data file upload form -->
+		<action path="/upload/dataFileUploadForm"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.data.file.upload.form"/>
+        	
+    <!-- Upload data file to server -->
+        <action
+        	path="/upload/uploadDataFile"
+        	name="attach.data.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/dataFileUploadForm.do">
+        	<forward name="success" path="/upload/specifyDataColumns.do"/>
+        </action>
+        
+    <!-- Specify data containing columns in an uploaded data fle -->
+        <action path="/upload/specifyDataColumns">
+        	<forward name="success" path="upload.specify.data.columns"/>
+        </action>
+        
+    <!-- Record set of data columns selected -->
+        <action
+        	path="/upload/attachDataFile"
+        	name="reporter.column.name.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/specifyDataColumns.do">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        	<forward name="errors" path="/upload/specifyDataColumns.do"/>
+        </action>
+        	
+    <!-- Reporter file upload form -->
+        <action path="/upload/reporterFileUploadForm"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.reporter.file.upload.form"/>
 
 		<!-- ============ Administration actions ======== -->
 

@@ -1,0 +1,142 @@
+/*
+$Revision: 1.1 $
+$Date: 2007-08-22 20:03:57 $
+
+The Web CGH Software License, Version 1.0
+
+Copyright 2003 RTI. This software was developed in conjunction with the
+National Cancer Institute, and so to the extent government employees are
+co-authors, any rights in such works shall be subject to Title 17 of the
+United States Code, section 105.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this 
+list of conditions and the disclaimer of Article 3, below. Redistributions in 
+binary form must reproduce the above copyright notice, this list of conditions 
+and the following disclaimer in the documentation and/or other materials 
+provided with the distribution.
+
+2. The end-user documentation included with the redistribution, if any, must 
+include the following acknowledgment:
+
+"This product includes software developed by the RTI and the National Cancer 
+Institute."
+
+If no such end-user documentation is to be included, this acknowledgment shall 
+appear in the software itself, wherever such third-party acknowledgments 
+normally appear.
+
+3. The names "The National Cancer Institute", "NCI", 
+“Research Triangle Institute”, and "RTI" must not be used to endorse or promote 
+products derived from this software.
+
+4. This license does not authorize the incorporation of this software into any 
+proprietary programs. This license does not authorize the recipient to use any 
+trademarks owned by either NCI or RTI.
+
+5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
+NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
+INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+package org.rti.webgenome.domain;
+
+import java.io.File;
+
+/**
+ * Data that were uploaded in a 'rectangular' file.
+ * @author dhall
+ *
+ */
+public class UploadedData {
+
+	/** File where the data reside on the server. */
+	private File file = null;
+	
+	/** File format. */
+	private RectangularTextFileFormat fileFormat = null;
+	
+	/** Name (not full path) of file on users system. */
+	private String remoteFileName = null;
+
+	/**
+	 * Get file where the data reside on the server.
+	 * @return A file
+	 */
+	public File getFile() {
+		return file;
+	}
+
+	/**
+	 * Set file where the data reside on the server.
+	 * @param file A rectangular format file
+	 */
+	public void setFile(final File file) {
+		this.file = file;
+	}
+
+	/**
+	 * Get format of file.
+	 * @return File format
+	 */
+	public RectangularTextFileFormat getFileFormat() {
+		return fileFormat;
+	}
+
+	/**
+	 * Set format of file.
+	 * @param fileFormat File format
+	 */
+	public void setFileFormat(
+			final RectangularTextFileFormat fileFormat) {
+		this.fileFormat = fileFormat;
+	}
+	
+	
+	/**
+	 * Get name (not full path) of file on users system.
+	 * @return File name
+	 */
+	public String getRemoteFileName() {
+		return remoteFileName;
+	}
+
+	/**
+	 * Set name (not full path) of file on users system.
+	 * @param remoteFileName File name
+	 */
+	public void setRemoteFileName(final String remoteFileName) {
+		this.remoteFileName = remoteFileName;
+	}
+
+	/**
+	 * Constructor.
+	 */
+	public UploadedData() {
+		
+	}
+
+	/**
+	 * Constructor.
+	 * @param file File where the data reside on the server
+	 * @param fileFormat File format
+	 * @param remoteFileName Name (not path) of file on users system
+	 */
+	public UploadedData(final File file,
+			final RectangularTextFileFormat fileFormat,
+			final String remoteFileName) {
+		super();
+		this.file = file;
+		this.fileFormat = fileFormat;
+		this.remoteFileName = remoteFileName;
+	}
+}

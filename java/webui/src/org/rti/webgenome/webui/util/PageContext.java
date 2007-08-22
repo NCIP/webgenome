@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.5 $
+$Date: 2007-08-22 20:03:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,8 @@ import javax.servlet.http.HttpSession;
 
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.domain.Upload;
+import org.rti.webgenome.domain.UploadedData;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -98,6 +100,12 @@ public final class PageContext {
 	/** Key of client data service manager. */
 	private static final String KEY_CLIENT_DATA_SERVICE_MANAGER =
 		"key.client.data.service.manager";
+	
+	/** Key to upload object. */
+	private static final String KEY_UPLOAD = "key.upload";
+	
+	/** Key to a single file that was uploaded. */
+	private static final String KEY_UPLOADED_DATA = "key.uploaded.file";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -248,6 +256,59 @@ public final class PageContext {
 			sess.setAttribute(KEY_CLIENT_DATA_SERVICE_MANAGER, mgr);
 		}
 		return mgr;
+	}
+	
+	/**
+	 * Set upload object.
+	 * @param upload Upload object
+	 * @param request Servlet request
+	 */
+	public static void setUpload(final Upload upload,
+			final HttpServletRequest request) {
+		request.getSession().setAttribute(KEY_UPLOAD, upload);
+	}
+	
+	/**
+	 * Get upload object.
+	 * @param request Servlet request
+	 * @return Upload object
+	 * @throws SessionTimeoutException If upload object cannot be found,
+	 * which would indicate that the session has timed out
+	 */
+	public static Upload getUpload(final HttpServletRequest request)
+	throws SessionTimeoutException {
+		Upload upload = (Upload) request.getSession().getAttribute(KEY_UPLOAD);
+		if (upload == null) {
+			throw new SessionTimeoutException("Session has expired");
+		}
+		return upload;
+	}
+	
+	/**
+	 * Get data that were uploaded.
+	 * @param request Servlet request
+	 * @return Uploaded data
+	 * @throws SessionTimeoutException If the uploaded file property is
+	 * null, indicating a session timeout.
+	 */
+	public static UploadedData getUploadedData(final HttpServletRequest request)
+	throws SessionTimeoutException {
+		UploadedData data = (UploadedData)
+			request.getSession().getAttribute(KEY_UPLOADED_DATA);
+		if (data == null) {
+			throw new SessionTimeoutException("Session has expired");
+		}
+		return data;
+	}
+	
+	/**
+	 * Set data that were uploaded.
+	 * @param uploadedData Data that were uploaded
+	 * @param request Servlet request
+	 */
+	public static void setUploadedData(final UploadedData uploadedData,
+			final HttpServletRequest request) {
+		request.getSession().setAttribute(KEY_UPLOADED_DATA, uploadedData);
 	}
 	
 	/**

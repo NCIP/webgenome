@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-21 22:31:43 $
+$Revision: 1.2 $
+$Date: 2007-08-22 20:03:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -205,5 +205,17 @@ public class DataFileMetaData {
 	 */
 	public DataFileMetaData() {
 		
+	}
+	
+	//
+	//  B U S I N E S S   M E T H O D S
+	//
+	
+	/**
+	 * Add metadata on a column.
+	 * @param meta Metadata on a column
+	 */
+	public void add(final DataColumnMetaData meta) {
+		this.dataColumnMetaData.add(meta);
 	}
 }

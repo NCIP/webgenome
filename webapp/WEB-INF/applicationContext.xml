@@ -643,6 +643,28 @@
 		</property>
 	</bean>
 	
+<!-- Initialize upload -->
+	<bean name="/upload/initializeUploadForm"
+		class="org.rti.webgenome.webui.struts.upload.InitializeUploadAction"/>
+		
+<!-- Show main upload form -->
+	<bean name="/upload/showUploadForm"
+		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction"/>
+		
+<!-- Upload data file -->
+	<bean name="/upload/uploadDataFile"
+		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction">
+		<property name="ioService" ref="ioService"/>
+	</bean>
+	
+<!-- Setup for specifying data columns -->
+	<bean name="/upload/specifyDataColumns"
+		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>
+
+<!-- Complete the process of attaching data file -->		
+	<bean name="/upload/attachDataFile"
+		class="org.rti.webgenome.webui.struts.upload.AttachDataFileAction"/>
+	
 <!-- AJAX action to retrieve newly completed jobs -->
 	<bean name="/ajax/newlyCompletedJobs"
 		class="org.rti.webgenome.webui.struts.ajax.NewlyCompletedJobsAction">

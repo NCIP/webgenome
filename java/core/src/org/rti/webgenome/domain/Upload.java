@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-21 22:31:43 $
+$Revision: 1.2 $
+$Date: 2007-08-22 20:03:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -322,5 +322,17 @@ public class Upload {
 	 */
 	public Upload() {
 		
+	}
+	
+	//
+	//  B U S I N E S S   M E T H O D S
+	//
+	
+	/**
+	 * Add data file meta data.
+	 * @param metaData Data file meta data
+	 */
+	public void add(final DataFileMetaData metaData) {
+		this.dataFileMetaData.add(metaData);
 	}
 }
