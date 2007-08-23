@@ -218,6 +218,13 @@
 	  	<put name="content" value="/WEB-INF/jsp/upload/reporterFileUploadForm.jsp" />
 	  	<put name="helpTopic" value="upload" />
   	</definition>
+  	
+<!-- Specify data file columns -->
+  	<definition name="upload.specify.reporter.columns" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/specifyReporterColumns.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
 
   	<!-- ================================ -->
   	<!--   Administration pages           -->

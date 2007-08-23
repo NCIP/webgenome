@@ -649,7 +649,10 @@
 		
 <!-- Show main upload form -->
 	<bean name="/upload/showUploadForm"
-		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction"/>
+		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction">
+		<property name="ioService" ref="ioService"/>
+		<property name="organismDao" ref="organismDao"/>
+	</bean>
 		
 <!-- Upload data file -->
 	<bean name="/upload/uploadDataFile"
@@ -660,10 +663,40 @@
 <!-- Setup for specifying data columns -->
 	<bean name="/upload/specifyDataColumns"
 		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>
+		
+<!-- Remove data file from upload -->
+	<bean name="/upload/removeDataFile"
+		class="org.rti.webgenome.webui.struts.upload.RemoveDataFileAction">
+		<property name="ioService" ref="ioService"/>
+	</bean>
 
 <!-- Complete the process of attaching data file -->		
 	<bean name="/upload/attachDataFile"
 		class="org.rti.webgenome.webui.struts.upload.AttachDataFileAction"/>
+		
+<!-- Upload reporter file -->
+	<bean name="/upload/uploadReporterFile"
+		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction">
+		<property name="ioService" ref="ioService"/>
+	</bean>
+	
+<!-- Setup for specifying reporter columns -->
+	<bean name="/upload/specifyReporterColumns"
+		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>
+		
+<!-- Remove data file from upload -->
+	<bean name="/upload/removeReporterFile"
+		class="org.rti.webgenome.webui.struts.upload.RemoveReporterFileAction">
+		<property name="ioService" ref="ioService"/>
+	</bean>
+
+<!-- Complete the process of attaching reporter file -->		
+	<bean name="/upload/attachReporterFile"
+		class="org.rti.webgenome.webui.struts.upload.AttachReporterFileAction"/>
+		
+<!-- Upload data -->
+	<bean name="/upload/uploadData"
+		class="org.rti.webgenome.webui.struts.upload.UploadAction"/>
 	
 <!-- AJAX action to retrieve newly completed jobs -->
 	<bean name="/ajax/newlyCompletedJobs"

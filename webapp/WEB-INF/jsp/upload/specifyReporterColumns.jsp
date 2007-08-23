@@ -29,7 +29,7 @@
 </p>
 
 <center>
-<html:form action="/upload/attachDataFile">
+<html:form action="/upload/attachReporterFile">
 <p>
 	<html:errors property="global"/>
 </p>
@@ -41,24 +41,6 @@
 		<html:options name="columnHeadings"/>
 	</html:select>
 </p>
-
-<table>
-	<tr>
-		<th>Contains Data</th>
-		<th>Column Name</th>
-		<th>Bioassay Name</th>
-	</tr>
-	<logic:iterate name="columnHeadings" id="col">
-	<bean:define id="col" name="col"/>
-	<tr>
-		<td align="center"><input type="checkbox" id="<%= col%>_cb"
-			name="<%= col%>_cb"
-			onclick="setBioassayName('<%= col%>')"/></td>
-		<td id="<%= col%>_col"><%= col%></td>
-		<td><input type="text" id="<%= col%>_bioassay" name="<%= col%>_bioassay"/></td>
-	</tr>
-	</logic:iterate>
-</table>
 
 <p>
 	<input type="submit" value="OK" />

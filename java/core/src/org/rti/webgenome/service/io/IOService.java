@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-14 22:42:06 $
+$Revision: 1.6 $
+$Date: 2007-08-23 21:19:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,10 +55,14 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.FileUploadDataSourceProperties;
@@ -317,5 +321,49 @@ public class IOService {
 	public SerializedChromosomeArrayDataGetter
 	getSerializedChromosomeArrayDataGetter() {
 		return new SerializedChromosomeArrayDataGetter(this.dataFileManager);
+	}
+	
+	/**
+	 * Get all column headings from given file.
+	 * @param fileName Name of file in working directory.  This is
+	 * not an absolute path.
+	 * @return Column headings
+	 */
+	public Set<String> getColumnHeadings(final String fileName) {
+		Set<String> cols = new HashSet<String>();
+		File file = this.getWorkingFile(fileName);
+		if (!file.exists() || !file.isFile()) {
+			throw new WebGenomeSystemException(
+					"Cannot get headings from file '" + fileName + "'.");
+		}
+		RectangularFileReader reader = new RectangularFileReader(file);
+		cols.addAll(reader.getColumnHeadings());
+		return cols;
+	}
+	
+	/**
+	 * Get all column headings from given data files.
+	 * @param dataFileMetaData Metadata on data files
+	 * @return Union of all column headings
+	 */
+	public Set<String> getColumnHeadings(
+			final Collection<DataFileMetaData> dataFileMetaData) {
+		Set<String> cols = new HashSet<String>();
+		for (DataFileMetaData meta : dataFileMetaData) {
+			String fileName = meta.getLocalFileName();
+			cols.addAll(this.getColumnHeadings(fileName));
+		}
+		return cols;
+	}
+	
+	/**
+	 * Get file referenced by given file name, which is in
+	 * {@code workingDir}.
+	 * @param fileName Name of file (not absolute path)
+	 * @return Working file
+	 */
+	private File getWorkingFile(final String fileName) {
+		String path = this.workingDir.getAbsolutePath() + "/" + fileName;
+		return new File(path);
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.3 $
+$Date: 2007-08-23 21:19:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -182,6 +182,14 @@ public final class BpUnits {
 		return (long) (bpValue / (double) this.numericBase);
 	}
 	
+	/**
+	 * Override of toString() methods.
+	 * @return Name of units
+	 */
+	public String toString() {
+		return this.name;
+	}
+	
 	// =====================================
 	//       Static methods
 	// =====================================
@@ -204,4 +212,5 @@ public final class BpUnits {
 		return new ArrayList<BpUnits>(INDEX.values());
 	}
 
+	
 }

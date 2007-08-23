@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-08-23 21:19:20 $
 
 The Web CGH Software License, Version 1.0
@@ -48,36 +48,14 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.struts;
+package org.rti.webgenome.webui.struts.upload;
 
-import org.apache.struts.action.ActionError;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.rti.webgenome.util.StringUtils;
+import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
- * Abstract base class for all Struts forms.
+ * Performs uploading of data.
  * @author dhall
- *
  */
-public abstract class BaseForm extends ActionForm {
+public class UploadAction extends BaseAction {
 
-	/**
-	 * Validate text box field.  If the {@code fieldValue}
-	 * is {@code null} or has length < 1, a new
-	 * {@code ActionError} with key of {@code fieldName}
-	 * and message code of {@code invalid.field}
-	 * (i.e. in ApplicationResources.Properties) will be
-	 * added to the given action errors.
-	 * @param fieldName Name of field
-	 * @param fieldValue Value of field
-	 * @param actionErrors Action errors to which new
-	 * error object may be added.
-	 */
-	protected void validateTextBoxField(final String fieldName,
-			final String fieldValue, final ActionErrors actionErrors) {
-		if (StringUtils.isEmpty(fieldValue)) {
-			actionErrors.add(fieldName, new ActionError("invalid.field"));
-		}
-	}
 }

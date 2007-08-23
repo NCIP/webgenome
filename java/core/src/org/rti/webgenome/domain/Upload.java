@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-22 20:03:57 $
+$Revision: 1.3 $
+$Date: 2007-08-23 21:19:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -90,6 +90,9 @@ public class Upload {
 	/** Format of file containing reporter data. */
 	private RectangularTextFileFormat reporterFileFormat = null;
 	
+	/** Heading of column in reporter file containing reporter names. */
+	private String reporterFileReporterNameColumnName = null;
+	
 	/**
 	 * Name of column containing reporter chromosome numbers.
 	 * If {@code reporterLocalFileName} is not null, then
@@ -120,6 +123,7 @@ public class Upload {
 	/** Organism that was subject of experiment. */
 	private Organism organism = null;
 	
+	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
@@ -146,6 +150,24 @@ public class Upload {
 	 */
 	public void setChromosomeColumnName(final String chromosomeColumnName) {
 		this.chromosomeColumnName = chromosomeColumnName;
+	}
+
+	/**
+	 * Get heading of column in reporter file containing reporter names.
+	 * @return Column heading
+	 */
+	public String getReporterFileReporterNameColumnName() {
+		return reporterFileReporterNameColumnName;
+	}
+
+	/**
+	 * Set heading of column in reporter file containing reporter names.
+	 * @param reporterFileReporterNameColumnName Column name
+	 */
+	public void setReporterFileReporterNameColumnName(
+			final String reporterFileReporterNameColumnName) {
+		this.reporterFileReporterNameColumnName =
+			reporterFileReporterNameColumnName;
 	}
 
 	/**
@@ -334,5 +356,52 @@ public class Upload {
 	 */
 	public void add(final DataFileMetaData metaData) {
 		this.dataFileMetaData.add(metaData);
+	}
+	
+	
+	/**
+	 * Remove data file metadata with given local file name.
+	 * @param localFileName Local file name (not absolute path)
+	 */
+	public void removeDataFileMetaData(final String localFileName) {
+		for (DataFileMetaData meta : this.dataFileMetaData) {
+			if (localFileName.equals(meta.getLocalFileName())) {
+				this.dataFileMetaData.remove(meta);
+				break;
+			}
+		}
+	}
+	
+	
+	/**
+	 * Remove reporter file metadata.
+	 */
+	public void removeRepoterFile() {
+		this.reporterFileFormat = null;
+		this.reporterLocalFileName = null;
+		this.reporterRemoteFileName = null;
+		this.reporterFileReporterNameColumnName = null;
+	}
+	
+	
+	/**
+	 * Set metadata about reporter file.
+	 * @param format File format
+	 * @param localFileName Local file name on server (not absolute path)
+	 * @param remoteFileName Remote file name of user's system
+	 * @param reporterFileReporterNameColumnName
+	 * Heading of column in reporter file containing reporter names.
+	 * (not absolute path)
+	 */
+	public void setReporterFile(
+			final RectangularTextFileFormat format,
+			final String localFileName,
+			final String remoteFileName,
+			final String reporterFileReporterNameColumnName) {
+		this.reporterFileFormat = format;
+		this.reporterLocalFileName = localFileName;
+		this.reporterRemoteFileName = remoteFileName;
+		this.reporterFileReporterNameColumnName =
+			reporterFileReporterNameColumnName;
 	}
 }

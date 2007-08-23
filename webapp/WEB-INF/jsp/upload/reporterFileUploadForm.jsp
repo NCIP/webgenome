@@ -1,17 +1,25 @@
+<%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <center>
 <h2>Attach Reporter File</h2>
+<html:form action="/upload/uploadReporterFile" method="POST" enctype="multipart/form-data">
+
 <p>
-File format:
-<input type="radio" name="format">CSV</input>
-<input type="radio" name="format">Tab-Delimited</input>
+	<html:errors property="global"/>
+</p>
+<p>
+	File format:
+	<html:radio property="fileFormat" value="CSV">CSV</html:radio>
+	<html:radio property="fileFormat" value="TAB_DELIMITED">Tab delimited</html:radio>
 </p>
 
 <p>
-File <input type="file" />
+	<html:errors property="uploadFile"/>
+	File <html:file property="uploadFile"/>
 </p>
 
 <p>
-	<input type="submit" value="OK" />
+	<html:submit value="Attach File"/>
 	<input type="button" value="Cancel" />
 </p>
+</html:form>
 </center>

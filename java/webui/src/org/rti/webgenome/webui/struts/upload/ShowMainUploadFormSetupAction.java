@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-22 20:03:57 $
+$Revision: 1.2 $
+$Date: 2007-08-23 21:19:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,13 +50,22 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Upload;
+import org.rti.webgenome.service.dao.OrganismDao;
+import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -66,6 +75,29 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public class ShowMainUploadFormSetupAction extends BaseAction {
+	
+	/** Service for file I/O. */
+	private IOService ioService = null;
+	
+	/** Organism data access object. */
+	private OrganismDao organismDao = null;
+
+	/**
+	 * Injector method for the organism data access object.
+	 * @param organismDao Organism data access object
+	 */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
+	}
+	
+	
+	/**
+	 * Set service for file I/O.
+	 * @param ioService File I/O service.
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -77,6 +109,21 @@ public class ShowMainUploadFormSetupAction extends BaseAction {
 	    ) throws Exception {
 		Upload upload = PageContext.getUpload(request);
 		request.setAttribute("upload", upload);
+		Set<String> allCols = new HashSet<String>();
+		if (upload.getReporterLocalFileName() == null) {
+			if (upload.getDataFileMetaData() != null) {
+				allCols = this.ioService.getColumnHeadings(
+						upload.getDataFileMetaData());
+			}
+		} else {
+			allCols = this.ioService.getColumnHeadings(
+					upload.getReporterLocalFileName());
+		}
+		request.setAttribute("allCols", allCols);
+		List<Organism> organisms = this.organismDao.loadAll();
+		request.setAttribute("organisms", organisms);
+		Collection<BpUnits> units = BpUnits.getUnits();
+		request.setAttribute("units", units);
 		return mapping.findForward("success");
 	}
 }

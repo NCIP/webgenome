@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-22 20:03:57 $
+$Revision: 1.3 $
+$Date: 2007-08-23 21:19:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -89,6 +89,7 @@ public class DataFileMetaData {
 	/** Column metadata. */
 	private Set<DataColumnMetaData> dataColumnMetaData =
 		new HashSet<DataColumnMetaData>();
+	
 
 	//
 	//  G E T T E R S / S E T T E R S
