@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-22 20:03:57 $
+$Revision: 1.2 $
+$Date: 2007-08-24 21:51:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.DataColumnMetaData;
 import org.rti.webgenome.domain.DataFileMetaData;
-import org.rti.webgenome.domain.Upload;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.domain.UploadedData;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -108,7 +108,7 @@ public class AttachDataFileAction extends BaseAction {
 		meta.setFormat(data.getFileFormat());
 		meta.setLocalFileName(data.getFile().getName());
 		meta.setRemoteFileName(data.getRemoteFileName());
-		Upload upload = PageContext.getUpload(request);
+		UploadDataSourceProperties upload = PageContext.getUpload(request);
 		upload.add(meta);
 		
 		// Add data column metadata to file metadata

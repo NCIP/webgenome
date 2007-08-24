@@ -37,4 +37,6 @@ DROP TABLE dsp_experiments CASCADE CONSTRAINTS;
 DROP TABLE job_out_bioassay_names CASCADE CONSTRAINTS;
 DROP TABLE job_out_experiment_names CASCADE CONSTRAINTS;
 DROP TABLE job_experiments CASCADE CONSTRAINTS;
+DROP TABLE data_file_meta_data CASCADE CONSTRAINTS;
+DROP TABLE data_col_meta_data CASCADE CONSTRAINTS;
 

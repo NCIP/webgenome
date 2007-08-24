@@ -208,10 +208,6 @@
 				
 			<%-- File upload --%>
 				<webgenome:onlyIfLoggedInAndStandAloneMode>
-					<html:link action="/cart/uploadForm" styleClass="menuItem">
-						Quick Upload
-					</html:link>
-					|
 					<html:link action="/upload/initializeUploadForm" styleClass="menuItem">
 						Upload
 					</html:link>

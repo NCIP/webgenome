@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-10 22:32:41 $
+$Revision: 1.3 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,8 @@ import java.util.List;
 
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssayData;
+import org.rti.webgenome.domain.Reporter;
+import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.FileUtils;
 
 import junit.framework.TestCase;
@@ -65,6 +67,18 @@ import junit.framework.TestCase;
  *
  */
 public final class SmdFileReaderTester extends TestCase {
+	
+	/** Heading of column containing reporter names. */
+	private static final String REPORTER_NAME_COLUMN_NAME = "name";
+	
+	/** Heading of column containing chromosome numbers. */
+	private static final String CHROMOSOME_COLUMN_NAME = "chromosome";
+	
+	/** Heading of column containing chromosome positions. */
+	private static final String POSITION_COLUMN_NAME = "position";
+	
+	/** Units of chromosome position. */
+	private static final BpUnits UNITS = BpUnits.KB;
     
     /**
      * Path (relative to classpath) to directory containing
@@ -75,177 +89,36 @@ public final class SmdFileReaderTester extends TestCase {
 
     
     /**
-     * Test method getBioAssayNames().
+     * Test method getReporters().
      * @throws Exception if something crashes.
      */
-    public void testGetBioAssayNames() throws Exception {
+    public void testGetReporters() throws Exception {
     	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
-        SmdFileReader reader = new SmdFileReader(file);
-        List<String> bioAssayNames = reader.getBioAssayNames();
-        assertEquals(2, bioAssayNames.size());
-        assertEquals("bioassay1", bioAssayNames.get(0));
-        assertEquals("bioassay2", bioAssayNames.get(1));
+        SmdFileReader reader = new SmdFileReader(file,
+        		REPORTER_NAME_COLUMN_NAME, CHROMOSOME_COLUMN_NAME,
+        		POSITION_COLUMN_NAME, UNITS);
+        List<Reporter> reporters = reader.getReporters();
+        assertEquals(5, reporters.size());
+        Reporter r = reporters.get(3);
+        assertEquals("r4", r.getName());
+        assertEquals((short) 2, r.getChromosome());
+        assertEquals((long) 5000, r.getLocation());
     }
     
-    
     /**
-     * Test getting bioassay data from a well-formed file.
-     * @throws Exception if something bad happens
+     * Test importing of normal data.
+     * @throws Exception if something crashes
      */
-    public void testGetBioAssayData() throws Exception {
+    public void testGetNormalData() throws Exception {
     	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
-        SmdFileReader reader = new SmdFileReader(file);
-        
-        // First bioassay
-        BioAssayData bad = reader.getBioAssayData("bioassay1");
-        assertNotNull(bad);
-        List<ArrayDatum> aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(3, aData.size());
-        assertEquals((float) 0.1, aData.get(0).getValue());
-        assertEquals((float) 0.3, aData.get(aData.size() - 1).getValue());
-        assertEquals((long) 100, aData.get(0).getReporter().getLocation());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.get(0).getValue());
-        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
-        
-        
-        // Second bioassay
-        bad = reader.getBioAssayData("bioassay2");
-        assertNotNull(bad);
-        aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(3, aData.size());
-        assertEquals((float) -0.1, aData.get(0).getValue());
-        assertEquals((float) -0.3, aData.get(aData.size() - 1).getValue());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.get(0).getValue());
-        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
-    }
-    
-    
-    /**
-     * Test getting bioassay data from a well-formed file
-     * where positions are given in units of KB (kilobases).
-     * @throws Exception if something bad happens
-     */
-    public void testGetBioAssayDataKb() throws Exception {
-    	File file = FileUtils.getFile(TEST_DIRECTORY, "normal-kb.csv");
-        SmdFileReader reader = new SmdFileReader(file);
-        
-        // First bioassay
-        BioAssayData bad = reader.getBioAssayData("bioassay1");
-        assertNotNull(bad);
-        List<ArrayDatum> aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(3, aData.size());
-        assertEquals((float) 0.1, aData.get(0).getValue());
-        assertEquals((float) 0.3, aData.get(aData.size() - 1).getValue());
-        assertEquals((long) 100000, aData.get(0).getReporter().getLocation());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.get(0).getValue());
-        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
-        
-        
-        // Second bioassay
-        bad = reader.getBioAssayData("bioassay2");
-        assertNotNull(bad);
-        aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(3, aData.size());
-        assertEquals((float) -0.1, aData.get(0).getValue());
-        assertEquals((float) -0.3, aData.get(aData.size() - 1).getValue());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.get(0).getValue());
-        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
-    }
-    
-    
-    /**
-     * Test getting bioassay data from a file with some
-     * missing reporter data.
-     * @throws Exception if something bad happens
-     */
-    public void testGetBioAssayDataMissingReporterData() throws Exception {
-    	File file = FileUtils.getFile(TEST_DIRECTORY,
-    			"missing_reporter_data.csv");
-        SmdFileReader reader = new SmdFileReader(file);
-        
-        // First bioassay
-        BioAssayData bad = reader.getBioAssayData("bioassay1");
-        assertNotNull(bad);
-        List<ArrayDatum> aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(1, aData.size());
-        assertEquals((float) 0.1, aData.get(0).getValue());
-        assertEquals((float) 0.1, aData.get(aData.size() - 1).getValue());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.get(0).getValue());
-        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
-        
-        
-        // Second bioassay
-        bad = reader.getBioAssayData("bioassay2");
-        assertNotNull(bad);
-        aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(1, aData.size());
-        assertEquals((float) -0.1, aData.get(0).getValue());
-        assertEquals((float) -0.1, aData.get(aData.size() - 1).getValue());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.get(0).getValue());
-        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
-    }
-    
-    
-    /**
-     * Test getting bioassay data from a file with some
-     * missing values.
-     * @throws Exception if something bad happens
-     */
-    public void testGetBioAssayDataMissingValues() throws Exception {
-    	File file = FileUtils.getFile(TEST_DIRECTORY, "missing_values.csv");
-        SmdFileReader reader = new SmdFileReader(file);
-        
-        // First bioassay
-        BioAssayData bad = reader.getBioAssayData("bioassay1");
-        assertNotNull(bad);
-        List<ArrayDatum> aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(1, aData.size());
-        assertEquals((float) 0.2, aData.get(0).getValue());
-        assertEquals((float) 0.2, aData.get(aData.size() - 1).getValue());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) 0.4, aData.get(0).getValue());
-        assertEquals((float) 0.5, aData.get(aData.size() - 1).getValue());
-        
-        
-        // Second bioassay
-        bad = reader.getBioAssayData("bioassay2");
-        assertNotNull(bad);
-        aData = bad.getArrayData((short) 1);
-        assertNotNull(aData);
-        assertEquals(3, aData.size());
-        assertEquals((float) -0.1, aData.get(0).getValue());
-        assertEquals((float) -0.3, aData.get(aData.size() - 1).getValue());
-        aData = bad.getArrayData((short) 2);
-        assertNotNull(aData);
-        assertEquals(2, aData.size());
-        assertEquals((float) -0.4, aData.get(0).getValue());
-        assertEquals((float) -0.5, aData.get(aData.size() - 1).getValue());
+        SmdFileReader reader = new SmdFileReader(file,
+        		REPORTER_NAME_COLUMN_NAME, CHROMOSOME_COLUMN_NAME,
+        		POSITION_COLUMN_NAME, UNITS);
+        BioAssayData data = reader.getBioAssayData(file, "bioassay1",
+        		REPORTER_NAME_COLUMN_NAME);
+        List<ArrayDatum> datumList = data.getArrayData((short) 1);
+        assertEquals(3, datumList.size());
+        ArrayDatum datum = data.getArrayData((short) 1).get(0);
+        assertEquals((float) 0.1, datum.getValue());
     }
 }

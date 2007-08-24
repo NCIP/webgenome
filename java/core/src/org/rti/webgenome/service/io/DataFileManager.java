@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,6 +68,8 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.BioAssayData;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.ChromosomeReporters;
+import org.rti.webgenome.domain.DataColumnMetaData;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
@@ -129,33 +131,27 @@ public final class DataFileManager {
     // ======================================
 
     
+    
     /**
-     * This method extracts all data from an
-     * SMD (Stanford Microarray Database) file,
-     * serializes reporter and array data to files,
-     * and sets file name properties within the embedded
-     * objects appropriately.
-     * @param smdFile SMD-format file
-     * @param organism Organism experiment was performed on
-     * @return An experiment.  For each column
-     * in the given file that does not contain
-     * reporter data, a new <code>BioAssay</code>
-     * will be created.  A single unique <code>Array</code>
-     * object will also be created and associated with
-     * these bioassays.  The method minimizes the amount
-     * of memory required.
-     * @throws SmdFormatException if given file does not
-     * comply with the SMD (Stanford Microarray Database)
-     * specification.
+     * Extract specified data from an SMD-format file.
+     * @param in Reader of SMD data files
+     * @param experiment Experiment into which parsed data will be
+     * deposited.
+     * @param dataFile File containing data to parse
+     * @param dataFileMetaData Metadata on data file
+     * @param organism Organism that experiment was performed against
+     * @throws SmdFormatException If the file is not valid
+     * SMD format
+     * @see {@link org.rti.webgenome.service.io.SmdFileReader}
      */
-    public Experiment convertSmdData(final File smdFile,
+    public void convertSmdData(
+    		final SmdFileReader in,
+    		final Experiment experiment,
+    		final File dataFile,
+            final DataFileMetaData dataFileMetaData,
             final Organism organism)
         throws SmdFormatException {
-        Experiment exp = new Experiment(smdFile.getName());
-        
-        LOGGER.info("Opening SMD file");
-        SmdFileReader in = new SmdFileReader(smdFile);
-        
+                
         // Create new array object and store reporters
         LOGGER.info("Serializing reporter data");
         StopWatch stopWatch = new StopWatch();
@@ -186,13 +182,15 @@ public final class DataFileManager {
         
         // Create new bioassay objects and store array data
         LOGGER.info("Serializing array data");
-        List<String> baNames = in.getBioAssayNames();
-        for (String name : baNames) {
+        for (DataColumnMetaData meta
+        		: dataFileMetaData.getDataColumnMetaData()) {
             DataSerializedBioAssay ba =
-                new DataSerializedBioAssay(name, organism);
-            exp.add(ba);
+                new DataSerializedBioAssay(meta.getBioAssayName(), organism);
+            experiment.add(ba);
             ba.setArray(array);
-            BioAssayData bad = in.getBioAssayData(name, true);
+            BioAssayData bad = in.getBioAssayData(dataFile,
+            		meta.getColumnName(),
+            		dataFileMetaData.getReporterNameColumnName());
             LOGGER.info("Serializing bioassay " + ba.getName());
             for (ChromosomeArrayData cad
                     : bad.getChromosomeArrayData().values()) {
@@ -212,8 +210,6 @@ public final class DataFileManager {
         LOGGER.info("Elapsed time: " + stopWatch.getFormattedLapTime());
         LOGGER.info("Total elapsed time: "
                 + stopWatch.getFormattedElapsedTime());
-        
-        return exp;
     }
     
     

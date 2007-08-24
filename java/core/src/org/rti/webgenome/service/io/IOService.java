@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.7 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,9 +65,8 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.FileUploadDataSourceProperties;
-import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.util.IdGenerator;
@@ -235,21 +234,18 @@ public class IOService {
 		String path =
 			this.workingDir.getAbsolutePath() + File.separator + fileName;
 		File file = new File(path);
-		if (!file.exists() || !file.isFile()) {
-			throw new WebGenomeSystemException("File '" + path + "' not valid");
-		}
-		LOGGER.info("Deleting serialized data file '"
-				+ file.getAbsolutePath() + "'");
-		if (!file.delete()) {
-			LOGGER.warn("Unable to delete uploaded file '" + path + "'");
+		if (file.exists() && file.isFile()) {
+			LOGGER.info("Deleting serialized data file '"
+					+ file.getAbsolutePath() + "'");
+			if (!file.delete()) {
+				LOGGER.warn("Unable to delete uploaded file '" + path + "'");
+			}
 		}
 	}
 	
 	/**
 	 * Load SMD format data from named file and put in shopping cart.
-	 * @param fileName Name of file containing SMD format data.
-	 * This is not an absolute path.
-	 * @param organism Organism associated with data
+	 * @param upload Upload data source properties
 	 * @param shoppingCart Shopping cart
 	 * @return New experiment that was added to shopping cart.
 	 * Clients should not subquently add this experiment object to
@@ -257,23 +253,31 @@ public class IOService {
 	 * @throws SmdFormatException If file does not contain
 	 * valid SMD format data
 	 */
-	public Experiment loadSmdData(final String fileName,
-			final Organism organism, final ShoppingCart shoppingCart)
+	public Experiment loadSmdData(final UploadDataSourceProperties upload,
+			final ShoppingCart shoppingCart)
 	throws SmdFormatException {
-		String path = this.workingDir.getAbsolutePath() + "/" + fileName;
-		File file = new File(path);
-		Experiment exp = this.dataFileManager.convertSmdData(file, organism);
-		exp.setId(this.experimentIdGenerator.nextId());
-		DataSourceProperties dsProps =
-			new FileUploadDataSourceProperties(fileName);
-		exp.setDataSourceProperties(dsProps);
+		Experiment experiment = new Experiment(upload.getExperimentName());
+		experiment.setId(this.experimentIdGenerator.nextId());
+		File reporterFile = this.getWorkingFile(
+				upload.getReporterLocalFileName());
+		SmdFileReader reader = new SmdFileReader(reporterFile,
+				upload.getReporterFileReporterNameColumnName(),
+				upload.getChromosomeColumnName(),
+				upload.getPositionColumnName(),
+				upload.getPositionUnits());
+		for (DataFileMetaData meta : upload.getDataFileMetaData()) {
+			File dataFile = this.getWorkingFile(meta.getLocalFileName());
+			this.dataFileManager.convertSmdData(reader, experiment, dataFile,
+					meta, upload.getOrganism());
+		}
+		experiment.setDataSourceProperties(upload);
 		ColorChooser colorChooser = shoppingCart.getBioassayColorChooser();
-		for (BioAssay ba : exp.getBioAssays()) {
+		for (BioAssay ba : experiment.getBioAssays()) {
 			ba.setId(this.bioAssayIdGenerator.nextId());
 			ba.setColor(colorChooser.nextColor());
 		}
-		shoppingCart.add(exp);
-		return exp;
+		shoppingCart.add(experiment);
+		return experiment;
 	}
 	
 	
@@ -292,11 +296,14 @@ public class IOService {
 			// upload file.
 			boolean deleteReporters = false;
 			DataSourceProperties props = exp.getDataSourceProperties();
-			if (props instanceof FileUploadDataSourceProperties) {
+			if (props instanceof UploadDataSourceProperties) {
 				deleteReporters = true;
-				String uploadFileName = ((FileUploadDataSourceProperties)
-						props).getUploadTempFileName();
-				this.delete(uploadFileName);
+				UploadDataSourceProperties uProps =
+					(UploadDataSourceProperties) props;
+				this.delete(uProps.getReporterLocalFileName());
+				for (DataFileMetaData meta : uProps.getDataFileMetaData()) {
+					this.delete(meta.getLocalFileName());
+				}
 			}
 			
 			// Delete files and possibly reporters
@@ -362,7 +369,7 @@ public class IOService {
 	 * @param fileName Name of file (not absolute path)
 	 * @return Working file
 	 */
-	private File getWorkingFile(final String fileName) {
+	public File getWorkingFile(final String fileName) {
 		String path = this.workingDir.getAbsolutePath() + "/" + fileName;
 		return new File(path);
 	}

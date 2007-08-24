@@ -77,11 +77,11 @@
 		</subclass>
 		<subclass name="org.rti.webgenome.service.job.DataImportJob"
 			discriminator-value="import">
-			<property name="fileName" column="file_name"/>
-			<many-to-one name="organism"
-				column="organism_id"
-				class="org.rti.webgenome.domain.Organism"
-				lazy="false"/>	
+			<many-to-one name="uploadDataSourceProperties"
+				column="data_src_props_id"
+				class="org.rti.webgenome.domain.DataSourceProperties"
+				cascade="all-delete-orphan"
+				lazy="false"/>
 		</subclass>
 	</class>
 

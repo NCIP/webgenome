@@ -22,9 +22,26 @@
 			<property name="clientId" column="client_id"/>
 		</subclass>
 		<subclass
-			name="org.rti.webgenome.domain.FileUploadDataSourceProperties"
-			discriminator-value="file">
-			<property name="uploadTempFileName" column="file_name"/>
+			name="org.rti.webgenome.domain.UploadDataSourceProperties"
+			discriminator-value="upload">
+			<property name="reporterLocalFileName" column="rep_loc_file_name"/>
+			<property name="reporterRemoteFileName" column="rep_rem_file_name"/>
+			<property name="reporterFileFormatName" column="rep_file_format"/>
+			<property name="reporterFileReporterNameColumnName" column="rep_col_name"/>
+			<property name="chromosomeColumnName" column="chrom_col_name"/>
+			<property name="positionColumnName" column="pos_col_name"/>
+			<property name="positionUnitsName" column="pos_units"/>
+			<property name="experimentName" column="exp_name"/>
+			<many-to-one name="organism" column="organism_id"
+				class="org.rti.webgenome.domain.Organism"
+				lazy="false"/>
+			<set
+				name="dataFileMetaData"
+				lazy="false"
+				cascade="all,delete-orphan">
+				<key column="data_src_props_id" not-null="true"/>
+				<one-to-many class="org.rti.webgenome.domain.DataFileMetaData"/>
+			</set>
 		</subclass>
 		<subclass
 			name="org.rti.webgenome.domain.SingleAnalysisDataSourceProperties"

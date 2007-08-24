@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.4 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,13 +51,17 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.webui.util;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
+import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -185,6 +189,49 @@ public final class ProcessingModeDecider {
 		return background;
 	}
 	
+	
+	/**
+	 * Determines whether load on the contents of
+	 * the given files should be performed in
+	 * the background.  It does this
+	 * by determining if the total file size in bytes
+	 * is greater than a threshold.  This treshold
+	 * may be set using the system property
+	 * {@code bg.processing.file.size.threshold}.  If this
+	 * property is not set, then the threshold is set
+	 * to {@link java.lang.Long.MAX_VALUE}, so
+	 * the method will always return {@code false}.
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
+	 * @param upload Upload properties
+	 * @param request Servlet request
+	 * @param ioService File I/O service
+	 * @return T/F
+	 * @throws SessionTimeoutException if the session mode
+	 * cannot be recovered indicating a session timeout
+	 */
+	public static boolean processInBackground(
+			final UploadDataSourceProperties upload,
+			final HttpServletRequest request,
+			final IOService ioService)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			Collection<File> files = new ArrayList<File>();
+			files.add(ioService.getWorkingFile(
+					upload.getReporterLocalFileName()));
+			for (DataFileMetaData meta : upload.getDataFileMetaData()) {
+				files.add(ioService.getWorkingFile(meta.getLocalFileName()));
+			}
+			long totalLen = 0;
+			for (File file : files) {
+				totalLen += file.length();
+			}
+			background = totalLen > BG_PROCESSING_FILE_SIZE_THRESHOLD;
+		}
+		return background;
+	}
+	
 	/**
 	 * Determines whether some compute-intensive process
 	 * should be performed in the background.  It does this
@@ -296,7 +343,6 @@ public final class ProcessingModeDecider {
 	 * property is not set, then the threshold is set
 	 * to {@link java.lang.Long.MAX_VALUE}, so
 	 * the method will always return {@code false}.
-	 * 
 	 * If the session mode is CLIENT, then operations are
 	 * never performed in the background.
 	 * @param file File that will be processed

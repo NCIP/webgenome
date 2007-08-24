@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -112,27 +112,28 @@ public class DataManipulationSimulator {
         throws SmdFormatException {
         long startTime = System.currentTimeMillis();
         
-        // Serialize data
-        LOGGER.info("Serializing data");
-        FileUtils.createDirectory(tempDirPath);
-        DataFileManager mgr = new DataFileManager(tempDirPath);
-        File smdFile = new File(smdFilePath);
-        Experiment exp = mgr.convertSmdData(smdFile, new Organism());
-        LOGGER.info("Finished serializing data");
-        
-        // Perform simulation
-        LOGGER.info("Performing simulations");
-        AnalyticOperationSimulator sim =
-            new SingleBioassayInMemoryAnalyticOperationSimulator();
-        sim.perform(mgr, exp, numDataAccesses);
-        LOGGER.info("Finished simulations");
-        
-        long endTime = System.currentTimeMillis();
-        
-        // Remove serialized data
-        mgr.deleteDataFiles(exp, true);
-        
-        return endTime - startTime;
+//        // Serialize data
+//        LOGGER.info("Serializing data");
+//        FileUtils.createDirectory(tempDirPath);
+//        DataFileManager mgr = new DataFileManager(tempDirPath);
+//        File smdFile = new File(smdFilePath);
+//        Experiment exp = mgr.convertSmdData(smdFile, new Organism());
+//        LOGGER.info("Finished serializing data");
+//        
+//        // Perform simulation
+//        LOGGER.info("Performing simulations");
+//        AnalyticOperationSimulator sim =
+//            new SingleBioassayInMemoryAnalyticOperationSimulator();
+//        sim.perform(mgr, exp, numDataAccesses);
+//        LOGGER.info("Finished simulations");
+//        
+//        long endTime = System.currentTimeMillis();
+//        
+//        // Remove serialized data
+//        mgr.deleteDataFiles(exp, true);
+//        
+//        return endTime - startTime;
+        return 1;
     }
     
     

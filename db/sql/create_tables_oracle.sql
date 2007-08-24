@@ -98,17 +98,13 @@ CREATE TABLE job (
 	description VARCHAR2(256),
 	user_notified_complete VARCHAR2(8),
 	
-	-- AnalysisJob and ReRunAnalysisJob
+	-- AnalysisJob, ReRunAnalysisJob, and DataImportJob
 	data_src_props_id NUMBER(38),
 	
 	-- PlotJob
 	plot_params_id NUMBER(38),
 	plot_id NUMBER(38),
-	
-	-- DataImportJob
-	file_name VARCHAR2(128),
-	organism_id NUMBER(38),
-	
+		
 	PRIMARY KEY (id)
 );
 
@@ -157,8 +153,16 @@ CREATE TABLE data_src_props (
 	jndi_provider_url VARCHAR2(1024),
 	client_id VARCHAR2(128),
 	
-	-- FileUploadDataSourceProperties
-	file_name VARCHAR2 (256),
+	-- UploadDataSourceProperties
+	rep_loc_file_name VARCHAR2(256),
+	rep_rem_file_name VARCHAR2(256),
+	rep_file_format VARCHAR2(256),
+	rep_col_name VARCHAR2(256),
+	chrom_col_name VARCHAR2(256),
+	pos_col_name VARCHAR2(256),
+	pos_units VARCHAR2(256),
+	exp_name VARCHAR2(128),
+	organism_id NUMBER(38),
 	
 	-- AnalysisDataSourceProperties
 	an_op_class_name VARCHAR2(256),
@@ -166,6 +170,30 @@ CREATE TABLE data_src_props (
 	-- SingleAnalysisDataSourceProperties
 	input_experiment_id NUMBER(38),
 	
+	PRIMARY KEY (id)
+);
+
+--
+-- DataFileMetaData
+--
+CREATE TABLE data_file_meta_data (
+	id NUMBER(38) NOT NULL,
+	data_src_props_id NUMBER(38),
+	remote_file_name VARCHAR(256),
+	local_file_name VARCHAR(256),
+	format VARCHAR2(256),
+	reporter_col_name VARCHAR2(128),
+	PRIMARY KEY (id)
+);
+
+--
+-- DataColumnMetaData
+--
+CREATE TABLE data_col_meta_data (
+	id NUMBER(38) NOT NULL,
+	data_file_meta_data_id NUMBER(38),
+	column_name VARCHAR2(128),
+	bioassay_name VARCHAR2(128),
 	PRIMARY KEY (id)
 );
 
@@ -710,6 +738,14 @@ ALTER TABLE job
 ADD CONSTRAINT fk_job_pi
 FOREIGN KEY (plot_id) REFERENCES plot (id);
 
-ALTER TABLE job
-ADD constraint fk_job_oi
-FOREIGN KEY (organism_id) REFERENCES organism (id);
+ALTER TABLE data_col_meta_data
+ADD CONSTRAINT dcmd_dfmdi
+FOREIGN KEY (data_file_meta_data_id) REFERENCES data_file_meta_data (id);
+
+ALTER TABLE data_file_meta_data
+ADD CONSTRAINT dfmd_dspi
+FOREIGN KEY (data_src_props_id) REFERENCES data_src_props(id);
+
+ALTER TABLE data_src_props
+ADD CONSTRAINT dsp_orgid
+FOREIGN KEY (organism_id) REFERENCES organism(id);

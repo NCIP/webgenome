@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.4 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,12 +59,17 @@ import java.util.Set;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.analysis.SlidingWindowSmoother;
 import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.DataColumnMetaData;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao;
 import org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao;
 import org.rti.webgenome.service.plot.ScatterPlotParameters;
+import org.rti.webgenome.units.BpUnits;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -125,7 +130,23 @@ public final class HibernateJobDaoTester extends TestCase {
 		ReRunAnalysisOnPlotExperimentsJob job3 =
 			new ReRunAnalysisOnPlotExperimentsJob(experiments, "user");
 		PlotJob job4 = new PlotJob(null, experiments, params, "user");
-		DataImportJob job5 = new DataImportJob("file", org, "user");
+		UploadDataSourceProperties uProps =
+			new UploadDataSourceProperties();
+		uProps.setChromosomeColumnName("chrom");
+		uProps.setExperimentName("exp");
+		uProps.setOrganism(org);
+		uProps.setPositionColumnName("pos");
+		uProps.setPositionUnits(BpUnits.BP);
+		uProps.setReporterFile(RectangularTextFileFormat.CSV, "localfile",
+				"remotefile", "reportername");
+		DataFileMetaData meta = new DataFileMetaData();
+		uProps.add(meta);
+		meta.setFormat(RectangularTextFileFormat.CSV);
+		meta.setLocalFileName("localfile");
+		meta.setRemoteFileName("remotefile");
+		meta.add(new DataColumnMetaData("col1", "ba1"));
+		meta.add(new DataColumnMetaData("col2", "ba2"));
+		DataImportJob job5 = new DataImportJob(uProps, "user");
 		
 		// Perform tests
 		dao.saveOrUpdate(job1);

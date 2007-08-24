@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.rti.webgenome.domain.DataFileMetaData"
+		table="data_file_meta_data">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<property name="remoteFileName" column="remote_file_name"/>
+		<property name="localFileName" column="local_file_name"/>
+		<property name="formatName" column="format"/>
+		<property name="reporterNameColumnName" column="reporter_col_name"/>
+		<set
+			name="dataColumnMetaData"
+			lazy="false"
+			cascade="all,delete-orphan">
+			<key column="data_file_meta_data_id" not-null="true"/>
+			<one-to-many class="org.rti.webgenome.domain.DataColumnMetaData"/>
+		</set>
+	</class>
+</hibernate-mapping>

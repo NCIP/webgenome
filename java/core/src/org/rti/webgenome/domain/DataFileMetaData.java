@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.4 $
+$Date: 2007-08-24 21:51:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -218,5 +218,23 @@ public class DataFileMetaData {
 	 */
 	public void add(final DataColumnMetaData meta) {
 		this.dataColumnMetaData.add(meta);
+	}
+	
+	/**
+	 * Get name of format.  This is to be used in
+	 * persistence of the enumerated type.
+	 * @return Name of format.
+	 */
+	public String getFormatName() {
+		return this.format.name();
+	}
+	
+	/**
+	 * Set format using name.  This is to be used
+	 * in persistence of the enumerated type.
+	 * @param formatName Name of format.
+	 */
+	public void setFormatName(final String formatName) {
+		this.format = RectangularTextFileFormat.valueOf(formatName);
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -119,50 +119,50 @@ public final class PlottingSimulator {
             final String outputDirPath, final String tempDirPath)
         throws SmdFormatException {
         
-        // Create directories
-        LOGGER.info("Creating directories");
-        FileUtils.createDirectory(tempDirPath);
-        FileUtils.createDirectory(outputDirPath);
-        LOGGER.info("Finished creating directories");
-        
-        // Serialize data
-        LOGGER.info("Serializing data");
-        DataFileManager mgr = new DataFileManager(tempDirPath);
-        File smdFile = new File(smdFilePath);
-        Experiment exp = mgr.convertSmdData(smdFile, new Organism());
-        LOGGER.info("Finished serializing data");
-        
-        // Create chromosome array data getter
-        SerializedChromosomeArrayDataGetter getter =
-        	new SerializedChromosomeArrayDataGetter();
-        getter.setDataFileManager(mgr);
-        
-        // Create plots
-        LOGGER.info("Creating plots");
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-        SortedSet<Short> chromosomes = exp.getChromosomes();
-        Collection<Experiment> experiments = new ArrayList<Experiment>();
-        experiments.add(exp);
-        for (Short chrom : chromosomes) {
-            LOGGER.info("Creating plot of chromosome " + chrom);
-//            SvgTestPanel canvas = SvgTestPanel.newSvgTestPanel();
-//            canvas.setSvgDirectory(new File(outputDirPath));
-//            ScatterPlot plot = new ScatterPlot(experiments, chrom, getter,
-//                    PLOT_WIDTH, PLOT_HEIGHT, PLOT_BOUNDARIES);
-//            canvas.add(plot, HorizontalAlignment.CENTERED,
-//                    VerticalAlignment.CENTERED);
-//            String fname = chrom + ".svg";
-//            canvas.toSvgFile(fname);
-            LOGGER.info("Finished creating plot of chromosome " + chrom);
-        }
-        LOGGER.info("Completed plotting");
-        LOGGER.info("Elapsed time in plotting: "
-                + stopWatch.getFormattedElapsedTime());
-        
-        // Clean up
-        LOGGER.info("Deleting serialized data");
-        mgr.deleteDataFiles(exp, true);
+//        // Create directories
+//        LOGGER.info("Creating directories");
+//        FileUtils.createDirectory(tempDirPath);
+//        FileUtils.createDirectory(outputDirPath);
+//        LOGGER.info("Finished creating directories");
+//        
+//        // Serialize data
+//        LOGGER.info("Serializing data");
+//        DataFileManager mgr = new DataFileManager(tempDirPath);
+//        File smdFile = new File(smdFilePath);
+//        Experiment exp = mgr.convertSmdData(smdFile, new Organism());
+//        LOGGER.info("Finished serializing data");
+//        
+//        // Create chromosome array data getter
+//        SerializedChromosomeArrayDataGetter getter =
+//        	new SerializedChromosomeArrayDataGetter();
+//        getter.setDataFileManager(mgr);
+//        
+//        // Create plots
+//        LOGGER.info("Creating plots");
+//        StopWatch stopWatch = new StopWatch();
+//        stopWatch.start();
+//        SortedSet<Short> chromosomes = exp.getChromosomes();
+//        Collection<Experiment> experiments = new ArrayList<Experiment>();
+//        experiments.add(exp);
+//        for (Short chrom : chromosomes) {
+//            LOGGER.info("Creating plot of chromosome " + chrom);
+////            SvgTestPanel canvas = SvgTestPanel.newSvgTestPanel();
+////            canvas.setSvgDirectory(new File(outputDirPath));
+////            ScatterPlot plot = new ScatterPlot(experiments, chrom, getter,
+////                    PLOT_WIDTH, PLOT_HEIGHT, PLOT_BOUNDARIES);
+////            canvas.add(plot, HorizontalAlignment.CENTERED,
+////                    VerticalAlignment.CENTERED);
+////            String fname = chrom + ".svg";
+////            canvas.toSvgFile(fname);
+//            LOGGER.info("Finished creating plot of chromosome " + chrom);
+//        }
+//        LOGGER.info("Completed plotting");
+//        LOGGER.info("Elapsed time in plotting: "
+//                + stopWatch.getFormattedElapsedTime());
+//        
+//        // Clean up
+//        LOGGER.info("Deleting serialized data");
+//        mgr.deleteDataFiles(exp, true);
     }
     
     

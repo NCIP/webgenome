@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.2 $
+$Date: 2007-08-24 21:51:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,97 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
+import org.rti.webgenome.service.dao.OrganismDao;
+import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.service.job.DataImportJob;
+import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
+import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
  * Performs uploading of data.
  * @author dhall
  */
 public class UploadAction extends BaseAction {
+	
+	/** Service for file I/O. */
+	private IOService ioService = null;
+	
+	/** Manages analysis jobs performed in the background. */
+	private JobManager jobManager = null;
+	
+	/** Organism data access object. */
+	private OrganismDao organismDao = null;
+	
+	/**
+	 * Set organism data access object.
+	 * @param organismDao Organism data access object
+	 */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
+	}
 
+
+	/**
+	 * Set manager for jobs performed in background.
+	 * @param jobManager Job manager.
+	 */
+	public void setJobManager(final JobManager jobManager) {
+		this.jobManager = jobManager;
+	}
+	
+	
+	/**
+	 * Set service for file I/O.
+	 * @param ioService File I/O service.
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ActionForward execute(
+	        final ActionMapping mapping, final ActionForm form,
+	        final HttpServletRequest request,
+	        final HttpServletResponse response
+	    ) throws Exception {
+		UploadDataSourceProperties upload = PageContext.getUpload(request);
+		UploadForm uForm = (UploadForm) form;
+		upload.setChromosomeColumnName(uForm.getChromosomeColumnName());
+		upload.setExperimentName(uForm.getExperimentName());
+		Long orgId = new Long(uForm.getOrganismId());
+		Organism org = this.organismDao.load(orgId);
+		upload.setOrganism(org);
+		upload.setPositionUnits(BpUnits.getUnits(uForm.getUnits()));
+		upload.setPositionColumnName(uForm.getPositionColumnName());
+		ActionForward forward = null;
+		if (ProcessingModeDecider.processInBackground(
+				upload, request, this.ioService)) {
+			Principal principal = PageContext.getPrincipal(request);
+			DataImportJob job = new DataImportJob(upload, principal.getName());
+			this.jobManager.add(job);
+			forward = mapping.findForward("batch");
+		} else {
+			ShoppingCart cart = this.getShoppingCart(request);
+			this.ioService.loadSmdData(upload, cart);
+			this.persistShoppingCartChanges(cart, request);
+			forward = mapping.findForward("non.batch");
+		}
+		return forward;
+	}
 }

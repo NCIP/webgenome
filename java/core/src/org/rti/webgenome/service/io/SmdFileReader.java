@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,59 +52,30 @@ package org.rti.webgenome.service.io;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssayData;
 import org.rti.webgenome.domain.Reporter;
+import org.rti.webgenome.units.BpUnits;
 
 /**
  * Reader for SMD (Stanford Microarray Database)-format files.
  * 
- *  * <p>The following describes the SMD data file format:</p>
- * <ol>
- * <li>Data are delimited text (e.g., comma-separated values)</li>
- * <li>Each column, with the exception of special columns,
- *     corresponds to a separate bioassay (i.e., physical array).</li>
- * <li>Each row, with the exception of special columns described below,
- *     corresponds to a reporter (i.e., probe).</li>
- * <li>The following are special columns.  Each of these is required.  Column
- *      heading names are shown in upper case, but the names may be lower case
- *      or a combination of cases.
- *         <ol style="list-style-type: lower-roman">
- *         <li></li>
- *         <li>NAME - This column contains reporter names.</li>
- *         <li>CHROMOSOME - This column contains chromosome numbers to which the
- *         corresponding reporter maps.</li>
- *         <li>LOCATION - This column contains the physical map
- *         location in base pairs
- *         of the left end of the corresponding reporter relative
- *         to the given chromosome.
- *         If the column heading contains one of the suffixes
- *         '_KB'or '_MB' (case insensitive),
- *         then values in this column are interpreted as being in
- *         units of KB (kilobases)
- *         or MB (megabases), respectively. 
- *         </ol>
- * </li>
- * <li>The heading (i.e., first row) of each column gives the identifier (name)
- *     of the corresponding bioassay.</li>
- * <li>Values in bioassay columns give the measurements of the corresponding
- *     reporters. Bioassay columns which follow can have any column name 
- *     (see point 5 above).
- *     There can be any number of them, but there must be at least one.</li>
- * </ol>
- * <p>Example:</p>
- * <pre>
- * &lt;NAME&gt; CHROMOSOME &lt;POSITION*&gt; &lt;BIOASSAY1&gt; ... &lt;BIOASSAY
- * RP-1    1            15000           0.3          ...     0.2
- * RP-2    1            34000          -0.2          ...     0.1
- * </pre>
- * * ~ name of the position column can be POSITION, KB_POSITION or MB_POSITION
- *
- * 
+ * These files are 'rectangular,' i.e. text format with
+ * lines (rows) consisting of an equal number of columns
+ * of values separated by a delimiting character, typically
+ * ',' or '\t.'  The name, chromosome, and physical chromosome
+ * position of reporters must be provided in a reporter annotation
+ * file provided to the constructor.  Then, any number of data
+ * files may be read.  These data files are also SMD format
+ * with one column giving reporter name and additional columns
+ * providing experimental results.
  * @author dhall
  *
  */
@@ -114,170 +85,103 @@ public final class SmdFileReader {
     //      Constants
     // =======================================
     
-    /**
-     * Optional suffix of position column heading that indicates
-     * reporter locations are given in units of KB (kilobases).
-     */
-    private static final String KB_SUFFIX = "_KB";
-    
-    /**
-     * Optional suffix of position column heading that indicates
-     * reporter locations are given in units of KB (kilobases).
-     */
-    private static final String MB_SUFFIX = "_MB";
-    
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(SmdFileReader.class);
     
-    /**
-     * Dummy reporter object to hold the position of records (i.e., rows)
-     * where reporter information could not be properly parsed.
-     */
-    private static final Reporter UNPARSEABLE_REPORTER = new Reporter();
     
     // =============================
     //       Attributes
     // =============================
     
-    /** Rectangular file reader. */
-    private final RectangularFileReader rectangularFileReader;
+    /** Cache of reporter objects indexed on name. */
+    private final Map<String, Reporter> reporters =
+    	new HashMap<String, Reporter>();
     
-    /** List to cache reporters parsed when file is initially read. */
-    private final List<Reporter> reporters = new ArrayList<Reporter>();
-        
-    /** Chromosome column heading.  This is treated as case insensitive. */
-    private String chromosomeColumnHeading = "chromosome";
-    
-    /** Reporter name column heading.  This is treated as case insensitive. */
-    private String reporterNameColumnHeading = "name";
-    
-    /**
-     * Chromosome position column heading.  This is treated
-     * as case insensitive.
-     * */
-    private String positionColumnHeading = "position";
-    
-    
-    // ============================
-    //   Getters and setters
-    // ============================
-    
-    /**
-     * Get chromosome column heading.  This is treated as
-     * case insensitive.
-     * @return Chromosome column header
-     */
-    public String getChromosomeColumnHeading() {
-        return chromosomeColumnHeading;
-    }
+    /** Units for {@code positionColumnHeading}. */
+    private final BpUnits units;
 
-
-    /**
-     * Set chromosome column heading.  This is treated as
-     * case insensitive.
-     * @param chromosomeColumnHeader Chromosome column header
-     */
-    public void setChromosomeColumnHeading(
-            final String chromosomeColumnHeader) {
-        this.chromosomeColumnHeading = chromosomeColumnHeader;
-    }
-
-
-    /**
-     * Get chromosome position column heading.  This is treated as
-     * case insensitive.
-     * @return Chromosome position column header
-     */
-    public String getPositionColumnHeading() {
-        return positionColumnHeading;
-    }
-
-
-    /**
-     * Set chromosome position column heading.  This is treated as
-     * case insensitive.
-     * @param positionColumnHeading Chromosome position column heading
-     */
-    public void setPositionColumnHeading(
-            final String positionColumnHeading) {
-        this.positionColumnHeading = positionColumnHeading;
-    }
-
-
-    /**
-     * Get reporter name column heading.  This is treated as
-     * case insensitive.
-     * @return Reporter name column heading
-     */
-    public String getReporterNameColumnHeading() {
-        return reporterNameColumnHeading;
-    }
-
-
-    /**
-     * Set reporter name column heading.  This is treated as
-     * case insensitive.
-     * @param reporterNameColumnHeading Reporter name column heading
-     */
-    public void setReporterNameColumnHeading(
-            final String reporterNameColumnHeading) {
-        this.reporterNameColumnHeading = reporterNameColumnHeading;
-    }
-    
-    
-    /**
-     * Get reporters parsed form file.
-     * @return Reporters
-     */
-    public List<Reporter> getReporters() {
-        return reporters;
-    }
     
     // ==============================
     //        Constructors
     // ==============================
     
-
-
+    
     /**
      * Constructor.
-     * @param file SMD-format file
-     * @throws SmdFormatException if file is not in SMD-format
+     * @param reporterFile File containing reporter 'annotations,' including
+     * reporter names, chromosomes, and physical chromosomal locations
+     * @param reporterNameColumnHeading Heading of column in reporter file
+     * containing reporter names
+     * @param chromosomeColumnHeading Heading of column in reporter file
+     * containing chromosome numbers
+     * @param positionColumnHeading Heading of column in reporter file
+     * containing physical chromosome positions
+     * @param units Units of physical chromosome positions
+     * @throws SmdFormatException If file is not in SMD format
      */
-    public SmdFileReader(final File file)
+    public SmdFileReader(final File reporterFile,
+    		final String reporterNameColumnHeading,
+    		final String chromosomeColumnHeading,
+    		final String positionColumnHeading,
+    		final BpUnits units)
         throws SmdFormatException {
-        this.rectangularFileReader = new RectangularFileReader(file);
-        this.loadReporters();
+        this.units = units;
+        this.loadReporters(reporterFile, reporterNameColumnHeading,
+        		chromosomeColumnHeading, positionColumnHeading);
     }
     
     
     /**
      * Constructor.
      * @param absolutePath Name of absolute path to SMD-format file
-     * @throws SmdFormatException if file is not in SMD-format
+     * @param reporterNameColumnHeading Heading of column in reporter file
+     * containing reporter names
+     * @param chromosomeColumnHeading Heading of column in reporter file
+     * containing chromosome numbers
+     * @param positionColumnHeading Heading of column in reporter file
+     * containing physical chromosome positions
+     * @param units Units of physical chromosome positions
+     * @throws SmdFormatException If file is not in SMD format
      */
-    public SmdFileReader(final String absolutePath)
+    public SmdFileReader(final String absolutePath,
+    		final String reporterNameColumnHeading,
+    		final String chromosomeColumnHeading,
+    		final String positionColumnHeading,
+    		final BpUnits units)
         throws SmdFormatException {
-        this(new File(absolutePath));
+        this(new File(absolutePath), reporterNameColumnHeading,
+        		chromosomeColumnHeading, positionColumnHeading, units);
     }
     
     
     /**
      * Load and cache reporters.
+     * @param reporterFile File containing reporter 'annotations,' including
+     * reporter names, chromosomes, and physical chromosomal locations
+     * @param reporterNameColumnHeading Heading of column in reporter file
+     * containing reporter names
+     * @param chromosomeColumnHeading Heading of column in reporter file
+     * containing chromosome numbers
+     * @param positionColumnHeading Heading of column in reporter file
+     * containing physical chromosome positions
      * @throws SmdFormatException if reporter name,
      * chromosome, or position column is not present.
      */
-    private void loadReporters() throws SmdFormatException {
+    private void loadReporters(final File reporterFile,
+    		final String reporterNameColumnHeading,
+    		final String chromosomeColumnHeading,
+    		final String positionColumnHeading) throws SmdFormatException {
+    	RectangularFileReader reader = new RectangularFileReader(reporterFile);
         
         // Get index of reporter-related columns
         List<String> colHeadings =
-            this.rectangularFileReader.getColumnHeadings();
+            reader.getColumnHeadings();
         int nameColIdx = this.indexOfString(colHeadings,
-                this.reporterNameColumnHeading, false);
+                reporterNameColumnHeading, false);
         int chromColIdx = this.indexOfString(colHeadings,
-                this.chromosomeColumnHeading, false);
+                chromosomeColumnHeading, false);
         int posColIdx = this.indexOfString(colHeadings,
-                this.positionColumnHeading, true);
+                positionColumnHeading, true);
         if (nameColIdx < 0 || chromColIdx < 0 || posColIdx < 0) {
             throw new SmdFormatException("File must have reporter name, "
                     + "chromosome, and position columns");
@@ -285,22 +189,12 @@ public final class SmdFileReader {
         
         // Load reporter-related columns into memory
         List<String> nameCol = 
-            this.rectangularFileReader.getColumn(nameColIdx);
+            reader.getColumn(nameColIdx);
         List<String> chromCol = 
-            this.rectangularFileReader.getColumn(chromColIdx);
+            reader.getColumn(chromColIdx);
         List<String> posCol = 
-            this.rectangularFileReader.getColumn(posColIdx);
-        
-        // Determine the multiplier for reporter locations
-        String actualPositionColumnHeading =
-            colHeadings.get(posColIdx).toUpperCase();
-        double positionMultiplier = 1.0;
-        if (actualPositionColumnHeading.endsWith(KB_SUFFIX)) {
-            positionMultiplier = 1000.0;
-        } else if (actualPositionColumnHeading.endsWith(MB_SUFFIX)) {
-            positionMultiplier = 1000000.0;
-        }
-        
+            reader.getColumn(posColIdx);
+               
         // Create and cache reporters
         Iterator<String> names = nameCol.iterator();
         Iterator<String> chroms = chromCol.iterator();
@@ -312,15 +206,15 @@ public final class SmdFileReader {
                 String chromStr = chroms.next();
                 String posStr = poses.next();
                 short chrom = Short.parseShort(chromStr);
-                long pos = (long)
-                    (Double.parseDouble(posStr) * positionMultiplier);
-                this.reporters.add(new Reporter(name, chrom, pos));
+                long pos = this.units.toBp((long)
+                    (Double.parseDouble(posStr)));
+                this.reporters.put(name, new Reporter(name, chrom, pos));
             } catch (NumberFormatException e) {
                 LOGGER.warn("Could not parse reporter information at "
                         + "line number " + lineNum);
-                this.reporters.add(UNPARSEABLE_REPORTER);
+            } finally {
+            	lineNum++;
             }
-            lineNum++;
         }
     }
     
@@ -366,99 +260,64 @@ public final class SmdFileReader {
     // =================================
     //     Public methods
     // =================================
-
-    /**
-     * Get names of bioassays contained in file.  All columns
-     * except the chromosome, location, and reporter name columns
-     * are assumed to correspond to bioassays.  This method returns
-     * the headers of these columns.
-     * @return Bioassay names
-     */
-    public List<String> getBioAssayNames() {
-        List<String> colHeadings =
-            this.rectangularFileReader.getColumnHeadings();
-        for (Iterator<String> it = colHeadings.iterator(); it.hasNext();) {
-            if (this.isReporterColHeading(it.next())) {
-                it.remove();
-            }
-        }
-        return colHeadings;
-    }
-    
     
     /**
-     * Is given string a reporter-related column heading?
-     * Comparison to reporter-related column names is
-     * case-insensitive.
-     * @param string A string
-     * @return T/F
+     * Get reporters parsed form file.
+     * @return Reporters
      */
-    private boolean isReporterColHeading(final String string) {
-        return
-            this.reporterNameColumnHeading.equalsIgnoreCase(string)
-            || this.chromosomeColumnHeading.equalsIgnoreCase(string)
-            || string.toLowerCase().indexOf(
-                    this.positionColumnHeading.toLowerCase()) == 0;
+    public List<Reporter> getReporters() {
+        List<Reporter> reps = new ArrayList<Reporter>();
+        reps.addAll(this.reporters.values());
+        Collections.sort(reps);
+        return reps;
     }
     
     
     /**
      * Get bioassay data corresponding to the given
-     * bioassay name.  All columns
-     * except the chromosome, location, and reporter name columns
-     * are assumed to correspond to bioassays.
-     * @param bioAssayName Name of bioassay
+     * data column name.  If any records in the file
+     * have reporters that were not the reporter file
+     * provided in the constructor, these will be excluded.
+     * @param file Data file to parse
+     * @param dataColumnName Name of column containing bioassay data
+     * to parse
+     * @param reporterNameColumnName Name of column providing
+     * reporter names
      * @return Bioassay data
      */
-    public BioAssayData getBioAssayData(final String bioAssayName) {
-        return this.getBioAssayData(bioAssayName, false);
-    }
-    
-    
-    /**
-     * Get bioassay data corresponding to the given
-     * bioassay name.  All columns
-     * except the chromosome, location, and reporter name columns
-     * are assumed to correspond to bioassays.
-     * @param bioAssayName Name of bioassay
-     * @param includeInvalidData SMD file may contain rows
-     * where the measured value is not a valid floating point
-     * number.  For some applications, the calling class may
-     * wish to have these values returned.  If this parameter
-     * is set to true, the method will insert
-     * an <code>ArrayDatum</code> object whose
-     * value is NaN for invalid data points.
-     * @return Bioassay data
-     */
-    public BioAssayData getBioAssayData(final String bioAssayName,
-            final boolean includeInvalidData) {
-        int colIdx = this.indexOfString(
-                this.rectangularFileReader.getColumnHeadings(),
-                bioAssayName, false);
-        List<String> col = this.rectangularFileReader.getColumn(colIdx);
+    public BioAssayData getBioAssayData(
+    		final File file, final String dataColumnName,
+    		final String reporterNameColumnName) {
+    	RectangularFileReader reader = new RectangularFileReader(file);
+        int dataColIdx = this.indexOfString(reader.getColumnHeadings(),
+                dataColumnName, false);
+        int nameColIdx = this.indexOfString(reader.getColumnHeadings(),
+        		reporterNameColumnName, false);
+        List<String> nameCol = reader.getColumn(nameColIdx);
+        List<String> dataCol = reader.getColumn(dataColIdx);
         BioAssayData bad = new BioAssayData();
-        Iterator<Reporter> reporters = this.reporters.iterator();
-        Iterator<String> values = col.iterator();
         long lineNum = 1;
-        while (reporters.hasNext() && values.hasNext()) {
-            Reporter r = reporters.next();
-            String valueStr = values.next();
-            if (r != UNPARSEABLE_REPORTER) {
-                try {
-                    float value = Float.parseFloat(valueStr);
-                    bad.add(new ArrayDatum(value, r));
-                } catch (NumberFormatException e) {
+        Iterator<String> names = nameCol.iterator();
+        Iterator<String> values = dataCol.iterator();
+        while (names.hasNext() && values.hasNext()) {
+        	String name = names.next();
+            Reporter r = this.reporters.get(name);
+            if (r == null) {
+            	LOGGER.warn("Reporter '" + name + "' in data file '"
+            			+ file.getName()
+            			+ "' unknown");
+            } else {
+            	String valueStr = values.next();
+            	try {
+            		float value = Float.parseFloat(valueStr);
+            		bad.add(new ArrayDatum(value, r));
+            	} catch (NumberFormatException e) {
                     LOGGER.warn("Error parsing bioassay data value from "
                             + "line number " + lineNum);
-                    if (includeInvalidData) {
-                        LOGGER.info("Adding invalid data point");
-                        bad.add(new ArrayDatum(Float.NaN, Float.NaN, r));
-                    }
                 }
             }
             lineNum++;
         }
         return bad;
     }
-
 }

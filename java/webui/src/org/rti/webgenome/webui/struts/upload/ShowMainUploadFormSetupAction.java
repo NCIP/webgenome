@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.3 $
+$Date: 2007-08-24 21:51:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.domain.Upload;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.units.BpUnits;
@@ -107,7 +107,7 @@ public class ShowMainUploadFormSetupAction extends BaseAction {
 	        final HttpServletRequest request,
 	        final HttpServletResponse response
 	    ) throws Exception {
-		Upload upload = PageContext.getUpload(request);
+		UploadDataSourceProperties upload = PageContext.getUpload(request);
 		request.setAttribute("upload", upload);
 		Set<String> allCols = new HashSet<String>();
 		if (upload.getReporterLocalFileName() == null) {

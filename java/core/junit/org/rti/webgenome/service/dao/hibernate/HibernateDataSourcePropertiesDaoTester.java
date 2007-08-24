@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-29 19:53:34 $
+$Revision: 1.4 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,12 +55,16 @@ import java.util.Set;
 
 import org.rti.webgenome.analysis.SimpleExperimentNormalizer;
 import org.rti.webgenome.analysis.SlidingWindowSmoother;
+import org.rti.webgenome.domain.DataColumnMetaData;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.EjbDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.FileUploadDataSourceProperties;
 import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.SimulatedDataSourceProperties;
 import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
+import org.rti.webgenome.units.BpUnits;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -88,6 +92,8 @@ public class HibernateDataSourcePropertiesDaoTester extends TestCase {
 			ctx.getBean("dataSourcePropertiesDao");
 		HibernateExperimentDao expDao =
 			(HibernateExperimentDao) ctx.getBean("experimentDao");
+		HibernateOrganismDao orgDao =
+			(HibernateOrganismDao) ctx.getBean("organismDao");
 		
 		// Instantiate test objects
 		SimulatedDataSourceProperties p1 =
@@ -95,8 +101,22 @@ public class HibernateDataSourcePropertiesDaoTester extends TestCase {
 		EjbDataSourceProperties p2 =
 			new EjbDataSourceProperties("jndiName1",
 					"jndiProvider1", "client2");
-		FileUploadDataSourceProperties p3 =
-			new FileUploadDataSourceProperties("file1");
+		UploadDataSourceProperties p3 =
+			new UploadDataSourceProperties();
+		p3.setChromosomeColumnName("chrom");
+		p3.setExperimentName("exp");
+		p3.setOrganism(orgDao.loadDefault());
+		p3.setPositionColumnName("pos");
+		p3.setPositionUnits(BpUnits.BP);
+		p3.setReporterFile(RectangularTextFileFormat.CSV, "localfile",
+				"remotefile", "reportername");
+		DataFileMetaData meta = new DataFileMetaData();
+		p3.add(meta);
+		meta.setFormat(RectangularTextFileFormat.CSV);
+		meta.setLocalFileName("localfile");
+		meta.setRemoteFileName("remotefile");
+		meta.add(new DataColumnMetaData("col1", "ba1"));
+		meta.add(new DataColumnMetaData("col2", "ba2"));
 		Experiment exp1 = new Experiment("exp1");
 		Experiment exp2 = new Experiment("exp2");
 		Experiment exp3 = new Experiment("exp3");

@@ -51,11 +51,6 @@
 			name="quantitation.type.form"
 			type="org.rti.webgenome.webui.struts.cart.QuantitationTypeForm"/>
 			
-	<!-- Form for uploading a data file -->
-		<form-bean
-			name="file.upload.form"
-			type="org.rti.webgenome.webui.struts.cart.FileUploadForm"/>
-			
 	<!-- Form for attaching a data or reporter file to an upload -->
 		<form-bean
 			name="attach.data.form"
@@ -128,16 +123,6 @@
 		<action
 			path="/cart/uploadForm">
 			<forward name="success" path="cart.upload.form"/>	
-		</action>
-		
-	<!-- File upload -->
-		<action
-			path="/cart/upload"
-			name="file.upload.form"
-			validate="true"
-			input="/cart/uploadForm">
-			<forward name="non.batch" path="/cart/showCart.do"/>
-			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
 
 	<!-- Show cart -->
@@ -249,12 +234,6 @@
 			path="/cart/setDisplayNames"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.set.display.names"/>
-
-	<!-- File upload -->
-		<action
-			path="/cart/fileUpload"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="cart.file.upload"/>
 
 	<!-- Set analytic operation parameters -->
 		<action

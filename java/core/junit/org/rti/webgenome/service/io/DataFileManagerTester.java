@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-04-10 22:32:41 $
+$Revision: 1.4 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,9 +55,13 @@ import java.io.File;
 import junit.framework.TestCase;
 
 import org.rti.webgenome.domain.ChromosomeArrayData;
+import org.rti.webgenome.domain.DataColumnMetaData;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
+import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.FileUtils;
 import org.rti.webgenome.util.UnitTestUtils;
 
@@ -67,6 +71,18 @@ import org.rti.webgenome.util.UnitTestUtils;
  *
  */
 public final class DataFileManagerTester extends TestCase {
+	
+	/** Heading of column containing reporter names. */
+	private static final String REPORTER_NAME_COLUMN_NAME = "name";
+	
+	/** Heading of column containing chromosome numbers. */
+	private static final String CHROMOSOME_COLUMN_NAME = "chromosome";
+	
+	/** Heading of column containing chromosome positions. */
+	private static final String POSITION_COLUMN_NAME = "position";
+	
+	/** Units of chromosome position. */
+	private static final BpUnits UNITS = BpUnits.KB;
     
     /** Name of temporary directory used for testing. */
     private static final String TEMP_DIR_NAME = "data_file_manager_temp";
@@ -111,7 +127,18 @@ public final class DataFileManagerTester extends TestCase {
         File testFile = FileUtils.getFile(TEST_DIRECTORY, fname);
         File tempDir = UnitTestUtils.createUnitTestDirectory(TEMP_DIR_NAME);
         DataFileManager mgr = new DataFileManager(tempDir.getAbsolutePath());
-        Experiment exp = mgr.convertSmdData(testFile, org);
+        Experiment exp = new Experiment();
+        SmdFileReader reader = new SmdFileReader(testFile,
+        		REPORTER_NAME_COLUMN_NAME, CHROMOSOME_COLUMN_NAME,
+        		POSITION_COLUMN_NAME, UNITS);
+        DataFileMetaData meta = new DataFileMetaData();
+        meta.setFormat(RectangularTextFileFormat.CSV);
+        meta.setLocalFileName(fname);
+        meta.setRemoteFileName(fname);
+        meta.setReporterNameColumnName(REPORTER_NAME_COLUMN_NAME);
+        meta.add(new DataColumnMetaData("bioassay1", "bioassay1"));
+        meta.add(new DataColumnMetaData("bioassay2", "bioassay2"));
+        mgr.convertSmdData(reader, exp, testFile, meta, org);
         
         // Recover some data
         DataSerializedBioAssay ba = (DataSerializedBioAssay)

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.7 $
+$Date: 2007-08-24 21:51:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,9 +55,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
@@ -81,59 +82,37 @@ public class DataImportJob extends AbstractJob {
 	//  A T T R I B U T E S
 	//
 	
-	/**
-	 * Name of file to be parsed.  This is not an absolute
-	 * path.  The job will be able to construct the
-	 */
-	private String fileName = null;
-	
-	/**
-	 * Organism associated with data.
-	 */
-	private Organism organism = null;
+	/** Properties of upload. */
+	private UploadDataSourceProperties uploadDataSourceProperties = null;
 	
 	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
 	
-
 	/**
-	 * Get name of file to parse.
-	 * @return File name, not absolute path.
+	 * Get properties for upload.
+	 * @return Properties for upload
 	 */
-	public String getFileName() {
-		return fileName;
+	public UploadDataSourceProperties getUploadDataSourceProperties() {
+		return uploadDataSourceProperties;
 	}
 
-	/**
-	 * Set name of file to parse.
-	 * @param fileName File name, not absolute path.
-	 */
-	public void setFileName(final String fileName) {
-		this.fileName = fileName;
-	}
 
 	/**
-	 * Get organism associated with data.
-	 * @return Organism associated with data.
+	 * Set properties for upload.
+	 * @param uploadDataSourceProperties Properties for upload
 	 */
-	public Organism getOrganism() {
-		return organism;
-	}
-
-	/**
-	 * Set organism associated with data.
-	 * @param organism Organism associated with data.
-	 */
-	public void setOrganism(final Organism organism) {
-		this.organism = organism;
+	public void setUploadDataSourceProperties(
+			final UploadDataSourceProperties uploadDataSourceProperties) {
+		this.uploadDataSourceProperties = uploadDataSourceProperties;
 	}
 	
 	//
 	//  C O N S T R U C T O R S
 	//
-	
+
+
 	/**
 	 * Constructor.  This should only be used by the
 	 * persistence framework.
@@ -145,17 +124,24 @@ public class DataImportJob extends AbstractJob {
 	
 	/**
 	 * Constructor.
-	 * @param fileName Name of data file to parse.
-	 * @param organism Organism associated with data.
+	 * @param uploadDataSourceProperties Properties for upload
 	 * @param userId User login name.
 	 */
-	public DataImportJob(final String fileName,
-			final Organism organism,
+	public DataImportJob(
+			final UploadDataSourceProperties uploadDataSourceProperties,
 			final String userId) {
 		super(userId);
-		this.fileName = fileName;
-		this.organism = organism;
-		this.setDescription("Importing file " + fileName);
+		this.uploadDataSourceProperties = uploadDataSourceProperties;
+		StringBuffer buff = new StringBuffer();
+		int count = 0;
+		for (DataFileMetaData meta
+				: uploadDataSourceProperties.getDataFileMetaData()) {
+			if (count++ > 0) {
+				buff.append(", ");
+			}
+			buff.append(meta.getLocalFileName());
+		}
+		this.setDescription("Importing files " + buff.toString());
 	}
 	
 	//
@@ -177,7 +163,7 @@ public class DataImportJob extends AbstractJob {
 			
 			// Load data into shopping cart
 			Experiment exp = ioService.loadSmdData(
-					this.fileName, this.organism, cart);
+					this.uploadDataSourceProperties, cart);
 			
 			// Persist new array object
 			Array array = this.getArray(exp);

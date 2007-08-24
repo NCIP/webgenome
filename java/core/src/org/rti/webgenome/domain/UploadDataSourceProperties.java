@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.1 $
+$Date: 2007-08-24 21:51:57 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,15 +60,13 @@ import org.rti.webgenome.units.BpUnits;
  * @author dhall
  *
  */
-public class Upload {
+public class UploadDataSourceProperties
+extends DataSourceProperties.BaseDataSourceProperties {
 	
 	//
 	//  A T T R I B U T E S
 	//
 
-	/** Primary key value for persistence. */
-	private Long id = null;
-	
 	/** Metadata on data files to upload. */
 	private Set<DataFileMetaData> dataFileMetaData =
 		new HashSet<DataFileMetaData>();
@@ -204,22 +202,6 @@ public class Upload {
 	}
 
 	/**
-	 * Get primary key value used for persistence.
-	 * @return Primary key value
-	 */
-	public Long getId() {
-		return id;
-	}
-
-	/**
-	 * Set primary key value used for persistence.
-	 * @param id Primary key value
-	 */
-	public void setId(final Long id) {
-		this.id = id;
-	}
-
-	/**
 	 * Get organism that was subject of experiment.
 	 * @return Organism
 	 */
@@ -342,13 +324,47 @@ public class Upload {
 	/**
 	 * Constructor.
 	 */
-	public Upload() {
+	public UploadDataSourceProperties() {
 		
 	}
 	
 	//
 	//  B U S I N E S S   M E T H O D S
 	//
+	
+	/**
+	 * Get name of reporter file format to be used for persistence.
+	 * @return Reporter file format
+	 */
+	public String getReporterFileFormatName() {
+		return this.reporterFileFormat.name();
+	}
+	
+	/**
+	 * Set reporter file format using name.  This is used
+	 * for persistence.
+	 * @param name Name of reporter file format
+	 */
+	public void setReporterFileFormatName(final String name) {
+		this.reporterFileFormat = RectangularTextFileFormat.valueOf(name);
+	}
+	
+	/**
+	 * Get name of position units for persistence of enumerated type.
+	 * @return Name of position units
+	 */
+	public String getPositionUnitsName() {
+		return this.positionUnits.getName();
+	}
+	
+	/**
+	 * Set position units using units name.  This is used for
+	 * persistence of the enumerated type.
+	 * @param name Name of position units
+	 */
+	public void setPositionUnitsName(final String name) {
+		this.positionUnits = BpUnits.getUnits(name);
+	}
 	
 	/**
 	 * Add data file meta data.

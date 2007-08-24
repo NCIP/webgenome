@@ -39,13 +39,6 @@
 	  	<put name="helpTopic" value="cart" />
   	</definition>
   	
-<!-- Show shopping cart -->
-  	<definition name="cart.upload.form" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Upload data" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/upload.jsp" />
-	  	<put name="helpTopic" value="cart" />
-  	</definition>
-  	
 <!-- Select plot type -->
   	<definition name="cart.select.plot.type" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Select plot type" />
@@ -92,13 +85,6 @@
   	<definition name="cart.job.details" extends="cart.layout" >
 	  	<put name="title" value="webGenome: Job details" />
 	  	<put name="content" value="/WEB-INF/jsp/cart/jobDetails.jsp" />
-	  	<put name="helpTopic" value="docTop" />
-  	</definition>
-
-<!-- File upload -->
-  	<definition name="cart.file.upload" extends="cart.layout" >
-	  	<put name="title" value="webGenome: File upload" />
-	  	<put name="content" value="/WEB-INF/jsp/cart/fileUpload.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
 

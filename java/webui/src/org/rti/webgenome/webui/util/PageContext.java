@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-22 20:03:57 $
+$Revision: 1.6 $
+$Date: 2007-08-24 21:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,7 +55,7 @@ import javax.servlet.http.HttpSession;
 
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.domain.Upload;
+import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.domain.UploadedData;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.session.SessionMode;
@@ -263,7 +263,7 @@ public final class PageContext {
 	 * @param upload Upload object
 	 * @param request Servlet request
 	 */
-	public static void setUpload(final Upload upload,
+	public static void setUpload(final UploadDataSourceProperties upload,
 			final HttpServletRequest request) {
 		request.getSession().setAttribute(KEY_UPLOAD, upload);
 	}
@@ -275,9 +275,9 @@ public final class PageContext {
 	 * @throws SessionTimeoutException If upload object cannot be found,
 	 * which would indicate that the session has timed out
 	 */
-	public static Upload getUpload(final HttpServletRequest request)
+	public static UploadDataSourceProperties getUpload(final HttpServletRequest request)
 	throws SessionTimeoutException {
-		Upload upload = (Upload) request.getSession().getAttribute(KEY_UPLOAD);
+		UploadDataSourceProperties upload = (UploadDataSourceProperties) request.getSession().getAttribute(KEY_UPLOAD);
 		if (upload == null) {
 			throw new SessionTimeoutException("Session has expired");
 		}
