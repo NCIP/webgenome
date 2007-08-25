@@ -674,6 +674,7 @@
 		<property name="jobManager" ref="jobManager"/>
 		<property name="shoppingCartDao" ref="shoppingCartDao"/>
 		<property name="organismDao" ref="organismDao"/>
+		<property name="arrayDao" ref="arrayDao"/>
 	</bean>
 	
 <!-- AJAX action to retrieve newly completed jobs -->

@@ -475,7 +475,7 @@
         	scope="session"
         	validate="true"
         	input="/upload/showUploadForm.do">
-        	<forward name="non.batch" path="/cart/newPlot.do"/>
+        	<forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
         </action>
 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.3 $
+$Date: 2007-08-25 01:57:12 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,10 +56,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
+import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.job.DataImportJob;
@@ -83,6 +86,18 @@ public class UploadAction extends BaseAction {
 	
 	/** Organism data access object. */
 	private OrganismDao organismDao = null;
+	
+	/** Array data access object. */
+	private ArrayDao arrayDao = null;
+	
+	
+	/**
+	 * Set array data access object.
+	 * @param arrayDao Array data access object
+	 */
+	public void setArrayDao(final ArrayDao arrayDao) {
+		this.arrayDao = arrayDao;
+	}
 	
 	/**
 	 * Set organism data access object.
@@ -137,7 +152,11 @@ public class UploadAction extends BaseAction {
 			forward = mapping.findForward("batch");
 		} else {
 			ShoppingCart cart = this.getShoppingCart(request);
-			this.ioService.loadSmdData(upload, cart);
+			Experiment exp = this.ioService.loadSmdData(upload, cart);
+			if (exp.getBioAssays().size() > 0) {
+				Array array = exp.getBioAssays().iterator().next().getArray();
+				this.arrayDao.save(array);
+			}
 			this.persistShoppingCartChanges(cart, request);
 			forward = mapping.findForward("non.batch");
 		}
