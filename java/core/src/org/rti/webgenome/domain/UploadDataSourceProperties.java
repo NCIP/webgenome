@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.2 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -328,6 +328,28 @@ extends DataSourceProperties.BaseDataSourceProperties {
 		
 	}
 	
+	/**
+	 * Constructor performing deep copy of given object.
+	 * @param props Object to deep copy
+	 */
+	public UploadDataSourceProperties(
+			final UploadDataSourceProperties props) {
+		this.chromosomeColumnName = props.chromosomeColumnName;
+		this.dataFileMetaData = new HashSet<DataFileMetaData>();
+		for (DataFileMetaData meta : props.dataFileMetaData) {
+			this.dataFileMetaData.add(new DataFileMetaData(meta));
+		}
+		this.experimentName = props.experimentName;
+		this.organism = props.organism;
+		this.positionColumnName = props.positionColumnName;
+		this.positionUnits = props.positionUnits;
+		this.reporterFileFormat = props.reporterFileFormat;
+		this.reporterFileReporterNameColumnName =
+			props.reporterFileReporterNameColumnName;
+		this.reporterLocalFileName = props.reporterLocalFileName;
+		this.reporterRemoteFileName = props.reporterRemoteFileName;
+	}
+	
 	//
 	//  B U S I N E S S   M E T H O D S
 	//
@@ -337,7 +359,13 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 * @return Reporter file format
 	 */
 	public String getReporterFileFormatName() {
-		return this.reporterFileFormat.name();
+		String name = null;
+		if (this.reporterFileFormat != null) {
+			name = this.reporterFileFormat.name();
+		} else {
+			name = "null";
+		}
+		return name;
 	}
 	
 	/**
@@ -346,7 +374,12 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 * @param name Name of reporter file format
 	 */
 	public void setReporterFileFormatName(final String name) {
-		this.reporterFileFormat = RectangularTextFileFormat.valueOf(name);
+		if ("null".equals(name)) {
+			this.reporterFileFormat = null;
+		} else {
+			this.reporterFileFormat =
+				RectangularTextFileFormat.valueOf(name);
+		}
 	}
 	
 	/**
@@ -354,7 +387,13 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 * @return Name of position units
 	 */
 	public String getPositionUnitsName() {
-		return this.positionUnits.getName();
+		String name = null;
+		if (this.positionUnits != null) {
+			name = this.positionUnits.getName();
+		} else {
+			name = "null";
+		}
+		return name;
 	}
 	
 	/**
@@ -363,7 +402,11 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 * @param name Name of position units
 	 */
 	public void setPositionUnitsName(final String name) {
-		this.positionUnits = BpUnits.getUnits(name);
+		if ("null".equals(name)) {
+			this.positionUnits = null;
+		} else {
+			this.positionUnits = BpUnits.getUnits(name);
+		}
 	}
 	
 	/**

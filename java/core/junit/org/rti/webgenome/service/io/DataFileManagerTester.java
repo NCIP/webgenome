@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.5 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.DataColumnMetaData;
 import org.rti.webgenome.domain.DataFileMetaData;
@@ -83,6 +84,10 @@ public final class DataFileManagerTester extends TestCase {
 	
 	/** Units of chromosome position. */
 	private static final BpUnits UNITS = BpUnits.KB;
+	
+	/** File format. */
+	private static final RectangularTextFileFormat FORMAT =
+		RectangularTextFileFormat.CSV;
     
     /** Name of temporary directory used for testing. */
     private static final String TEMP_DIR_NAME = "data_file_manager_temp";
@@ -130,7 +135,7 @@ public final class DataFileManagerTester extends TestCase {
         Experiment exp = new Experiment();
         SmdFileReader reader = new SmdFileReader(testFile,
         		REPORTER_NAME_COLUMN_NAME, CHROMOSOME_COLUMN_NAME,
-        		POSITION_COLUMN_NAME, UNITS);
+        		POSITION_COLUMN_NAME, UNITS, FORMAT);
         DataFileMetaData meta = new DataFileMetaData();
         meta.setFormat(RectangularTextFileFormat.CSV);
         meta.setLocalFileName(fname);
@@ -138,7 +143,8 @@ public final class DataFileManagerTester extends TestCase {
         meta.setReporterNameColumnName(REPORTER_NAME_COLUMN_NAME);
         meta.add(new DataColumnMetaData("bioassay1", "bioassay1"));
         meta.add(new DataColumnMetaData("bioassay2", "bioassay2"));
-        mgr.convertSmdData(reader, exp, testFile, meta, org);
+        Array array = new Array();
+        mgr.convertSmdData(reader, exp, testFile, meta, org, array);
         
         // Recover some data
         DataSerializedBioAssay ba = (DataSerializedBioAssay)

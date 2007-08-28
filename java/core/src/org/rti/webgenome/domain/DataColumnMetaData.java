@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-21 22:31:43 $
+$Revision: 1.2 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -157,5 +157,13 @@ public class DataColumnMetaData {
 		super();
 		this.columnName = columnName;
 		this.bioAssayName = bioAssayName;
+	}
+	
+	/**
+	 * Constructor that performs deep copy.
+	 * @param meta Data column meta data
+	 */
+	public DataColumnMetaData(final DataColumnMetaData meta) {
+		this(meta.columnName, meta.bioAssayName);
 	}
 }

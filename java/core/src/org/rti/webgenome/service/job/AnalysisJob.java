@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.3 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -224,13 +224,16 @@ public class AnalysisJob extends AbstractJob {
 					this.outputExperimentNames, this.outputBioAssayNames,
 					transformer);
 			sDao.update(cart);
-			this.setTerminationMessage("Succeeded");
+			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Analysis job completed for user "
 					+ this.getUserId());
 		} catch (AnalyticException e) {
-			this.setTerminationMessage("Failed: " + e.getMessage());
+			this.setTerminationMessage(
+					Job.JOB_EXECUTION_FAILURE_MESSAGE + ": "
+							+ e.getMessage());
 			LOGGER.info("Analysis job failed for user " + this.getUserId());
 			LOGGER.info(e);
+			e.printStackTrace();
 		}
 	}
 }

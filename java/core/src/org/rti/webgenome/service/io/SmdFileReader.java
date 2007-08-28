@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.3 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssayData;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.units.BpUnits;
 
@@ -99,6 +100,7 @@ public final class SmdFileReader {
     
     /** Units for {@code positionColumnHeading}. */
     private final BpUnits units;
+    
 
     
     // ==============================
@@ -117,17 +119,20 @@ public final class SmdFileReader {
      * @param positionColumnHeading Heading of column in reporter file
      * containing physical chromosome positions
      * @param units Units of physical chromosome positions
+     * @param format File format
      * @throws SmdFormatException If file is not in SMD format
      */
     public SmdFileReader(final File reporterFile,
     		final String reporterNameColumnHeading,
     		final String chromosomeColumnHeading,
     		final String positionColumnHeading,
-    		final BpUnits units)
+    		final BpUnits units,
+    		final RectangularTextFileFormat format)
         throws SmdFormatException {
         this.units = units;
         this.loadReporters(reporterFile, reporterNameColumnHeading,
-        		chromosomeColumnHeading, positionColumnHeading);
+        		chromosomeColumnHeading, positionColumnHeading,
+        		format);
     }
     
     
@@ -141,16 +146,19 @@ public final class SmdFileReader {
      * @param positionColumnHeading Heading of column in reporter file
      * containing physical chromosome positions
      * @param units Units of physical chromosome positions
+     * @param format File format
      * @throws SmdFormatException If file is not in SMD format
      */
     public SmdFileReader(final String absolutePath,
     		final String reporterNameColumnHeading,
     		final String chromosomeColumnHeading,
     		final String positionColumnHeading,
-    		final BpUnits units)
+    		final BpUnits units,
+    		final RectangularTextFileFormat format)
         throws SmdFormatException {
         this(new File(absolutePath), reporterNameColumnHeading,
-        		chromosomeColumnHeading, positionColumnHeading, units);
+        		chromosomeColumnHeading, positionColumnHeading, units,
+        		format);
     }
     
     
@@ -164,14 +172,18 @@ public final class SmdFileReader {
      * containing chromosome numbers
      * @param positionColumnHeading Heading of column in reporter file
      * containing physical chromosome positions
+     * @param format File format
      * @throws SmdFormatException if reporter name,
      * chromosome, or position column is not present.
      */
     private void loadReporters(final File reporterFile,
     		final String reporterNameColumnHeading,
     		final String chromosomeColumnHeading,
-    		final String positionColumnHeading) throws SmdFormatException {
+    		final String positionColumnHeading,
+    		final RectangularTextFileFormat format)
+    throws SmdFormatException {
     	RectangularFileReader reader = new RectangularFileReader(reporterFile);
+    	reader.setDelimiter(format.getDelimiter());
         
         // Get index of reporter-related columns
         List<String> colHeadings =
@@ -283,12 +295,15 @@ public final class SmdFileReader {
      * to parse
      * @param reporterNameColumnName Name of column providing
      * reporter names
+     * @param format File format
      * @return Bioassay data
      */
     public BioAssayData getBioAssayData(
     		final File file, final String dataColumnName,
-    		final String reporterNameColumnName) {
+    		final String reporterNameColumnName,
+    		final RectangularTextFileFormat format) {
     	RectangularFileReader reader = new RectangularFileReader(file);
+    	reader.setDelimiter(format.getDelimiter());
         int dataColIdx = this.indexOfString(reader.getColumnHeadings(),
                 dataColumnName, false);
         int nameColIdx = this.indexOfString(reader.getColumnHeadings(),

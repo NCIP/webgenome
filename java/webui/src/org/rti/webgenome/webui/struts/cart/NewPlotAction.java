@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.14 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -189,6 +189,7 @@ public final class NewPlotAction extends BaseAction {
     	PlotParametersForm pForm = (PlotParametersForm) form;
     	PlotParameters params = pForm.getPlotParameters();
     	SessionMode mode = PageContext.getSessionMode(request);
+    	Long plotId = null;
     	
     	// Get experiments to plot.  If this action is
     	// invoked to create a new <code>Plot</code> instance,
@@ -216,7 +217,7 @@ public final class NewPlotAction extends BaseAction {
 	    	
 	    	// Get experiment names, which are actually IDs to
 	    	// the client application
-	    	Long plotId = Long.parseLong(request.getParameter("plotId"));
+	    	plotId = Long.parseLong(request.getParameter("plotId"));
 	    	plot = cart.getPlot(plotId);
 	    	experiments = plot.getExperiments();
 	    	QuantitationType qType =
@@ -264,7 +265,7 @@ public final class NewPlotAction extends BaseAction {
 	    // Case: Generate plot in background
 	    } else {
 	    	Principal principal = PageContext.getPrincipal(request);
-	    	PlotJob job = new PlotJob(plot,
+	    	PlotJob job = new PlotJob(plotId,
 	    			new HashSet<Experiment>(experiments), params,
 	    			principal.getName());
 	    	this.jobManager.add(job);

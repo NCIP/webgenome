@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.4 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,14 @@ import java.util.Date;
  *
  */
 public interface Job {
+	
+	/** Text status indicating a job has successfully executed. */
+	String JOB_EXECUTION_SUCCESS_MESSAGE =
+		"Job successfully completed";
+	
+	/** Text status indicating a job has failed. */
+	String JOB_EXECUTION_FAILURE_MESSAGE =
+		"FAILURE";
 	
 	/**
 	 * Get unique identifier for job.

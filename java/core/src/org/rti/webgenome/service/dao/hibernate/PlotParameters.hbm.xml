@@ -36,7 +36,7 @@
 			<property name="drawFeatureLabels" column="draw_feature_labels"/>
 			<property name="width" column="width"/>
 			<set name="annotationTypesByName" table="ann_plot_params_types"
-				lazy="false" cascade="all-delete-orphan">
+				lazy="false">
 				<key column="plot_params_id"/>
 				<element column="name" type="java.lang.String"/>
 			</set>

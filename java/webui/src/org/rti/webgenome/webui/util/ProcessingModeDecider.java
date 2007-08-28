@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.5 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -320,10 +320,13 @@ public final class ProcessingModeDecider {
 			for (Experiment exp : experiments) {
 				for (GenomeInterval interval : genomeIntervals) {
 					int totalNum = exp.numDatum(interval.getChromosome());
-					double fraction = (double) interval.length()
-						/ (double) exp.inferredChromosomeSize(
-								interval.getChromosome());
-					numDatum += (int) ((double) totalNum * fraction);
+					
+					// Code commented out for demo
+//					double fraction = (double) interval.length()
+//						/ (double) exp.inferredChromosomeSize(
+//								interval.getChromosome());
+//					numDatum += (int) ((double) totalNum * fraction);
+					numDatum += totalNum;
 				}
 			}
 			background = numDatum >= BG_PROCESSING_DATUM_THRESHOLD;

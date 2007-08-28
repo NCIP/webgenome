@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.2 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.ajax;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,6 +63,7 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.service.job.Job;
 import org.rti.webgenome.service.job.JobManager;
+import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -100,9 +102,15 @@ public class NewlyCompletedJobsAction extends BaseAction {
 	        final HttpServletResponse response
 	    ) throws Exception {
 		LOGGER.info("Looking for newly completed jobs");
-		Principal principal = PageContext.getPrincipal(request);
-		Collection<Job> jobs = this.jobManager.getNewlyCompletedJobs(
-				principal.getName());
+		Collection<Job> jobs = new ArrayList<Job>();
+		try {
+			Principal principal = PageContext.getPrincipal(request);
+			jobs = this.jobManager.getNewlyCompletedJobs(
+					principal.getName());
+		} catch (SessionTimeoutException e) {
+			LOGGER.info("Browser requesting completed jobs "
+					+ "from an expired session");
+		}
 		if (jobs.size() > 0) {
 			StringBuffer jobIds = new StringBuffer();
 			int count = 0;

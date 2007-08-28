@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.8 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -163,7 +163,8 @@ public class DataImportJob extends AbstractJob {
 			
 			// Load data into shopping cart
 			Experiment exp = ioService.loadSmdData(
-					this.uploadDataSourceProperties, cart);
+					new UploadDataSourceProperties(
+							this.uploadDataSourceProperties), cart);
 			
 			// Persist new array object
 			Array array = this.getArray(exp);
@@ -174,13 +175,16 @@ public class DataImportJob extends AbstractJob {
 			// Persist shopping cart changes
 			sDao.update(cart);
 			
-			this.setTerminationMessage("Succeeded");
+			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Data import job completed for user "
 					+ this.getUserId());
 		} catch (SmdFormatException e) {
-			this.setTerminationMessage("Failed: " + e.getMessage());
+			this.setTerminationMessage(
+					Job.JOB_EXECUTION_FAILURE_MESSAGE + ": "
+							+ e.getMessage());
 			LOGGER.info("Data import failed for user " + this.getUserId());
 			LOGGER.info(e);
+			e.printStackTrace();
 		}
 	}
 	

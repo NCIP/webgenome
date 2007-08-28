@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.4 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -117,7 +117,8 @@ public class ShowMainUploadFormSetupAction extends BaseAction {
 			}
 		} else {
 			allCols = this.ioService.getColumnHeadings(
-					upload.getReporterLocalFileName());
+					upload.getReporterLocalFileName(),
+					upload.getReporterFileFormat());
 		}
 		request.setAttribute("allCols", allCols);
 		List<Organism> organisms = this.organismDao.loadAll();

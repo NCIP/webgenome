@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-22 20:03:57 $
+$Revision: 1.2 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -90,6 +90,7 @@ public class SpecifyDataColumnsSetupAction extends BaseAction {
 		reader.setDelimiter(data.getFileFormat().getDelimiter());
 		List<String> columnHeadings = reader.getColumnHeadings();
 		request.setAttribute("columnHeadings", columnHeadings);
+		request.setAttribute("data", data);
 		return mapping.findForward("success");
 	}
 }

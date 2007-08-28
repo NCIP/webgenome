@@ -46,8 +46,15 @@
 				<html:errors property="genomeIntervals"/>
 			</td>
 			<td>
+			<%-- =================================================
+			Note: the attribute 'derivedFromAnalysis' will
+			currently never be present.  The code that places
+			it in the request has been commented out.  The
+			reason the following form element must be deactivated
+			is not currently known.
+			======================================================= --%>
 				<logic:present name="derivedFromAnalysis">
-					<html:text property="genomeIntervals" disabled="true"/>
+				<html:text property="genomeIntervals" disabled="true"/>
 					<html:select property="units" disabled="true">
 					<html:option value="BP">BP</html:option>
 					<html:option value="KB">KB</html:option>
@@ -56,7 +63,6 @@
 				</logic:present>
 				<logic:notPresent name="derivedFromAnalysis">
 				<html:text property="genomeIntervals"/>
-				&nbsp;
 				<html:select property="units">
 					<html:option value="BP">BP</html:option>
 					<html:option value="KB">KB</html:option>

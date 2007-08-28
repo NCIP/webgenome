@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.6 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -89,14 +89,6 @@ public class SerialQueueJobManager implements JobManager {
 	 * to see if there are any new jobs.
 	 */
 	private static final long JOB_EXECUTION_THREAD_SLEEP_TIME = 5000;
-	
-	/** Text status indicating a job has successfully executed. */
-	private static final String JOB_EXECUTION_SUCCESS_MESSAGE =
-		"Job successfully completed";
-	
-	/** Text status indicating a job has failed. */
-	private static final String JOB_EXECUTION_FAILURE_MESSAGE =
-		"FAILURE";
 	
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(
@@ -410,7 +402,6 @@ public class SerialQueueJobManager implements JobManager {
 				// Execute job
 				try {
 					job.execute(jobServices);
-					job.setTerminationMessage(JOB_EXECUTION_SUCCESS_MESSAGE);
 					LOGGER.info("Job '" + job.getId()
 							+ "' successfully completed");
 				} catch (Exception e) {
@@ -422,7 +413,7 @@ public class SerialQueueJobManager implements JobManager {
 						throwable = throwable.getCause();
 					}
 					String exceptionMsg = e.getMessage();
-					String msg = JOB_EXECUTION_FAILURE_MESSAGE;
+					String msg = Job.JOB_EXECUTION_FAILURE_MESSAGE;
 					if (exceptionMsg != null && exceptionMsg.length() > 0) {
 						msg += ": " + exceptionMsg;
 					}

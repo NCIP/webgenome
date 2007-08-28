@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -149,8 +149,10 @@ public class AnnotationPlotParameters extends HeatMapPlotParameters {
 	 */
 	public AnnotationPlotParameters(final AnnotationPlotParameters params) {
 		super(params);
-		params.setAnnotationTypes(new HashSet<AnnotationType>(
-				params.getAnnotationTypes()));
+		this.drawFeatureLabels = params.drawFeatureLabels;
+		this.width = params.width;
+		this.annotationTypes = new HashSet<AnnotationType>(
+				params.getAnnotationTypes());
 	}
 	
 	

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.4 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.util.List;
 
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssayData;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.FileUtils;
@@ -79,6 +80,10 @@ public final class SmdFileReaderTester extends TestCase {
 	
 	/** Units of chromosome position. */
 	private static final BpUnits UNITS = BpUnits.KB;
+	
+	/** File format. */
+	private static final RectangularTextFileFormat FORMAT =
+		RectangularTextFileFormat.CSV;
     
     /**
      * Path (relative to classpath) to directory containing
@@ -96,7 +101,7 @@ public final class SmdFileReaderTester extends TestCase {
     	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
         SmdFileReader reader = new SmdFileReader(file,
         		REPORTER_NAME_COLUMN_NAME, CHROMOSOME_COLUMN_NAME,
-        		POSITION_COLUMN_NAME, UNITS);
+        		POSITION_COLUMN_NAME, UNITS, FORMAT);
         List<Reporter> reporters = reader.getReporters();
         assertEquals(5, reporters.size());
         Reporter r = reporters.get(3);
@@ -113,9 +118,9 @@ public final class SmdFileReaderTester extends TestCase {
     	File file = FileUtils.getFile(TEST_DIRECTORY, "normal.csv");
         SmdFileReader reader = new SmdFileReader(file,
         		REPORTER_NAME_COLUMN_NAME, CHROMOSOME_COLUMN_NAME,
-        		POSITION_COLUMN_NAME, UNITS);
+        		POSITION_COLUMN_NAME, UNITS, FORMAT);
         BioAssayData data = reader.getBioAssayData(file, "bioassay1",
-        		REPORTER_NAME_COLUMN_NAME);
+        		REPORTER_NAME_COLUMN_NAME, FORMAT);
         List<ArrayDatum> datumList = data.getArrayData((short) 1);
         assertEquals(3, datumList.size());
         ArrayDatum datum = data.getArrayData((short) 1).get(0);

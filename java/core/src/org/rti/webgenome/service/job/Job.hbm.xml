@@ -59,10 +59,7 @@
 		</subclass>
 		<subclass name="org.rti.webgenome.service.job.PlotJob"
 			discriminator-value="plot">
-			<many-to-one name="plot"
-				column="plot_id"
-				class="org.rti.webgenome.domain.Plot"
-				lazy="false"/>
+			<property name="plotId" column="plot_id"/>
 			<set name="experiments" table="job_experiments"
 				lazy="false">
 				<key column="job_id"/>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.5 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -135,10 +135,7 @@ public final class PlotParametersSetupAction extends BaseAction {
     		pForm.setName("");
     	}
     	
-    	// Get selected experiments and determine if
-    	// any are derived from an analytic operation.
-    	// The downstream JSP needs to know this because
-    	// some form elements must be de-activated.
+    	// Get experiments
     	Collection<Experiment> experiments = null;
     	ShoppingCart cart = this.getShoppingCart(request);
     	if (plotIdStr != null) {
@@ -155,12 +152,22 @@ public final class PlotParametersSetupAction extends BaseAction {
 	    	Collection<Long> expIds = seForm.getSelectedExperimentIds();
 	    	experiments = cart.getExperiments(expIds);
     	}
-    	for (Experiment exp : experiments) {
-    		if (exp.isDerived()) {
-    			request.setAttribute("derivedFromAnalysis", "1");
-    			break;
-    		}
-    	}
+    	
+    	// Get selected experiments and determine if
+    	// any are derived from an analytic operation.
+    	// The downstream JSP needs to know this because
+    	// some form elements must be de-activated.
+    	
+    	// This code is commented out because I am not sure why
+    	// it was originally needed.  It does not seem to
+    	// be needed now.
+
+//    	for (Experiment exp : experiments) {
+//    		if (exp.isDerived()) {
+//    			request.setAttribute("derivedFromAnalysis", "1");
+//    			break;
+//    		}
+//    	}
     	
     	// If plot is an annotation plot, get available
     	// annotation types and attach to request

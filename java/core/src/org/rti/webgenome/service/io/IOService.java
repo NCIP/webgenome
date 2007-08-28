@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.8 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,10 +61,12 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.graphics.util.ColorChooser;
@@ -257,18 +259,38 @@ public class IOService {
 			final ShoppingCart shoppingCart)
 	throws SmdFormatException {
 		Experiment experiment = new Experiment(upload.getExperimentName());
+		experiment.setOrganism(upload.getOrganism());
 		experiment.setId(this.experimentIdGenerator.nextId());
-		File reporterFile = this.getWorkingFile(
+		File reporterFile = null;
+		String reporterNameColName = null;
+		RectangularTextFileFormat format = null;
+		if (upload.getReporterLocalFileName() == null) {
+			Set<DataFileMetaData> meta = upload.getDataFileMetaData();
+			if (meta == null || meta.size() < 1) {
+				throw new IllegalArgumentException("No data file specified");
+			}
+			DataFileMetaData firstMeta = meta.iterator().next();
+			reporterFile = this.getWorkingFile(
+					firstMeta.getLocalFileName());
+			reporterNameColName = firstMeta.getReporterNameColumnName();
+			format = firstMeta.getFormat();
+		} else {
+			reporterFile = this.getWorkingFile(
 				upload.getReporterLocalFileName());
+			reporterNameColName =
+				upload.getReporterFileReporterNameColumnName();
+			format = upload.getReporterFileFormat();
+		}
 		SmdFileReader reader = new SmdFileReader(reporterFile,
-				upload.getReporterFileReporterNameColumnName(),
+				reporterNameColName,
 				upload.getChromosomeColumnName(),
 				upload.getPositionColumnName(),
-				upload.getPositionUnits());
+				upload.getPositionUnits(), format);
+		Array array = this.dataFileManager.serializeReporters(reader);
 		for (DataFileMetaData meta : upload.getDataFileMetaData()) {
 			File dataFile = this.getWorkingFile(meta.getLocalFileName());
 			this.dataFileManager.convertSmdData(reader, experiment, dataFile,
-					meta, upload.getOrganism());
+					meta, upload.getOrganism(), array);
 		}
 		experiment.setDataSourceProperties(upload);
 		ColorChooser colorChooser = shoppingCart.getBioassayColorChooser();
@@ -334,9 +356,11 @@ public class IOService {
 	 * Get all column headings from given file.
 	 * @param fileName Name of file in working directory.  This is
 	 * not an absolute path.
+	 * @param format File format
 	 * @return Column headings
 	 */
-	public Set<String> getColumnHeadings(final String fileName) {
+	public Set<String> getColumnHeadings(final String fileName,
+			final RectangularTextFileFormat format) {
 		Set<String> cols = new HashSet<String>();
 		File file = this.getWorkingFile(fileName);
 		if (!file.exists() || !file.isFile()) {
@@ -344,6 +368,7 @@ public class IOService {
 					"Cannot get headings from file '" + fileName + "'.");
 		}
 		RectangularFileReader reader = new RectangularFileReader(file);
+		reader.setDelimiter(format.getDelimiter());
 		cols.addAll(reader.getColumnHeadings());
 		return cols;
 	}
@@ -358,7 +383,7 @@ public class IOService {
 		Set<String> cols = new HashSet<String>();
 		for (DataFileMetaData meta : dataFileMetaData) {
 			String fileName = meta.getLocalFileName();
-			cols.addAll(this.getColumnHeadings(fileName));
+			cols.addAll(this.getColumnHeadings(fileName, meta.getFormat()));
 		}
 		return cols;
 	}

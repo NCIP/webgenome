@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.5 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -208,6 +208,21 @@ public class DataFileMetaData {
 		
 	}
 	
+	/**
+	 * Constructor performing deep copy of given object.
+	 * @param meta Object to deep copy
+	 */
+	public DataFileMetaData(final DataFileMetaData meta) {
+		this.dataColumnMetaData = new HashSet<DataColumnMetaData>();
+		for (DataColumnMetaData colMeta : meta.dataColumnMetaData) {
+			this.dataColumnMetaData.add(new DataColumnMetaData(colMeta));
+		}
+		this.format = meta.format;
+		this.localFileName = meta.localFileName;
+		this.remoteFileName = meta.remoteFileName;
+		this.reporterNameColumnName = meta.reporterNameColumnName;
+	}
+	
 	//
 	//  B U S I N E S S   M E T H O D S
 	//
@@ -226,7 +241,13 @@ public class DataFileMetaData {
 	 * @return Name of format.
 	 */
 	public String getFormatName() {
-		return this.format.name();
+		String name = null;
+		if (this.format == null) {
+			name = "null";
+		} else {
+			name = this.format.name();
+		}
+		return name;
 	}
 	
 	/**
@@ -235,6 +256,10 @@ public class DataFileMetaData {
 	 * @param formatName Name of format.
 	 */
 	public void setFormatName(final String formatName) {
-		this.format = RectangularTextFileFormat.valueOf(formatName);
+		if ("null".equals(formatName)) {
+			this.format = null;
+		} else {
+			this.format = RectangularTextFileFormat.valueOf(formatName);
+		}
 	}
 }

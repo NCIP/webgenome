@@ -28,6 +28,8 @@
 	desired.
 </p>
 
+<h3 align="center">File: <bean:write name="data" property="remoteFileName"/></h3>
+
 <center>
 <html:form action="/upload/attachDataFile">
 <p>

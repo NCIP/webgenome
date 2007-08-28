@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-25 01:57:12 $
+$Revision: 1.4 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
@@ -149,6 +151,9 @@ public class UploadAction extends BaseAction {
 			Principal principal = PageContext.getPrincipal(request);
 			DataImportJob job = new DataImportJob(upload, principal.getName());
 			this.jobManager.add(job);
+			ActionMessages messages = new ActionMessages();
+    		messages.add("global", new ActionMessage("import.job"));
+    		this.saveMessages(request, messages);
 			forward = mapping.findForward("batch");
 		} else {
 			ShoppingCart cart = this.getShoppingCart(request);

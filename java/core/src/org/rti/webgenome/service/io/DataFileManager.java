@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.3 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -130,33 +130,18 @@ public final class DataFileManager {
     //     Business methods
     // ======================================
 
-    
-    
     /**
-     * Extract specified data from an SMD-format file.
-     * @param in Reader of SMD data files
-     * @param experiment Experiment into which parsed data will be
-     * deposited.
-     * @param dataFile File containing data to parse
-     * @param dataFileMetaData Metadata on data file
-     * @param organism Organism that experiment was performed against
-     * @throws SmdFormatException If the file is not valid
-     * SMD format
-     * @see {@link org.rti.webgenome.service.io.SmdFileReader}
+     * Serialize reporters in given reader as a new array object.
+     * @param smdFileReader Reader of SMD format files.
+     * @return Array object containing persisted reporters
      */
-    public void convertSmdData(
-    		final SmdFileReader in,
-    		final Experiment experiment,
-    		final File dataFile,
-            final DataFileMetaData dataFileMetaData,
-            final Organism organism)
-        throws SmdFormatException {
-                
+    public Array serializeReporters(final SmdFileReader smdFileReader) {
+    	
         // Create new array object and store reporters
         LOGGER.info("Serializing reporter data");
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        List<Reporter> reporters = in.getReporters();
+        List<Reporter> reporters = smdFileReader.getReporters();
         ChromosomeReporters cr = null;
         Array array = new Array();
         for (Reporter r : reporters) {
@@ -179,18 +164,45 @@ public final class DataFileManager {
         }
         LOGGER.info("Completed serialization of reporters");
         LOGGER.info("Elapsed time: " + stopWatch.getFormattedLapTime());
+        return array;
+    }
+    
+    /**
+     * Extract specified data from an SMD-format file.
+     * @param smdFileReader Reader of SMD data files
+     * @param experiment Experiment into which parsed data will be
+     * deposited.
+     * @param dataFile File containing data to parse
+     * @param dataFileMetaData Metadata on data file
+     * @param organism Organism that experiment was performed against
+     * @param array Array used in experiment
+     * @throws SmdFormatException If the file is not valid
+     * SMD format
+     * @see {@link org.rti.webgenome.service.io.SmdFileReader}
+     */
+    public void convertSmdData(
+    		final SmdFileReader smdFileReader,
+    		final Experiment experiment,
+    		final File dataFile,
+            final DataFileMetaData dataFileMetaData,
+            final Organism organism,
+            final Array array)
+        throws SmdFormatException {
         
         // Create new bioassay objects and store array data
         LOGGER.info("Serializing array data");
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         for (DataColumnMetaData meta
         		: dataFileMetaData.getDataColumnMetaData()) {
             DataSerializedBioAssay ba =
                 new DataSerializedBioAssay(meta.getBioAssayName(), organism);
             experiment.add(ba);
             ba.setArray(array);
-            BioAssayData bad = in.getBioAssayData(dataFile,
+            BioAssayData bad = smdFileReader.getBioAssayData(dataFile,
             		meta.getColumnName(),
-            		dataFileMetaData.getReporterNameColumnName());
+            		dataFileMetaData.getReporterNameColumnName(),
+            		dataFileMetaData.getFormat());
             LOGGER.info("Serializing bioassay " + ba.getName());
             for (ChromosomeArrayData cad
                     : bad.getChromosomeArrayData().values()) {

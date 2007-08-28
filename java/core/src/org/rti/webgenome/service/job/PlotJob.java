@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.5 $
+$Date: 2007-08-28 17:24:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,12 +75,12 @@ public class PlotJob extends AbstractJob {
 	//
 	
 	/**
-	 * Plot object to populate, if this job involves re-doing a
+	 * ID of plot object to populate, if this job involves re-doing a
 	 * plot with new parameters.  This will only be not-null
 	 * if the job involves re-creating
 	 * a plot with new parameters.
 	 */
-	private Plot plot = null;
+	private Long plotId = null;
 	
 	/** Experiments to plot. */
 	private Set<Experiment> experiments = null;
@@ -109,24 +109,24 @@ public class PlotJob extends AbstractJob {
 	}
 
 	/**
-	 * Get plot to populate.
-	 * @return Plot whose properties will be populated by this job.
+	 * Get ID of plot to populate.
+	 * @return ID of plot whose properties will be populated by this job.
 	 * This will only be not-null if the job involves re-creating
 	 * a plot with new parameters.
 	 */
-	public Plot getPlot() {
-		return plot;
+	public Long getPlotId() {
+		return plotId;
 	}
 
 	/**
-	 * Set plot to populate.
-	 * @param plot Plot whose properties will be populated by
+	 * Set ID of plot to populate.
+	 * @param plot ID of plot whose properties will be populated by
 	 * this job.  This property will only be set if the job
 	 * involves re-creating
 	 * a plot with new parameters.
 	 */
-	public void setPlot(final Plot plot) {
-		this.plot = plot;
+	public void setPlotId(final Long plot) {
+		this.plotId = plot;
 	}
 
 	/**
@@ -159,18 +159,18 @@ public class PlotJob extends AbstractJob {
 	
 	/**
 	 * Constructor.
-	 * @param plot Plot whose properties will be populated.
+	 * @param plot ID of plot whose properties will be populated.
 	 * This will only be not-null if the job involves re-creating
 	 * a plot with new parameters.
 	 * @param experiments Experiments to plot
 	 * @param plotParameters Parameters of plot to populate
 	 * @param userId User login name
 	 */
-	public PlotJob(final Plot plot, final Set<Experiment> experiments,
+	public PlotJob(final Long plot, final Set<Experiment> experiments,
 			final PlotParameters plotParameters,
 			final String userId) {
 		super(userId);
-		this.plot = plot;
+		this.plotId = plot;
 		this.experiments = experiments;
 		this.plotParameters = plotParameters;
 		this.setDescription("Generating plot " + plotParameters.getPlotName());
@@ -200,14 +200,19 @@ public class PlotJob extends AbstractJob {
 			PlotParameters newParamsObj = this.plotParameters.deepCopy();
 			
 			// Plot and persist
-			jobServices.getPlotService().plotExperiments(this.plot,
+			Plot plot = cart.getPlot(this.plotId);
+			jobServices.getPlotService().plotExperiments(plot,
 					this.experiments, newParamsObj,
 					cart, dataGetter);
+			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			sDao.update(cart);
 		} catch (Exception e) {
-			this.setTerminationMessage("Failed: " + e.getMessage());
+			this.setTerminationMessage(
+					Job.JOB_EXECUTION_FAILURE_MESSAGE + ": "
+							+ e.getMessage());
 			LOGGER.info("Plot job failed for user " + this.getUserId());
 			LOGGER.info(e);
+			e.printStackTrace();
 		}
 		LOGGER.info("Analysis job completed for user "
 				+ this.getUserId());
