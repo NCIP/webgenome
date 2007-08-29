@@ -97,6 +97,14 @@ Organism
 </p>
 
 <p>
+Quantitation type
+<html:select property="quantitationTypeId">
+	<html:options collection="qTypes" property="id"
+		labelProperty="name"/>
+</html:select>
+</p>
+
+<p>
 	<html:submit property="OK"/>
 	<input type="button" value="Cancel" />
 </p>

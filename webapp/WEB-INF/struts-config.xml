@@ -535,9 +535,9 @@
             
          <!-- ========= AJAX actions ============== -->
          
-         <action path="/ajax/newlyCompletedJobs">
+         <action path="/ajax/newlyChangedJobs">
          	<forward name="success"
-         		path="/WEB-INF/jsp/ajax/newlyCompletedJobs.jsp"/>
+         		path="/WEB-INF/jsp/ajax/newlyChangedJobs.jsp"/>
          </action>
 
 	</action-mappings>

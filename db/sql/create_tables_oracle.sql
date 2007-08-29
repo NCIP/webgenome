@@ -97,6 +97,7 @@ CREATE TABLE job (
 	termination_message VARCHAR2(1024),
 	description VARCHAR2(256),
 	user_notified_complete VARCHAR2(8),
+	user_notified_start VARCHAR2(8),
 	
 	-- AnalysisJob, ReRunAnalysisJob, and DataImportJob
 	data_src_props_id NUMBER(38),
@@ -163,6 +164,7 @@ CREATE TABLE data_src_props (
 	pos_units VARCHAR2(256),
 	exp_name VARCHAR2(128),
 	organism_id NUMBER(38),
+	quant_type VARCHAR2(256),
 	
 	-- AnalysisDataSourceProperties
 	an_op_class_name VARCHAR2(256),

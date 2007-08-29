@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.4 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,6 +91,12 @@ public abstract class AbstractJob implements Job {
 	 * the job is not complete, this should be set to false.
 	 */
 	private boolean userNotifiedOfCompletion = false;
+	
+	/**
+	 * Has the user been notified of the job starting?
+	 * If ths job has not started, this should be set to false.
+	 */
+	private boolean userNotifiedOfStart = false;
 	
 	
 	//
@@ -240,4 +246,23 @@ public abstract class AbstractJob implements Job {
 			final boolean userNotifiedOfCompletion) {
 		this.userNotifiedOfCompletion = userNotifiedOfCompletion;
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isUserNotifiedOfStart() {
+		return userNotifiedOfStart;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setUserNotifiedOfStart(
+			final boolean userNotifiedOfStart) {
+		this.userNotifiedOfStart = userNotifiedOfStart;
+	}
+	
+	
 }

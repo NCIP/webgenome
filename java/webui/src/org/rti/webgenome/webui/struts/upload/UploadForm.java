@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.2 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.struts.BaseForm;
@@ -87,6 +88,10 @@ public class UploadForm extends BaseForm {
 	
 	/** Name of experiment that will contain uploaded data. */
 	private String experimentName = null;
+	
+	/** ID of quantitation type of all data. */
+	private String quantitationTypeId =
+		QuantitationType.COPY_NUMBER.getId();
 
 	/**
 	 * Get name of colum containing chromosomal position.
@@ -103,6 +108,24 @@ public class UploadForm extends BaseForm {
 	 */
 	public void setChromosomeColumnName(final String chromosomeColumnName) {
 		this.chromosomeColumnName = chromosomeColumnName;
+	}
+
+	/**
+	 * Get quantitation type ID of all data.
+	 * @return Quantitation type ID
+	 */
+	public String getQuantitationTypeId() {
+		return quantitationTypeId;
+	}
+
+	/**
+	 * Set quantitation type ID of all data.
+	 * @param quantitationTypeId Quantitation type
+	 * ID
+	 */
+	public void setQuantitationTypeId(
+			final String quantitationTypeId) {
+		this.quantitationTypeId = quantitationTypeId;
 	}
 
 	/**

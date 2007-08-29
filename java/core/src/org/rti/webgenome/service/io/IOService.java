@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.9 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -261,6 +261,7 @@ public class IOService {
 		Experiment experiment = new Experiment(upload.getExperimentName());
 		experiment.setOrganism(upload.getOrganism());
 		experiment.setId(this.experimentIdGenerator.nextId());
+		experiment.setQuantitationType(upload.getQuantitationType());
 		File reporterFile = null;
 		String reporterNameColName = null;
 		RectangularTextFileFormat format = null;

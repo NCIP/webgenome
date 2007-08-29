@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.7 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,8 +101,18 @@ public interface JobManager {
 	 * with given user ID that have completed
 	 * since the last call of this method.
 	 * @param userId User login name
-	 * @return List of user jobs that have completed sicne the
+	 * @return List of user jobs that have completed since the
 	 * last call of this method.
 	 */
 	Collection<Job> getNewlyCompletedJobs(String userId);
+	
+	/**
+	 * This method returns a list of jobs associated
+	 * with given user ID that have started
+	 * since the last call of this method.
+	 * @param userId User login name
+	 * @return List of user jobs that have started since the
+	 * last call of this method.
+	 */
+	Collection<Job> getNewlyStartedJobs(String userId);
 }

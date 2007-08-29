@@ -97,16 +97,32 @@
 				    		var xmlDoc = xmlHttp.responseXML.documentElement;
 				    		if (xmlDoc != null) {
 					    		updateTable(xmlDoc);
-					    		showJobCompletionMessage(xmlDoc);
+					    		if (anyJobsCompleted(xmlDoc)) {
+					    			showJobCompletionMessage(xmlDoc);
+					    		}
 					    	}
 				    	}
 				    }
 				    xmlHttp.open("GET",
-				    	"<html:rewrite page="/ajax/newlyCompletedJobs.do"/>",
+				    	"<html:rewrite page="/ajax/newlyChangedJobs.do"/>",
 				    	true);
 				    xmlHttp.send(null);
 				}
 				return false;
+			}
+			
+			// Determines if any jobs have completed
+			function anyJobsCompleted(doc) {
+				var completed = false;
+				var elements = doc.getElementsByTagName("update");
+				for (var i = 0; i < elements.length && !completed; i++) {
+					var element = elements.item(i);
+					var id = element.getAttribute("elementId");
+					if (id.indexOf("_endDate") >= 0) {
+						completed = true;
+					}	
+				}
+				return completed;
 			}
 		
 			// Parse server response and update HTML table on the

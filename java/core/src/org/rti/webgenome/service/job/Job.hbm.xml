@@ -18,6 +18,7 @@
 		<property name="userId" column="user_id"/>
 		<property name="description"/>
 		<property name="userNotifiedOfCompletion" column="user_notified_complete"/>
+		<property name="userNotifiedOfStart" column="user_notified_start"/>
 		<subclass name="org.rti.webgenome.service.job.AnalysisJob"
 			discriminator-value="analysis">
 			<many-to-one name="dataSourceProperties"

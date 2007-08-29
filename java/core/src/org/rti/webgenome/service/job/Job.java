@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.5 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -179,6 +179,24 @@ public interface Job {
 	 * been notified.
 	 */
 	boolean isUserNotifiedOfCompletion();
+	
+	/**
+	 * Set property that indicates user has been notified that
+	 * the job has started.
+	 * @param notified Has the user been notified that the job
+	 * has started?  This should only be set to true if the
+	 * job has started and the user has been notified.
+	 */
+	void setUserNotifiedOfStart(boolean notified);
+	
+	/**
+	 * Has the user been notified that the job has started?
+	 * @return {@code true} if the job has started and the user
+	 * has been notified.  Returns {@code false} if the job
+	 * has not started or it has started but the user has not
+	 * been notified.
+	 */
+	boolean isUserNotifiedOfStart();
 	
 	/**
 	 * Execute job.

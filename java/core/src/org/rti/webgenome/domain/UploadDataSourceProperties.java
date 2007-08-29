@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.3 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,6 +121,9 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	/** Organism that was subject of experiment. */
 	private Organism organism = null;
 	
+	/** Quantitation type of all data. */
+	private QuantitationType quantitationType = null;
+	
 	
 	//
 	//  G E T T E R S / S E T T E R S
@@ -148,6 +151,24 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 */
 	public void setChromosomeColumnName(final String chromosomeColumnName) {
 		this.chromosomeColumnName = chromosomeColumnName;
+	}
+
+	/**
+	 * Get quantitation type of all data.
+	 * @return Quantitation type
+	 */
+	public QuantitationType getQuantitationType() {
+		return quantitationType;
+	}
+
+	/**
+	 * Set quantitation type of all data.
+	 * @param quantitationType Quantitation type
+	 * of all data
+	 */
+	public void setQuantitationType(
+			final QuantitationType quantitationType) {
+		this.quantitationType = quantitationType;
 	}
 
 	/**
@@ -348,6 +369,7 @@ extends DataSourceProperties.BaseDataSourceProperties {
 			props.reporterFileReporterNameColumnName;
 		this.reporterLocalFileName = props.reporterLocalFileName;
 		this.reporterRemoteFileName = props.reporterRemoteFileName;
+		this.quantitationType = props.quantitationType;
 	}
 	
 	//
@@ -406,6 +428,35 @@ extends DataSourceProperties.BaseDataSourceProperties {
 			this.positionUnits = null;
 		} else {
 			this.positionUnits = BpUnits.getUnits(name);
+		}
+	}
+	
+	/**
+	 * Get ID of quantitation type for persisting
+	 * this enumerated type.
+	 * @return ID of quantitation type.
+	 */
+	public String getQuantitationTypeId() {
+		String name = null;
+		if (this.quantitationType != null) {
+			name = this.quantitationType.getId();
+		} else {
+			name = "null";
+		}
+		return name;
+	}
+	
+	/**
+	 * Set quantitation type by specifying ID.  This
+	 * is used for persistence.
+	 * @param id ID of quantitation type
+	 */
+	public void setQuantitationTypeId(final String id) {
+		if ("null".equals(id)) {
+			this.quantitationType = null;
+		} else {
+			this.quantitationType =
+				QuantitationType.getQuantitationType(id);
 		}
 	}
 	

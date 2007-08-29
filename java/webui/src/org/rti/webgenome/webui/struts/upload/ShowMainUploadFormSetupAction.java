@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.5 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.IOService;
@@ -125,6 +126,9 @@ public class ShowMainUploadFormSetupAction extends BaseAction {
 		request.setAttribute("organisms", organisms);
 		Collection<BpUnits> units = BpUnits.getUnits();
 		request.setAttribute("units", units);
+		Collection<QuantitationType> qTypes =
+			QuantitationType.getQuantitationTypeIndex().values();
+		request.setAttribute("qTypes", qTypes);
 		return mapping.findForward("success");
 	}
 }

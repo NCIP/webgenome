@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.5 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.service.dao.ArrayDao;
@@ -145,6 +146,9 @@ public class UploadAction extends BaseAction {
 		upload.setOrganism(org);
 		upload.setPositionUnits(BpUnits.getUnits(uForm.getUnits()));
 		upload.setPositionColumnName(uForm.getPositionColumnName());
+		upload.setQuantitationType(
+				QuantitationType.getQuantitationType(
+						uForm.getQuantitationTypeId()));
 		ActionForward forward = null;
 		if (ProcessingModeDecider.processInBackground(
 				upload, request, this.ioService)) {

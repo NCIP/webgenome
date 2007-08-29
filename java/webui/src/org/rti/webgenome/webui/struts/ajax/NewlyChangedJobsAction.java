@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.1 $
+$Date: 2007-08-29 19:29:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,16 +68,16 @@ import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * This class identifies any jobs that have completed since
- * the last call to this class.
+ * This class identifies any jobs whose start or completion
+ * status has changed since the last call.
  * @author dhall
  *
  */
-public class NewlyCompletedJobsAction extends BaseAction {
+public class NewlyChangedJobsAction extends BaseAction {
 	
 	/** Logger. */
 	private static final Logger LOGGER =
-		Logger.getLogger(NewlyCompletedJobsAction.class);
+		Logger.getLogger(NewlyChangedJobsAction.class);
 	
 	/** Manager of compute-intensive jobs. */
 	private JobManager jobManager = null;
@@ -102,19 +102,22 @@ public class NewlyCompletedJobsAction extends BaseAction {
 	        final HttpServletResponse response
 	    ) throws Exception {
 		LOGGER.info("Looking for newly completed jobs");
-		Collection<Job> jobs = new ArrayList<Job>();
+		Collection<Job> completedJobs = new ArrayList<Job>();
+		Collection<Job> startedJobs = new ArrayList<Job>();
 		try {
 			Principal principal = PageContext.getPrincipal(request);
-			jobs = this.jobManager.getNewlyCompletedJobs(
+			completedJobs = this.jobManager.getNewlyCompletedJobs(
+					principal.getName());
+			startedJobs = this.jobManager.getNewlyStartedJobs(
 					principal.getName());
 		} catch (SessionTimeoutException e) {
 			LOGGER.info("Browser requesting completed jobs "
 					+ "from an expired session");
 		}
-		if (jobs.size() > 0) {
+		if (completedJobs.size() > 0) {
 			StringBuffer jobIds = new StringBuffer();
 			int count = 0;
-			for (Job job : jobs) {
+			for (Job job : completedJobs) {
 				if (count++ > 0) {
 					jobIds.append(", ");
 				}
@@ -125,7 +128,8 @@ public class NewlyCompletedJobsAction extends BaseAction {
 		} else {
 			LOGGER.info("No newly completed jobs to report");
 		}
-		request.setAttribute("jobs", jobs);
+		request.setAttribute("completedJobs", completedJobs);
+		request.setAttribute("startedJobs", startedJobs);
 		return mapping.findForward("success");
 	}
 }
