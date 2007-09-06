@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.7 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -266,8 +266,6 @@ public class ScatterPlotPainter extends PlotPainter {
     		this.params = params;
     		this.genomeIntervals.addAll(params.getGenomeIntervals());
     		Collections.sort(this.genomeIntervals);
-    		Collection<Short> chromosomes =
-    			Experiment.chromosomes(experiments);
     		QuantitationType copyNumberQT =
     			Experiment.getCopyNumberQuantitationType(experiments);
     		if (copyNumberQT != null) {
@@ -288,8 +286,35 @@ public class ScatterPlotPainter extends PlotPainter {
     				this.rightYAxisMinValue = params.getExpressionMinY();
     			}
     		}
+    		if (copyNumberQT != null && expressionQT != null) {
+    			this.mergeAxesRanges();
+    		}
     		this.sizer = new ScatterPlotSizer(params);
     		this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
+    	}
+    	
+    	/**
+    	 * For co-visualization of copy number/LOH and expression data,
+    	 * both Y-axes should have the same range.  This method merges
+    	 * those ranges.
+    	 */
+    	private void mergeAxesRanges() {
+    		double maxY = Double.NaN;
+    		double minY = Double.NaN;
+    		if (this.leftYAxisMaxValue > this.rightYAxisMaxValue) {
+    			maxY = this.leftYAxisMaxValue;
+    		} else {
+    			maxY = this.rightYAxisMaxValue;
+    		}
+    		if (this.leftYAxisMinValue < this.rightYAxisMinValue) {
+    			minY = this.leftYAxisMinValue;
+    		} else {
+    			minY = this.rightYAxisMinValue;
+    		}
+    		this.leftYAxisMaxValue = maxY;
+    		this.rightYAxisMaxValue = maxY;
+    		this.leftYAxisMinValue = minY;
+    		this.rightYAxisMinValue = minY;
     	}
     	
     	
@@ -448,6 +473,8 @@ public class ScatterPlotPainter extends PlotPainter {
     	 * @return New scatter plot
     	 */
     	private ScatterPlot newScatterPlot(final GenomeInterval gi) {
+    		
+    		// Create plot boundaries
     		PlotBoundaries expressionPlotBoundaries = null;
             PlotBoundaries copyNumberPlotBoundaries = null;
             if (Experiment.getExpressionQuantitationType(this.experiments)
@@ -461,6 +488,16 @@ public class ScatterPlotPainter extends PlotPainter {
             			gi.getStartLocation(), this.params.getCopyNumberMinY(),
             			gi.getEndLocation(), this.params.getCopyNumberMaxY());
             }
+            
+            // If co-visualizing copy number/LOH and expression data,
+            // union boundaries together so plotting space same
+            if (expressionPlotBoundaries != null
+            		&& copyNumberPlotBoundaries != null) {
+            	expressionPlotBoundaries.union(copyNumberPlotBoundaries);
+            	copyNumberPlotBoundaries.union(expressionPlotBoundaries);
+            }
+            
+            // Create and configure plot
             ScatterPlot scatterPlot = new ScatterPlot(this.experiments,
             		gi.getChromosome(), this.chromosomeArrayDataGetter,
             		this.sizer.width(gi), this.sizer.height,
@@ -478,6 +515,7 @@ public class ScatterPlotPainter extends PlotPainter {
             scatterPlot.setShowGenes(this.params.isShowGenes());
             scatterPlot.setShowReporterNames(
             		this.params.isShowReporterNames());
+            scatterPlot.setShowStem(this.params.isDrawStems());
             return scatterPlot;
         }
     }

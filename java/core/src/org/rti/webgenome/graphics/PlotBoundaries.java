@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.4 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -335,11 +335,22 @@ public class PlotBoundaries {
     }
     
     /**
+     * Return printable representation of object state.
+     * @return Printable representation of object state.
+     */
+    public final String toPrettyString() {
+    	return this.bottomLeftDataPoint.toPrettyString() + " -> "
+    		+ this.topRightDataPoint.toPrettyString();
+    }
+    
+    /**
      * Union given plot boundary with this. (i.e. add additional
      * space to this.)
      * @param plotBoundaries Plot boundaries
      */
     public final void union(final PlotBoundaries plotBoundaries) {
+    	System.out.println("Before union: " + this.toPrettyString());
+    	System.out.println("Merging with: " + plotBoundaries.toPrettyString());
 
     	// Adjust bottom left
     	DataPoint bLeft = plotBoundaries.bottomLeftDataPoint;
@@ -376,6 +387,7 @@ public class PlotBoundaries {
     	if (tRight.getValue2() > this.topRightDataPoint.getValue2()) {
     		this.topRightDataPoint.setValue2(tRight.getValue2());
         }
+    	System.out.println("After merge: " + this.toPrettyString());
     }
     
     

@@ -29,8 +29,10 @@
 			<property name="showAnnotation" column="show_annotation"/>
 			<property name="showGenes" column="show_genes"/>
 			<property name="showReporterNames" column="show_reporter_names"/>
-			<property name="minSaturation" column="min_saturation"/>
-			<property name="maxSaturation" column="max_saturation"/>
+			<property name="expressionMaxSaturation" column="expr_max_saturation"/>
+			<property name="expressionMinSaturation" column="expr_min_saturation"/>
+			<property name="copyNumberMaxSaturation" column="cn_max_saturation"/>
+			<property name="copyNumberMinSaturation" column="cn_min_saturation"/>
 			<property name="minMask" column="min_mask"/>
 			<property name="maxMask" column="max_mask"/>
 			<property name="drawFeatureLabels" column="draw_feature_labels"/>
@@ -55,8 +57,10 @@
 			<property name="showAnnotation" column="show_annotation"/>
 			<property name="showGenes" column="show_genes"/>
 			<property name="showReporterNames" column="show_reporter_names"/>
-			<property name="minSaturation" column="min_saturation"/>
-			<property name="maxSaturation" column="max_saturation"/>
+			<property name="expressionMaxSaturation" column="expr_max_saturation"/>
+			<property name="expressionMinSaturation" column="expr_min_saturation"/>
+			<property name="copyNumberMaxSaturation" column="cn_max_saturation"/>
+			<property name="copyNumberMinSaturation" column="cn_min_saturation"/>
 			<property name="minMask" column="min_mask"/>
 			<property name="maxMask" column="max_mask"/>
 			<property name="ideogramSizeByName" column="ideogram_size"/>
@@ -72,13 +76,14 @@
 			<property name="showAnnotation" column="show_annotation"/>
 			<property name="showGenes" column="show_genes"/>
 			<property name="showReporterNames" column="show_reporter_names"/>
-			<property name="minY" column="min_y"/>
-			<property name="maxY" column="max_y"/>
+			<property name="copyNumberMinY" column="cn_min_y"/>
+			<property name="copyNumberMaxY" column="cn_max_y"/>
 			<property name="height" column="height"/>
 			<property name="drawHorizGridLines" column="draw_horiz_grid_lines"/>
 			<property name="drawVertGridLines" column="draw_vert_grid_lines"/>
 			<property name="drawPoints" column="draw_points"/>
 			<property name="drawErrorBars" column="draw_error_bars"/>
+			<property name="drawStems" column="draw_stems"/>
 			<property name="width" column="width"/>
 		</subclass>
 	</class>

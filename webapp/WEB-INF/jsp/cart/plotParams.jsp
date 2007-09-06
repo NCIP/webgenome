@@ -262,35 +262,67 @@
 			</td>
 		</tr>
 		
-	<%-- Minimum saturation --%>
+	<%-- Minimum copy number saturation --%>
 		<tr>
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-minSaturation')"
+					onclick="help('param-copyNumberMinSaturation')"
 					title="Information" border="0"
 					width="15" height="15"/>
-				Minimum saturation value
-				<html:errors property="minSaturation"/>
+				Minimum saturation value for copy number and LOH data
+				<html:errors property="copyNumberMinSaturation"/>
 			</td>
 			<td>
-				<html:text property="minSaturation"/>
+				<html:text property="copyNumberMinSaturation"/>
 			</td>
 		</tr>
 		
-	<%-- Maximum saturation --%>
+	<%-- Maximum copy number saturation --%>
 		<tr>
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-maxSaturation')"
+					onclick="help('param-copyNumberMaxSaturation')"
 					title="Information" border="0"
 					width="15" height="15"/>
-				Maximum saturation value
-				<html:errors property="maxSaturation"/>
+				Maximum saturation value for copy number and LOH data
+				<html:errors property="copyNumberMaxSaturation"/>
 			</td>
 			<td>
-				<html:text property="maxSaturation"/>
+				<html:text property="copyNumberMaxSaturation"/>
+			</td>
+		</tr>
+		
+	<%-- Minimum expression saturation --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-copyNumberMinSaturation')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Minimum saturation value for gene expression data
+				<html:errors property="copyNumberMinSaturation"/>
+			</td>
+			<td>
+				<html:text property="copyNumberMinSaturation"/>
+			</td>
+		</tr>
+		
+	<%-- Maximum expression saturation --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-copyNumberMaxSaturation')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Maximum saturation value for gene expression data
+				<html:errors property="copyNumberMaxSaturation"/>
+			</td>
+			<td>
+				<html:text property="copyNumberMaxSaturation"/>
 			</td>
 		</tr>
 		
@@ -462,35 +494,67 @@
 		
 		<webgenome:onlyIfScatterPlot plotTypeBeanName="plotType">
 		
-	<%-- Minimum Y-axis value --%>
+	<%-- Minimum Y-axis value for copy number data --%>
 		<tr>
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-minY')"
+					onclick="help('param-copyNumberMinY')"
 					title="Information" border="0"
 					width="15" height="15"/>
-				Minimum Y-axis value
-				<html:errors property="minY"/>
+				Minimum Y-axis value for copy number and LOH data
+				<html:errors property="copyNumberMinY"/>
 			</td>
 			<td>
-				<html:text property="minY"/>
+				<html:text property="copyNumberMinY"/>
 			</td>
 		</tr>
 		
-	<%-- Maximum Y-axis value --%>
+	<%-- Maximum Y-axis value for copy number data --%>
 		<tr>
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-maxY')"
+					onclick="help('param-copyNumberMaxY')"
 					title="Information" border="0"
 					width="15" height="15"/>
-				Maximum Y-axis value
-				<html:errors property="maxY"/>
+				Maximum Y-axis value for copy number and LOH data
+				<html:errors property="copyNumberMaxY"/>
 			</td>
 			<td>
-				<html:text property="maxY"/>
+				<html:text property="copyNumberMaxY"/>
+			</td>
+		</tr>
+		
+	<%-- Minimum Y-axis value for gene expression data --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-expressionMinY')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Minimum Y-axis value for gene expression data
+				<html:errors property="expressionMinY"/>
+			</td>
+			<td>
+				<html:text property="expressionMinY"/>
+			</td>
+		</tr>
+		
+	<%-- Maximum Y-axis value for gene expression data --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-expressionMaxY')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Maximum Y-axis value for gene expression data
+				<html:errors property="expressionMaxY"/>
+			</td>
+			<td>
+				<html:text property="expressionMaxY"/>
 			</td>
 		</tr>
 		
@@ -583,6 +647,21 @@
 			</td>
 			<td>
 				<html:checkbox property="drawErrorBars"/>
+			</td>
+		</tr>
+		
+	<%-- Draw stems on expression data diamonds --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawStems')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Stems on gene expression data points?
+			</td>
+			<td>
+				<html:checkbox property="drawStems"/>
 			</td>
 		</tr>
 		

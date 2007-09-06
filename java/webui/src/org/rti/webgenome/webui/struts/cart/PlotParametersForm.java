@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.6 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -126,7 +126,7 @@ public class PlotParametersForm extends BaseForm {
 	 * parameters.
 	 */
 	private static final String
-	SCATTER_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = "minY";
+	SCATTER_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = "copyNumberMinY";
 	
 	
 	/**
@@ -294,10 +294,13 @@ public class PlotParametersForm extends BaseForm {
 	private String drawVertGridLines = "on";
 	
 	/** Draw data points in scatter plot? */
-	private String drawPoints = "on";
+	private String drawPoints = "";
 	
 	/** Draw error bars in scatter plot? */
 	private String drawErrorBars = "";
+	
+	/** Draw stems connected to diamond shaped points for expression data? */
+	private String drawStems = "";
 	
 	//
 	//     ATTRIBUTES USED IN DIFFERENT PLOT TYPES
@@ -567,6 +570,25 @@ public class PlotParametersForm extends BaseForm {
 	 */
 	public final String getDrawHorizGridLines() {
 		return drawHorizGridLines;
+	}
+	
+	
+	/**
+	 * Should stems connected to diamond shaped points for expression data
+	 * be drawn?
+	 * @return 'on' (true) or empty string (false)
+	 */
+	public String getDrawStems() {
+		return drawStems;
+	}
+
+	/**
+	 * Sets if stems connected to diamond shaped points for expression data
+	 * should be drawn.
+	 * @param drawStems 'on' (true) or empty string (false)
+	 */
+	public void setDrawStems(final String drawStems) {
+		this.drawStems = drawStems;
 	}
 
 	/**
@@ -946,6 +968,7 @@ public class PlotParametersForm extends BaseForm {
 			this.drawVertGridLines = "";
 			this.drawErrorBars = "";
 			this.drawPoints = "";
+			this.drawStems = "";
 		}
 		
 		// Turn off general genomic plot parameter checkbox fields.
@@ -1379,7 +1402,8 @@ public class PlotParametersForm extends BaseForm {
 		this.drawHorizGridLines = "on";
 		this.drawVertGridLines = "on";
 		this.drawErrorBars = "";
-		this.drawPoints = "on";	
+		this.drawPoints = "";
+		this.drawStems = "";
 	}
 	
 	/**
@@ -1493,6 +1517,7 @@ public class PlotParametersForm extends BaseForm {
 		params.setDrawErrorBars(
 				FormUtils.checkBoxToBoolean(this.drawErrorBars));
 		params.setDrawPoints(FormUtils.checkBoxToBoolean(this.drawPoints));
+		params.setDrawStems(FormUtils.checkBoxToBoolean(this.drawStems));
 		return params;
 	}
 	
@@ -1737,5 +1762,7 @@ public class PlotParametersForm extends BaseForm {
 				plotParameters.isDrawErrorBars());
 		this.drawPoints = FormUtils.booleanToCheckBox(
 				plotParameters.isDrawPoints());
+		this.drawStems = FormUtils.booleanToCheckBox(
+				plotParameters.isDrawStems());
 	}
 }

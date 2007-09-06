@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.5 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -106,10 +106,13 @@ extends BaseGenomicPlotParameters implements Serializable {
     private boolean drawVertGridLines = true;
     
     /** Draw data points. */
-    private boolean drawPoints = true;
+    private boolean drawPoints = false;
     
     /** Draw error bars. */
     private boolean drawErrorBars = false;
+    
+    /** Draw stems attached to diamond shaped expression points. */
+    private boolean drawStems = false;
     
     // ==========================
     //      Getters/setters
@@ -135,7 +138,27 @@ extends BaseGenomicPlotParameters implements Serializable {
 	}
 
 
+	/**
+	 * Will stems attached to diamond shaped expression points
+	 * be drawn?
+	 * @return T/F
+	 */
+    public boolean isDrawStems() {
+		return drawStems;
+	}
+
+
     /**
+     * Set if stems attached to diamond shaped expression points
+     * will be drawn.
+     * @param drawStems Whether stems are drawn
+     */
+	public void setDrawStems(final boolean drawStems) {
+		this.drawStems = drawStems;
+	}
+
+
+	/**
      * Get width of plot area in pixels.  Plot area
      * does not include axes, legend, etc.
      * @return Width of plot area in pixels.
@@ -328,6 +351,7 @@ extends BaseGenomicPlotParameters implements Serializable {
     	this.drawVertGridLines = params.drawVertGridLines;
     	this.drawErrorBars = params.drawErrorBars;
     	this.drawPoints = params.drawPoints;
+    	this.drawStems = params.drawStems;
     }
     
     

@@ -257,8 +257,10 @@ CREATE TABLE plot_params (
 	show_reporter_names VARCHAR2(8),
 	
 	-- HeatMapPlotParameters --
-	max_saturation NUMBER(38),
-	min_saturation NUMBER(38),
+	cn_max_saturation NUMBER(38),
+	cn_min_saturation NUMBER(38),
+	expr_max_saturation NUMBER(38),
+	expr_min_saturation NUMBER(38),
 	min_mask NUMBER(38),
 	max_mask NUMBER(38),
 	
@@ -275,13 +277,16 @@ CREATE TABLE plot_params (
 	ideogram_thickness INT,
 	
 	-- ScatterPlotParameters --
-	min_y NUMBER(38),
-	max_y NUMBER(38),
+	cn_min_y NUMBER(38),
+	cn_max_y NUMBER(38),
+	expr_min_y NUMBER(38),
+	expr_max_y NUMBER(38),
 	height INT,
 	draw_horiz_grid_lines VARCHAR2(8),
 	draw_vert_grid_lines VARCHAR2(8),
 	draw_points VARCHAR2(8),
 	draw_error_bars VARCHAR2(8),
+	draw_stems VARCHAR2(8),
 	
 	-- AnnotationPlotParameters and ScatterPlotParameters --
 	width INT,

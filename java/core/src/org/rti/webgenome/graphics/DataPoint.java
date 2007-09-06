@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/graphics/DataPoint.java,v $
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -274,6 +274,14 @@ public class DataPoint {
     			error = -error;
     	}
     	return this.value2 + error;
+    }
+    
+    /**
+     * Return representation of point formatted for viewing.
+     * @return Representation of point formatted for viewing.
+     */
+    public String toPrettyString() {
+    	return "(" + this.value1 + "," + this.value2 + ")";
     }
     
     

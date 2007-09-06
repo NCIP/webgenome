@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.5 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -233,6 +233,12 @@ public final class ScatterPlot implements PlotElement {
     /** Show reporter names in mouseover text? */
     private boolean showReporterNames = true;
     
+    /**
+     * Show stem attached to diamond-shaped points for
+     * expression data.
+     */
+    private boolean showStem = true;
+    
     // =============================
     //     Getters/setters
     // =============================
@@ -282,6 +288,27 @@ public final class ScatterPlot implements PlotElement {
 	 */
 	public boolean isShowAnnotation() {
 		return showAnnotation;
+	}
+	
+	
+
+	/**
+	 * Will stem be shown attached to diamond-shaped points for
+	 * expression data?
+	 * @return T/F
+	 */
+	public boolean isShowStem() {
+		return showStem;
+	}
+
+
+	/**
+	 * Set if stem will be shown attached to diamond-shaped points for
+	 * expression data.
+	 * @param showStem Whether stem will be shown
+	 */
+	public void setShowStem(final boolean showStem) {
+		this.showStem = showStem;
 	}
 
 
@@ -853,8 +880,10 @@ public final class ScatterPlot implements PlotElement {
 	        	this.drawDiamond(x, y, color,
 	        			datum.getReporter().getName(), drawingCanvas,
 	        			pointRadius, datum.getReporter().isSelected());
-	        	this.drawStem(this.reusableDataPoint1, color,
-	        			drawingCanvas, pointRadius);
+	        	if (this.showStem) {
+		        	this.drawStem(this.reusableDataPoint1, color,
+		        			drawingCanvas, pointRadius);
+	        	}
 	        }
 	        
 	        // Add click box command

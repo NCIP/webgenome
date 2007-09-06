@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-26 16:45:34 $
+$Revision: 1.6 $
+$Date: 2007-09-06 21:51:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -315,12 +315,6 @@ public class ClickBoxes implements Serializable {
 	 */
 	public void addClickBoxText(final String text, final int x, final int y) {
 		int idx = this.getIndex(x, y);
-		if (idx >= 0 && idx < this.clickBox.length) {
-			System.out.println("  ***Adding***");
-			this.clickBox[idx] = text;
-		} else {
-			System.out.println();
-		}
 	}
 	
 	/**
@@ -336,9 +330,13 @@ public class ClickBoxes implements Serializable {
 		int idx = this.getIndex(x, y);
 		if (idx >= 0 && idx < this.clickBox.length) {
 			text = this.clickBox[idx];
-		} else {
-			LOGGER.warn("Pixel (" + x + ", " + y + ") out of range");
 		}
+		// Code commented out because not really necessary and
+		// leads to alot of output that may bury needed
+		// debugging messages
+//		else {
+//			LOGGER.warn("Pixel (" + x + ", " + y + ") out of range");
+//		}
 		return text;
 	}
 	
@@ -355,11 +353,16 @@ public class ClickBoxes implements Serializable {
 		int idx = row * this.numCols + col;
 		if (idx >= 0 && idx < this.clickBox.length) {
 			value = this.clickBox[idx];
-		} else {
-			LOGGER.warn("Box [" + row + "][" + col
-					+ "] out of range (index = " + idx + " out of "
-					+ this.clickBox.length + ")");
 		}
+		// Code commented out because not really necessary and
+		// leads to alot of output that may bury needed
+		// debugging messages
+//		else {
+//			
+//			LOGGER.warn("Box [" + row + "][" + col
+//					+ "] out of range (index = " + idx + " out of "
+//					+ this.clickBox.length + ")");
+//		}
 		return value;
 	}
 	
@@ -440,7 +443,6 @@ public class ClickBoxes implements Serializable {
 	private int getIndex(final int x, final int y) {
 		int row = this.getRowNum(y);
 		int col = this.getColNum(x);
-		System.out.println("Index [" + row + "][" + col + "]");
 		return row * this.numCols + col;
 	}
 	
