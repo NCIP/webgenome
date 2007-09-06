@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -368,12 +368,10 @@ implements MultiExperimentStatelessOperation {
 
 	
 	/**
-     * Get user configurable properties.
-     * @param qType Quantitation type
-     * @return User configurable properties
+     * {@inheritDoc}
      */
     public List<UserConfigurableProperty> getUserConfigurableProperties(
-    		final QuantitationType qType) {
+    		final Collection<QuantitationType> qTypes) {
     	
     	// Properties common to all quantitation types
 		List<UserConfigurableProperty> props =
@@ -393,16 +391,19 @@ implements MultiExperimentStatelessOperation {
 		props.add(opts);
 		
 		// LOH properties
-		if (qType == QuantitationType.LOH) {
-			props.add(new SimpleUserConfigurableProperty("lohThreshold",
-					"LOH threshold", String.valueOf(this.lohThreshold)));
-		} else {
-			props.add(new SimpleUserConfigurableProperty(
-					"amplificationThreshold", "Amplification threshold",
-					String.valueOf(this.amplificationThreshold)));
-			props.add(new SimpleUserConfigurableProperty("deletionThreshold",
-					"Deletion threshold", String.valueOf(
-							this.deletionThreshold)));
+		for (QuantitationType qType : qTypes) {
+			if (qType == QuantitationType.LOH) {
+				props.add(new SimpleUserConfigurableProperty("lohThreshold",
+						"LOH threshold", String.valueOf(this.lohThreshold)));
+			} else {
+				props.add(new SimpleUserConfigurableProperty(
+						"amplificationThreshold", "Amplification threshold",
+						String.valueOf(this.amplificationThreshold)));
+				props.add(new SimpleUserConfigurableProperty(
+						"deletionThreshold",
+						"Deletion threshold", String.valueOf(
+								this.deletionThreshold)));
+			}
 		}
 		return props;
 	}
@@ -496,7 +497,8 @@ implements MultiExperimentStatelessOperation {
     public int numResultingBioAssays(
     		final Collection<Experiment> experiments) {
     	int num = -1;
-    	QuantitationType qtype = Experiment.getQuantitationType(experiments);
+    	QuantitationType qtype = Experiment.getCopyNumberQuantitationType(
+    			experiments);
     	if (qtype == QuantitationType.COPY_NUMBER
     			|| qtype == QuantitationType.LOG_2_RATIO_COPY_NUMBER
     			|| qtype == QuantitationType.FOLD_CHANGE

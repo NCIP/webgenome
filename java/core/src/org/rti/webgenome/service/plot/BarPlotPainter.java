@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,7 @@ import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.graphics.widget.Bar;
 import org.rti.webgenome.graphics.widget.Caption;
@@ -123,6 +124,43 @@ public class BarPlotPainter extends PlotPainter {
 			throw new IllegalArgumentException("Plot parameters are null");
 		}
 		
+		Collection<Experiment> copyNumberExperiments =
+			Experiment.getCopyNumberExperiments(experiments);
+		Collection<Experiment> expressionExperiments =
+			Experiment.getExpressionExperiments(experiments);
+		if (copyNumberExperiments != null && copyNumberExperiments.size() > 0) {
+			PlotPanel cnPan = panel.newChildPlotPanel();
+			this.addRow(cnPan, copyNumberExperiments, params,
+					Experiment.getCopyNumberQuantitationType(experiments));
+			panel.add(cnPan, HorizontalAlignment.LEFT_JUSTIFIED,
+					VerticalAlignment.TOP_JUSTIFIED);
+		}
+		if (expressionExperiments != null && expressionExperiments.size() > 0) {
+			PlotPanel exPan = panel.newChildPlotPanel();
+			this.addRow(exPan, expressionExperiments, params,
+					Experiment.getExpressionQuantitationType(experiments));
+			VerticalAlignment va = null;
+			if (copyNumberExperiments != null
+					&& copyNumberExperiments.size() > 0) {
+				va = VerticalAlignment.BELOW;
+			} else {
+				va = VerticalAlignment.TOP_JUSTIFIED;
+			}
+			panel.add(exPan, HorizontalAlignment.LEFT_JUSTIFIED, va);
+		}
+	}
+		
+	/**
+	 * Add a "row" of bars to given panel.
+	 * @param panel Panel on which to draw bars.
+	 * @param experiments Experiments to plot
+	 * @param params Plotting parameters
+	 * @param qType Quantitation type of data
+	 */
+	private void addRow(final PlotPanel panel,
+			final Collection<Experiment> experiments,
+			final BarPlotParameters params,
+			final QuantitationType qType) {
 		CommonArrayDatumGroupIterator it =
 			new CommonArrayDatumGroupIterator(experiments);
 		float plotMin = this.minSelectedValue(experiments);
@@ -143,7 +181,7 @@ public class BarPlotPainter extends PlotPainter {
 		MultiPlotGridLayouter layouter = new MultiPlotGridLayouter(
 				params.getNumPlotsPerRow(), panel, plotMin, plotMax,
 				params.getRowHeight(),
-				Experiment.getQuantitationType(experiments));
+				qType);
 		layouter.setPadding(PADDING);
 		while (it.hasNext()) {
 			CommonArrayDatumGroup group = it.next();

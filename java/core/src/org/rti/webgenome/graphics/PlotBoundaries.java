@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -425,6 +425,16 @@ public class PlotBoundaries {
     		final double value1, final double value2) {
     	return value1 >= this.getMinValue1() && value1 <= this.getMaxValue1()
     	&& value2 >= this.getMinValue2() && value2 <= this.getMaxValue2();
+    }
+    
+    
+    /**
+     * Do boundaries contain X-axis?
+     * @return T/F
+     */
+    public final boolean containsXAxis() {
+    	return this.getMinValue2() <= 0.0
+    	&& this.getMaxValue2() >= 0.0;
     }
     
     

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,6 +69,7 @@ import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.graphics.event.GraphicEvent;
 import org.rti.webgenome.graphics.primitive.Arc;
 import org.rti.webgenome.graphics.primitive.Circle;
+import org.rti.webgenome.graphics.primitive.Diamond;
 import org.rti.webgenome.graphics.primitive.GraphicPrimitive;
 import org.rti.webgenome.graphics.primitive.Line;
 import org.rti.webgenome.graphics.primitive.Polygon;
@@ -389,6 +390,14 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
 	            		c.getY() - correction, c.getRadius() * 2,
 	                    c.getRadius() * 2);
             }
+        } else if (prim instanceof Diamond) {
+        	Diamond d = (Diamond) prim;
+        	int x = d.getCenterPoint().x;
+        	int y = d.getCenterPoint().y;
+        	int h = d.getSize() / 2;
+        	int[] xx = new int[] {x - h, x, x + h, x, x - h};
+        	int[] yy = new int[] {y, y + h, y, y - h, y};
+        	graphics.drawPolyline(xx, yy, 5);
         } else if (prim instanceof Line) {
             Line l = (Line) prim;
             graphics.setStroke(new BasicStroke(l.getWidth()));

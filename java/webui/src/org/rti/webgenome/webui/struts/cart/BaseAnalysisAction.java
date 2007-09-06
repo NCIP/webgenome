@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.6 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -62,6 +63,7 @@ import org.rti.webgenome.analysis.AnalyticOperationFactory;
 import org.rti.webgenome.analysis.BadUserConfigurablePropertyException;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
@@ -196,7 +198,10 @@ public class BaseAnalysisAction extends BaseAction {
 	    			}
 	    		}
 	    	}
-	    	props.setSourceAnalyticOperation(op, exp.getQuantitationType());
+	    	Collection<QuantitationType> qTypes =
+	    		new ArrayList<QuantitationType>();
+	    	qTypes.add(exp.getQuantitationType());
+	    	props.setSourceAnalyticOperation(op, qTypes);
     	}
     	
     	// If user input is invalid, return

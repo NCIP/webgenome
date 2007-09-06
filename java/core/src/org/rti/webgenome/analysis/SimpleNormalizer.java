@@ -1,8 +1,8 @@
 /*
 
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.analysis;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -251,12 +252,10 @@ StatefulOperation.DefStatefulOperation {
     public abstract String getName();
     
     /**
-     * Get user configurable properties.
-     * @param qType Quantitation type
-     * @return User configurable properties
+     * {@inheritDoc}
      */
     public final List<UserConfigurableProperty> getUserConfigurableProperties(
-    		final QuantitationType qType) {
+    		final Collection<QuantitationType> qTypes) {
        List<UserConfigurableProperty> props =
            new ArrayList<UserConfigurableProperty>();
        UserConfigurablePropertyWithOptions prop = new

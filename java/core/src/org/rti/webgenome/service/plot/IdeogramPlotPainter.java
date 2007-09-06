@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.plot;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.rti.webgenome.domain.Cytoband;
 import org.rti.webgenome.domain.CytologicalMap;
@@ -167,7 +169,7 @@ public class IdeogramPlotPainter extends PlotPainter {
      */
     public final EventHandlerGraphicBoundaries  paintPlot(final PlotPanel panel,
     		final Collection<Experiment> experiments,
-    		final BaseGenomicPlotParameters params) {
+    		final IdeogramPlotParameters params) {
 		
 		// Make sure arguments okay
 		if (experiments == null || experiments.size() < 1) {
@@ -177,7 +179,6 @@ public class IdeogramPlotPainter extends PlotPainter {
 			throw new IllegalArgumentException(
 					"Expecting plot parameters of type IdeogramPlotParameters");
 		}
-		IdeogramPlotParameters plotParameters = (IdeogramPlotParameters) params;
 		EventHandlerGraphicBoundaries evtHandlerBoundaries =
 			new EventHandlerGraphicBoundaries();
 		
@@ -190,174 +191,329 @@ public class IdeogramPlotPainter extends PlotPainter {
 			}
 		}
 		
-		// Get quantitation type
-		QuantitationType qType = Experiment.getQuantitationType(experiments);
-		
-		int plotCount = 0;
 		int rowCount = 1;
-		PlotPanel row = panel.newChildPlotPanel();
-		for (GenomeInterval gi : plotParameters.getGenomeIntervals()) {
-			if (plotCount++ >=  plotParameters.getNumPlotsPerRow()) {
-				VerticalAlignment va = null;
-				if (rowCount++ == 1) {
-					va = VerticalAlignment.TOP_JUSTIFIED;
-				} else {
-					va = VerticalAlignment.BELOW;
-				}
-				panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
-				ColorScale scale = new ColorScale(
-						plotParameters.getMinSaturation(),
-						plotParameters.getMaxSaturation(),
-						COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
-						COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
-				panel.add(scale, HorizontalAlignment.CENTERED,
-						VerticalAlignment.BELOW);
-				panel.add(new Caption(qType.getName(), Orientation.HORIZONTAL,
-						false, panel.getDrawingCanvas()),
-						HorizontalAlignment.CENTERED,
-						VerticalAlignment.BELOW);
-				row = panel.newChildPlotPanel();
-				plotCount = 1;
+		RowAdder rowAdder = new RowAdder(experiments, params,
+				this.cytologicalMapDao, org, evtHandlerBoundaries,
+				this.getChromosomeArrayDataGetter());
+		QuantitationType copyNumberQT =
+			Experiment.getCopyNumberQuantitationType(experiments);
+		QuantitationType expressionQT =
+			Experiment.getExpressionQuantitationType(experiments);
+		while (rowAdder.hasMore()) {
+			PlotPanel row = panel.newChildPlotPanel();
+			rowAdder.paintRow(row);
+			VerticalAlignment va = null;
+			if (rowCount++ == 1) {
+				va = VerticalAlignment.TOP_JUSTIFIED;
+			} else {
+				va = VerticalAlignment.BELOW;
 			}
-			row.setName("row");
+			panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
+			this.addScales(panel, copyNumberQT, expressionQT, params);
+		}
+		return evtHandlerBoundaries;
+	}
+    
+    
+    /**
+     * Add "scales" to given panel.  These scales give color coding
+     * for copy number and/or expression data.
+     * @param panel Panel on which to draw scales
+     * @param copyNumberQT Quantitation type for copy number data
+     * @param expressionQT Quantitation type for expression data
+     * @param params Plotting parameters
+     */
+    private void addScales(final PlotPanel panel,
+    		final QuantitationType copyNumberQT,
+    		final QuantitationType expressionQT,
+    		final IdeogramPlotParameters params) {
+    	PlotPanel scales = panel.newChildPlotPanel();
+		if (copyNumberQT != null) {
+			PlotPanel cnPanel = scales.newChildPlotPanel();
+			ColorScale scale = new ColorScale(
+					params.getCopyNumberMinSaturation(),
+					params.getCopyNumberMaxSaturation(),
+					COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
+					COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
+			cnPanel.add(scale, HorizontalAlignment.CENTERED,
+					VerticalAlignment.TOP_JUSTIFIED);
+			cnPanel.add(new Caption(copyNumberQT.getName(),
+					Orientation.HORIZONTAL,
+					false, panel.getDrawingCanvas()),
+					HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+			scales.add(cnPanel, HorizontalAlignment.LEFT_JUSTIFIED,
+					VerticalAlignment.TOP_JUSTIFIED);
+		}
+		if (expressionQT != null) {
+			PlotPanel exPanel = scales.newChildPlotPanel();
+			ColorScale scale = new ColorScale(
+					params.getExpressionMinSaturation(),
+					params.getExpressionMaxSaturation(),
+					COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
+					COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
+			exPanel.add(scale, HorizontalAlignment.CENTERED,
+					VerticalAlignment.TOP_JUSTIFIED);
+			exPanel.add(new Caption(expressionQT.getName(),
+					Orientation.HORIZONTAL,
+					false, panel.getDrawingCanvas()),
+					HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+			HorizontalAlignment ha = null;
+			if (copyNumberQT == null) {
+				ha = HorizontalAlignment.LEFT_JUSTIFIED;
+			} else {
+				ha = HorizontalAlignment.RIGHT_OF;
+			}
+			scales.add(exPanel, ha,
+					VerticalAlignment.TOP_JUSTIFIED);
+		}
+		panel.add(scales, HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+    }
+	
+	
+	/**
+	 * Helper class that adds a new "row" of genome interval
+	 * plots to a larger graph.
+	 * @author dhall
+	 *
+	 */
+	private static final class RowAdder {
+		
+		//
+		//  A T T R I B U T E S
+		//
+		
+		/** Experiments to plot. */
+		private Collection<Experiment> experiments = null;
+		
+		/** Genome interval to plot. */
+		private List<GenomeInterval> genomeIntervals =
+			new ArrayList<GenomeInterval>();
+		
+		/** Plotting parameters. */
+		private IdeogramPlotParameters params = null;
+		
+		/** Index pointing to genome intervals. */
+		private int idx = 0;
+		
+		/** Data access object for cytological maps. */
+		private CytologicalMapDao cytologicalMapDao = null;
+		
+		/** Organism associated with data to plot. */
+		private Organism organism = null;
+		
+		/** Boundaries of mouse-over interactive areas. */
+		private EventHandlerGraphicBoundaries eventBoundaries = null;
+		
+		/** Data getter. */
+		private ChromosomeArrayDataGetter chromosomeArrayDataGetter = null;
+		
+		//
+		//  C O N S T R U C T O R S
+		//
+		
+		
+		/**
+		 * Constructor.
+		 * @param experiments Experiments to plot.
+		 * @param params Plotting parameters
+		 * @param cytologicalMapDao Data access object for
+		 * cytological maps
+		 * @param organism Organism associated with data
+		 * @param eventBoundaries Mouse-over event coordinates
+		 * @param chromosomeArrayDataGetter Data getter
+		 */
+		public RowAdder(final Collection<Experiment> experiments,
+				final IdeogramPlotParameters params,
+				final CytologicalMapDao cytologicalMapDao,
+				final Organism organism,
+				final EventHandlerGraphicBoundaries eventBoundaries,
+				final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+			super();
+			this.experiments = experiments;
+			this.params = params;
+			this.cytologicalMapDao = cytologicalMapDao;
+			this.organism = organism;
+			this.eventBoundaries = eventBoundaries;
+			this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
+			this.genomeIntervals.addAll(params.getGenomeIntervals());
+		}
+		
+		//
+		//  B U S I N E S S  M E T H O D S
+		//
+		
+
+		/**
+		 * Paint a row of graphical elements onto the given panel.
+		 * @param row Panel on which to add elements.
+		 */
+		private void paintRow(final PlotPanel row) {
+			if (this.hasMore()) {
+				int endIdx = this.idx + this.params.getNumPlotsPerRow();
+				if (endIdx > this.genomeIntervals.size()) {
+					endIdx = this.genomeIntervals.size();
+				}
+				for (int i = this.idx; i < endIdx; i++) {
+					boolean isReferencePlot = i == this.idx;
+					this.addIntervalPlot(row, this.genomeIntervals.get(i),
+							isReferencePlot);
+				}
+				this.idx = endIdx;
+			}
+		}
+		
+		/**
+		 * Add a single genome interval to row panel.
+		 * @param row Panel corresponding to a row of plots
+		 * @param gi Genome interval to plot
+		 * @param referencePlot Should this plot be a graphical
+		 * "reference" element, i.e. providing layout coordinates
+		 * for subsequent elements?
+		 */
+		private void addIntervalPlot(final PlotPanel row,
+				final GenomeInterval gi, final boolean referencePlot) {
 			
 			// Get cytological map
 			CytologicalMap cytologicalMap =
-				this.cytologicalMapDao.load(org, gi.getChromosome());
+				this.cytologicalMapDao.load(this.organism, gi.getChromosome());
 			
 			// Calculate height of ideogram
-			ChromosomeIdeogramSize idSize = plotParameters.getIdeogramSize();
+			ChromosomeIdeogramSize idSize = this.params.getIdeogramSize();
 			int height = idSize.pixels(cytologicalMap.length());
 			
-			// Paint chromosome ideogram
-			boolean makeReferenceElement = false;
-			if (plotCount == 1) {
-				makeReferenceElement = true;
-			}
 			this.paintChromosomeIdeogram(row, cytologicalMap,
-					height, idSize, plotParameters.getIdeogramThickness(),
-					"CHR " + gi.getChromosome(),
-					makeReferenceElement, evtHandlerBoundaries);
+					height, "CHR " + gi.getChromosome(),
+					referencePlot, this.eventBoundaries);
 			
 			// Add data tracks
 			this.paintDataTracks(row, experiments, gi.getChromosome(),
-					height, plotParameters, evtHandlerBoundaries);
+					height, this.params, this.eventBoundaries);
 		}
 		
-		// Add final row
-		VerticalAlignment va = null;
-		if (rowCount == 1) {
-			va = VerticalAlignment.TOP_JUSTIFIED;
-		} else {
-			va = VerticalAlignment.BELOW;
-		}
-		panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
-		ColorScale scale = new ColorScale(
-				plotParameters.getMinSaturation(),
-				plotParameters.getMaxSaturation(),
-				COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
-				COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
-		panel.add(scale, HorizontalAlignment.CENTERED,
-				VerticalAlignment.BELOW);
-		panel.add(new Caption(qType.getName(), Orientation.HORIZONTAL,
-				false, panel.getDrawingCanvas()),
-				HorizontalAlignment.CENTERED,
-				VerticalAlignment.BELOW);
-		
-		return evtHandlerBoundaries;
-	}
-	
-	
-	/**
-	 * Paint chromosome ideogram on given plot panel.
-	 * @param plotPanel Plot panel to paint on
-	 * @param cytologicalMap Cytological map to convert graphically
-	 * into an ideogram
-	 * @param height Height of ideogram in pixels.  This
-	 * does not include chromosome end caps, which are a fixed
-	 * height, but rather the height of the region that can be
-	 * plotted against.
-	 * @param idSize Chromosome ideogram size
-	 * @param ideogramThickness Ideogram thickness in pixels
-	 * @param chromosome Chromosome name
-	 * @param makeReferenceElement Make this ideogram the
-	 * reference element for the given plot panel in terms
-	 * of layout?
-	 * @param boundaries Event handler boundaries
-	 */
-	private void paintChromosomeIdeogram(final PlotPanel plotPanel,
-			final CytologicalMap cytologicalMap,
-			final int height, final ChromosomeIdeogramSize idSize,
-			final int ideogramThickness,
-			final String chromosome, final boolean makeReferenceElement,
-			final EventHandlerGraphicBoundaries boundaries) {
-		PlotPanel idPanel = plotPanel.newChildPlotPanel();
-		
-		// Instantiate genome feature plot
-		ChromosomeIdeogram plot = new ChromosomeIdeogram(1,
-				cytologicalMap.length(), cytologicalMap.getCentromereStart(),
-				cytologicalMap.getCentromereEnd(),
-				height, Orientation.VERTICAL,
-				ideogramThickness);
-		
-		// Add cytobands to plot
-		for (Cytoband c : cytologicalMap.getCytobands()) {
-			plot.add(c);
+		/**
+		 * Are there more rows to plot?
+		 * @return T/F
+		 */
+		private boolean hasMore() {
+			return this.idx < this.genomeIntervals.size();
 		}
 		
-		// Add genome feature plot
-		idPanel.add(plot, true);
-		
-		// Add graphic event boundaries
-		boundaries.add(plot.getMouseOverStripes());
-		
-		// Add end caps
-		ChromosomeEndCap topCap = new ChromosomeEndCap(ideogramThickness,
-				FRAME_LINE_COLOR, Direction.UP);
-		ChromosomeEndCap botCap = new ChromosomeEndCap(ideogramThickness,
-				FRAME_LINE_COLOR, Direction.DOWN);
-		idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED,
-				VerticalAlignment.TOP_JUSTIFIED);
-		idPanel.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED,
-				VerticalAlignment.BOTTOM_JUSTIFIED);
-		
-		// Add chromosome number caption
-		Caption caption = new Caption(chromosome, null,
-				Orientation.HORIZONTAL, false, idPanel.getDrawingCanvas());
-		idPanel.add(caption, HorizontalAlignment.CENTERED,
-				VerticalAlignment.BELOW);
-		
-		// Add new panel to parent
-		if (makeReferenceElement) {
-			plotPanel.add(idPanel, true);
-		} else {
-			plotPanel.add(idPanel, HorizontalAlignment.RIGHT_OF,
-					VerticalAlignment.TOP_JUSTIFIED);
-		}
-	}
+		/**
+		 * Paint chromosome ideogram on given plot panel.
+		 * @param plotPanel Plot panel to paint on
+		 * @param cytologicalMap Cytological map to convert graphically
+		 * into an ideogram
+		 * @param height Height of ideogram in pixels.  This
+		 * does not include chromosome end caps, which are a fixed
+		 * height, but rather the height of the region that can be
+		 * plotted against.
+		 * @param chromosome Chromosome name
+		 * @param makeReferenceElement Make this ideogram the
+		 * reference element for the given plot panel in terms
+		 * of layout?
+		 * @param boundaries Event handler boundaries
+		 */
+		private void paintChromosomeIdeogram(final PlotPanel plotPanel,
+				final CytologicalMap cytologicalMap,
+				final int height,
+				final String chromosome, final boolean makeReferenceElement,
+				final EventHandlerGraphicBoundaries boundaries) {
+			PlotPanel idPanel = plotPanel.newChildPlotPanel();
 			
-	
-	/**
-	 * Add data tracks to plot.
-	 * @param panel A plot panel
-	 * @param experiments Experiments to plot
-	 * @param chromosome Chromosome number
-	 * @param height Height of data tracks
-	 * @param plotParameters Plot parameters
-	 * @param boundaries Event handler boundaries
-	 */
-	private void paintDataTracks(final PlotPanel panel,
-			final Collection<Experiment> experiments, final short chromosome,
-			final int height, final IdeogramPlotParameters plotParameters,
-			final EventHandlerGraphicBoundaries boundaries) {
-		HeatMapColorFactory fac = new HeatMapColorFactory(
-				plotParameters.getMinSaturation(),
-				plotParameters.getMaxSaturation(), NUM_BINS);
-		HeatMapPlot plot = new HeatMapPlot(experiments, chromosome, fac,
-				plotParameters, this.getChromosomeArrayDataGetter(),
-				panel.getDrawingCanvas());
-		boundaries.addAll(plot.getMouseOverStripes());
-		panel.add(plot, HorizontalAlignment.RIGHT_OF,
-				VerticalAlignment.TOP_JUSTIFIED);
+			// Instantiate genome feature plot
+			ChromosomeIdeogram plot = new ChromosomeIdeogram(1,
+					cytologicalMap.length(),
+					cytologicalMap.getCentromereStart(),
+					cytologicalMap.getCentromereEnd(),
+					height, Orientation.VERTICAL,
+					this.params.getIdeogramThickness());
+			
+			// Add cytobands to plot
+			for (Cytoband c : cytologicalMap.getCytobands()) {
+				plot.add(c);
+			}
+			
+			// Add genome feature plot
+			idPanel.add(plot, true);
+			
+			// Add graphic event boundaries
+			boundaries.add(plot.getMouseOverStripes());
+			
+			// Add end caps
+			ChromosomeEndCap topCap = new ChromosomeEndCap(
+					this.params.getIdeogramThickness(),
+					FRAME_LINE_COLOR, Direction.UP);
+			ChromosomeEndCap botCap = new ChromosomeEndCap(
+					this.params.getIdeogramThickness(),
+					FRAME_LINE_COLOR, Direction.DOWN);
+			idPanel.add(topCap, HorizontalAlignment.LEFT_JUSTIFIED,
+					VerticalAlignment.TOP_JUSTIFIED);
+			idPanel.add(botCap, HorizontalAlignment.LEFT_JUSTIFIED,
+					VerticalAlignment.BOTTOM_JUSTIFIED);
+			
+			// Add chromosome number caption
+			Caption caption = new Caption(chromosome, null,
+					Orientation.HORIZONTAL, false, idPanel.getDrawingCanvas());
+			idPanel.add(caption, HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+			
+			// Add new panel to parent
+			if (makeReferenceElement) {
+				plotPanel.add(idPanel, true);
+			} else {
+				plotPanel.add(idPanel, HorizontalAlignment.RIGHT_OF,
+						VerticalAlignment.TOP_JUSTIFIED);
+			}
+		}
+				
+		
+		/**
+		 * Add data tracks to plot.
+		 * @param panel A plot panel
+		 * @param experiments Experiments to plot
+		 * @param chromosome Chromosome number
+		 * @param height Height of data tracks
+		 * @param plotParameters Plot parameters
+		 * @param boundaries Event handler boundaries
+		 */
+		private void paintDataTracks(final PlotPanel panel,
+				final Collection<Experiment> experiments,
+				final short chromosome,
+				final int height, final IdeogramPlotParameters plotParameters,
+				final EventHandlerGraphicBoundaries boundaries) {
+			
+			// Copy number data
+			Collection<Experiment> cnExps =
+				Experiment.getCopyNumberExperiments(experiments);
+			if (cnExps != null && cnExps.size() > 0) {
+				HeatMapColorFactory fac = new HeatMapColorFactory(
+						plotParameters.getExpressionMinSaturation(),
+						plotParameters.getExpressionMaxSaturation(), NUM_BINS);
+				HeatMapPlot plot = new HeatMapPlot(cnExps, chromosome, fac,
+						plotParameters, this.chromosomeArrayDataGetter,
+						panel.getDrawingCanvas());
+				boundaries.addAll(plot.getMouseOverStripes());
+				panel.add(plot, HorizontalAlignment.RIGHT_OF,
+						VerticalAlignment.TOP_JUSTIFIED);
+			}
+			
+			// Expression data
+			Collection<Experiment> exprExps =
+				Experiment.getExpressionExperiments(experiments);
+			if (exprExps != null & exprExps.size() > 0) {
+				HeatMapColorFactory fac = new HeatMapColorFactory(
+						plotParameters.getCopyNumberMinSaturation(),
+						plotParameters.getCopyNumberMaxSaturation(), NUM_BINS);
+				HeatMapPlot plot = new HeatMapPlot(exprExps, chromosome, fac,
+						plotParameters, this.chromosomeArrayDataGetter,
+						panel.getDrawingCanvas());
+				boundaries.addAll(plot.getMouseOverStripes());
+				panel.add(plot, HorizontalAlignment.RIGHT_OF,
+						VerticalAlignment.TOP_JUSTIFIED);
+			}
+		}
 	}
 }

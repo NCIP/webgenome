@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.6 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -97,7 +97,8 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
 					"Unable to retrieve plot from shopping cart");
 		}
 		Collection<Experiment> experiments = plot.getExperiments();
-		QuantitationType qType = Experiment.getQuantitationType(experiments);
+		Collection<QuantitationType> qTypes =
+			Experiment.getQuantitationTypes(experiments);
 		Map<Experiment, Collection<UserConfigurableProperty>>
 			derivedExperiments = new HashMap<Experiment,
 				Collection<UserConfigurableProperty>>();
@@ -112,7 +113,7 @@ public class AdjustPlotAnalysisParamsSetupAction extends BaseAction {
 					exp.getDataSourceProperties();
 				derivedExperiments.put(exp,
 						props.getSourceAnalyticOperation().
-						getUserConfigurableProperties(qType));
+						getUserConfigurableProperties(qTypes));
 			}
 		}
 		request.setAttribute("derived.experiments", derivedExperiments);

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,11 +73,11 @@ public interface AnalyticOperation {
     
     /**
      * Get user configurable properties.
-     * @param qType Quantitation type
+     * @param qTypes Quantitation types
      * @return User configurable properties
      */
     List<UserConfigurableProperty> getUserConfigurableProperties(
-    		QuantitationType qType);
+    		Collection<QuantitationType> qTypes);
     
     
     /**

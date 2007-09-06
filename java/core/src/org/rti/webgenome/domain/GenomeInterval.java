@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.5 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webgenome.domain;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -385,7 +386,8 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	 * to query client applications for data.
 	 * @param genomeIntervals Genome intervals
 	 * @param units Base pair units
-	 * @param qType Quantitation type
+	 * @param expressionQType Quantitation type for expression data
+	 * @param copyNumberQType Quantitation type for copy number data
 	 * @return Bioassay data constraints
 	 * @throws WebGenomeApplicationException If any of the bioassay data
 	 * constraints does not have defined endpoints.
@@ -393,17 +395,28 @@ public class GenomeInterval implements Comparable<GenomeInterval> {
 	public static final BioAssayDataConstraints[] getBioAssayDataConstraints(
 			final Collection<GenomeInterval> genomeIntervals,
 			final BpUnits units,
-			final QuantitationType qType)
+			final QuantitationType expressionQType,
+			final QuantitationType copyNumberQType)
 	throws WebGenomeApplicationException {
-		BioAssayDataConstraints[] c =
-			new BioAssayDataConstraints[genomeIntervals.size()];
-		int i = 0;
+		List<BioAssayDataConstraints> c =
+			new ArrayList<BioAssayDataConstraints>();
 		for (GenomeInterval gi : genomeIntervals) {
-			BioAssayDataConstraints con = gi.getBioAssayDataConstraints(units);
-			con.setQuantitationType(qType.getId());
-			c[i++] = con;
+			if (expressionQType != null) {
+				BioAssayDataConstraints con =
+					gi.getBioAssayDataConstraints(units);
+				con.setQuantitationType(expressionQType.getId());
+				c.add(con);
+			}
+			if (copyNumberQType != null) {
+				BioAssayDataConstraints con =
+					gi.getBioAssayDataConstraints(units);
+				con.setQuantitationType(copyNumberQType.getId());
+				c.add(con);
+			}
 		}
-		return c;
+		BioAssayDataConstraints[] constraints = new BioAssayDataConstraints[0];
+		constraints = c.toArray(constraints);
+		return constraints;
 	}
 	
 	/**

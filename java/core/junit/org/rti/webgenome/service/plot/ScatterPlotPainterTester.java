@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,8 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ExperimentGenerator;
 import org.rti.webgenome.domain.GenomeInterval;
+import org.rti.webgenome.domain.QuantitationType;
+import org.rti.webgenome.graphics.InterpolationType;
 import org.rti.webgenome.graphics.widget.RasterFileTestPlotPanel;
 import org.rti.webgenome.service.plot.ScatterPlotPainter;
 import org.rti.webgenome.service.plot.ScatterPlotParameters;
@@ -193,11 +195,23 @@ public final class ScatterPlotPainterTester extends TestCase {
 		expGen.setGap(GAP);
         Collection<Experiment> experiments = new ArrayList<Experiment>();
         for (int i = 0; i < NUM_EXPERIMENTS; i++) {
-        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
+        	Experiment copyNumberExp =
+        		expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
 	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME);
-	        experiments.add(exp);
-	        for (BioAssay ba : exp.getBioAssays()) {
+        	Experiment expressionExp =
+        		expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
+	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME);
+	        experiments.add(copyNumberExp);
+	        experiments.add(expressionExp);
+	        copyNumberExp.setQuantitationType(
+	        		QuantitationType.LOG_2_RATIO_COPY_NUMBER);
+	        expressionExp.setQuantitationType(
+	        		QuantitationType.LOG_2_RATIO_FOLD_CHANGE);
+	        for (BioAssay ba : copyNumberExp.getBioAssays()) {
 	        	ba.setColor(Color.BLUE);
+	        }
+	        for (BioAssay ba : expressionExp.getBioAssays()) {
+	        	ba.setColor(Color.RED);
 	        }
         }
         
@@ -206,12 +220,20 @@ public final class ScatterPlotPainterTester extends TestCase {
         for (short i = 1; i <= NUM_CHROMOSOMES; i++) {
         	params.add(new GenomeInterval(i, (short) 0, CHROM_LENGTH));
         }
-        params.setMinY(Experiment.findMinValue(experiments));
-        params.setMaxY(Experiment.findMaxValue(experiments));
+
+        params.setExpressionMaxY(
+        		Experiment.findMaxExpressionValue(experiments) + (float) 3.2);
+        params.setExpressionMinY(
+        		Experiment.findMinExpressionValue(experiments) - (float) 1.3);
+        params.setCopyNumberMaxY(
+        		Experiment.findMaxCopyNumberValue(experiments));
+        params.setCopyNumberMinY(
+        		Experiment.findMinCopyNumberValue(experiments));
         params.setUnits(BpUnits.KB);
         params.setNumPlotsPerRow(2);
         params.setWidth(WIDTH);
         params.setHeight(HEIGHT);
+        params.setInterpolationType(InterpolationType.SPLINE);
         
         // Create plotting panel
         RasterFileTestPlotPanel panel =

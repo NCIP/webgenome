@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.7 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -883,9 +883,42 @@ public class Experiment implements Serializable {
     	return max;
     }
     
+    /**
+     * Filter copy number experiments from given experiments.
+     * @param experiments Experiments to filter
+     * @return Copy number experiments
+     */
+    public static final Collection<Experiment> getCopyNumberExperiments(
+    		final Collection<Experiment> experiments) {
+    	Collection<Experiment> copyNumExps = new ArrayList<Experiment>();
+    	for (Experiment exp : experiments) {
+    		if (!exp.getQuantitationType().isExpressionData()) {
+    			copyNumExps.add(exp);
+    		}
+    	}
+    	return copyNumExps;
+    }
+    
     
     /**
-     * Get maximum value from given
+     * Filter expression experiments from given experiments.
+     * @param experiments Experiments to filter
+     * @return Expression experiments
+     */
+    public static final Collection<Experiment> getExpressionExperiments(
+    		final Collection<Experiment> experiments) {
+    	Collection<Experiment> expressionExps = new ArrayList<Experiment>();
+    	for (Experiment exp : experiments) {
+    		if (exp.getQuantitationType().isExpressionData()) {
+    			expressionExps.add(exp);
+    		}
+    	}
+    	return expressionExps;
+    }
+    
+    
+    /**
+     * Get maximum copy number (or LOH) value from given
      * experiments.  This value is the sum of
      * <code>value</code> and <code>error</code>
      * for some <code>ArrayDatum</code> object contained herein.
@@ -893,15 +926,17 @@ public class Experiment implements Serializable {
      * @return Maximum value or 0.0 if there are
      * no nested <code>ArrayDatum</code> objects.
      */
-    public static final float findMaxValue(
+    public static final float findMaxCopyNumberValue(
     		final Collection<Experiment> experiments) {
     	Float max = Float.NaN;
     	for (Experiment exp : experiments) {
-    		float candidateMax = exp.maxValue();
-    		if (!Float.isNaN(candidateMax)) {
-    			if (Float.isNaN(max) || candidateMax > max) {
-    				max = candidateMax;
-    			}
+    		if (!exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMax = exp.maxValue();
+	    		if (!Float.isNaN(candidateMax)) {
+	    			if (Float.isNaN(max) || candidateMax > max) {
+	    				max = candidateMax;
+	    			}
+	    		}
     		}
     	}
     	if (Float.isNaN(max)) {
@@ -912,7 +947,36 @@ public class Experiment implements Serializable {
     
     
     /**
-     * Get minimum value from given
+     * Get maximum expression value from given
+     * experiments.  This value is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @return Maximum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMaxExpressionValue(
+    		final Collection<Experiment> experiments) {
+    	Float max = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		if (exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMax = exp.maxValue();
+	    		if (!Float.isNaN(candidateMax)) {
+	    			if (Float.isNaN(max) || candidateMax > max) {
+	    				max = candidateMax;
+	    			}
+	    		}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum copy number (or LOH) value from given
      * experiments.  This is the sum of
      * <code>value</code> and <code>error</code>
      * for some <code>ArrayDatum</code> object contained herein.
@@ -920,15 +984,17 @@ public class Experiment implements Serializable {
      * @return Minimum value or 0.0 if there are
      * no nested <code>ArrayDatum</code> objects.
      */
-    public static final float findMinValue(
+    public static final float findMinCopyNumberValue(
     		final Collection<Experiment> experiments) {
     	Float min = Float.NaN;
     	for (Experiment exp : experiments) {
-    		float candidateMin = exp.minValue();
-    		if (!Float.isNaN(candidateMin)) {
-    			if (Float.isNaN(min) || candidateMin < min) {
-    				min = candidateMin;
-    			}
+    		if (!exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMin = exp.minValue();
+	    		if (!Float.isNaN(candidateMin)) {
+	    			if (Float.isNaN(min) || candidateMin < min) {
+	    				min = candidateMin;
+	    			}
+	    		}
     		}
     	}
     	if (Float.isNaN(min)) {
@@ -939,7 +1005,36 @@ public class Experiment implements Serializable {
     
     
     /**
-     * Get minimum value from given
+     * Get minimum expression value from given
+     * experiments.  This is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMinExpressionValue(
+    		final Collection<Experiment> experiments) {
+    	Float min = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		if (exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMin = exp.minValue();
+	    		if (!Float.isNaN(candidateMin)) {
+	    			if (Float.isNaN(min) || candidateMin < min) {
+	    				min = candidateMin;
+	    			}
+	    		}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Get minimum copy number value (or LOH) from given
      * experiments and chromosomes.  This is the sum of
      * <code>value</code> and <code>error</code>
      * for some <code>ArrayDatum</code> object contained herein.
@@ -948,16 +1043,18 @@ public class Experiment implements Serializable {
      * @return Minimum value or 0.0 if there are
      * no nested <code>ArrayDatum</code> objects.
      */
-    public static final float findMaxValue(
+    public static final float findMaxCopyNumberValue(
     		final Collection<Experiment> experiments,
     		final Collection<Short> chromosomes) {
     	Float max = Float.NaN;
     	for (Experiment exp : experiments) {
-    		float candidateMax = exp.maxValue(chromosomes);
-    		if (!Float.isNaN(candidateMax)) {
-    			if (Float.isNaN(max) || candidateMax > max) {
-    				max = candidateMax;
-    			}
+    		if (!exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMax = exp.maxValue(chromosomes);
+	    		if (!Float.isNaN(candidateMax)) {
+	    			if (Float.isNaN(max) || candidateMax > max) {
+	    				max = candidateMax;
+	    			}
+	    		}
     		}
     	}
     	if (Float.isNaN(max)) {
@@ -968,7 +1065,7 @@ public class Experiment implements Serializable {
     
     
     /**
-     * Get minimum value from given
+     * Get minimum expression value from given
      * experiments and chromosomes.  This is the sum of
      * <code>value</code> and <code>error</code>
      * for some <code>ArrayDatum</code> object contained herein.
@@ -977,16 +1074,49 @@ public class Experiment implements Serializable {
      * @return Minimum value or 0.0 if there are
      * no nested <code>ArrayDatum</code> objects.
      */
-    public static final float findMinValue(
+    public static final float findMaxExpressionValue(
+    		final Collection<Experiment> experiments,
+    		final Collection<Short> chromosomes) {
+    	Float max = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		if (exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMax = exp.maxValue(chromosomes);
+	    		if (!Float.isNaN(candidateMax)) {
+	    			if (Float.isNaN(max) || candidateMax > max) {
+	    				max = candidateMax;
+	    			}
+	    		}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
+    }
+    
+    
+    /**
+     * Get minimum copy number (or LOH) value from given
+     * experiments and chromosomes.  This is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMinCopyNumberValue(
     		final Collection<Experiment> experiments,
     		final Collection<Short> chromosomes) {
     	Float min = Float.NaN;
     	for (Experiment exp : experiments) {
-    		float candidateMin = exp.minValue(chromosomes);
-    		if (!Float.isNaN(candidateMin)) {
-    			if (Float.isNaN(min) || candidateMin < min) {
-    				min = candidateMin;
-    			}
+    		if (!exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMin = exp.minValue(chromosomes);
+	    		if (!Float.isNaN(candidateMin)) {
+	    			if (Float.isNaN(min) || candidateMin < min) {
+	    				min = candidateMin;
+	    			}
+	    		}
     		}
     	}
     	if (Float.isNaN(min)) {
@@ -997,20 +1127,98 @@ public class Experiment implements Serializable {
     
     
     /**
-     * Determine the quantitation type from given experiments.
+     * Get minimum expression value from given
+     * experiments and chromosomes.  This is the sum of
+     * <code>value</code> and <code>error</code>
+     * for some <code>ArrayDatum</code> object contained herein.
+     * @param experiments Experiments
+     * @param chromosomes Chromosome numbers
+     * @return Minimum value or 0.0 if there are
+     * no nested <code>ArrayDatum</code> objects.
+     */
+    public static final float findMinExpressionValue(
+    		final Collection<Experiment> experiments,
+    		final Collection<Short> chromosomes) {
+    	Float min = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		if (exp.getQuantitationType().isExpressionData()) {
+	    		float candidateMin = exp.minValue(chromosomes);
+	    		if (!Float.isNaN(candidateMin)) {
+	    			if (Float.isNaN(min) || candidateMin < min) {
+	    				min = candidateMin;
+	    			}
+	    		}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Determine the copy number (or LOH) quantitation
+     * type from given experiments.
      * @param experiments Experiments
      * @return Quantitation type
      */
-    public static QuantitationType getQuantitationType(
+    public static QuantitationType getCopyNumberQuantitationType(
     		final Collection<Experiment> experiments) {
     	QuantitationType qt = null;
     	for (Experiment exp : experiments) {
-    		qt = exp.quantitationType;
-    		if (qt != null) {
-    			break;
+    		if (!exp.getQuantitationType().isExpressionData()) {
+	    		qt = exp.quantitationType;
+	    		if (qt != null) {
+	    			break;
+	    		}
     		}
     	}
     	return qt;
+    }
+    
+    
+    /**
+     * Determine the expression quantitation
+     * type from given experiments.
+     * @param experiments Experiments
+     * @return Quantitation type
+     */
+    public static QuantitationType getExpressionQuantitationType(
+    		final Collection<Experiment> experiments) {
+    	QuantitationType qt = null;
+    	for (Experiment exp : experiments) {
+    		if (exp.getQuantitationType().isExpressionData()) {
+	    		qt = exp.quantitationType;
+	    		if (qt != null) {
+	    			break;
+	    		}
+    		}
+    	}
+    	return qt;
+    }
+    
+    
+    /**
+     * Get all (<= 2) quantitation types in given experiments.
+     * There will be at most one copy number (including LOH)
+     * and ne expression quantitation type.
+     * @param experiments Experiments
+     * @return Quantitation types
+     */
+    public static Collection<QuantitationType> getQuantitationTypes(
+    		final Collection<Experiment> experiments) {
+    	Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
+    	QuantitationType qt =
+    		Experiment.getCopyNumberQuantitationType(experiments);
+    	if (qt != null) {
+    		qTypes.add(qt);
+    	}
+    	qt = Experiment.getExpressionQuantitationType(experiments);
+    	if (qt != null) {
+    		qTypes.add(qt);
+    	}
+    	return qTypes;
     }
     
     /**

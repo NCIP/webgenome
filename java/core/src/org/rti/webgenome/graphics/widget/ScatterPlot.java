@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-26 16:45:33 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,6 +76,7 @@ import org.rti.webgenome.graphics.event.MouseOverStripe;
 import org.rti.webgenome.graphics.event.MouseOverStripes;
 import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.graphics.primitive.Circle;
+import org.rti.webgenome.graphics.primitive.Diamond;
 import org.rti.webgenome.graphics.primitive.Line;
 import org.rti.webgenome.graphics.util.PointListCompressor;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
@@ -85,7 +86,10 @@ import flanagan.interpolation.CubicSpline;
 
 /**
  * A two dimensional plotting space that renders
- * array data as points connected by lines.
+ * array data as points connected by lines.  The plot may
+ * graph one type (i.e. quantitation type) of copy number (or LOH) data and one
+ * type of expression data.  If both are plotted at the same time,
+ * this is called 'co-visualization.'
  * @author dhall
  *
  */
@@ -118,6 +122,12 @@ public final class ScatterPlot implements PlotElement {
     /** Minimum width of a region of LOH in pixels. */
     private static final int MIN_LOH_WIDTH = 10;
     
+    /** Thickness of "stem" drawn from X-axis to expression data point. */
+    private static final int STEM_THICKNESS = 2;
+    
+    /** Opacity (i.e. alpha) of expression data colors. */
+    private static final int EXPRESSION_OPACITY = 125;
+    
     
     // =============================
     //       Attributes
@@ -148,8 +158,11 @@ public final class ScatterPlot implements PlotElement {
     /** Y-coordinate of plot origin (i.e., upper left-most point). */
     private int y = 0;
     
-    /** Boundaries of plot. */
-    private final PlotBoundaries plotBoundaries;
+    /** Plot boundaries for expression data. */
+    private final PlotBoundaries expressionPlotBoundaries;
+    
+    /** Plot boundaries for copy number data. */
+    private final PlotBoundaries copyNumberPlotBoundaries;
     
     /**
      * Data point object that is reused during plot creation
@@ -162,6 +175,12 @@ public final class ScatterPlot implements PlotElement {
      * in order to economize memory.
      */
     private final DataPoint reusableDataPoint2 = new DataPoint();
+    
+    /**
+     * Data point representing the base of the "stem"
+     * of an expression data point diamond and stem.
+     */
+    private final DataPoint stemBaseReusableDataPoint = new DataPoint();
     
     /** Click boxes used for providing interactivity using Javascript. */
     private final ClickBoxes clickBoxes;
@@ -196,8 +215,11 @@ public final class ScatterPlot implements PlotElement {
     /** Draw raw LOH probabilities along with scored data? */
     private boolean drawRawLohProbabilities = true;
     
-    /** Quantitation type. */
-    private QuantitationType quantitationType = null;
+    /** Quantitation type for copy number data. */
+    private QuantitationType copyNumberQType = null;
+    
+    /** Quantitation type for expression data. */
+    private QuantitationType expressionQType = null;
     
     /** Interpolation type. */
     private InterpolationType interpolationType = InterpolationType.NONE;
@@ -419,14 +441,18 @@ public final class ScatterPlot implements PlotElement {
      * chromosome array data
      * @param width Width of plot in pixels
      * @param height Height of plot in pixels
-     * @param plotBoundaries Plot boundaries in native data units
-     * (i.e., base pairs vs. some quantitation type)
+     * @param expressionPlotBoundaries Plot boundaries in native data units
+     * (i.e., base pairs vs. some quantitation type) for expression data
+     * @param copyNumberPlotBoundaries Plot boundaries in native data units
+     * (i.e., base pairs vs. some quantitation type) for copy number
+     * of LOH data.
      */
     public ScatterPlot(final Collection<Experiment> experiments,
     		final short chromosome,
     		final ChromosomeArrayDataGetter chromosomeArrayDataGetter,
             final int width, final int height,
-            final PlotBoundaries plotBoundaries) {
+            final PlotBoundaries expressionPlotBoundaries,
+            final PlotBoundaries copyNumberPlotBoundaries) {
     	
     	// Make sure args okay
     	if (experiments == null) {
@@ -436,14 +462,24 @@ public final class ScatterPlot implements PlotElement {
     		throw new IllegalArgumentException(
     				"Chromosome array data getter cannot be null");
     	}
-    	this.quantitationType = null;
+    	this.expressionQType = null;
+    	this.copyNumberQType = null;
     	for (Experiment exp : experiments) {
     		QuantitationType qt = exp.getQuantitationType();
-    		if (this.quantitationType == null) {
-    			this.quantitationType = qt;
-    		} else if (this.quantitationType != qt) {
-    			throw new IllegalArgumentException(
-    					"Cannot mix quantitation types in plot");
+    		if (qt.isExpressionData()) {
+    			if (this.expressionQType == null) {
+    				this.expressionQType = qt;
+    			} else if (this.expressionQType != qt) {
+    				throw new IllegalArgumentException(
+						"Cannot mix expression quantitation types in plot");
+    			}
+    		} else {
+    			if (this.copyNumberQType == null) {
+    				this.copyNumberQType = qt;
+    			} else if (this.copyNumberQType != qt) {
+    				throw new IllegalArgumentException(
+						"Cannot mix copy number quantitation types in plot");
+    			}
     		}
     	}
         
@@ -453,7 +489,8 @@ public final class ScatterPlot implements PlotElement {
         this.chromosomeArrayDataGetter = chromosomeArrayDataGetter;
         this.width = width;
         this.height = height;
-        this.plotBoundaries = plotBoundaries;
+        this.expressionPlotBoundaries = expressionPlotBoundaries;
+        this.copyNumberPlotBoundaries = copyNumberPlotBoundaries;
         this.clickBoxes = new ClickBoxes(width, height, DEF_POINT_RADIUS * 3,
         		DEF_POINT_RADIUS * 3);
         this.mouseOverStripes = new MouseOverStripes(
@@ -482,17 +519,22 @@ public final class ScatterPlot implements PlotElement {
     	
         // Paint points and lines
     	BioAssay selected = null;
+    	QuantitationType selectedQT = null;
         for (Experiment exp : this.experiments) {
             for (BioAssay bioAssay : exp.getBioAssays()) {
             	if (bioAssay.isSelected()) {
             		selected = bioAssay;
+            		selectedQT = exp.getQuantitationType();
             	} else {
-            		this.paint(canvas, bioAssay, reporters);
+            		this.paint(canvas, bioAssay, reporters,
+            				exp.getQuantitationType());
             	}
             }
         }
+        
+        // Selected bioassay painted last so that its line is on top
         if (selected != null) {
-        	this.paint(canvas, selected, reporters);
+        	this.paint(canvas, selected, reporters, selectedQT);
         }
         
         // Initialize mouseover stripes
@@ -505,9 +547,11 @@ public final class ScatterPlot implements PlotElement {
      * @param bioAssay Bioassay to paint
      * @param reporters All reporters in all experiments that
      * are being painted
+     * @param qType Quantitation type
      */
     private void paint(final DrawingCanvas canvas, final BioAssay bioAssay,
-    		final SortedSet<Reporter> reporters) {
+    		final SortedSet<Reporter> reporters,
+    		final QuantitationType qType) {
     	
     	int pointRadius = DEF_POINT_RADIUS;
     	int lineWidth = DEF_LINE_WIDTH;
@@ -518,49 +562,20 @@ public final class ScatterPlot implements PlotElement {
     	ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
     		getChromosomeArrayData(bioAssay, this.chromosome);
     	if (cad != null) {
-    		
     		if (cad.getChromosomeAlterations() == null) {
-    		
-	    		if (this.quantitationType != QuantitationType.LOH
-	    				|| (this.quantitationType == QuantitationType.LOH
-	    						&& this.drawRawLohProbabilities)) {
-	                
-		            // Points
-		    		if (this.drawPoints) {
-			            this.paintPoints(cad, bioAssay.getColor(), canvas,
-			            		pointRadius,
-			            		bioAssay.getId(), reporters);
-		    		}
-		            
-		            // Error bars
-		    		if (this.drawErrorBars) {
-		    			this.paintErrorBars(cad, bioAssay.getColor(), canvas,
-		    					lineWidth);
-		    		}
-		        
-		            // Lines
-		    		if (this.interpolationType
-		    				== InterpolationType.STRAIGHT_LINE) {
-			            this.paintStraightConnectingLines(
-			            		cad, bioAssay.getColor(), canvas,
-			            		lineWidth);
-		    		} else if (this.interpolationType
-		    				== InterpolationType.SPLINE) {
-		    			this.paintConnectingSpline(
-		    					cad, bioAssay.getColor(), canvas,
-		    					lineWidth);
-		    		} else if (this.interpolationType
-		    				== InterpolationType.STEP) {
-		    			this.paintConnectingSteps(cad, bioAssay.getColor(),
-		    					canvas, lineWidth);
-		    		}
-				}
-	    		
-	    		// LOH scored lines
-	    		if (this.quantitationType == QuantitationType.LOH) {
-	    			this.paintAlterations(cad, bioAssay.getColor(), canvas,
-	    					ALTERATION_LINE_WIDTH, AnnotationType.LOH_SEGMENT);
-	    		}
+    			if (qType.isExpressionData()) {
+    				Color origColor = bioAssay.getColor();
+    				Color newColor = new Color(origColor.getRed(),
+    						origColor.getGreen(), origColor.getBlue(),
+    						EXPRESSION_OPACITY);
+    				this.paintExpressionData(canvas, cad, newColor,
+    						lineWidth, pointRadius, bioAssay.getId(),
+    						reporters);
+    			} else {
+    				this.painCopyNumberData(canvas, cad, bioAssay.getColor(),
+    						lineWidth, pointRadius, bioAssay.getId(),
+    						reporters);
+    			}
     		} else {
     			if (cad.getChromosomeAlterations().size() > 0) {
     				List<AnnotatedGenomeFeature> feats =
@@ -573,6 +588,87 @@ public final class ScatterPlot implements PlotElement {
         }
     }
     
+    /**
+     * Paint gene expression data.
+     * @param canvas Drawing canvas to render data
+     * @param cad Data to paint
+     * @param color Color of points
+     * @param lineWidth Width of error bar lines
+     * @param pointRadius Radius of data points
+     * @param bioAssayId ID of bioassay data being plotted
+     * @param reporters Reporters in bioassay being plotted
+     */
+    private void paintExpressionData(final DrawingCanvas canvas,
+    		final ChromosomeArrayData cad, final Color color,
+			final int lineWidth, final int pointRadius,
+			final Long bioAssayId, final SortedSet<Reporter> reporters) {
+          
+    	// Points
+        this.paintPoints(cad, color, canvas, pointRadius,
+        		bioAssayId, reporters, true);
+        
+        // Error bars
+		if (this.drawErrorBars) {
+			this.paintErrorBars(cad, color, canvas,
+					lineWidth, this.expressionPlotBoundaries);
+		}
+    }
+    
+    /**
+     * Paint copy number data on given canvas.
+     * @param canvas Drawing canvas to render data
+     * @param cad Data to paint
+     * @param color Color of points
+     * @param lineWidth Width of error bar lines
+     * @param pointRadius Radius of data points
+     * @param bioAssayId ID of bioassay data being plotted
+     * @param reporters Reporters in bioassay being plotted
+     */
+    private void painCopyNumberData(final DrawingCanvas canvas,
+    		final ChromosomeArrayData cad, final Color color,
+			final int lineWidth, final int pointRadius,
+			final Long bioAssayId, final SortedSet<Reporter> reporters) {
+    	if (this.copyNumberQType != QuantitationType.LOH
+				|| (this.copyNumberQType == QuantitationType.LOH
+						&& this.drawRawLohProbabilities)) {
+            
+            // Points
+    		if (this.drawPoints) {
+	            this.paintPoints(cad, color, canvas, pointRadius,
+	            		bioAssayId, reporters, false);
+    		}
+            
+            // Error bars
+    		if (this.drawErrorBars) {
+    			this.paintErrorBars(cad, color, canvas,
+    					lineWidth, this.copyNumberPlotBoundaries);
+    		}
+        
+            // Lines
+    		if (this.interpolationType
+    				== InterpolationType.STRAIGHT_LINE) {
+	            this.paintStraightConnectingLines(
+	            		cad, color, canvas,
+	            		lineWidth);
+    		} else if (this.interpolationType
+    				== InterpolationType.SPLINE) {
+    			this.paintConnectingSpline(
+    					cad, color, canvas,
+    					lineWidth);
+    		} else if (this.interpolationType
+    				== InterpolationType.STEP) {
+    			this.paintConnectingSteps(cad, color,
+    					canvas, lineWidth);
+    		}
+		}
+		
+		// LOH scored lines
+		if (this.copyNumberQType == QuantitationType.LOH) {
+			this.paintAlterations(cad, color, canvas,
+					ALTERATION_LINE_WIDTH, AnnotationType.LOH_SEGMENT);
+		}
+    }
+    
     
     /**
      * Initialize mouseover stripes.
@@ -580,6 +676,12 @@ public final class ScatterPlot implements PlotElement {
      */
     private void initializeMouseOverStripes(
     		final SortedSet<Reporter> reporters) {
+    	PlotBoundaries boundaries = null;
+    	if (this.copyNumberPlotBoundaries != null) {
+    		boundaries = this.copyNumberPlotBoundaries;
+    	} else if (this.expressionPlotBoundaries != null) {
+    		boundaries = this.expressionPlotBoundaries;
+    	}
     	if (!this.showAnnotation && !this.showGenes
     			&& !this.showReporterNames) {
     		this.mouseOverStripes = null;
@@ -596,7 +698,8 @@ public final class ScatterPlot implements PlotElement {
 		    					+ lastReporter.getLocation()) / 2;
 		    		}
 		    		int currentStartPix = (int)
-		    			(this.plotBoundaries.fractionalDistanceFromLeft(
+		    			(boundaries.
+		    					fractionalDistanceFromLeft(
 		    					currentStartBp) * (double) this.width);
 		    		MouseOverStripe currentStripe = new MouseOverStripe();
 		    		this.mouseOverStripes.add(currentStripe);
@@ -678,16 +781,18 @@ public final class ScatterPlot implements PlotElement {
      * @param pointRadius Radius of data point in pixels
      * @param bioAssayId ID of bioassay datum comes from
      * @param reporters Sorted set of reporters
+     * @param isExpressionData Do data come from an expression array?
      */
     private void paintPoints(final ChromosomeArrayData cad, final Color color,
             final DrawingCanvas drawingCanvas, final int pointRadius,
             final Long bioAssayId,
-            final SortedSet<Reporter> reporters) {
+            final SortedSet<Reporter> reporters,
+            final boolean isExpressionData) {
     	List<ArrayDatum> arrayData = cad.getArrayData();
     	if (arrayData != null) {
 	        for (ArrayDatum datum : cad.getArrayData()) {
 	            this.paintPoint(datum, color, drawingCanvas, pointRadius,
-	            		bioAssayId);
+	            		bioAssayId, isExpressionData);
 	            reporters.add(datum.getReporter());
 	        }
     	}
@@ -700,12 +805,15 @@ public final class ScatterPlot implements PlotElement {
      * @param color Color of error bars
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of lines
+     * @param boundaries Boundaries of plot with regard to a quantitation
+     * type
      */
     private void paintErrorBars(final ChromosomeArrayData cad,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth) {
+            final int lineWidth, final PlotBoundaries boundaries) {
         for (ArrayDatum datum : cad.getArrayData()) {
-            this.paintErrorBar(datum, color, drawingCanvas, lineWidth);
+            this.paintErrorBar(datum, color, drawingCanvas, lineWidth,
+            		boundaries);
         }
     }
     
@@ -718,19 +826,36 @@ public final class ScatterPlot implements PlotElement {
      * @param drawingCanvas A drawing canvas
      * @param pointRadius Radius of data point
      * @param bioAssayId ID of bioassay datum comes from
+     * @param isExpressionData Is the datum from gene expression
+     * data?
      */
     private void paintPoint(final ArrayDatum datum,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int pointRadius, final Long bioAssayId) {
+            final int pointRadius, final Long bioAssayId,
+            final boolean isExpressionData) {
         this.reusableDataPoint1.bulkSet(datum);
-	    if (this.plotBoundaries.withinBoundaries(this.reusableDataPoint1)) {
-	        int x = this.transposeX(this.reusableDataPoint1);
-	        int y = this.transposeY(this.reusableDataPoint1);
+	    if (this.inPlotBoundaries(this.reusableDataPoint1, isExpressionData)) {
+	    	PlotBoundaries boundaries = null;
+	    	if (isExpressionData) {
+	    		boundaries = this.expressionPlotBoundaries;
+	    	} else {
+	    		boundaries = this.copyNumberPlotBoundaries;
+	    	}
+	        int x = this.transposeX(this.reusableDataPoint1, boundaries);
+	        int y = this.transposeY(this.reusableDataPoint1, boundaries);
 	        
 	        // Create point
-	        this.drawPoint(x, y, color, datum.getReporter().getName(),
-	                drawingCanvas, pointRadius,
-	                datum.getReporter().isSelected());
+	        if (!isExpressionData) {
+		        this.drawPoint(x, y, color, datum.getReporter().getName(),
+		                drawingCanvas, pointRadius,
+		                datum.getReporter().isSelected());
+	        } else {
+	        	this.drawDiamond(x, y, color,
+	        			datum.getReporter().getName(), drawingCanvas,
+	        			pointRadius, datum.getReporter().isSelected());
+	        	this.drawStem(this.reusableDataPoint1, color,
+	        			drawingCanvas, pointRadius);
+	        }
 	        
 	        // Add click box command
 	        x -= this.x;
@@ -742,6 +867,25 @@ public final class ScatterPlot implements PlotElement {
         }
     }
     
+    /**
+     * Is given point within the bounaries of the plot?
+     * @param point Data point
+     * @param isExpressionData Is the data point expression data?
+     * @return T/F
+     */
+    private boolean inPlotBoundaries(
+    		final DataPoint point, final boolean isExpressionData) {
+    	boolean in = false;
+    	if (isExpressionData) {
+    		in = this.expressionPlotBoundaries.inBoundary(
+    				point.getValue1(), point.getValue2());
+    	} else {
+    		in = this.copyNumberPlotBoundaries.inBoundary(
+    				point.getValue1(), point.getValue2());
+    	}
+    	return in;
+    }
+    
     
     /**
      * Paint error bars for a single data point.
@@ -749,16 +893,18 @@ public final class ScatterPlot implements PlotElement {
      * @param color A color
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of line
+     * @param boundaries Boundaries of plot with regard to
+     * a quantitation type
      */
     private void paintErrorBar(final ArrayDatum datum,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth) {
+            final int lineWidth, final PlotBoundaries boundaries) {
         this.reusableDataPoint1.bulkSet(datum);
-        int x = this.transposeX(this.reusableDataPoint1);
-        int y = this.transposeY(this.reusableDataPoint1);
+        int x = this.transposeX(this.reusableDataPoint1, boundaries);
+        int y = this.transposeY(this.reusableDataPoint1, boundaries);
         if (!Float.isNaN(datum.getError())) {
             this.drawErrorBar(x, y, datum.getError(), color, drawingCanvas,
-            		lineWidth);
+            		lineWidth, boundaries);
         }
     }
     
@@ -786,7 +932,8 @@ public final class ScatterPlot implements PlotElement {
     
     
     /**
-     * Draw a line between two data points.
+     * Draw a line between two data points.  This method will only
+     * be used if data are not expression.
      * @param p1 First data point
      * @param p2 Second data point
      * @param drawingCanvas Drawing canvas
@@ -796,15 +943,15 @@ public final class ScatterPlot implements PlotElement {
     private void paintLine(final DataPoint p1, final DataPoint p2,
     		final DrawingCanvas drawingCanvas, final int lineWidth,
     		final Color color) {
-    	if (this.plotBoundaries.atLeastPartlyOnPlot(p1, p2)) {
-            if (!this.plotBoundaries.withinBoundaries(p1)
-                    || !this.plotBoundaries.withinBoundaries(p2)) {
-                this.plotBoundaries.truncateToFitOnPlot(p1, p2);
+    	if (this.copyNumberPlotBoundaries.atLeastPartlyOnPlot(p1, p2)) {
+            if (!this.copyNumberPlotBoundaries.withinBoundaries(p1)
+                    || !this.copyNumberPlotBoundaries.withinBoundaries(p2)) {
+                this.copyNumberPlotBoundaries.truncateToFitOnPlot(p1, p2);
             }
-            int x1 = this.transposeX(p1);
-            int y1 = this.transposeY(p1);
-            int x2 = this.transposeX(p2);
-            int y2 = this.transposeY(p2);
+            int x1 = this.transposeX(p1, this.copyNumberPlotBoundaries);
+            int y1 = this.transposeY(p1, this.copyNumberPlotBoundaries);
+            int x2 = this.transposeX(p2, this.copyNumberPlotBoundaries);
+            int y2 = this.transposeY(p2, this.copyNumberPlotBoundaries);
             Line line = new Line(x1, y1, x2, y2, lineWidth, color);
             drawingCanvas.add(line);
         }
@@ -824,8 +971,10 @@ public final class ScatterPlot implements PlotElement {
     	for (int i = 0; i < n; i++) {
     		ArrayDatum datum = arrayData.get(i);
     		xxList.add((double) this.transposeX(
-    				datum.getReporter().getLocation()));
-    		yyList.add((double) this.transposeY(datum.getValue()));
+    				datum.getReporter().getLocation(),
+    				this.copyNumberPlotBoundaries));
+    		yyList.add((double) this.transposeY(datum.getValue(),
+    				this.copyNumberPlotBoundaries));
     	}
     	PointListCompressor.compress(xxList, yyList);
     	n = xxList.size();
@@ -858,13 +1007,15 @@ public final class ScatterPlot implements PlotElement {
 	    	ArrayDatum lastDatum = arrayData.get(arrayData.size() - 1);
 	    	int startX = this.x;
 	    	int firstDatumX =
-	    		this.transposeX(firstDatum.getReporter().getLocation());
+	    		this.transposeX(firstDatum.getReporter().getLocation(),
+	    				this.copyNumberPlotBoundaries);
 	    	if (firstDatumX > startX) {
 	    		startX = firstDatumX;
 	    	}
 	    	int endX = this.x + this.width;
 	    	int lastDatumX =
-	    		this.transposeX(lastDatum.getReporter().getLocation());
+	    		this.transposeX(lastDatum.getReporter().getLocation(),
+	    				this.copyNumberPlotBoundaries);
 	    	if (lastDatumX < endX) {
 	    		endX = lastDatumX;
 	    	}
@@ -958,8 +1109,10 @@ public final class ScatterPlot implements PlotElement {
     		AnnotatedGenomeFeature feat = it.next();
     				    				
 			// Draw altered segment
-			int startX = this.transposeX(feat.getStartLocation());
-			int endX = this.transposeX(feat.getEndLocation());
+			int startX = this.transposeX(feat.getStartLocation(),
+					this.copyNumberPlotBoundaries);
+			int endX = this.transposeX(feat.getEndLocation(),
+					this.copyNumberPlotBoundaries);
 			if (startX == endX) {
 				startX -= MIN_LOH_WIDTH / 2;
 				if (startX < this.x) {
@@ -970,7 +1123,8 @@ public final class ScatterPlot implements PlotElement {
 					endX = this.x + this.width;
 				}
 			}
-			int topY = this.transposeY(feat.getQuantitation());
+			int topY = this.transposeY(feat.getQuantitation(),
+					this.copyNumberPlotBoundaries);
 			drawingCanvas.add(new Line(startX, topY, endX, topY,
 					lineWidth, color));
 		}
@@ -999,6 +1153,58 @@ public final class ScatterPlot implements PlotElement {
         }
     }
     
+    /**
+     * Draw diamond shape.
+     * @param x X-coordinate of point center in pixels
+     * @param y Y-coordinate of point in pixels
+     * @param color Color of point
+     * @param label Mouseover label for point
+     * @param drawingCanvas A drawing canvas
+     * @param pointRadius Radius of data point
+     * @param selected Is individual data point selected (as opposed
+     * to entire bioassay)?
+     */
+    private void drawDiamond(final int x, final int y, final Color color,
+            final String label, final DrawingCanvas drawingCanvas,
+            final int pointRadius, final boolean selected) {
+    	Diamond d = new Diamond(x, y, pointRadius * 2, color);
+    	drawingCanvas.add(d, false);
+        if (selected) {
+        	Circle circle = new Circle(x, y, pointRadius + 3, color, false);
+        	drawingCanvas.add(circle);
+        }
+    }
+    
+    /**
+     * Draw vertical stem from expression data diamond to Y-axis
+     * zero value. 
+     * @param point Data point being plotted
+     * @param color Color of point
+     * @param drawingCanvas A drawing canvas
+     * @param pointRadius Radius of data point
+     */
+    private void drawStem(final DataPoint point, final Color color,
+            final DrawingCanvas drawingCanvas,
+            final int pointRadius) {
+    	if (this.expressionPlotBoundaries.containsXAxis()) {
+    		this.stemBaseReusableDataPoint.setValue1(point.getValue1());
+    		this.stemBaseReusableDataPoint.setValue2(0.0);
+    		int x1 = this.transposeX(point, this.expressionPlotBoundaries);
+    		int y1 = this.transposeY(point, this.expressionPlotBoundaries);
+    		int x2 = this.transposeX(this.stemBaseReusableDataPoint,
+    				this.expressionPlotBoundaries);
+    		int y2 = this.transposeY(this.stemBaseReusableDataPoint,
+    				this.expressionPlotBoundaries);
+    		if (point.getValue2() < 0) {
+    			y2 += pointRadius / 2;
+    		} else {
+    			y2 -= pointRadius / 2;
+    		}
+    		Line line = new Line(x1, y1, x2, y2, STEM_THICKNESS, color);
+    		drawingCanvas.add(line);
+    	}
+    }
+    
     
     /**
      * Draw single error bar.
@@ -1008,14 +1214,16 @@ public final class ScatterPlot implements PlotElement {
      * @param color Color of bar
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of line in pixels
+     * @param boundaries Boundaries of the plot in relation to
+     * the quantitation type
      */
     private void drawErrorBar(final int x, final int y, final double error,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth) {
+            final int lineWidth, final PlotBoundaries boundaries) {
         
         // Compute reference points
         int deltaY = (int) ((double) height
-                * this.plotBoundaries.fractionalHeight(error));
+                * boundaries.fractionalHeight(error));
         int y1 = y - deltaY / 2;
         int y2 = y1 + deltaY;
         int x1 = x - (DEF_ERROR_BAR_HATCH_LENGTH / 2);
@@ -1040,11 +1248,14 @@ public final class ScatterPlot implements PlotElement {
      * the native units of the plot (i.e., base pairs vs. some
      * quantitation type) to pixels.
      * @param dataPoint A data point
+     * @param boundaries Plot boundaries with respect to a quantitation
+     * type
      * @return Transposed x-coordinate in pixels
      */
-    private int transposeX(final DataPoint dataPoint) {
+    private int transposeX(final DataPoint dataPoint,
+    		final PlotBoundaries boundaries) {
         return this.x + (int) ((double) width
-                * this.plotBoundaries.fractionalDistanceFromLeft(dataPoint));
+                * boundaries.fractionalDistanceFromLeft(dataPoint));
     }
     
     
@@ -1053,11 +1264,14 @@ public final class ScatterPlot implements PlotElement {
      * the native units of the plot (i.e., base pairs vs. some
      * quantitation type) to pixels.
      * @param x An x-coordinate in native units
+     * @param boundaries Plot boundaries with respect to a quantitation
+     * type
      * @return Transposed x-coordinate in pixels
      */
-    private int transposeX(final long x) {
+    private int transposeX(final long x,
+    		final PlotBoundaries boundaries) {
         return this.x + (int) ((double) width
-                * this.plotBoundaries.fractionalDistanceFromLeft(x));
+                * boundaries.fractionalDistanceFromLeft(x));
     }
     
     
@@ -1066,11 +1280,14 @@ public final class ScatterPlot implements PlotElement {
      * the native units of the plot (i.e., base pairs vs. some
      * quantitation type) to pixels.
      * @param dataPoint A data point
+     * @param boundaries Plot boundaries with respect to a quantitation
+     * type
      * @return Transposed y-coordinate in pixels
      */
-    private int transposeY(final DataPoint dataPoint) {
+    private int transposeY(final DataPoint dataPoint,
+    		final PlotBoundaries boundaries) {
         return this.y + height - (int) ((double) height
-                * this.plotBoundaries.fractionalDistanceFromBottom(dataPoint));
+                * boundaries.fractionalDistanceFromBottom(dataPoint));
     }
     
     
@@ -1079,11 +1296,14 @@ public final class ScatterPlot implements PlotElement {
      * the native units of the plot (i.e., base pairs vs. some
      * quantitation type) to pixels.
      * @param y A y-coordinate in native units
+     * @param boundaries Plot boundaries with respect to a quantitation
+     * type
      * @return Transposed y-coordinate in pixels
      */
-    private int transposeY(final float y) {
+    private int transposeY(final float y,
+    		final PlotBoundaries boundaries) {
         return this.y + height - (int) ((double) height
-                * this.plotBoundaries.fractionalDistanceFromBottom(y));
+                * boundaries.fractionalDistanceFromBottom(y));
     }
     
     /**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -314,13 +314,21 @@ public class AnnotationPlotPainter extends PlotPainter {
 			final short chromosome, final long startLocation,
 			final long endLocation) {
 		for (Experiment exp : experiments) {
+			float minSat = Float.NaN;
+			float maxSat = Float.NaN;
+			if (exp.getQuantitationType().isExpressionData()) {
+				minSat = params.getExpressionMinSaturation();
+				maxSat = params.getExpressionMaxSaturation();
+			} else {
+				minSat = params.getCopyNumberMinSaturation();
+				minSat = params.getCopyNumberMaxSaturation();
+			}
 			for (BioAssay bioAssay : exp.getBioAssays()) {
 				ChromosomeArrayData cad = this.getChromosomeArrayDataGetter().
 				getChromosomeArrayData(bioAssay, chromosome);
 				DataTrack track = new DataTrack(cad,
 						startLocation,
-						endLocation, params.getMinSaturation(),
-						params.getMaxSaturation(),
+						endLocation, minSat, maxSat,
 						params.getWidth(), bioAssay.getName(),
 						panel.getDrawingCanvas());
 				panel.add(track, HorizontalAlignment.LEFT_JUSTIFIED,

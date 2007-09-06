@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,6 @@ import java.util.Collection;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ExperimentGenerator;
 import org.rti.webgenome.graphics.util.HeatMapColorFactory;
-import org.rti.webgenome.graphics.widget.HeatMapPlot;
 import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.plot.IdeogramPlotParameters;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
@@ -130,7 +129,7 @@ public final class HeatMapPlotTester extends TestCase {
 		
 		// Create heat map color code factory
 		HeatMapColorFactory fac = new HeatMapColorFactory(
-				0, params.getMaxSaturation(),
+				0, params.getCopyNumberMaxSaturation(),
 				NUM_BINS);
 		
 		// Create chromosome array data getter
@@ -154,7 +153,8 @@ public final class HeatMapPlotTester extends TestCase {
 	public void testPaintSerialized() {
 		
 		String testDirPath = 
-    		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME).getAbsolutePath();
+    		UnitTestUtils.createUnitTestDirectory(TEST_DIR_NAME).
+    		getAbsolutePath();
 		
 		// Instantiate plot panel
 		RasterFileTestPlotPanel panel =
@@ -175,7 +175,7 @@ public final class HeatMapPlotTester extends TestCase {
 		
 		// Create heat map color code factory
 		HeatMapColorFactory fac = new HeatMapColorFactory(
-				0, params.getMaxSaturation(),
+				0, params.getCopyNumberMaxSaturation(),
 				NUM_BINS);
 		
 		// Create chromosome array data getter

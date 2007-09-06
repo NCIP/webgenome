@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -122,17 +122,17 @@ public class AnalyticPipeline implements AnalyticOperation {
     
     /**
      * Get user configurable properties.
-     * @param qType Quantitation type
+     * @param qTypes Quantitation types
      * @return User configurable properties
      */
     public final List<UserConfigurableProperty> getUserConfigurableProperties(
-    		final QuantitationType qType) {
+    		final Collection<QuantitationType> qTypes) {
     	List<UserConfigurableProperty> props =
     		new ArrayList<UserConfigurableProperty>();
     	int count = 0;
     	for (AnalyticOperation op : this.operations) {
     		for (UserConfigurableProperty prop
-    				: op.getUserConfigurableProperties(qType)) {
+    				: op.getUserConfigurableProperties(qTypes)) {
     			UserConfigurableProperty newProp = prop.createClone();
     			String newName = count + "_" + prop.getName();
     			String newDisplayName = "Step " + count + " "

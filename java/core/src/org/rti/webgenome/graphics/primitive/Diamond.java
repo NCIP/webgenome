@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
@@ -48,75 +48,66 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.domain;
+package org.rti.webgenome.graphics.primitive;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.rti.webgenome.analysis.AnalyticOperation;
+import java.awt.Color;
+import java.awt.Point;
 
 /**
- * Source of data for an experiment derived through
- * an analytic operation where there were multiple
- * input experiments.
+ * Represents a diamond shape.
  * @author dhall
  *
  */
-public class MultiAnalysisDataSourceProperties
-extends AnalysisDataSourceProperties {
-	
-	//
-	//  A T T R I B U T E S
-	//
-	
-	/** Input experiments that were run through analytic operation. */
-	private Set<Experiment> inputExperiments =
-		new HashSet<Experiment>();
+public class Diamond extends GraphicPrimitive {
 
-	
-	//
-	//  G E T T E R S  /  S E T T E R S
-	//
+	/** Point in center of diamond. */
+	private Point centerPoint = new Point(0, 0);
 	
 	/**
-	 * Get input experiments that were run through analytic operation.
-	 * @return Input experiments that were run through analytic operation.
+	 * Size in pixels of diamond at widest and highest point along
+	 * Y- and X-axes, respectively.
 	 */
-	public Set<Experiment> getInputExperiments() {
-		return inputExperiments;
+	private int size = 0;
+
+	/**
+	 * Get point in center of diamond.
+	 * @return Point in center of diamond.
+	 */
+	public Point getCenterPoint() {
+		return centerPoint;
 	}
 
 	/**
-	 * Set input experiments that were run through analytic operation.
-	 * @param inputExperiments Input experiments that were run through
-	 * analytic operation.
+	 * Get size in pixels of diamond at widest and highest point along
+	 * Y- and X-axes, respectively.
+	 * @return Size in pixels of diamond at widest and highest point along
+	 * Y- and X-axes, respectively.
 	 */
-	public void setInputExperiments(
-			final Set<Experiment> inputExperiments) {
-		this.inputExperiments = inputExperiments;
-	}
-	
-	//
-	//  C O N S T R U C T O R S
-	//
-	
-	/**
-	 * Constructor.
-	 */
-	public MultiAnalysisDataSourceProperties() {
-		
+	public int getSize() {
+		return size;
 	}
 	
 	/**
 	 * Constructor.
-	 * @param inputExperiments Input experiments that were run through
-	 * analytic operation.
-	 * @param operation Analytic operation performed on input experiments.
+	 * @param x X-coordinate of center of diamond in pixels.
+	 * @param y Y-coordinate of center of diamond in pixels.
+	 * @param size Size in pixels of diamond at widest and highest point along
+	 * Y- and X-axes, respectively.
+	 * @param color Color of diamond
 	 */
-	public MultiAnalysisDataSourceProperties(
-			final Set<Experiment> inputExperiments,
-			final AnalyticOperation operation) {
-		super(operation, Experiment.getQuantitationTypes(inputExperiments));
-		this.inputExperiments = inputExperiments;
+	public Diamond(final int x, final int y, final int size,
+			final Color color) {
+		this.centerPoint = new Point(x, y);
+		this.size = size;
+		this.setColor(color);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void move(final int deltaX, final int deltaY) {
+		this.centerPoint.x += deltaX;
+		this.centerPoint.y += deltaY;
 	}
 }

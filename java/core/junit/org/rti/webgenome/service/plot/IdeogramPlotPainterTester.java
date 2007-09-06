@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,10 +58,9 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ExperimentGenerator;
 import org.rti.webgenome.domain.GenomeInterval;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.graphics.widget.Caption;
 import org.rti.webgenome.graphics.widget.RasterFileTestPlotPanel;
-import org.rti.webgenome.service.plot.IdeogramPlotPainter;
-import org.rti.webgenome.service.plot.IdeogramPlotParameters;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.units.ChromosomeIdeogramSize;
 import org.rti.webgenome.units.HorizontalAlignment;
@@ -134,9 +133,19 @@ public final class IdeogramPlotPainterTester extends TestCase {
         for (int i = 0; i < NUM_EXPERIMENTS; i++) {
         	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
 	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME);
+        	exp.setQuantitationType(QuantitationType.COPY_NUMBER);
 	        experiments.add(exp);
 	        for (BioAssay ba : exp.getBioAssays()) {
 	        	ba.setColor(Color.BLUE);
+	        }
+        }
+        for (int i = 0; i < NUM_EXPERIMENTS; i++) {
+        	Experiment exp = expGen.newInMemoryExperiment(NUM_BIO_ASSAYS,
+	        		NUM_CHROMOSOMES, NUM_DATUM_PER_CHROMOSOME);
+        	exp.setQuantitationType(QuantitationType.FOLD_CHANGE);
+	        experiments.add(exp);
+	        for (BioAssay ba : exp.getBioAssays()) {
+	        	ba.setColor(Color.RED);
 	        }
         }
         

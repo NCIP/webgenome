@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.2 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -165,14 +167,28 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	/**
 	 * Constructor.
 	 * @param operation Operation that produced the output.
+	 * @param quantitationTypes Quantitation types of input
+	 * data.
+	 */
+	public AnalysisDataSourceProperties(
+			final AnalyticOperation operation,
+			final Collection<QuantitationType> quantitationTypes) {
+		this.setSourceAnalyticOperation(operation,
+				quantitationTypes);
+	}
+	
+	/**
+	 * Constructor.
+	 * @param operation Operation that produced the output.
 	 * @param quantitationType Quantitation type of input
 	 * data.
 	 */
 	public AnalysisDataSourceProperties(
 			final AnalyticOperation operation,
 			final QuantitationType quantitationType) {
-		this.setSourceAnalyticOperation(operation,
-				quantitationType);
+		Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
+		qTypes.add(quantitationType);
+		this.setSourceAnalyticOperation(operation, qTypes);
 	}
 	
 	
@@ -213,16 +229,16 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 * If this experiment object was generated through an analytic
      * operation, this property represents this operation.
 	 * @param sourceAnalyticOperation Source analytic operation.
-	 * @param quantitationType Quantitation type on which the
+	 * @param quantitationTypes Quantitation types on which the
 	 * operation is performed.
 	 */
 	public final void setSourceAnalyticOperation(
 			final AnalyticOperation sourceAnalyticOperation,
-			final QuantitationType quantitationType) {
+			final Collection<QuantitationType> quantitationTypes) {
 		this.analyticOperationClassName =
 			sourceAnalyticOperation.getClass().getName();
 		this.userConfigurableProperties = new HashSet<UserConfigurableProperty>(
 			sourceAnalyticOperation.getUserConfigurableProperties(
-					quantitationType));
+					quantitationTypes));
 	}
 }

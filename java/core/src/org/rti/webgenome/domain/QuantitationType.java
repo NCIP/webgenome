@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-09 22:29:43 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,25 +70,28 @@ public final class QuantitationType implements Serializable {
     
     /** Fold change. */
     public static final QuantitationType FOLD_CHANGE =
-    	new QuantitationType(QuantitationTypes.FOLD_CHANGE, "Fold Change");
+    	new QuantitationType(QuantitationTypes.FOLD_CHANGE,
+    			"Gene Expression Fold Change",
+    			true);
     
     /** Log2 ratio fold change. */
     public static final QuantitationType LOG_2_RATIO_FOLD_CHANGE =
         new QuantitationType(QuantitationTypes.FOLD_CHANGE_LOG2_RATIO,
-        		"Log2 Ratio Fold Change");
+        		"Gene Expression Log2 Ratio Fold Change", true);
     
     /** Copy number. */
     public static final QuantitationType COPY_NUMBER =
-    	new QuantitationType(QuantitationTypes.COPY_NUMBER, "Copy Number");
+    	new QuantitationType(QuantitationTypes.COPY_NUMBER, "Copy Number",
+    			false);
     
     /** Lo2 ratio copy number. */
     public static final QuantitationType LOG_2_RATIO_COPY_NUMBER =
     	new QuantitationType(QuantitationTypes.COPY_NUMBER_LOG2_RATION,
-    			"Log2 Ratio Copy Number");
+    			"Log2 Ratio Copy Number", false);
     
     /** Loss of heterozygosity. */
     public static final QuantitationType LOH =
-    	new QuantitationType(QuantitationTypes.LOH, "LOH");
+    	new QuantitationType(QuantitationTypes.LOH, "LOH", false);
     
     /** Maps quantitation type names of quantitation types. */
     private static final Map<String, QuantitationType> INDEX =
@@ -116,6 +119,9 @@ public final class QuantitationType implements Serializable {
     /** Identifier. */
     private final String id;
     
+    /** Flag indicating the quantitation type is expression data. */
+    private final boolean expressionData;
+    
     // =======================
     //     Getters/setters
     // =======================
@@ -136,6 +142,14 @@ public final class QuantitationType implements Serializable {
     	return this.id;
     }
     
+    /**
+     * Is the quantitation type indicitive of expression data?
+     * @return T/F
+     */
+    public boolean isExpressionData() {
+    	return this.expressionData;
+    }
+    
     
     // ==========================
     //     Constructors
@@ -145,10 +159,13 @@ public final class QuantitationType implements Serializable {
      * Constructor.
      * @param id Identifier
      * @param name Name of quantitation type
+     * @param isExpressionData Is quantitation type expression data?
      */
-    public QuantitationType(final String id, final String name) {
+    public QuantitationType(final String id, final String name,
+    		final boolean isExpressionData) {
     	this.id = id;
         this.name = name;
+        this.expressionData = isExpressionData;
     }
     
     

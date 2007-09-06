@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -209,8 +209,10 @@ public class AnalysisService {
 			final DataTransformer dataTransformer)
 	throws AnalyticException {
 		QuantitationType qType = experiment.getQuantitationType();
+		Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
+		qTypes.add(qType);
     	Collection<UserConfigurableProperty> props =
-    		operation.getUserConfigurableProperties(qType);
+    		operation.getUserConfigurableProperties(qTypes);
 		dataTransformer.reCompute(experiment, props);
 	}
 	
@@ -239,8 +241,11 @@ public class AnalysisService {
 				exp.getDataSourceProperties();
 			AnalyticOperation op = dsProps.getSourceAnalyticOperation();
 			QuantitationType qType = exp.getQuantitationType();
+			Collection<QuantitationType> qTypes =
+				new ArrayList<QuantitationType>();
+			qTypes.add(qType);
 			Collection<UserConfigurableProperty> props =
-				op.getUserConfigurableProperties(qType);
+				op.getUserConfigurableProperties(qTypes);
 			dataTransformer.reCompute(exp, props);
 		}
 	}

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,17 +101,31 @@ public final class RouteToOperationPageAction extends BaseAction {
 		Collection<Experiment> exps = cart.getExperiments(
 				seForm.getSelectedExperimentIds());
 		QuantitationType qType = null;
+		QuantitationType expressionQType = null;
+		boolean mixedTypes = false;
 		for (Experiment exp : exps) {
-			if (qType == null) {
-				qType = exp.getQuantitationType();
-			} else {
-				if (qType != exp.getQuantitationType()) {
-					ActionErrors errors = new ActionErrors();
-					errors.add("global",
-							new ActionError("mixed.quantitation.types"));
-					this.saveErrors(request, errors);
-					return mapping.findForward("error");
+			QuantitationType eqt = exp.getQuantitationType();
+			if (eqt.isExpressionData()) {
+				if (expressionQType == null) {
+					expressionQType = eqt;
+				} else if (expressionQType != eqt) {
+					mixedTypes = true;
 				}
+			}
+			if (!eqt.isExpressionData()) {
+				if (qType == null) {
+					qType = eqt;
+				} else if (qType != eqt) {
+					mixedTypes = true;
+				}
+			}
+			
+			if (mixedTypes) {
+				ActionErrors errors = new ActionErrors();
+				errors.add("global",
+						new ActionError("mixed.quantitation.types"));
+				this.saveErrors(request, errors);
+				return mapping.findForward("error");
 			}
 		}
     	

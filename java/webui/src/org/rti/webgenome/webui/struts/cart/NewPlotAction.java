@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.15 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,6 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.io.DataFileManager;
@@ -220,8 +219,6 @@ public final class NewPlotAction extends BaseAction {
 	    	plotId = Long.parseLong(request.getParameter("plotId"));
 	    	plot = cart.getPlot(plotId);
 	    	experiments = plot.getExperiments();
-	    	QuantitationType qType =
-	    		Experiment.getQuantitationType(experiments);
 	    	
 	    	// TODO: If genome intervals have not changed, do not
 	    	// go back to client for data.
@@ -233,7 +230,11 @@ public final class NewPlotAction extends BaseAction {
 		    		params.getGenomeIntervals();
 		    	BioAssayDataConstraints[] constraints =
 		    		GenomeInterval.getBioAssayDataConstraints(genomeIntervals,
-		    				params.getUnits(), qType);
+		    				params.getUnits(),
+		    				Experiment.getExpressionQuantitationType(
+		    						experiments),
+		    				Experiment.getCopyNumberQuantitationType(
+		    						experiments));
 		    	constraints = this.findNewConstraints(constraints,
 		    			experiments);
 		    	if (constraints.length > 0) {

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webgenome.analysis;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -131,12 +132,10 @@ extends SingleBioAssayStatelessOperation.BaseSingleBioAssayStatelessOperation {
 
 
     /**
-     * Get user configurable properties.
-     * @param qType Quantitation type
-     * @return User configurable properties
+     * {@inheritDoc}
      */
     public final List<UserConfigurableProperty> getUserConfigurableProperties(
-    		final QuantitationType qType) {
+    		final Collection<QuantitationType> qTypes) {
     	return new ArrayList<UserConfigurableProperty>();
     }
     

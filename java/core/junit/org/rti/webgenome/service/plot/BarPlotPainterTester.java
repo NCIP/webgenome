@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-09 22:29:43 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webgenome.client.ExperimentDTO;
 import org.rti.webgenome.client.ExperimentDTOGenerator;
 import org.rti.webgenome.client.QuantitationTypes;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.graphics.widget.RasterFileTestPlotPanel;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.util.UnitTestUtils;
@@ -120,6 +121,11 @@ public final class BarPlotPainterTester extends TestCase {
 			String id = "Experiment " + i;
 			ExperimentDTO dto = gen.newExperimentDTO(id, constraintsArr);
 			Experiment exp = new Experiment(dto, constraintsArr);
+			if (i % 2 == 0) {
+				exp.setQuantitationType(QuantitationType.COPY_NUMBER);
+			} else {
+				exp.setQuantitationType(QuantitationType.FOLD_CHANGE);
+			}
 			experiments.add(exp);
 		}
 		BarPlotPainter painter = new BarPlotPainter(

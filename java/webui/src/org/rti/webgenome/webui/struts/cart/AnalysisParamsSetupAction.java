@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.3 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -113,8 +114,9 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	Collection<Long> ids = seForm.getSelectedExperimentIds();
     	Collection<Experiment> experiments = cart.getExperiments(ids);
     	
-    	// Determine quantitation type
-    	QuantitationType qType = Experiment.getQuantitationType(experiments);
+    	// Determine quantitation types
+    	Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
+    	
     	
     	// Get instance of analytic operation and attach to request
     	AnalyticOperationParametersForm aForm =
@@ -127,7 +129,7 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	// Get user configurable parameter characteristics and
     	// attach to request
     	List<UserConfigurableProperty> props =
-    		op.getUserConfigurableProperties(qType);
+    		op.getUserConfigurableProperties(qTypes);
     	request.setAttribute("props", props);
     	
     	// Get selected experiments and attach to request.

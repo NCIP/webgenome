@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -108,18 +108,32 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 	//
 	
 	/**
-	 * Maximum color saturation value.  Data values
+	 * Maximum color saturation value for expression data.  Data values
 	 * greater than or equal to this will be mapped to pure red
 	 * (#FF0000) in the plot.
 	 */
-	private float maxSaturation = DEF_MAX_SATURATION;
+	private float expressionMaxSaturation = DEF_MAX_SATURATION;
 	
 	/**
-	 * Minium color saturation value.  Data values
+	 * Minium color saturation value for expression data.  Data values
 	 * less than or equal to this will be mapped to
 	 * pure green (#00FF00) in the plot.
 	 */
-	private float minSaturation = DEF_MIN_SATURATION;
+	private float expressionMinSaturation = DEF_MIN_SATURATION;
+	
+	/**
+	 * Maximum color saturation value for copy number data.  Data values
+	 * greater than or equal to this will be mapped to pure red
+	 * (#FF0000) in the plot.
+	 */
+	private float copyNumberMaxSaturation = DEF_MAX_SATURATION;
+	
+	/**
+	 * Minium color saturation value for copy number data.  Data values
+	 * less than or equal to this will be mapped to
+	 * pure green (#00FF00) in the plot.
+	 */
+	private float copyNumberMinSaturation = DEF_MIN_SATURATION;
 	
 	/**
 	 * Minimum mask value.  Values between
@@ -185,49 +199,96 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 
 
 	/**
-	 * Get maximum color saturation value.
+	 * Get maximum color saturation value for expression data.
 	 * Data values
 	 * greater than or equal to this will be mapped to pure red.
 	 * (#FF0000) in the plot.
 	 * @return Maximum color saturation value.
 	 */
-	public final float getMaxSaturation() {
-		return maxSaturation;
+	public final float getExpressionMaxSaturation() {
+		return expressionMaxSaturation;
 	}
 
 	
 	/**
-	 * Set maximum color saturation value.
+	 * Set maximum color saturation value for expression data.
 	 * Data values
 	 * greater than or equal to this will be mapped to pure red.
 	 * @param maxSaturation Maximum color saturation value.
 	 */
-	public final void setMaxSaturation(final float maxSaturation) {
-		this.maxSaturation = maxSaturation;
+	public final void setExpressionMaxSaturation(final float maxSaturation) {
+		this.expressionMaxSaturation = maxSaturation;
 	}
 
 	
 	/**
-	 * Get minimum color saturation value.
+	 * Get minimum color saturation value for expression data.
 	 * Data values
 	 * less than or equal to this will be mapped to pure green.
 	 * (#00FF00) in the plot.
 	 * @return Minimum color saturation value.
 	 */
-	public final float getMinSaturation() {
-		return minSaturation;
+	public final float getExpressionMinSaturation() {
+		return expressionMinSaturation;
 	}
 
 	
 	/**
-	 * Set minimum color saturation value.
+	 * Set minimum color saturation value for expression data.
 	 * Data values
 	 * less than or equal to this will be mapped to pure green.
 	 * (#00FF00) in the plot.
 	 * @param minSaturation Minimum color saturation value.
 	 */
-	public final void setMinSaturation(final float minSaturation) {
-		this.minSaturation = minSaturation;
+	public final void setExpressionMinSaturation(final float minSaturation) {
+		this.expressionMinSaturation = minSaturation;
+	}
+	
+	
+	/**
+	 * Get maximum color saturation value for copy number data.
+	 * Data values
+	 * greater than or equal to this will be mapped to pure red.
+	 * (#FF0000) in the plot.
+	 * @return Maximum color saturation value.
+	 */
+	public final float getCopyNumberMaxSaturation() {
+		return copyNumberMaxSaturation;
+	}
+
+	
+	/**
+	 * Set maximum color saturation value for copy number data.
+	 * Data values
+	 * greater than or equal to this will be mapped to pure red.
+	 * @param maxSaturation Maximum color saturation value.
+	 */
+	public final void setCopyNumberMaxSaturation(final float maxSaturation) {
+		this.copyNumberMaxSaturation = maxSaturation;
+	}
+
+	
+	/**
+	 * Get minimum color saturation value for copy number data.
+	 * Data values
+	 * less than or equal to this will be mapped to pure green.
+	 * (#00FF00) in the plot.
+	 * @return Minimum color saturation value.
+	 */
+	public final float getCopyNumberMinSaturation() {
+		return copyNumberMinSaturation;
+	}
+
+	
+	/**
+	 * Set minimum color saturation value for copy number data.
+	 * Data values
+	 * less than or equal to this will be mapped to pure green.
+	 * (#00FF00) in the plot.
+	 * @param minSaturation Minimum color saturation value.
+	 */
+	public final void setCopyNumberMinSaturation(final float minSaturation) {
+		this.copyNumberMinSaturation = minSaturation;
 	}
 
 	
@@ -250,9 +311,11 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 	public HeatMapPlotParameters(final HeatMapPlotParameters params) {
 		super(params);
 		this.maxMask = params.maxMask;
-		this.maxSaturation = params.maxSaturation;
+		this.copyNumberMaxSaturation = params.copyNumberMaxSaturation;
+		this.copyNumberMinSaturation = params.copyNumberMinSaturation;
+		this.expressionMaxSaturation = params.expressionMaxSaturation;
+		this.expressionMinSaturation = params.expressionMinSaturation;
 		this.minMask = params.minMask;
-		this.minSaturation = params.minSaturation;
 	}
 	
 	
@@ -271,15 +334,29 @@ public abstract class HeatMapPlotParameters extends BaseGenomicPlotParameters {
 		super.deriveMissingAttributes(experiments);
 		Set<Short> chromosomes = GenomeInterval.getChromosomes(
 				this.getGenomeIntervals());
-		if (Float.isNaN(this.getMinSaturation())
-				|| this.getMinSaturation() == Constants.FLOAT_NAN) {
-			float min = Experiment.findMinValue(experiments, chromosomes);
-			this.setMinSaturation(min);
+		if (Float.isNaN(this.getExpressionMinSaturation())
+				|| this.getExpressionMinSaturation() == Constants.FLOAT_NAN) {
+			float min = Experiment.findMinExpressionValue(
+					experiments, chromosomes);
+			this.setExpressionMinSaturation(min);
 		}
-		if (Float.isNaN(this.getMaxSaturation())
-				|| this.getMinSaturation() == Constants.FLOAT_NAN) {
-			float max = Experiment.findMaxValue(experiments, chromosomes);
-			this.setMaxSaturation(max);
+		if (Float.isNaN(this.getExpressionMaxSaturation())
+				|| this.getExpressionMaxSaturation() == Constants.FLOAT_NAN) {
+			float max = Experiment.findMaxExpressionValue(
+					experiments, chromosomes);
+			this.setExpressionMaxSaturation(max);
+		}
+		if (Float.isNaN(this.getCopyNumberMinSaturation())
+				|| this.getCopyNumberMinSaturation() == Constants.FLOAT_NAN) {
+			float min = Experiment.findMinCopyNumberValue(
+					experiments, chromosomes);
+			this.setCopyNumberMinSaturation(min);
+		}
+		if (Float.isNaN(this.getCopyNumberMaxSaturation())
+				|| this.getCopyNumberMaxSaturation() == Constants.FLOAT_NAN) {
+			float max = Experiment.findMaxCopyNumberValue(
+					experiments, chromosomes);
+			this.setCopyNumberMaxSaturation(max);
 		}
     }
 }

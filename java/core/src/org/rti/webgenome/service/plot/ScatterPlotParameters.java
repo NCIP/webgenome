@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,11 +75,17 @@ extends BaseGenomicPlotParameters implements Serializable {
     //      Attributes
     // ============================
     
-    /** Minimum Y-axis value specified by user. */
-    private float minY = Constants.FLOAT_NAN;
+    /** Minimum Y-axis value for copy number or LOH data specified by user. */
+    private float copyNumberMinY = Constants.FLOAT_NAN;
 
-    /** Maximum Y-axis value specified by user. */
-    private float maxY = Constants.FLOAT_NAN;
+    /** Maximum Y-axis value for copy number of LOH data specified by user. */
+    private float copyNumberMaxY = Constants.FLOAT_NAN;
+    
+    /** Minimum Y-axis value for expression data specified by user. */
+    private float expressionMinY = Constants.FLOAT_NAN;
+    
+    /** Maximum Y-axis value for expression data specified by user. */
+    private float expressionMaxY = Constants.FLOAT_NAN;
     
     /**
      * Width of plot area in pixels.  Plot area
@@ -184,6 +190,77 @@ extends BaseGenomicPlotParameters implements Serializable {
 		this.drawPoints = drawPoints;
 	}
 
+	/**
+	 * Get maximum Y-axis value for copy number data.
+	 * @return Maximum Y-axis value
+	 */
+	public float getCopyNumberMaxY() {
+		return copyNumberMaxY;
+	}
+
+
+	/**
+	 * Set maximum Y-axis value for copy number data.
+	 * @param copyNumberMaxY Maximum Y-axis value
+	 */
+	public void setCopyNumberMaxY(final float copyNumberMaxY) {
+		this.copyNumberMaxY = copyNumberMaxY;
+	}
+
+
+	/**
+	 * Get minimum Y-axis value for copy number data.
+	 * @return Minimum Y-axis value
+	 */
+	public float getCopyNumberMinY() {
+		return copyNumberMinY;
+	}
+
+
+	/**
+	 * Set minimum Y-axis value for copy number data.
+	 * @param copyNumberMinY Minimum Y-axis value
+	 */
+	public void setCopyNumberMinY(final float copyNumberMinY) {
+		this.copyNumberMinY = copyNumberMinY;
+	}
+
+
+	/**
+	 * Get maximum Y-axis value for expression data.
+	 * @return Maximum Y-axis value
+	 */
+	public float getExpressionMaxY() {
+		return expressionMaxY;
+	}
+
+
+	/**
+	 * Set maximum Y-axis value for expression data.
+	 * @param expressionMaxY Maximum Y-axis value
+	 */
+	public void setExpressionMaxY(final float expressionMaxY) {
+		this.expressionMaxY = expressionMaxY;
+	}
+
+
+	/**
+	 * Get minimum Y-axis value for expression data.
+	 * @return Minimum Y-axis value
+	 */
+	public float getExpressionMinY() {
+		return expressionMinY;
+	}
+
+
+	/**
+	 * Set minimum Y-axis value for expression data.
+	 * @param expressionMinY Minimum Y-axis value
+	 */
+	public void setExpressionMinY(final float expressionMinY) {
+		this.expressionMinY = expressionMinY;
+	}
+
 
 	/**
 	 * Draw horizontal grid lines?
@@ -221,40 +298,7 @@ extends BaseGenomicPlotParameters implements Serializable {
 	}
 
 
-	/**
-     * Get maximum Y-axis value specified by user.
-     * @return Maximum Y-axis value specified by user
-     */
-    public float getMaxY() {
-        return maxY;
-    }
 
-    
-    /**
-     * Set maximum Y-axis value specified by user.
-     * @param maxY Maximum Y-axis value specified by user
-     */
-    public void setMaxY(final float maxY) {
-        this.maxY = maxY;
-    }
-
-    
-    /**
-     * Get minimum Y-axis value specified by user.
-     * @return Minimum Y-axis value specified by user
-     */
-    public float getMinY() {
-        return minY;
-    }
-
-    
-    /**
-     * Set minimum Y-axis value specified by user.
-     * @param minY Minimum Y-axis value specified by user
-     */
-    public void setMinY(final float minY) {
-        this.minY = minY;
-    }
     
     // ==============================
     //        Constructors
@@ -276,8 +320,10 @@ extends BaseGenomicPlotParameters implements Serializable {
     	super(params);
     	this.height = params.height;
     	this.width = params.width;
-    	this.maxY = params.maxY;
-    	this.minY = params.minY;
+    	this.copyNumberMaxY = params.copyNumberMaxY;
+    	this.copyNumberMinY = params.copyNumberMinY;
+    	this.expressionMaxY = params.expressionMaxY;
+    	this.expressionMinY = params.expressionMinY;
     	this.drawHorizGridLines = params.drawHorizGridLines;
     	this.drawVertGridLines = params.drawVertGridLines;
     	this.drawErrorBars = params.drawErrorBars;
@@ -298,15 +344,30 @@ extends BaseGenomicPlotParameters implements Serializable {
     	super.deriveMissingAttributes(experiments);
     	Set<Short> chromosomes = GenomeInterval.getChromosomes(
 				this.getGenomeIntervals());
-		if (Float.isNaN(this.getMinY())
-				|| this.getMinY() == Constants.FLOAT_NAN) {
-			float min = Experiment.findMinValue(experiments, chromosomes);
-			this.setMinY(min);
+		if (Float.isNaN(this.getExpressionMinY())
+				|| this.getExpressionMinY() == Constants.FLOAT_NAN) {
+			float min = Experiment.findMinExpressionValue(
+					experiments, chromosomes);
+			this.setExpressionMinY(min);
 		}
-		if (Float.isNaN(this.getMaxY())
-				|| this.getMaxY() == Constants.FLOAT_NAN) {
-			float max = Experiment.findMaxValue(experiments, chromosomes);
-			this.setMaxY(max);
+		if (Float.isNaN(this.getExpressionMaxY())
+				|| this.getExpressionMaxY() == Constants.FLOAT_NAN) {
+			float max = Experiment.findMaxExpressionValue(
+					experiments, chromosomes);
+			this.setExpressionMaxY(max);
+		}
+		
+		if (Float.isNaN(this.getCopyNumberMinY())
+				|| this.getCopyNumberMinY() == Constants.FLOAT_NAN) {
+			float min = Experiment.findMinCopyNumberValue(
+					experiments, chromosomes);
+			this.setCopyNumberMinY(min);
+		}
+		if (Float.isNaN(this.getCopyNumberMaxY())
+				|| this.getCopyNumberMaxY() == Constants.FLOAT_NAN) {
+			float max = Experiment.findMaxCopyNumberValue(
+					experiments, chromosomes);
+			this.setCopyNumberMaxY(max);
 		}
     }
     

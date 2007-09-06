@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.6 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -200,7 +200,10 @@ public class PlotJob extends AbstractJob {
 			PlotParameters newParamsObj = this.plotParameters.deepCopy();
 			
 			// Plot and persist
-			Plot plot = cart.getPlot(this.plotId);
+			Plot plot = null;
+			if (this.plotId != null) {
+				plot = cart.getPlot(this.plotId);
+			}
 			jobServices.getPlotService().plotExperiments(plot,
 					this.experiments, newParamsObj,
 					cart, dataGetter);

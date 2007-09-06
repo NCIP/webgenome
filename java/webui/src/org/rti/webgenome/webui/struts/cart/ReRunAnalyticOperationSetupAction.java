@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.6 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +65,7 @@ import org.rti.webgenome.analysis.UserConfigurableProperty;
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -102,9 +104,10 @@ public class ReRunAnalyticOperationSetupAction extends BaseAction {
 		AnalysisDataSourceProperties dsProps =
 			(AnalysisDataSourceProperties) exp.getDataSourceProperties();
 		AnalyticOperation op = dsProps.getSourceAnalyticOperation();
+		Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
+		qTypes.add(exp.getQuantitationType());
 		Collection<UserConfigurableProperty> props =
-			op.getUserConfigurableProperties(
-					exp.getQuantitationType());
+			op.getUserConfigurableProperties(qTypes);
 		request.setAttribute("analyticOperation", op);
 		request.setAttribute("userConfigurableProperties", props);
 		

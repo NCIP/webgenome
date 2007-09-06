@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.5 $
+$Date: 2007-09-06 16:48:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -216,12 +216,20 @@ public class PlotParametersForm extends BaseForm {
 	//     ATTRIBUTES FOR ALL HEAT MAP PLOTS
 	//
 	
-	/** Ideogram plot minimum saturation. */
-	private String minSaturation = String.valueOf(
+	/** Heat map plot minimum saturation for expression data. */
+	private String expressionMinSaturation = String.valueOf(
 			HeatMapPlotParameters.DEF_MIN_SATURATION);
 	
-	/** Maximum saturation. */
-	private String maxSaturation = String.valueOf(
+	/** Heat map plot maximum saturation for expression data. */
+	private String expressionMaxSaturation = String.valueOf(
+			HeatMapPlotParameters.DEF_MAX_SATURATION);
+	
+	/** Heat map plot minimum saturation for copy number data. */
+	private String copyNumberMinSaturation = String.valueOf(
+			HeatMapPlotParameters.DEF_MIN_SATURATION);
+	
+	/** Heat map plot maximum saturation for copy number data. */
+	private String copyNumberMaxSaturation = String.valueOf(
 			HeatMapPlotParameters.DEF_MAX_SATURATION);
 	
 	/** Minimum data mask value for ideogram plot. */
@@ -267,11 +275,17 @@ public class PlotParametersForm extends BaseForm {
 	//     ATTRIBUTES FOR SCATTER PLOTS
 	//
 
-	/** Minimum Y-axis value. */
-	private String minY = "";
+	/** Minimum Y-axis value for expression data. */
+	private String expressionMinY = "";
 	
-	/** Maximum Y-axis value. */
-	private String maxY = "";
+	/** Maximum Y-axis value for expression data. */
+	private String expressionMaxY = "";
+	
+	/** Minimum Y-axis value for copy number data. */
+	private String copyNumberMinY = "";
+	
+	/** Maximum Y-axis value for copy number data. */
+	private String copyNumberMaxY = "";
 	
 	/** Draw horizontal grid lines in scatter plot? */
 	private String drawHorizGridLines = "on";
@@ -598,36 +612,69 @@ public class PlotParametersForm extends BaseForm {
 		this.name = name;
 	}
 
+
 	/**
-	 * Get maximum Y-axis value.
-	 * @return Maximum Y-axis value.
+	 * Get maximum Y-axis value for copy number data.
+	 * @return Maximum Y-axis value
 	 */
-	public final String getMaxY() {
-		return maxY;
+	public final String getCopyNumberMaxY() {
+		return copyNumberMaxY;
 	}
 
 	/**
-	 * Set maximum Y-axis value.
-	 * @param maxY Maximum Y-axis value.
+	 * Set maximum Y-axis value for copy number data.
+	 * @param copyNumberMaxY Maximum Y-axis value
 	 */
-	public final void setMaxY(final String maxY) {
-		this.maxY = maxY;
+	public final void setCopyNumberMaxY(final String copyNumberMaxY) {
+		this.copyNumberMaxY = copyNumberMaxY;
 	}
 
 	/**
-	 * Get minimum Y-axis value.
-	 * @return Minimum Y-axis value.
+	 * Get minimum Y-axis value for copy number data.
+	 * @return Minimum Y-axis value
 	 */
-	public final String getMinY() {
-		return minY;
+	public final String getCopyNumberMinY() {
+		return copyNumberMinY;
 	}
 
 	/**
-	 * Set minimum Y-axis value.
-	 * @param minY Minimum Y-axis value.
+	 * Set minimum Y-axis value for copy number data.
+	 * @param copyNumberMinY Minimum Y-axis value
 	 */
-	public final void setMinY(final String minY) {
-		this.minY = minY;
+	public final void setCopyNumberMinY(final String copyNumberMinY) {
+		this.copyNumberMinY = copyNumberMinY;
+	}
+
+	/**
+	 * Get maximum Y-axis value for expression data.
+	 * @return Maximum Y-axis value
+	 */
+	public final String getExpressionMaxY() {
+		return expressionMaxY;
+	}
+
+	/**
+	 * Set maximum Y-axis value for expression data.
+	 * @param expressionMaxY Maximum Y-axis value
+	 */
+	public final void setExpressionMaxY(final String expressionMaxY) {
+		this.expressionMaxY = expressionMaxY;
+	}
+
+	/**
+	 * Get minimum Y-axis value for expression data.
+	 * @return Minimum Y-axis value
+	 */
+	public final String getExpressionMinY() {
+		return expressionMinY;
+	}
+
+	/**
+	 * Set minimum Y-axis value for expression data.
+	 * @param expressionMinY Minimum Y-axis value
+	 */
+	public final void setExpressionMinY(final String expressionMinY) {
+		this.expressionMinY = expressionMinY;
 	}
 
 	/**
@@ -764,20 +811,41 @@ public class PlotParametersForm extends BaseForm {
 	}
 
 	/**
-	 * Get maximum saturation value for color coding plots.
+	 * Get maximum saturation value for expression data
+	 * for color coding plots.
 	 * @return Maximum saturation value.
 	 */
-	public final String getMaxSaturation() {
-		return maxSaturation;
+	public final String getExpressionMaxSaturation() {
+		return expressionMaxSaturation;
 	}
 
 	
 	/**
-	 * Set maximum saturation value for color coding plots.
+	 * Set maximum saturation value for expression data
+	 * for color coding plots.
 	 * @param maxSaturation Maximum saturation value.
 	 */
-	public final void setMaxSaturation(final String maxSaturation) {
-		this.maxSaturation = maxSaturation;
+	public final void setExpressionMaxSaturation(final String maxSaturation) {
+		this.expressionMaxSaturation = maxSaturation;
+	}
+	
+	/**
+	 * Get maximum saturation value for copy number data
+	 * for color coding plots.
+	 * @return Maximum saturation value.
+	 */
+	public final String getCopyNumberMaxSaturation() {
+		return copyNumberMaxSaturation;
+	}
+
+	
+	/**
+	 * Set maximum saturation value for copy number data
+	 * for color coding plots.
+	 * @param maxSaturation Maximum saturation value.
+	 */
+	public final void setCopyNumberMaxSaturation(final String maxSaturation) {
+		this.copyNumberMaxSaturation = maxSaturation;
 	}
 
 	/**
@@ -799,20 +867,42 @@ public class PlotParametersForm extends BaseForm {
 
 	
 	/**
-	 * Get minimum saturation value for color coding plots.
+	 * Get minimum saturation value for expression data
+	 * for color coding plots.
 	 * @return Minimum saturation value.
 	 */
-	public final String getMinSaturation() {
-		return minSaturation;
+	public final String getExpressionMinSaturation() {
+		return expressionMinSaturation;
 	}
 
 	
 	/**
-	 * Set minimum saturation value for color coding plots.
+	 * Set minimum saturation value for expression data
+	 * for color coding plots.
 	 * @param minSaturation Minimum saturation value.
 	 */
-	public final void setMinSaturation(final String minSaturation) {
-		this.minSaturation = minSaturation;
+	public final void setExpressionMinSaturation(final String minSaturation) {
+		this.expressionMinSaturation = minSaturation;
+	}
+	
+	
+	/**
+	 * Get minimum saturation value for copy number data
+	 * for color coding plots.
+	 * @return Minimum saturation value.
+	 */
+	public final String getCopyNumberMinSaturation() {
+		return copyNumberMinSaturation;
+	}
+
+	
+	/**
+	 * Set minimum saturation value for copy number data
+	 * for color coding plots.
+	 * @param minSaturation Minimum saturation value.
+	 */
+	public final void setCopyNumberMinSaturation(final String minSaturation) {
+		this.copyNumberMinSaturation = minSaturation;
 	}
 
 	
@@ -1008,30 +1098,85 @@ public class PlotParametersForm extends BaseForm {
 		// Attributes in parent class
 		this.validateGenomicPlotFields(errors);
 		
-		// minSaturation
-		if (!StringUtils.isEmpty(this.minSaturation)) {
-			if (!ValidationUtils.validNumber(this.minSaturation)) {
-				errors.add("minSaturation", new ActionError("invalid.field"));
+		// expressionMinSaturation and expressionMaxSaturation
+		boolean validSoFar = true;
+		if (!StringUtils.isEmpty(this.expressionMinSaturation)) {
+			if (!ValidationUtils.validNumber(this.expressionMinSaturation)) {
+				errors.add("expressionMinSaturation",
+						new ActionError("invalid.field"));
+				validSoFar = false;
+			}
+		}
+		if (!StringUtils.isEmpty(this.expressionMaxSaturation)) {
+			if (!ValidationUtils.validNumber(this.expressionMaxSaturation)) {
+				errors.add("expressionMaxSaturation",
+						new ActionError("invalid.field"));
+				validSoFar = false;
+			}
+		}
+		if (validSoFar
+				&& !StringUtils.isEmpty(this.expressionMinSaturation)
+				&& !StringUtils.isEmpty(this.expressionMaxSaturation)) {
+			double min = Double.parseDouble(this.expressionMinSaturation);
+			double max = Double.parseDouble(this.expressionMaxSaturation);
+			if (min > max) {
+				errors.add("expressionMinSaturation",
+						new ActionError("invalid.field"));
+				errors.add("expressionMaxSaturation",
+						new ActionError("invalid.field"));
 			}
 		}
 		
-		// maxSaturation
-		if (!StringUtils.isEmpty(this.maxSaturation)) {
-			if (!ValidationUtils.validNumber(this.maxSaturation)) {
-				errors.add("maxSaturation", new ActionError("invalid.field"));
+		// copyNumberMinSaturation and copyNumberMaxSaturation
+		validSoFar = true;
+		if (!StringUtils.isEmpty(this.copyNumberMinSaturation)) {
+			if (!ValidationUtils.validNumber(this.copyNumberMinSaturation)) {
+				errors.add("copyNumberMinSaturation",
+						new ActionError("invalid.field"));
+				validSoFar = false;
+			}
+		}
+		if (!StringUtils.isEmpty(this.copyNumberMaxSaturation)) {
+			if (!ValidationUtils.validNumber(this.copyNumberMaxSaturation)) {
+				errors.add("copyNumberMaxSaturation",
+						new ActionError("invalid.field"));
+				validSoFar = false;
+			}
+		}
+		if (validSoFar
+				&& !StringUtils.isEmpty(this.copyNumberMinSaturation)
+				&& !StringUtils.isEmpty(this.copyNumberMaxSaturation)) {
+			double min = Double.parseDouble(this.copyNumberMinSaturation);
+			double max = Double.parseDouble(this.copyNumberMaxSaturation);
+			if (min > max) {
+				errors.add("copyNumberMinSaturation",
+						new ActionError("invalid.field"));
+				errors.add("copyNumberMaxSaturation",
+						new ActionError("invalid.field"));
 			}
 		}
 		
-		// minMask
+		// minMask and maxMask
+		validSoFar = true;
 		if (!StringUtils.isEmpty(this.minMask)) {
 			if (!ValidationUtils.validNumber(this.minMask)) {
 				errors.add("minMask", new ActionError("invalid.field"));
+				validSoFar = false;
 			}
 		}
-		
-		// maxMask
 		if (!StringUtils.isEmpty(this.maxMask)) {
 			if (!ValidationUtils.validNumber(this.maxMask)) {
+				errors.add("maxMask", new ActionError("invalid.field"));
+				validSoFar = false;
+			}
+		}
+		if (validSoFar
+				&& !StringUtils.isEmpty(this.minMask)
+				&& !StringUtils.isEmpty(this.maxMask)) {
+			double min = Double.parseDouble(this.minMask);
+			double max = Double.parseDouble(this.maxMask);
+			if (min > max) {
+				errors.add("minMask", new ActionError("invalid.field"));
 				errors.add("maxMask", new ActionError("invalid.field"));
 			}
 		}
@@ -1107,28 +1252,55 @@ public class PlotParametersForm extends BaseForm {
 		// Attributes in parent class
 		this.validateGenomicPlotFields(errors);
 		
-		// minY and maxY
+		// expressionMinY and expressionMaxY
 		boolean validateRelationship = true;
-		if (this.minY != null && this.minY.length() > 0) {
-			if (!ValidationUtils.validNumber(this.minY)) {
-				errors.add("minY", new ActionError("invalid.field"));
+		if (this.expressionMinY != null && this.expressionMinY.length() > 0) {
+			if (!ValidationUtils.validNumber(this.expressionMinY)) {
+				errors.add("expressionMinY", new ActionError("invalid.field"));
 				validateRelationship = false;
 			}
 		} else {
 			validateRelationship = false;
 		}
-		if (this.maxY != null && this.maxY.length() > 0) {
-			if (!ValidationUtils.validNumber(this.maxY)) {
-				errors.add("maxY", new ActionError("invalid.field"));
+		if (this.expressionMaxY != null && this.expressionMaxY.length() > 0) {
+			if (!ValidationUtils.validNumber(this.expressionMaxY)) {
+				errors.add("expressionMaxY", new ActionError("invalid.field"));
 				validateRelationship = false;
 			}
 		} else {
 			validateRelationship = false;
 		}
 		if (validateRelationship) {
-			if (Double.parseDouble(this.minY) > Double.parseDouble(this.maxY)) {
-				errors.add("minY", new ActionError("invalid.field"));
-				errors.add("maxY", new ActionError("invalid.field"));
+			if (Double.parseDouble(this.expressionMinY)
+					> Double.parseDouble(this.expressionMaxY)) {
+				errors.add("expressionMinY", new ActionError("invalid.field"));
+				errors.add("expressionMaxY", new ActionError("invalid.field"));
+			}
+		}
+		
+		// copyNumberMinY and copyNumberMaxY
+		validateRelationship = true;
+		if (this.copyNumberMinY != null && this.copyNumberMinY.length() > 0) {
+			if (!ValidationUtils.validNumber(this.copyNumberMinY)) {
+				errors.add("copyNumberMinY", new ActionError("invalid.field"));
+				validateRelationship = false;
+			}
+		} else {
+			validateRelationship = false;
+		}
+		if (this.copyNumberMaxY != null && this.copyNumberMaxY.length() > 0) {
+			if (!ValidationUtils.validNumber(this.copyNumberMaxY)) {
+				errors.add("copyNumberMaxY", new ActionError("invalid.field"));
+				validateRelationship = false;
+			}
+		} else {
+			validateRelationship = false;
+		}
+		if (validateRelationship) {
+			if (Double.parseDouble(this.copyNumberMinY)
+					> Double.parseDouble(this.copyNumberMaxY)) {
+				errors.add("copyNumberMinY", new ActionError("invalid.field"));
+				errors.add("copyNumberMaxY", new ActionError("invalid.field"));
 			}
 		}
 		
@@ -1173,10 +1345,14 @@ public class PlotParametersForm extends BaseForm {
 		
 		// Attributes for all heat map plots
 		this.maxMask = "";
-		this.maxSaturation = String.valueOf(
-				HeatMapPlotParameters.DEF_MAX_SATURATION);
 		this.minMask = "";
-		this.minSaturation = String.valueOf(
+		this.expressionMaxSaturation = String.valueOf(
+				HeatMapPlotParameters.DEF_MAX_SATURATION);
+		this.expressionMinSaturation = String.valueOf(
+				HeatMapPlotParameters.DEF_MIN_SATURATION);
+		this.copyNumberMaxSaturation = String.valueOf(
+				HeatMapPlotParameters.DEF_MAX_SATURATION);
+		this.copyNumberMinSaturation = String.valueOf(
 				HeatMapPlotParameters.DEF_MIN_SATURATION);
 		
 		// Attributes for annotation plots
@@ -1194,8 +1370,10 @@ public class PlotParametersForm extends BaseForm {
 				IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 		
 		// Attributes for scatter plots
-		this.minY = "";
-		this.maxY = "";
+		this.copyNumberMaxY = "";
+		this.copyNumberMinY = "";
+		this.expressionMaxY = "";
+		this.expressionMinY = "";
 		this.width = DEF_WIDTH;
 		this.height = DEF_HEIGHT;
 		this.drawHorizGridLines = "on";
@@ -1298,9 +1476,13 @@ public class PlotParametersForm extends BaseForm {
 	private ScatterPlotParameters newScatterPlotParameters() {
 		ScatterPlotParameters params = new ScatterPlotParameters();
 		this.transferCommonGenomicPlotParameters(params);
-		params.setMinY(FormUtils.textBoxToFloat(this.minY,
+		params.setExpressionMinY(FormUtils.textBoxToFloat(this.expressionMinY,
 				Constants.FLOAT_NAN));
-		params.setMaxY(FormUtils.textBoxToFloat(this.maxY,
+		params.setExpressionMaxY(FormUtils.textBoxToFloat(this.expressionMaxY,
+				Constants.FLOAT_NAN));
+		params.setCopyNumberMinY(FormUtils.textBoxToFloat(this.copyNumberMinY,
+				Constants.FLOAT_NAN));
+		params.setCopyNumberMaxY(FormUtils.textBoxToFloat(this.copyNumberMaxY,
 				Constants.FLOAT_NAN));
 		params.setWidth(Integer.parseInt(this.width));
 		params.setHeight(Integer.parseInt(this.height));
@@ -1371,12 +1553,16 @@ public class PlotParametersForm extends BaseForm {
 		this.transferCommonGenomicPlotParameters(params);
 		params.setMaxMask(FormUtils.textBoxToFloat(
 				this.maxMask, Constants.SMALL_FLOAT));
-		params.setMaxSaturation(FormUtils.textBoxToFloat(
-				this.maxSaturation, Float.NaN));
+		params.setExpressionMaxSaturation(FormUtils.textBoxToFloat(
+				this.expressionMaxSaturation, Float.NaN));
+		params.setExpressionMinSaturation(FormUtils.textBoxToFloat(
+				this.expressionMinSaturation, Float.NaN));
+		params.setCopyNumberMaxSaturation(FormUtils.textBoxToFloat(
+				this.copyNumberMaxSaturation, Float.NaN));
+		params.setCopyNumberMinSaturation(FormUtils.textBoxToFloat(
+				this.copyNumberMinSaturation, Float.NaN));
 		params.setMinMask(FormUtils.textBoxToFloat(
 				this.minMask, Constants.BIG_FLOAT));
-		params.setMinSaturation(FormUtils.textBoxToFloat(
-				this.minSaturation, Float.NaN));
 	}
 	
 	
@@ -1469,11 +1655,15 @@ public class PlotParametersForm extends BaseForm {
 			final HeatMapPlotParameters params) {
 		this.bulkSetCommonGenomicPlotAttributes(params);
 		this.maxMask = FormUtils.floatToTextBox(params.getMaxMask());
-		this.maxSaturation = FormUtils.floatToTextBox(
-				params.getMaxSaturation());
+		this.expressionMaxSaturation = FormUtils.floatToTextBox(
+				params.getExpressionMaxSaturation());
+		this.expressionMinSaturation = FormUtils.floatToTextBox(
+				params.getExpressionMinSaturation());
+		this.copyNumberMaxSaturation = FormUtils.floatToTextBox(
+				params.getCopyNumberMaxSaturation());
+		this.copyNumberMinSaturation = FormUtils.floatToTextBox(
+				params.getCopyNumberMinSaturation());
 		this.minMask = FormUtils.floatToTextBox(params.getMinMask());
-		this.minSaturation = FormUtils.floatToTextBox(
-				params.getMinSaturation());
 	}
 	
 	
@@ -1531,8 +1721,14 @@ public class PlotParametersForm extends BaseForm {
 		this.bulkSetCommonGenomicPlotAttributes(plotParameters);
 		this.height = String.valueOf(plotParameters.getHeight());
 		this.width = String.valueOf(plotParameters.getWidth());
-		this.minY = FormUtils.floatToTextBox(plotParameters.getMinY()); 
-		this.maxY = FormUtils.floatToTextBox(plotParameters.getMaxY());
+		this.expressionMaxY = FormUtils.floatToTextBox(
+				plotParameters.getExpressionMaxY());
+		this.expressionMinY = FormUtils.floatToTextBox(
+				plotParameters.getExpressionMinY());
+		this.copyNumberMaxY = FormUtils.floatToTextBox(
+				plotParameters.getCopyNumberMaxY());
+		this.copyNumberMinY = FormUtils.floatToTextBox(
+				plotParameters.getCopyNumberMinY());
 		this.drawHorizGridLines = FormUtils.booleanToCheckBox(
 				plotParameters.isDrawHorizGridLines());
 		this.drawVertGridLines = FormUtils.booleanToCheckBox(

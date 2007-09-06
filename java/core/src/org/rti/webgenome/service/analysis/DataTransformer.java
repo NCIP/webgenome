@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.4 $
+$Date: 2007-09-06 16:48:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -199,8 +199,9 @@ public abstract class DataTransformer {
     	
     	// Set a few properties of new experiment
     	experiment.bulkSetShallow(newExp);
-    	props.setSourceAnalyticOperation(op,
-    			props.getInputExperiment().getQuantitationType());
+    	Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
+    	qTypes.add(props.getInputExperiment().getQuantitationType());
+    	props.setSourceAnalyticOperation(op, qTypes);
     	experiment.setName(expName);
     	for (BioAssay ba : experiment.getBioAssays()) {
     		ba.setName(bioAssayNames.get(ba.getParentBioAssayId()));
@@ -473,13 +474,12 @@ public abstract class DataTransformer {
         	}
         }
         if (operation instanceof MinimumCommonAlteredRegionOperation) {
-        	qt = Experiment.getQuantitationType(input);
         	((MinimumCommonAlteredRegionOperation) operation).
         		setQuantitationType(qt);
         }
         boolean inMemory = Experiment.dataInMemory(input);
         Experiment output = new Experiment(operation.getName());
-        output.setQuantitationType(Experiment.getQuantitationType(input));
+        output.setQuantitationType(qt);
         output.setTerminal(true);
         output.setOrganism(Experiment.getOrganism(input));
         MultiAnalysisDataSourceProperties props =
