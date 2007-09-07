@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.8 $
+$Date: 2007-09-07 22:21:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -413,9 +413,13 @@ public class SerialQueueJobManager implements JobManager {
 				}
 				
 				// Set start time and persist
-				LOGGER.info("Starting job with id '" + job.getId() + "'");
-				job.setStartDate(new Date());
-				jobDao.saveOrUpdate(job);
+				try {
+					LOGGER.info("Starting job with id '" + job.getId() + "'");
+					job.setStartDate(new Date());
+					jobDao.saveOrUpdate(job);
+				} catch (Exception e) {
+					LOGGER.error("Unable to save job state", e);
+				}
 				
 				// Execute job
 				try {
@@ -439,8 +443,12 @@ public class SerialQueueJobManager implements JobManager {
 				}
 				
 				// Set end time and persist
-				job.setEndDate(new Date());
-				jobDao.saveOrUpdate(job);
+				try {
+					job.setEndDate(new Date());
+					jobDao.saveOrUpdate(job);
+				} catch (Exception e) {
+					LOGGER.error("Unable to save job state", e);
+				}
 			}
 		}
 		

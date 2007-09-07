@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-09-07 22:21:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -86,12 +86,7 @@ public final class InMemoryDataTransformer
     
     
     /**
-     * Add given chromosome array data to given bioassay.
-     * This method handles the two cases where we are
-     * keeping all data in memory or are serializing
-     * data when not being used.
-     * @param bioAssay A bioassay
-     * @param chromosomeArrayData Chromosome array data
+     * {@inheritDoc}
      */
     protected void addChromosomeArrayData(final BioAssay bioAssay,
             final ChromosomeArrayData chromosomeArrayData) {
@@ -103,8 +98,8 @@ public final class InMemoryDataTransformer
         }
     }
     
-    
-    /**
+
+	/**
      * Get chromosome array data from given bioassay and chromosome.
      * This method handles the two cases where we are
      * keeping all data in memory or are serializing

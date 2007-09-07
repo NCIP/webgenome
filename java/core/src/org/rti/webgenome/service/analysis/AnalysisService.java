@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.5 $
+$Date: 2007-09-07 22:21:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,8 +63,10 @@ import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
 import org.rti.webgenome.analysis.SingleBioAssayStatelessOperation;
 import org.rti.webgenome.analysis.SingleExperimentStatelessOperation;
 import org.rti.webgenome.analysis.UserConfigurableProperty;
+import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
@@ -146,7 +148,7 @@ public class AnalysisService {
 			Experiment output =
 			dataTransformer.performMultiExperimentStatelessOperation(
 					experiments,
-					(MultiExperimentStatelessOperation) operation);
+					(MultiExperimentStatelessOperation) operation, null);
 			output.setId(this.experimentIdGenerator.nextId());
 			int count = 0;
 			for (BioAssay ba : output.getBioAssays()) {
@@ -208,12 +210,36 @@ public class AnalysisService {
 			final AnalyticOperation operation,
 			final DataTransformer dataTransformer)
 	throws AnalyticException {
-		QuantitationType qType = experiment.getQuantitationType();
-		Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
-		qTypes.add(qType);
-    	Collection<UserConfigurableProperty> props =
-    		operation.getUserConfigurableProperties(qTypes);
-		dataTransformer.reCompute(experiment, props);
+		if (operation instanceof MultiExperimentStatelessOperation) {
+			MultiAnalysisDataSourceProperties props =
+				(MultiAnalysisDataSourceProperties)
+				experiment.getDataSourceProperties();
+			Collection<Experiment> inputs = props.getInputExperiments();
+			dataTransformer.performMultiExperimentStatelessOperation(
+					inputs,
+					(MultiExperimentStatelessOperation) operation,
+					experiment);
+			int count = 0;
+			for (BioAssay ba : experiment.getBioAssays()) {
+				ba.setId(this.bioAssayIdGenerator.nextId());
+				ba.setColor(ALTERATION_COLORS.get(count++
+						% ALTERATION_COLORS.size()));
+			}
+		} else {
+			QuantitationType qType = experiment.getQuantitationType();
+			Collection<QuantitationType> qTypes =
+				new ArrayList<QuantitationType>();
+			qTypes.add(qType);
+	    	Collection<UserConfigurableProperty> props =
+	    		operation.getUserConfigurableProperties(qTypes);
+			dataTransformer.reCompute(experiment, props);
+		}
+		Collection<QuantitationType> qTypes =
+			new ArrayList<QuantitationType>();
+		qTypes.add(experiment.getQuantitationType());
+		((AnalysisDataSourceProperties)
+				experiment.getDataSourceProperties()).
+				setSourceAnalyticOperation(operation, qTypes);
 	}
 	
 	
@@ -236,17 +262,44 @@ public class AnalysisService {
 				throw new IllegalArgumentException(
 						"Experiments must be derived");
 			}
-			SingleAnalysisDataSourceProperties dsProps =
-				(SingleAnalysisDataSourceProperties)
-				exp.getDataSourceProperties();
-			AnalyticOperation op = dsProps.getSourceAnalyticOperation();
-			QuantitationType qType = exp.getQuantitationType();
+			AnalyticOperation operation = (
+					(AnalysisDataSourceProperties)
+					exp.getDataSourceProperties()).
+					getSourceAnalyticOperation();
+			if (operation instanceof MultiExperimentStatelessOperation) {
+				MultiAnalysisDataSourceProperties props =
+					(MultiAnalysisDataSourceProperties)
+					exp.getDataSourceProperties();
+				Collection<Experiment> inputs = props.getInputExperiments();
+				dataTransformer.performMultiExperimentStatelessOperation(
+						inputs,
+						(MultiExperimentStatelessOperation) operation,
+						exp);
+				int count = 0;
+				for (BioAssay ba : exp.getBioAssays()) {
+					ba.setId(this.bioAssayIdGenerator.nextId());
+					ba.setColor(ALTERATION_COLORS.get(count++
+							% ALTERATION_COLORS.size()));
+				}
+			} else {
+				SingleAnalysisDataSourceProperties dsProps =
+					(SingleAnalysisDataSourceProperties)
+					exp.getDataSourceProperties();
+				AnalyticOperation op = dsProps.getSourceAnalyticOperation();
+				QuantitationType qType = exp.getQuantitationType();
+				Collection<QuantitationType> qTypes =
+					new ArrayList<QuantitationType>();
+				qTypes.add(qType);
+				Collection<UserConfigurableProperty> props =
+					op.getUserConfigurableProperties(qTypes);
+				dataTransformer.reCompute(exp, props);
+			}
 			Collection<QuantitationType> qTypes =
 				new ArrayList<QuantitationType>();
-			qTypes.add(qType);
-			Collection<UserConfigurableProperty> props =
-				op.getUserConfigurableProperties(qTypes);
-			dataTransformer.reCompute(exp, props);
+			qTypes.add(exp.getQuantitationType());
+			((AnalysisDataSourceProperties)
+					exp.getDataSourceProperties()).
+					setSourceAnalyticOperation(operation, qTypes);
 		}
 	}
 }

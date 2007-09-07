@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.8 $
+$Date: 2007-09-07 22:21:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -462,6 +462,23 @@ public class Experiment implements Serializable {
     			}
     		}
     	}
+    }
+    
+    
+    /**
+     * Get bioassay with given ID.
+     * @param id Bioassay ID
+     * @return Bioassay with given ID
+     */
+    public BioAssay getBioAssay(final Long id) {
+    	BioAssay bioAssay = null;
+    	for (BioAssay candidateBioAssay : this.bioAssays) {
+    		if (id.equals(candidateBioAssay.getId())) {
+    			bioAssay = candidateBioAssay;
+    			break;
+    		}
+    	}
+    	return bioAssay;
     }
     
     

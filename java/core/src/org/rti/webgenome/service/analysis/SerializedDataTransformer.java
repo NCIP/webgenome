@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.3 $
+$Date: 2007-09-07 22:21:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -145,26 +145,32 @@ public final class SerializedDataTransformer
     
     
     /**
-     * Add given chromosome array data to given bioassay.
-     * This method handles the two cases where we are
-     * keeping all data in memory or are serializing
-     * data when not being used.
-     * @param bioAssay A bioassay
-     * @param chromosomeArrayData Chromosome array data
+     * {@inheritDoc}
      */
     protected void addChromosomeArrayData(final BioAssay bioAssay,
             final ChromosomeArrayData chromosomeArrayData) {
     	if (bioAssay instanceof DataSerializedBioAssay) {
+    		DataSerializedBioAssay dbsa =
+    			(DataSerializedBioAssay) bioAssay;
+    		
+    		// If necessary, delete old value
+    		String fileName = dbsa.getFileName(
+    				chromosomeArrayData.getChromosome());
+    		if (fileName != null) {
+    			this.dataFileManager.deleteDataFile(fileName);
+    		}
+    		
+    		// Add new value
             this.dataFileManager.saveChromosomeArrayData(
-                    (DataSerializedBioAssay) bioAssay, chromosomeArrayData);
+                    dbsa, chromosomeArrayData);
         } else {
         	throw new IllegalArgumentException(
 			"Bioassay must be of type DataSerializedBioAssay");
         }
     }
-    
-    
-    /**
+
+
+	/**
      * Get chromosome array data from given bioassay and chromosome.
      * This method handles the two cases where we are
      * keeping all data in memory or are serializing

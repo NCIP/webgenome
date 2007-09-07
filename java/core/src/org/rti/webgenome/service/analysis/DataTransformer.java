@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.5 $
+$Date: 2007-09-07 22:21:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,18 +50,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.analysis;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.analysis.AnalyticException;
 import org.rti.webgenome.analysis.AnalyticOperation;
-import org.rti.webgenome.analysis.AnalyticPipeline;
 import org.rti.webgenome.analysis.BadUserConfigurablePropertyException;
 import org.rti.webgenome.analysis.IntraBioAssayStatefulOperation;
 import org.rti.webgenome.analysis.IntraExperimentStatefulOperation;
@@ -77,7 +73,6 @@ import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.DataContainingBioAssay;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
-import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
 import org.rti.webgenome.domain.QuantitationType;
@@ -125,7 +120,7 @@ public abstract class DataTransformer {
         	new SingleAnalysisDataSourceProperties(
         		input, operation);
         output.setDataSourceProperties(props);
-        this.performAnalyticOperation(input, output, operation);
+        this.performAnalyticOperation(input, output, operation, false);
         LOGGER.info("Completed operation");
         return output;
     }
@@ -148,66 +143,20 @@ public abstract class DataTransformer {
     public void reCompute(final Experiment experiment,
     		final Collection<UserConfigurableProperty>
     		analyticOperationProps)
-    throws AnalyticException	 {
-    	
-    	// Retain various attributes of experiment and
-    	// bioassays so they can be retrieved and assigned
-    	// to newly-created objects
-    	String expName = experiment.getName();
-    	Map<Long, String> bioAssayNames =
-    		new HashMap<Long, String>();
-    	Map<Long, Color> bioAssayColors =
-    		new HashMap<Long, Color>();
-    	Map<Long, Long> bioAssayIds =
-    		new HashMap<Long, Long>();
-    	for (BioAssay ba : experiment.getBioAssays()) {
-    		bioAssayNames.put(ba.getParentBioAssayId(), ba.getName());
-    		bioAssayColors.put(ba.getParentBioAssayId(), ba.getColor());
-    		bioAssayIds.put(ba.getParentBioAssayId(), ba.getId());
-    	}
-    	
-    	// Make sure experiment derived from analytic operation
-    	// with a single input experiment
-    	DataSourceProperties dataSourceProperties =
-    		experiment.getDataSourceProperties();
-    	if (!experiment.isDerived()
-    			|| !(dataSourceProperties
-    					instanceof SingleAnalysisDataSourceProperties)) {
-    		throw new IllegalArgumentException(
-    				"Cannot recompute experiment if it "
-    				+ "was not derived from an analytic "
-    				+ "operation with a single input experiment");
-    	}
-    	
-    	// Get operation and set user parameters
+    throws AnalyticException {
     	SingleAnalysisDataSourceProperties props =
     		(SingleAnalysisDataSourceProperties)
     		experiment.getDataSourceProperties();
+    	Experiment input = props.getInputExperiment();
     	AnalyticOperation op = props.getSourceAnalyticOperation();
-    	for (UserConfigurableProperty prop : analyticOperationProps) {
-    		try {
+    	try {
+			for (UserConfigurableProperty prop : analyticOperationProps) {
 				op.setProperty(prop.getName(), prop.getCurrentValue());
-			} catch (BadUserConfigurablePropertyException e) {
-				throw new AnalyticException(
-						"Error setting analytic operation parameters", e);
 			}
-    	}
-    	
-    	// Perform operation
-    	Experiment newExp = this.perform(
-    			props.getInputExperiment(), op);
-    	
-    	// Set a few properties of new experiment
-    	experiment.bulkSetShallow(newExp);
-    	Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
-    	qTypes.add(props.getInputExperiment().getQuantitationType());
-    	props.setSourceAnalyticOperation(op, qTypes);
-    	experiment.setName(expName);
-    	for (BioAssay ba : experiment.getBioAssays()) {
-    		ba.setName(bioAssayNames.get(ba.getParentBioAssayId()));
-    		ba.setColor(bioAssayColors.get(ba.getParentBioAssayId()));
-    		ba.setId(bioAssayIds.get(ba.getParentBioAssayId()));
-    	}
+		} catch (BadUserConfigurablePropertyException e) {
+			throw new AnalyticException("Bad parameter value", e);
+		}
+    	this.performAnalyticOperation(input, experiment, op, true);
     }
     
     
@@ -217,21 +166,29 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output experiment
      * @param operation Opeation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performAnalyticOperation(
     		final Experiment input, final Experiment output,
-            final AnalyticOperation operation)
+            final AnalyticOperation operation,
+            final boolean reperformance)
     throws AnalyticException {
-        if (operation instanceof AnalyticPipeline) {
-            this.performAnalyticPipeline(
-            		input, output, (AnalyticPipeline) operation);
-        } else if (operation instanceof StatelessOperation) {
+        // Code commented out because pipeline functionality has not
+        // been fully implemented
+    	
+//        if (operation instanceof AnalyticPipeline) {
+//            this.performAnalyticPipeline(
+//            		input, output, (AnalyticPipeline) operation);
+//        } else
+        	
+        if (operation instanceof StatelessOperation) {
         	this.performStatelessOperation(input, output,
-        			(StatelessOperation) operation);
+        			(StatelessOperation) operation, reperformance);
         } else if (operation instanceof StatefulOperation) {
         	this.performStatefulOperation(input, output,
-        			(StatefulOperation) operation);
+        			(StatefulOperation) operation, reperformance);
         }
     }
     
@@ -242,18 +199,23 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output experiment
      * @param operation Opeation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performStatelessOperation(
     		final Experiment input, final Experiment output,
-            final StatelessOperation operation)
+            final StatelessOperation operation,
+            final boolean reperformance)
     throws AnalyticException {
     	if (operation instanceof SingleBioAssayStatelessOperation) {
             this.performSingleBioAssayStatelessOperation(input, output,
-                    (SingleBioAssayStatelessOperation) operation);
+                    (SingleBioAssayStatelessOperation) operation,
+                    reperformance);
         } else if (operation instanceof SingleExperimentStatelessOperation) {
             this.performSingleExperimentStatelessOperation(input, output,
-                    (SingleExperimentStatelessOperation) operation);
+                    (SingleExperimentStatelessOperation) operation,
+                    reperformance);
         } else {
         	throw new WebGenomeSystemException(
         			"Unknown stateless operation '"
@@ -268,20 +230,25 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output experiment
      * @param operation Opeation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performStatefulOperation(
     		final Experiment input, final Experiment output,
-            final StatefulOperation operation)
+            final StatefulOperation operation,
+            final boolean reperformance)
     throws AnalyticException {
     	if (operation instanceof IntraBioAssayStatefulOperation) {
     		this.performIntraBioAssayStatefulOperation(input,
     				output,
-    				(IntraBioAssayStatefulOperation) operation);
+    				(IntraBioAssayStatefulOperation) operation,
+    				reperformance);
     	} else if (operation instanceof IntraExperimentStatefulOperation) {
     		this.performIntraExperimentStatefulOperation(input,
     				output,
-    				(IntraExperimentStatefulOperation) operation);
+    				(IntraExperimentStatefulOperation) operation,
+    				reperformance);
     	} else {
     		throw new WebGenomeSystemException(
         			"Unknown stateful operation '"
@@ -296,28 +263,58 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output experiment
      * @param operation Opeation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performIntraBioAssayStatefulOperation(
     		final Experiment input, final Experiment output,
-            final IntraBioAssayStatefulOperation operation)
+            final IntraBioAssayStatefulOperation operation,
+            final boolean reperformance)
     throws AnalyticException {
-        for (BioAssay ba : input.getBioAssays()) {
+    	
+    	// Determine which bioassays to iterate over
+    	Collection<BioAssay> bioAssays = null;
+    	if (reperformance) {
+    		bioAssays = output.getBioAssays();
+    	} else {
+    		bioAssays = input.getBioAssays();
+    	}
+    	
+    	// Iterate over bioassays
+        for (BioAssay bioAssay : bioAssays) {
+        	
+        	// Reset operation state
             operation.resetState();
+            
+            // Determine input and output bioassays
+            BioAssay inputBioAssay = null;
+            BioAssay outputBioAssay = null;
+            if (reperformance) {
+            	inputBioAssay = input.getBioAssay(
+            			bioAssay.getParentBioAssayId());
+            	outputBioAssay = bioAssay;
+            } else {
+            	inputBioAssay = bioAssay;
+            	outputBioAssay = this.clone(inputBioAssay);
+                outputBioAssay.setParentBioAssayId(inputBioAssay.getId());
+                output.add(outputBioAssay);
+            }
+            
+            // Initialize operation state
             ChromosomeArrayDataIterator it =
-            	this.getChromosomeArrayDataIterator(ba);
+            	this.getChromosomeArrayDataIterator(inputBioAssay);
             while (it.hasNext()) {
             	ChromosomeArrayData cad = it.next();
             	operation.adjustState(cad);
             }
-            BioAssay newBa = this.clone(ba);
-            newBa.setParentBioAssayId(ba.getId());
-            output.add(newBa);
-            it = this.getChromosomeArrayDataIterator(ba);
+            
+            // Perform operation
+            it = this.getChromosomeArrayDataIterator(inputBioAssay);
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
-                this.addChromosomeArrayData(newBa, outputCad);
+                this.addChromosomeArrayData(outputBioAssay, outputCad);
             }
         }
     }
@@ -329,13 +326,20 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output experiment
      * @param operation Opeation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performIntraExperimentStatefulOperation(
     		final Experiment input, final Experiment output,
-            final IntraExperimentStatefulOperation operation)
+            final IntraExperimentStatefulOperation operation,
+            final boolean reperformance)
     throws AnalyticException {
+    	
+    	// Reset operation state
         operation.resetState();
+        
+        // Initialize operation state
         for (BioAssay ba : input.getBioAssays()) {
         	ChromosomeArrayDataIterator it =
             	this.getChromosomeArrayDataIterator(ba);
@@ -344,16 +348,39 @@ public abstract class DataTransformer {
             	operation.adjustState(cad);
             }
         }
-        for (BioAssay ba : input.getBioAssays()) {
-            BioAssay newBa = this.clone(ba);
-            newBa.setParentBioAssayId(ba.getId());
-            output.add(newBa);
+        
+        // Get bioassays to iterate over
+        Collection<BioAssay> bioAssays = null;
+        if (reperformance) {
+        	bioAssays = output.getBioAssays();
+        } else {
+        	bioAssays = input.getBioAssays();
+        }
+        
+        // Iterate over bioassays
+        for (BioAssay bioAssay : bioAssays) {
+        	
+        	// Get input and output bioassays
+        	BioAssay inputBioAssay = null;
+        	BioAssay outputBioAssay = null;
+        	if (reperformance) {
+        		outputBioAssay = bioAssay;
+        		inputBioAssay = input.getBioAssay(
+        				outputBioAssay.getParentBioAssayId());
+        	} else {
+        		inputBioAssay = bioAssay;
+        		outputBioAssay = this.clone(inputBioAssay);
+                outputBioAssay.setParentBioAssayId(inputBioAssay.getId());
+                output.add(outputBioAssay);
+        	}
+            
+        	// Perform operation
             ChromosomeArrayDataIterator it =
-            	this.getChromosomeArrayDataIterator(ba);
+            	this.getChromosomeArrayDataIterator(inputBioAssay);
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
-                this.addChromosomeArrayData(newBa, outputCad);
+                this.addChromosomeArrayData(outputBioAssay, outputCad);
             }
         }
     }
@@ -366,44 +393,48 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output data
      * @param operation Operation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performSingleBioAssayStatelessOperation(
     		final Experiment input, final Experiment output,
-            final SingleBioAssayStatelessOperation operation)
+            final SingleBioAssayStatelessOperation operation,
+            final boolean reperformance)
         throws AnalyticException {
-        if (operation instanceof IntraExperimentStatefulOperation) {
-            ((IntraExperimentStatefulOperation) operation).resetState();
-            for (BioAssay ba : input.getBioAssays()) {
-            	ChromosomeArrayDataIterator it =
-                	this.getChromosomeArrayDataIterator(ba);
-                while (it.hasNext()) {
-                	ChromosomeArrayData cad = it.next();
-                	((IntraExperimentStatefulOperation)
-                			operation).adjustState(cad);
-                }
-            }
-        }
-        for (BioAssay ba : input.getBioAssays()) {
-            if (operation instanceof IntraBioAssayStatefulOperation) {
-                ((IntraBioAssayStatefulOperation) operation).resetState();
-                ChromosomeArrayDataIterator it =
-                	this.getChromosomeArrayDataIterator(ba);
-                while (it.hasNext()) {
-                	ChromosomeArrayData cad = it.next();
-                	((IntraBioAssayStatefulOperation)
-                			operation).adjustState(cad);
-                }
-            }
-            BioAssay newBa = this.clone(ba);
-            newBa.setParentBioAssayId(ba.getId());
-            output.add(newBa);
+    	
+    	// Get bioassays to iterate over
+    	Collection<BioAssay> bioAssays = null;
+    	if (reperformance) {
+    		bioAssays = output.getBioAssays();
+    	} else {
+    		bioAssays = input.getBioAssays();
+    	}
+    	
+    	// Iterate over bioassays
+        for (BioAssay bioAssay : bioAssays) {
+        	
+        	// Get input and output bioassays
+        	BioAssay inputBioAssay = null;
+        	BioAssay outputBioAssay = null;
+        	if (reperformance) {
+        		outputBioAssay = bioAssay;
+        		inputBioAssay = input.getBioAssay(
+        				outputBioAssay.getParentBioAssayId());
+        	} else {
+        		inputBioAssay = bioAssay;
+        		outputBioAssay = this.clone(inputBioAssay);
+                outputBioAssay.setParentBioAssayId(inputBioAssay.getId());
+                output.add(outputBioAssay);
+        	}
+        	
+            // Perform operation
             ChromosomeArrayDataIterator it =
-            	this.getChromosomeArrayDataIterator(ba);
+            	this.getChromosomeArrayDataIterator(inputBioAssay);
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
-                this.addChromosomeArrayData(newBa, outputCad);
+                this.addChromosomeArrayData(outputBioAssay, outputCad);
             }
         }
     }
@@ -417,19 +448,35 @@ public abstract class DataTransformer {
      * @param input Input data
      * @param output Output data
      * @param operation Operation to perform
+     * @param reperformance Is this a reperformance of the
+     * same operation with different user specified parameters?
      * @throws AnalyticException if a computation error occurs
      */
     private void performSingleExperimentStatelessOperation(
     		final Experiment input,
     		final Experiment output,
-            final SingleExperimentStatelessOperation operation)
+            final SingleExperimentStatelessOperation operation,
+            final boolean reperformance)
         throws AnalyticException {
-        if (input.getBioAssays().size() < 1) {
+    	
+    	// Check args
+        if ((!reperformance && input.getBioAssays().size() < 1)
+        		|| (reperformance && output.getBioAssays().size() < 1)) {
             throw new IllegalArgumentException(
                     "Cannot perform operation on empty data set");
         }
-        BioAssay bioAssay = this.clone(input.getBioAssays().iterator().next());
-        output.add(bioAssay);
+        
+        // Get output bioassay
+        BioAssay outputBioAssay = null;
+        if (reperformance) {
+        	outputBioAssay = output.getBioAssays().iterator().next();
+        } else {
+        	outputBioAssay =
+        		this.clone(input.getBioAssays().iterator().next());
+        	output.add(outputBioAssay);
+        }
+        
+        // Perform operation
         for (Short chromosome : input.getChromosomes()) {
             List<ChromosomeArrayData> cad =
                 new ArrayList<ChromosomeArrayData>();
@@ -437,7 +484,7 @@ public abstract class DataTransformer {
                 cad.add(this.getChromosomeArrayData(ba, chromosome));
             }
             ChromosomeArrayData newCad = operation.perform(cad);
-            this.addChromosomeArrayData(bioAssay, newCad);
+            this.addChromosomeArrayData(outputBioAssay, newCad);
         }
     }
     
@@ -449,13 +496,19 @@ public abstract class DataTransformer {
      * and performs operation on these pools.
      * @param input Input data
      * @param operation Operation to perform
+     * @param originalOutput If we are re-performing the operation
+     * with new user supplied parameters, this is the previously
+     * produced experiment
      * @return Experiment
      * @throws AnalyticException if a computation error occurs
      */
     public final Experiment performMultiExperimentStatelessOperation(
     		final Collection<Experiment> input,
-            final MultiExperimentStatelessOperation operation)
+            final MultiExperimentStatelessOperation operation,
+            final Experiment originalOutput)
         throws AnalyticException {
+    	
+    	// Check args
         if (input.size() < 1) {
             throw new IllegalArgumentException(
                     "Cannot perform operation on empty data set");
@@ -473,20 +526,32 @@ public abstract class DataTransformer {
         		}
         	}
         }
+        
+        // Initialization
         if (operation instanceof MinimumCommonAlteredRegionOperation) {
         	((MinimumCommonAlteredRegionOperation) operation).
         		setQuantitationType(qt);
         }
-        boolean inMemory = Experiment.dataInMemory(input);
-        Experiment output = new Experiment(operation.getName());
-        output.setQuantitationType(qt);
-        output.setTerminal(true);
-        output.setOrganism(Experiment.getOrganism(input));
         MultiAnalysisDataSourceProperties props =
         	new MultiAnalysisDataSourceProperties(
         			new HashSet<Experiment>(input), operation);
-        output.setDataSourceProperties(props);
         List<BioAssay> bioAssays = new ArrayList<BioAssay>();
+        
+        boolean inMemory = Experiment.dataInMemory(input);
+        
+        // Get output experiment
+        Experiment output = null;
+        if (originalOutput != null) {
+        	output = originalOutput;
+        	output.setBioAssays(new HashSet<BioAssay>());
+        } else {
+        	output = new Experiment(operation.getName());
+	        output.setQuantitationType(qt);
+	        output.setTerminal(true);
+	        output.setOrganism(Experiment.getOrganism(input));
+        }
+        output.setDataSourceProperties(props);
+        
         for (Short chromosome : Experiment.chromosomes(input)) {
             List<ChromosomeArrayData> inCads =
             	new ArrayList<ChromosomeArrayData>();
@@ -517,45 +582,48 @@ public abstract class DataTransformer {
     }
     
     
-    /**
-     * Perform each operation in given pipeline.
-     * @param input Data input into pipeline
-     * @param output Data output into pipeline
-     * @param pipeline Analytic pipeline
-     * @throws AnalyticException if a computation error occurs
-     */
-    private void performAnalyticPipeline(
-    		final Experiment input, final Experiment output,
-            final AnalyticPipeline pipeline)
-    throws AnalyticException {
-        if (pipeline.getOperations().size() < 1) {
-            throw new IllegalArgumentException(
-                    "Pipeline must have at least one operation");
-        }
-        
-        // Perform operations
-        Experiment intermediateIn = input;
-        Experiment intermediateOut = null;
-        List<AnalyticOperation> ops = pipeline.getOperations();
-        for (int i = 0; i < ops.size(); i++) {
-            AnalyticOperation op = ops.get(i);
-            if (i == ops.size() - 1) {
-                this.performAnalyticOperation(intermediateIn, output, op);
-            } else {
-                intermediateOut = this.perform(intermediateIn, op);
-            }
-            if (intermediateIn != input) {
-                this.finalize(intermediateIn);
-            }
-            intermediateIn = intermediateOut;
-        }
-        
-        // Rename bioassays
-        for (BioAssay ba : output.getBioAssays()) {
-            String newName = ba.getName() + " " + pipeline.getName();
-            ba.setName(newName);
-        }
-    }
+    // Code commented out because pipeline functionality has not
+    // been fully implemented
+    
+//    /**
+//     * Perform each operation in given pipeline.
+//     * @param input Data input into pipeline
+//     * @param output Data output into pipeline
+//     * @param pipeline Analytic pipeline
+//     * @throws AnalyticException if a computation error occurs
+//     */
+//    private void performAnalyticPipeline(
+//    		final Experiment input, final Experiment output,
+//            final AnalyticPipeline pipeline)
+//    throws AnalyticException {
+//        if (pipeline.getOperations().size() < 1) {
+//            throw new IllegalArgumentException(
+//                    "Pipeline must have at least one operation");
+//        }
+//        
+//        // Perform operations
+//        Experiment intermediateIn = input;
+//        Experiment intermediateOut = null;
+//        List<AnalyticOperation> ops = pipeline.getOperations();
+//        for (int i = 0; i < ops.size(); i++) {
+//            AnalyticOperation op = ops.get(i);
+//            if (i == ops.size() - 1) {
+//                this.performAnalyticOperation(intermediateIn, output, op);
+//            } else {
+//                intermediateOut = this.perform(intermediateIn, op);
+//            }
+//            if (intermediateIn != input) {
+//                this.finalize(intermediateIn);
+//            }
+//            intermediateIn = intermediateOut;
+//        }
+//        
+//        // Rename bioassays
+//        for (BioAssay ba : output.getBioAssays()) {
+//            String newName = ba.getName() + " " + pipeline.getName();
+//            ba.setName(newName);
+//        }
+//    }
     
     
     // ======================================
@@ -574,14 +642,15 @@ public abstract class DataTransformer {
     
     /**
      * Add given chromosome array data to given bioassay.
+     * If data already exists for the chromosome, the original
+     * value will be replaced.
      * @param bioAssay A bioassay
      * @param chromosomeArrayData Chromosome array data
      */
     protected abstract void addChromosomeArrayData(
     		BioAssay bioAssay,
             ChromosomeArrayData chromosomeArrayData);
-    
-    
+        
     /**
      * Get chromosome array data from given bioassay and chromosome.
      * @param bioAssay Bioassay

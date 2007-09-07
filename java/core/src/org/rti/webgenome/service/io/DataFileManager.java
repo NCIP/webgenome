@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.4 $
+$Date: 2007-09-07 22:21:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -353,6 +353,14 @@ public final class DataFileManager {
                 this.serializer.decommissionObject(fname);
             }
         }
+    }
+    
+    /**
+     * Delete given data file.
+     * @param fileName Name of file, not absolute path
+     */
+    public void deleteDataFile(final String fileName) {
+    	this.serializer.decommissionObject(fileName);
     }
     
     
