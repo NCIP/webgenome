@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-13 19:35:02 $
+$Revision: 1.3 $
+$Date: 2007-09-07 15:51:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,20 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.dao.hibernate;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.util.DbUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -64,8 +73,21 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public final class HibernateShoppingCartDao extends HibernateDaoSupport
     implements ShoppingCartDao {
-    
+	
+	/** Data source for JDBC queries. */
+	private DataSource dataSource = null;
+	
+	
     /**
+     * Set data source for JDBC queries.
+     * @param dataSource Data source
+     */
+    public void setDataSource(final DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+
+	/**
      * Save to persistent storage.
      * @param shoppingCart A shopping cart
      */
@@ -128,9 +150,39 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * cart.
      */
     public Collection<String> getAllImageFileNames() {
-    	
-    	// TODO: Implement this
-    	
-    	return null;
+    	Collection<String> fileNames = new ArrayList<String>();
+    	PreparedStatement stmt = null;
+    	ResultSet rset = null;
+    	String sql = "SELECT def_img_file_name FROM plot";
+    	try {
+			Connection con = this.dataSource.getConnection();
+			stmt = con.prepareStatement(sql);
+			rset = stmt.executeQuery();
+			while (rset.next()) {
+				fileNames.add(rset.getString(1));
+			}
+		} catch (SQLException e) {
+			throw new WebGenomeSystemException(
+					"Error getting image file names", e);
+		} finally {
+			DbUtils.close(rset);
+			DbUtils.close(stmt);
+		}
+    	sql = "SELECT file_name FROM img_file_map";
+    	try {
+			Connection con = this.dataSource.getConnection();
+			stmt = con.prepareStatement(sql);
+			rset = stmt.executeQuery();
+			while (rset.next()) {
+				fileNames.add(rset.getString(1));
+			}
+		} catch (SQLException e) {
+			throw new WebGenomeSystemException(
+					"Error getting image file names", e);
+		} finally {
+			DbUtils.close(rset);
+			DbUtils.close(stmt);
+		}
+    	return fileNames;
     }
 }
