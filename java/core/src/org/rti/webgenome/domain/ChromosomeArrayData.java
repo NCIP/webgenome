@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -162,6 +162,12 @@ public class ChromosomeArrayData implements Serializable {
 				if (f.getQuantitation() > this.maxValue) {
 					this.maxValue = f.getQuantitation();
 				}
+			}
+			if (this.minValue == Float.MAX_VALUE) {
+				this.minValue = (float) 0.0;
+			}
+			if (this.maxValue == Float.MIN_VALUE) {
+				this.maxValue = (float) 0.0;
 			}
 			float headroom = HEAD_ROOM_MULTIPLE
 					* (this.maxValue - this.minValue);
@@ -472,6 +478,18 @@ public class ChromosomeArrayData implements Serializable {
     		}
     	}
     	return it;
+    }
+    
+    /**
+     * Return number of {@code ArrayDatum} objects.
+     * @return Number of {@code ArrayDatum} objects.
+     */
+    public int numDatum() {
+    	int num = 0;
+    	if (this.arrayData != null) {
+    		num = this.arrayData.size();
+    	}
+    	return num;
     }
     
     

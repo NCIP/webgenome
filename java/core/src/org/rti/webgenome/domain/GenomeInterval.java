@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.6 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,6 +61,7 @@ import java.util.StringTokenizer;
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.core.WebGenomeApplicationException;
 import org.rti.webgenome.units.BpUnits;
+import org.rti.webgenome.util.SystemUtils;
 
 
 /**
@@ -67,7 +69,12 @@ import org.rti.webgenome.units.BpUnits;
  * @author dhall
  *
  */
-public class GenomeInterval implements Comparable<GenomeInterval> {
+public class GenomeInterval
+implements Comparable<GenomeInterval>, Serializable {
+	
+	/** Serialized version ID. */
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	// ===========================
 	//      Constants

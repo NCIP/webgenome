@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-07 22:21:24 $
+$Revision: 1.6 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -551,7 +551,6 @@ public abstract class DataTransformer {
 	        output.setOrganism(Experiment.getOrganism(input));
         }
         output.setDataSourceProperties(props);
-        
         for (Short chromosome : Experiment.chromosomes(input)) {
             List<ChromosomeArrayData> inCads =
             	new ArrayList<ChromosomeArrayData>();

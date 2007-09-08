@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-06 14:41:41 $
+$Revision: 1.3 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -285,10 +285,17 @@ public class DataSerializedBioAssay extends BioAssay {
         this.chromosomeArrayDataFileIndex.put(chrom, fileName);
         this.chromosomeSizes.put(chrom,
         		chromosomeArrayData.inferredChromosomeSize());
-        this.minValues.put(chrom, chromosomeArrayData.getMinValue());
-        this.maxValues.put(chrom, chromosomeArrayData.getMaxValue());
-        this.numDatum.put(chrom,
-        		chromosomeArrayData.getArrayData().size());
+        float min = chromosomeArrayData.getMinValue();
+        if (Float.isNaN(min)) {
+        	min = (float) 0.0;
+        }
+        this.minValues.put(chrom, min);
+        float max = chromosomeArrayData.getMaxValue();
+        if (Float.isNaN(max)) {
+        	max = (float) 0.0;
+        }
+        this.maxValues.put(chrom, max);
+        this.numDatum.put(chrom, chromosomeArrayData.numDatum());
     }
     
     

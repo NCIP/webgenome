@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,16 +50,24 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.rti.webgenome.util.SystemUtils;
 
 /**
  * An annotated genome feature.
  * @author dhall
  *
  */
-public class AnnotatedGenomeFeature extends GenomeInterval {
+public class AnnotatedGenomeFeature extends GenomeInterval
+implements Serializable {
+	
+	/** Serialized version ID. */
+    private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 	
 	
 	// ===================================

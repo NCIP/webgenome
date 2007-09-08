@@ -61,8 +61,7 @@
 			name="org.rti.webgenome.domain.MultiAnalysisDataSourceProperties"
 			discriminator-value="multi.analysis">
 			<property name="analyticOperationClassName" column="an_op_class_name"/>
-			<set name="inputExperiments" table="dsp_experiments"
-				cascade="save-update">
+			<set name="inputExperiments" table="dsp_experiments" lazy="false">
 				<key column="data_src_props_id"/>
 				<many-to-many column="experiment_id"
 					class="org.rti.webgenome.domain.Experiment"/>

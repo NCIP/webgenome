@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-07 22:21:30 $
+$Revision: 1.5 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
+import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssay;
@@ -206,7 +207,8 @@ public final class DataFileManager {
             LOGGER.info("Serializing bioassay " + ba.getName());
             for (ChromosomeArrayData cad
                     : bad.getChromosomeArrayData().values()) {
-                ArrayDataAttributes ada = new ArrayDataAttributes();
+                ArrayDataAttributes ada = new ArrayDataAttributes(
+                		cad.getChromosomeAlterations());
                 for (Iterator<ArrayDatum> it = cad.getArrayData().iterator();
                     it.hasNext();) {
                     ArrayDatum ad = it.next();
@@ -235,33 +237,34 @@ public final class DataFileManager {
      */
     public ChromosomeArrayData loadChromosomeArrayData(
             final DataSerializedBioAssay bioAssay, final short chromosome) {
-        
-        // Recover reporters
-        String fname =
-            bioAssay.getArray().getChromosomeReportersFileName(chromosome);
-        ChromosomeReporters cr = this.loadChromosomeReporters(fname);
-        
-        // Recover array datum attributes
-        fname = bioAssay.getFileName(chromosome);
+    	
+    	// Recover attributes not dependent on reporters
+    	String fname = bioAssay.getFileName(chromosome);
         ArrayDataAttributes ada = (ArrayDataAttributes)
             this.serializer.deSerialize(fname);
-        
-        // Construct chromosome array data
         ChromosomeArrayData cad = new ChromosomeArrayData(chromosome);
-        Iterator<Reporter> rIt = cr.getReporters().iterator();
-        Iterator<ArrayDatumAttributes> aIt =
-            ada.getArrayDatumAttributes().iterator();
-        while (rIt.hasNext() && aIt.hasNext()) {
-            Reporter r = rIt.next();
-            ArrayDatumAttributes atts = aIt.next();
-            if (!Float.isNaN(atts.getValue())) {
-                ArrayDatum datum =
-                    new ArrayDatum(atts.getValue(), atts.getError(), r);
-                cad.add(datum);
-            }
-            aIt.remove();
-        }
+        cad.setChromosomeAlterations(ada.getChromosomeAlterations());
         
+        // Recover reporter-dependent attributes
+    	if (bioAssay.getArray() != null) {
+	        fname = bioAssay.getArray().getChromosomeReportersFileName(
+	        		chromosome);
+	        ChromosomeReporters cr = this.loadChromosomeReporters(fname);
+	        Iterator<Reporter> rIt = cr.getReporters().iterator();
+	        Iterator<ArrayDatumAttributes> aIt =
+	            ada.getArrayDatumAttributes().iterator();
+	        while (rIt.hasNext() && aIt.hasNext()) {
+	            Reporter r = rIt.next();
+	            ArrayDatumAttributes atts = aIt.next();
+	            if (!Float.isNaN(atts.getValue())) {
+	                ArrayDatum datum =
+	                    new ArrayDatum(atts.getValue(), atts.getError(), r);
+	                cad.add(datum);
+	            }
+	            aIt.remove();
+	        }
+    	}
+    	
         return cad;
     }
     
@@ -281,23 +284,28 @@ public final class DataFileManager {
     			+ bioAssay.getName() + " chromosome " + chromNum);
         Array array = bioAssay.getArray();
         if (array == null) {
-            throw new IllegalArgumentException("Unknown reporter");
-        }
+        	if (bioAssay.numDatum() > 0) {
+        		throw new IllegalArgumentException("Unknown reporter");
+        	}
+        } else {
         
-        // Save reporters if they have not been saved
-        if (array.getChromosomeReportersFileName(chromNum) == null) {
-        	LOGGER.info("Serializing reporters for " + bioAssay.getName()
-        			+ " chromosome " + chromNum);
-        	SortedSet<Reporter> reporters = chromosomeArrayData.getReporters();
-        	ChromosomeReporters cr = new ChromosomeReporters(chromNum);
-        	cr.setReporters(reporters);
-        	String fileName = this.serializer.serialize(cr);
-        	array.setChromosomeReportersFileName(chromNum, fileName);
-        	LOGGER.info("Completed serialization of reporters");
+	        // Save reporters if they have not been saved
+	        if (array.getChromosomeReportersFileName(chromNum) == null) {
+	        	LOGGER.info("Serializing reporters for " + bioAssay.getName()
+	        			+ " chromosome " + chromNum);
+	        	SortedSet<Reporter> reporters =
+	        		chromosomeArrayData.getReporters();
+	        	ChromosomeReporters cr = new ChromosomeReporters(chromNum);
+	        	cr.setReporters(reporters);
+	        	String fileName = this.serializer.serialize(cr);
+	        	array.setChromosomeReportersFileName(chromNum, fileName);
+	        	LOGGER.info("Completed serialization of reporters");
+	        }
         }
         
         // Save array datum
-        ArrayDataAttributes ada = new ArrayDataAttributes();
+        ArrayDataAttributes ada = new ArrayDataAttributes(
+        		chromosomeArrayData.getChromosomeAlterations());
         for (ArrayDatum ad : chromosomeArrayData.getArrayData()) {
             ada.add(new ArrayDatumAttributes(ad.getValue(),
                     ad.getError()));
@@ -393,6 +401,7 @@ public final class DataFileManager {
     
     /**
      * Aggregate of <code>ArrayDatumAttribute</code>
+     * and {@code AnnotatedGenomeFeature}
      * objects from same chromosome.  This is used
      * for two purposes: (1) Multiple
      * <code>ArrayDatum</code> objects that point to the same
@@ -416,6 +425,11 @@ public final class DataFileManager {
         /** Array datum attributes. */
         private List<ArrayDatumAttributes> arrayDatumAttributes =
             new ArrayList<ArrayDatumAttributes>();
+        
+        /** Chromosomal alterations. */
+        private List<AnnotatedGenomeFeature> chromosomeAlterations =
+        	new ArrayList<AnnotatedGenomeFeature>();
+        	
 
         
         // ============================
@@ -430,15 +444,27 @@ public final class DataFileManager {
             return arrayDatumAttributes;
         }
         
+        /**
+         * Get chromosome alterations.
+         * @return Chromosome alterations
+         */
+        public List<AnnotatedGenomeFeature> getChromosomeAlterations() {
+			return chromosomeAlterations;
+		}
+        
+        
         // ============================
         //    Constructors
         // ============================
-        
-        /**
+
+
+		/**
          * Constructor.
+         * @param chromosomeAlterations Chromosome alterations
          */
-        public ArrayDataAttributes() {
-            
+        public ArrayDataAttributes(
+        		final List<AnnotatedGenomeFeature> chromosomeAlterations) {
+            this.chromosomeAlterations = chromosomeAlterations;
         }
         
         // =========================

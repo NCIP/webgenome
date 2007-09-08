@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-26 16:45:34 $
+$Revision: 1.4 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -120,11 +120,13 @@ public class ColorChooser {
 	 * @param colorCounts Map of color integer equivalents
 	 * (i.e. RGB value) to counts.
 	 */
-	public final void setColorCounts(final Map<Integer, Integer> colorCounts) {
-		this.colorCounts = new HashMap<Color, Integer>();
-		for (Integer colorInt : colorCounts.keySet()) {
-			Color c = new Color(colorInt);
-			this.colorCounts.put(c, colorCounts.get(colorInt));
+	public final void setColorCounts(final Map<Integer, Integer>colorCounts) {
+		if (colorCounts.size() == this.colorCounts.size()) {
+			this.colorCounts = new HashMap<Color, Integer>();
+			for (Integer colorInt : colorCounts.keySet()) {
+				Color c = new Color(colorInt);
+				this.colorCounts.put(c, colorCounts.get(colorInt));
+			}
 		}
 	}
 
@@ -148,9 +150,11 @@ public class ColorChooser {
 	 * equivalents (i.e., RGB values).
 	 */
 	public final void setColors(final List<Integer> colors) {
-		this.colors = new ArrayList<Color>();
-		for (int colorInt : colors) {
-			this.colors.add(new Color(colorInt));
+		if (colors.size() == this.colors.size()) {
+			this.colors = new ArrayList<Color>();
+			for (int colorInt : colors) {
+				this.colors.add(new Color(colorInt));
+			}
 		}
 	}
 

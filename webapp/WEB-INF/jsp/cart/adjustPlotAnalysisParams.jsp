@@ -7,11 +7,11 @@
 	target="mainwindow">
 <bean:define id="plotId" name="plot" property="id"/>
 <input type="hidden" name="plotId" value="<%= plotId %>">
-<table>
+<table class="table">
 	<tr>
-		<td>Experiment</td>
-		<td>Analytic Operation</td>
-		<td>Parameters</td>
+		<th>Experiment</th>
+		<th>Analytic Operation</th>
+		<th>Parameters</th>
 	</tr>
 	<logic:iterate name="derived.experiments" id="experiment">
 		<tr>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-08-17 19:02:16 $
+$Revision: 1.7 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -160,8 +160,10 @@ public final class RemoveExperimentAction extends BaseAction {
     	Set<Array> removeList = new HashSet<Array>();
     	for (BioAssay ba : exp.getBioAssays()) {
     		Array array = ba.getArray();
-    		if (array.isDisposable()) {
-    			removeList.add(array);
+    		if (array != null) {
+	    		if (array.isDisposable()) {
+	    			removeList.add(array);
+	    		}
     		}
     	}
     	for (Array a : removeList) {

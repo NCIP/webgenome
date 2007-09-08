@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.4 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -266,14 +266,19 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
      * @return Rendered with of given text
      */
     public int renderedWidth(final String text, final int fontSize) {
-       BufferedImage img = new BufferedImage(1, 1,
-                IMAGE_TYPE);
-       Graphics graphics = img.getGraphics();
-       Font font = graphics.getFont();
-       Font newFont = new Font(font.getFontName(), font.getStyle(), fontSize);
-       graphics.setFont(newFont);
-       FontMetrics fm = graphics.getFontMetrics();
-       return fm.stringWidth(text);
+    	int width = 0;
+    	if (text != null && text.length() > 0) {
+	       BufferedImage img = new BufferedImage(1, 1,
+	                IMAGE_TYPE);
+	       Graphics graphics = img.getGraphics();
+	       Font font = graphics.getFont();
+	       Font newFont =
+	    	   new Font(font.getFontName(), font.getStyle(), fontSize);
+	       graphics.setFont(newFont);
+	       FontMetrics fm = graphics.getFontMetrics();
+	       width = fm.stringWidth(text);
+    	}
+    	return width;
     }
     
     
@@ -456,7 +461,9 @@ public final class RasterDrawingCanvas implements DrawingCanvas {
             	x = t.getX()
             	- renderedWidth(t.getValue(), t.getFontSize()) / 2;
             }
-            graphics.drawString(t.getValue(), x, t.getY());
+            if (t.getValue() != null) {
+            	graphics.drawString(t.getValue(), x, t.getY());
+            }
             if (transform != null) {
             	try {
 					graphics.transform(transform.createInverse());

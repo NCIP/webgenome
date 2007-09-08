@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.4 $
+$Date: 2007-09-08 22:27:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -116,7 +116,15 @@ public final class AnalysisParamsSetupAction extends BaseAction {
     	
     	// Determine quantitation types
     	Collection<QuantitationType> qTypes = new ArrayList<QuantitationType>();
-    	
+    	QuantitationType qType =
+    		Experiment.getCopyNumberQuantitationType(experiments);
+    	if (qType != null) {
+    		qTypes.add(qType);
+    	}
+    	qType = Experiment.getExpressionQuantitationType(experiments);
+    	if (qType != null) {
+    		qTypes.add(qType);
+    	}
     	
     	// Get instance of analytic operation and attach to request
     	AnalyticOperationParametersForm aForm =
