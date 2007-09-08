@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-14 22:42:07 $
+$Revision: 1.3 $
+$Date: 2007-09-08 17:17:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ package org.rti.webgenome.service.job;
 
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.dao.ArrayDao;
+import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.plot.PlotService;
@@ -81,6 +82,9 @@ public class JobServices {
 	
 	/** Array data access object. */
 	private final ArrayDao arrayDao;
+	
+	/** Experiment data access object. */
+	private final ExperimentDao experimentDao;
 
 	
 	//
@@ -119,6 +123,15 @@ public class JobServices {
 		return shoppingCartDao;
 	}
 	
+	
+	/**
+	 * Get experiment data access object.
+	 * @return Experiment data access object
+	 */
+	public ExperimentDao getExperimentDao() {
+		return experimentDao;
+	}
+
 	/**
 	 * Get array data access object.
 	 * @return Array data access object
@@ -138,18 +151,21 @@ public class JobServices {
 	 * @param plotService Service to plot data.
 	 * @param shoppingCartDao Shopping cart data access object
 	 * @param arrayDao Array data access object
+	 * @param experimentDao Experiment data access object
 	 */
 	public JobServices(final IOService ioService,
 			final AnalysisService analytisService,
 			final PlotService plotService,
 			final ShoppingCartDao shoppingCartDao,
-			final ArrayDao arrayDao) {
+			final ArrayDao arrayDao,
+			final ExperimentDao experimentDao) {
 		super();
 		this.ioService = ioService;
 		this.analysisService = analytisService;
 		this.plotService = plotService;
 		this.shoppingCartDao = shoppingCartDao;
 		this.arrayDao = arrayDao;
+		this.experimentDao = experimentDao;
 	}
 	
 	

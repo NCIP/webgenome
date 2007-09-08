@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.2 $
+$Date: 2007-09-08 17:17:16 $
 
 The Web CGH Software License, Version 1.0
 
@@ -101,7 +101,7 @@ public class NewlyChangedJobsAction extends BaseAction {
 	        final HttpServletRequest request,
 	        final HttpServletResponse response
 	    ) throws Exception {
-		LOGGER.info("Looking for newly completed jobs");
+		LOGGER.debug("Looking for newly completed jobs");
 		Collection<Job> completedJobs = new ArrayList<Job>();
 		Collection<Job> startedJobs = new ArrayList<Job>();
 		try {
@@ -126,7 +126,7 @@ public class NewlyChangedJobsAction extends BaseAction {
 			LOGGER.info("The following jobs have recently completed: "
 					+ jobIds.toString());
 		} else {
-			LOGGER.info("No newly completed jobs to report");
+			LOGGER.debug("No newly completed jobs to report");
 		}
 		request.setAttribute("completedJobs", completedJobs);
 		request.setAttribute("startedJobs", startedJobs);

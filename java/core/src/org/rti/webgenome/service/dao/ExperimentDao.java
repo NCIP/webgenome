@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-17 19:02:16 $
+$Revision: 1.3 $
+$Date: 2007-09-08 17:17:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,6 +65,12 @@ public interface ExperimentDao {
 	 * @param experiment Experiment to save
 	 */
 	void save(Experiment experiment);
+	
+	/**
+	 * Update given experiment in persistent storage.
+	 * @param experiment Experiment to update
+	 */
+	void update(Experiment experiment);
 	
 	/**
 	 * Load experiment with given ID.

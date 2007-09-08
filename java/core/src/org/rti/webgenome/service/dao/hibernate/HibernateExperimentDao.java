@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-17 19:02:17 $
+$Revision: 1.3 $
+$Date: 2007-09-08 17:17:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -99,7 +99,13 @@ public class HibernateExperimentDao extends HibernateDaoSupport implements
 		this.getHibernateTemplate().save(experiment);
 	}
 	
-	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void update(final Experiment experiment) {
+		this.getHibernateTemplate().update(experiment);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

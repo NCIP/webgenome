@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-09-07 22:21:16 $
+$Revision: 1.9 $
+$Date: 2007-09-08 17:17:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.dao.ArrayDao;
+import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.plot.PlotService;
@@ -123,6 +124,9 @@ public class SerialQueueJobManager implements JobManager {
 	/** Array data access object. */
 	private ArrayDao arrayDao = null;
 	
+	/** Experiment data access object. */
+	private ExperimentDao experimentDao = null;
+	
 	//
 	//  S E T T E R S
 	//
@@ -169,6 +173,15 @@ public class SerialQueueJobManager implements JobManager {
 	 */
 	public void setArrayDao(final ArrayDao arrayDao) {
 		this.arrayDao = arrayDao;
+	}
+
+
+	/**
+	 * Set experiment data access object.
+	 * @param experimentDao Experiment data access object
+	 */
+	public void setExperimentDao(final ExperimentDao experimentDao) {
+		this.experimentDao = experimentDao;
 	}
 
 
@@ -396,7 +409,7 @@ public class SerialQueueJobManager implements JobManager {
 		private void monitorJobQueue() {
 			JobServices jobServices = new JobServices(
 					ioService, analysisService, plotService,
-					shoppingCartDao, arrayDao);
+					shoppingCartDao, arrayDao, experimentDao);
 			while (true) {
 				
 				// Get next job from queue

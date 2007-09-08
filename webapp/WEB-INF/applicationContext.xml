@@ -234,6 +234,9 @@
 		<property name="arrayDao">
 			<ref bean="arrayDao"/>
 		</property>
+		<property name="experimentDao">
+			<ref bean="experimentDao"/>
+		</property>
 		<constructor-arg>
 			<ref bean="jobDao"/>
 		</constructor-arg>

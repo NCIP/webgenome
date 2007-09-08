@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.4 $
+$Date: 2007-09-08 17:17:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
+import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 
 /**
@@ -144,8 +145,7 @@ public class ReRunAnalysisJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId());
+		ExperimentDao expDao = jobServices.getExperimentDao();
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
@@ -154,11 +154,11 @@ public class ReRunAnalysisJob extends AbstractJob {
 		AnalyticOperation operation =
 			this.dataSourceProperties.getSourceAnalyticOperation();
 		try {
-			LOGGER.info("Re-nalysis job starting for user "
+			LOGGER.info("Re-analysis job starting for user "
 					+ this.getUserId());
 			aService.rePerformAnalyticOperation(
 					experiment, operation, transformer);
-			sDao.update(cart);
+			expDao.update(experiment);
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Re-analysis job completed for user "
 					+ this.getUserId());
