@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.12 $
+$Date: 2007-09-08 18:10:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -141,7 +141,7 @@ extends BaseAnalysisAction {
 			Principal principal = PageContext.getPrincipal(request);
 			ReRunAnalysisOnPlotExperimentsJob job =
 				new ReRunAnalysisOnPlotExperimentsJob(
-						new HashSet<Experiment>(experiments),
+						new HashSet<Experiment>(experiments), plotId,
 						principal.getName());
 			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();

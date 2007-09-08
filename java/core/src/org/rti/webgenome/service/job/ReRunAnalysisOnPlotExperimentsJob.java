@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.4 $
+$Date: 2007-09-08 18:10:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,10 +55,13 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.analysis.AnalyticException;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
+import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
 
 /**
  * A job to re-run all producing analytic operations on
@@ -85,10 +88,14 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 	 */
 	private Set<Experiment> experiments = null;
 	
+	/** ID of plot to re-create. */
+	private Long plotId = null;
+	
 	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
+	
 	
 	/**
 	 * Get experiments that will be re-generated.  All
@@ -114,12 +121,30 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 	public void setExperiments(final Set<Experiment> experiments) {
 		this.experiments = experiments;
 	}
+	
+	/**
+	 * Get ID of plot to regenerate.
+	 * @return Plot primary key ID
+	 */
+	public Long getPlotId() {
+		return plotId;
+	}
+
+
+	/**
+	 * Set ID of plot to regenerate.
+	 * @param plotId Primary key ID
+	 */
+	public void setPlotId(final Long plotId) {
+		this.plotId = plotId;
+	}
 
 
 	//
 	//  C O N S T R U C T O R S
 	//
-	
+
+
 	/**
 	 * Constructor.  This should only be used by the
 	 * persistence framework.
@@ -135,13 +160,16 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 	 * operation.  Furthermore, the data source property
 	 * in each experiment should include new user-specified
 	 * analytic operation parameter values.
+	 * @param plotId Primary key ID of plot to regenerate
 	 * @param userId User login name
 	 */
 	public ReRunAnalysisOnPlotExperimentsJob(
 			final Set<Experiment> experiments,
+			final Long plotId,
 			final String userId) {
 		super(userId);
 		this.experiments = experiments;
+		this.plotId = plotId;
 		StringBuffer buff = new StringBuffer(
 				"Regenerating plot with experiments ");
 		int count = 0;
@@ -163,17 +191,32 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId());
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
+		ExperimentDao expDao = jobServices.getExperimentDao();
+		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
+		ShoppingCart cart = sDao.load(this.getUserId());
+		SerializedChromosomeArrayDataGetter dataGetter =
+			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		try {
 			LOGGER.info("Plot re-analysis job starting for user "
 					+ this.getUserId());
+			
+			// Re-do analytic operation
 			aService.rePerformAnalyticOperation(
 					this.experiments, transformer);
+			for (Experiment exp : this.experiments) {
+				expDao.update(exp);
+			}
+			
+			// Plot and persist
+			Plot plot = cart.getPlot(this.plotId);
+			jobServices.getPlotService().plotExperiments(plot,
+					this.experiments, plot.getPlotParameters(),
+					cart, dataGetter);
 			sDao.update(cart);
+			
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Plot re-analysis job completed for user "
 					+ this.getUserId());

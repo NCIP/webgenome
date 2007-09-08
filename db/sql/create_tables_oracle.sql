@@ -102,7 +102,7 @@ CREATE TABLE job (
 	-- AnalysisJob, ReRunAnalysisJob, and DataImportJob
 	data_src_props_id NUMBER(38),
 	
-	-- PlotJob
+	-- PlotJob and ReRunAnalysisOnPlotExperimentsJob
 	plot_params_id NUMBER(38),
 	plot_id NUMBER(38),
 		

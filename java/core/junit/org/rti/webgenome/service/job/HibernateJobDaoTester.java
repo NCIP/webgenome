@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.5 $
+$Date: 2007-09-08 18:10:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -128,7 +128,8 @@ public final class HibernateJobDaoTester extends TestCase {
 				outputBioAssayNames, outputExperimentNames, "user");
 		ReRunAnalysisJob job2 = new ReRunAnalysisJob(exp1, op, "user");
 		ReRunAnalysisOnPlotExperimentsJob job3 =
-			new ReRunAnalysisOnPlotExperimentsJob(experiments, "user");
+			new ReRunAnalysisOnPlotExperimentsJob(experiments,
+					(long) 1, "user");
 		PlotJob job4 = new PlotJob(null, experiments, params, "user");
 		UploadDataSourceProperties uProps =
 			new UploadDataSourceProperties();

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-08 17:17:09 $
+$Revision: 1.5 $
+$Date: 2007-09-08 18:10:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,12 +54,10 @@ import org.apache.log4j.Logger;
 import org.rti.webgenome.analysis.AnalyticException;
 import org.rti.webgenome.analysis.AnalyticOperation;
 import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.dao.ExperimentDao;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
 
 /**
  * A job that re-runs an analytic operation on a single

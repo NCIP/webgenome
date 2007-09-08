@@ -51,6 +51,7 @@
 		</subclass>
 		<subclass name="org.rti.webgenome.service.job.ReRunAnalysisOnPlotExperimentsJob"
 			discriminator-value="rerunOnPlot">
+			<property name="plotId" column="plot_id"/>
 			<set name="experiments" table="job_experiments"
 				lazy="false">
 				<key column="job_id"/>
