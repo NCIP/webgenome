@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2007-09-08 18:28:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -147,7 +147,7 @@ public final class UserConfigurablePropertyInputTag extends TagSupport {
 				for (String key : opMap.keySet()) {
 					String value = opMap.get(key);
 					out.write("<option value=\"" + key + "\"");
-					if (value.equals(prop.getCurrentValue())) {
+					if (key.equals(prop.getCurrentValue())) {
 						out.write(" selected");
 					}
 					out.write(">" + value + "</option>");
