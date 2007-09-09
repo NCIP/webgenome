@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Date: 2007-09-09 18:32:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,21 +50,26 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.taglib;
 
+import java.util.Collection;
+
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.rti.webgenome.analysis.UserConfigurableProperty;
+import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.util.SystemUtils;
 
 /**
  * Show content of tag only if there is a derived experiment
  * bean in some scope with name provided by the
- * <code>name</code> property.  A derived experiment is one
+ * <code>name</code> property and which has
+ * user configurable parameters.  A derived experiment is one
  * that results from an analytic operation.
  * @author dhall
  *
  */
-public class OnlyIfDerivedExperimentTag extends TagSupport {
+public class OnlyIfParameteredDerivedExperimentTag extends TagSupport {
 	
 	
 	//
@@ -116,7 +121,14 @@ public class OnlyIfDerivedExperimentTag extends TagSupport {
 				}
 				Experiment exp = (Experiment) obj;
 				if (exp.isDerived()) {
-					rval = TagSupport.EVAL_BODY_INCLUDE;
+					AnalysisDataSourceProperties props =
+						(AnalysisDataSourceProperties)
+						exp.getDataSourceProperties();
+					Collection<UserConfigurableProperty> userProps =
+						props.getUserConfigurableProperties();
+					if (userProps != null && userProps.size() > 0) {
+						rval = TagSupport.EVAL_BODY_INCLUDE;
+					}
 				}
 			}
 		}

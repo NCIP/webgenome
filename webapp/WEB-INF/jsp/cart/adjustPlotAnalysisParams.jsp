@@ -16,11 +16,12 @@
 	<logic:iterate name="derived.experiments" id="experiment">
 		<tr>
 			<td>
-				<bean:write name="experiment" property="key.name"/>
+				<bean:write name="experiment" property="key.name"/>&nbsp;
 			</td>
 			<td>
 				<bean:write name="experiment"
 					property="key.dataSourceProperties.sourceAnalyticOperation.name"/>
+				&nbsp;
 			</td>
 			<td>
 				<bean:define id="expId" name="experiment" property="key.id"/>
@@ -30,6 +31,7 @@
 					<webgenome:userConfigurablePropertyInput name="prop"
 						prefix="<%= prefix %>"/><br>
 				</logic:iterate>
+				&nbsp;
 			</td>
 		<tr>
 	</logic:iterate>

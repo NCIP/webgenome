@@ -88,8 +88,8 @@
 							<html:checkbox property="<%= propName %>"/>
 						</td>
 						<td valign="middle" align="left">
-							<bean:write name="experiment" property="name"/> -
-							<bean:write name="experiment" property="quantitationType.name"/>
+							<bean:write name="experiment" property="name"/><br>
+							(<bean:write name="experiment" property="quantitationType.name"/>)
 						</td>
 						<td valign="middle" width="1">
 							<html:img page="/images/spacer.gif"
@@ -98,12 +98,16 @@
 						/></td>
 						<td valign="middle" align="right" width="48">
 							<span style="font-size:16px;">
+								<table><tr>
+								<td>
 								<a href="#"
 									onclick="nameChange('<bean:write name="experiment" property="id"/>', 'experiment')"
 										><html:img page="/images/icon-nameChooser.gif"
 											title="New experiment name" border="0"
 											width="15" height="15"
 								/></a>
+								</td>
+								<td>
 								<a href="javascript:confirmRemove('<bean:write name="experiment" property="name"/>', '<html:rewrite page="/cart/removeExperiment.do"
 									paramName="experiment" paramProperty="id"
 									paramId="id"/>');"
@@ -111,13 +115,20 @@
 										title="Remove experiment" border="0"
 										width="15" height="15"
 								/></a>
-								<webgenome:onlyIfDerivedExperiment name="experiment">
-								[<html:link action="/cart/rerunAnalysisParams"
+								</td>
+								<webgenome:onlyIfParameteredDerivedExperiment name="experiment">
+								<td>
+								<html:link action="/cart/rerunAnalysisParams"
 									paramId="experimentId" paramName="experiment"
 									paramProperty="id">
-									Change parameters
-								</html:link>]
-								</webgenome:onlyIfDerivedExperiment>
+									<html:img page="/images/icon-undo.gif"
+										title="Change parameters"
+										border="0"
+										width="15" height="15"/>
+								</html:link>
+								</td>
+								</webgenome:onlyIfParameteredDerivedExperiment>
+								</tr></table>
 							</span>
 						</td>
 					</tr></table>
@@ -171,7 +182,7 @@
 		&nbsp;&nbsp;
 		
 		<html:radio property="operation" value="analysis"/>
-		Perform Analytic Operation
+		Smooth/Normalize Data
 		
 		&nbsp;&nbsp;
 		

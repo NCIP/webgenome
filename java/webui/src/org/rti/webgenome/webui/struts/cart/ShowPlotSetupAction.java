@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.4 $
+$Date: 2007-09-09 18:32:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
@@ -115,7 +116,14 @@ public final class ShowPlotSetupAction extends BaseAction {
     	for (Experiment exp : experiments) {
     		if (exp != null) {
     			if (exp.isDerived()) {
-    				request.setAttribute("derived.data", "1");
+    				AnalysisDataSourceProperties props =
+    					(AnalysisDataSourceProperties)
+    					exp.getDataSourceProperties();
+    				Collection userParams =
+    					props.getUserConfigurableProperties();
+    				if (userParams != null && userParams.size() > 0) {
+    					request.setAttribute("analysis.params", "1");
+    				}
     				break;
     			}
     		}

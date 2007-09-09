@@ -176,8 +176,8 @@
    
 <!-- Show body content only if there is a derived experiment -->
    <tag>
-      <name>onlyIfDerivedExperiment</name>
-      <tagclass>org.rti.webgenome.webui.taglib.OnlyIfDerivedExperimentTag</tagclass>
+      <name>onlyIfParameteredDerivedExperiment</name>
+      <tagclass>org.rti.webgenome.webui.taglib.OnlyIfParameteredDerivedExperimentTag</tagclass>
       <bodycontent>JSP</bodycontent>
       
    <!-- Name attribute -->

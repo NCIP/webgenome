@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.16 $
+$Date: 2007-09-09 18:32:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -186,7 +186,7 @@ public final class NewPlotAction extends BaseAction {
     	ShoppingCart cart = this.getShoppingCart(request);
     	Plot plot = null;
     	PlotParametersForm pForm = (PlotParametersForm) form;
-    	PlotParameters params = pForm.getPlotParameters();
+    	PlotParameters params = null;
     	SessionMode mode = PageContext.getSessionMode(request);
     	Long plotId = null;
     	
@@ -198,6 +198,9 @@ public final class NewPlotAction extends BaseAction {
     	// from the plot instance.
     	Collection<Experiment> experiments = null;
 	    if (request.getParameter("plotId") == null) {
+	    	
+	    	// Generate new plot parameters
+	    	params = pForm.getPlotParameters();
 	    	
 	    	// Retrieve selected experiments form bean.
 	    	// Note, this is not the form bean configured
@@ -219,6 +222,10 @@ public final class NewPlotAction extends BaseAction {
 	    	plotId = Long.parseLong(request.getParameter("plotId"));
 	    	plot = cart.getPlot(plotId);
 	    	experiments = plot.getExperiments();
+	    	
+	    	// Recover plot parameters and set plot parameters bean fields
+	    	params = plot.getPlotParameters();
+	    	pForm.bulkSet(params);
 	    	
 	    	// TODO: If genome intervals have not changed, do not
 	    	// go back to client for data.

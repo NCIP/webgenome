@@ -18,7 +18,7 @@
 		paramName="plot" paramProperty="id"/>');">
 		Change Plot Parameters
 	</a>
-	<logic:present name="derived.data">
+	<logic:present name="analysis.params">
 	&nbsp;&nbsp;
 	<a href="javascript:openPopUpWindow('<html:rewrite page="/cart/adjustPlotAnalysisParamsSetup.do" paramId="id"
 		paramName="plot" paramProperty="id"/>');">
