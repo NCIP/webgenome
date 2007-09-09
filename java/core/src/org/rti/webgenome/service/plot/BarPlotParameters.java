@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,13 @@ package org.rti.webgenome.service.plot;
 public class BarPlotParameters extends PlotParameters {
 	
 	//
+	//  C O N S T A N T S
+	//
+	
+	/** Default bar width of pixels. */
+	public static final int DEF_BAR_WIDTH = 10;
+	
+	//
 	//     ATTRIBUTES
 	//
 	
@@ -65,7 +72,7 @@ public class BarPlotParameters extends PlotParameters {
 	private int rowHeight = 300;
 	
 	/** Width of each individual bar in pixels. */
-	private int barWidth = 10;
+	private int barWidth = DEF_BAR_WIDTH;
 	
 	
 	//

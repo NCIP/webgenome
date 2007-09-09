@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-07-27 22:21:19 $
+$Revision: 1.6 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -189,6 +189,8 @@ public final class ClientPlotAction extends BaseAction {
         
         // Instantiate data source properties and set quantitation type.
         DataSourceProperties props = null;
+        
+        // Case: client is true application client
         if (request.getParameter("test") == null) {
         	
         	// TODO: Get jndiName and jndiProviderURL from
@@ -203,6 +205,8 @@ public final class ClientPlotAction extends BaseAction {
         	for (int i = 0; i < constraints.length; i++) {
         		constraints[i].setQuantitationType(INIT_QUANTITATION_TYPE);
         	}
+        	
+        // Case: plotting simulated data
         } else {
         	props = new SimulatedDataSourceProperties();
         }

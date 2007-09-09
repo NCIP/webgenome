@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.6 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,27 +71,55 @@ extends BaseGenomicPlotParameters implements Serializable {
     private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
     
+    /** Default value for minimum expression value on Y-axis. */
+    public static final float DEF_EXPRESSION_MIN_Y = Constants.FLOAT_NAN;
+    
+    /** Default value for maximum expression value on Y-axis. */
+    public static final float DEF_EXPRESSION_MAX_Y = Constants.FLOAT_NAN;
+    
+    /** Default value for minimum copy number value on Y-axis. */
+    public static final float DEF_COPY_NUMBER_MIN_Y = Constants.FLOAT_NAN;
+    
+    /** Default value for maximum copy number value on Y-axis. */
+    public static final float DEF_COPY_NUMBER_MAX_Y = Constants.FLOAT_NAN;
+    
+    /** Default value for drawing horizontal grid lines. */
+    public static final boolean DEF_DRAW_HORIZ_GRID_LINES = true;
+    
+    /** Default value for drawing vertical grid lines. */
+    public static final boolean DEF_DRAW_VERT_GRID_LINES = true;
+    
+    /** Default value for drawing data points. */
+    public static final boolean DEF_DRAW_POINTS = false;
+    
+    /** Default value for drawing error bars. */
+    public static final boolean DEF_DRAW_ERROR_BARS = false;
+    
+    /** Default value for drawing expression data stems. */
+    public static final boolean DEF_DRAW_STEMS = true;
+    
+    
     // ============================
     //      Attributes
     // ============================
     
     /** Minimum Y-axis value for copy number or LOH data specified by user. */
-    private float copyNumberMinY = Constants.FLOAT_NAN;
+    private float copyNumberMinY = DEF_COPY_NUMBER_MIN_Y;
 
     /** Maximum Y-axis value for copy number of LOH data specified by user. */
-    private float copyNumberMaxY = Constants.FLOAT_NAN;
+    private float copyNumberMaxY = DEF_COPY_NUMBER_MAX_Y;
     
     /** Minimum Y-axis value for expression data specified by user. */
-    private float expressionMinY = Constants.FLOAT_NAN;
+    private float expressionMinY = DEF_EXPRESSION_MIN_Y;
     
     /** Maximum Y-axis value for expression data specified by user. */
-    private float expressionMaxY = Constants.FLOAT_NAN;
+    private float expressionMaxY = DEF_EXPRESSION_MAX_Y;
     
     /**
      * Width of plot area in pixels.  Plot area
      * does not include axes, legend, etc.
      */
-    private int width = -1;
+    private int width = DEF_WIDTH;
     
     /**
      * Height of plot area in pixels.  Plot area
@@ -100,19 +128,19 @@ extends BaseGenomicPlotParameters implements Serializable {
     private int height = -1;
     
     /** Draw horizontal grid lines? */
-    private boolean drawHorizGridLines = true;
+    private boolean drawHorizGridLines = DEF_DRAW_HORIZ_GRID_LINES;
     
     /** Draw vertical grid lines? */
-    private boolean drawVertGridLines = true;
+    private boolean drawVertGridLines = DEF_DRAW_VERT_GRID_LINES;
     
     /** Draw data points. */
-    private boolean drawPoints = false;
+    private boolean drawPoints = DEF_DRAW_POINTS;
     
     /** Draw error bars. */
-    private boolean drawErrorBars = false;
+    private boolean drawErrorBars = DEF_DRAW_ERROR_BARS;
     
     /** Draw stems attached to diamond shaped expression points. */
-    private boolean drawStems = false;
+    private boolean drawStems = DEF_DRAW_STEMS;
     
     // ==========================
     //      Getters/setters

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -77,7 +77,22 @@ public abstract class BaseGenomicPlotParameters extends PlotParameters {
 	
 	/** Default interpolation type. */
 	public static final InterpolationType DEF_INTERPOLATION_TYPE =
-		InterpolationType.NONE;
+		InterpolationType.SPLINE;
+	
+	/** Default value for interpolation of endpoints. */
+	public static final boolean DEF_INTERPOLATE_ENDPOINTS = false;
+	
+	/** Default value for the drawing of row LOH probabilities. */
+	public static final boolean DEF_DRAW_ROW_LOH_PROBABILITIES = true;
+	
+	/** Default value for showing reporter annotations as mouseover. */
+	public static final boolean DEF_SHOW_ANNOTATION = false;
+	
+	/** Default value for showing nearby genes as mouseover. */
+	public static final boolean DEF_SHOW_GENES = true;
+	
+	/** Default value for showing reporter names as mouseover. */
+	public static final boolean DEF_SHOW_REPORTER_NAMES = true;
     
     // ==========================
     //       Attributes
@@ -97,23 +112,23 @@ public abstract class BaseGenomicPlotParameters extends PlotParameters {
      * the endpoints will be extended distally midway to the
      * next reporters.
      */
-    private boolean interpolateLohEndpoints = false;
+    private boolean interpolateLohEndpoints = DEF_INTERPOLATE_ENDPOINTS;
     
     /** Draw raw LOH probabilities along with scored data? */
-    private boolean drawRawLohProbabilities = true;
+    private boolean drawRawLohProbabilities = DEF_DRAW_ROW_LOH_PROBABILITIES;
     
     /** Type of interpolation to perform between data points. */
     private InterpolationType interpolationType =
     	DEF_INTERPOLATION_TYPE;
     
     /** Show annotation in mouseover text? */
-    private boolean showAnnotation = false;
+    private boolean showAnnotation = DEF_SHOW_ANNOTATION;
     
     /** Show gene names in mouseover text? */
-    private boolean showGenes = true;
+    private boolean showGenes = DEF_SHOW_GENES;
     
     /** Show reporter names in mouseover text? */
-    private boolean showReporterNames = true;
+    private boolean showReporterNames = DEF_SHOW_REPORTER_NAMES;
     
     // ===========================
     //    Getters/setters

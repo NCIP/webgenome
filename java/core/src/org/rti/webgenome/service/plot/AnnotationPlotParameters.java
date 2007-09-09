@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.4 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,13 @@ import org.rti.webgenome.domain.AnnotationType;
  *
  */
 public class AnnotationPlotParameters extends HeatMapPlotParameters {
+	
+	//
+	//  C O N S T A N T S
+	//
+	
+	/** Default value for drawing feature labels. */
+	public static final boolean DEF_DRAW_FEATURE_LABELS = false;
 
 	//
 	//     ATTRIBUTES
@@ -72,10 +79,10 @@ public class AnnotationPlotParameters extends HeatMapPlotParameters {
 		new HashSet<AnnotationType>();
 
 	/** Width of plot excluding track labels to the left in pixels. */
-	private int width = 0;
+	private int width = DEF_WIDTH;
 	
 	/** Draw labels above features? */
-	private boolean drawFeatureLabels = false;
+	private boolean drawFeatureLabels = DEF_DRAW_FEATURE_LABELS;
 	
 	//
 	//     GETTERS/SETTERS

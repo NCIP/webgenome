@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.7 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -104,22 +104,6 @@ public class PlotParametersForm extends BaseForm {
 	private static final String DEF_PLOT_TYPE =
 		PlotType.SCATTER.toString();
 	
-	/** Default units. */
-	private static final String DEF_UNITS = BpUnits.KB.getName();
-	
-	/** Default plots per row. */
-	private static final String DEF_NUM_PLOTS_PER_ROW = "4";
-	
-	/** Default plot width. */
-	private static final String DEF_WIDTH = "550";
-	
-	/** Default plot height. */
-	private static final String DEF_HEIGHT = "250";
-	
-	/** Default bar plot bar width in pixels. */
-	private static final String DEF_BAR_WIDTH = "10";
-	
-	
 	/**
 	 * Name of HTTP query parameter that would indicate
 	 * the request came from a form for setting scatter plot
@@ -165,14 +149,15 @@ public class PlotParametersForm extends BaseForm {
 	private String genomeIntervals = DEF_GENOME_INTERVALS;
 	
 	/** Genome interval units (i.e., BP, KB, MB). */
-	private String units = DEF_UNITS;
+	private String units = PlotParameters.DEF_UNITS.getName();
 	
 	/**
 	 * Number of plots per row.  If more than one genome
 	 * interval is specified, each will be plotted in
 	 * a separate graph within the same graphics file.
 	 */
-	private String numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
+	private String numPlotsPerRow =
+		String.valueOf(PlotParameters.DEF_NUM_PLOTS_PER_ROW);
 	
 	
 	//
@@ -194,23 +179,32 @@ public class PlotParametersForm extends BaseForm {
      * the endpoints will be extended distally midway to the
      * next reporters.
 	 */
-	private String interpolateLohEndpoints = "";
+	private String interpolateLohEndpoints =
+		FormUtils.booleanToCheckBox(
+				BaseGenomicPlotParameters.DEF_INTERPOLATE_ENDPOINTS);
 	
 	/** Draw raw LOH probabilities? */
-	private String drawRawLohProbabilities = "on";
+	private String drawRawLohProbabilities =
+		FormUtils.booleanToCheckBox(
+				BaseGenomicPlotParameters.DEF_DRAW_ROW_LOH_PROBABILITIES);
 	
 	/** Type of interpolation to perform between data points. */
 	private String interpolationType =
 		InterpolationType.STRAIGHT_LINE.toString();
 	
 	/** Show reporter annotation in mouseover? */
-	private String showAnnotation = "";
+	private String showAnnotation =
+		FormUtils.booleanToCheckBox(
+				BaseGenomicPlotParameters.DEF_SHOW_ANNOTATION);
 	
 	/** Show gene names in mouseover? */
-	private String showGenes = "on";
+	private String showGenes =
+		FormUtils.booleanToCheckBox(BaseGenomicPlotParameters.DEF_SHOW_GENES);
 	
 	/** Show reporter anmes in mouseover? */
-	private String showReporterNames = "on";
+	private String showReporterNames =
+		FormUtils.booleanToCheckBox(
+				BaseGenomicPlotParameters.DEF_SHOW_REPORTER_NAMES);
 	
 	//
 	//     ATTRIBUTES FOR ALL HEAT MAP PLOTS
@@ -232,11 +226,13 @@ public class PlotParametersForm extends BaseForm {
 	private String copyNumberMaxSaturation = String.valueOf(
 			HeatMapPlotParameters.DEF_MAX_SATURATION);
 	
-	/** Minimum data mask value for ideogram plot. */
-	private String minMask = "";
+	/** Minimum data mask value. */
+	private String minMask =
+		FormUtils.floatToTextBox(HeatMapPlotParameters.DEF_MIN_MASK);
 	
-	/** Maximum data mask value for ideogram plot. */
-	private String maxMask = "";
+	/** Maximum data mask value. */
+	private String maxMask =
+		FormUtils.floatToTextBox(HeatMapPlotParameters.DEF_MAX_MASK);
 	
 	//
 	//     ATTRIBUTES FOR ANNOTATION PLOTS
@@ -246,14 +242,16 @@ public class PlotParametersForm extends BaseForm {
 	private String[] annotationTypes = null;
 	
 	/** Should labels of genome feature be drawn? */
-	private String drawFeatureLabels = "";
+	private String drawFeatureLabels =
+		FormUtils.booleanToCheckBox(
+				AnnotationPlotParameters.DEF_DRAW_FEATURE_LABELS);
 	
 	//
 	//     ATTRIBUTES FOR BAR PLOTS
 	//
 	
 	/** Width of bar plot bar in pixels. */
-	private String barWidth = DEF_BAR_WIDTH;
+	private String barWidth = String.valueOf(BarPlotParameters.DEF_BAR_WIDTH);
 	
 	//
 	//     ATTRIBUTES FOR IDEOGRAM PLOTS
@@ -276,31 +274,40 @@ public class PlotParametersForm extends BaseForm {
 	//
 
 	/** Minimum Y-axis value for expression data. */
-	private String expressionMinY = "";
+	private String expressionMinY = FormUtils.floatToTextBox(
+			ScatterPlotParameters.DEF_EXPRESSION_MIN_Y);
 	
 	/** Maximum Y-axis value for expression data. */
-	private String expressionMaxY = "";
+	private String expressionMaxY = FormUtils.floatToTextBox(
+			ScatterPlotParameters.DEF_EXPRESSION_MAX_Y);
 	
 	/** Minimum Y-axis value for copy number data. */
-	private String copyNumberMinY = "";
+	private String copyNumberMinY = FormUtils.floatToTextBox(
+			ScatterPlotParameters.DEF_COPY_NUMBER_MIN_Y);
 	
 	/** Maximum Y-axis value for copy number data. */
-	private String copyNumberMaxY = "";
+	private String copyNumberMaxY = FormUtils.floatToTextBox(
+			ScatterPlotParameters.DEF_COPY_NUMBER_MAX_Y);
 	
 	/** Draw horizontal grid lines in scatter plot? */
-	private String drawHorizGridLines = "on";
+	private String drawHorizGridLines = FormUtils.booleanToCheckBox(
+			ScatterPlotParameters.DEF_DRAW_HORIZ_GRID_LINES);
 	
 	/** Draw vertical grid lines in scatter plot? */
-	private String drawVertGridLines = "on";
+	private String drawVertGridLines = FormUtils.booleanToCheckBox(
+			ScatterPlotParameters.DEF_DRAW_VERT_GRID_LINES);
 	
 	/** Draw data points in scatter plot? */
-	private String drawPoints = "";
+	private String drawPoints = FormUtils.booleanToCheckBox(
+			ScatterPlotParameters.DEF_DRAW_POINTS);
 	
 	/** Draw error bars in scatter plot? */
-	private String drawErrorBars = "";
+	private String drawErrorBars = FormUtils.booleanToCheckBox(
+			ScatterPlotParameters.DEF_DRAW_ERROR_BARS);
 	
 	/** Draw stems connected to diamond shaped points for expression data? */
-	private String drawStems = "";
+	private String drawStems = FormUtils.booleanToCheckBox(
+			ScatterPlotParameters.DEF_DRAW_STEMS);
 	
 	//
 	//     ATTRIBUTES USED IN DIFFERENT PLOT TYPES
@@ -311,13 +318,13 @@ public class PlotParametersForm extends BaseForm {
 	 * Width of plot in pixels. This is ued in
 	 * scatter plots and annotation plots.
 	 */
-	private String width = DEF_WIDTH;
+	private String width = String.valueOf(PlotParameters.DEF_WIDTH);
 	
 	/**
 	 * Height of plot in pixels. This is used in
 	 * scatter plots and bar plots.
 	 */
-	private String height = DEF_HEIGHT;
+	private String height = String.valueOf(PlotParameters.DEF_HEIGHT);
 	
 	
 	// ================================
@@ -1352,23 +1359,37 @@ public class PlotParametersForm extends BaseForm {
 		this.plotType = DEF_PLOT_TYPE;
 		this.name = "";
 		this.genomeIntervals = DEF_GENOME_INTERVALS;
-		this.units = DEF_UNITS;
-		this.numPlotsPerRow = DEF_NUM_PLOTS_PER_ROW;
+		this.units = PlotParameters.DEF_UNITS.getName();
+		this.numPlotsPerRow =
+			String.valueOf(PlotParameters.DEF_NUM_PLOTS_PER_ROW);
 		
 		// Attributes for all genome plots
 		this.lohThreshold = String.valueOf(
 				BaseGenomicPlotParameters.DEF_LOH_THRESHOLD);
-		this.interpolateLohEndpoints = "";
-		this.drawRawLohProbabilities = "on";
+		this.interpolateLohEndpoints =
+			FormUtils.booleanToCheckBox(
+					BaseGenomicPlotParameters.DEF_INTERPOLATE_ENDPOINTS);
+		this.drawRawLohProbabilities =
+			FormUtils.booleanToCheckBox(
+					BaseGenomicPlotParameters.DEF_DRAW_ROW_LOH_PROBABILITIES);
 		this.interpolationType =
 			BaseGenomicPlotParameters.DEF_INTERPOLATION_TYPE.toString();
-		this.showAnnotation = "";
-		this.showGenes = "on";
-		this.showReporterNames = "on";
+		this.showAnnotation =
+			FormUtils.booleanToCheckBox(
+					BaseGenomicPlotParameters.DEF_SHOW_ANNOTATION);
+		this.showGenes =
+			FormUtils.booleanToCheckBox(
+					BaseGenomicPlotParameters.DEF_SHOW_GENES);
+		this.showReporterNames =
+			FormUtils.booleanToCheckBox(
+					BaseGenomicPlotParameters.DEF_SHOW_REPORTER_NAMES);
 		
 		// Attributes for all heat map plots
-		this.maxMask = "";
-		this.minMask = "";
+		this.maxMask =
+			FormUtils.floatToTextBox(HeatMapPlotParameters.DEF_MAX_MASK);
+		this.minMask =
+			FormUtils.floatToTextBox(HeatMapPlotParameters.DEF_MIN_MASK);
+			FormUtils.floatToTextBox(HeatMapPlotParameters.DEF_MIN_MASK);
 		this.expressionMaxSaturation = String.valueOf(
 				HeatMapPlotParameters.DEF_MAX_SATURATION);
 		this.expressionMinSaturation = String.valueOf(
@@ -1380,10 +1401,12 @@ public class PlotParametersForm extends BaseForm {
 		
 		// Attributes for annotation plots
 		this.annotationTypes = null;
-		this.drawFeatureLabels = "";
+		this.drawFeatureLabels =
+			FormUtils.booleanToCheckBox(
+					AnnotationPlotParameters.DEF_DRAW_FEATURE_LABELS);
 		
 		// Attributes for bar plots
-		this.barWidth = DEF_BAR_WIDTH;
+		this.barWidth = String.valueOf(BarPlotParameters.DEF_BAR_WIDTH);
 		
 		// Attributes for ideogram plots
 		this.ideogramSize = IdeogramPlotParameters.DEF_IDEOGRAM_SIZE.getName();
@@ -1393,17 +1416,26 @@ public class PlotParametersForm extends BaseForm {
 				IdeogramPlotParameters.DEF_IDEOGRAM_THICKNESS);
 		
 		// Attributes for scatter plots
-		this.copyNumberMaxY = "";
-		this.copyNumberMinY = "";
-		this.expressionMaxY = "";
-		this.expressionMinY = "";
-		this.width = DEF_WIDTH;
-		this.height = DEF_HEIGHT;
-		this.drawHorizGridLines = "on";
-		this.drawVertGridLines = "on";
-		this.drawErrorBars = "";
-		this.drawPoints = "";
-		this.drawStems = "";
+		this.copyNumberMaxY = FormUtils.floatToTextBox(
+				ScatterPlotParameters.DEF_COPY_NUMBER_MAX_Y);
+		this.copyNumberMinY = FormUtils.floatToTextBox(
+				ScatterPlotParameters.DEF_COPY_NUMBER_MIN_Y);
+		this.expressionMaxY = FormUtils.floatToTextBox(
+				ScatterPlotParameters.DEF_EXPRESSION_MIN_Y);
+		this.expressionMinY = FormUtils.floatToTextBox(
+				ScatterPlotParameters.DEF_EXPRESSION_MIN_Y);
+		this.width = String.valueOf(PlotParameters.DEF_WIDTH);
+		this.height = String.valueOf(PlotParameters.DEF_HEIGHT);
+		this.drawHorizGridLines = FormUtils.booleanToCheckBox(
+				ScatterPlotParameters.DEF_DRAW_HORIZ_GRID_LINES);
+		this.drawVertGridLines = FormUtils.booleanToCheckBox(
+				ScatterPlotParameters.DEF_DRAW_VERT_GRID_LINES);
+		this.drawErrorBars = FormUtils.booleanToCheckBox(
+				ScatterPlotParameters.DEF_DRAW_ERROR_BARS);
+		this.drawPoints = FormUtils.booleanToCheckBox(
+				ScatterPlotParameters.DEF_DRAW_POINTS);
+		this.drawStems = FormUtils.booleanToCheckBox(
+				ScatterPlotParameters.DEF_DRAW_STEMS);
 	}
 	
 	/**

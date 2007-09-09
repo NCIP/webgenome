@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-06-28 22:12:17 $
+$Revision: 1.3 $
+$Date: 2007-09-09 17:16:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,6 +71,15 @@ public abstract class PlotParameters {
 	
 	/** Default number of plots per row. */
 	public static final int DEF_NUM_PLOTS_PER_ROW = 5;
+	
+	/** Default units of chromosome locations. */
+	public static final BpUnits DEF_UNITS = BpUnits.KB;
+	
+	/** Default width of plot. */
+	public static final int DEF_WIDTH = 550;
+	
+	/** Default plot height. */
+	public static final int DEF_HEIGHT = 250;	
 
 	
 	//
@@ -90,7 +99,7 @@ public abstract class PlotParameters {
      * Units for <code>startLocation</code>
      * and <code>endLocation</code> fields.
      */
-    private BpUnits units = BpUnits.BP;
+    private BpUnits units = DEF_UNITS;
     
     /** Genome intervals to plot. */
     private SortedSet<GenomeInterval> genomeIntervals =
