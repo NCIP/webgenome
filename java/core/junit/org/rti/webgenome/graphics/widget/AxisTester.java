@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2007-09-10 21:59:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,9 +52,9 @@ package org.rti.webgenome.graphics.widget;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.rti.webgenome.graphics.widget.Axis;
-import org.rti.webgenome.graphics.widget.Background;
 import org.rti.webgenome.units.HorizontalAlignment;
 import org.rti.webgenome.units.Location;
 import org.rti.webgenome.units.Orientation;
@@ -98,68 +98,90 @@ public final class AxisTester extends TestCase {
 	/** Color of background object. */
 	private static final Color BG_COLOR = Color.PINK;
 	
-	/**
-	 * Test in horizontal orientation with text above axis.
-	 */
-	public void testHorizAbove() {
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.HORIZONTAL,
-				Location.ABOVE, panel.getDrawingCanvas()),
-				HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
-		panel.toPngFile("horiz-above.png");
-	}
+//	/**
+//	 * Test in horizontal orientation with text above axis.
+//	 */
+//	public void testHorizAbove() {
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.HORIZONTAL,
+//				Location.ABOVE, panel.getDrawingCanvas()),
+//				HorizontalAlignment.CENTERED, VerticalAlignment.ABOVE);
+//		panel.toPngFile("horiz-above.png");
+//	}
+//	
+//	/**
+//	 * Test in horizontal orientation with text below axis.
+//	 */
+//	public void testHorizBelow() {
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.HORIZONTAL,
+//				Location.BELOW, panel.getDrawingCanvas()),
+//				HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
+//		panel.toPngFile("horiz-below.png");
+//	}
+//	
+//	
+//	/**
+//	 * Test in vertical orientation with text to left of axis.
+//	 */
+//	public void testVertLeft() {
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
+//				Location.LEFT_OF, panel.getDrawingCanvas()),
+//				HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
+//		panel.toPngFile("vert-left.png");
+//	}
+//	
+//	
+//	/**
+//	 * Test in vertical orientation with text to right of axis.
+//	 */
+//	public void testVertRight() {
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
+//		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
+//				Location.RIGHT_OF, panel.getDrawingCanvas()),
+//				HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
+//		panel.toPngFile("vert-right.png");
+//	}
+//	
+//	
+//	/**
+//	 * Test in vertical aligned to zero point.
+//	 */
+//	public void testVertOnZero() {
+//		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
+//		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
+//				Location.LEFT_OF, panel.getDrawingCanvas()),
+//				HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
+//		panel.add(new Axis(MIN, MAX + 1.0, LENGTH, Orientation.VERTICAL,
+//				Location.RIGHT_OF, panel.getDrawingCanvas()),
+//				HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
+//		panel.toPngFile("vert-on-zero.png");
+//	}
+	
 	
 	/**
-	 * Test in horizontal orientation with text below axis.
+	 * Test on client-specified hatches.
 	 */
-	public void testHorizBelow() {
+	public void testClientSpecifiedHatches() {
 		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
 		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.HORIZONTAL,
-				Location.BELOW, panel.getDrawingCanvas()),
+		List<Double> points = new ArrayList<Double>();
+		List<String> labels = new ArrayList<String>();
+		points.add(new Double(300000));
+		points.add(new Double(500000));
+		points.add(new Double(600000));
+		labels.add("CHR1");
+		labels.add("CHR2");
+		labels.add("CHR3");
+		panel.add(new Axis(LENGTH, Orientation.HORIZONTAL,
+				Location.BELOW, panel.getDrawingCanvas(),
+				points, labels),
 				HorizontalAlignment.CENTERED, VerticalAlignment.BELOW);
-		panel.toPngFile("horiz-below.png");
-	}
-	
-	
-	/**
-	 * Test in vertical orientation with text to left of axis.
-	 */
-	public void testVertLeft() {
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
-				Location.LEFT_OF, panel.getDrawingCanvas()),
-				HorizontalAlignment.LEFT_OF, VerticalAlignment.CENTERED);
-		panel.toPngFile("vert-left.png");
-	}
-	
-	
-	/**
-	 * Test in vertical orientation with text to right of axis.
-	 */
-	public void testVertRight() {
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
-		panel.add(new Background(BG_WIDTH, BG_HEIGHT, BG_COLOR));
-		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
-				Location.RIGHT_OF, panel.getDrawingCanvas()),
-				HorizontalAlignment.RIGHT_OF, VerticalAlignment.CENTERED);
-		panel.toPngFile("vert-right.png");
-	}
-	
-	
-	/**
-	 * Test in vertical aligned to zero point.
-	 */
-	public void testVertOnZero() {
-		RasterFileTestPlotPanel panel = new RasterFileTestPlotPanel(TEST_DIR);
-		panel.add(new Axis(MIN, MAX, LENGTH, Orientation.VERTICAL,
-				Location.LEFT_OF, panel.getDrawingCanvas()),
-				HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
-		panel.add(new Axis(MIN, MAX + 1.0, LENGTH, Orientation.VERTICAL,
-				Location.RIGHT_OF, panel.getDrawingCanvas()),
-				HorizontalAlignment.RIGHT_OF, VerticalAlignment.ON_ZERO);
-		panel.toPngFile("vert-on-zero.png");
+		panel.toPngFile("user-specified.png");
 	}
 }

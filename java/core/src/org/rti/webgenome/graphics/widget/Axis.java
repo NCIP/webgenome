@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:30 $
+$Revision: 1.2 $
+$Date: 2007-09-10 21:59:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.List;
 
 import org.rti.webgenome.graphics.DrawingCanvas;
 import org.rti.webgenome.graphics.primitive.Cursor;
@@ -187,6 +188,15 @@ public final class Axis implements ScalePlotElement {
     
     /** Range between minimum and maximum values in native units. */
     private final double range;
+    
+    /** Location of user-specified hatch points. */
+    private List<Double> hatchPoints = null;
+    
+    /**
+     * User specified hatch lables.  Size and order must.
+     * correspond to {@code hatchPoints}.
+     */
+    private List<String> hatchLabels = null;
     
     
     // ============================
@@ -431,6 +441,166 @@ public final class Axis implements ScalePlotElement {
     }
     
     
+    /**
+     * Constructor.
+     * @param length Length in pixels
+     * @param orientation Orientation
+     * @param positionTextRelativeToHatches Position of hatch mark labels
+     * relative to hatch marks
+     * @param canvas Canvas the axis will be rendered to
+     * @param hatchPoints Relative location of hatch marks
+     * @param hatchLabels Label for corresponding hatch point
+     * (i.e. the size and order of the two lists must be the same)
+     */
+    public Axis(final int length, final Orientation orientation,
+            final Location positionTextRelativeToHatches,
+            final DrawingCanvas canvas, final List<Double> hatchPoints,
+            final List<String> hatchLabels) {
+    	
+    	if (hatchPoints == null || hatchLabels == null
+    			|| hatchPoints.size() != hatchLabels.size()) {
+    		throw new IllegalArgumentException("hatchPoints and "
+    				+ "hatchLabels cannot be null and must be of "
+    				+ "same length");
+    	}
+    	
+    	// Set attributes not dependent on orientation and position
+    	this.hatchPoints = hatchPoints;
+    	this.hatchLabels = hatchLabels;
+        this.minValue = hatchPoints.get(0);
+        this.maxValue = hatchPoints.get(hatchPoints.size() - 1);
+        this.length = length;
+        this.range = maxValue - minValue;
+        this.orientation = orientation;
+        this.positionTextRelativeToHatches = positionTextRelativeToHatches;
+        this.spansZero = maxValue >= 0 && minValue <= 0;
+        this.minX = 0;
+        this.minY = 0;
+        
+        if (hatchPoints.size() > 0 && hatchLabels.size() > 0) {
+        
+	        // Set attributes distinct for horizontal orientation
+	        if (orientation == Orientation.HORIZONTAL) {
+	        	
+	        	// Calculate reference coordinates
+	        	String ticStr = hatchLabels.get(0);
+	        	int textWidth = canvas.renderedWidth(ticStr, this.fontSize);
+	        	int relativeTextMinX = this.nativeUnitsToPixel(
+	        			hatchPoints.get(0)) - textWidth / 2;
+	        	ticStr = hatchLabels.get(hatchLabels.size() - 1);
+	        	textWidth = canvas.renderedWidth(ticStr, this.fontSize);
+	        	int relativeTextMaxX = this.nativeUnitsToPixel(
+	        			hatchPoints.get(hatchPoints.size() - 1))
+	        		+ textWidth / 2;
+	        	
+	        	// Attributes that are same regardless of text location
+	        	this.lineMinX = 0;
+	        	this.lineMaxX = length;
+	        	this.maxX = length;
+	        	this.maxY = this.fontSize + this.padding + this.majorTicLength;
+	        	if (this.spansZero) {
+	        		this.zeroX = this.nativeUnitsToPixel(0.0);
+	        	}
+	        	if (relativeTextMinX < 0) {
+	        		this.lineMinX -= relativeTextMinX;
+	        		this.lineMaxX -= relativeTextMinX;
+	        		this.maxX -= relativeTextMinX;
+	        		if (this.spansZero) {
+	        			this.zeroX -= relativeTextMinX;
+	        		}
+	        		relativeTextMaxX -= relativeTextMinX;
+	        	}
+	        	if (relativeTextMaxX > this.maxX) {
+	        		this.maxX = relativeTextMaxX;
+	        	}
+	        	this.maxY = this.fontSize + this.padding + this.majorTicLength;
+	        	
+	        	// Text above
+	        	if (positionTextRelativeToHatches == Location.ABOVE) {
+	        		this.zeroY = this.maxY - this.majorTicLength / 2;
+	        		
+	        	// Text below
+	        	} else if (positionTextRelativeToHatches == Location.BELOW) {
+	        		this.zeroY = this.majorTicLength / 2;
+	        		
+	        	// Invalid text position
+	        	} else {
+	        		throw new IllegalArgumentException("Illegal combination of "
+	        				+ "orientation and positionTextRelativeToHatches");
+	        	}
+	        	
+	        	this.lineMinY = this.zeroY;
+	    		this.lineMaxY = this.zeroY;
+	        	
+	        // Set attributes distinct for vertical orientation
+	        } else if (orientation == Orientation.VERTICAL) {
+	        	
+	        	// Calculate reference coordinates
+	        	int relativeTextMinY = length
+	        		- this.nativeUnitsToPixel(hatchPoints.get(
+	        				hatchPoints.size() - 1)) - this.fontSize / 2;
+	        	int relativeTextMaxY = length
+	        		- this.nativeUnitsToPixel(hatchPoints.get(
+	        				hatchPoints.size() - 1))
+	        		+ this.fontSize / 2;
+	        	double majorTicInterval = 0.0;
+	        	if (hatchLabels.size() == 1) {
+	        		majorTicInterval = hatchPoints.get(0);
+	        	} else {
+	        		majorTicInterval = hatchPoints.get(
+	        				hatchPoints.size() - 1)
+	        				- hatchPoints.get(hatchPoints.size() - 2);
+	        	}
+	        	int maxTextWidth = this.maxTextWidth(hatchPoints.get(
+        				hatchPoints.size() - 1),
+	        			majorTicInterval, canvas);
+	        	
+	        	// Set attributes common to all text placements
+	        	this.maxX = maxTextWidth + this.padding + this.majorTicLength;
+	        	this.maxY = length;
+	        	this.lineMinY = 0;
+	        	this.lineMaxY = length;
+	        	if (this.spansZero) {
+	        		this.zeroY = this.length - this.nativeUnitsToPixel(0.0);
+	        	}
+	        	if (relativeTextMinY < 0) {
+	        		this.maxY -= relativeTextMinY;
+	        		this.lineMinY -= relativeTextMinY;
+	        		this.lineMaxY -= relativeTextMinY;
+		        	if (this.spansZero) {
+		        		this.zeroY -= relativeTextMinY;
+		        	}
+	        	}
+	        	if (relativeTextMaxY > length) {
+	        		this.maxY += relativeTextMaxY - length;
+	        	}
+	        	
+	        	// Text to left
+	        	if (positionTextRelativeToHatches == Location.LEFT_OF) {
+	        		this.zeroX = maxTextWidth + this.padding
+	        			+ this.majorTicLength / 2;
+	        		
+	        	// Text to right
+	        	} else if (positionTextRelativeToHatches == Location.RIGHT_OF) {
+	        		this.zeroX = this.majorTicLength / 2;
+	        		
+	        	// Invalid text position
+	        	} else {
+	        		throw new IllegalArgumentException("Illegal combination of "
+	        				+ "orientation and positionTextRelativeToHatches");
+	        	}
+	        	
+	        	this.lineMinX = this.zeroX;
+	        	this.lineMaxX = this.zeroX;
+	        	
+	        // Invalid orientation
+	        } else {
+	        	throw new IllegalArgumentException("Invalid orientation");
+	        }
+        }
+    }
+    
+    
     // ===========================================
     //    Implementation of PlotElement interface
     // ===========================================
@@ -467,35 +637,49 @@ public final class Axis implements ScalePlotElement {
                 this.color);
         canvas.add(line);
         
-        // Set up for generating tic marks
-	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
-                new RenderedWidthCalculator(canvas), 
-	    		this.length, this.minValue, this.maxValue, this.fontSize);
-        double majorTicInterval = this.computeTicInterval(
-                this.minValue, this.maxValue, maxNumMajorTics);
-        double minorTicInterval = majorTicInterval
-            / numMinorTicsBetweenMajorTics;
-        double startingMajorTic = this.computeStartTic(this.minValue,
-                majorTicInterval);
+        // Case: User did not specify precise hatch locations and labels
+        if (this.hatchPoints == null) {
         
-        // Create tic marks
-        for (double i = startingMajorTic - majorTicInterval;
-            i <= this.maxValue; i += majorTicInterval) {
-            
-            // Major tic mark
-            if (i >= this.minValue) {
-                AxisTicMark tic = this.newAxisTicMark(i, true);
-                tic.paint(canvas, true);
-            }
-            
-            // Minor tic marks
-            for (double j = i + minorTicInterval; j < i + majorTicInterval;
-                j += minorTicInterval) {
-                if (j >= this.minValue && j <= this.maxValue) {
-	                AxisTicMark tic = this.newAxisTicMark(j, false);
-	                tic.paint(canvas, false);
-                }
-            }
+	        // Set up for generating tic marks
+		    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
+	                new RenderedWidthCalculator(canvas), 
+		    		this.length, this.minValue, this.maxValue, this.fontSize);
+	        double majorTicInterval = this.computeTicInterval(
+	                this.minValue, this.maxValue, maxNumMajorTics);
+	        double minorTicInterval = majorTicInterval
+	            / numMinorTicsBetweenMajorTics;
+	        double startingMajorTic = this.computeStartTic(this.minValue,
+	                majorTicInterval);
+	        
+	        // Create tic marks
+	        for (double i = startingMajorTic - majorTicInterval;
+	            i <= this.maxValue; i += majorTicInterval) {
+	            
+	            // Major tic mark
+	            if (i >= this.minValue) {
+	            	String label = this.numberFormatter.format(i);
+	                AxisTicMark tic = this.newAxisTicMark(i, label, true);
+	                tic.paint(canvas, true);
+	            }
+	            
+	            // Minor tic marks
+	            for (double j = i + minorTicInterval; j < i + majorTicInterval;
+	                j += minorTicInterval) {
+	                if (j >= this.minValue && j <= this.maxValue) {
+		                AxisTicMark tic = this.newAxisTicMark(j, null, false);
+		                tic.paint(canvas, false);
+	                }
+	            }
+	        }
+	        
+	    // Case: user specified precise hatch locations and labels
+        } else {
+        	for (int i = 0; i < this.hatchPoints.size(); i++) {
+        		double point = this.hatchPoints.get(i);
+        		String label = this.hatchLabels.get(i);
+	        	AxisTicMark tic = this.newAxisTicMark(point, label, true);
+	            tic.paint(canvas, true);
+        	}
         }
     }
     
@@ -729,12 +913,13 @@ public final class Axis implements ScalePlotElement {
 	/**
 	 * Create new axis tic mark.
 	 * @param value Value
+	 * @param label Label of tic
 	 * @param isMajor Is a major tic mark?
 	 * @return A tic mark
 	 */
 	private AxisTicMark newAxisTicMark(final double value,
+			final String label,
 			final boolean isMajor) {
-	    String label = this.numberFormatter.format(value);
 	    int pixel = this.nativeUnitsToPixel(value);
 	    Point point = null;
 	    if (this.orientation == Orientation.HORIZONTAL) {
