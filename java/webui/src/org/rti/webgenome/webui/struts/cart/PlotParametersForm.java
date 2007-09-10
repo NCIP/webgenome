@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-09-09 17:16:05 $
+$Revision: 1.8 $
+$Date: 2007-09-10 21:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1078,6 +1078,11 @@ public class PlotParametersForm extends BaseForm {
 		}
 		
 		// genomeIntervals
+		if (this.genomeIntervals == null
+				|| this.genomeIntervals.length() < 1) {
+			errors.add("genomeIntervals",
+					new ActionError("invalid.field"));
+		}
 		BpUnits units = BpUnits.getUnits(this.units);
 		if (this.genomeIntervals != null && this.genomeIntervals.length() > 0) {
 			try {

@@ -59,7 +59,13 @@
 	<html:img page="/images/icon-colorChooser.gif"
 		title="Select color"
 		 border="0"
-		 width="15" height="15"/> = Select color
+		 width="15" height="15"/> = Select color &nbsp;&nbsp;
+		
+	<html:img page="/images/icon-undo.gif"
+		title="Change parameters"
+		 border="0"
+		 width="15" height="15"/> = Change parameters
+	
 
 <table cellpadding="10"><tr valign="top" align="center"><td>
 

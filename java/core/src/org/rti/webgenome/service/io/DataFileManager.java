@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.6 $
+$Date: 2007-09-10 21:00:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,6 +75,8 @@ import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Reporter;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.util.StopWatch;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -237,32 +239,35 @@ public final class DataFileManager {
      */
     public ChromosomeArrayData loadChromosomeArrayData(
             final DataSerializedBioAssay bioAssay, final short chromosome) {
+    	ChromosomeArrayData cad = null;
     	
     	// Recover attributes not dependent on reporters
     	String fname = bioAssay.getFileName(chromosome);
-        ArrayDataAttributes ada = (ArrayDataAttributes)
-            this.serializer.deSerialize(fname);
-        ChromosomeArrayData cad = new ChromosomeArrayData(chromosome);
-        cad.setChromosomeAlterations(ada.getChromosomeAlterations());
-        
-        // Recover reporter-dependent attributes
-    	if (bioAssay.getArray() != null) {
-	        fname = bioAssay.getArray().getChromosomeReportersFileName(
-	        		chromosome);
-	        ChromosomeReporters cr = this.loadChromosomeReporters(fname);
-	        Iterator<Reporter> rIt = cr.getReporters().iterator();
-	        Iterator<ArrayDatumAttributes> aIt =
-	            ada.getArrayDatumAttributes().iterator();
-	        while (rIt.hasNext() && aIt.hasNext()) {
-	            Reporter r = rIt.next();
-	            ArrayDatumAttributes atts = aIt.next();
-	            if (!Float.isNaN(atts.getValue())) {
-	                ArrayDatum datum =
-	                    new ArrayDatum(atts.getValue(), atts.getError(), r);
-	                cad.add(datum);
-	            }
-	            aIt.remove();
-	        }
+    	if (fname != null) {
+	        ArrayDataAttributes ada = (ArrayDataAttributes)
+	            this.serializer.deSerialize(fname);
+	        cad = new ChromosomeArrayData(chromosome);
+	        cad.setChromosomeAlterations(ada.getChromosomeAlterations());
+	        
+	        // Recover reporter-dependent attributes
+	    	if (bioAssay.getArray() != null) {
+		        fname = bioAssay.getArray().getChromosomeReportersFileName(
+		        		chromosome);
+		        ChromosomeReporters cr = this.loadChromosomeReporters(fname);
+		        Iterator<Reporter> rIt = cr.getReporters().iterator();
+		        Iterator<ArrayDatumAttributes> aIt =
+		            ada.getArrayDatumAttributes().iterator();
+		        while (rIt.hasNext() && aIt.hasNext()) {
+		            Reporter r = rIt.next();
+		            ArrayDatumAttributes atts = aIt.next();
+		            if (!Float.isNaN(atts.getValue())) {
+		                ArrayDatum datum =
+		                    new ArrayDatum(atts.getValue(), atts.getError(), r);
+		                cad.add(datum);
+		            }
+		            aIt.remove();
+		        }
+	    	}
     	}
     	
         return cad;
@@ -369,6 +374,39 @@ public final class DataFileManager {
      */
     public void deleteDataFile(final String fileName) {
     	this.serializer.decommissionObject(fileName);
+    }
+    
+
+    /**
+     * Persist given click boxes.
+     * @param clickBoxes Click boxes to persist.
+     * @return Name of file containing serialized click boxes
+     */
+    public String saveClickBoxes(final Set<ClickBoxes> clickBoxes) {
+    	HashSet<ClickBoxes> hs = new HashSet<ClickBoxes>(clickBoxes);
+    	return this.serializer.serialize(hs);
+    }
+    
+    
+    /**
+     * Recover (deserialize) object in given file.
+     * @param fileName Name of file
+     * @return Oject serialized in file
+     */
+    public Serializable recoverObject(final String fileName) {
+    	return this.serializer.deSerialize(fileName);
+    }
+    
+    /**
+     * Persist given mouse over stripes.
+     * @param mouseOverStripes Mouseover stripes to persist
+     * @return Name of file containing serialized mouseover stripes
+     */
+    public String saveMouseOverStripes(
+    		final Set<MouseOverStripes> mouseOverStripes) {
+    	HashSet<MouseOverStripes> hs =
+    		new HashSet<MouseOverStripes>(mouseOverStripes);
+    	return this.serializer.serialize(hs);
     }
     
     

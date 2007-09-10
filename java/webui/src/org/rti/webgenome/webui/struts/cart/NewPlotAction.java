@@ -1,6 +1,6 @@
 /*
-$Revision: 1.16 $
-$Date: 2007-09-09 18:32:21 $
+$Revision: 1.17 $
+$Date: 2007-09-10 21:00:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -224,8 +224,12 @@ public final class NewPlotAction extends BaseAction {
 	    	experiments = plot.getExperiments();
 	    	
 	    	// Recover plot parameters and set plot parameters bean fields
-	    	params = plot.getPlotParameters();
-	    	pForm.bulkSet(params);
+	    	if (request.getParameter("params.from.user") != null) {
+	    		params = pForm.getPlotParameters();
+	    	} else {
+		    	params = plot.getPlotParameters();
+		    	pForm.bulkSet(params);
+	    	}
 	    	
 	    	// TODO: If genome intervals have not changed, do not
 	    	// go back to client for data.
@@ -256,8 +260,9 @@ public final class NewPlotAction extends BaseAction {
 	    ActionForward forward = null;
 	    
 	    // Case: Plot immediately
-	    if (!ProcessingModeDecider.processInBackground(experiments,
-	    		params.getGenomeIntervals(), request)) {
+	    if (!(ProcessingModeDecider.processInBackground(experiments,
+	    		params.getGenomeIntervals(), request)
+	    		|| ProcessingModeDecider.plotInBackground(params, request))) {
 	    	ChromosomeArrayDataGetter getter = null;
 	    	if (this.dataInMemory(request)) {
 	    		getter = new InMemoryChromosomeArrayDataGetter();

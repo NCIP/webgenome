@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-07 15:51:58 $
+$Revision: 1.4 $
+$Date: 2007-09-10 21:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,12 +57,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.graphics.event.MouseOverStripes;
+import org.rti.webgenome.graphics.io.ClickBoxes;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.util.DbUtils;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -77,6 +82,9 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
 	/** Data source for JDBC queries. */
 	private DataSource dataSource = null;
 	
+	/** Data file manager for serializing plot interactivity objects. */
+	private DataFileManager dataFileManager = null;
+	
 	
     /**
      * Set data source for JDBC queries.
@@ -85,6 +93,17 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
     public void setDataSource(final DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
+    
+    
+    /**
+     * Set data file manager for serializing plot interactivity objects.
+     * @param dataFileManager Data file manager
+     */
+	public void setDataFileManager(final DataFileManager dataFileManager) {
+		this.dataFileManager = dataFileManager;
+	}
+
+
 
 
 	/**
@@ -92,7 +111,75 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * @param shoppingCart A shopping cart
      */
     public void save(final ShoppingCart shoppingCart) {
+        this.persistPlotInteractivityObjects(shoppingCart);
         this.getHibernateTemplate().save(shoppingCart);
+    }
+    
+    /**
+     * Persist all embedded objects involved in plot interactivity
+     * using serialization.
+     * @param shoppingCart A shopping cart
+     */
+    private void persistPlotInteractivityObjects(
+    		final ShoppingCart shoppingCart) {
+    	for (Plot plot : shoppingCart.getPlots()) {
+        	if (plot.getClickBoxesFileName() == null
+        			&& plot.getClickBoxes() != null) {
+        		plot.setClickBoxesFileName(
+        				this.dataFileManager.saveClickBoxes(
+        						plot.getClickBoxes()));
+        	}
+        	if (plot.getMouseOverStripesFileName() == null
+        			&& plot.getMouseOverStripes() != null) {
+        		plot.setMouseOverStripesFileName(
+        				this.dataFileManager.saveMouseOverStripes(
+        						plot.getMouseOverStripes()));
+        	}
+        }
+    }
+    
+    /**
+     * Recover all embedded objects involved in plot interactivity
+     * using serialization.
+     * @param shoppingCart A shopping cart
+     */
+    private void recoverPlotInteractivityObjects(
+    		final ShoppingCart shoppingCart) {
+    	for (Plot plot : shoppingCart.getPlots()) {
+    		if (plot.getClickBoxes() == null
+    				&& plot.getClickBoxesFileName() != null) {
+    			plot.setClickBoxes((Set<ClickBoxes>)
+    					this.dataFileManager.recoverObject(
+    							plot.getClickBoxesFileName()));
+    		}
+    		if (plot.getMouseOverStripes() == null
+    				&& plot.getMouseOverStripesFileName() != null) {
+    			plot.setMouseOverStripes((Set<MouseOverStripes>)
+    					this.dataFileManager.recoverObject(
+    							plot.getMouseOverStripesFileName()));
+    		}
+    	}
+    }
+    
+    
+    /**
+     * Delete embedded plot interactivity objects.
+     * @param shoppingCart A shopping cart
+     */
+    private void deletePlotInteractivityObjects(
+    		final ShoppingCart shoppingCart) {
+    	for (Plot plot : shoppingCart.getPlots()) {
+    		if (plot.getClickBoxesFileName() != null) {
+    			this.dataFileManager.deleteDataFile(
+    					plot.getClickBoxesFileName());
+    			plot.setClickBoxesFileName(null);
+    		}
+    		if (plot.getMouseOverStripesFileName() != null) {
+    			this.dataFileManager.deleteDataFile(
+    					plot.getMouseOverStripesFileName());
+    			plot.setMouseOverStripesFileName(null);
+    		}
+    	}
     }
     
     
@@ -102,8 +189,10 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * @return A shopping cart
      */
     public ShoppingCart load(final Long id) {
-        return (ShoppingCart)
+        ShoppingCart cart = (ShoppingCart)
             this.getHibernateTemplate().load(ShoppingCart.class, id);
+        this.recoverPlotInteractivityObjects(cart);
+        return cart;
     }
     
     
@@ -120,6 +209,7 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
         ShoppingCart cart = null;
         if (carts != null && carts.size() > 0) {
             cart = (ShoppingCart) carts.get(0);
+            this.recoverPlotInteractivityObjects(cart);
         }
         return cart;
     }
@@ -130,6 +220,7 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * @param shoppingCart A shopping cart
      */
     public void update(final ShoppingCart shoppingCart) {
+    	this.persistPlotInteractivityObjects(shoppingCart);
         this.getHibernateTemplate().update(shoppingCart);
     }
     
@@ -139,6 +230,7 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * @param shoppingCart A shopping cart
      */
     public void delete(final ShoppingCart shoppingCart) {
+    	this.deletePlotInteractivityObjects(shoppingCart);
         this.getHibernateTemplate().delete(shoppingCart);
     }
 

@@ -15,9 +15,6 @@ DROP TABLE img_file_map CASCADE CONSTRAINTS;
 DROP TABLE shopping_cart CASCADE CONSTRAINTS;
 DROP TABLE plot CASCADE CONSTRAINTS;
 DROP TABLE color_chooser CASCADE CONSTRAINTS;
-DROP TABLE mouse_over_stripe CASCADE CONSTRAINTS;
-DROP TABLE mouse_over_stripes CASCADE CONSTRAINTS;
-DROP TABLE click_boxes CASCADE CONSTRAINTS;
 DROP TABLE ann_plot_params_types CASCADE CONSTRAINTS;
 DROP TABLE plot_params_ivals CASCADE CONSTRAINTS;
 DROP TABLE plot_params CASCADE CONSTRAINTS;
@@ -32,11 +29,18 @@ DROP TABLE reporters_file_names CASCADE CONSTRAINTS;
 DROP TABLE array CASCADE CONSTRAINTS;
 DROP TABLE organism CASCADE CONSTRAINTS;
 DROP TABLE principal CASCADE CONSTRAINTS;
-DROP TABLE click_boxes_text CASCADE CONSTRAINTS;
 DROP TABLE dsp_experiments CASCADE CONSTRAINTS;
 DROP TABLE job_out_bioassay_names CASCADE CONSTRAINTS;
 DROP TABLE job_out_experiment_names CASCADE CONSTRAINTS;
 DROP TABLE job_experiments CASCADE CONSTRAINTS;
 DROP TABLE data_file_meta_data CASCADE CONSTRAINTS;
 DROP TABLE data_col_meta_data CASCADE CONSTRAINTS;
+--
+-- Following statements commented out because data in these
+-- tables now being persisted via object serialization.
+--
 
+--DROP TABLE mouse_over_stripe CASCADE CONSTRAINTS;
+--DROP TABLE mouse_over_stripes CASCADE CONSTRAINTS;
+--DROP TABLE click_boxes CASCADE CONSTRAINTS;
+--DROP TABLE click_boxes_text CASCADE CONSTRAINTS;

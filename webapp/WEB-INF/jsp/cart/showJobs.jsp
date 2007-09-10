@@ -15,9 +15,9 @@
 	<tr>
 		<th>Job ID</th>
 		<th>Description</th>
-		<th>Submission Date</th>
-		<th>Start Date</th>
-		<th>End Date</th>
+		<th>Submission Time</th>
+		<th>Start Time</th>
+		<th>End Time</th>
 		<th>Outcome</tr>
 	</tr>
 	<logic:iterate name="jobs" id="job">

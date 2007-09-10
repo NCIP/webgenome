@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.4 $
+$Date: 2007-09-10 21:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -100,7 +100,7 @@ public final class SetPlotParametersAction extends BaseAction {
     	
     	// Bulk set form bean properties
     	ppf.bulkSet(params);
-    	
+    	    	
     	this.persistShoppingCartChanges(cart, request);
     	return mapping.findForward("success");
     }

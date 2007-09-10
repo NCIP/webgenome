@@ -12,6 +12,8 @@
 		<input type="hidden" name="plotId" value="<%= request.getParameter("id") %>">
 	</logic:present>
 	
+	<input type="hidden" name="params.from.user" value="1" />
+	
 	<table class="noBorder">
 	
 	<%-- ===================================== --%>

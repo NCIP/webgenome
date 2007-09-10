@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.5 $
+$Date: 2007-09-10 21:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,12 +105,26 @@ public class Plot implements Serializable {
     private Set<ClickBoxes> clickBoxes = null;
     
     /**
+     * Click boxes are persisted via serialization for
+     * performance.  This attribute gives the name of
+     * the file (not full path) in which they are serialized.
+     */
+    private String clickBoxesFileName = null;
+    
+    /**
      * Mouse over stripes reprsenting rectangular
      * pixel regions within the plot.  Text values
      * of each strip gives mouseover text (reporter
      * names).
      */
     private Set<MouseOverStripes> mouseOverStripes = null;
+    
+    /**
+     * Mouse over stripes are persisted via serialization for
+     * performance.  This attribute gives the name of
+     * the file (not full path) in which they are serialized.
+     */
+    private String mouseOverStripesFileName = null;
     
     /** Width of entire plot image in pixels. */
     private int width = 0;
@@ -146,6 +160,49 @@ public class Plot implements Serializable {
 	}
 
 	
+	/**
+	 * Click boxes are persisted via serialization for
+     * performance.  This attribute gives the name of
+     * the file (not full path) in which they are serialized.
+	 * @return File name where click boxes are persisted.
+	 */
+	public String getClickBoxesFileName() {
+		return clickBoxesFileName;
+	}
+
+	/**
+	 * Sets file name where click boxes are persisted.
+	 * Click boxes are persisted via serialization for
+     * performance.  This attribute gives the name of
+     * the file (not full path) in which they are serialized.
+	 * @param clickBoxesFileName File name
+	 */
+	public void setClickBoxesFileName(final String clickBoxesFileName) {
+		this.clickBoxesFileName = clickBoxesFileName;
+	}
+
+	/**
+	 * Mouse over stripes are persisted via serialization for
+     * performance.  This attribute gives the name of
+     * the file (not full path) in which they are serialized.
+	 * @return File name
+	 */
+	public String getMouseOverStripesFileName() {
+		return mouseOverStripesFileName;
+	}
+
+	/**
+	 * Sets name of file where mouseover stripes are persisted.
+	 * Mouse over stripes are persisted via serialization for
+     * performance.  This attribute gives the name of
+     * the file (not full path) in which they are serialized.
+	 * @param mouseOverStripesFileName File 
+	 */
+	public void setMouseOverStripesFileName(
+			final String mouseOverStripesFileName) {
+		this.mouseOverStripesFileName = mouseOverStripesFileName;
+	}
+
 	/**
 	 * Get experiments in plot.
 	 * @return Experiment IDs

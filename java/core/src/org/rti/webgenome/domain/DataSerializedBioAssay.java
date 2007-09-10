@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.4 $
+$Date: 2007-09-10 21:00:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -376,11 +376,13 @@ public class DataSerializedBioAssay extends BioAssay {
     	float min = Float.NaN;
     	for (short chrom : chromosomes) {
     		Float candidateMin = this.minValues.get(chrom);
-    		if (!Float.isNaN(candidateMin)) {
-	    		if (candidateMin != null) {
-	    			if (Float.isNaN(min) || candidateMin < min) {
-	    				min = candidateMin;
-	    			}
+    		if (candidateMin != null) {
+	    		if (!Float.isNaN(candidateMin)) {
+		    		if (candidateMin != null) {
+		    			if (Float.isNaN(min) || candidateMin < min) {
+		    				min = candidateMin;
+		    			}
+		    		}
 	    		}
     		}
     	}
@@ -399,11 +401,13 @@ public class DataSerializedBioAssay extends BioAssay {
     	float max = Float.NaN;
     	for (short chrom : chromosomes) {
     		Float candidateMax = this.maxValues.get(chrom);
-    		if (!Float.isNaN(candidateMax)) {
-	    		if (candidateMax != null) {
-	    			if (Float.isNaN(max) || candidateMax > max) {
-	    				max = candidateMax;
-	    			}
+    		if (candidateMax != null) {
+	    		if (!Float.isNaN(candidateMax)) {
+		    		if (candidateMax != null) {
+		    			if (Float.isNaN(max) || candidateMax > max) {
+		    				max = candidateMax;
+		    			}
+		    		}
 	    		}
     		}
     	}

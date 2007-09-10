@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.6 $
+$Date: 2007-09-10 21:00:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,8 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.service.plot.AnnotationPlotParameters;
+import org.rti.webgenome.service.plot.PlotParameters;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -136,6 +138,34 @@ public final class ProcessingModeDecider {
 			}
 		}
 		BG_PROCESSING_FILE_SIZE_THRESHOLD = threshold;
+	}
+	
+	/**
+	 * Threshold genome interval size
+	 * for background file processing of SOME plots
+	 * on an analytic
+	 * server.  This may be initialized
+	 * from a system property 'bg.processing.file.size.threshold.'
+	 * If this property is not set, the threshold will be
+	 * set to {@link java.lang.Long.MAX_VALUE}.  Hence,
+	 * all operations will be performed on the application
+	 * server.
+	 */
+	private static final long BG_PROCESSING_GENOME_INTERVAL_THRESHOLD;
+	static {
+		String propName = "bg.processing.genome.interval.threshold";
+		long threshold = Long.MAX_VALUE;
+		String thresholdProp = SystemUtils.getApplicationProperty(
+				propName);
+		if (thresholdProp != null) {
+			try {
+				threshold = Long.parseLong(thresholdProp);
+			} catch (NumberFormatException e) {
+				LOGGER.warn("System property '"
+						+ propName + "' is not a valid number");
+			}
+		}
+		BG_PROCESSING_GENOME_INTERVAL_THRESHOLD = threshold;
 	}
 
 	//
@@ -364,6 +394,50 @@ public final class ProcessingModeDecider {
 		boolean background = false;
 		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
 			background = file.length() > BG_PROCESSING_FILE_SIZE_THRESHOLD;
+		}
+		return background;
+	}
+	
+	
+	/**
+	 * Determines whether plotting
+	 * should be performed in the background.
+	 * It does this
+	 * by determining if the genome interval size
+	 * is greater than a threshold.  This treshold
+	 * may be set using the system property
+	 * {@code bg.processing.genome.interval.threshold}.  If this
+	 * property is not set, then the threshold is set
+	 * to {@link java.lang.Long.MAX_VALUE}, so
+	 * the method will always return {@code false}.
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
+	 * Only plot types that involve retrieval of annotations
+	 * from the database are considered.
+	 * @param params Plotting parameters
+	 * @param request Servlet request
+	 * @return {@code true} if the total genome interval size
+	 * size is greater than a threshold and should, hence,
+	 * indicate that the process in question should be
+	 * performed in the background.  Returns {@code false}
+	 * otherwise.
+	 * @throws SessionTimeoutException If the session mode cannot
+	 * be determined indicating a timeout
+	 */
+	public static boolean plotInBackground(
+			final PlotParameters params,
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			if (params instanceof AnnotationPlotParameters) {
+				long totalInterval = 0;
+				for (GenomeInterval ival : params.getGenomeIntervals()) {
+					totalInterval += ival.length();
+				}
+				background = totalInterval
+					> BG_PROCESSING_GENOME_INTERVAL_THRESHOLD;
+			}
 		}
 		return background;
 	}

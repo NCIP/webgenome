@@ -90,6 +90,7 @@
   		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
   		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
   		<property name="dataSource" ref="dataSource"/>
+  		<property name="dataFileManager" ref="dataFileManager"/>
   	</bean>
     
 <!-- Processing Job DAO (Standalone Mode) -->

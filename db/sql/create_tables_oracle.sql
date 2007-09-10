@@ -318,58 +318,63 @@ CREATE TABLE ann_plot_params_types (
 );
 
 --
+-- Next four tables commented out because these
+-- data are now being persisted via object
+-- serialization.
+
+--
 -- ClickBoxes
 --
-CREATE TABLE click_boxes (
-	id NUMBER(38) NOT NULL,
-	origin_x INT,
-	origin_y INT,
-	box_width INT,
-	box_height INT,
-	width INT,
-	height INT,
-	num_rows INT,
-	num_cols INT,
-	plot_id NUMBER(38),
-	PRIMARY KEY (id)
-);
+--CREATE TABLE click_boxes (
+--	id NUMBER(38) NOT NULL,
+--	origin_x INT,
+--	origin_y INT,
+--	box_width INT,
+--	box_height INT,
+--	width INT,
+--	height INT,
+--	num_rows INT,
+--	num_cols INT,
+--	plot_id NUMBER(38),
+--	PRIMARY KEY (id)
+--);
 
 --
 -- ClickBoxes.clickBox property
 --
-CREATE TABLE click_boxes_text (
-	click_boxes_id NUMBER(38) NOT NULL,
-	list_index INT,
-	text_value VARCHAR2(128),
-	PRIMARY KEY (click_boxes_id, list_index)
-);
+--CREATE TABLE click_boxes_text (
+--	click_boxes_id NUMBER(38) NOT NULL,
+--	list_index INT,
+--	text_value VARCHAR2(128),
+--	PRIMARY KEY (click_boxes_id, list_index)
+--);
 
 --
 -- MouseOverStripes
 --
-CREATE TABLE mouse_over_stripes (
-	id NUMBER(38) NOT NULL,
-	orientation VARCHAR2(16),
-	width INT,
-	height INT,
-	origin_x INT,
-	origin_y INT,
-	plot_id NUMBER(38),
-	PRIMARY KEY (id)
-);
+--CREATE TABLE mouse_over_stripes (
+--	id NUMBER(38) NOT NULL,
+--	orientation VARCHAR2(16),
+--	width INT,
+--	height INT,
+--	origin_x INT,
+--	origin_y INT,
+--	plot_id NUMBER(38),
+--	PRIMARY KEY (id)
+--);
 
 --
 -- MouseOverStripe
 --
-CREATE TABLE mouse_over_stripe (
-	id NUMBER(38) NOT NULL,
-	mouse_over_stripes_id NUMBER(38),
-	start_pix INT,
-	end_pix INT,
-	text VARCHAR2(1024),
-	list_index INT,
-	PRIMARY KEY (id)
-);
+--CREATE TABLE mouse_over_stripe (
+--	id NUMBER(38) NOT NULL,
+--	mouse_over_stripes_id NUMBER(38),
+--	start_pix INT,
+--	end_pix INT,
+--	text VARCHAR2(1024),
+--	list_index INT,
+--	PRIMARY KEY (id)
+--);
 
 --
 -- Plot
@@ -382,6 +387,8 @@ CREATE TABLE plot (
 	plot_params_id NUMBER(38),
 	shopping_cart_id NUMBER(38),
 	list_index INT,
+	cb_file_name VARCHAR2(256),
+	mos_file_name VARCHAR2(256),
 	PRIMARY KEY (id)
 );
 
@@ -581,9 +588,15 @@ ALTER TABLE plot_params_ivals
 ADD CONSTRAINT fk_ppi_plot_params_id
 FOREIGN KEY (plot_params_id) REFERENCES plot_params(id);
 
-ALTER TABLE mouse_over_stripe
-ADD CONSTRAINT fk_mos_mosid
-FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes (id);
+--
+-- Constraint commented out because these
+-- data are now being persisted via object
+-- serialization.
+--
+
+--ALTER TABLE mouse_over_stripe
+--ADD CONSTRAINT fk_mos_mosid
+--FOREIGN KEY (mouse_over_stripes_id) REFERENCES mouse_over_stripes (id);
 
 ALTER TABLE plot
 ADD CONSTRAINT fk_plot_plot_params_id
@@ -681,17 +694,35 @@ ALTER TABLE experiment
 ADD CONSTRAINT fk_experiment_sci
 FOREIGN KEY (shopping_cart_id) REFERENCES shopping_cart (id);
 
-ALTER TABLE click_boxes_text
-ADD CONSTRAINT fk_cbt_cbi
-FOREIGN KEY (click_boxes_id) REFERENCES click_boxes (id);
+--
+-- Constraint commented out because these
+-- data are now being persisted via object
+-- serialization.
+--
 
-ALTER TABLE mouse_over_stripes
-ADD CONSTRAINT fk_mos_pi
-FOREIGN KEY (plot_id) REFERENCES plot (id);
+--ALTER TABLE click_boxes_text
+--ADD CONSTRAINT fk_cbt_cbi
+--FOREIGN KEY (click_boxes_id) REFERENCES click_boxes (id);
 
-ALTER TABLE click_boxes
-ADD CONSTRAINT fk_cb_pi
-FOREIGN KEY (plot_id) REFERENCES plot (id);
+--
+-- Constraint commented out because these
+-- data are now being persisted via object
+-- serialization.
+--
+
+--ALTER TABLE mouse_over_stripes
+--ADD CONSTRAINT fk_mos_pi
+--FOREIGN KEY (plot_id) REFERENCES plot (id);
+
+--
+-- Constraint commented out because these
+-- data are now being persisted via object
+-- serialization.
+--
+
+--ALTER TABLE click_boxes
+--ADD CONSTRAINT fk_cb_pi
+--FOREIGN KEY (plot_id) REFERENCES plot (id);
 
 ALTER TABLE data_src_props
 ADD CONSTRAINT fk_dsp_iei

@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-tiles.tld" prefix="tiles" %>
 <%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
+<%@ page import="org.rti.webgenome.util.SystemUtils" %>
+
 <tiles:importAttribute name="selectedMenuItem" scope="request"/>
 <tiles:importAttribute name="helpTopic" scope="request"/>
 
@@ -61,7 +63,8 @@
 			completed jobs.
 			--%>
 			<webgenome:onlyIfLoggedInAndStandAloneMode>
-				window.setInterval("updateJobStatus()", 5000);
+				window.setInterval("updateJobStatus()",
+				<%= SystemUtils.getApplicationProperty("job.polling.interval") %>);
 			</webgenome:onlyIfLoggedInAndStandAloneMode>
 			
 			var messageLeftPix;
