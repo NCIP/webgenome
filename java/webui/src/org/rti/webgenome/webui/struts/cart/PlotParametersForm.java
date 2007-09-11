@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-09-10 21:00:40 $
+$Revision: 1.9 $
+$Date: 2007-09-11 22:52:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,6 +70,7 @@ import org.rti.webgenome.graphics.InterpolationType;
 import org.rti.webgenome.service.plot.AnnotationPlotParameters;
 import org.rti.webgenome.service.plot.BarPlotParameters;
 import org.rti.webgenome.service.plot.BaseGenomicPlotParameters;
+import org.rti.webgenome.service.plot.GenomeSnapshopPlotParameters;
 import org.rti.webgenome.service.plot.HeatMapPlotParameters;
 import org.rti.webgenome.service.plot.IdeogramPlotParameters;
 import org.rti.webgenome.service.plot.PlotParameters;
@@ -121,6 +122,15 @@ public class PlotParametersForm extends BaseForm {
 	private static final String
 	GENOMIC_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER = 
 		"genomeIntervals";
+	
+	/**
+	 * Name of HTTP query parameter that would indicate
+	 * the request came from a form for setting genomic
+	 * snapshot plot parameters.
+	 */
+	private static final String
+	GENOMIC_SNAPSHOT_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER =
+		"minY";
 	
 	/**
 	 * Name of HTTP query parameter that would indicate
@@ -289,14 +299,6 @@ public class PlotParametersForm extends BaseForm {
 	private String copyNumberMaxY = FormUtils.floatToTextBox(
 			ScatterPlotParameters.DEF_COPY_NUMBER_MAX_Y);
 	
-	/** Draw horizontal grid lines in scatter plot? */
-	private String drawHorizGridLines = FormUtils.booleanToCheckBox(
-			ScatterPlotParameters.DEF_DRAW_HORIZ_GRID_LINES);
-	
-	/** Draw vertical grid lines in scatter plot? */
-	private String drawVertGridLines = FormUtils.booleanToCheckBox(
-			ScatterPlotParameters.DEF_DRAW_VERT_GRID_LINES);
-	
 	/** Draw data points in scatter plot? */
 	private String drawPoints = FormUtils.booleanToCheckBox(
 			ScatterPlotParameters.DEF_DRAW_POINTS);
@@ -308,6 +310,18 @@ public class PlotParametersForm extends BaseForm {
 	/** Draw stems connected to diamond shaped points for expression data? */
 	private String drawStems = FormUtils.booleanToCheckBox(
 			ScatterPlotParameters.DEF_DRAW_STEMS);
+	
+	//
+	//  ATTRIBUTES FOR GENOMIC SNAPSHOT PLOTS
+	//
+	
+	/** Minimum Y-axis value. */
+	private String minY = String.valueOf(
+			GenomeSnapshopPlotParameters.DEF_MIN_Y);
+	
+	/** Maximum Y-axis value. */
+	private String maxY = String.valueOf(
+			GenomeSnapshopPlotParameters.DEF_MAX_Y);
 	
 	//
 	//     ATTRIBUTES USED IN DIFFERENT PLOT TYPES
@@ -325,6 +339,14 @@ public class PlotParametersForm extends BaseForm {
 	 * scatter plots and bar plots.
 	 */
 	private String height = String.valueOf(PlotParameters.DEF_HEIGHT);
+	
+	/** Draw horizontal grid lines in scatter plot? */
+	private String drawHorizGridLines = FormUtils.booleanToCheckBox(
+			PlotParameters.DEF_DRAW_HORIZ_GRID_LINES);
+	
+	/** Draw vertical grid lines in scatter plot? */
+	private String drawVertGridLines = FormUtils.booleanToCheckBox(
+			PlotParameters.DEF_DRAW_VERT_GRID_LINES);
 	
 	
 	// ================================
@@ -355,6 +377,38 @@ public class PlotParametersForm extends BaseForm {
 		this.genomeIntervals = genomeIntervals;
 	}
 	
+	/**
+	 * Get maximum Y-axis value.
+	 * @return Maximum Y-axis value
+	 */
+	public String getMaxY() {
+		return maxY;
+	}
+
+	/**
+	 * Set maximum Y-axis value.
+	 * @param maxY Maximum Y-axis value.
+	 */
+	public void setMaxY(final String maxY) {
+		this.maxY = maxY;
+	}
+
+	/**
+	 * Get minimum Y-axis value.
+	 * @return Minimum Y-axis value
+	 */
+	public String getMinY() {
+		return minY;
+	}
+
+	/**
+	 * Set minimum Y-axis value.
+	 * @param minY Minimum Y-axis value.
+	 */
+	public void setMinY(final String minY) {
+		this.minY = minY;
+	}
+
 	/**
 	 * Should annotated genome feature labels be drawn?
 	 * @return T/F
@@ -978,6 +1032,16 @@ public class PlotParametersForm extends BaseForm {
 			this.drawStems = "";
 		}
 		
+		// Turn off genomic snapshot plot checkbox fields.
+		// This should only
+		// be done if the JSP immediately upstream actually
+		// included an HTML form for setting genomic snapshot plot
+		// parameters.
+		if (this.genomicSnapshotPlotParamsHtmlFormUpstream(request)) {
+			this.drawHorizGridLines = "";
+			this.drawVertGridLines = "";
+		}
+		
 		// Turn off general genomic plot parameter checkbox fields.
 		// This should only
 		// be done if the JSP immediately upstream actually
@@ -1030,6 +1094,19 @@ public class PlotParametersForm extends BaseForm {
 	
 	/**
 	 * Determines if the immediate upstream JSP included an
+	 * HTML form for setting genomic snapshot plot parameters.
+	 * @param request Servlet request
+	 * @return T/F
+	 */
+	private boolean genomicSnapshotPlotParamsHtmlFormUpstream(
+			final HttpServletRequest request) {
+		return request.getParameter(
+				GENOMIC_SNAPSHOT_PLOT_PARAMETERS_FORM_INDICATOR_PARAMETER)
+				!= null;
+	}
+	
+	/**
+	 * Determines if the immediate upstream JSP included an
 	 * HTML form for setting annotation plot parameters.
 	 * @param request Servlet request
 	 * @return T/F
@@ -1058,6 +1135,8 @@ public class PlotParametersForm extends BaseForm {
 			this.validateIdeogramPlotFields(errors);
 		} else if (plotType == PlotType.SCATTER) {
 			this.validateScatterPlotFields(errors);
+		} else if (plotType == PlotType.GENOMIC_SNAPSHOT) {
+			this.validateGenomicSnapshotPlotFields(errors);
 		}
 		if (errors.size() > 0) {
 			errors.add("global", new ActionError("invalid.fields"));
@@ -1281,6 +1360,53 @@ public class PlotParametersForm extends BaseForm {
 	 * Validate scatter plot-specific fields.
 	 * @param errors Action errors
 	 */
+	private void validateGenomicSnapshotPlotFields(
+			final ActionErrors errors) {
+		
+		// Attributes in parent class
+		this.validateGenomicPlotFields(errors);
+		
+		// minY and maxY
+		boolean validateRelationship = true;
+		if (this.minY != null && this.minY.length() > 0) {
+			if (!ValidationUtils.validNumber(this.minY)) {
+				errors.add("minY", new ActionError("invalid.field"));
+				validateRelationship = false;
+			}
+		} else {
+			validateRelationship = false;
+		}
+		if (this.maxY != null && this.maxY.length() > 0) {
+			if (!ValidationUtils.validNumber(this.maxY)) {
+				errors.add("maxY", new ActionError("invalid.field"));
+				validateRelationship = false;
+			}
+		} else {
+			validateRelationship = false;
+		}
+		if (validateRelationship) {
+			if (Double.parseDouble(this.minY)
+					> Double.parseDouble(this.maxY)) {
+				errors.add("minY", new ActionError("invalid.field"));
+				errors.add("maxY", new ActionError("invalid.field"));
+			}
+		}
+		
+		// width
+		if (!ValidationUtils.validNumber(this.width)) {
+			errors.add("width", new ActionError("invalid.field"));
+		}
+		
+		// height
+		if (!ValidationUtils.validNumber(this.height)) {
+			errors.add("height", new ActionError("invalid.field"));
+		}
+	}
+	
+	/**
+	 * Validate scatter plot-specific fields.
+	 * @param errors Action errors
+	 */
 	private void validateScatterPlotFields(
 			final ActionErrors errors) {
 		
@@ -1429,18 +1555,26 @@ public class PlotParametersForm extends BaseForm {
 				ScatterPlotParameters.DEF_EXPRESSION_MIN_Y);
 		this.expressionMinY = FormUtils.floatToTextBox(
 				ScatterPlotParameters.DEF_EXPRESSION_MIN_Y);
-		this.width = String.valueOf(PlotParameters.DEF_WIDTH);
-		this.height = String.valueOf(PlotParameters.DEF_HEIGHT);
-		this.drawHorizGridLines = FormUtils.booleanToCheckBox(
-				ScatterPlotParameters.DEF_DRAW_HORIZ_GRID_LINES);
-		this.drawVertGridLines = FormUtils.booleanToCheckBox(
-				ScatterPlotParameters.DEF_DRAW_VERT_GRID_LINES);
 		this.drawErrorBars = FormUtils.booleanToCheckBox(
 				ScatterPlotParameters.DEF_DRAW_ERROR_BARS);
 		this.drawPoints = FormUtils.booleanToCheckBox(
 				ScatterPlotParameters.DEF_DRAW_POINTS);
 		this.drawStems = FormUtils.booleanToCheckBox(
 				ScatterPlotParameters.DEF_DRAW_STEMS);
+		
+		// Attributes for genomic snapshot plots
+		this.minY = FormUtils.floatToTextBox(
+				GenomeSnapshopPlotParameters.DEF_MIN_Y);
+		this.maxY = FormUtils.floatToTextBox(
+				GenomeSnapshopPlotParameters.DEF_MAX_Y);
+		
+		// Attributes for multiple plot types
+		this.width = String.valueOf(PlotParameters.DEF_WIDTH);
+		this.height = String.valueOf(PlotParameters.DEF_HEIGHT);
+		this.drawHorizGridLines = FormUtils.booleanToCheckBox(
+				PlotParameters.DEF_DRAW_HORIZ_GRID_LINES);
+		this.drawVertGridLines = FormUtils.booleanToCheckBox(
+				PlotParameters.DEF_DRAW_VERT_GRID_LINES);
 	}
 	
 	/**
@@ -1466,6 +1600,10 @@ public class PlotParametersForm extends BaseForm {
 		// Scatter plot
 		} else if (type == PlotType.SCATTER) {
 			p = this.newScatterPlotParameters();
+		
+		// GenomicSnapshotPlot
+		} else if (type == PlotType.GENOMIC_SNAPSHOT) {
+			p = this.newGenomicSnapshotPlotParameters();
 		}
 
 		return p;
@@ -1525,6 +1663,29 @@ public class PlotParametersForm extends BaseForm {
 		if (!StringUtils.isEmpty(this.trackWidth)) {
 			params.setTrackWidth(Integer.parseInt(this.trackWidth));
 		}
+		return params;
+	}
+	
+	/**
+	 * Create new genomic snapshot plot parameters and initialize attributes
+	 * from this instance.
+	 * @return Scatter plot parameters
+	 */
+	private GenomeSnapshopPlotParameters
+	newGenomicSnapshotPlotParameters() {
+		GenomeSnapshopPlotParameters params =
+			new GenomeSnapshopPlotParameters();
+		this.transferCommonGenomicPlotParameters(params);
+		params.setWidth(Integer.parseInt(this.width));
+		params.setHeight(Integer.parseInt(this.height));
+		params.setDrawHorizGridLines(
+				FormUtils.checkBoxToBoolean(this.drawHorizGridLines));
+		params.setDrawVertGridLines(
+				FormUtils.checkBoxToBoolean(this.drawVertGridLines));
+		params.setMinY(FormUtils.textBoxToFloat(this.minY,
+				Constants.FLOAT_NAN));
+		params.setMaxY(FormUtils.textBoxToFloat(this.maxY,
+				Constants.FLOAT_NAN));
 		return params;
 	}
 	
@@ -1665,6 +1826,11 @@ public class PlotParametersForm extends BaseForm {
 		} else if (plotType == PlotType.SCATTER) {
 			this.bulkSetScatterPlotAttributes(
 					(ScatterPlotParameters) plotParameters);
+		
+		// GenomicSnapshotPlot attributes
+		} else if (plotType == PlotType.GENOMIC_SNAPSHOT) {
+			this.bulkSetGenomicSnapshotPlotAttributes(
+					(GenomeSnapshopPlotParameters) plotParameters);
 		}
 	}
 	
@@ -1772,6 +1938,25 @@ public class PlotParametersForm extends BaseForm {
 		this.trackWidth = String.valueOf(plotParameters.getTrackWidth());
 		this.ideogramThickness =
 			String.valueOf(plotParameters.getIdeogramThickness());
+	}
+	
+	/**
+	 * Bulk set genomic snapshot plot attributes.
+	 * @param plotParameters Plot parameters
+	 */
+	private void bulkSetGenomicSnapshotPlotAttributes(
+			final GenomeSnapshopPlotParameters plotParameters) {
+		this.bulkSetCommonGenomicPlotAttributes(plotParameters);
+		this.height = String.valueOf(plotParameters.getHeight());
+		this.width = String.valueOf(plotParameters.getWidth());
+		this.maxY = FormUtils.floatToTextBox(
+				plotParameters.getMaxY());
+		this.minY = FormUtils.floatToTextBox(
+				plotParameters.getMinY());
+		this.drawHorizGridLines = FormUtils.booleanToCheckBox(
+				plotParameters.isDrawHorizGridLines());
+		this.drawVertGridLines = FormUtils.booleanToCheckBox(
+				plotParameters.isDrawVertGridLines());
 	}
 	
 	/**

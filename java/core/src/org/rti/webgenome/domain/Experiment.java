@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-09-07 22:21:25 $
+$Revision: 1.9 $
+$Date: 2007-09-11 22:52:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1018,6 +1018,52 @@ public class Experiment implements Serializable {
     		min = (float) 0.0;
     	}
     	return min;
+    }
+    
+    
+    /**
+     * Find minimum value in given experiments.
+     * @param experiments Some experiments
+     * @return Min data value
+     */
+    public static float findMinValue(
+    		final Collection<Experiment> experiments) {
+    	Float min = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		float candidateMin = exp.minValue();
+    		if (!Float.isNaN(candidateMin)) {
+    			if (Float.isNaN(min) || candidateMin < min) {
+    				min = candidateMin;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(min)) {
+    		min = (float) 0.0;
+    	}
+    	return min;
+    }
+    
+    
+    /**
+     * Find maximum data value in experiments.
+     * @param experiments Some experiments
+     * @return Maximum data value
+     */
+    public static float findMaxValue(
+    		final Collection<Experiment> experiments) {
+    	Float max = Float.NaN;
+    	for (Experiment exp : experiments) {
+    		float candidateMax = exp.maxValue();
+    		if (!Float.isNaN(candidateMax)) {
+    			if (Float.isNaN(max) || candidateMax > max) {
+    				max = candidateMax;
+    			}
+    		}
+    	}
+    	if (Float.isNaN(max)) {
+    		max = (float) 0.0;
+    	}
+    	return max;
     }
     
     

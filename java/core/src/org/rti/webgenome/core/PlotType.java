@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:27 $
+$Revision: 1.2 $
+$Date: 2007-09-11 22:52:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,7 +71,10 @@ public enum PlotType {
 	BAR,
 	
 	/** Frequency plot. */
-	FREQUENCY;
+	FREQUENCY,
+	
+	/** Genomic snapshot. */
+	GENOMIC_SNAPSHOT;
 	
 	//
 	//     BUSINESS METHODS

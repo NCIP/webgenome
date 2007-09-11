@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-09 17:16:05 $
+$Revision: 1.4 $
+$Date: 2007-09-11 22:52:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,7 +79,13 @@ public abstract class PlotParameters {
 	public static final int DEF_WIDTH = 550;
 	
 	/** Default plot height. */
-	public static final int DEF_HEIGHT = 250;	
+	public static final int DEF_HEIGHT = 250;
+	
+	/** Default value for drawing horizontal grid lines. */
+    public static final boolean DEF_DRAW_HORIZ_GRID_LINES = true;
+    
+    /** Default value for drawing vertical grid lines. */
+    public static final boolean DEF_DRAW_VERT_GRID_LINES = true;
 
 	
 	//

@@ -86,6 +86,17 @@
 			<property name="drawStems" column="draw_stems"/>
 			<property name="width" column="width"/>
 		</subclass>
+		<subclass name="org.rti.webgenome.service.plot.GenomeSnapshotPlotParameters"
+			discriminator-value="genomic">
+			<property name="lohThreshold" column="loh_threshold"/>
+			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
+			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
+			<property name="height" column="height"/>
+			<property name="drawHorizGridLines" column="draw_horiz_grid_lines"/>
+			<property name="drawVertGridLines" column="draw_vert_grid_lines"/>
+			<property name="width" column="width"/>
+		</subclass>
 	</class>
 
 </hibernate-mapping>

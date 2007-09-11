@@ -281,15 +281,22 @@ CREATE TABLE plot_params (
 	cn_max_y NUMBER(38),
 	expr_min_y NUMBER(38),
 	expr_max_y NUMBER(38),
-	height INT,
-	draw_horiz_grid_lines VARCHAR2(8),
-	draw_vert_grid_lines VARCHAR2(8),
 	draw_points VARCHAR2(8),
 	draw_error_bars VARCHAR2(8),
 	draw_stems VARCHAR2(8),
 	
-	-- AnnotationPlotParameters and ScatterPlotParameters --
+	-- AnnotationPlotParameters, ScatterPlotParameters, --
+	-- and GenomeSnapshotPlotParameters                 --
 	width INT,
+	
+	-- ScatterPlotParameters and GenomeSnapshotPlotParameters --
+	height INT,
+	draw_horiz_grid_lines VARCHAR2(8),
+	draw_vert_grid_lines VARCHAR2(8),
+	
+	-- GenomicSnapshotPlotParameters
+	min_y NUMBER(38),
+	max_y NUMBER(38),
 	
 	PRIMARY KEY (id)
 );

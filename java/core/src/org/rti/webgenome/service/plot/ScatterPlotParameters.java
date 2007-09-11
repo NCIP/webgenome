@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-09 17:16:05 $
+$Revision: 1.7 $
+$Date: 2007-09-11 22:52:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -82,12 +82,6 @@ extends BaseGenomicPlotParameters implements Serializable {
     
     /** Default value for maximum copy number value on Y-axis. */
     public static final float DEF_COPY_NUMBER_MAX_Y = Constants.FLOAT_NAN;
-    
-    /** Default value for drawing horizontal grid lines. */
-    public static final boolean DEF_DRAW_HORIZ_GRID_LINES = true;
-    
-    /** Default value for drawing vertical grid lines. */
-    public static final boolean DEF_DRAW_VERT_GRID_LINES = true;
     
     /** Default value for drawing data points. */
     public static final boolean DEF_DRAW_POINTS = false;

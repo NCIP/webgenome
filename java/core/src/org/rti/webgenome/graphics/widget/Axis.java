@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-10 21:59:20 $
+$Revision: 1.3 $
+$Date: 2007-09-11 22:52:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -761,24 +761,31 @@ public final class Axis implements ScalePlotElement {
      */
     public Grid newGrid(final int width, final int height,
             final Color color, final PlotPanel panel) {
-        Grid grid = new Grid(width, height,
+    	Grid grid = new Grid(width, height,
                 Orientation.opposite(this.orientation), color);
-	    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
-                new RenderedWidthCalculator(panel), 
-	    		this.length, this.minValue, this.maxValue, this.fontSize);
-        double majorTicInterval = this.computeTicInterval(
-                this.minValue, this.maxValue, maxNumMajorTics);
-        double startingMajorTic = this.computeStartTic(
-                this.minValue, majorTicInterval);
-        for (double x = startingMajorTic; x <= this.maxValue;
-            x += majorTicInterval) {
-            int p = this.nativeUnitsToPixel(x);
-            if (x == 0.0) {
-            	grid.setZeroPointLocation(p);
-            } else {
-            	grid.addGridMarkPosition(p);
-            }
-        }
+    	if (this.hatchPoints == null) {
+		    int maxNumMajorTics = this.maxNumTicsThatFitOnOneLine(
+	                new RenderedWidthCalculator(panel), 
+		    		this.length, this.minValue, this.maxValue, this.fontSize);
+	        double majorTicInterval = this.computeTicInterval(
+	                this.minValue, this.maxValue, maxNumMajorTics);
+	        double startingMajorTic = this.computeStartTic(
+	                this.minValue, majorTicInterval);
+	        for (double x = startingMajorTic; x <= this.maxValue;
+	            x += majorTicInterval) {
+	            int p = this.nativeUnitsToPixel(x);
+	            if (x == 0.0) {
+	            	grid.setZeroPointLocation(p);
+	            } else {
+	            	grid.addGridMarkPosition(p);
+	            }
+	        }
+    	} else {
+    		for (Double hatchPoint : this.hatchPoints) {
+    			int p = this.nativeUnitsToPixel(hatchPoint);
+    			grid.addGridMarkPosition(p);
+    		}
+    	}
         return grid;
     }
     
