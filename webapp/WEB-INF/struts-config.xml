@@ -402,6 +402,11 @@
         	type="org.apache.struts.actions.ForwardAction"
         	parameter="upload.data.file.upload.form"/>
         	
+	<!-- ZIP file upload form -->
+		<action path="/upload/zipFileUploadForm"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.zip.file.upload.form"/>
+        	
     <!-- Upload data file to server -->
         <action
         	path="/upload/uploadDataFile"
@@ -412,10 +417,30 @@
         	<forward name="success" path="/upload/specifyDataColumns.do"/>
         </action>
         
+    <!-- Upload ZIP file to server -->
+        <action
+        	path="/upload/uploadZipFile"
+        	name="attach.data.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/zipFileUploadForm.do">
+        	<!--
+        	<forward name="success" path="/upload/specifyZipDataColumns.do"/>
+        	-->
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        </action>
+        
     <!-- Specify data containing columns in an uploaded data fle -->
         <action path="/upload/specifyDataColumns">
         	<forward name="success" path="upload.specify.data.columns"/>
         </action>
+        
+    <!-- Specify data containing columns in all files in a ZIP archive -->
+    <!--
+        <action path="/upload/specifyZipDataColumns">
+        	<forward name="success" path="upload.specify.zip.data.columns"/>
+        </action>
+    -->
         
     <!-- Record set of data columns selected -->
         <action
@@ -427,6 +452,19 @@
         	<forward name="success" path="/upload/showUploadForm.do"/>
         	<forward name="errors" path="/upload/specifyDataColumns.do"/>
         </action>
+        
+    <!-- Record set of data columns selected for ZIP files -->
+    <!--
+        <action
+        	path="/upload/attachZipDataFile"
+        	name="reporter.column.name.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/specifyZipDataColumns.do">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        	<forward name="errors" path="/upload/specifyZipDataColumns.do"/>
+        </action>
+    -->
         
     <!-- Remove data file from upload -->
         <action path="/upload/removeDataFile">

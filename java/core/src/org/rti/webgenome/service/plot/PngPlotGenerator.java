@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-13 19:35:03 $
+$Revision: 1.4 $
+$Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,6 +173,12 @@ public class PngPlotGenerator implements PlotGenerator {
 					(ScatterPlotParameters) completeParams,
 					chromosomeArrayDataGetter);
 			
+		// GenomeSnapshot plot
+		} else if (plotParameters instanceof GenomeSnapshopPlotParameters) {
+			this.newGenomeSnapshotPlot(plot, experiments,
+					(GenomeSnapshopPlotParameters) completeParams,
+					chromosomeArrayDataGetter);
+			
 		// Ideogram plot
 		} else if (plotParameters instanceof IdeogramPlotParameters) {
 			this.newIdeogramPlot(plot, experiments,
@@ -225,6 +231,10 @@ public class PngPlotGenerator implements PlotGenerator {
 			this.newScatterPlot(plot, experiments,
 					(ScatterPlotParameters) completeParams,
 					chromosomeArrayDataGetter);
+		} else if (plotParameters instanceof GenomeSnapshopPlotParameters) {
+			this.newGenomeSnapshotPlot(plot, experiments,
+					(GenomeSnapshopPlotParameters) completeParams,
+					chromosomeArrayDataGetter);
 		} else if (plotParameters instanceof IdeogramPlotParameters) {
 			this.newIdeogramPlot(plot, experiments,
 					(IdeogramPlotParameters) completeParams,
@@ -238,6 +248,41 @@ public class PngPlotGenerator implements PlotGenerator {
 					(AnnotationPlotParameters) plotParameters,
 					chromosomeArrayDataGetter);
 		}
+	}
+	
+	
+	/**
+	 * Create new plot.
+	 * @param plot Plot
+	 * @param experiments Experiments containing data to plot.
+	 * @param plotParameters Plot parameters.
+	 * @param chromosomeArrayDataGetter Chromosome array data getter
+	 */
+	private void newGenomeSnapshotPlot(final Plot plot,
+			final Collection<Experiment> experiments,
+			final GenomeSnapshopPlotParameters plotParameters,
+			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		LOGGER.debug("Creating new genome snapshot plot");
+		
+		// Instantiate plot painter
+		GenomeSnapshotPlotPainter painter =
+			new GenomeSnapshotPlotPainter(chromosomeArrayDataGetter);
+		
+		// Create default plot image
+		LOGGER.debug("Creating default plot image");
+		RasterDrawingCanvas canvas = new RasterDrawingCanvas();
+		PlotPanel panel = new PlotPanel(canvas);
+		painter.paintPlot(panel, experiments, plotParameters);
+		panel.paint(canvas);
+		canvas.setWidth(panel.width());
+		canvas.setHeight(panel.height());
+		plot.setWidth(panel.width() + EXTRA_PADDING);		
+		plot.setHeight(panel.height());
+		String imageFileName =
+			this.imageFileManager.saveImage(canvas.toBufferedImage());
+		plot.setDefaultImageFileName(imageFileName);
+		LOGGER.debug("Completed default plot image");
+		LOGGER.debug("Completed genome snapshot plot");
 	}
 	
 	

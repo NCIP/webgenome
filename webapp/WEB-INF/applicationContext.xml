@@ -638,6 +638,12 @@
 		<property name="ioService" ref="ioService"/>
 	</bean>
 	
+<!-- Upload data file -->
+	<bean name="/upload/uploadZipFile"
+		class="org.rti.webgenome.webui.struts.upload.UploadZipFileAction">
+		<property name="ioService" ref="ioService"/>
+	</bean>
+	
 <!-- Setup for specifying data columns -->
 	<bean name="/upload/specifyDataColumns"
 		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>

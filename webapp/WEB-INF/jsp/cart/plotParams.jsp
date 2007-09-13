@@ -37,6 +37,7 @@
 		</tr>
 	
 	<%-- Genome intervals and units --%>
+		<webgenome:onlyIfNotGenomeSnapshotPlot>
 		<tr>
 			<td>
 				<html:img styleClass="pointer"
@@ -89,6 +90,7 @@
 				<html:text property="numPlotsPerRow"/>
 			</td>
 		</tr>
+		</webgenome:onlyIfNotGenomeSnapshotPlot>
 		
 		<%-- =============================== --%>
 		<%--   Parameters for genomic plots  --%>
@@ -489,6 +491,108 @@
 		</tr>
 		
 		</webgenome:onlyIfIdeogramPlot>
+		
+		<%-- ========================================== --%>
+		<%--   Parameters for genome snapshot plot      --%>
+		<%-- ========================================== --%>
+		
+		<webgenome:onlyIfGenomeSnapshotPlot plotTypeBeanName="plotType">
+		
+	<%-- Minimum Y-axis value --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-minY')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Minimum Y-axis value
+				<html:errors property="minY"/>
+			</td>
+			<td>
+				<html:text property="minY"/>
+			</td>
+		</tr>
+		
+	<%-- Maximum Y-axis value --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-maxY')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Maximum Y-axis value
+				<html:errors property="maxY"/>
+			</td>
+			<td>
+				<html:text property="maxY"/>
+			</td>
+		</tr>
+		
+	<%-- Plot width --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-width')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Plot width in pixels
+				<html:errors property="width"/>
+			</td>
+			<td>
+				<html:text property="width"/>
+			</td>
+		</tr>
+		
+	<%-- Plot height --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-height')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Plot height in pixels
+				<html:errors property="height"/>
+			</td>
+			<td>
+				<html:text property="height"/>
+			</td>
+		</tr>
+		
+	<%-- Draw horizontal grid lines --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawHorizGridLines')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Draw horizontal grid lines?
+			</td>
+			<td>
+				<html:checkbox property="drawHorizGridLines"/>
+			</td>
+		</tr>
+		
+	<%-- Draw vertical grid lines --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawVertGridLines')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Draw vertical grid lines?
+			</td>
+			<td>
+				<html:checkbox property="drawVertGridLines"/>
+			</td>
+		</tr>
+		
+		</webgenome:onlyIfGenomeSnapshotPlot>
 		
 		<%-- ================================== --%>
 		<%--   Parameters for scatter plot      --%>

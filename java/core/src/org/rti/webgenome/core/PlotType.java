@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-11 22:52:24 $
+$Revision: 1.3 $
+$Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -74,7 +74,7 @@ public enum PlotType {
 	FREQUENCY,
 	
 	/** Genomic snapshot. */
-	GENOMIC_SNAPSHOT;
+	GENOME_SNAPSHOT;
 	
 	//
 	//     BUSINESS METHODS

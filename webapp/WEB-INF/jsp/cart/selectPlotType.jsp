@@ -16,6 +16,18 @@
 		<%-- Scatter plot --%>
 			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[0].checked=true;">
 				<td>
+					<html:radio property="plotType" value="GENOME_SNAPSHOT"/>
+				</td>
+				<td>
+					<html:img page="/images/icon-scatterPlot.gif" border="1"/>
+				</td>
+				<td>
+					Whole Genome Snapshot
+				</td>
+			</tr>
+		
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[0].checked=true;">
+				<td>
 					<html:radio property="plotType" value="SCATTER"/>
 				</td>
 				<td>

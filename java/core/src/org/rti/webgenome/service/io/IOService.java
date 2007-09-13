@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.10 $
+$Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,12 +52,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.io;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
@@ -69,6 +72,8 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
+import org.rti.webgenome.domain.ZipEntryMetaData;
+import org.rti.webgenome.domain.ZipFileMetaData;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.util.IdGenerator;
@@ -102,6 +107,9 @@ public class IOService {
 	
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(IOService.class);
+	
+	/** Name of manifest file in a JAR archive. */
+	private static final String JAR_MANIFEST_FILE_NAME = "MANIFEST.MF";
 	
 
 	//
@@ -227,6 +235,65 @@ public class IOService {
 		return file;
 	}
 	
+	
+	/**
+	 * Upload and extract individual data files from ZIP file.  Individual
+	 * files will be stored locally.  The original ZIP file will not.
+	 * @param in Input stream to ZIP file.
+	 * @param zipFileName Zip file name on remote system.
+	 * @return Metadata for zip data.
+	 */
+    public ZipFileMetaData uploadZipFile(final InputStream in,
+    		final String zipFileName) {
+    	
+    	// Stream ZIP file to disk
+    	File zipFile = this.upload(in);
+    	
+    	// Instantiate zip file metadata
+    	ZipFileMetaData meta = new ZipFileMetaData(zipFileName);
+    	
+    	// Extract zip entry files
+    	ZipInputStream zipIn = null;
+    	try {
+			zipIn = new ZipInputStream(
+					new FileInputStream(zipFile));
+			ZipEntry zipEntry = zipIn.getNextEntry();
+			while (zipEntry != null) {
+				if (this.probableDataFile(zipEntry)) {
+					File zipEntryFile = this.upload(zipIn);
+					ZipEntryMetaData zeMeta = new ZipEntryMetaData(
+							zipEntryFile.getName(), zipEntry.getName());
+					meta.add(zeMeta);
+				}
+				zipEntry = zipIn.getNextEntry();
+			}
+		} catch (Exception e) {
+			throw new WebGenomeSystemException("Error extracint ZIP file", e);
+		} finally {
+			IOUtils.close(zipIn);
+		}
+		
+		// Delete ZIP file
+		if (!zipFile.delete()) {
+			LOGGER.warn("Unable to delete ZIP file");
+		}
+    	
+    	return meta;
+    }
+    
+    
+    /**
+     * Determine if given ZIP file entry likely represents a data
+     * containing file.
+     * @param zipEntry ZIP file entry
+     * @return T/F
+     */
+    private boolean probableDataFile(final ZipEntry zipEntry) {
+    	return
+    		!zipEntry.isDirectory()
+    		&& zipEntry.getName().indexOf(JAR_MANIFEST_FILE_NAME) < 0;
+    }
+    
 	
 	/**
 	 * Delete file with given name form working directory.

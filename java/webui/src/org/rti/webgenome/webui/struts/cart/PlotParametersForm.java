@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-09-11 22:52:24 $
+$Revision: 1.10 $
+$Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1135,7 +1135,7 @@ public class PlotParametersForm extends BaseForm {
 			this.validateIdeogramPlotFields(errors);
 		} else if (plotType == PlotType.SCATTER) {
 			this.validateScatterPlotFields(errors);
-		} else if (plotType == PlotType.GENOMIC_SNAPSHOT) {
+		} else if (plotType == PlotType.GENOME_SNAPSHOT) {
 			this.validateGenomicSnapshotPlotFields(errors);
 		}
 		if (errors.size() > 0) {
@@ -1602,7 +1602,7 @@ public class PlotParametersForm extends BaseForm {
 			p = this.newScatterPlotParameters();
 		
 		// GenomicSnapshotPlot
-		} else if (type == PlotType.GENOMIC_SNAPSHOT) {
+		} else if (type == PlotType.GENOME_SNAPSHOT) {
 			p = this.newGenomicSnapshotPlotParameters();
 		}
 
@@ -1828,7 +1828,7 @@ public class PlotParametersForm extends BaseForm {
 					(ScatterPlotParameters) plotParameters);
 		
 		// GenomicSnapshotPlot attributes
-		} else if (plotType == PlotType.GENOMIC_SNAPSHOT) {
+		} else if (plotType == PlotType.GENOME_SNAPSHOT) {
 			this.bulkSetGenomicSnapshotPlotAttributes(
 					(GenomeSnapshopPlotParameters) plotParameters);
 		}

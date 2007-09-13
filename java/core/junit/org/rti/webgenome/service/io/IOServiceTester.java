@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-13 23:42:16 $
+$Revision: 1.1 $
+$Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,87 +48,69 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.util;
+package org.rti.webgenome.service.io;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.Collection;
 
-import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.domain.ZipEntryMetaData;
+import org.rti.webgenome.domain.ZipFileMetaData;
+import org.rti.webgenome.util.FileUtils;
+import org.rti.webgenome.util.UnitTestUtils;
+
+import junit.framework.TestCase;
 
 /**
- * Class containing utility methods for manipulating
- * files and directories.
+ * Tester for {@code IOService}.
  * @author dhall
  *
  */
-public final class FileUtils {
+public class IOServiceTester extends TestCase {
 	
-	/**
-	 * Constructor.
-	 */
-	private FileUtils() {
-		
-	}
+    /** Name of temporary directory used for testing. */
+    private static final String TEMP_DIR_NAME = "io_service_temp";
+    
+    /**
+     * Path (relative to classpath) to directory containing
+     * test files.
+     */
+    private static final String TEST_DIRECTORY =
+        "org/rti/webgenome/service/io/io_service_test_files";
     
     
     /**
-     * Create directory corresponding to given path.
-     * Method also creates necessary sub-directories,
-     * if they are absent.  If a directory cannot
-     * be created, then method returns null.  If
-     * directory is already existing, nothing new
-     * is created.
-     * @param path Absolute path to directory
-     * @return File representing directory or null
-     * if it cannot be created
+     * Test method {@code uploadZipFile}.
+     * @throws Exception if something bad happens
      */
-    public static File createDirectory(final String path) {
-        PathTokenizer pt = new PathTokenizer(path);
-        StringBuffer dirName = new StringBuffer();
-        while (pt.hasNext()) {
-            String subDirName = pt.next();
-            if (dirName.length() > 0) {
-                dirName.append("/");
-            }
-            dirName.append(subDirName);
-            File dir = new File(dirName.toString());
-            if (dir.exists()) {
-                if (!dir.isDirectory()) {
-                    return null;
-                }
-            } else {
-                dir.mkdir();
-            }
+    public void testUploadZipFile() throws Exception {
+    	
+    	// Create temporary directory that will be used as both
+    	// working directory and data storage directory
+        File workingDir = UnitTestUtils.createUnitTestDirectory(TEMP_DIR_NAME);
+        
+        // Instantiate IOService
+        DataFileManager dataFileManager = new DataFileManager(
+        		workingDir.getAbsolutePath());
+        IOService ioService = new IOService(workingDir.getAbsolutePath(),
+        		dataFileManager);
+        
+        // Get stream to ZIP file
+        File testFile = FileUtils.getFile(TEST_DIRECTORY, "small.zip");
+        InputStream in = new FileInputStream(testFile);
+        
+        // Run test
+        ZipFileMetaData meta = ioService.uploadZipFile(in, "small.zip");
+        assertNotNull(meta);
+        Collection<ZipEntryMetaData> zeMeta = meta.getZipEntryMetaData();
+        assertNotNull(zeMeta);
+        assertEquals(2, zeMeta.size());
+        
+        // Clean up
+        for (ZipEntryMetaData z : zeMeta) {
+        	ioService.delete(z.getLocalFileName());
         }
-        return new File(path);
     }
-    
-    
-    /**
-     * Get file with given name and given directory.
-     * @param directoryPath Classpath-relative path to
-     * directory.
-     * @param fileName File name.
-     * @return A file.
-     */
-    public static File getFile(final String directoryPath,
-    		final String fileName) {
-        String absoluteName = directoryPath + "/" + fileName;
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL url = loader.getResource(absoluteName);
-        if (url == null) {
-        	throw new WebGenomeSystemException("Cannot find file '"
-        			+ fileName + "' in directory '" + directoryPath
-        			+ "'");
-        }
-        File file = null;
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new WebGenomeSystemException("Error finding file '"
-            		+ absoluteName + "'");
-        }
-        return file;
-    }
+
 }

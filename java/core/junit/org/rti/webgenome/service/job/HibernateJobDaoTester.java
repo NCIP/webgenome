@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-08 18:10:44 $
+$Revision: 1.6 $
+$Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,9 +66,10 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
+import org.rti.webgenome.graphics.InterpolationType;
 import org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao;
 import org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao;
-import org.rti.webgenome.service.plot.ScatterPlotParameters;
+import org.rti.webgenome.service.plot.GenomeSnapshopPlotParameters;
 import org.rti.webgenome.units.BpUnits;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -123,13 +124,17 @@ public final class HibernateJobDaoTester extends TestCase {
 			new HashMap<Long, String>();
 		outputExperimentNames.put(new Long(1), "exp1-smoothed");
 		outputExperimentNames.put(new Long(2), "exp2-smoothed");
-		ScatterPlotParameters params = new ScatterPlotParameters();
+//		ScatterPlotParameters params = new ScatterPlotParameters();
 		AnalysisJob job1 = new AnalysisJob(experiments, op,
 				outputBioAssayNames, outputExperimentNames, "user");
 		ReRunAnalysisJob job2 = new ReRunAnalysisJob(exp1, op, "user");
-		ReRunAnalysisOnPlotExperimentsJob job3 =
-			new ReRunAnalysisOnPlotExperimentsJob(experiments,
-					(long) 1, "user");
+//		ReRunAnalysisOnPlotExperimentsJob job3 =
+//			new ReRunAnalysisOnPlotExperimentsJob(experiments,
+//					(long) 1, "user");
+		GenomeSnapshopPlotParameters params =
+			new GenomeSnapshopPlotParameters();
+		params.setInterpolationType(InterpolationType.SPLINE);
+		params.setMaxY((float) 0.5);
 		PlotJob job4 = new PlotJob(null, experiments, params, "user");
 		UploadDataSourceProperties uProps =
 			new UploadDataSourceProperties();
@@ -152,12 +157,12 @@ public final class HibernateJobDaoTester extends TestCase {
 		// Perform tests
 		dao.saveOrUpdate(job1);
 		dao.saveOrUpdate(job2);
-		dao.saveOrUpdate(job3);
+//		dao.saveOrUpdate(job3);
 		dao.saveOrUpdate(job4);
 		dao.saveOrUpdate(job5);
 		dao.delete(job1);
 		dao.delete(job2);
-		dao.delete(job3);
+//		dao.delete(job3);
 		dao.delete(job4);
 		dao.delete(job5);
 		

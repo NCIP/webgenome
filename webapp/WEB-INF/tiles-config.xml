@@ -191,10 +191,24 @@
 	  	<put name="helpTopic" value="upload" />
   	</definition>
   	
+<!-- Data file upload form -->
+  	<definition name="upload.zip.file.upload.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload ZIP file" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/zipFileUploadForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
 <!-- Specify data file columns -->
   	<definition name="upload.specify.data.columns" extends="upload.layout" >
 	  	<put name="title" value="webGenome: Upload data" />
 	  	<put name="content" value="/WEB-INF/jsp/upload/specifyDataColumns.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Specify ZIP data files columns -->
+  	<definition name="upload.specify.zip.data.columns" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload ZIPPed data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/specifyZipDataColumns.jsp" />
 	  	<put name="helpTopic" value="upload" />
   	</definition>
   	

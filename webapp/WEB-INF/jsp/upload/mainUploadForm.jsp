@@ -43,7 +43,11 @@ number of rows must be the same and the order of reporters the same.
 	</logic:iterate>
 </p>
 <html:link action="/upload/dataFileUploadForm">
-	Attach file
+	Attach individual data file
+</html:link>
+&nbsp;&nbsp;
+<html:link action="/upload/zipFileUploadForm">
+	Attach ZIP file containing multiple data files
 </html:link>
 
 <h3>Step 2 (optional): Attach a file containing reporter annotations</h3>

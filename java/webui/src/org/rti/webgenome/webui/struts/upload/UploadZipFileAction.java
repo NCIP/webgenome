@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-13 23:42:16 $
+$Revision: 1.1 $
+$Date: 2007-09-13 23:42:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,87 +48,64 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.util;
+package org.rti.webgenome.webui.struts.upload;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 
-import org.rti.webgenome.core.WebGenomeSystemException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.RectangularTextFileFormat;
+import org.rti.webgenome.domain.UploadedData;
+import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Class containing utility methods for manipulating
- * files and directories.
+ * Uploads a ZIP file containing individual data files
+ * to server.
  * @author dhall
  *
  */
-public final class FileUtils {
+public class UploadZipFileAction extends BaseAction {
+	
+	/** Service for file I/O. */
+	private IOService ioService = null;
+	
 	
 	/**
-	 * Constructor.
+	 * Set service for file I/O.
+	 * @param ioService File I/O service.
 	 */
-	private FileUtils() {
-		
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
 	}
-    
-    
-    /**
-     * Create directory corresponding to given path.
-     * Method also creates necessary sub-directories,
-     * if they are absent.  If a directory cannot
-     * be created, then method returns null.  If
-     * directory is already existing, nothing new
-     * is created.
-     * @param path Absolute path to directory
-     * @return File representing directory or null
-     * if it cannot be created
-     */
-    public static File createDirectory(final String path) {
-        PathTokenizer pt = new PathTokenizer(path);
-        StringBuffer dirName = new StringBuffer();
-        while (pt.hasNext()) {
-            String subDirName = pt.next();
-            if (dirName.length() > 0) {
-                dirName.append("/");
-            }
-            dirName.append(subDirName);
-            File dir = new File(dirName.toString());
-            if (dir.exists()) {
-                if (!dir.isDirectory()) {
-                    return null;
-                }
-            } else {
-                dir.mkdir();
-            }
-        }
-        return new File(path);
-    }
-    
-    
-    /**
-     * Get file with given name and given directory.
-     * @param directoryPath Classpath-relative path to
-     * directory.
-     * @param fileName File name.
-     * @return A file.
-     */
-    public static File getFile(final String directoryPath,
-    		final String fileName) {
-        String absoluteName = directoryPath + "/" + fileName;
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        URL url = loader.getResource(absoluteName);
-        if (url == null) {
-        	throw new WebGenomeSystemException("Cannot find file '"
-        			+ fileName + "' in directory '" + directoryPath
-        			+ "'");
-        }
-        File file = null;
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            throw new WebGenomeSystemException("Error finding file '"
-            		+ absoluteName + "'");
-        }
-        return file;
-    }
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ActionForward execute(
+	        final ActionMapping mapping, final ActionForm form,
+	        final HttpServletRequest request,
+	        final HttpServletResponse response
+	    ) throws Exception {
+		AttachDataForm adForm = (AttachDataForm) form;
+		
+		// Stream file bytes to file on local disk
+		File file = this.ioService.upload(
+				adForm.getUploadFile().getInputStream());
+		
+		// Cache reference to data
+		RectangularTextFileFormat format =
+			RectangularTextFileFormat.valueOf(adForm.getFileFormat());
+		UploadedData data = new UploadedData(file, format,
+				adForm.getUploadFile().getFileName());
+		PageContext.setUploadedData(data, request);
+		
+		return mapping.findForward("success");
+	}
 }

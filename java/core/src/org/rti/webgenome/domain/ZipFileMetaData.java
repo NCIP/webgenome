@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
@@ -48,66 +48,100 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.dao.hibernate;
+package org.rti.webgenome.domain;
 
-import org.rti.webgenome.domain.AnnotationType;
-import org.rti.webgenome.domain.GenomeInterval;
-import org.rti.webgenome.service.plot.AnnotationPlotParameters;
-import org.rti.webgenome.service.plot.BarPlotParameters;
-import org.rti.webgenome.service.plot.GenomeSnapshopPlotParameters;
-import org.rti.webgenome.service.plot.IdeogramPlotParameters;
-import org.rti.webgenome.service.plot.ScatterPlotParameters;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import junit.framework.TestCase;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * Tester for
- * {@link org.rti.webgenome.service.dao.Hibernate.
- * HibernatePlotParametersDao}.
+ * Represents metadata concerning an uploaded
+ * ZIP file containing individual data files.
  * @author dhall
  *
  */
-public class HibernatePlotParametersDaoTester extends TestCase {
+public class ZipFileMetaData {
+
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Name (not full path) of ZIP file on remote system. */
+	private String remoteFileName = null;
+	
+	/** Metadata on data files in ZIP file. */
+	private Collection<ZipEntryMetaData> zipEntryMetaData =
+		new ArrayList<ZipEntryMetaData>();
+
+	
+	//
+	//  G E T T E R S / S E T T E R S
+	//
 	
 	/**
-	 * Test all methods.
+	 * Get metadata on data files in ZIP file.
+	 * @return Metadata on data files in ZIP file.
 	 */
-	public void testAllMethods() {
-		
-		// Get DAO bean
-		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        "org/rti/webgenome/service/dao/hibernate/beans.xml");
-		HibernatePlotParametersDao dao =
-			(HibernatePlotParametersDao)
-			ctx.getBean("plotParametersDao");
-		
-		// Instantiate test objects
-		AnnotationPlotParameters p1 = new AnnotationPlotParameters();
-		p1.add(AnnotationType.GENE);
-		p1.add(AnnotationType.LOH_SEGMENT);
-		p1.add(new GenomeInterval((short) 1, 1, 10));
-		p1.add(new GenomeInterval((short) 1, 11, 50));
-		BarPlotParameters p2 = new BarPlotParameters();
-		p2.add(new GenomeInterval((short) 2, 10, 50));
-		IdeogramPlotParameters p3 = new IdeogramPlotParameters();
-		p3.add(new GenomeInterval((short) 3, 1, 50));
-		ScatterPlotParameters p4 = new ScatterPlotParameters();
-		p4.add(new GenomeInterval((short) 4, 100, 200));
-		GenomeSnapshopPlotParameters p5 = new GenomeSnapshopPlotParameters();
-		
-		// Run tests
-		dao.save(p1);
-		dao.save(p2);
-		dao.save(p3);
-		dao.save(p4);
-		dao.save(p5);
-		dao.delete(p1);
-		dao.delete(p2);
-		dao.delete(p3);
-		dao.delete(p4);
-		dao.delete(p5);
+	public Collection<ZipEntryMetaData> getZipEntryMetaData() {
+		return zipEntryMetaData;
 	}
 
+	/**
+	 * Set metadata on data files in ZIP file.
+	 * @param zipEntryMetaData Metadata on data files in ZIP file.
+	 */
+	public void setZipEntryMetaData(
+			final Collection<ZipEntryMetaData> zipEntryMetaData) {
+		this.zipEntryMetaData = zipEntryMetaData;
+	}
+
+	/**
+	 * Get name (not full path) of ZIP file on remote system.
+	 * @return Name (not full path) of ZIP file on remote system.
+	 */
+	public String getRemoteFileName() {
+		return remoteFileName;
+	}
+
+	/**
+	 * Set name (not full path) of ZIP file on remote system.
+	 * @param remoteFileName Name (not full path) of ZIP file
+	 * on remote system.
+	 */
+	public void setRemoteFileName(final String remoteFileName) {
+		this.remoteFileName = remoteFileName;
+	}
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.
+	 */
+	public ZipFileMetaData() {
+		
+	}
+
+	/**
+	 * Constructor.
+	 * @param remoteFileName Name (not full path) of ZIP file
+	 * on remote system.
+	 */
+	public ZipFileMetaData(final String remoteFileName) {
+		super();
+		this.remoteFileName = remoteFileName;
+	}
+	
+	
+	//
+	//  B U S I N E S S  M E T H O D S
+	//
+	
+	/**
+	 * Add given 'metadatum'.
+	 * @param zipEntryMetaDatum 'Metadatum' to add
+	 */
+	public void add(final ZipEntryMetaData zipEntryMetaDatum) {
+		this.zipEntryMetaData.add(zipEntryMetaDatum);
+	}
 }

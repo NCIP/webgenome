@@ -86,7 +86,7 @@
 			<property name="drawStems" column="draw_stems"/>
 			<property name="width" column="width"/>
 		</subclass>
-		<subclass name="org.rti.webgenome.service.plot.GenomeSnapshotPlotParameters"
+		<subclass name="org.rti.webgenome.service.plot.GenomeSnapshopPlotParameters"
 			discriminator-value="genomic">
 			<property name="lohThreshold" column="loh_threshold"/>
 			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>

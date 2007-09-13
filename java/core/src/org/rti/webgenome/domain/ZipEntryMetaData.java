@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-09-13 23:42:17 $
 
 The Web CGH Software License, Version 1.0
@@ -48,66 +48,92 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.dao.hibernate;
-
-import org.rti.webgenome.domain.AnnotationType;
-import org.rti.webgenome.domain.GenomeInterval;
-import org.rti.webgenome.service.plot.AnnotationPlotParameters;
-import org.rti.webgenome.service.plot.BarPlotParameters;
-import org.rti.webgenome.service.plot.GenomeSnapshopPlotParameters;
-import org.rti.webgenome.service.plot.IdeogramPlotParameters;
-import org.rti.webgenome.service.plot.ScatterPlotParameters;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import junit.framework.TestCase;
+package org.rti.webgenome.domain;
 
 /**
- * Tester for
- * {@link org.rti.webgenome.service.dao.Hibernate.
- * HibernatePlotParametersDao}.
+ * Metadata about data file that originated from
+ * an uploaded ZIP file.
  * @author dhall
  *
  */
-public class HibernatePlotParametersDaoTester extends TestCase {
+public class ZipEntryMetaData {
+
+	//
+	//  A T T R I B U T E S
+	//
 	
 	/**
-	 * Test all methods.
+	 * Name (not full path) on local files system
+	 * of file extracted from an uploaded ZIP file.
+	 * 
 	 */
-	public void testAllMethods() {
-		
-		// Get DAO bean
-		ApplicationContext ctx = new ClassPathXmlApplicationContext(
-        "org/rti/webgenome/service/dao/hibernate/beans.xml");
-		HibernatePlotParametersDao dao =
-			(HibernatePlotParametersDao)
-			ctx.getBean("plotParametersDao");
-		
-		// Instantiate test objects
-		AnnotationPlotParameters p1 = new AnnotationPlotParameters();
-		p1.add(AnnotationType.GENE);
-		p1.add(AnnotationType.LOH_SEGMENT);
-		p1.add(new GenomeInterval((short) 1, 1, 10));
-		p1.add(new GenomeInterval((short) 1, 11, 50));
-		BarPlotParameters p2 = new BarPlotParameters();
-		p2.add(new GenomeInterval((short) 2, 10, 50));
-		IdeogramPlotParameters p3 = new IdeogramPlotParameters();
-		p3.add(new GenomeInterval((short) 3, 1, 50));
-		ScatterPlotParameters p4 = new ScatterPlotParameters();
-		p4.add(new GenomeInterval((short) 4, 100, 200));
-		GenomeSnapshopPlotParameters p5 = new GenomeSnapshopPlotParameters();
-		
-		// Run tests
-		dao.save(p1);
-		dao.save(p2);
-		dao.save(p3);
-		dao.save(p4);
-		dao.save(p5);
-		dao.delete(p1);
-		dao.delete(p2);
-		dao.delete(p3);
-		dao.delete(p4);
-		dao.delete(p5);
+	private String localFileName = null;
+	
+	/**
+	 * Name (not full path) on remote file system
+	 * of file extracted from an uploaded ZIP file.
+	 */
+	private String remoteFileName = null;
+	
+	//
+	//  G E T T E R S / S E T T E R S
+	//
+
+	/**
+	 * Get name (not full path) on local files system
+	 * of file extracted from an uploaded ZIP file.
+	 * @return Name (not full path) on local files system
+	 * of file extracted from an uploaded ZIP file.
+	 */
+	public String getLocalFileName() {
+		return localFileName;
 	}
 
+	/**
+	 * Set name (not full path) on local files system
+	 * of file extracted from an uploaded ZIP file.
+	 * @param localFileName Name (not full path) on local files system
+	 * of file extracted from an uploaded ZIP file.
+	 */
+	public void setLocalFileName(final String localFileName) {
+		this.localFileName = localFileName;
+	}
+
+	/**
+	 * Get name (not full path) on remote file system
+	 * of file extracted from an uploaded ZIP file.
+	 * @return Name (not full path) on remote file system
+	 * of file extracted from an uploaded ZIP file.
+	 */
+	public String getRemoteFileName() {
+		return remoteFileName;
+	}
+
+	/**
+	 * Set name (not full path) on remote file system
+	 * of file extracted from an uploaded ZIP file.
+	 * @param remoteFileName Name (not full path) on remote file system
+	 * of file extracted from an uploaded ZIP file.
+	 */
+	public void setRemoteFileName(final String remoteFileName) {
+		this.remoteFileName = remoteFileName;
+	}
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
+	/**
+	 * Constructor.
+	 * @param localFileName Name (not full path) on local files system
+	 * of file extracted from an uploaded ZIP file.
+	 * @param remoteFileName Name (not full path) on remote file system
+	 * of file extracted from an uploaded ZIP file.
+	 */
+	public ZipEntryMetaData(final String localFileName,
+			final String remoteFileName) {
+		super();
+		this.localFileName = localFileName;
+		this.remoteFileName = remoteFileName;
+	}
 }
