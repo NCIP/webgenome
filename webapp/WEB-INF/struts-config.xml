@@ -424,10 +424,7 @@
         	scope="session"
         	validate="true"
         	input="/upload/zipFileUploadForm.do">
-        	<!--
         	<forward name="success" path="/upload/specifyZipDataColumns.do"/>
-        	-->
-        	<forward name="success" path="/upload/showUploadForm.do"/>
         </action>
         
     <!-- Specify data containing columns in an uploaded data fle -->
@@ -436,11 +433,9 @@
         </action>
         
     <!-- Specify data containing columns in all files in a ZIP archive -->
-    <!--
         <action path="/upload/specifyZipDataColumns">
         	<forward name="success" path="upload.specify.zip.data.columns"/>
         </action>
-    -->
         
     <!-- Record set of data columns selected -->
         <action

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-13 23:42:17 $
+$Revision: 1.2 $
+$Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -109,7 +109,7 @@ public class IOServiceTester extends TestCase {
         
         // Clean up
         for (ZipEntryMetaData z : zeMeta) {
-        	ioService.delete(z.getLocalFileName());
+        	ioService.delete(z.getLocalFile().getName());
         }
     }
 

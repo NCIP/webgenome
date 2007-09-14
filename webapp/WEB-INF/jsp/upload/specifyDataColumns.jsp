@@ -44,7 +44,7 @@
 	</html:select>
 </p>
 
-<table>
+<table class="table">
 	<tr>
 		<th>Contains Data</th>
 		<th>Column Name</th>

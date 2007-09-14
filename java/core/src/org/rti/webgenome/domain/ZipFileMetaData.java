@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-13 23:42:17 $
+$Revision: 1.2 $
+$Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -71,6 +71,9 @@ public class ZipFileMetaData {
 	/** Metadata on data files in ZIP file. */
 	private Collection<ZipEntryMetaData> zipEntryMetaData =
 		new ArrayList<ZipEntryMetaData>();
+	
+	/** File format or enclosed data files. */
+	private RectangularTextFileFormat fileFormat = null;
 
 	
 	//
@@ -92,6 +95,23 @@ public class ZipFileMetaData {
 	public void setZipEntryMetaData(
 			final Collection<ZipEntryMetaData> zipEntryMetaData) {
 		this.zipEntryMetaData = zipEntryMetaData;
+	}
+	
+	/**
+	 * Get format of file.
+	 * @return File format
+	 */
+	public RectangularTextFileFormat getFileFormat() {
+		return fileFormat;
+	}
+
+	/**
+	 * Set format of file.
+	 * @param fileFormat File format
+	 */
+	public void setFileFormat(
+			final RectangularTextFileFormat fileFormat) {
+		this.fileFormat = fileFormat;
 	}
 
 	/**

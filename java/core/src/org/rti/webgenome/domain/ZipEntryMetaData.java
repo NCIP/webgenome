@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-13 23:42:17 $
+$Revision: 1.2 $
+$Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,10 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Metadata about data file that originated from
  * an uploaded ZIP file.
@@ -63,11 +67,11 @@ public class ZipEntryMetaData {
 	//
 	
 	/**
-	 * Name (not full path) on local files system
-	 * of file extracted from an uploaded ZIP file.
+	 * Local copy of a file
+	 * extracted from an uploaded ZIP file.
 	 * 
 	 */
-	private String localFileName = null;
+	private File localFile = null;
 	
 	/**
 	 * Name (not full path) on remote file system
@@ -75,28 +79,50 @@ public class ZipEntryMetaData {
 	 */
 	private String remoteFileName = null;
 	
+	/** Column headings. */
+	private List<String> columnHeadings = new ArrayList<String>();
+	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
 
+
+
 	/**
-	 * Get name (not full path) on local files system
-	 * of file extracted from an uploaded ZIP file.
-	 * @return Name (not full path) on local files system
-	 * of file extracted from an uploaded ZIP file.
+	 * Get local copy of a file
+	 * extracted from an uploaded ZIP file.
+	 * @return Local copy of a file
+	 * extracted from an uploaded ZIP file.
 	 */
-	public String getLocalFileName() {
-		return localFileName;
+	public File getLocalFile() {
+		return localFile;
 	}
 
 	/**
-	 * Set name (not full path) on local files system
-	 * of file extracted from an uploaded ZIP file.
-	 * @param localFileName Name (not full path) on local files system
-	 * of file extracted from an uploaded ZIP file.
+	 * Set local copy of a file
+	 * extracted from an uploaded ZIP file.
+	 * @param localFile Local copy of a file
+	 * extracted from an uploaded ZIP file.
 	 */
-	public void setLocalFileName(final String localFileName) {
-		this.localFileName = localFileName;
+	public void setLocalFile(final File localFile) {
+		this.localFile = localFile;
+	}
+
+	
+	/**
+	 * Get column headings.
+	 * @return Column headings
+	 */
+	public List<String> getColumnHeadings() {
+		return columnHeadings;
+	}
+
+	/**
+	 * Set column headings.
+	 * @param columnHeadings Column headings
+	 */
+	public void setColumnHeadings(final List<String> columnHeadings) {
+		this.columnHeadings = columnHeadings;
 	}
 
 	/**
@@ -125,15 +151,27 @@ public class ZipEntryMetaData {
 	
 	/**
 	 * Constructor.
-	 * @param localFileName Name (not full path) on local files system
-	 * of file extracted from an uploaded ZIP file.
+	 * @param localFile Local copy of a file
+	 * extracted from an uploaded ZIP file.
 	 * @param remoteFileName Name (not full path) on remote file system
 	 * of file extracted from an uploaded ZIP file.
 	 */
-	public ZipEntryMetaData(final String localFileName,
+	public ZipEntryMetaData(final File localFile,
 			final String remoteFileName) {
 		super();
-		this.localFileName = localFileName;
+		this.localFile = localFile;
 		this.remoteFileName = remoteFileName;
+	}
+	
+	//
+	//  B U S I N E S S  M E T H O D S
+	//
+	
+	/**
+	 * Add column heading.
+	 * @param columnHeading Column heading (i.e. name)
+	 */
+	public void addColumnHeadings(final String columnHeading) {
+		this.columnHeadings.add(columnHeading);
 	}
 }

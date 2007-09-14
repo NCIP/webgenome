@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-08-24 21:51:58 $
+$Revision: 1.7 $
+$Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.domain.UploadedData;
+import org.rti.webgenome.domain.ZipFileMetaData;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -106,6 +107,10 @@ public final class PageContext {
 	
 	/** Key to a single file that was uploaded. */
 	private static final String KEY_UPLOADED_DATA = "key.uploaded.file";
+	
+	/** Key to metadata on uploaded ZIP file. */
+	private static final String KEY_ZIP_FILE_META_DATA =
+		"key.zip.file.meta.data";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -269,19 +274,49 @@ public final class PageContext {
 	}
 	
 	/**
+	 * Set zip file metadata.
+	 * @param meta Zip file metadata
+	 * @param request Servlet request
+	 */
+	public static void setZipFileMetaData(final ZipFileMetaData meta,
+			final HttpServletRequest request) {
+		request.getSession().setAttribute(KEY_ZIP_FILE_META_DATA, meta);
+	}
+	
+	/**
 	 * Get upload object.
 	 * @param request Servlet request
 	 * @return Upload object
 	 * @throws SessionTimeoutException If upload object cannot be found,
 	 * which would indicate that the session has timed out
 	 */
-	public static UploadDataSourceProperties getUpload(final HttpServletRequest request)
+	public static UploadDataSourceProperties getUpload(
+			final HttpServletRequest request)
 	throws SessionTimeoutException {
-		UploadDataSourceProperties upload = (UploadDataSourceProperties) request.getSession().getAttribute(KEY_UPLOAD);
+		UploadDataSourceProperties upload = (UploadDataSourceProperties)
+		request.getSession().getAttribute(KEY_UPLOAD);
 		if (upload == null) {
 			throw new SessionTimeoutException("Session has expired");
 		}
 		return upload;
+	}
+	
+	/**
+	 * Get zip file metadata.
+	 * @param request Servlet request
+	 * @return Zip file metadata object
+	 * @throws SessionTimeoutException If upload object cannot be found,
+	 * which would indicate that the session has timed out
+	 */
+	public static ZipFileMetaData getZipFileMetaData(
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		ZipFileMetaData meta = (ZipFileMetaData)
+			request.getSession().getAttribute(KEY_ZIP_FILE_META_DATA);
+		if (meta == null) {
+			throw new SessionTimeoutException("Session has expired");
+		}
+		return meta;
 	}
 	
 	/**

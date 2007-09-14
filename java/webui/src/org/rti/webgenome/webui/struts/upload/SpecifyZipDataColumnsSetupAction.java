@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
@@ -48,96 +48,40 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.domain;
+package org.rti.webgenome.webui.struts.upload;
 
-import java.io.File;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.ZipFileMetaData;
+import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Data that were uploaded in a 'rectangular' file.
+ * Sets up for downstream JSP that enables the user to
+ * select data containing-columns in uploaded data files.
  * @author dhall
  *
  */
-public class UploadedData {
-
-	/** File where the data reside on the server. */
-	private File file = null;
-	
-	/** File format. */
-	private RectangularTextFileFormat fileFormat = null;
-	
-	/** Name (not full path) of file on users system. */
-	private String remoteFileName = null;
-	
-
-	/**
-	 * Get file where the data reside on the server.
-	 * @return A file
-	 */
-	public File getFile() {
-		return file;
-	}
-
-	/**
-	 * Set file where the data reside on the server.
-	 * @param file A rectangular format file
-	 */
-	public void setFile(final File file) {
-		this.file = file;
-	}
-
-	/**
-	 * Get format of file.
-	 * @return File format
-	 */
-	public RectangularTextFileFormat getFileFormat() {
-		return fileFormat;
-	}
-
-	/**
-	 * Set format of file.
-	 * @param fileFormat File format
-	 */
-	public void setFileFormat(
-			final RectangularTextFileFormat fileFormat) {
-		this.fileFormat = fileFormat;
-	}
-	
+public class SpecifyZipDataColumnsSetupAction extends BaseAction {
 	
 	/**
-	 * Get name (not full path) of file on users system.
-	 * @return File name
+	 * {@inheritDoc}
 	 */
-	public String getRemoteFileName() {
-		return remoteFileName;
-	}
-
-	/**
-	 * Set name (not full path) of file on users system.
-	 * @param remoteFileName File name
-	 */
-	public void setRemoteFileName(final String remoteFileName) {
-		this.remoteFileName = remoteFileName;
-	}
-
-	/**
-	 * Constructor.
-	 */
-	public UploadedData() {
+	public ActionForward execute(
+	        final ActionMapping mapping, final ActionForm form,
+	        final HttpServletRequest request,
+	        final HttpServletResponse response
+	    ) throws Exception {
 		
+		// Get zip file metadata and attach to request
+		ZipFileMetaData meta = PageContext.getZipFileMetaData(request);
+		request.setAttribute("zip", meta);
+		
+		return mapping.findForward("success");
 	}
 
-	/**
-	 * Constructor.
-	 * @param file File where the data reside on the server
-	 * @param fileFormat File format
-	 * @param remoteFileName Name (not path) of file on users system
-	 */
-	public UploadedData(final File file,
-			final RectangularTextFileFormat fileFormat,
-			final String remoteFileName) {
-		super();
-		this.file = file;
-		this.fileFormat = fileFormat;
-		this.remoteFileName = remoteFileName;
-	}
 }

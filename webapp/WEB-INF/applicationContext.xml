@@ -648,6 +648,10 @@
 	<bean name="/upload/specifyDataColumns"
 		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>
 		
+<!-- Setup for specifying data columns -->
+	<bean name="/upload/specifyZipDataColumns"
+		class="org.rti.webgenome.webui.struts.upload.SpecifyZipDataColumnsSetupAction"/>
+		
 <!-- Remove data file from upload -->
 	<bean name="/upload/removeDataFile"
 		class="org.rti.webgenome.webui.struts.upload.RemoveDataFileAction">

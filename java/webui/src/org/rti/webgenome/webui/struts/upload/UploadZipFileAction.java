@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-13 23:42:18 $
+$Revision: 1.2 $
+$Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,16 +50,15 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
-import java.io.File;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.upload.FormFile;
 import org.rti.webgenome.domain.RectangularTextFileFormat;
-import org.rti.webgenome.domain.UploadedData;
+import org.rti.webgenome.domain.ZipFileMetaData;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -96,15 +95,15 @@ public class UploadZipFileAction extends BaseAction {
 		AttachDataForm adForm = (AttachDataForm) form;
 		
 		// Stream file bytes to file on local disk
-		File file = this.ioService.upload(
-				adForm.getUploadFile().getInputStream());
+		FormFile formFile = adForm.getUploadFile();
+		ZipFileMetaData meta = this.ioService.uploadZipFile(
+				formFile.getInputStream(), formFile.getFileName());
 		
 		// Cache reference to data
 		RectangularTextFileFormat format =
 			RectangularTextFileFormat.valueOf(adForm.getFileFormat());
-		UploadedData data = new UploadedData(file, format,
-				adForm.getUploadFile().getFileName());
-		PageContext.setUploadedData(data, request);
+		meta.setFileFormat(format);
+		PageContext.setZipFileMetaData(meta, request);
 		
 		return mapping.findForward("success");
 	}

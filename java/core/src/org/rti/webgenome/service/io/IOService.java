@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2007-09-13 23:42:17 $
+$Revision: 1.11 $
+$Date: 2007-09-14 22:14:11 $
 
 The Web CGH Software License, Version 1.0
 
@@ -262,8 +262,11 @@ public class IOService {
 				if (this.probableDataFile(zipEntry)) {
 					File zipEntryFile = this.upload(zipIn);
 					ZipEntryMetaData zeMeta = new ZipEntryMetaData(
-							zipEntryFile.getName(), zipEntry.getName());
+							zipEntryFile, zipEntry.getName());
 					meta.add(zeMeta);
+					RectangularFileReader reader =
+						new RectangularFileReader(zipEntryFile);
+					zeMeta.setColumnHeadings(reader.getColumnHeadings());
 				}
 				zipEntry = zipIn.getNextEntry();
 			}
