@@ -31,6 +31,16 @@
 
 <h3 align="center">ZIP File: <bean:write name="zip" property="remoteFileName"/></h3>
 
+<center>
+<form action="<html:rewrite page="/upload/attachZipDataFile.do"/>">
+<p>
+	<html:errors property="global"/>
+</p>
+
+<p>
+	<input type="submit" value="OK" />
+</p>
+
 <logic:iterate name="zip" property="zipEntryMetaData" id="meta">
 
 	<h2><bean:write name="meta" property="remoteFileName"/></h2>
@@ -71,43 +81,9 @@
 
 </logic:iterate>
 
-<%--
-<center>
-<html:form action="/upload/attachDataFile">
-<p>
-	<html:errors property="global"/>
-</p>
-
-<p>
-	Column containing reporter names
-	<html:errors property="reporterColumnName"/>
-	<html:select property="reporterColumnName">
-		<html:options name="columnHeadings"/>
-	</html:select>
-</p>
-
-<table>
-	<tr>
-		<th>Contains Data</th>
-		<th>Column Name</th>
-		<th>Bioassay Name</th>
-	</tr>
-	<logic:iterate name="columnHeadings" id="col">
-	<bean:define id="col" name="col"/>
-	<tr>
-		<td align="center"><input type="checkbox" id="<%= col%>_cb"
-			name="<%= col%>_cb"
-			onclick="setBioassayName('<%= col%>')"/></td>
-		<td id="<%= col%>_col"><%= col%></td>
-		<td><input type="text" id="<%= col%>_bioassay" name="<%= col%>_bioassay"/></td>
-	</tr>
-	</logic:iterate>
-</table>
-
 <p>
 	<input type="submit" value="OK" />
-	<input type="button" value="Cancel" />
 </p>
-</html:form>
+
+</form>
 </center>
---%>

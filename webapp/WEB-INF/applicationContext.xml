@@ -662,6 +662,10 @@
 	<bean name="/upload/attachDataFile"
 		class="org.rti.webgenome.webui.struts.upload.AttachDataFileAction"/>
 		
+<!-- Complete the process of attaching zip data file -->
+	<bean name="/upload/attachZipDataFile"
+		class="org.rti.webgenome.webui.struts.upload.AttachZipDataFileAction"/>
+		
 <!-- Upload reporter file -->
 	<bean name="/upload/uploadReporterFile"
 		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction">

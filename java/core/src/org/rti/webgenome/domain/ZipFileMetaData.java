@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-14 22:14:11 $
+$Revision: 1.3 $
+$Date: 2007-09-18 00:09:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -163,5 +163,26 @@ public class ZipFileMetaData {
 	 */
 	public void add(final ZipEntryMetaData zipEntryMetaDatum) {
 		this.zipEntryMetaData.add(zipEntryMetaDatum);
+	}
+	
+	
+	/**
+	 * Get enclosed zip entry metadata by specifying the
+	 * corresponding local file name.
+	 * @param localFileName Name (not full path) of local file
+	 * associated with zip entry (i.e. local file containing
+	 * zip entry file contents).
+	 * @return Zip entry meta data
+	 */
+	public ZipEntryMetaData getZipEntryMetaDataByLocalFileName(
+			final String localFileName) {
+		ZipEntryMetaData meta = null;
+		for (ZipEntryMetaData m : this.zipEntryMetaData) {
+			if (localFileName.equals(m.getLocalFile().getName())) {
+				meta = m;
+				break;
+			}
+		}
+		return meta;
 	}
 }

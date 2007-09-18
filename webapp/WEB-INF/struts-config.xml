@@ -449,17 +449,10 @@
         </action>
         
     <!-- Record set of data columns selected for ZIP files -->
-    <!--
-        <action
-        	path="/upload/attachZipDataFile"
-        	name="reporter.column.name.form"
-        	scope="session"
-        	validate="true"
-        	input="/upload/specifyZipDataColumns.do">
+        <action path="/upload/attachZipDataFile">
         	<forward name="success" path="/upload/showUploadForm.do"/>
         	<forward name="errors" path="/upload/specifyZipDataColumns.do"/>
         </action>
-    -->
         
     <!-- Remove data file from upload -->
         <action path="/upload/removeDataFile">
