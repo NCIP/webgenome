@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-11 22:52:24 $
+$Revision: 1.2 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -107,7 +107,7 @@ public class GenomeSnapshotPlot implements PlotElement {
     private static final int DIAMOND_SIZE = 6;
     
     /** Width of plot lines in pixels. */
-    private static final int LINE_WIDTH = 2;
+    private static final int LINE_WIDTH = 1;
 
     
     //

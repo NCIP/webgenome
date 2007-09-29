@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-11 22:52:24 $
+$Revision: 1.4 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -467,8 +467,13 @@ public final class Axis implements ScalePlotElement {
     	// Set attributes not dependent on orientation and position
     	this.hatchPoints = hatchPoints;
     	this.hatchLabels = hatchLabels;
-        this.minValue = hatchPoints.get(0);
-        this.maxValue = hatchPoints.get(hatchPoints.size() - 1);
+    	if (hatchPoints.size() > 0) {
+	        this.minValue = hatchPoints.get(0);
+	        this.maxValue = hatchPoints.get(hatchPoints.size() - 1);
+    	} else {
+    		this.minValue = (float) 0.0;
+    		this.maxValue = (float) 0.0;
+    	}
         this.length = length;
         this.range = maxValue - minValue;
         this.orientation = orientation;

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2007-09-13 23:42:17 $
+$Revision: 1.11 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -316,11 +316,11 @@ public class PlotParametersForm extends BaseForm {
 	//
 	
 	/** Minimum Y-axis value. */
-	private String minY = String.valueOf(
+	private String minY = FormUtils.floatToTextBox(
 			GenomeSnapshopPlotParameters.DEF_MIN_Y);
 	
 	/** Maximum Y-axis value. */
-	private String maxY = String.valueOf(
+	private String maxY = FormUtils.floatToTextBox(
 			GenomeSnapshopPlotParameters.DEF_MAX_Y);
 	
 	//

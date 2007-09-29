@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-10 21:00:40 $
+$Revision: 1.5 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -337,7 +337,7 @@ public class DataSerializedBioAssay extends BioAssay {
     	float min = Float.NaN;
     	for (float candidateMin : this.minValues.values()) {
     		if (!Float.isNaN(candidateMin)) {
-	    		if (Float.isNaN(candidateMin) || candidateMin < min) {
+	    		if (Float.isNaN(min) || candidateMin < min) {
 	    			min = candidateMin;
 	    		}
     		}
@@ -356,7 +356,7 @@ public class DataSerializedBioAssay extends BioAssay {
     	float max = Float.NaN;
     	for (float candidateMax : this.maxValues.values()) {
     		if (!Float.isNaN(candidateMax)) {
-	    		if (Float.isNaN(candidateMax) || candidateMax > max) {
+	    		if (Float.isNaN(max) || candidateMax > max) {
 	    			max = candidateMax;
 	    		}
     		}

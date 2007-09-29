@@ -25,6 +25,11 @@
 		Change Analytic Parameters
 	</a>
 	</logic:present>
+	&nbsp;&nbsp;
+	<html:link action="/cart/derivedPlot" paramId="id" paramName="plot"
+		paramProperty="id">
+		New Plot of these Data
+	</html:link>
 </center>
 
 <h1 align="center"><bean:write name="plot" property="plotParameters.plotName"/></h1>

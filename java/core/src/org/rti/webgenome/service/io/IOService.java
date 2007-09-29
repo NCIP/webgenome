@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2007-09-14 22:14:11 $
+$Revision: 1.12 $
+$Date: 2007-09-29 05:24:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -454,6 +454,7 @@ public class IOService {
 		Set<String> cols = new HashSet<String>();
 		for (DataFileMetaData meta : dataFileMetaData) {
 			String fileName = meta.getLocalFileName();
+			System.out.println("Meta: " + meta.getRemoteFileName() + meta.getLocalFileName());
 			cols.addAll(this.getColumnHeadings(fileName, meta.getFormat()));
 		}
 		return cols;

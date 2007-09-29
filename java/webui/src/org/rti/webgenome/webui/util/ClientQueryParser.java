@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-25 18:37:59 $
+$Revision: 1.4 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.core.InvalidClientQueryParametersException;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.GenomeIntervalFormatException;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.units.BpUnits;
 
 /**
@@ -138,6 +139,9 @@ public final class ClientQueryParser {
     		throw new InvalidClientQueryParametersException(
     				"Missing HTTP query parameter: "
     				+ QTYPE_PARAM_NAME);
+    	} else if (!validQuantitationType(qType)) {
+    		throw new InvalidClientQueryParametersException(
+    				"Invalid quantitation type");
     	}
     	String intervals = request.getParameter(INTERVALS_PARAM_NAME);
     	if (intervals == null) {
@@ -152,6 +156,16 @@ public final class ClientQueryParser {
         constraintsArray = (BioAssayDataConstraints[])
         	constraints.toArray(constraintsArray);
         return constraintsArray;
+    }
+    
+    
+    /**
+     * Is given quantitation type valid?
+     * @param qType A quantitation type
+     * @return T/F
+     */
+    private static boolean validQuantitationType(final String qType) {
+    	return QuantitationType.getQuantitationType(qType) != null;
     }
     
     

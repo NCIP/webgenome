@@ -156,6 +156,12 @@
 			<forward name="error" path="/cart/showCart.do"/>
 		</action>
 		
+	<!-- Generate new plot of data in another plot -->
+		<action
+			path="/cart/derivedPlot"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="cart.select.plot.type"/>
+			
 	<!-- Select type of data to import from client -->
 		<action
 			path="/cart/selectImportDataType">

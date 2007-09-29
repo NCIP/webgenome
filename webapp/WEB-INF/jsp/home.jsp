@@ -18,6 +18,7 @@
 	lohParams.put("exptIDs", "Experiment 1");
 	lohParams.put("intervals", "1:1-200000000");
 	lohParams.put("qType", QuantitationTypes.LOH);
+	//lohParams.put("qType", "<script>alert(\"hello\")</script>");
 	lohParams.put("clientID", "1");
 	lohParams.put("test", "true");
 	request.setAttribute("lohParamsMap", lohParams);

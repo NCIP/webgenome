@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-18 00:09:59 $
+$Revision: 1.2 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.DataColumnMetaData;
 import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.domain.UploadedData;
 import org.rti.webgenome.domain.ZipEntryMetaData;
 import org.rti.webgenome.domain.ZipFileMetaData;
 import org.rti.webgenome.webui.struts.BaseAction;
@@ -153,18 +152,14 @@ public class AttachZipDataFileAction extends BaseAction {
 				// associated with file
 				DataFileMetaData dfMeta = metaMap.get(fName);
 				if (dfMeta == null) {
-					dfMeta = new DataFileMetaData();
+					dfMeta = this.newDataFileMetaData(zipMeta, fName);
 					metaMap.put(fName, dfMeta);
-					dfMeta.setFormat(zipMeta.getFileFormat());
-					ZipEntryMetaData zeMeta =
-						zipMeta.getZipEntryMetaDataByLocalFileName(fName);
-					dfMeta.setLocalFileName(zeMeta.getLocalFile().getName());
-					dfMeta.setRemoteFileName(zeMeta.getRemoteFileName());
 				}
 				
 				// Add new ZIP column metadata entry
+				String colName = fieldName.substring(firstUnderscoreIndex + 1);
 				DataColumnMetaData colMeta =
-					new DataColumnMetaData(fieldName, bioAssayName);
+					new DataColumnMetaData(colName, bioAssayName);
 				dfMeta.add(colMeta);
 				
 			// If parameter associated with select box
@@ -173,7 +168,7 @@ public class AttachZipDataFileAction extends BaseAction {
 						- SELECT_SUFFIX.length());
 				DataFileMetaData dfMeta = metaMap.get(fName);
 				if (dfMeta == null) {
-					dfMeta = new DataFileMetaData();
+					dfMeta = this.newDataFileMetaData(zipMeta, fName);
 					metaMap.put(fName, dfMeta);
 				}
 				dfMeta.setReporterNameColumnName(request.getParameter(pName));
@@ -181,10 +176,29 @@ public class AttachZipDataFileAction extends BaseAction {
 		}
 		
 		// Add all new data file metadata to upload
-		for (DataFileMetaData dfMeta : metaMap.values()) {
+		for (String key : metaMap.keySet()) {
+			DataFileMetaData dfMeta = metaMap.get(key);
 			upload.add(dfMeta);
 		}
 		
 		return mapping.findForward("success");
+	}
+	
+	/**
+	 * Instantiate new data file metadata.
+	 * @param zipMeta Metadata for entire ZIP file
+	 * @param localFileName Name of local data file unpacked
+	 * from the ZIP file
+	 * @return New metadata on data file {@code localFileName}
+	 */
+	private DataFileMetaData newDataFileMetaData(
+			final ZipFileMetaData zipMeta, final String localFileName) {
+		DataFileMetaData dfMeta = new DataFileMetaData();
+		ZipEntryMetaData zeMeta = zipMeta.getZipEntryMetaDataByLocalFileName(
+				localFileName);
+		dfMeta.setFormat(zipMeta.getFileFormat());
+		dfMeta.setLocalFileName(localFileName);
+		dfMeta.setRemoteFileName(zeMeta.getRemoteFileName());
+		return dfMeta;
 	}
 }

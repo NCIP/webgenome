@@ -10,6 +10,11 @@
 	some plot type defined in org.rti.webgenome.core.PlotType.
 --%>
 	<html:form action="/cart/plotParameters">
+	
+		<logic:present parameter="id">
+			<input type="hidden" name="plotId"
+				value="<%= request.getParameter("id") %>">
+		</logic:present>
 
 		<table cellpadding="5" cellspacing="0" border="0">
 
@@ -26,7 +31,7 @@
 				</td>
 			</tr>
 		
-			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[0].checked=true;">
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[1].checked=true;">
 				<td>
 					<html:radio property="plotType" value="SCATTER"/>
 				</td>
@@ -39,7 +44,7 @@
 			</tr>
 		
 		<%-- Ideogram plot --%>
-			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[1].checked=true;">
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[2].checked=true;">
 				<td>
 					<html:radio property="plotType" value="IDEOGRAM"/>
 				</td>
@@ -52,7 +57,7 @@
 			</tr>
 			
 		<%-- Bar plot --%>
-			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[2].checked=true;">
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[3].checked=true;">
 				<td>
 					<html:radio property="plotType" value="BAR"/>
 				</td>
@@ -65,7 +70,7 @@
 			</tr>
 			
 		<%-- Bar plot --%>
-			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[3].checked=true;">
+			<tr class="cellOut" onMouseOver="this.className='cellOver'" onMouseOut="this.className='cellOut'" onClick="document.forms[0].plotType[4].checked=true;">
 				<td>
 					<html:radio property="plotType" value="ANNOTATION"/>
 				</td>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-09 17:16:05 $
+$Revision: 1.7 $
+$Date: 2007-09-29 05:24:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,6 +173,14 @@ public final class ClientPlotAction extends BaseAction {
 			final ActionForm form, final HttpServletRequest request, 
     		final HttpServletResponse response) throws Exception {
 		LOGGER.debug("Starting ClientPlotAction");
+		
+		System.out.println("qType = " + request.getParameter("qType"));
+		System.out.println("contextPath = " + request.getContextPath());
+		System.out.println("pathInfo = " + request.getPathInfo());
+		System.out.println("queryString = " + request.getQueryString());
+		System.out.println("requestURI = " + request.getRequestURI());
+		System.out.println("servletPath = " + request.getServletPath());
+		System.out.println("requestURL = " + request.getRequestURL());
 		
 		// Cache client ID in session
 		String clientID = request.getParameter("clientID");
