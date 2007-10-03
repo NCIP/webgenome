@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.3 $
+$Date: 2007-10-03 17:32:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,6 +64,7 @@ import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.graphics.widget.Bar;
@@ -162,9 +163,12 @@ public class BarPlotPainter extends PlotPainter {
 			final BarPlotParameters params,
 			final QuantitationType qType) {
 		CommonArrayDatumGroupIterator it =
-			new CommonArrayDatumGroupIterator(experiments);
-		float plotMin = this.minSelectedValue(experiments);
-		float plotMax = this.maxSelectedValue(experiments);
+			new CommonArrayDatumGroupIterator(experiments,
+					params.getGenomeIntervals());
+		float plotMin = this.minSelectedValue(experiments,
+				params.getGenomeIntervals());
+		float plotMax = this.maxSelectedValue(experiments,
+				params.getGenomeIntervals());
 		if (plotMin > (float) 0.0) {
 			plotMin = (float) 0.0;
 		}
@@ -225,10 +229,12 @@ public class BarPlotPainter extends PlotPainter {
 	/**
 	 * Find minimum selected value over given experiments.
 	 * @param experiments Experiments
+	 * @param intervals Genome intervals in plot
 	 * @return Minimum selected value (plus error)
 	 */
 	private float minSelectedValue(
-			final Collection<Experiment> experiments) {
+			final Collection<Experiment> experiments,
+			final Collection<GenomeInterval> intervals) {
 		assert experiments != null;
 		float min = Float.MAX_VALUE;
 		for (Experiment exp : experiments) {
@@ -238,7 +244,8 @@ public class BarPlotPainter extends PlotPainter {
 						this.getChromosomeArrayDataGetter()
 						.getChromosomeArrayData(ba, chrom);
 					for (ArrayDatum ad : cad.getArrayData()) {
-						if (ad.getReporter().isSelected()) {
+						if (ad.getReporter().isSelected()
+								&& GenomeInterval.contains(intervals, ad)) {
 							if (ad.valuePlusError() < min) {
 								min = ad.valuePlusError();
 							}
@@ -254,10 +261,12 @@ public class BarPlotPainter extends PlotPainter {
 	/**
 	 * Find maximum selected value over given experiments.
 	 * @param experiments Experiments
+	 * @param intervals Intervals in plot
 	 * @return Maximum selected value (plus error)
 	 */
 	private float maxSelectedValue(
-			final Collection<Experiment> experiments) {
+			final Collection<Experiment> experiments,
+			final Collection<GenomeInterval> intervals) {
 		assert experiments != null;
 		float max = Float.MIN_VALUE;
 		for (Experiment exp : experiments) {
@@ -267,7 +276,8 @@ public class BarPlotPainter extends PlotPainter {
 						this.getChromosomeArrayDataGetter()
 						.getChromosomeArrayData(ba, chrom);
 					for (ArrayDatum ad : cad.getArrayData()) {
-						if (ad.getReporter().isSelected()) {
+						if (ad.getReporter().isSelected()
+								&& GenomeInterval.contains(intervals, ad)) {
 							if (ad.valuePlusError() > max) {
 								max = ad.valuePlusError();
 							}
@@ -425,9 +435,11 @@ public class BarPlotPainter extends PlotPainter {
 		/**
 		 * Constructor.
 		 * @param experiments Experiments
+		 * @param genomeIntervals Genome intervals in plot
 		 */
 		private CommonArrayDatumGroupIterator(
-				final Collection<Experiment> experiments) {
+				final Collection<Experiment> experiments,
+				final Collection<GenomeInterval> genomeIntervals) {
 			
 			// Map of groups to reporter name
 			Map<String, CommonArrayDatumGroup> groupsMap =
@@ -441,7 +453,9 @@ public class BarPlotPainter extends PlotPainter {
 						if (cad != null) {
 							for (ArrayDatum ad : cad.getArrayData()) {
 								Reporter r = ad.getReporter();
-								if (r.isSelected()) {
+								if (r.isSelected()
+										&& GenomeInterval.contains(
+												genomeIntervals, ad)) {
 									CommonArrayDatumGroup group =
 										groupsMap.get(r.getName());
 									if (group == null) {

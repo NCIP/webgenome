@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.8 $
+$Date: 2007-10-03 17:32:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -331,15 +331,19 @@ public class ScatterPlotPainter extends PlotPainter {
     	 */
     	private void addRow(final PlotPanel row) {
     		if (this.idx < this.genomeIntervals.size()) {
-    			Axis yAxis = this.addLeftYAxis(row);
+    			Axis yAxis = new Axis(this.leftYAxisMinValue,
+    	                this.leftYAxisMaxValue, this.sizer.height(),
+    	                Orientation.VERTICAL, Location.LEFT_OF,
+    	                row.getDrawingCanvas());
     			int endIdx = this.idx + this.params.getNumPlotsPerRow();
     			if (endIdx > this.genomeIntervals.size()) {
     				endIdx = this.genomeIntervals.size();
     			}
     			for (int i = this.idx; i < endIdx; i++) {
     				this.addGenomeIntervalPlot(row, this.genomeIntervals.get(i),
-    						yAxis);
+    						yAxis, i == this.idx);
     			}
+    			this.addLeftYAxis(row, yAxis);
     			if (this.rightYAxisQuantitationType != null) {
     				this.addRightYAxis(row);
     			}
@@ -351,21 +355,16 @@ public class ScatterPlotPainter extends PlotPainter {
     	/**
     	 * Add left Y-axis to row.
     	 * @param row Panel to draw axis on
-    	 * @return Newly-created axis
+    	 * @param yAxis Axis to add
     	 */
-    	private Axis addLeftYAxis(final PlotPanel row) {
-    		Axis yAxis = new Axis(this.leftYAxisMinValue,
-	                this.leftYAxisMaxValue, this.sizer.height(),
-	                Orientation.VERTICAL, Location.LEFT_OF,
-	                row.getDrawingCanvas());
+    	private void addLeftYAxis(final PlotPanel row, final Axis yAxis) {
 	        Caption yCaption = new Caption(
 	        		leftYAxisQuantitationType.getName(),
 	                Orientation.HORIZONTAL, true, row.getDrawingCanvas());
 	        row.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-	                VerticalAlignment.BOTTOM_JUSTIFIED);
+	                VerticalAlignment.BOTTOM_JUSTIFIED, true);
 	        row.add(yCaption, HorizontalAlignment.LEFT_OF,
 	                VerticalAlignment.CENTERED);
-	        return yAxis;
     	}
     	
     	
@@ -396,9 +395,13 @@ public class ScatterPlotPainter extends PlotPainter {
     	 * @param gi Genome interval to graph
     	 * @param referenceYAxis Reference Y-axis, which will always
     	 * be the left Y-axis
+    	 * @param leftJustify Should plot be left justified related
+    	 * to other widgets?  This is typically done if the plot
+    	 * is the first on a row.
     	 */
     	private void addGenomeIntervalPlot(final PlotPanel row,
-    			final GenomeInterval gi, final Axis referenceYAxis) {
+    			final GenomeInterval gi, final Axis referenceYAxis,
+    			final boolean leftJustify) {
             PlotPanel col = row.newChildPlotPanel();
             BpUnits units = this.params.getUnits();
             long start = units.fromBp(gi.getStartLocation());
@@ -442,8 +445,14 @@ public class ScatterPlotPainter extends PlotPainter {
             col.add(xCaption, HorizontalAlignment.CENTERED,
                     VerticalAlignment.BELOW);
             
-            
-            row.add(col, HorizontalAlignment.RIGHT_OF,
+            // Add all widgets to row
+            HorizontalAlignment ha = null;
+            if (leftJustify) {
+            	ha = HorizontalAlignment.LEFT_JUSTIFIED;
+            } else {
+            	ha = HorizontalAlignment.RIGHT_OF;
+            }
+            row.add(col, ha,
             		VerticalAlignment.BOTTOM_JUSTIFIED);
             
             this.plots.add(scatterPlot);

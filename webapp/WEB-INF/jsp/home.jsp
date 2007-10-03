@@ -51,22 +51,41 @@ name="lohParamsMap">LOH</html:link> data.
 </td><td width="48%">
 
 <p>
-This version of <font color="#336699"><b><i>web</i>Genome</b></font> supports the creation of two types of plots:
+This version of <font color="#336699"><b><i>web</i>Genome</b></font> supports the creation of five types of plots:
 <table cellspacing="10" cellpadding="0" border="0">
 	<tr>
 		<td align="center">
 			<html:img page="/images/icon-scatterPlot.gif"/><br>
+			<small>Genome Snapshot Plot</small>
+		</td>
+		<td align="center">
+			<html:img page="/images/icon-scatterPlot.gif"/><br>
 			<small>Scatter Plot</small>
 		</td>
-		<td rowspan="2"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
+		<td rowspan="3"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
 		<td align="center">
 			<html:img page="/images/icon-ideogramPlot.gif"/><br>
 			<small>Ideogram Plot</small>
 		</td>
 	</tr>
+	<tr>
+		<td align="center">
+			<html:img page="/images/icon-annotationPlot.gif"/><br>
+			<small>Annotation Plot</small>
+		</td>
+		<td align="center">
+			<html:img page="/images/icon-barPlot.gif"/><br>
+			<small>Bar Plot</small>
+		</td>
+		<td>&nbsp;</td>
+		<%--
+		<td rowspan="3"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
+		--%>
+	</tr>
 </table>
 Supported data types include <em>copy number</em>, <em>fold change</em>,
-and <em>loss of heterozygosity</em>.  Additionally, a number of basic
+<em>loss of heterozygosity</em>, and <em>gene expression</em>.
+Additionally, a number of basic
 statistical operations are available to process data prior to plotting.
 </p>
 

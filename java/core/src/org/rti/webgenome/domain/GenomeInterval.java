@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.7 $
+$Date: 2007-10-03 17:32:13 $
 
 The Web CGH Software License, Version 1.0
 
@@ -301,6 +301,20 @@ implements Comparable<GenomeInterval>, Serializable {
 		&& ival.endLocation <= this.endLocation;
 	}
 	
+	
+	/**
+	 * Is the given chromosomal location in this interval?
+	 * @param chromosome Chromosome number
+	 * @param position Position on chromosome in base pairs
+	 * @return T/F
+	 */
+	public final boolean contains(
+			final short chromosome, final long position) {
+		return this.chromosome == chromosome
+		&& position >= this.startLocation
+		&& position <= this.endLocation;
+	}
+	
 	/**
 	 * Is this interval completely to left of given?
 	 * @param ival A genome interval
@@ -565,6 +579,38 @@ implements Comparable<GenomeInterval>, Serializable {
 			chromosomes.add(gi.getChromosome());
 		}
 		return chromosomes;
+	}
+	
+	
+	/**
+	 * Is given array datum from this genome interval?
+	 * @param datum An array datum
+	 * @return T/F
+	 */
+	public boolean contains(final ArrayDatum datum) {
+		Reporter r = datum.getReporter();
+		return this.contains(r.getChromosome(), r.getLocation());
+	}
+	
+	
+	/**
+	 * Is the given array datum from at least one of the given
+	 * genome intervals?
+	 * @param intervals Genome intervals to check against
+	 * @param datum An array datum
+	 * @return T/F
+	 */
+	public static boolean contains(
+			final Collection<GenomeInterval> intervals,
+			final ArrayDatum datum) {
+		boolean contains = false;
+		for (GenomeInterval ival : intervals) {
+			if (ival.contains(datum)) {
+				contains = true;
+				break;
+			}
+		}
+		return contains;
 	}
 	
 	
