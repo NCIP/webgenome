@@ -85,9 +85,13 @@ CREATE TABLE annotated_genome_feature (
 --
 -- Job
 --
+-- (1) First block are common fields
+-- (2) Second block are fields specific to
+--     AnalysisJob, ReRunAnalysisJob, and DataImportJob
+-- (3) Third block are fields specific to
+--     PlotJob and ReRunAnalysisOnPlotExperimentsJob
+--
 CREATE TABLE job (
-
-	-- Common fields
 	id NUMBER(38) NOT NULL,
 	type VARCHAR2(16),
 	user_id VARCHAR2(64),
@@ -99,10 +103,8 @@ CREATE TABLE job (
 	user_notified_complete VARCHAR2(8),
 	user_notified_start VARCHAR2(8),
 	
-	-- AnalysisJob, ReRunAnalysisJob, and DataImportJob
 	data_src_props_id NUMBER(38),
 	
-	-- PlotJob and ReRunAnalysisOnPlotExperimentsJob
 	plot_params_id NUMBER(38),
 	plot_id NUMBER(38),
 		
@@ -141,20 +143,22 @@ CREATE TABLE job_experiments (
 --
 -- DataSourceProperties
 --
+-- (1) First block are common properties
+-- (2) Second block is the subclass discriminator
+-- (3) Third block are properties specific to EjbDataSourceProperties
+-- (4) Fourth block are properties specific to UploadDataSourceProperties
+-- (5) Fifth block are properties specific to AnalysisDataSourceProperties
+-- (6) Sixth block are properties specific to SingleAnalysisDataSourceProperties
+--
 CREATE TABLE data_src_props (
-
-	-- Common properties
 	id NUMBER(38) NOT NULL,
 	
-	-- Discriminator
 	type VARCHAR2(16),
 	
-	-- EjbDataSourceProperties
 	jndi_name VARCHAR2(256),
 	jndi_provider_url VARCHAR2(1024),
 	client_id VARCHAR2(128),
 	
-	-- UploadDataSourceProperties
 	rep_loc_file_name VARCHAR2(256),
 	rep_rem_file_name VARCHAR2(256),
 	rep_file_format VARCHAR2(256),
@@ -166,10 +170,8 @@ CREATE TABLE data_src_props (
 	organism_id NUMBER(38),
 	quant_type VARCHAR2(256),
 	
-	-- AnalysisDataSourceProperties
 	an_op_class_name VARCHAR2(256),
 	
-	-- SingleAnalysisDataSourceProperties
 	input_experiment_id NUMBER(38),
 	
 	PRIMARY KEY (id)
@@ -238,16 +240,28 @@ CREATE TABLE prop_options (
 --
 -- This table holds all properties in PlotParameters and subclasses.
 --
+-- (1) First block contains properties for PlotParameters base class
+-- (2) Second block contains properties for BaseGenomicPlotParameters
+-- (3) Third block contains properties for HeatMapPlotParameters
+-- (4) Fourth block contains properties for AnnotationPlotParameters
+-- (5) Fifth block contains properties for BarPlotParameters
+-- (6) Sixth block contains properties for IdeogramPlotParameters
+-- (7) Seventh block contains properties for ScatterPlotParameters
+-- (8) Eigth block contains properties found only in
+--     AnnotationPlotParameters, ScatterPlotParameters,
+--     and GenomeSnapshotPlotParameters
+-- (9) Ninth block contains properties found only in
+--     ScatterPlotParameters and GenomeSnapshotPlotParameters
+-- (10) Tenth block contains properties found only in
+--      GenomicSnapshotPlotParameters
+--
 CREATE TABLE plot_params (
-
-	-- PlotParameters --
 	id NUMBER(38) NOT NULL,
 	plot_name VARCHAR2(256),
 	num_plots_per_row INT,
 	units VARCHAR2(256),
 	type VARCHAR2(16),
 	
-	-- BaseGenomicPlotParameters --
 	loh_threshold NUMBER(38),
 	intplt_loh_eps VARCHAR2(8),
 	draw_raw_loh_probs VARCHAR2(8),
@@ -256,7 +270,6 @@ CREATE TABLE plot_params (
 	show_genes VARCHAR2(8),
 	show_reporter_names VARCHAR2(8),
 	
-	-- HeatMapPlotParameters --
 	cn_max_saturation NUMBER(38),
 	cn_min_saturation NUMBER(38),
 	expr_max_saturation NUMBER(38),
@@ -264,19 +277,15 @@ CREATE TABLE plot_params (
 	min_mask NUMBER(38),
 	max_mask NUMBER(38),
 	
-	-- AnnotationPlotParameters --
 	draw_feature_labels VARCHAR2(8),
 	
-	-- BarPlotParameters --
 	row_height INT,
 	bar_width INT,
 	
-	-- IdeogramPlotParameters --
 	ideogram_size VARCHAR2(256),
 	track_width INT,
 	ideogram_thickness INT,
 	
-	-- ScatterPlotParameters --
 	cn_min_y NUMBER(38),
 	cn_max_y NUMBER(38),
 	expr_min_y NUMBER(38),
@@ -285,16 +294,12 @@ CREATE TABLE plot_params (
 	draw_error_bars VARCHAR2(8),
 	draw_stems VARCHAR2(8),
 	
-	-- AnnotationPlotParameters, ScatterPlotParameters, --
-	-- and GenomeSnapshotPlotParameters                 --
 	width INT,
 	
-	-- ScatterPlotParameters and GenomeSnapshotPlotParameters --
 	height INT,
 	draw_horiz_grid_lines VARCHAR2(8),
 	draw_vert_grid_lines VARCHAR2(8),
 	
-	-- GenomicSnapshotPlotParameters
 	min_y NUMBER(38),
 	max_y NUMBER(38),
 	
