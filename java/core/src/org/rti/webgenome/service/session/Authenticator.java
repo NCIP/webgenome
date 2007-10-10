@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-04-09 22:19:49 $
+$Revision: 1.2 $
+$Date: 2007-10-10 15:08:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,24 +48,24 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 package org.rti.webgenome.service.session;
 
+import org.rti.webgenome.domain.Principal;
 
 /**
- * Authenticates user.
+ * Interface that authenticates users against some
+ * credential repository.
+ * @author dhall
+ *
  */
 public interface Authenticator {
-	
-	/**
-	 * Authenticate user.
-	 * @param loginName Login name
-	 * @param password Password
-	 * @return User profile
-	 * @throws AuthenticationException if user cannot be authenticated
-	 */
-	UserProfile authenticate(String loginName, String password)
-		throws AuthenticationException;
-	
 
+	/**
+	 * Log the user in.
+	 * @param userName User name
+	 * @param password Password
+	 * @return A principal object if the given credentials
+	 * authenticate, or {@code null} otherwise.
+	 */
+	Principal login(String userName, String password);
 }

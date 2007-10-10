@@ -41,7 +41,11 @@
 
 	</html:form>
 	
+	<%--
+	Link deactivated to prevent malicious use.  This functionality
+	will be moved to the administrator module eventually.
 	<p>
 		<html:link action="/user/newAccount">Create Account</html:link>
 	</p>
+	--%>
 </center>

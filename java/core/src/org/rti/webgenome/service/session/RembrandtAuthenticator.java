@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2007-04-09 22:19:49 $
+$Date: 2007-10-10 15:08:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,40 +48,88 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-
 package org.rti.webgenome.service.session;
 
+import gov.nih.nci.security.AuthenticationManager;
+import gov.nih.nci.security.SecurityServiceProvider;
+import gov.nih.nci.security.exceptions.CSInputException;
+import gov.nih.nci.security.exceptions.CSLoginException;
+
+import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
-import org.rti.webgenome.util.SystemUtils;
+import org.rti.webgenome.domain.Principal;
 
 /**
- * Authenticates system administrator.
+ * Authenticates user credentials against the
+ * Rembrandt application credential repository.
+ * @author dhall
+ *
  */
-public final class AdminAuthenticator implements Authenticator {
-    
+public class RembrandtAuthenticator implements Authenticator {
+	
+	//
+	//  S T A T I C S
+	//
+	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(
+			RembrandtAuthenticator.class);
+	
+	
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Authentication manager for Rembrandt. */
+	private final AuthenticationManager authenticationManager;
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
 	/**
-	 * Authenticate user.
-	 * @param loginName Login name
-	 * @param password Password
-	 * @return User profile
-	 * @throws AuthenticationException if user cannot be authenticated
+	 * Constructor.
+	 * @param authenticationManagerName Name of authentication manager
+	 * for Rembrandt
 	 */
-	public UserProfile authenticate(
-			final String loginName, final String password)
-		throws AuthenticationException {
-	    if (password == null) {
-	        throw new IllegalArgumentException("Passwords cannot be null");
-	    }
-	    String adminPassword = SystemUtils.getApplicationProperty(
-	    		"sysadmin.password");
-	    if (adminPassword == null) {
-	        throw new WebGenomeSystemException("Property 'sysadmin.password' "
-	        		+ "not set in 'webgenome.properties' file");
-	    }
-	    if (!adminPassword.equals(password)) {
-	        return null;
-	    }
-	    return new AdminUserProfile();
+	public RembrandtAuthenticator(final String authenticationManagerName) {
+		try {
+			this.authenticationManager =
+				SecurityServiceProvider.getAuthenticationManager(
+						authenticationManagerName);
+			if (this.authenticationManager == null) {
+				throw new WebGenomeSystemException(
+						"Cannot get authenticator for Rembrandt with name: "
+						+ authenticationManagerName);
+			}
+		} catch (Exception e) {
+			throw new WebGenomeSystemException(
+					"Error getting authentication manager for "
+					+ "Rembrandt with name: "
+					+ authenticationManagerName, e);
+		}
 	}
+	
+	//
+	//  I N T E R F A C E : Authenticator
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public Principal login(final String userName, final String password) {
+		Principal principal = null;
+		try {
+			if (this.authenticationManager.login(userName, password)) {
+				principal = new Principal(userName, password);
+			}
+		} catch (CSLoginException e) {
+			LOGGER.warn("Invalid login attempt by '" + userName + "'");
+		} catch (CSInputException e) {
+			LOGGER.warn("Invalid login attempt by '" + userName + "'");
+		} catch (Exception e) {
+			throw new WebGenomeSystemException(
+					"Error validating user credentials", e);
+		}
+		return principal;
+	}
 }

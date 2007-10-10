@@ -19,6 +19,13 @@
 		</property>
 	</bean>
 
+	<!--
+	*****************************************************************
+	Following code commented out during testing of authenticators
+	so the tests would execute more quickly.
+	*****************************************************************
+	-->
+	<!--
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
 		<property name="url"><value>${db.url}</value></property>
@@ -48,5 +55,13 @@
 
 	<bean id="securityMgr" class="org.rti.webgenome.service.session.SecurityMgrImpl">
 		<property name="principalDao"><ref bean="principalDao"/></property>
+	</bean>
+	
+	-->
+	<bean id="rembrandtAuthenticator"
+		class="org.rti.webgenome.service.session.RembrandtAuthenticator">
+		<constructor-arg type="java.lang.String">
+			<value>webgenome</value>
+		</constructor-arg>
 	</bean>
 </beans>
