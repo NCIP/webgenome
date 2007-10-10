@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -81,10 +81,11 @@ public interface ShoppingCartDao {
      * Load cart associated with given user name from
      * persistent storage.
      * @param userName User name
+     * @param domain The domain in which the user name applies
      * @return A shopping cart or null if there is not one
      * for given user.
      */
-    ShoppingCart load(String userName);
+    ShoppingCart load(String userName, String domain);
     
     
     /**

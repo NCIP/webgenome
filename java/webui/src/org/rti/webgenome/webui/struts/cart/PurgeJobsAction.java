@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-01 23:05:01 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -76,7 +76,7 @@ public class PurgeJobsAction extends BaseJobAction {
 	        final HttpServletResponse response
 	    ) throws Exception {
 		Principal principal = PageContext.getPrincipal(request);
-		this.getJobManager().purge(principal.getName());
+		this.getJobManager().purge(principal.getName(), principal.getDomain());
 		return mapping.findForward("success");
 	}
 }

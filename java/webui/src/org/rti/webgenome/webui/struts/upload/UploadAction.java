@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.6 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -153,7 +153,8 @@ public class UploadAction extends BaseAction {
 		if (ProcessingModeDecider.processInBackground(
 				upload, request, this.ioService)) {
 			Principal principal = PageContext.getPrincipal(request);
-			DataImportJob job = new DataImportJob(upload, principal.getName());
+			DataImportJob job = new DataImportJob(upload,
+					principal.getName(), principal.getDomain());
 			this.jobManager.add(job);
 			ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("import.job"));

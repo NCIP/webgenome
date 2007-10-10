@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-08 18:10:44 $
+$Revision: 1.5 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -162,12 +162,13 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 	 * analytic operation parameter values.
 	 * @param plotId Primary key ID of plot to regenerate
 	 * @param userId User login name
+	 * @param userDomain Domain in which user name applies.
 	 */
 	public ReRunAnalysisOnPlotExperimentsJob(
 			final Set<Experiment> experiments,
 			final Long plotId,
-			final String userId) {
-		super(userId);
+			final String userId, final String userDomain) {
+		super(userId, userDomain);
 		this.experiments = experiments;
 		this.plotId = plotId;
 		StringBuffer buff = new StringBuffer(
@@ -196,7 +197,7 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 		AnalysisService aService = jobServices.getAnalysisService();
 		ExperimentDao expDao = jobServices.getExperimentDao();
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId());
+		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		try {

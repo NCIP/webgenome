@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
@@ -48,45 +48,73 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.struts.cart;
+package org.rti.webgenome.service.session;
 
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
+import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.job.Job;
-import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Setup action for showing list of a user's
- * compute jobs.
+ * This class is an authenticator that checks against multiple
+ * credential providers.  The user credentials will be authenticated
+ * if at least one of the configured credential providers
+ * authenticates.
  * @author dhall
  *
  */
-public class ShowJobsSetupAction extends BaseJobAction {
-
+public class MultiCredentialProviderAuthenticator implements Authenticator {
+	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(
+			MultiCredentialProviderAuthenticator.class);
+	
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Credential providers to check against. */
+	private Set<Authenticator> authenticators =
+		new HashSet<Authenticator>();
+	
+	//
+	//  C O N S T R U C T O R S
+	//
+	
 	
 	/**
-	 * {@inheritDoc}
+	 * Constructor.
+	 * @param authenticators Credential providers to check against
 	 */
-	public ActionForward execute(
-	        final ActionMapping mapping, final ActionForm form,
-	        final HttpServletRequest request,
-	        final HttpServletResponse response
-	    ) throws Exception {
-		
-		// Get list of users jobs and attach to request
-		Principal principal = PageContext.getPrincipal(request);
-		Collection<Job> jobs =
-			this.getJobManager().getJobs(principal.getName(),
-					principal.getDomain());
-		request.setAttribute("jobs", jobs);
-		
-		return mapping.findForward("success");
+	public MultiCredentialProviderAuthenticator(
+			final Set<Authenticator> authenticators) {
+		super();
+		this.authenticators = authenticators;
+	}
+	
+	//
+	//  I N T E R F A C E : Authenticator
+	//
+
+	/**
+	 * {@inheritDoc}
+	 * @see org.rti.webgenome.service.session.Authenticator#login(
+	 * java.lang.String, java.lang.String)
+	 */
+	public Principal login(final String userName, final String password) {
+		Principal principal = null;
+		for (Authenticator auth : this.authenticators) {
+			try {
+				principal = auth.login(userName, password);
+			} catch (Exception e) {
+				LOGGER.error(
+						"A credential provider is out of commission", e);
+			}
+			if (principal != null) {
+				break;
+			}
+		}
+		return principal;
 	}
 }

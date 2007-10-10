@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.6 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -93,6 +93,18 @@ public interface Job {
 	 * @param userId User identifier
 	 */
 	void setUserId(String userId);
+	
+	/**
+	 * Set the domain in which the user ID applies.
+	 * @param userDomain A domain
+	 */
+	void setUserDomain(String userDomain);
+	
+	/**
+	 * Get the domain in which the user name applies.
+	 * @return A domain
+	 */
+	String getUserDomain();
 	
 	/**
 	 * Get date/time that the job was instantiated.

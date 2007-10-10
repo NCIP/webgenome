@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-10-10 15:08:41 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -120,7 +120,8 @@ public class RembrandtAuthenticator implements Authenticator {
 		Principal principal = null;
 		try {
 			if (this.authenticationManager.login(userName, password)) {
-				principal = new Principal(userName, password);
+				principal = new Principal(userName, password,
+						this.authenticationManager.getApplicationContextName());
 			}
 		} catch (CSLoginException e) {
 			LOGGER.warn("Invalid login attempt by '" + userName + "'");

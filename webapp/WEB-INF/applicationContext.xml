@@ -126,6 +126,21 @@
 	<bean id="securityMgr" class="org.rti.webgenome.service.session.SecurityMgrImpl">
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
+	
+<!-- Authenticator for login credentials -->
+	<bean id="authenticator"
+		class="org.rti.webgenome.service.session.MultiCredentialProviderAuthenticator">
+		<constructor-arg>
+			<set>
+				<ref bean="securityMgr"/>
+				<bean class="org.rti.webgenome.service.session.RembrandtAuthenticator">
+					<constructor-arg type="java.lang.String">
+						<value>webgenome</value>
+					</constructor-arg>
+				</bean>
+			</set>
+		</constructor-arg>
+	</bean>
 		
 <!-- ID generator for bioassays -->
 	<bean id="bioAssayIdGenerator"
@@ -250,7 +265,7 @@
 <!-- Validate login -->
 	<bean name="/user/validateLogin"
 		class="org.rti.webgenome.webui.struts.user.LoginAction">
-		<property name="securityMgr"><ref bean="securityMgr"/></property>
+		<property name="authenticator"><ref bean="authenticator"/></property>
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>

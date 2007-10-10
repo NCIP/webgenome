@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-08 17:17:16 $
+$Revision: 1.3 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -107,9 +107,9 @@ public class NewlyChangedJobsAction extends BaseAction {
 		try {
 			Principal principal = PageContext.getPrincipal(request);
 			completedJobs = this.jobManager.getNewlyCompletedJobs(
-					principal.getName());
+					principal.getName(), principal.getDomain());
 			startedJobs = this.jobManager.getNewlyStartedJobs(
-					principal.getName());
+					principal.getName(), principal.getDomain());
 		} catch (SessionTimeoutException e) {
 			LOGGER.info("Browser requesting completed jobs "
 					+ "from an expired session");

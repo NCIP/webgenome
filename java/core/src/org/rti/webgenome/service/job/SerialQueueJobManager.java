@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-09-08 17:17:07 $
+$Revision: 1.10 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -244,13 +244,15 @@ public class SerialQueueJobManager implements JobManager {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<Job> getJobs(final String userId) {
+	public Collection<Job> getJobs(final String userId,
+			final String userDomain) {
 		if (userId == null || userId.length() == 0) {
 			throw new IllegalArgumentException("User ID cannot be empty");
 		}
 		Collection<Job> userJobs = new ArrayList<Job>();
 		for (Job job : this.jobs) {
-			if (userId.equals(job.getUserId())) {
+			if (userId.equals(job.getUserId())
+					&& userDomain.equals(job.getUserDomain())) {
 				userJobs.add(job);
 			}
 		}
@@ -293,8 +295,8 @@ public class SerialQueueJobManager implements JobManager {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void purge(final String userId) {
-		Collection<Job> userJobs = this.getJobs(userId);
+	public void purge(final String userId, final String userDomain) {
+		Collection<Job> userJobs = this.getJobs(userId, userDomain);
 		for (Job job : userJobs) {
 			this.remove(job.getId());
 		}
@@ -304,9 +306,10 @@ public class SerialQueueJobManager implements JobManager {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<Job> getNewlyCompletedJobs(final String userId) {
+	public Collection<Job> getNewlyCompletedJobs(final String userId,
+			final String userDomain) {
 		Collection<Job> completedJobs = new ArrayList<Job>();
-		Collection<Job> allJobs = this.getJobs(userId);
+		Collection<Job> allJobs = this.getJobs(userId, userDomain);
 		for (Job job : allJobs) {
 			if (job.getEndDate() != null && !job.isUserNotifiedOfCompletion()) {
 				completedJobs.add(job);
@@ -322,9 +325,9 @@ public class SerialQueueJobManager implements JobManager {
 	 * {@inheritDoc}
 	 */
 	public Collection<Job> getNewlyStartedJobs(
-			final String userId) {
+			final String userId, final String userDomain) {
 		Collection<Job> startedJobs = new ArrayList<Job>();
-		Collection<Job> allJobs = this.getJobs(userId);
+		Collection<Job> allJobs = this.getJobs(userId, userDomain);
 		for (Job job : allJobs) {
 			if (job.getStartDate() != null && !job.isUserNotifiedOfStart()) {
 				startedJobs.add(job);

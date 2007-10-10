@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.5 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -80,6 +80,9 @@ public abstract class AbstractJob implements Job {
 	/** Identifier of user to whom job is associated. */
 	private String userId = null;
 	
+	/** Domain in which the user ID is applied. */
+	private String userDomain = null;
+	
 	/** Message giving state of job upon termination. */
 	private String terminationMessage = null;
 	
@@ -114,10 +117,12 @@ public abstract class AbstractJob implements Job {
 	/**
 	 * Constructor.
 	 * @param userId User account name.
+	 * @param userDomain Domain in which user name is valid
 	 */
-	protected AbstractJob(final String userId) {
+	protected AbstractJob(final String userId, final String userDomain) {
 		this();
 		this.userId = userId;
+		this.userDomain = userDomain;
 	}
 	
 	
@@ -212,6 +217,23 @@ public abstract class AbstractJob implements Job {
 	 */
 	public void setUserId(final String userId) {
 		this.userId = userId;
+	}
+
+	/**
+	 * Get domain in which user name applies.
+	 * @return A domain
+	 */
+	public String getUserDomain() {
+		return userDomain;
+	}
+
+
+	/**
+	 * Set domain in which user name applies.
+	 * @param userDomain A domain
+	 */
+	public void setUserDomain(final String userDomain) {
+		this.userDomain = userDomain;
 	}
 
 

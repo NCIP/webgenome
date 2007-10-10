@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-13 23:42:17 $
+$Revision: 1.7 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -126,8 +126,9 @@ public final class HibernateJobDaoTester extends TestCase {
 		outputExperimentNames.put(new Long(2), "exp2-smoothed");
 //		ScatterPlotParameters params = new ScatterPlotParameters();
 		AnalysisJob job1 = new AnalysisJob(experiments, op,
-				outputBioAssayNames, outputExperimentNames, "user");
-		ReRunAnalysisJob job2 = new ReRunAnalysisJob(exp1, op, "user");
+				outputBioAssayNames, outputExperimentNames, "user", "domain");
+		ReRunAnalysisJob job2 = new ReRunAnalysisJob(exp1, op,
+				"user", "domain");
 //		ReRunAnalysisOnPlotExperimentsJob job3 =
 //			new ReRunAnalysisOnPlotExperimentsJob(experiments,
 //					(long) 1, "user");
@@ -135,7 +136,7 @@ public final class HibernateJobDaoTester extends TestCase {
 			new GenomeSnapshopPlotParameters();
 		params.setInterpolationType(InterpolationType.SPLINE);
 		params.setMaxY((float) 0.5);
-		PlotJob job4 = new PlotJob(null, experiments, params, "user");
+		PlotJob job4 = new PlotJob(null, experiments, params, "user", "domain");
 		UploadDataSourceProperties uProps =
 			new UploadDataSourceProperties();
 		uProps.setChromosomeColumnName("chrom");
@@ -152,7 +153,7 @@ public final class HibernateJobDaoTester extends TestCase {
 		meta.setRemoteFileName("remotefile");
 		meta.add(new DataColumnMetaData("col1", "ba1"));
 		meta.add(new DataColumnMetaData("col2", "ba2"));
-		DataImportJob job5 = new DataImportJob(uProps, "user");
+		DataImportJob job5 = new DataImportJob(uProps, "user", "domain");
 		
 		// Perform tests
 		dao.saveOrUpdate(job1);

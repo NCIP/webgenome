@@ -1,6 +1,6 @@
 /*
-$Revision: 1.17 $
-$Date: 2007-09-10 21:00:39 $
+$Revision: 1.18 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -280,7 +280,7 @@ public final class NewPlotAction extends BaseAction {
 	    	Principal principal = PageContext.getPrincipal(request);
 	    	PlotJob job = new PlotJob(plotId,
 	    			new HashSet<Experiment>(experiments), params,
-	    			principal.getName());
+	    			principal.getName(), principal.getDomain());
 	    	this.jobManager.add(job);
 	    	ActionMessages messages = new ActionMessages();
 	    	messages.add("global", new ActionMessage("plot.job"));

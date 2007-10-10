@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.4 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -174,13 +174,14 @@ public class AnalysisJob extends AbstractJob {
 	 * @param outputExperimentNames Map of input experiment IDs to output
 	 * experiment names.
 	 * @param userId User account name
+	 * @param userDomain Domain in which user name applies.
 	 */
 	public AnalysisJob(final Collection<Experiment> experiments,
 			final AnalyticOperation operation,
 			final Map<Long, String> outputBioAssayNames,
 			final Map<Long, String> outputExperimentNames,
-			final String userId) {
-		super(userId);
+			final String userId, final String userDomain) {
+		super(userId, userDomain);
 		this.dataSourceProperties = new MultiAnalysisDataSourceProperties(
 				new HashSet<Experiment>(experiments), operation);
 		this.outputBioAssayNames = outputBioAssayNames;
@@ -209,7 +210,7 @@ public class AnalysisJob extends AbstractJob {
 	@Override
 	public void execute(final JobServices jobServices) {
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId());
+		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();

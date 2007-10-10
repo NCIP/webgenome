@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.8 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,34 +85,40 @@ public interface JobManager {
 	/**
 	 * Get all current jobs associated with given user.
 	 * @param userId Id (i.e., user name) of a user
+	 * @param userDomain Domain in which the user ID is valid
 	 * @return All current jobs associated with given user
 	 */
-	Collection<Job> getJobs(String userId);
+	Collection<Job> getJobs(String userId, String userDomain);
 	
 	/**
 	 * Purge all copleted job records associated with
 	 * given user.
 	 * @param userId User login name
+	 * @param userDomain Domain in which the user ID is valid
 	 */
-	void purge(String userId);
+	void purge(String userId, String userDomain);
 	
 	/**
 	 * This method returns a list of jobs associated
 	 * with given user ID that have completed
 	 * since the last call of this method.
 	 * @param userId User login name
+	 * @param userDomain Domain in which the user ID is valid
 	 * @return List of user jobs that have completed since the
 	 * last call of this method.
 	 */
-	Collection<Job> getNewlyCompletedJobs(String userId);
+	Collection<Job> getNewlyCompletedJobs(String userId,
+			String userDomain);
 	
 	/**
 	 * This method returns a list of jobs associated
 	 * with given user ID that have started
 	 * since the last call of this method.
 	 * @param userId User login name
+	 * @param userDomain Domain in which the user ID is valid
 	 * @return List of user jobs that have started since the
 	 * last call of this method.
 	 */
-	Collection<Job> getNewlyStartedJobs(String userId);
+	Collection<Job> getNewlyStartedJobs(String userId,
+			String userDomain);
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-08 18:10:44 $
+$Revision: 1.6 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -126,11 +126,12 @@ public class ReRunAnalysisJob extends AbstractJob {
 	 * @param operation Operation to re-run.  New user-specified
 	 * parameter values must be previously set.
 	 * @param userId Login name of user.
+	 * @param userDomain Domain in which user name applies.
 	 */
 	public ReRunAnalysisJob(final Experiment experiment,
 			final AnalyticOperation operation,
-			final String userId) {
-		super(userId);
+			final String userId, final String userDomain) {
+		super(userId, userDomain);
 		this.dataSourceProperties = new SingleAnalysisDataSourceProperties(
 				experiment, operation);
 		this.setDescription("Re-running analytic operation "

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2007-08-20 22:09:37 $
+$Revision: 1.12 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -156,7 +156,7 @@ public final class AnalysisAction extends BaseAnalysisAction {
     		JobManager jobManager = this.getJobManager();
     		AnalysisJob job = new AnalysisJob(experiments, op,
     				outputBioAssayNames, outputExperimentNames,
-    				principal.getName());
+    				principal.getName(), principal.getDomain());
     		jobManager.add(job);
     		ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("analysis.job"));

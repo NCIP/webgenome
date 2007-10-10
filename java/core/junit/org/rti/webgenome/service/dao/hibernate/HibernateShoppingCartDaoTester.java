@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-07-24 20:08:32 $
+$Revision: 1.7 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -98,6 +98,16 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 		HibernateShoppingCartDao dao =
 			(HibernateShoppingCartDao)
 			ctx.getBean("shoppingCartDao");
+		ShoppingCart cart = new ShoppingCart("user", "domain");
+		dao.save(cart);
+		ShoppingCart cart2 = dao.load("user", "domain");
+		assertNotNull(cart2);
+		dao.delete(cart);
+		
+		//
+		// Code commented out because after refactor it no longer works.
+		// TODO: Get code below working again.
+		//
 		
 		// Instantiate test object
 //		Organism org = new Organism("Genus", "species");
@@ -191,6 +201,6 @@ public final class HibernateShoppingCartDaoTester extends TestCase {
 //		cart.remove(exp);
 //		dao.update(cart);
 //		dao.delete(cart);
-		ShoppingCart cart = dao.load("dhall");
+		
     }
 }

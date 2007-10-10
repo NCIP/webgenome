@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,10 +85,11 @@ public interface PrincipalDao {
 	 * Load principal with given name and password.
 	 * @param name Name of principal.
 	 * @param password Principal's password.
+	 * @param domain Authentication domain
 	 * @return Principal with given name and password
 	 * or null if no such principal exists.
 	 */
-	Principal load(String name, String password);
+	Principal load(String name, String password, String domain);
 	
 	
 	/**

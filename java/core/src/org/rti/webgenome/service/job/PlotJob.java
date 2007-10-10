@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.7 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -165,11 +165,12 @@ public class PlotJob extends AbstractJob {
 	 * @param experiments Experiments to plot
 	 * @param plotParameters Parameters of plot to populate
 	 * @param userId User login name
+	 * @param userDomain Domain in which user name applies.
 	 */
 	public PlotJob(final Long plot, final Set<Experiment> experiments,
 			final PlotParameters plotParameters,
-			final String userId) {
-		super(userId);
+			final String userId, final String userDomain) {
+		super(userId, userDomain);
 		this.plotId = plot;
 		this.experiments = experiments;
 		this.plotParameters = plotParameters;
@@ -186,7 +187,7 @@ public class PlotJob extends AbstractJob {
 	@Override
 	public void execute(final JobServices jobServices) {
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId());
+		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		LOGGER.info("Plot job starting for user "

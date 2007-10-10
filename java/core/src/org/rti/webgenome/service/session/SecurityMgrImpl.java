@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-04-09 22:19:49 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,9 @@ import org.rti.webgenome.service.dao.PrincipalDao;
  *
  */
 public final class SecurityMgrImpl implements SecurityMgr {
+	
+	/** Name of webGenome credential provider domain. */
+	private static final String WEBGENOME_DOMAIN = "webgenome";
 
 	// =======================
 	//      Attributes
@@ -122,7 +125,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 			throw new AccountAlreadyExistsException("An account with name '"
 					+ name + "' already exists");
 		}
-		Principal p = new Principal(name, password);
+		Principal p = new Principal(name, password, WEBGENOME_DOMAIN);
 		this.principalDao.save(p);
 		return p;
 	}
@@ -171,8 +174,9 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 * @return Principal object or null if no principal
 	 * exists with given user name and password.
 	 */
-	public Principal logIn(final String name,
+	public Principal login(final String name,
 			final String password) {
-		return this.principalDao.load(name, password);
+		return this.principalDao.load(name, password,
+				WEBGENOME_DOMAIN);
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2007-09-10 21:00:40 $
+$Revision: 1.14 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -143,7 +143,7 @@ extends BaseAnalysisAction {
 			ReRunAnalysisOnPlotExperimentsJob job =
 				new ReRunAnalysisOnPlotExperimentsJob(
 						new HashSet<Experiment>(experiments), plotId,
-						principal.getName());
+						principal.getName(), principal.getDomain());
 			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();
 	    	messages.add("global", new ActionMessage("plot.job"));

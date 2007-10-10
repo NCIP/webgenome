@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-04-09 22:19:49 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,11 +53,12 @@ package org.rti.webgenome.service.session;
 import org.rti.webgenome.domain.Principal;
 
 /**
- * Manages user account related functions.
+ * Manages user account related functions for the WebGenome
+ * credential database only.
  * @author dhall
  *
  */
-public interface SecurityMgr {
+public interface SecurityMgr extends Authenticator {
 
 	/**
 	 * Create a new user account with given user name
@@ -101,5 +102,5 @@ public interface SecurityMgr {
 	 * @return Principal object or null if no principal
 	 * exists with given user name and password.
 	 */
-	Principal logIn(String name, String password);
+	Principal login(String name, String password);
 }

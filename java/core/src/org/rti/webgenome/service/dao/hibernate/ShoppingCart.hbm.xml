@@ -12,6 +12,7 @@
 		    <generator class="increment"/>
 		</id>
 		<property name="userName" column="user_name"/>
+		<property name="userDomain" column="user_domain"/>
 		<set name="experiments"
 			lazy="false" cascade="all-delete-orphan">
 			<key column="shopping_cart_id"/>

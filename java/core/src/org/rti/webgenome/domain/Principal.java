@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,6 +69,9 @@ public class Principal {
 	
 	/** Password. */
 	private String password = null;
+	
+	/** Authentication domain for principal. */
+	private String domain = null;
 
 	/** Is user an administrator? */
 	private boolean admin = false;
@@ -77,6 +80,26 @@ public class Principal {
 	//     Getters/setters
 	// ==========================
 	
+	/**
+	 * Get authentication domain for principal.
+	 * @return Authentication domain.  This will typically be
+	 * the name of some credential provider.
+	 */
+	public String getDomain() {
+		return domain;
+	}
+
+
+	/**
+	 * Set authentication domain for principal.
+	 * @param domain Authentication domain.  This will typically be
+	 * the name of some credential provider.
+	 */
+	public void setDomain(final String domain) {
+		this.domain = domain;
+	}
+
+
 	/**
 	 * Get ID used as primary key for persistence.
 	 * @return ID used as primary key for persistence.
@@ -163,9 +186,12 @@ public class Principal {
 	 * Constructor.
 	 * @param name User name.
 	 * @param password Password.
+	 * @param domain Authentication domain
 	 */
-	public Principal(final String name, final String password) {
+	public Principal(final String name, final String password,
+			final String domain) {
 		this.name = name;
 		this.password = password;
+		this.domain = domain;
 	}
 }

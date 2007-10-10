@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-18 21:42:49 $
+$Revision: 1.4 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -102,7 +102,8 @@ public abstract class BaseAction extends Action {
 			cart = PageContext.getShoppingCart(request);
 		} else if (mode == SessionMode.STAND_ALONE) {
 			Principal principal = PageContext.getPrincipal(request);
-			cart = this.shoppingCartDao.load(principal.getName());
+			cart = this.shoppingCartDao.load(principal.getName(),
+					principal.getDomain());
 		}
 		return cart;
 	}

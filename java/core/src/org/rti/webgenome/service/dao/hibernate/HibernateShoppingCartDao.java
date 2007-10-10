@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-10 21:00:40 $
+$Revision: 1.5 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -200,11 +200,13 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * Load cart associated with given user name from
      * persistent storage.
      * @param userName User name
+     * @param domain Domain in which user name applies
      * @return A shopping cart
      */
-    public ShoppingCart load(final String userName) {
-        String query = "from ShoppingCart cart where cart.userName = ?";
-        Object[] args = new Object[] {userName};
+    public ShoppingCart load(final String userName, final String domain) {
+        String query = "from ShoppingCart cart where cart.userName = ? "
+        	+ "and cart.userDomain = ?";
+        Object[] args = new Object[] {userName, domain};
         List carts = this.getHibernateTemplate().find(query, args);
         ShoppingCart cart = null;
         if (carts != null && carts.size() > 0) {

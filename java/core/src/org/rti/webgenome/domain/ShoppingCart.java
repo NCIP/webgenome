@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-07-24 20:51:34 $
+$Revision: 1.9 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,6 +91,9 @@ public class ShoppingCart implements Serializable {
     /** User name associated with cart. */
     private String userName = null;
     
+    /** Domain in which the user name is valid. */
+    private String userDomain = null;
+    
     /**
      * Image file manager.  If this propery is not null,
      * then when a shopping cart instance is finalized,
@@ -121,7 +124,23 @@ public class ShoppingCart implements Serializable {
 		this.plots = plots;
 	}
 	
+	/**
+	 * Get domain in which user name is valid.
+	 * @return Domain
+	 */
+	public final String getUserDomain() {
+		return userDomain;
+	}
+
 	
+	/**
+	 * Set domain in which user name is valid.
+	 * @param userDomain Domain
+	 */
+	public final void setUserDomain(final String userDomain) {
+		this.userDomain = userDomain;
+	}
+
 	/**
 	 * Get color chooser for bioassays.
 	 * @return Color chooser
@@ -235,9 +254,11 @@ public class ShoppingCart implements Serializable {
     /**
      * Constructor.
      * @param userName User name
+     * @param userDomain Domain in which user name is valid
      */
-    public ShoppingCart(final String userName) {
+    public ShoppingCart(final String userName, final String userDomain) {
         this.userName = userName;
+        this.userDomain = userDomain;
     }
    
 

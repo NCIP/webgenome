@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:28 $
+$Revision: 1.2 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -104,13 +104,15 @@ public final class HibernatePrincipalDao extends HibernateDaoSupport
 	 * Load principal with given name and password.
 	 * @param name Name of principal.
 	 * @param password Principal's password.
+	 * @param domain Authentication domain
 	 * @return Principal with given name and password
 	 * or null if no such principal exists.
 	 */
-	public Principal load(final String name, final String password) {
+	public Principal load(final String name, final String password,
+			final String domain) {
 		String query = "from Principal p where p.name = ? "
-			+ "and p.password = ?";
-		Object[] args = new Object[] {name, password};
+			+ "and p.password = ? and p.domain=?";
+		Object[] args = new Object[] {name, password, domain};
 		Principal p = null;
 		List principals = this.getHibernateTemplate().find(query, args);
 		if (principals != null && principals.size() > 0) {

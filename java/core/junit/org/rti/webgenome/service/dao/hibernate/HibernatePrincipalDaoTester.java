@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-13 02:52:12 $
+$Revision: 1.3 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,15 +69,16 @@ public final class HibernatePrincipalDaoTester extends TestCase {
 	public void testAllMethods() {
 		String name = "Name";
 		String password = "Password";
+		String domain = "Domain";
 		ApplicationContext ctx = new ClassPathXmlApplicationContext(
         "org/rti/webgenome/service/dao/hibernate/beans.xml");
 		HibernatePrincipalDao dao = (HibernatePrincipalDao)
 			ctx.getBean("principalDao");
-		Principal p1 = new Principal(name, password);
+		Principal p1 = new Principal(name, password, domain);
 		dao.save(p1);
 		Principal p2 = dao.load(name);
 		assertEquals(p1.getPassword(), p2.getPassword());
-		p2 = dao.load(name, password);
+		p2 = dao.load(name, password, domain);
 		assertNotNull(p2);
 		dao.delete(p1);
 		p2 = dao.load(name);

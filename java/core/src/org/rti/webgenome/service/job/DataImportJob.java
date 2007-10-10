@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.9 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -126,11 +126,12 @@ public class DataImportJob extends AbstractJob {
 	 * Constructor.
 	 * @param uploadDataSourceProperties Properties for upload
 	 * @param userId User login name.
+	 * @param userDomain Domain in which user name applies.
 	 */
 	public DataImportJob(
 			final UploadDataSourceProperties uploadDataSourceProperties,
-			final String userId) {
-		super(userId);
+			final String userId, final String userDomain) {
+		super(userId, userDomain);
 		this.uploadDataSourceProperties = uploadDataSourceProperties;
 		StringBuffer buff = new StringBuffer();
 		int count = 0;
@@ -154,7 +155,7 @@ public class DataImportJob extends AbstractJob {
 	@Override
 	public void execute(final JobServices jobServices) {
 		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId());
+		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
 		IOService ioService = jobServices.getIoService();
 		ArrayDao aDao = jobServices.getArrayDao();
 		try {

@@ -5,10 +5,12 @@ CREATE TABLE principal (
     id NUMBER(38) NOT NULL,
 	name VARCHAR2(48),
 	password VARCHAR2(48),
+	domain VARCHAR2(128),
 	admin CHAR(1),
 	PRIMARY KEY (id)
 );
-INSERT INTO principal (id, name, password, admin) values (1, 'admin', 'cureforcancer', 'T');
+INSERT INTO principal (id, name, password, admin, domain) values (1, 'admin', 'cureforcancer', 'T', 'webgenome');
+INSERT INTO principal (id, name, password, admin, domain) values (2, 'tippie', 'toe', 'F', 'webgenome');
 
 --
 -- Organism
@@ -95,6 +97,7 @@ CREATE TABLE job (
 	id NUMBER(38) NOT NULL,
 	type VARCHAR2(16),
 	user_id VARCHAR2(64),
+	user_domain VARCHAR2(128),
 	instantiation_date TIMESTAMP,
 	start_date TIMESTAMP,
 	end_date TIMESTAMP,
@@ -572,6 +575,7 @@ CREATE TABLE color_chooser_color_count (
 CREATE TABLE shopping_cart (
 	id NUMBER(38) NOT NULL,
 	user_name VARCHAR2(128),
+	user_domain VARCHAR2(128),
 	color_chooser_id NUMBER(38) NOT NULL,
 	PRIMARY KEY (id)
 );

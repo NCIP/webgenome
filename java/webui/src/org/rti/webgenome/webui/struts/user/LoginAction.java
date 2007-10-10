@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-18 21:42:49 $
+$Revision: 1.4 $
+$Date: 2007-10-10 17:47:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.ImageFileManager;
-import org.rti.webgenome.service.session.SecurityMgr;
+import org.rti.webgenome.service.session.Authenticator;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -76,8 +76,11 @@ import org.rti.webgenome.webui.util.PageContext;
  */
 public final class LoginAction extends BaseAction {
 	
-	/** Account manager. This property should be injected. */
-	private SecurityMgr securityMgr = null;
+	/**
+	 * Authenticator of user credentials.
+	 * This property should be injected.
+	 */
+	private Authenticator authenticator = null;
 	
 	/**
 	 * Shopping cart data access object.  This property should
@@ -87,11 +90,11 @@ public final class LoginAction extends BaseAction {
 	
 
 	/**
-	 * Set account manager.
-	 * @param securityMgr Security manager for user accounts.
+	 * Set authenticator of user credentials.
+	 * @param authenticator An authenticator
 	 */
-	public void setSecurityMgr(final SecurityMgr securityMgr) {
-		this.securityMgr = securityMgr;
+	public void setAuthenticator(final Authenticator authenticator) {
+		this.authenticator = authenticator;
 	}
 	
 	
@@ -127,7 +130,7 @@ public final class LoginAction extends BaseAction {
     	LoginForm lf = (LoginForm) form;
     	
     	// Get principal and cache in session
-    	Principal p = this.securityMgr.logIn(lf.getName(),
+    	Principal p = this.authenticator.login(lf.getName(),
     			lf.getPassword());
     	if (p == null) {
     		ActionErrors errors = new ActionErrors();
@@ -141,9 +144,10 @@ public final class LoginAction extends BaseAction {
     	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
     	
     	// Instantiate shopping cart if null
-    	ShoppingCart cart = this.shoppingCartDao.load(p.getName());
+    	ShoppingCart cart = this.shoppingCartDao.load(
+    			p.getName(), p.getDomain());
     	if (cart == null) {
-    		cart = new ShoppingCart(p.getName());
+    		cart = new ShoppingCart(p.getName(), p.getDomain());
     		this.shoppingCartDao.save(cart);
     	}
     	

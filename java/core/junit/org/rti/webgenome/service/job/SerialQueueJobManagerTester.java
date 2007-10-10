@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-31 16:28:14 $
+$Revision: 1.3 $
+$Date: 2007-10-10 17:47:01 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,6 +73,9 @@ public class SerialQueueJobManagerTester extends TestCase {
 	/** User name to associated with jobs. */
 	private static final String USER = "user";
 	
+	/** Domain in which user name is applied. */
+	private static final String DOMAIN = "domain";
+	
 	/**
 	 * User name of "wrong" user.  No jobs will be associated
 	 * with this user.
@@ -92,11 +95,11 @@ public class SerialQueueJobManagerTester extends TestCase {
 		
 		// Add several jobs
 		for (int i = 0; i < NUM_JOBS; i++) {
-			man.add(new JobImpl(USER));
+			man.add(new JobImpl(USER, DOMAIN));
 		}
 		
 		// Get jobs from manager and examine
-		Collection<Job> jobs = man.getJobs(USER);
+		Collection<Job> jobs = man.getJobs(USER, DOMAIN);
 		assertNotNull(jobs);
 		assertEquals(NUM_JOBS, jobs.size());
 		for (Job job : jobs) {
@@ -104,13 +107,13 @@ public class SerialQueueJobManagerTester extends TestCase {
 			assertNull(job.getStartDate());
 			assertNull(job.getEndDate());
 		}
-		jobs = man.getJobs(WRONG_USER);
+		jobs = man.getJobs(WRONG_USER, DOMAIN);
 		assertNotNull(jobs);
 		assertEquals(0, jobs.size());
 		
 		// Let some jobs execute and examine
 		Thread.sleep(JOB_DURATION * NUM_JOBS / 2);
-		jobs = man.getJobs(USER);
+		jobs = man.getJobs(USER, DOMAIN);
 		assertNotNull(jobs);
 		assertEquals(NUM_JOBS, jobs.size());
 		boolean someFinished = false;
@@ -136,7 +139,7 @@ public class SerialQueueJobManagerTester extends TestCase {
 		
 		// Let all jobs finish and examine
 		Thread.sleep(JOB_DURATION * NUM_JOBS);
-		jobs = man.getJobs(USER);
+		jobs = man.getJobs(USER, DOMAIN);
 		assertNotNull(jobs);
 		assertEquals(NUM_JOBS, jobs.size());
 		boolean allFinished = true;
@@ -150,7 +153,7 @@ public class SerialQueueJobManagerTester extends TestCase {
 		// Remove job and examine
 		Job job = jobs.iterator().next();
 		man.remove(job.getId());
-		jobs = man.getJobs(USER);
+		jobs = man.getJobs(USER, DOMAIN);
 		assertNotNull(jobs);
 		assertEquals(NUM_JOBS - 1, jobs.size());
 	}
@@ -165,9 +168,11 @@ public class SerialQueueJobManagerTester extends TestCase {
 		/**
 		 * Constructor.
 		 * @param user User id (i.e. user name)
+		 * @param domain Domain user ID is applied to
 		 */
-		private JobImpl(final String user) {
+		private JobImpl(final String user, final String domain) {
 			this.setUserId(user);
+			this.setUserDomain(domain);
 		}
 
 		/**
