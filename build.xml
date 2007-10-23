@@ -177,6 +177,7 @@
 			</fileset>
 			<lib dir="${build.lib.dir}" includes="*.jar"/>
 		</war>
+		<copy file="${build.dir}/${war.file.name}" todir="${dist.dir}"/>
 	</target>
 	
 <!-- Deploy WAR file -->
