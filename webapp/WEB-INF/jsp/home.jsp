@@ -24,19 +24,21 @@
 	request.setAttribute("lohParamsMap", lohParams);
 %>
 
-<h1 align="center">webGenome Home</h1>
+<h1 align="center">WebGenome Home</h1>
 
 <br>
 
 <table align="center" width="760" cellspacing="0" cellpadding="10" border="0"><tr valign="top"><td width="52%">
 
 <p>
-<font color="#336699"><b><i>web</i>Genome</b></font> is an application for creating genomics plots.  This version
-of the system is designed to operate as a plotting client for
-other applications. To create plots, you must first select a data set
-in another affiliated application, such as <b>Rembrandt</b>.  You will then
-be directed back into <font color="#336699"><b><i>web</i>Genome</b></font>.
-</p>
+<font color="#336699"><b><i>Web</i>Genome</b></font> is an application for
+creating genomics plots.  <em>Version 3.0</em>
+of the system is designed to operate as both
+a stand-alone application and as a plotting client for
+other applications. To create plots, you must
+either log in and upload data or select a data set
+in another affiliated application, such as <b>Rembrandt</b>, and
+then elect to plot data in <i>Web</i>Genome</b>.
 
 <p>
 To get a flavor for the system without going through another

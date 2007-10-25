@@ -28,7 +28,7 @@ String reportBuildProperty ( String label, String propertyKey , Properties prope
 	String propertiesFile = "buildInformation.properties" ;
 	String errorMessage = "Software Release Information not available.\n" +
 					      "'" + propertiesFile + "' missing from CLASSPATH.\n" +
-	   					  "Uusually this will only be available,\nif you are running this web application packaged as a War file." ;
+	   					  "Usually this will only be available,\nif you are running this web application packaged as a War file." ;
 	try {
 		Properties buildProperties = new Properties() ;
 		InputStream in = Thread.currentThread().
