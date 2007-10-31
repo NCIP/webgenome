@@ -18,9 +18,6 @@
 	<!-- ======================================= -->
 	
 	<!-- ================= Source directories ============= -->
-	<!-- Source directory for business classes -->
-	<property name="core.src.dir" location="${core.home.dir}/src"/>
-	
 	<!-- Source directory for JUnit test classes -->
 	<property name="core.junit.src.dir" location="${core.home.dir}/junit"/>
 	
@@ -83,7 +80,15 @@
 	<target name="compile" depends="setup" description="Compile Java classes">
 		<echo level="info" message="Compiling sources"/>
 		<javac srcdir="${core.src.dir}" destdir="${core.classes.dir}"
-			classpathref="class.path" debug="false"/>
+			classpathref="class.path" debug="true"/>
+		
+		
+		<!-- Copy sources to compile directory for debugging -->
+		<!-- Commented out b/c unnecessary
+		<copy todir="${core.classes.dir}">
+			<fileset dir="${core.src.dir}" includes="**/*.java"/>
+		</copy>
+		-->
 	</target>
 	
 <!-- Compile JUnit test classes -->

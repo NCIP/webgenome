@@ -36,6 +36,9 @@
 	<!-- Home directory for system tests -->
 	<property name="systest.home.dir" location="${src.parent.dir}/systest"/>
 	
+	<!-- Source directory for business classes -->
+		<property name="core.src.dir" location="${core.home.dir}/src"/>
+	
 	<!-- =========== BUILD DIRECTORIES ============ -->
 	
 	<!-- Temporary directory used for building.  All
@@ -163,6 +166,7 @@
 				<exclude name="WEB-INF/classes/**"/>
 			</fileset>
 			<lib dir="${build.lib.dir}" includes="*.jar"/>
+			<classes dir="${core.src.dir}" includes="**/*.hbm.xml"/>
 		</war>
 	</target>
 	
@@ -176,6 +180,7 @@
 				<exclude name="WEB-INF/classes/**"/>
 			</fileset>
 			<lib dir="${build.lib.dir}" includes="*.jar"/>
+			<classes dir="${core.src.dir}" includes="**/*.hbm.xml"/>
 		</war>
 		<copy file="${build.dir}/${war.file.name}" todir="${dist.dir}"/>
 	</target>
@@ -184,6 +189,13 @@
 	<target name="deploy" depends="war" description="Deploy WAR file">
 		<echo level="info" message="Deploying WAR file"/>
 		<copy file="${build.dir}/${war.file.name}" todir="${tomcat.webapp.dir}"/>
+	</target>
+	
+<!-- Deploy WAR file in JBoss -->
+	<target name="deploy-jboss" depends="war-no-tests"
+		description="Deploy WAR file in JBoss">
+		<echo level="info" message="Deploying WAR file"/>
+		<copy file="${build.dir}/${war.file.name}" todir="${jboss.deploy.dir}"/>
 	</target>
 	
 <!-- Deploy WAR file without running unit tests -->

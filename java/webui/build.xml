@@ -44,6 +44,11 @@
 	<target name="setup" description="Create and initialize build directories">
 		<echo level="info" message="Creating build directories"/>
 		<mkdir dir="${webui.classes.dir}"/>
+		<copy todir="${webui.classes.dir}">
+			<fileset dir="${webui.src.dir}">
+				<include name="*.properties"/>
+			</fileset>
+		</copy>
 	</target>
 	
 <!-- Compile sources -->

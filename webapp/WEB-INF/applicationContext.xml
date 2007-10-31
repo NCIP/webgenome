@@ -44,16 +44,57 @@
 <!-- Session factory -->
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
     	<property name="dataSource" ref="dataSource"/>
+    	
+    	<!-- Commented out because it does not work in JBoss 4.0.5
+    		 for some reason -->
+    	<!--
     	<property name="mappingDirectoryLocations">
 	      	<list>
-        		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/dao/hibernate</value></constructor-arg>
-        		</bean>
-        		<bean class="org.springframework.core.io.ClassPathResource">
-        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/job</value></constructor-arg>
-        		</bean>
+        		<bean id="core.dao"
+					class="org.springframework.core.io.ClassPathResource">
+					<constructor-arg type="java.lang.String"
+						value="org/rti/webgenome/service/dao/hibernate"/>
+				</bean>
+				<bean id="job.dao"
+					class="org.springframework.core.io.ClassPathResource">
+					<constructor-arg value="org/rti/webgenome/service/job"/>
+				</bean>
 	      	</list>
-    	</property>    	
+    	</property>
+    	-->
+    	
+    	<!-- Individual *.hbm.xml files specified in lieu of
+    	     directory locations in above commented code due to
+    	     glitch in JBoss 4.0.5.  If above code is uncommented,
+    	     below property should be commented out.
+    	-->
+    	<property name="mappingResources">
+	      <list>
+	      	<value>org/rti/webgenome/service/dao/hibernate/AnnotatedGenomeFeature.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Array.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/BioAssay.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/BioAssayDataConstraintsWrapper.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/ClickBoxes.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/ColorChooser.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Cytoband.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/CytologicalMap.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/DataColumnMetaData.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/DataFileMetaData.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/DataSourceProperties.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Experiment.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/GenomeInterval.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/MouseOverStripe.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/MouseOverStripes.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Organism.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/Plot.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/PlotParameters.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/Principal.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/ShoppingCart.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/UserConfigurableProperty.hbm.xml</value>
+	        <value>org/rti/webgenome/service/job/Job.hbm.xml</value>
+	      </list>
+	    </property>
+	    
     	<property name="hibernateProperties">
       		<props>
         		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
