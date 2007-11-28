@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-14 22:14:11 $
+$Revision: 1.3 $
+$Date: 2007-11-28 19:51:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Collection;
 
+import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.ZipEntryMetaData;
 import org.rti.webgenome.domain.ZipFileMetaData;
 import org.rti.webgenome.util.FileUtils;
@@ -101,7 +102,8 @@ public class IOServiceTester extends TestCase {
         InputStream in = new FileInputStream(testFile);
         
         // Run test
-        ZipFileMetaData meta = ioService.uploadZipFile(in, "small.zip");
+        ZipFileMetaData meta = ioService.uploadZipFile(in, "small.zip",
+        		RectangularTextFileFormat.CSV);
         assertNotNull(meta);
         Collection<ZipEntryMetaData> zeMeta = meta.getZipEntryMetaData();
         assertNotNull(zeMeta);

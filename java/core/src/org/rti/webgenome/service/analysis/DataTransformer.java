@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.7 $
+$Date: 2007-11-28 19:51:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -84,7 +84,7 @@ import org.rti.webgenome.service.util.ChromosomeArrayDataIterator;
  * Abstract base class for classes that
  * Manage the transformation of data
  * through one or more analytic operations.
- * Class usese template pattern.
+ * Class uses template pattern.
  * @author dhall
  *
  */

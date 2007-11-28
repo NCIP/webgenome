@@ -2,4 +2,6 @@
 .project
 webapp/plots/*.*
 build
+build/*.*
 dist
+dist/*.*

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-11-28 19:51:21 $
+$Revision: 1.1 $
+$Date: 2007-11-28 19:51:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,65 +48,59 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.webui.struts.upload;
+package org.rti.webgenome.service.session;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.upload.FormFile;
-import org.rti.webgenome.domain.RectangularTextFileFormat;
-import org.rti.webgenome.domain.ZipFileMetaData;
-import org.rti.webgenome.service.io.IOService;
-import org.rti.webgenome.webui.struts.BaseAction;
-import org.rti.webgenome.webui.util.PageContext;
+import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.util.StringUtils;
 
 /**
- * Uploads a ZIP file containing individual data files
- * to server.
+ * This is an implementation of {@link Authenticator}
+ * where the username/password pairs are passed in
+ * as constructor arguments.
  * @author dhall
  *
  */
-public class UploadZipFileAction extends BaseAction {
+public class InMemoryAuthenticator implements Authenticator {
 	
-	/** Service for file I/O. */
-	private IOService ioService = null;
 	
+	/** Map of username (keys) / password (values) pairs. */
+	private final Map<String, String> credentials;
+	
+	/** Domain name for this security context. */
+	private final String domain;
 	
 	/**
-	 * Set service for file I/O.
-	 * @param ioService File I/O service.
+	 * Constructor.
+	 * @param credentials Map of username (keys) /
+	 * password (values) pairs.
+	 * @param domain A domain name for this security context
 	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
+	public InMemoryAuthenticator(final Map<String, String> credentials,
+			final String domain) {
+		this.credentials = credentials;
+		this.domain = domain;
 	}
 
-
+	//
+	//  I N T E R F A C E : Authenticator
+	//
+	
 	/**
 	 * {@inheritDoc}
 	 */
-	public ActionForward execute(
-	        final ActionMapping mapping, final ActionForm form,
-	        final HttpServletRequest request,
-	        final HttpServletResponse response
-	    ) throws Exception {
-		AttachDataForm adForm = (AttachDataForm) form;
-		
-		// Get file format
-		RectangularTextFileFormat format =
-			RectangularTextFileFormat.valueOf(adForm.getFileFormat());
-		
-		// Stream file bytes to file on local disk
-		FormFile formFile = adForm.getUploadFile();
-		ZipFileMetaData meta = this.ioService.uploadZipFile(
-				formFile.getInputStream(), formFile.getFileName(),
-				format);
-		
-		// Cache reference to data
-		PageContext.setZipFileMetaData(meta, request);
-		
-		return mapping.findForward("success");
+	public Principal login(final String userName, final String password) {
+		Principal principal = null;
+		if (!StringUtils.isEmpty(userName)) {
+			String realPassword = this.credentials.get(userName);
+			if (realPassword != null) {
+				if (StringUtils.equal(password, realPassword)) {
+					principal = new Principal(userName, password,
+							this.domain);
+				}
+			}
+		}
+		return principal;
 	}
 }

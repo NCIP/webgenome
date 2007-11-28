@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.5 $
+$Date: 2007-11-28 19:51:21 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -75,6 +76,9 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public final class LoginAction extends BaseAction {
+	
+	/** Logger. */
+	private static final Logger LOGGER = Logger.getLogger(LoginAction.class);
 	
 	/**
 	 * Authenticator of user credentials.
@@ -132,7 +136,10 @@ public final class LoginAction extends BaseAction {
     	// Get principal and cache in session
     	Principal p = this.authenticator.login(lf.getName(),
     			lf.getPassword());
+    	LOGGER.info("User '" + lf.getName() + "' authenticated");
     	if (p == null) {
+    		LOGGER.info("User '" + lf.getName()
+    				+ "' could not be authenticated");
     		ActionErrors errors = new ActionErrors();
     		errors.add("global", new ActionError("invalid.user"));
     		this.saveErrors(request, errors);

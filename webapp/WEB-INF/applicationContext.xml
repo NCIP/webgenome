@@ -168,11 +168,29 @@
 		<property name="principalDao"><ref bean="principalDao"/></property>
 	</bean>
 	
+<!-- Special authenticator for a test account -->
+<!-- TODO: The properties associated with 'wgtest,' 'wgpass,' and 'test-domain'
+below should probably be configurable somehow. -->
+	<bean id="testAuthenticator" class="org.rti.webgenome.service.session.InMemoryAuthenticator">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key><value>wgtest</value></key>
+					<value>wgpass</value>
+				</entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg>
+			<value>test-domain</value>
+		</constructor-arg>
+	</bean>
+	
 <!-- Authenticator for login credentials -->
 	<bean id="authenticator"
 		class="org.rti.webgenome.service.session.MultiCredentialProviderAuthenticator">
 		<constructor-arg>
 			<set>
+				<ref bean="testAuthenticator"/>
 				<ref bean="securityMgr"/>
 				<bean class="org.rti.webgenome.service.session.RembrandtAuthenticator">
 					<constructor-arg type="java.lang.String">

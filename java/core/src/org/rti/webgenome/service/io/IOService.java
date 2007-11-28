@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2007-09-29 05:24:18 $
+$Revision: 1.13 $
+$Date: 2007-11-28 19:51:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -241,16 +241,18 @@ public class IOService {
 	 * files will be stored locally.  The original ZIP file will not.
 	 * @param in Input stream to ZIP file.
 	 * @param zipFileName Zip file name on remote system.
+	 * @param format Rectangular data file format
 	 * @return Metadata for zip data.
 	 */
     public ZipFileMetaData uploadZipFile(final InputStream in,
-    		final String zipFileName) {
+    		final String zipFileName, final RectangularTextFileFormat format) {
     	
     	// Stream ZIP file to disk
     	File zipFile = this.upload(in);
     	
     	// Instantiate zip file metadata
     	ZipFileMetaData meta = new ZipFileMetaData(zipFileName);
+    	meta.setFileFormat(format);
     	
     	// Extract zip entry files
     	ZipInputStream zipIn = null;
@@ -266,6 +268,7 @@ public class IOService {
 					meta.add(zeMeta);
 					RectangularFileReader reader =
 						new RectangularFileReader(zipEntryFile);
+					reader.setDelimiter(format.getDelimiter());
 					zeMeta.setColumnHeadings(reader.getColumnHeadings());
 				}
 				zipEntry = zipIn.getNextEntry();
