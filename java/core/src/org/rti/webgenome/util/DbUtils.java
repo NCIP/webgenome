@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-17 19:02:16 $
+$Revision: 1.6 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
@@ -303,5 +305,41 @@ public final class DbUtils {
 			DbUtils.close(stmt);
 		}
 		return exists;
+	}
+	
+	
+	/**
+	 * Get all values from string column of given table.
+	 * @param dataSource Data source
+	 * @param tableName Name of database table
+	 * @param columnName Name of column in given table
+	 * @return All string values from given column and
+	 * table
+	 */
+	public static Collection<String> getStringValues(
+			final DataSource dataSource,
+			final String tableName, final String columnName) {
+		Collection<String> data = new ArrayList<String>();
+		Statement stmt = null;
+		ResultSet rset = null;
+		String sql =
+			"SELECT " + columnName
+			+ " FROM " + tableName;
+		try {
+			Connection con = dataSource.getConnection();
+			stmt = con.createStatement();
+			rset = stmt.executeQuery(sql);
+			while (rset.next()) {
+				data.add(rset.getString(1));
+			}
+		} catch (SQLException e) {
+			throw new WebGenomeSystemException(
+					"Error querying database table '" + tableName
+					+ "' column '" + columnName + "'", e);
+		} finally {
+			DbUtils.close(rset);
+			DbUtils.close(stmt);
+		}
+		return data;
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.3 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,8 +75,12 @@ public class InitializeUploadAction extends BaseAction {
 	        final HttpServletRequest request,
 	        final HttpServletResponse response
 	    ) throws Exception {
-		UploadDataSourceProperties upload = new UploadDataSourceProperties();
-		PageContext.setUpload(upload, request);
+		UploadDataSourceProperties upload =
+			PageContext.getUpload(request, false);
+		if (upload == null) {
+			upload = new UploadDataSourceProperties();
+			PageContext.setUpload(upload, request);
+		}
 		return mapping.findForward("success");
 	}
 }

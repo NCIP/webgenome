@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.6 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -279,4 +280,27 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
 		}
     	return fileNames;
     }
+
+
+    /**
+     * {@inheritDoc}
+     */
+	public Set<String> getAllDataFileNames() {
+		Set<String> fNames = new HashSet<String>();
+		try {
+			fNames.addAll(DbUtils.getStringValues(this.dataSource,
+					"array_data_file_index", "file_name"));
+			fNames.addAll(DbUtils.getStringValues(this.dataSource,
+					"plot", "cb_file_name"));
+			fNames.addAll(DbUtils.getStringValues(this.dataSource,
+					"plot", "mos_file_name"));
+			fNames.addAll(DbUtils.getStringValues(this.dataSource,
+					"reporter_file_names", "file_name"));
+		} catch (Exception e) {
+			throw new WebGenomeSystemException(
+					"Error retrieving all current data files from "
+					+ "the database", e);
+		}
+		return fNames;
+	}
 }

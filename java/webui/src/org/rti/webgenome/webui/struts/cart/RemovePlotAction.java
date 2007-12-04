@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-08-17 20:05:05 $
+$Revision: 1.5 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.PlotDao;
+import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -74,6 +75,9 @@ public final class RemovePlotAction extends BaseAction {
 	
 	/** Plot data access object. */
 	private PlotDao plotDao = null;
+	
+	/** Manager of all data files. */
+	private DataFileManager dataFileManager = null;
 	
 	/**
 	 * Set image file manager.
@@ -93,6 +97,15 @@ public final class RemovePlotAction extends BaseAction {
 		this.plotDao = plotDao;
 	}
 
+
+	/**
+	 * Set manager for all data files.
+	 * @param dataFileManager Manager for all data files
+	 */
+	public void setDataFileManager(
+			final DataFileManager dataFileManager) {
+		this.dataFileManager = dataFileManager;
+	}
 
 
 	/**
@@ -134,6 +147,9 @@ public final class RemovePlotAction extends BaseAction {
     	for (String fileName : plot.getAllImageFileNames()) {
     		this.imageFileManager.deleteImageFile(fileName);
     	}
+    	
+    	// Get rid of plot interactivity files
+    	this.dataFileManager.deleteDataFiles(plot);
     	
     	// TODO: Stand-alone specific actions
     	

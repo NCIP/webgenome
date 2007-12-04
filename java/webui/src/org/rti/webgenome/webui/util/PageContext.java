@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-09-14 22:14:11 $
+$Revision: 1.8 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -274,6 +274,14 @@ public final class PageContext {
 	}
 	
 	/**
+	 * Remove upload object.
+	 * @param request A request
+	 */
+	public static void removeUpload(final HttpServletRequest request) {
+		request.getSession().removeAttribute(KEY_UPLOAD);
+	}
+	
+	/**
 	 * Set zip file metadata.
 	 * @param meta Zip file metadata
 	 * @param request Servlet request
@@ -293,9 +301,27 @@ public final class PageContext {
 	public static UploadDataSourceProperties getUpload(
 			final HttpServletRequest request)
 	throws SessionTimeoutException {
+		return PageContext.getUpload(request, true);
+	}
+	
+	
+	/**
+	 * Get upload object.
+	 * @param request Servlet request
+	 * @param exceptionIfMissing Throw exception if it
+	 * cannot be found?
+	 * @return Upload object
+	 * @throws SessionTimeoutException If upload object cannot be found
+	 * and <code>createIfMissing</code> is false,
+	 * which would indicate that the session has timed out
+	 */
+	public static UploadDataSourceProperties getUpload(
+			final HttpServletRequest request,
+			final boolean exceptionIfMissing)
+	throws SessionTimeoutException {
 		UploadDataSourceProperties upload = (UploadDataSourceProperties)
 		request.getSession().getAttribute(KEY_UPLOAD);
-		if (upload == null) {
+		if (upload == null && exceptionIfMissing) {
 			throw new SessionTimeoutException("Session has expired");
 		}
 		return upload;

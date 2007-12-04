@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-10 21:00:41 $
+$Revision: 1.7 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.ArrayDatum;
@@ -74,9 +75,11 @@ import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.graphics.event.MouseOverStripes;
 import org.rti.webgenome.graphics.io.ClickBoxes;
+import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.util.StopWatch;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -112,11 +115,15 @@ public final class DataFileManager {
      */
     private Map<String, ChromosomeReporters> chromosomeReportersCache =
         new HashMap<String, ChromosomeReporters>();
+    
+    /** Absolute path to directory where data are serialized. */
+    private String dataDirectoryPath = null;
         
     
     // =====================================
     //       Constructors
     // =====================================
+  
     
     /**
      * Constructor.
@@ -128,10 +135,35 @@ public final class DataFileManager {
         this.serializer = new FileSerializer(dataDirectoryPath);
     }
     
-    
     // ======================================
     //     Business methods
     // ======================================
+    
+    /**
+     * Get rid of any data files not referenced by data in
+     * shopping cart.
+     * @param shoppingCartDao Shopping cart data access object
+     */
+    public void purgeOrphanDataFiles(final ShoppingCartDao shoppingCartDao) {
+    	File dir = new File(this.dataDirectoryPath);
+    	if (!dir.exists() || !dir.isDirectory()) {
+    		throw new WebGenomeSystemException(
+    				"Invalid data directory: " + this.dataDirectoryPath);
+    	}
+    	File[] files = dir.listFiles();
+    	Set<String> referencedFiles =
+    		shoppingCartDao.getAllDataFileNames();
+    	for (int i = 0; i < files.length; i++) {
+    		File file = files[i];
+    		String fName = file.getName();
+    		if (!referencedFiles.contains(fName)) {
+    			if (!file.delete()) {
+    				LOGGER.warn("Could not delete data file: "
+    						+ file.getAbsolutePath());
+    			}
+    		}
+    	}
+    }
 
     /**
      * Serialize reporters in given reader as a new array object.
@@ -366,6 +398,16 @@ public final class DataFileManager {
                 this.serializer.decommissionObject(fname);
             }
         }
+    }
+    
+    
+    /**
+     * Delete all data files associated with plot.
+     * @param plot A plot
+     */
+    public void deleteDataFiles(final Plot plot) {
+    	this.deleteDataFile(plot.getClickBoxesFileName());
+    	this.deleteDataFile(plot.getMouseOverStripesFileName());
     }
     
     /**

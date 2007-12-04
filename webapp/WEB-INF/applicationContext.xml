@@ -530,6 +530,7 @@ below should probably be configurable somehow. -->
 		<property name="plotDao">
 			<ref bean="plotDao"/>
 		</property>
+		<property name="dataFileManager" ref="dataFileManager"/>
 	</bean>
 	
 <!-- Color chooser -->

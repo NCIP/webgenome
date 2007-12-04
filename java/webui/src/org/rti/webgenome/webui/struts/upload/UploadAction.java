@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.7 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -170,6 +170,7 @@ public class UploadAction extends BaseAction {
 			this.persistShoppingCartChanges(cart, request);
 			forward = mapping.findForward("non.batch");
 		}
+		PageContext.removeUpload(request);
 		return forward;
 	}
 }

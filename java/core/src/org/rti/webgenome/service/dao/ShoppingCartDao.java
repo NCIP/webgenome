@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.3 $
+$Date: 2007-12-04 23:06:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.dao;
 
 import java.util.Collection;
+import java.util.Set;
 
 import org.rti.webgenome.domain.ShoppingCart;
 
@@ -108,4 +109,12 @@ public interface ShoppingCartDao {
      * cart.
      */
     Collection<String> getAllImageFileNames();
+    
+    /**
+     * Get name of all data files in all shopping carts.
+     * @return Names of data files, not absolute paths.
+     * These include files containing experimental results,
+     * reporters, and plot interactivity object serializations.
+     */
+    Set<String> getAllDataFileNames();
 }
