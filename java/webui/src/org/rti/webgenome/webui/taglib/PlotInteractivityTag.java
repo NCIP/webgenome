@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.5 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.6 $
+$Date: 2007-12-04 20:10:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -115,7 +115,9 @@ public class PlotInteractivityTag extends TagSupport {
 		String defaultImage = plot.getDefaultImageFileName();	// get default plot image
 		Map<String,String> imageFileMap = plot.getImageFileMap();	// get image file map
 
-		int plotWidth = plot.getWidth();	// plot width
+		// Subtraction from plot width necessary to keep image from repeating
+		// TODO: Fix repeating imagage problem so this subtraction is not necessary
+		int plotWidth = plot.getWidth() - 25;	// plot width
 		int plotHeight = plot.getHeight();	// plot height
 
 		// Get context path and image sub context path

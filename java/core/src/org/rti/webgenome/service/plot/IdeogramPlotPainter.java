@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.4 $
+$Date: 2007-12-04 20:10:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Cytoband;
 import org.rti.webgenome.domain.CytologicalMap;
 import org.rti.webgenome.domain.Experiment;
@@ -379,6 +380,11 @@ public class IdeogramPlotPainter extends PlotPainter {
 			// Get cytological map
 			CytologicalMap cytologicalMap =
 				this.cytologicalMapDao.load(this.organism, gi.getChromosome());
+			if (cytologicalMap == null) {
+				throw new WebGenomeSystemException(
+						"Cytological map not found for chromosome "
+						+ gi.getChromosome());
+			}
 			
 			// Calculate height of ideogram
 			ChromosomeIdeogramSize idSize = this.params.getIdeogramSize();
@@ -490,8 +496,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 				Experiment.getCopyNumberExperiments(experiments);
 			if (cnExps != null && cnExps.size() > 0) {
 				HeatMapColorFactory fac = new HeatMapColorFactory(
-						plotParameters.getExpressionMinSaturation(),
-						plotParameters.getExpressionMaxSaturation(), NUM_BINS);
+						plotParameters.getCopyNumberMinSaturation(),
+						plotParameters.getCopyNumberMaxSaturation(), NUM_BINS);
 				HeatMapPlot plot = new HeatMapPlot(cnExps, chromosome, fac,
 						plotParameters, this.chromosomeArrayDataGetter,
 						panel.getDrawingCanvas());
@@ -505,8 +511,8 @@ public class IdeogramPlotPainter extends PlotPainter {
 				Experiment.getExpressionExperiments(experiments);
 			if (exprExps != null & exprExps.size() > 0) {
 				HeatMapColorFactory fac = new HeatMapColorFactory(
-						plotParameters.getCopyNumberMinSaturation(),
-						plotParameters.getCopyNumberMaxSaturation(), NUM_BINS);
+						plotParameters.getExpressionMinSaturation(),
+						plotParameters.getExpressionMaxSaturation(), NUM_BINS);
 				HeatMapPlot plot = new HeatMapPlot(exprExps, chromosome, fac,
 						plotParameters, this.chromosomeArrayDataGetter,
 						panel.getDrawingCanvas());

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-29 05:24:19 $
+$Revision: 1.5 $
+$Date: 2007-12-04 20:10:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -85,6 +85,9 @@ public final class Axis implements ScalePlotElement {
      */
     private static final float[] MULTIPLIERS =
     	{(float) 5.0, (float) 2.0, (float) 1.0};
+    
+    /** Thickness of axis tic marks in pixels. */
+    private static final int TIC_MARK_THICKNESS = 3;
     
 
     // =============================
@@ -679,12 +682,22 @@ public final class Axis implements ScalePlotElement {
 	        
 	    // Case: user specified precise hatch locations and labels
         } else {
+        	System.out.print("Axis:");
+        	AxisTicMark lastTic = null;
         	for (int i = 0; i < this.hatchPoints.size(); i++) {
         		double point = this.hatchPoints.get(i);
         		String label = this.hatchLabels.get(i);
 	        	AxisTicMark tic = this.newAxisTicMark(point, label, true);
+	        	if (lastTic != null) {
+	        		if (tic.overlapsWith(lastTic, padding, canvas)) {
+	        			tic = this.newAxisTicMark(point, null, true);
+	        		}
+	        	}
 	            tic.paint(canvas, true);
+	            lastTic = tic;
+	            System.out.print(" " + tic.lineX1);
         	}
+        	System.out.println();
         }
     }
     
@@ -1049,6 +1062,9 @@ public final class Axis implements ScalePlotElement {
 	    //        Attributes
 	    // ========================================
 	    
+	    /** Have the drawing coordinates been set? */
+	    private boolean drawingCoordinatesSet = false;
+	    
 	    /** Alignment point of tic mark. */
 	    private final Point alignmentPoint;
 	    
@@ -1095,7 +1111,7 @@ public final class Axis implements ScalePlotElement {
 		private int maxY = 0;
 		
 		/** Thicknes of tick mark line. */
-		private int lineThickness = 3;
+		private int lineThickness = TIC_MARK_THICKNESS;
 		
 		/** Length of tic mark line. */
 		private int length = 20;
@@ -1213,10 +1229,13 @@ public final class Axis implements ScalePlotElement {
 		 * Does this overlap given tic mark?
 		 * @param axisTicMark An axis tic mark
 		 * @param padding Padding that should be between given tic mark and this
+		 * @param canvas The canvas this will be rendered on
 		 * @return T/F
 		 */
 		public boolean overlapsWith(final AxisTicMark axisTicMark,
-				final int padding) {
+				final int padding, final DrawingCanvas canvas) {
+			this.setDrawingCoordinates(canvas);
+			axisTicMark.setDrawingCoordinates(canvas);
 		    return this.overlapsHorizontally(axisTicMark, padding)
 		    	&& this.overlapsVertically(axisTicMark, padding);
 		}
@@ -1268,61 +1287,65 @@ public final class Axis implements ScalePlotElement {
 		 * @param canvas Canvas that will be drawn upon
 		 */
 		private void setDrawingCoordinates(final DrawingCanvas canvas) {
-		    int textLength = 0;
-		    int textHeight = 0;
-		    int textPadding = 0;
-		    if (this.label != null && this.label.length() > 0) {
-		        textLength = canvas.renderedWidth(this.label, this.fontSize);
-		        textHeight = this.fontSize;
-		        textPadding = this.padding;
-		    }
-		    
-		    // Horizontal orientation
-		    if (this.orientation == Orientation.HORIZONTAL) {
-		        this.lineX1 = this.alignmentPoint.x - this.length / 2;
-		        this.lineY1 = this.alignmentPoint.y;
-		        this.lineX2 = this.lineX1 + length;
-		        this.lineY2 = this.lineY1;
-		        this.textY = this.lineY1 + this.fontSize / 3;
-		        this.minY = this.lineY1 - textHeight / 2;
-		        this.maxY = this.lineY1 + textHeight / 2;
-		        if (this.labelLocation == Location.LEFT_OF) {
-		            this.textX = this.lineX1 - textLength - textPadding;
-		            this.minX = this.textX;
-		            this.maxX = this.lineX2;
-		        } else if (this.labelLocation == Location.RIGHT_OF) {
-		            this.textX = this.lineX2 + textPadding;
-		            this.minX = this.lineX1;
-		            this.maxX = this.lineX2 + textPadding + textLength;
-		        } else {
-		            throw new IllegalArgumentException(
-		            		"Illegal combination of orientation "
-		            		+ "and label location");
-		        }
-		    
-		    // Vertical orientation
-		    } else if (this.orientation == Orientation.VERTICAL) {
-		        this.lineX1 = this.alignmentPoint.x;
-		        this.lineY1 = this.alignmentPoint.y - this.length / 2;
-		        this.lineX2 = this.lineX1;
-		        this.lineY2 = this.lineY1 + this.length;
-		        this.textX = this.lineX1 - textLength / 2;
-		        this.minX = this.lineX1 - textLength / 2;
-		        this.maxX = this.lineX2 + textLength / 2;
-		        if (this.labelLocation == Location.ABOVE) {
-		            this.textY = this.lineY1 - textPadding;
-		            this.minY = this.lineY1 - textPadding - textHeight;
-		            this.maxY = this.lineY2;
-		        } else if (this.labelLocation == Location.BELOW) {
-		            this.textY = this.lineY2 + textPadding + textHeight;
-		            this.minY = this.lineY1;
-		            this.maxY = this.lineY2 + textPadding + textHeight;
-		        } else {
-		            throw new IllegalArgumentException(
-		            		"Illegal combination of orientation "
-		            		+ "and label location");
-		        }
-		    }
+			if (!this.drawingCoordinatesSet) {
+			    int textLength = 0;
+			    int textHeight = 0;
+			    int textPadding = 0;
+			    if (this.label != null && this.label.length() > 0) {
+			        textLength = canvas.renderedWidth(
+			        		this.label, this.fontSize);
+			        textHeight = this.fontSize;
+			        textPadding = this.padding;
+			    }
+			    
+			    // Horizontal orientation
+			    if (this.orientation == Orientation.HORIZONTAL) {
+			        this.lineX1 = this.alignmentPoint.x - this.length / 2;
+			        this.lineY1 = this.alignmentPoint.y;
+			        this.lineX2 = this.lineX1 + length;
+			        this.lineY2 = this.lineY1;
+			        this.textY = this.lineY1 + this.fontSize / 3;
+			        this.minY = this.lineY1 - textHeight / 2;
+			        this.maxY = this.lineY1 + textHeight / 2;
+			        if (this.labelLocation == Location.LEFT_OF) {
+			            this.textX = this.lineX1 - textLength - textPadding;
+			            this.minX = this.textX;
+			            this.maxX = this.lineX2;
+			        } else if (this.labelLocation == Location.RIGHT_OF) {
+			            this.textX = this.lineX2 + textPadding;
+			            this.minX = this.lineX1;
+			            this.maxX = this.lineX2 + textPadding + textLength;
+			        } else {
+			            throw new IllegalArgumentException(
+			            		"Illegal combination of orientation "
+			            		+ "and label location");
+			        }
+			    
+			    // Vertical orientation
+			    } else if (this.orientation == Orientation.VERTICAL) {
+			        this.lineX1 = this.alignmentPoint.x;
+			        this.lineY1 = this.alignmentPoint.y - this.length / 2;
+			        this.lineX2 = this.lineX1;
+			        this.lineY2 = this.lineY1 + this.length;
+			        this.textX = this.lineX1 - textLength / 2;
+			        this.minX = this.lineX1 - textLength / 2;
+			        this.maxX = this.lineX2 + textLength / 2;
+			        if (this.labelLocation == Location.ABOVE) {
+			            this.textY = this.lineY1 - textPadding;
+			            this.minY = this.lineY1 - textPadding - textHeight;
+			            this.maxY = this.lineY2;
+			        } else if (this.labelLocation == Location.BELOW) {
+			            this.textY = this.lineY2 + textPadding + textHeight;
+			            this.minY = this.lineY1;
+			            this.maxY = this.lineY2 + textPadding + textHeight;
+			        } else {
+			            throw new IllegalArgumentException(
+			            		"Illegal combination of orientation "
+			            		+ "and label location");
+			        }
+			    }
+			    this.drawingCoordinatesSet = true;
+			}
 		}
 		
 		

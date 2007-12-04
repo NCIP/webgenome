@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-10-03 17:32:13 $
+$Revision: 1.9 $
+$Date: 2007-12-04 20:10:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -362,7 +362,7 @@ public class ScatterPlotPainter extends PlotPainter {
 	        		leftYAxisQuantitationType.getName(),
 	                Orientation.HORIZONTAL, true, row.getDrawingCanvas());
 	        row.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
-	                VerticalAlignment.BOTTOM_JUSTIFIED, true);
+	                VerticalAlignment.BOTTOM_JUSTIFIED);
 	        row.add(yCaption, HorizontalAlignment.LEFT_OF,
 	                VerticalAlignment.CENTERED);
     	}

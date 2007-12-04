@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-09-11 22:52:24 $
+$Revision: 1.2 $
+$Date: 2007-12-04 20:10:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -173,7 +173,7 @@ public class GenomeSnapshotPlotPainter extends PlotPainter {
         	mapper.getChromosomeStartLocations();
         for (Short chrom : chromStarts.keySet()) {
         	hatchLabels.add(chrom.toString());
-        	hatchPoints.add(new Double(chromStarts.get(chrom).longValue()));
+        	hatchPoints.add(new Double(chromStarts.get(chrom)));
         }
         Axis xAxis = new Axis(params.getWidth(), Orientation.HORIZONTAL,
         		Location.BELOW, panel.getDrawingCanvas(), hatchPoints,

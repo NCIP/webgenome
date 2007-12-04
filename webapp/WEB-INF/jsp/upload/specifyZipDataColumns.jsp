@@ -32,7 +32,7 @@
 <h3 align="center">ZIP File: <bean:write name="zip" property="remoteFileName"/></h3>
 
 <center>
-<form action="<html:rewrite page="/upload/attachZipDataFile.do"/>">
+<form name="colForm" action="<html:rewrite page="/upload/attachZipDataFile.do"/>">
 <p>
 	<html:errors property="global"/>
 </p>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2007-09-29 05:24:19 $
+$Revision: 1.12 $
+$Date: 2007-12-04 20:10:30 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1804,6 +1804,8 @@ public class PlotParametersForm extends BaseForm {
 			this.plotType = PlotType.BAR.toString();
 		} else if (plotParameters instanceof AnnotationPlotParameters) {
 			this.plotType = PlotType.ANNOTATION.toString();
+		} else if (plotParameters instanceof GenomeSnapshopPlotParameters) {
+			this.plotType = PlotType.GENOME_SNAPSHOT.toString();
 		}
 		PlotType plotType = PlotType.valueOf(this.plotType);
 		

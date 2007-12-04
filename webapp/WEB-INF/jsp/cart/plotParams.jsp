@@ -107,6 +107,7 @@
 					title="Information" border="0"
 					width="15" height="15"/>
 				LOH probability threshold
+				<html:errors property="lohThreshold"/>
 			</td>
 			<td>
 				<html:text property="lohThreshold"/>

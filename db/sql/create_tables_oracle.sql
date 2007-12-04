@@ -265,7 +265,7 @@ CREATE TABLE plot_params (
 	units VARCHAR2(256),
 	type VARCHAR2(16),
 	
-	loh_threshold NUMBER(38),
+	loh_threshold NUMBER,
 	intplt_loh_eps VARCHAR2(8),
 	draw_raw_loh_probs VARCHAR2(8),
 	intplt_type VARCHAR2(256),
@@ -273,12 +273,12 @@ CREATE TABLE plot_params (
 	show_genes VARCHAR2(8),
 	show_reporter_names VARCHAR2(8),
 	
-	cn_max_saturation NUMBER(38),
-	cn_min_saturation NUMBER(38),
-	expr_max_saturation NUMBER(38),
-	expr_min_saturation NUMBER(38),
-	min_mask NUMBER(38),
-	max_mask NUMBER(38),
+	cn_max_saturation NUMBER,
+	cn_min_saturation NUMBER,
+	expr_max_saturation NUMBER,
+	expr_min_saturation NUMBER,
+	min_mask NUMBER,
+	max_mask NUMBER,
 	
 	draw_feature_labels VARCHAR2(8),
 	
@@ -289,10 +289,10 @@ CREATE TABLE plot_params (
 	track_width INT,
 	ideogram_thickness INT,
 	
-	cn_min_y NUMBER(38),
-	cn_max_y NUMBER(38),
-	expr_min_y NUMBER(38),
-	expr_max_y NUMBER(38),
+	cn_min_y NUMBER,
+	cn_max_y NUMBER,
+	expr_min_y NUMBER,
+	expr_max_y NUMBER,
 	draw_points VARCHAR2(8),
 	draw_error_bars VARCHAR2(8),
 	draw_stems VARCHAR2(8),
@@ -303,8 +303,8 @@ CREATE TABLE plot_params (
 	draw_horiz_grid_lines VARCHAR2(8),
 	draw_vert_grid_lines VARCHAR2(8),
 	
-	min_y NUMBER(38),
-	max_y NUMBER(38),
+	min_y NUMBER,
+	max_y NUMBER,
 	
 	PRIMARY KEY (id)
 );
