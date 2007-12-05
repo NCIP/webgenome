@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.4 $
+$Date: 2007-12-05 21:02:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -198,6 +198,7 @@ implements MultiExperimentStatelessOperation {
 				ChromosomeArrayData cad =
 					new ChromosomeArrayData(chromosome);
 				cad.setChromosomeAlterations(alts);
+				cad.setAlterationType(AnnotationType.LOH_SEGMENT);
 				output.add(cad);
 			} else {
 				List<AnnotatedGenomeFeature> alts =
@@ -207,11 +208,13 @@ implements MultiExperimentStatelessOperation {
 				ChromosomeArrayData cad =
 					new ChromosomeArrayData(chromosome);
 				cad.setChromosomeAlterations(alts);
+				cad.setAlterationType(AnnotationType.AMPLIFIED_SEGMENT);
 				output.add(cad);
 				alts = this.minimumCommonAlterations(input,
 							AnnotationType.DELETED_SEGMENT,
 							this.deletionThreshold);
 				cad = new ChromosomeArrayData(chromosome);
+				cad.setAlterationType(AnnotationType.DELETED_SEGMENT);
 				cad.setChromosomeAlterations(alts);
 				output.add(cad);
 			}
@@ -469,18 +472,14 @@ implements MultiExperimentStatelessOperation {
      */
     public String getName(final ChromosomeArrayData cad) {
     	String name = "";
-    	List<AnnotatedGenomeFeature> feats = cad.getChromosomeAlterations();
-    	if (feats != null && feats.size() > 0) {
-    		AnnotatedGenomeFeature feat = feats.get(0);
-    		AnnotationType type = feat.getAnnotationType();
-    		if (type == AnnotationType.AMPLIFIED_SEGMENT) {
-    			name = "MCAR";
-    		} else if (type == AnnotationType.DELETED_SEGMENT) {
-    			name = "MCDR";
-    		} else if (type == AnnotationType.LOH_SEGMENT) {
-    			name = "MCLOHR";
-    		}
-    	}
+		AnnotationType type = cad.getAlterationType();
+		if (type == AnnotationType.AMPLIFIED_SEGMENT) {
+			name = "MCAR";
+		} else if (type == AnnotationType.DELETED_SEGMENT) {
+			name = "MCDR";
+		} else if (type == AnnotationType.LOH_SEGMENT) {
+			name = "MCLOHR";
+		}
     	return name;
     }
 	

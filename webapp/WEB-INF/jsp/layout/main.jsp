@@ -309,7 +309,7 @@
 		<tr>
 			<td height="39" align="center" valign="center" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" border="0">
 				<span class="footer">
-					Copyright &copy; RTI International, 2005-2006. All rights reserved.
+					Copyright &copy; RTI International, 2003-2008. All rights reserved.
 				</span>
 			</td>
 		</tr>

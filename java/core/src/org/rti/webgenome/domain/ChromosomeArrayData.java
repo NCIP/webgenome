@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.3 $
+$Date: 2007-12-05 21:02:29 $
 
 The Web CGH Software License, Version 1.0
 
@@ -121,6 +121,9 @@ public class ChromosomeArrayData implements Serializable {
     /** Chromosome alterations. */
     private List<AnnotatedGenomeFeature> chromosomeAlterations = null;
     
+    /** Type of alterations, if any, held in this object. */
+    private AnnotationType alterationType = null;
+    
     // =================================
     //    Getters/setters
     // =================================
@@ -146,6 +149,24 @@ public class ChromosomeArrayData implements Serializable {
 
 
     /**
+     * Get type of alterations, if any, held in this object.
+     * @return Alteration type or null
+     */
+    public AnnotationType getAlterationType() {
+		return alterationType;
+	}
+
+
+    /**
+     * Set type of alterations, if any, held in this object.
+     * @param alterationType Alteration type
+     */
+	public void setAlterationType(final AnnotationType alterationType) {
+		this.alterationType = alterationType;
+	}
+
+
+	/**
      * Set chromosome alterations.
      * @param chromosomeAlteration Chromosome alterations.
      */
