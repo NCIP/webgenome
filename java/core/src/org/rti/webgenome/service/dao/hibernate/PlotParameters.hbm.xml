@@ -78,6 +78,8 @@
 			<property name="showReporterNames" column="show_reporter_names"/>
 			<property name="copyNumberMinY" column="cn_min_y"/>
 			<property name="copyNumberMaxY" column="cn_max_y"/>
+			<property name="expressionMinY" column="expr_min_y"/>
+			<property name="expressionMaxY" column="expr_max_y"/>
 			<property name="height" column="height"/>
 			<property name="drawHorizGridLines" column="draw_horiz_grid_lines"/>
 			<property name="drawVertGridLines" column="draw_vert_grid_lines"/>
@@ -96,6 +98,8 @@
 			<property name="drawHorizGridLines" column="draw_horiz_grid_lines"/>
 			<property name="drawVertGridLines" column="draw_vert_grid_lines"/>
 			<property name="width" column="width"/>
+			<property name="minY" column="min_y"/>
+			<property name="maxY" column="max_y"/>
 		</subclass>
 	</class>
 

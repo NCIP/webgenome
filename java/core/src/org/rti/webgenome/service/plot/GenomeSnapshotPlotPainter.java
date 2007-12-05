@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-12-04 20:10:30 $
+$Revision: 1.3 $
+$Date: 2007-12-05 19:59:32 $
 
 The Web CGH Software License, Version 1.0
 
@@ -133,8 +133,8 @@ public class GenomeSnapshotPlotPainter extends PlotPainter {
         	Experiment.getCopyNumberQuantitationType(experiments);
 		if (copyNumberQType != null) {
 			copyNumberAxis = new Axis(
-					Experiment.findMinCopyNumberValue(experiments),
-					Experiment.findMaxCopyNumberValue(experiments),
+					params.getMinY(),
+					params.getMaxY(),
 					params.getHeight(), Orientation.VERTICAL,
 					Location.LEFT_OF, panel.getDrawingCanvas());
 			referenceYAxis = copyNumberAxis;
@@ -150,8 +150,8 @@ public class GenomeSnapshotPlotPainter extends PlotPainter {
 				textLocation = Location.LEFT_OF;
 			}
 			expressionAxis = new Axis(
-					Experiment.findMinExpressionValue(experiments),
-					Experiment.findMaxExpressionValue(experiments),
+					params.getMinY(),
+					params.getMaxY(),
 					params.getHeight(), Orientation.VERTICAL,
 					textLocation, panel.getDrawingCanvas());
 			if (referenceYAxis == null) {
