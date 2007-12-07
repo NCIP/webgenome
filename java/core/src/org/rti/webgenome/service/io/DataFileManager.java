@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-12-04 23:06:40 $
+$Revision: 1.8 $
+$Date: 2007-12-07 19:52:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -406,8 +406,12 @@ public final class DataFileManager {
      * @param plot A plot
      */
     public void deleteDataFiles(final Plot plot) {
-    	this.deleteDataFile(plot.getClickBoxesFileName());
-    	this.deleteDataFile(plot.getMouseOverStripesFileName());
+    	if (plot.getClickBoxesFileName() != null) {
+    		this.deleteDataFile(plot.getClickBoxesFileName());
+    	}
+    	if (plot.getMouseOverStripesFileName() != null) {
+    		this.deleteDataFile(plot.getMouseOverStripesFileName());
+    	}
     }
     
     /**

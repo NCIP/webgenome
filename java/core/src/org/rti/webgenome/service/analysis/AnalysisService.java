@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-07 22:21:25 $
+$Revision: 1.6 $
+$Date: 2007-12-07 19:52:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,10 +58,7 @@ import java.util.Map;
 
 import org.rti.webgenome.analysis.AnalyticException;
 import org.rti.webgenome.analysis.AnalyticOperation;
-import org.rti.webgenome.analysis.AnalyticPipeline;
 import org.rti.webgenome.analysis.MultiExperimentStatelessOperation;
-import org.rti.webgenome.analysis.SingleBioAssayStatelessOperation;
-import org.rti.webgenome.analysis.SingleExperimentStatelessOperation;
 import org.rti.webgenome.analysis.UserConfigurableProperty;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.BioAssay;
@@ -171,25 +168,19 @@ public class AnalysisService {
     			if (expName != null) {
     				output.setName(expName);
     			}
-    			if (operation instanceof SingleBioAssayStatelessOperation
-    					|| (operation instanceof AnalyticPipeline
-    							&& ((AnalyticPipeline) operation).
-    							producesSingleBioAssayPerExperiment())) {
-    				for (BioAssay ba : output.getBioAssays()) {
-    					String bioAssayName =
-    						outputBioAssayNames.get(
-    								ba.getParentBioAssayId());
-    					if (bioAssayName != null) {
-    						ba.setName(bioAssayName);
-    					}
-    				}
-    			} else if (operation
-    					instanceof SingleExperimentStatelessOperation) {
-    				Collection<BioAssay> bioAssays = output.getBioAssays();
-    				if (bioAssays.size() > 0) {
-    					bioAssays.iterator().next().setName(expName);
-    				}
-    			}
+				for (BioAssay ba : output.getBioAssays()) {
+					Long parentId = ba.getParentBioAssayId();
+					if (parentId != null) {
+						String bioAssayName =
+							outputBioAssayNames.get(
+									parentId);
+						if (bioAssayName != null) {
+							ba.setName(bioAssayName);
+						} 
+					} else if (expName != null) {
+						ba.setName(expName);
+					}
+				}
     		}
 		}
 	}

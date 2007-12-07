@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.4 $
+$Date: 2007-12-07 19:52:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -207,7 +207,8 @@ public final class FileSerializer implements Serializer {
 		String path = this.getAbsolutePath(fileName);
 		File file = new File(path);
 		if (!file.exists()) {
-			throw new IllegalArgumentException("Cannot find object with id '"
+			throw new IllegalArgumentException(
+					"Cannot find object file with id '"
                     + fileName + "'");
         }
 		if (!file.delete()) {

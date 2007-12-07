@@ -5,7 +5,7 @@
 <center>
 	<p>
 		<font color="red">
-			<b>webCGH was unable to complete this request for the following reason:</b>
+			<b>WebGenome was unable to complete this request for the following reason:</b>
 		</font>
 	</p>
 	

@@ -5,7 +5,7 @@
 <p>
 	<font color="red">
 		<b>
-			webCGH was unable to complete this request due to the
+			WebGenome was unable to complete this request due to the
 			failure of a system component.
 		</b>
 	</font>

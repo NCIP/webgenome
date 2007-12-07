@@ -5,8 +5,8 @@
 <p>
 	<font color="red">
 		<b>
-			An unknown exception has occurred that has prevented
-			webCGH from completing this request.
+			An unexpected error has occurred that has prevented
+			WebGenome from completing this request.
 		</b>
 	</font>
 </p>
