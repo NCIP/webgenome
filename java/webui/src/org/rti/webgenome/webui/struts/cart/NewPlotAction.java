@@ -1,6 +1,6 @@
 /*
-$Revision: 1.18 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.19 $
+$Date: 2007-12-17 18:49:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -193,9 +193,9 @@ public final class NewPlotAction extends BaseAction {
     	// Get experiments to plot.  If this action is
     	// invoked to create a new <code>Plot</code> instance,
     	// the experiment IDs come from a form.  If it is invoked
-    	// to update an existing plot (i.e., re-plot),
-    	// the experiments are obtained
-    	// from the plot instance.
+    	// to update an existing plot (i.e., re-plot) or to create
+    	// a new plot from data in an existing plot,
+    	// the experiments are obtained from the plot instance.
     	Collection<Experiment> experiments = null;
 	    if (request.getParameter("plotId") == null) {
 	    	
@@ -257,6 +257,11 @@ public final class NewPlotAction extends BaseAction {
 	    	}
 	    }
 	    
+	    // If action is not to replot an existing plot, set Plot object to null
+	    if (request.getParameter("diff.plot.type") != null) {
+	    	plot = null;
+	    }
+	    
 	    ActionForward forward = null;
 	    
 	    // Case: Plot immediately
@@ -270,9 +275,10 @@ public final class NewPlotAction extends BaseAction {
 	    		getter = new SerializedChromosomeArrayDataGetter(
 	    				this.dataFileManager);
 	    	}
-	    	this.plotService.plotExperiments(plot, experiments, params, cart,
-	    			getter);
+	    	plot = this.plotService.plotExperiments(
+	    			plot, experiments, params, cart, getter);
 	    	this.persistShoppingCartChanges(cart, request);
+	    	request.setAttribute("plot", plot);
 	    	forward = mapping.findForward("non.batch");
 	    	
 	    // Case: Generate plot in background

@@ -1,4 +1,6 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <h1 align="center">Select Plot Type</h1>
 
@@ -11,9 +13,16 @@
 --%>
 	<html:form action="/cart/plotParameters">
 	
+		<%-- Pass parameters to downstream JSP and action --%>
 		<logic:present parameter="id">
-			<input type="hidden" name="plotId"
+		
+			<%-- ID of existing plot containing data for new plot --%>
+			<input type="hidden" name="id"
 				value="<%= request.getParameter("id") %>">
+				
+			<%-- Instruction to action class that this is a different
+			     plot of the data from an existing plot --%>
+			<input type="hidden" name="diff.plot.type" value="true">
 		</logic:present>
 
 		<table cellpadding="5" cellspacing="0" border="0">

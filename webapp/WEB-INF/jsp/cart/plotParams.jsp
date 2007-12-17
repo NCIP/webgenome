@@ -8,10 +8,27 @@
 </p>
 <html:form action="/cart/newPlot" target="mainwindow">
 
+	<%-- ==========================================================
+	There are three entry points to this page:
+		(1) Creating a brand new plot of selected experiments
+		(2) Re-plotting an existing experiment with new parameter
+		    values
+		(3) Create a new plot of data in an existing plot
+	For entry points (2) and (3), the downstream action needs
+	to know which plot to extract data from.  For entry point (3),
+	the action needs a switch to indicate this is a different plot
+	of data in an existing plot.
+	=============================================================== --%>
 	<logic:present parameter="id">
 		<input type="hidden" name="plotId" value="<%= request.getParameter("id") %>">
 	</logic:present>
 	
+	<logic:present parameter="diff.plot.type">
+		<input type="hidden" name="diff.plot.type" value="true">
+	</logic:present>
+	
+	<%-- Indicates to downstream action that plot parameters come from
+	user form input --%>
 	<input type="hidden" name="params.from.user" value="1" />
 	
 	<table class="noBorder">

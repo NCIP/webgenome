@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-09 18:32:21 $
+$Revision: 1.5 $
+$Date: 2007-12-17 18:49:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -89,24 +89,30 @@ public final class ShowPlotSetupAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	// Retrieve plot ID.  Look first at parameters, then request
-    	Long plotId = null;
-    	String plotIdStr = request.getParameter("plotId");
-    	if (plotIdStr != null) {
-    		plotId = Long.parseLong(plotIdStr);
-    	}
+    	// Get plot and attach to request, if not there already.
+    	// It will be there already if this action was invoked
+    	// NewPlotAction in non-batch mode.
+    	Plot plot = (Plot) request.getAttribute("plot");
+    	if (plot == null) {
     	
-    	// Retrieve plot from shopping cart
-    	ShoppingCart cart = this.getShoppingCart(request);
-    	Plot plot = null;
-    	if (plotId != null) {
-    		plot = cart.getPlot(plotId);
-    	} else {
-    		plot = cart.getLastPlotIn();
-    	}
+	    	// Retrieve plot ID.  Look first at request, then parameters
+	    	Long plotId = null;
+	    	String plotIdStr = request.getParameter("plotId");
+	    	if (plotIdStr != null) {
+	    		plotId = Long.parseLong(plotIdStr);
+	    	}
+	    	
+	    	// Retrieve plot from shopping cart
+	    	ShoppingCart cart = this.getShoppingCart(request);
+	    	if (plotId != null) {
+	    		plot = cart.getPlot(plotId);
+	    	} else {
+	    		plot = cart.getLastPlotIn();
+	    	}
     	
-    	// Attache plot to request
-    	request.setAttribute("plot", plot);
+	    	// Attach plot to request
+	    	request.setAttribute("plot", plot);
+    	}
     	
     	// See if any plotted experiments were derived from
     	// analytic operations.  If so, plant an attribute

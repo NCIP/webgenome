@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-07-18 21:42:49 $
+$Revision: 1.2 $
+$Date: 2007-12-17 18:49:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,11 +105,13 @@ public class PlotService {
 	 * plot is generated, it will be saved into this cart.
 	 * @param chromosomeArrayDataGetter Getter for chromosome
 	 * array data
+	 * @return Plot that was replotted or newly created plot.
 	 */
-	public void plotExperiments(final Plot plot,
+	public Plot plotExperiments(final Plot plot,
 			final Collection<Experiment> experiments,
 			final PlotParameters params, final ShoppingCart cart,
 			final ChromosomeArrayDataGetter chromosomeArrayDataGetter) {
+		Plot returnPlot = plot;
 		if (plot != null) {
 			this.plotGenerator.replot(plot, experiments, params,
 					chromosomeArrayDataGetter);
@@ -123,6 +125,8 @@ public class PlotService {
     			params.setPlotName(plotName);
     		}
     		cart.add(newPlot);
+    		returnPlot = newPlot;
 		}
+		return returnPlot;
 	}
 }
