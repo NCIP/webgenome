@@ -405,3 +405,11 @@ a.transientLink {
 a.transientLink:hover {
 	color: #999999;
 }
+
+.circled {
+	background-color: #ccc;
+}
+
+.uncircled {
+	background-color: white;
+}

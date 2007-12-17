@@ -4,19 +4,36 @@
 
 
 <script language="Javascript">
-	function setBioassayName(field) {
-		var checkBoxId = field + "_cb";
-		var checkBox = document.getElementById(checkBoxId);
-		var colName = null;
-		if (checkBox.checked) {
-			var colTdId = field + "_col";
-			colName = document.getElementById(colTdId).firstChild.nodeValue;
+	var xOffset = 0;
+	var yOffset = 0;
+	function toggle(name, value) {
+		var yes = document.getElementById(name + "_yes");
+		var no = document.getElementById(name + "_no");
+		var cell = document.getElementById(name + "_td");
+		if (value == "yes") {
+			xOffset = document.body.scrollLeft || window.pageXOffset;
+			yOffset = document.body.scrollTop || window.pageYOffset;
+			yes.className = "circled";
+			no.className = "uncircled";
+			var textBox = document.createElement("input");
+			textBox.setAttribute("type", "text");
+			textBox.setAttribute("id", name + "_bioassay");
+			textBox.setAttribute("name", name + "_bioassay");
+			cell.appendChild(textBox);
+			setTimeout("resetViewport()", 500);
 		} else {
-			colName = "";
+			yes.className = "uncircled";
+			no.className = "circled";
+			var textBox = document.getElementById(name + "_bioassay");
+			cell.removeChild(textBox);
 		}
-		var textInputId = field + "_bioassay";
-		var textInput = document.getElementById(textInputId);
-		textInput.value = colName;
+	}
+	
+	function resetViewport() {
+		document.body.scrollLeft = xOffset;
+		document.body.scrollTop = yOffset;
+		window.pageXOffset = xOffset;
+		window.pageYOffset = yOffset;
 	}
 </script>
 
@@ -64,16 +81,22 @@
 		<logic:iterate name="meta" property="columnHeadings" id="col">
 		<bean:define id="col" name="col"/>
 		<tr>
-			<td>
-				<input type="checkbox" id="<%= fname%>_<%= col%>_cb"
-				name="<%= fname%>_<%= col%>_cb"
-				onclick="setBioassayName('<%= fname%>_<%= col%>')"/>
+			<td align="center">
+				<span id="<%= fname%>_<%= col %>_yes" class="uncircled">
+					<a href="#" onclick="toggle('<%= fname%>_<%= col %>', 'yes')">
+						YES
+					</a>
+				</span>
+				&nbsp;|&nbsp;
+				<span id="<%= fname%>_<%= col %>_no" class="circled">
+					<a href="#" onclick="toggle('<%= fname%>_<%= col %>', 'no')">
+						NO
+					</a>
+				</span>
 			</td>
-			<td id="<%= fname%>_<%= col%>_col"><%= col%></td>
-			<td>
-				<input type="text"
-					id="<%= fname%>_<%= col%>_bioassay"
-					name="<%= fname%>_<%= col%>_bioassay"/>
+			<td><%= col%></td>
+			<td id="<%= fname%>_<%= col %>_td">
+				&nbsp;
 			</td>
 		</tr>
 		</logic:iterate>

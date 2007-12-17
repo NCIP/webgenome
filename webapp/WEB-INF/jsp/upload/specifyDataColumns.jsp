@@ -3,19 +3,24 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
 <script language="Javascript">
-	function setBioassayName(field) {
-		var checkBoxId = field + "_cb";
-		var checkBox = document.getElementById(checkBoxId);
-		var colName = null;
-		if (checkBox.checked) {
-			var colTdId = field + "_col";
-			colName = document.getElementById(colTdId).firstChild.nodeValue;
+	function toggle(name, value) {
+		var yes = document.getElementById(name + "_yes");
+		var no = document.getElementById(name + "_no");
+		var cell = document.getElementById(name + "_td");
+		if (value == "yes") {
+			yes.className = "circled";
+			no.className = "uncircled";
+			var textBox = document.createElement("input");
+			textBox.setAttribute("type", "text");
+			textBox.setAttribute("id", name + "_bioassay");
+			textBox.setAttribute("name", name + "_bioassay");
+			cell.appendChild(textBox);
 		} else {
-			colName = "";
+			yes.className = "uncircled";
+			no.className = "circled";
+			var textBox = document.getElementById(name + "_bioassay");
+			cell.removeChild(textBox);
 		}
-		var textInputId = field + "_bioassay";
-		var textInput = document.getElementById(textInputId);
-		textInput.value = colName;
 	}
 </script>
 
@@ -53,11 +58,25 @@
 	<logic:iterate name="columnHeadings" id="col">
 	<bean:define id="col" name="col"/>
 	<tr>
-		<td align="center"><input type="checkbox" id="<%= col%>_cb"
-			name="<%= col%>_cb"
-			onclick="setBioassayName('<%= col%>')"/></td>
-		<td id="<%= col%>_col"><%= col%></td>
-		<td><input type="text" id="<%= col%>_bioassay" name="<%= col%>_bioassay"/></td>
+		<td align="center">
+			<span id="<%= col %>_yes" class="uncircled">
+				<a href="#" onclick="toggle('<%= col %>', 'yes')">
+					YES
+				</a>
+			</span>
+			&nbsp;|&nbsp;
+			<span id="<%= col %>_no" class="circled">
+				<a href="#" onclick="toggle('<%= col %>', 'no')">
+					NO
+				</a>
+			</span>
+		</td>
+		<td>
+			<%= col%>
+		</td>
+		<td id="<%= col %>_td">
+			&nbsp;
+		</td>
 	</tr>
 	</logic:iterate>
 </table>

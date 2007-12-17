@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-29 05:24:19 $
+$Revision: 1.3 $
+$Date: 2007-12-17 23:29:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -81,14 +81,6 @@ public class AttachZipDataFileAction extends BaseAction {
 	/**
 	 * Suffix added to a data file column heading by the JSP
 	 * 'specifyDataColumn.jsp' to indicate the parameter
-	 * is a checkbox for selecting if the corresponding column
-	 * contains data.
-	 */
-	private static final String CHECKBOX_SUFFIX = "_cb";
-	
-	/**
-	 * Suffix added to a data file column heading by the JSP
-	 * 'specifyDataColumn.jsp' to indicate the parameter
 	 * is a text box for specifying the name of the bioassay
 	 * that is derived from data in the column.
 	 */
@@ -127,15 +119,14 @@ public class AttachZipDataFileAction extends BaseAction {
 			String pName = pNames.nextElement();
 			
 			// If parameter associated with a checkbox
-			if (pName.endsWith(CHECKBOX_SUFFIX)) {
+			if (pName.endsWith(BIOASSAY_SUFFIX)) {
 				
 				// Parse out 'field name,' i.e. everything but suffix
 				String fieldName = pName.substring(0,
-						pName.length() - CHECKBOX_SUFFIX.length());
+						pName.length() - BIOASSAY_SUFFIX.length());
 				
 				// Get corresponding parameter giving bioassay name
-				String bioAssayParamName = fieldName + BIOASSAY_SUFFIX;
-				String bioAssayName = request.getParameter(bioAssayParamName);
+				String bioAssayName = request.getParameter(pName);
 				if (bioAssayName == null || bioAssayName.length() < 1) {
 					ActionErrors errors = new ActionErrors();
 					errors.add("global",
