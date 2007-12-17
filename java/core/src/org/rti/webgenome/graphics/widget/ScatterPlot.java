@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.6 $
+$Date: 2007-12-17 17:42:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -609,7 +609,8 @@ public final class ScatterPlot implements PlotElement {
     					cad.getChromosomeAlterations();
     				AnnotationType type = feats.get(0).getAnnotationType();
 	    			this.paintAlterations(cad, bioAssay.getColor(), canvas,
-	    					ALTERATION_LINE_WIDTH, type);
+	    					ALTERATION_LINE_WIDTH, type,
+	    					this.copyNumberPlotBoundaries);
     			}
     		}
         }
@@ -637,7 +638,7 @@ public final class ScatterPlot implements PlotElement {
         // Error bars
 		if (this.drawErrorBars) {
 			this.paintErrorBars(cad, color, canvas,
-					lineWidth, this.expressionPlotBoundaries);
+					lineWidth, this.expressionPlotBoundaries, true);
 		}
     }
     
@@ -668,7 +669,7 @@ public final class ScatterPlot implements PlotElement {
             // Error bars
     		if (this.drawErrorBars) {
     			this.paintErrorBars(cad, color, canvas,
-    					lineWidth, this.copyNumberPlotBoundaries);
+    					lineWidth, this.copyNumberPlotBoundaries, false);
     		}
         
             // Lines
@@ -692,7 +693,8 @@ public final class ScatterPlot implements PlotElement {
 		// LOH scored lines
 		if (this.copyNumberQType == QuantitationType.LOH) {
 			this.paintAlterations(cad, color, canvas,
-					ALTERATION_LINE_WIDTH, AnnotationType.LOH_SEGMENT);
+					ALTERATION_LINE_WIDTH, AnnotationType.LOH_SEGMENT,
+					this.copyNumberPlotBoundaries);
 		}
     }
     
@@ -834,13 +836,15 @@ public final class ScatterPlot implements PlotElement {
      * @param lineWidth Width of lines
      * @param boundaries Boundaries of plot with regard to a quantitation
      * type
+     * @param isExpressionData Are we plotting gene expression data?
      */
     private void paintErrorBars(final ChromosomeArrayData cad,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth, final PlotBoundaries boundaries) {
+            final int lineWidth, final PlotBoundaries boundaries,
+            final boolean isExpressionData) {
         for (ArrayDatum datum : cad.getArrayData()) {
             this.paintErrorBar(datum, color, drawingCanvas, lineWidth,
-            		boundaries);
+            		boundaries, isExpressionData);
         }
     }
     
@@ -924,16 +928,20 @@ public final class ScatterPlot implements PlotElement {
      * @param lineWidth Width of line
      * @param boundaries Boundaries of plot with regard to
      * a quantitation type
+     * @param isExpressionData Are we plotting gene expression data?
      */
     private void paintErrorBar(final ArrayDatum datum,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth, final PlotBoundaries boundaries) {
+            final int lineWidth, final PlotBoundaries boundaries,
+            final boolean isExpressionData) {
         this.reusableDataPoint1.bulkSet(datum);
-        int x = this.transposeX(this.reusableDataPoint1, boundaries);
-        int y = this.transposeY(this.reusableDataPoint1, boundaries);
-        if (!Float.isNaN(datum.getError())) {
-            this.drawErrorBar(x, y, datum.getError(), color, drawingCanvas,
-            		lineWidth, boundaries);
+        if (this.inPlotBoundaries(this.reusableDataPoint1, isExpressionData)) {
+	        int x = this.transposeX(this.reusableDataPoint1, boundaries);
+	        int y = this.transposeY(this.reusableDataPoint1, boundaries);
+	        if (!Float.isNaN(datum.getError())) {
+	            this.drawErrorBar(x, y, datum.getError(), color, drawingCanvas,
+	            		lineWidth, boundaries);
+	        }
         }
     }
     
@@ -1121,10 +1129,12 @@ public final class ScatterPlot implements PlotElement {
      * @param drawingCanvas Canvas to paint on
      * @param lineWidth Width of line
      * @param alterationType Alteration type
+     * @param boundaries Plot boundaries
      */
     private void paintAlterations(final ChromosomeArrayData cad,
             final Color color, final DrawingCanvas drawingCanvas,
-            final int lineWidth, final AnnotationType alterationType) {
+            final int lineWidth, final AnnotationType alterationType,
+            final PlotBoundaries boundaries) {
     	
     	// Iterate over alterations
     	Iterator<AnnotatedGenomeFeature> it = cad.alteredSegmentIterator(
@@ -1136,26 +1146,31 @@ public final class ScatterPlot implements PlotElement {
     	}
     	while (it.hasNext()) {
     		AnnotatedGenomeFeature feat = it.next();
+    		DataPoint left = DataPoint.leftDataPoint(feat);
+    		DataPoint right = DataPoint.rightDataPoint(feat);
+    		if (boundaries.atLeastPartlyOnPlot(left, right)) {
+    			boundaries.truncateToFitOnPlot(left, right);
     				    				
-			// Draw altered segment
-			int startX = this.transposeX(feat.getStartLocation(),
-					this.copyNumberPlotBoundaries);
-			int endX = this.transposeX(feat.getEndLocation(),
-					this.copyNumberPlotBoundaries);
-			if (startX == endX) {
-				startX -= MIN_LOH_WIDTH / 2;
-				if (startX < this.x) {
-					startX = this.x;
+				// Draw altered segment
+				int startX = this.transposeX(left,
+						boundaries);
+				int endX = this.transposeX(right,
+						boundaries);
+				if (startX == endX) {
+					startX -= MIN_LOH_WIDTH / 2;
+					if (startX < this.x) {
+						startX = this.x;
+					}
+					endX += MIN_LOH_WIDTH / 2;
+					if (endX > this.x + this.width) {
+						endX = this.x + this.width;
+					}
 				}
-				endX += MIN_LOH_WIDTH / 2;
-				if (endX > this.x + this.width) {
-					endX = this.x + this.width;
-				}
-			}
-			int topY = this.transposeY(feat.getQuantitation(),
-					this.copyNumberPlotBoundaries);
-			drawingCanvas.add(new Line(startX, topY, endX, topY,
-					lineWidth, color));
+				int topY = this.transposeY(feat.getQuantitation(),
+						this.copyNumberPlotBoundaries);
+				drawingCanvas.add(new Line(startX, topY, endX, topY,
+						lineWidth, color));
+    		}
 		}
     }
     

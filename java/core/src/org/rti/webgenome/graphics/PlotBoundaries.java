@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.5 $
+$Date: 2007-12-17 17:42:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -322,16 +322,15 @@ public class PlotBoundaries {
     		throw new IllegalArgumentException("Cannot fit line endpoints "
     				+ "to plot if the line does not intersect plot");
     	}
-    	if (this.withinBoundaries(point1) && this.withinBoundaries(point2)) {
-    		throw new IllegalArgumentException("Line already entirely on plot");
+    	if (!this.withinBoundaries(point1) || !this.withinBoundaries(point2)) {
+	        double slope = DataPoint.slope(point1, point2);
+	        if (!this.withinBoundaries(point1)) {
+	            this.moveDataPointToBorder(point1, slope);
+	        }
+	        if (!this.withinBoundaries(point2)) {
+	            this.moveDataPointToBorder(point2, slope);
+	        }
     	}
-        double slope = DataPoint.slope(point1, point2);
-        if (!this.withinBoundaries(point1)) {
-            this.moveDataPointToBorder(point1, slope);
-        }
-        if (!this.withinBoundaries(point2)) {
-            this.moveDataPointToBorder(point2, slope);
-        }
     }
     
     /**

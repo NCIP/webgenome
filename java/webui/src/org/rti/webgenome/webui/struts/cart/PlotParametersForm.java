@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2007-12-04 20:10:30 $
+$Revision: 1.13 $
+$Date: 2007-12-17 17:42:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1777,13 +1777,13 @@ public class PlotParametersForm extends BaseForm {
 		params.setMaxMask(FormUtils.textBoxToFloat(
 				this.maxMask, Constants.SMALL_FLOAT));
 		params.setExpressionMaxSaturation(FormUtils.textBoxToFloat(
-				this.expressionMaxSaturation, Float.NaN));
+				this.expressionMaxSaturation, Constants.FLOAT_NAN));
 		params.setExpressionMinSaturation(FormUtils.textBoxToFloat(
-				this.expressionMinSaturation, Float.NaN));
+				this.expressionMinSaturation, Constants.FLOAT_NAN));
 		params.setCopyNumberMaxSaturation(FormUtils.textBoxToFloat(
-				this.copyNumberMaxSaturation, Float.NaN));
+				this.copyNumberMaxSaturation, Constants.FLOAT_NAN));
 		params.setCopyNumberMinSaturation(FormUtils.textBoxToFloat(
-				this.copyNumberMinSaturation, Float.NaN));
+				this.copyNumberMinSaturation, Constants.FLOAT_NAN));
 		params.setMinMask(FormUtils.textBoxToFloat(
 				this.minMask, Constants.BIG_FLOAT));
 	}

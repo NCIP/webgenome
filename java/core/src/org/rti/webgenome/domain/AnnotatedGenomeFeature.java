@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.4 $
+$Date: 2007-12-17 17:42:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -309,7 +309,7 @@ implements Serializable {
 			final List<AnnotatedGenomeFeature> children) {
 		this.childFeatures.addAll(children);
 	}
-	
+		
 	
 	// ================================
 	//      Overrides

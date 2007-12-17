@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/core/src/org/rti/webgenome/graphics/DataPoint.java,v $
-$Revision: 1.2 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.3 $
+$Date: 2007-12-17 17:42:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.rti.webgenome.graphics;
 
+import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.ArrayDatum;
 
 /**
@@ -303,5 +304,27 @@ public class DataPoint {
         if (run == 0.0)
             return Double.NaN; 
         return rise /run;
+    }
+    
+    
+    /**
+     * Create new data point corresponding to the "left" side of
+     * the given feature.
+     * @param feat Feature
+     * @return New data point
+     */
+    public static DataPoint leftDataPoint(final AnnotatedGenomeFeature feat) {
+    	return new DataPoint(feat.getStartLocation(), feat.getQuantitation());
+    }
+    
+    
+    /**
+     * Create new data point corresponding to the "right" side of
+     * the given feature.
+     * @param feat Feature
+     * @return New data point
+     */
+    public static DataPoint rightDataPoint(final AnnotatedGenomeFeature feat) {
+    	return new DataPoint(feat.getEndLocation(), feat.getQuantitation());
     }
 }
