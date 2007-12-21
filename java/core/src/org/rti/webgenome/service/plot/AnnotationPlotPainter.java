@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.5 $
+$Date: 2007-12-21 22:44:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,11 +62,13 @@ import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.graphics.DrawingCanvas;
 import org.rti.webgenome.graphics.widget.AnnotationTrack;
 import org.rti.webgenome.graphics.widget.Axis;
 import org.rti.webgenome.graphics.widget.Background;
 import org.rti.webgenome.graphics.widget.Caption;
+import org.rti.webgenome.graphics.widget.ColorScale;
 import org.rti.webgenome.graphics.widget.DataTrack;
 import org.rti.webgenome.graphics.widget.Grid;
 import org.rti.webgenome.graphics.widget.PlotPanel;
@@ -96,6 +98,15 @@ public class AnnotationPlotPainter extends PlotPainter {
 	
 	/** Background color. */
 	private static final Color BG_COLOR = new Color(200, 200, 200);
+	
+	/** Width of color scale in pixels. */
+	private static final int COLOR_SCALE_WIDTH = 250;
+	
+	/** Height of color scale in pixels. */
+	private static final int COLOR_SCALE_HEIGHT = 15;
+	
+	/** Number of color bins in color scale. */
+	private static final int COLOR_SCALE_NUM_BINS = 16;
 	
 	
 	//
@@ -207,6 +218,13 @@ public class AnnotationPlotPainter extends PlotPainter {
 		this.paintDataTracks(childPanel, experiments, params,
 				interval.getChromosome(), interval.getStartLocation(),
 				interval.getEndLocation());
+		
+		// Add color code indicator
+		QuantitationType copyNumberQT =
+			Experiment.getCopyNumberQuantitationType(experiments);
+		QuantitationType expressionQT =
+			Experiment.getExpressionQuantitationType(experiments);
+		this.addScales(childPanel, copyNumberQT, expressionQT, params);
 		
 		// Add grid
 		Grid grid = axis.newGrid(params.getWidth(),
@@ -336,4 +354,62 @@ public class AnnotationPlotPainter extends PlotPainter {
 			}
 		}
 	}
+	
+	
+    /**
+     * Add "scales" to given panel.  These scales give color coding
+     * for copy number and/or expression data.
+     * @param panel Panel on which to draw scales
+     * @param copyNumberQT Quantitation type for copy number data
+     * @param expressionQT Quantitation type for expression data
+     * @param params Plotting parameters
+     */
+    private void addScales(final PlotPanel panel,
+    		final QuantitationType copyNumberQT,
+    		final QuantitationType expressionQT,
+    		final AnnotationPlotParameters params) {
+    	PlotPanel scales = panel.newChildPlotPanel();
+		if (copyNumberQT != null) {
+			PlotPanel cnPanel = scales.newChildPlotPanel();
+			ColorScale scale = new ColorScale(
+					params.getCopyNumberMinSaturation(),
+					params.getCopyNumberMaxSaturation(),
+					COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
+					COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
+			cnPanel.add(scale, HorizontalAlignment.CENTERED,
+					VerticalAlignment.TOP_JUSTIFIED);
+			cnPanel.add(new Caption(copyNumberQT.getName(),
+					Orientation.HORIZONTAL,
+					false, panel.getDrawingCanvas()),
+					HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+			scales.add(cnPanel, HorizontalAlignment.LEFT_JUSTIFIED,
+					VerticalAlignment.TOP_JUSTIFIED);
+		}
+		if (expressionQT != null) {
+			PlotPanel exPanel = scales.newChildPlotPanel();
+			ColorScale scale = new ColorScale(
+					params.getExpressionMinSaturation(),
+					params.getExpressionMaxSaturation(),
+					COLOR_SCALE_WIDTH, COLOR_SCALE_HEIGHT,
+					COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
+			exPanel.add(scale, HorizontalAlignment.CENTERED,
+					VerticalAlignment.TOP_JUSTIFIED);
+			exPanel.add(new Caption(expressionQT.getName(),
+					Orientation.HORIZONTAL,
+					false, panel.getDrawingCanvas()),
+					HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+			HorizontalAlignment ha = null;
+			if (copyNumberQT == null) {
+				ha = HorizontalAlignment.LEFT_JUSTIFIED;
+			} else {
+				ha = HorizontalAlignment.RIGHT_OF;
+			}
+			scales.add(exPanel, ha,
+					VerticalAlignment.TOP_JUSTIFIED);
+		}
+		panel.add(scales, HorizontalAlignment.CENTERED,
+					VerticalAlignment.BELOW);
+    }
 }
