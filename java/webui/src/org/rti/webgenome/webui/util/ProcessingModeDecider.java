@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-10 21:00:41 $
+$Revision: 1.7 $
+$Date: 2008-01-05 00:00:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -88,17 +88,16 @@ public final class ProcessingModeDecider {
 	
 	/**
 	 * Threshold number of individual array datum
-	 * for background processing on an analytic
-	 * server.  This may be initialized
-	 * from a system property 'bg.processing.datum.threshold.'
+	 * for background processing of a plotting
+	 * operation.  This may be initialized
+	 * from a system property 'bg.processing.plotting.threshold.'
 	 * If this property is not set, the threshold will be
 	 * set to {@link java.lang.Integer.MAX_VALUE}.  Hence,
-	 * all operations will be performed on the application
-	 * server.
+	 * all plotting operations will be performed immediately.
 	 */
-	private static final int BG_PROCESSING_DATUM_THRESHOLD;
+	private static final int BG_PROCESSING_PLOTTING_THRESHOLD;
 	static {
-		String propName = "bg.processing.datum.threshold";
+		String propName = "bg.processing.plotting.threshold";
 		int threshold = Integer.MAX_VALUE;
 		String thresholdProp = SystemUtils.getApplicationProperty(
 				propName);
@@ -110,13 +109,38 @@ public final class ProcessingModeDecider {
 						+ propName + "' is not a valid number");
 			}
 		}
-		BG_PROCESSING_DATUM_THRESHOLD = threshold;
+		BG_PROCESSING_PLOTTING_THRESHOLD = threshold;
+	}
+	
+	/**
+	 * Threshold number of individual array datum
+	 * for background processing of an analytic
+	 * operation.  This may be initialized
+	 * from a system property 'bg.processing.analysis.threshold.'
+	 * If this property is not set, the threshold will be
+	 * set to {@link java.lang.Integer.MAX_VALUE}.  Hence,
+	 * all plotting operations will be performed immediately.
+	 */
+	private static final int BG_PROCESSING_ANALYSIS_THRESHOLD;
+	static {
+		String propName = "bg.processing.analysis.threshold";
+		int threshold = Integer.MAX_VALUE;
+		String thresholdProp = SystemUtils.getApplicationProperty(
+				propName);
+		if (thresholdProp != null) {
+			try {
+				threshold = Integer.parseInt(thresholdProp);
+			} catch (NumberFormatException e) {
+				LOGGER.warn("System property '"
+						+ propName + "' is not a valid number");
+			}
+		}
+		BG_PROCESSING_ANALYSIS_THRESHOLD = threshold;
 	}
 	
 	/**
 	 * Threshold file size
-	 * for background file processing on an analytic
-	 * server.  This may be initialized
+	 * for background file processing.  This may be initialized
 	 * from a system property 'bg.processing.file.size.threshold.'
 	 * If this property is not set, the threshold will be
 	 * set to {@link java.lang.Long.MAX_VALUE}.  Hence,
@@ -185,7 +209,8 @@ public final class ProcessingModeDecider {
 	//
 	
 	/**
-	 * Determines whether some compute-intensive process
+	 * Determines whether some compute-intensive
+	 * analysis process
 	 * should be performed in the background.  It does this
 	 * by determining if the total number of
 	 * {@link org.rti.webgenome.domain.ArrayDatum}
@@ -209,12 +234,13 @@ public final class ProcessingModeDecider {
 	 * @throws SessionTimeoutException If the session mode cannot
 	 * be determined indicating a timeout
 	 */
-	public static boolean processInBackground(
+	public static boolean analysisInBackground(
 			final Experiment experiment, final HttpServletRequest request)
 	throws SessionTimeoutException {
 		boolean background = false;
 		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
-			background = experiment.numDatum() >= BG_PROCESSING_DATUM_THRESHOLD;
+			background = experiment.numDatum()
+				>= BG_PROCESSING_ANALYSIS_THRESHOLD;
 		}
 		return background;
 	}
@@ -263,7 +289,8 @@ public final class ProcessingModeDecider {
 	}
 	
 	/**
-	 * Determines whether some compute-intensive process
+	 * Determines whether some compute-intensive
+	 * analysis process
 	 * should be performed in the background.  It does this
 	 * by determining if the total number of
 	 * {@link org.rti.webgenome.domain.ArrayDatum}
@@ -287,7 +314,7 @@ public final class ProcessingModeDecider {
 	 * @throws SessionTimeoutException If the session mode cannot
 	 * be determined indicating a timeout
 	 */
-	public static boolean processInBackground(
+	public static boolean analysisInBackground(
 			final Collection<Experiment> experiments,
 			final HttpServletRequest request)
 	throws SessionTimeoutException {
@@ -297,14 +324,14 @@ public final class ProcessingModeDecider {
 			for (Experiment exp : experiments) {
 				numDatum += exp.numDatum();
 			}
-			background = numDatum >= BG_PROCESSING_DATUM_THRESHOLD;
+			background = numDatum >= BG_PROCESSING_ANALYSIS_THRESHOLD;
 		}
 		return background;
 	}
 	
 	
 	/**
-	 * Determines whether some compute-intensive process
+	 * Determines whether some compute-intensive plotting process
 	 * should be performed in the background.  It does this
 	 * by determining if the total number of
 	 * {@link org.rti.webgenome.domain.ArrayDatum}
@@ -339,7 +366,7 @@ public final class ProcessingModeDecider {
 	 * @throws SessionTimeoutException If the session mode cannot
 	 * be determined indicating a timeout
 	 */
-	public static boolean processInBackground(
+	public static boolean plotInBackground(
 			final Collection<Experiment> experiments,
 			final Collection<GenomeInterval> genomeIntervals,
 			final HttpServletRequest request)
@@ -350,16 +377,18 @@ public final class ProcessingModeDecider {
 			for (Experiment exp : experiments) {
 				for (GenomeInterval interval : genomeIntervals) {
 					int totalNum = exp.numDatum(interval.getChromosome());
-					
-					// Code commented out for demo
-//					double fraction = (double) interval.length()
-//						/ (double) exp.inferredChromosomeSize(
-//								interval.getChromosome());
-//					numDatum += (int) ((double) totalNum * fraction);
-					numDatum += totalNum;
+					double fraction = 0.0;
+					if (interval.endpointsSpecified()) {
+						fraction = (double) interval.length()
+						/ (double) exp.inferredChromosomeSize(
+								interval.getChromosome());
+					} else {
+						fraction = 1.0;
+					}
+					numDatum += (int) ((double) totalNum * fraction);
 				}
 			}
-			background = numDatum >= BG_PROCESSING_DATUM_THRESHOLD;
+			background = numDatum >= BG_PROCESSING_PLOTTING_THRESHOLD;
 		}
 		return background;
 	}

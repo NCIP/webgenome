@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.15 $
+$Date: 2008-01-05 00:00:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -129,7 +129,7 @@ extends BaseAnalysisAction {
 		
 		// Case: Process imediately
 		DataTransformer transformer = this.getDataTransformer(request);
-		if (!(ProcessingModeDecider.processInBackground(derivedExperiments,
+		if (!(ProcessingModeDecider.analysisInBackground(derivedExperiments,
 				request) || ProcessingModeDecider.plotInBackground(
 						plot.getPlotParameters(), request))) {
 			this.getAnalysisService().rePerformAnalyticOperation(

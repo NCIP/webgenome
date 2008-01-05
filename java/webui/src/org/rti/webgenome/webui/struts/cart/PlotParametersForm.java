@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2007-12-17 17:42:58 $
+$Revision: 1.14 $
+$Date: 2008-01-05 00:00:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -1357,14 +1357,14 @@ public class PlotParametersForm extends BaseForm {
 	
 	
 	/**
-	 * Validate scatter plot-specific fields.
+	 * Validate genome snapshot plot-specific fields.
 	 * @param errors Action errors
 	 */
 	private void validateGenomicSnapshotPlotFields(
 			final ActionErrors errors) {
 		
-		// Attributes in parent class
-		this.validateGenomicPlotFields(errors);
+		// TODO: Add validation for LOH threshold when
+		// it is added
 		
 		// minY and maxY
 		boolean validateRelationship = true;

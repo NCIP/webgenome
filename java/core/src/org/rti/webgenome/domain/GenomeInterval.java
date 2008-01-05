@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-10-03 17:32:13 $
+$Revision: 1.8 $
+$Date: 2008-01-05 00:00:28 $
 
 The Web CGH Software License, Version 1.0
 
@@ -397,6 +397,14 @@ implements Comparable<GenomeInterval>, Serializable {
 	 */
 	public final long length() {
 		return this.endLocation - this.startLocation + 1;
+	}
+	
+	/**
+	 * Have the endpoints of the interval been specified?
+	 * @return T/F
+	 */
+	public final boolean endpointsSpecified() {
+		return this.startLocation >= 0 && this.endLocation >= 0;
 	}
 	
 	

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.13 $
+$Date: 2008-01-05 00:00:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -113,7 +113,7 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 		DataTransformer transformer = this.getDataTransformer(request);
 		
 		// Case: perform immediately
-    	if (!ProcessingModeDecider.processInBackground(exp, request)) {
+    	if (!ProcessingModeDecider.analysisInBackground(exp, request)) {
 	    	this.getAnalysisService().rePerformAnalyticOperation(
 	    			exp, op, transformer);
 	    	this.persistShoppingCartChanges(cart, request);

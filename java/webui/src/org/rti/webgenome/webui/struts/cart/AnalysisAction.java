@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.13 $
+$Date: 2008-01-05 00:00:24 $
 
 The Web CGH Software License, Version 1.0
 
@@ -140,7 +140,7 @@ public final class AnalysisAction extends BaseAnalysisAction {
 		Collection<Experiment> experiments = cart.getExperiments(ids);
 
 		// Case: Perform immediately
-    	if (!ProcessingModeDecider.processInBackground(
+    	if (!ProcessingModeDecider.analysisInBackground(
     			experiments, request)) {
     		DataTransformer transformer = this.getDataTransformer(request);
 	    	this.getAnalysisService().performAnalyticOperation(
