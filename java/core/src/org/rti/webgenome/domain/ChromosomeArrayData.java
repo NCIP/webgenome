@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-12-05 21:02:29 $
+$Revision: 1.4 $
+$Date: 2008-01-08 21:07:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -328,7 +328,12 @@ public class ChromosomeArrayData implements Serializable {
         
         // Check args
         if (from > to) {
-            throw new IllegalArgumentException("From cannot be larget than to");
+            throw new IllegalArgumentException("From cannot be larger than to");
+        }
+        
+        // Case: return all datum objects
+        if (from <= 0 && to >= this.inferredChromosomeSize()) {
+        	return this.getArrayData();
         }
         
         // Find indices of endpoints of data that fall within given

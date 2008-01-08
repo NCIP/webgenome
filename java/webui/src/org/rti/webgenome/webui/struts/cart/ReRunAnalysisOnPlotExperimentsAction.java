@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2008-01-05 00:00:25 $
+$Revision: 1.16 $
+$Date: 2008-01-08 21:07:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -131,7 +131,10 @@ extends BaseAnalysisAction {
 		DataTransformer transformer = this.getDataTransformer(request);
 		if (!(ProcessingModeDecider.analysisInBackground(derivedExperiments,
 				request) || ProcessingModeDecider.plotInBackground(
-						plot.getPlotParameters(), request))) {
+						plot.getPlotParameters(), request))
+						|| ProcessingModeDecider.plotInBackground(experiments,
+								plot.getPlotParameters().getGenomeIntervals(),
+								request)) {
 			this.getAnalysisService().rePerformAnalyticOperation(
 					derivedExperiments, transformer);
 			this.persistShoppingCartChanges(cart, request);

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-12-17 17:42:59 $
+$Revision: 1.7 $
+$Date: 2008-01-08 21:07:41 $
 
 The Web CGH Software License, Version 1.0
 
@@ -630,14 +630,15 @@ public final class ScatterPlot implements PlotElement {
     		final ChromosomeArrayData cad, final Color color,
 			final int lineWidth, final int pointRadius,
 			final Long bioAssayId, final SortedSet<Reporter> reporters) {
+    	List<ArrayDatum> data = this.getArrayData(cad, true);
           
     	// Points
-        this.paintPoints(cad, color, canvas, pointRadius,
+        this.paintPoints(data, color, canvas, pointRadius,
         		bioAssayId, reporters, true);
         
         // Error bars
 		if (this.drawErrorBars) {
-			this.paintErrorBars(cad, color, canvas,
+			this.paintErrorBars(data, color, canvas,
 					lineWidth, this.expressionPlotBoundaries, true);
 		}
     }
@@ -659,16 +660,17 @@ public final class ScatterPlot implements PlotElement {
     	if (this.copyNumberQType != QuantitationType.LOH
 				|| (this.copyNumberQType == QuantitationType.LOH
 						&& this.drawRawLohProbabilities)) {
+    		List<ArrayDatum> data = this.getArrayData(cad, false);
             
             // Points
     		if (this.drawPoints) {
-	            this.paintPoints(cad, color, canvas, pointRadius,
+	            this.paintPoints(data, color, canvas, pointRadius,
 	            		bioAssayId, reporters, false);
     		}
             
             // Error bars
     		if (this.drawErrorBars) {
-    			this.paintErrorBars(cad, color, canvas,
+    			this.paintErrorBars(data, color, canvas,
     					lineWidth, this.copyNumberPlotBoundaries, false);
     		}
         
@@ -676,16 +678,16 @@ public final class ScatterPlot implements PlotElement {
     		if (this.interpolationType
     				== InterpolationType.STRAIGHT_LINE) {
 	            this.paintStraightConnectingLines(
-	            		cad, color, canvas,
+	            		data, color, canvas,
 	            		lineWidth);
     		} else if (this.interpolationType
     				== InterpolationType.SPLINE) {
     			this.paintConnectingSpline(
-    					cad, color, canvas,
+    					data, color, canvas,
     					lineWidth);
     		} else if (this.interpolationType
     				== InterpolationType.STEP) {
-    			this.paintConnectingSteps(cad, color,
+    			this.paintConnectingSteps(data, color,
     					canvas, lineWidth);
     		}
 		}
@@ -804,7 +806,7 @@ public final class ScatterPlot implements PlotElement {
     
     /**
      * Paint all points for given chromosome array data.
-     * @param cad Chromosome array data
+     * @param data Data to plot
      * @param color Color of points
      * @param drawingCanvas A drawing canvas
      * @param pointRadius Radius of data point in pixels
@@ -812,14 +814,13 @@ public final class ScatterPlot implements PlotElement {
      * @param reporters Sorted set of reporters
      * @param isExpressionData Do data come from an expression array?
      */
-    private void paintPoints(final ChromosomeArrayData cad, final Color color,
+    private void paintPoints(final List<ArrayDatum> data, final Color color,
             final DrawingCanvas drawingCanvas, final int pointRadius,
             final Long bioAssayId,
             final SortedSet<Reporter> reporters,
             final boolean isExpressionData) {
-    	List<ArrayDatum> arrayData = cad.getArrayData();
-    	if (arrayData != null) {
-	        for (ArrayDatum datum : cad.getArrayData()) {
+    	if (data != null) {
+	        for (ArrayDatum datum : data) {
 	            this.paintPoint(datum, color, drawingCanvas, pointRadius,
 	            		bioAssayId, isExpressionData);
 	            reporters.add(datum.getReporter());
@@ -829,8 +830,28 @@ public final class ScatterPlot implements PlotElement {
     
     
     /**
-     * Paint all error bars for given chromosome array data.
+     * Retrieves array datum objects to plot.  This method only returns the
+     * objects that will be in the plot.
      * @param cad Chromosome array data
+     * @param isExpressionData Are we plotting expression data?
+     * @return Array datum objects in plot
+     */
+    private List<ArrayDatum> getArrayData(final ChromosomeArrayData cad,
+    		final boolean isExpressionData) {
+    	PlotBoundaries boundaries = null;
+    	if (isExpressionData) {
+    		boundaries = this.expressionPlotBoundaries;
+    	} else {
+    		boundaries = this.copyNumberPlotBoundaries;
+    	}
+    	return cad.getArrayData((long) boundaries.getMinValue1(),
+    			(long) boundaries.getMaxValue1());
+    }
+    
+    
+    /**
+     * Paint all error bars for given chromosome array data.
+     * @param data Data to plot
      * @param color Color of error bars
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of lines
@@ -838,11 +859,11 @@ public final class ScatterPlot implements PlotElement {
      * type
      * @param isExpressionData Are we plotting gene expression data?
      */
-    private void paintErrorBars(final ChromosomeArrayData cad,
+    private void paintErrorBars(final List<ArrayDatum> data,
             final Color color, final DrawingCanvas drawingCanvas,
             final int lineWidth, final PlotBoundaries boundaries,
             final boolean isExpressionData) {
-        for (ArrayDatum datum : cad.getArrayData()) {
+        for (ArrayDatum datum : data) {
             this.paintErrorBar(datum, color, drawingCanvas, lineWidth,
             		boundaries, isExpressionData);
         }
@@ -948,17 +969,17 @@ public final class ScatterPlot implements PlotElement {
     
     /**
      * Paint straight lines connecting data points.
-     * @param cad ChromosomeArrayData
+     * @param data Data to plot
      * @param color A color
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of line in pixels
      */
-    private void paintStraightConnectingLines(final ChromosomeArrayData cad,
+    private void paintStraightConnectingLines(final List<ArrayDatum> data,
             final Color color, final DrawingCanvas drawingCanvas,
             final int lineWidth) {
-        for (int i = 1; i < cad.getArrayData().size(); i++) {
-            ArrayDatum d1 = cad.getArrayData().get(i - 1);
-            ArrayDatum d2 = cad.getArrayData().get(i);
+        for (int i = 1; i < data.size(); i++) {
+            ArrayDatum d1 = data.get(i - 1);
+            ArrayDatum d2 = data.get(i);
             this.reusableDataPoint1.bulkSet(d1);
             this.reusableDataPoint2.bulkSet(d2);
             this.paintLine(this.reusableDataPoint1,
@@ -997,16 +1018,15 @@ public final class ScatterPlot implements PlotElement {
     
     /**
      * Generate cubic spline.
-     * @param cad Chromosome array data that provided control points
+     * @param data Data that will be plotted
      * @return Cubic spline
      */
-    private CubicSpline newCubicSpline(final ChromosomeArrayData cad) {
-    	List<ArrayDatum> arrayData = cad.getArrayData();
-    	int n = arrayData.size();
+    private CubicSpline newCubicSpline(final List<ArrayDatum> data) {
+    	int n = data.size();
     	List<Double> xxList = new ArrayList<Double>();
     	List<Double> yyList = new ArrayList<Double>();
     	for (int i = 0; i < n; i++) {
-    		ArrayDatum datum = arrayData.get(i);
+    		ArrayDatum datum = data.get(i);
     		xxList.add((double) this.transposeX(
     				datum.getReporter().getLocation(),
     				this.copyNumberPlotBoundaries));
@@ -1027,21 +1047,20 @@ public final class ScatterPlot implements PlotElement {
     
     /**
      * Paint cubic spline connecting data points.
-     * @param cad ChromosomeArrayData
+     * @param data Data to plot
      * @param color A color
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of line in pixels
      */
-    private void paintConnectingSpline(final ChromosomeArrayData cad,
+    private void paintConnectingSpline(final List<ArrayDatum> data,
             final Color color, final DrawingCanvas drawingCanvas,
             final int lineWidth) {
-    	List<ArrayDatum> arrayData = cad.getArrayData();
-    	if (arrayData.size() > 0) {
+    	if (data.size() > 0) {
     		int minY = this.y;
     		int maxY = minY + this.height;
-	    	CubicSpline spline = this.newCubicSpline(cad);
-	    	ArrayDatum firstDatum = arrayData.get(0);
-	    	ArrayDatum lastDatum = arrayData.get(arrayData.size() - 1);
+	    	CubicSpline spline = this.newCubicSpline(data);
+	    	ArrayDatum firstDatum = data.get(0);
+	    	ArrayDatum lastDatum = data.get(data.size() - 1);
 	    	int startX = this.x;
 	    	int firstDatumX =
 	    		this.transposeX(firstDatum.getReporter().getLocation(),
@@ -1086,17 +1105,17 @@ public final class ScatterPlot implements PlotElement {
     
     /**
      * Paint "steps" connecting data points.
-     * @param cad ChromosomeArrayData
+     * @param data Data to plot
      * @param color A color
      * @param drawingCanvas A drawing canvas
      * @param lineWidth Width of line in pixels
      */
-    private void paintConnectingSteps(final ChromosomeArrayData cad,
+    private void paintConnectingSteps(final List<ArrayDatum> data,
             final Color color, final DrawingCanvas drawingCanvas,
             final int lineWidth) {
-        for (int i = 1; i < cad.getArrayData().size(); i++) {
-            ArrayDatum d1 = cad.getArrayData().get(i - 1);
-            ArrayDatum d2 = cad.getArrayData().get(i);
+        for (int i = 1; i < data.size(); i++) {
+            ArrayDatum d1 = data.get(i - 1);
+            ArrayDatum d2 = data.get(i);
             long start = d1.getReporter().getLocation();
             long end = d2.getReporter().getLocation();
             long mid = (start + end) / (long) 2;
