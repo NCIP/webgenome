@@ -321,14 +321,14 @@
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-copyNumberMinSaturation')"
+					onclick="help('param-exprMinSaturation')"
 					title="Information" border="0"
 					width="15" height="15"/>
 				Minimum saturation value for gene expression data
-				<html:errors property="copyNumberMinSaturation"/>
+				<html:errors property="expressionMinSaturation"/>
 			</td>
 			<td>
-				<html:text property="copyNumberMinSaturation"/>
+				<html:text property="expressionMinSaturation"/>
 			</td>
 		</tr>
 		
@@ -337,14 +337,14 @@
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-copyNumberMaxSaturation')"
+					onclick="help('param-exprMaxSaturation')"
 					title="Information" border="0"
 					width="15" height="15"/>
 				Maximum saturation value for gene expression data
-				<html:errors property="copyNumberMaxSaturation"/>
+				<html:errors property="expressionMaxSaturation"/>
 			</td>
 			<td>
-				<html:text property="copyNumberMaxSaturation"/>
+				<html:text property="expressionMaxSaturation"/>
 			</td>
 		</tr>
 		
@@ -361,11 +361,10 @@
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-plotName')"
+					onclick="help('param-annTypes')"
 					title="Information" border="0"
 					width="15" height="15"/>
 					Annotation Types
-				<html:errors property="name"/>
 			</td>
 			<td>
 				<html:select multiple="true" property="annotationTypes" size="5">
@@ -379,7 +378,7 @@
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-plotName')"
+					onclick="help('param-labelsR')"
 					title="Information" border="0"
 					width="15" height="15"/>
 					Draw feature labels
@@ -815,7 +814,7 @@
 			<td>
 				<html:img styleClass="pointer"
 					page="/images/Inform.gif" align="absmiddle"
-					onclick="help('param-drawStems')"
+					onclick="help('param-stems')"
 					title="Information" border="0"
 					width="15" height="15"/>
 				Stems on gene expression data points?
