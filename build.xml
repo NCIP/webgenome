@@ -62,7 +62,7 @@
 	
 	<!-- Directory that will contain the distributable
 			software products -->
-	<property name="dist.dir" location="dist"/>
+	<property name="dist.dir" location="deployment-artifacts"/>
 	
 	<!-- Name (not path) of core JAR file -->
 	<property name="core.jar.file.name" value="webgenome-core.jar"/>
@@ -108,8 +108,8 @@
 		<echo level="info" message="Deleting generated files and directories"/>
 		<delete dir="${dist.dir}"/>
 		<delete dir="${build.dir}"/>
-		<delete file="${tomcat.webapp.dir}/${war.file.name}"/>
-		<delete dir="${tomcat.webapp.dir}/${context.name}"/>
+		<delete file="${TOMCAT.WEBAPP.DIR}/${war.file.name}"/>
+		<delete dir="${TOMCAT.WEBAPP.DIR}/${context.name}"/>
 	</target>
 	
 <!-- Setup build directory structure -->
@@ -188,21 +188,21 @@
 <!-- Deploy WAR file -->
 	<target name="deploy" depends="war" description="Deploy WAR file">
 		<echo level="info" message="Deploying WAR file"/>
-		<copy file="${build.dir}/${war.file.name}" todir="${tomcat.webapp.dir}"/>
+		<copy file="${build.dir}/${war.file.name}" todir="${TOMCAT.WEBAPP.DIR}"/>
 	</target>
 	
 <!-- Deploy WAR file in JBoss -->
 	<target name="deploy-jboss" depends="war-no-tests"
 		description="Deploy WAR file in JBoss">
 		<echo level="info" message="Deploying WAR file"/>
-		<copy file="${build.dir}/${war.file.name}" todir="${jboss.deploy.dir}"/>
+		<copy file="${build.dir}/${war.file.name}" todir="${JBOSS.DEPLOY.DIR}"/>
 	</target>
 	
 <!-- Deploy WAR file without running unit tests -->
 	<target name="deploy-no-tests" depends="war-no-tests"
 		description="Deploy WAR file without performing unit tests">
 		<echo level="info" message="Deploying WAR file"/>
-		<copy file="${build.dir}/${war.file.name}" todir="${tomcat.webapp.dir}"/>
+		<copy file="${build.dir}/${war.file.name}" todir="${TOMCAT.WEBAPP.DIR}"/>
 	</target>
 	
 <!-- Build system tests -->
@@ -232,7 +232,7 @@
 <!-- Format JUnit test reports -->
 	<target name="format-test-reports" description="Format JUnit test reports">
 		<property name="junit.formatted.output.dir"
-			value="${report.dir}/${build.time}"/>
+			value="${REPORT.DIR}/${build.time}"/>
 		<mkdir dir="${junit.formatted.output.dir}"/>
 		<junitreport todir="${junit.formatted.output.dir}">
 			<fileset dir="${junit.output.dir}"/>
@@ -240,14 +240,17 @@
 		</junitreport>
 	</target>
 	
+<!-- Required build-all target -->
+	<target name="build-all" depends="war-no-tests"/>
+	
 <!-- Take actions if any tests fail -->
 	<target name="all" depends="run-systest,format-test-reports"
 		description="Build and test all components">		
 		<echo level="info" message="Sending email notification"/>
-		<mail from="${notification.from}"
-			tolist="${notification.recipient.list}"
-			subject="${notification.success.subject}"
-			mailhost="${notification.smtp.host}"
+		<mail from="${NOTIFICATION.FROM}"
+			tolist="${NOTIFICATION.RECIPIENT.LIST}"
+			subject="${NOTIFICATION.SUCCESS.SUBJECT}"
+			mailhost="${NOTIFICATION.SMTP.HOST}"
 			messagemimetype="text/plain"
 			encoding="plain">
 			<message>

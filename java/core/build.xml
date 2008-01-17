@@ -121,10 +121,10 @@
 		
 		<!-- Below code commented out because of current inability
 		to get <mail> tag working with RTI SMPT server propertly -->
-		<mail from="${notification.from}"
-			tolist="${notification.recipient.list}"
-			subject="${notification.test.failure.subject}"
-			mailhost="${notification.smtp.host}"
+		<mail from="${NOTIFICATION.FROM}"
+			tolist="${NOTIFICATION.RECIPIENT.LIST}"
+			subject="${NOTIFICATION.TEST.FAILURE.SUBJECT}"
+			mailhost="${NOTIFICATION.SMTP.HOST}"
 			messagemimetype="text/plain"
 			encoding="plain">
 			<message>

@@ -61,17 +61,17 @@
 <!-- Start Tomcat -->
 	<target name="tomcat-start" description="Start tomcat app server">
 		<echo level="info" message="Starting Tomcat"/>
-		<java jar="${tomcat.home}/bin/bootstrap.jar" fork="true" spawn="true">
-	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+		<java jar="${TOMCAT.HOME}/bin/bootstrap.jar" fork="true" spawn="true">
+	        <jvmarg value="-Dcatalina.home=${TOMCAT.HOME}"/>
 	    </java>
-		<sleep seconds="${pause.seconds.after.start.tomcat.called}"/>
+		<sleep seconds="${PAUSE.SECONDS.AFTER.START.TOMCAT.CALLED}"/>
 	</target>
 	
 <!-- Stop Tomcat -->
 	<target name="tomcat-stop" description="Stop tomcat app server">
 		<echo level="info" message="Stopping Tomcat"/>
-	    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	    <java jar="${TOMCAT.HOME}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${TOMCAT.HOME}"/>
 	        <arg line="stop"/>
 	    </java>
 	</target>
@@ -96,10 +96,10 @@
 		if="systest.failure"
 		description="Take actions if any tests fail">
 		
-		<mail from="${notification.from}"
-			tolist="${notification.recipient.list}"
-			subject="${notification.test.failure.subject}"
-			mailhost="${notification.smtp.host}"
+		<mail from="${NOTIFICATION.FROM}"
+			tolist="${NOTIFICATION.RECIPIENT.LIST}"
+			subject="${NOTIFICATION.TEST.FAILURE.SUBJECT}"
+			mailhost="${NOTIFICATION.SMTP.HOST}"
 			messagemimetype="text/plain"
 			encoding="plain">
 			<message>
@@ -108,8 +108,8 @@ One or more systems tests failed during build on ${build.time}
 		</mail>
 		
 		<echo level="info" message="Stopping Tomcat"/>
-	    <java jar="${tomcat.home}/bin/bootstrap.jar" fork="true">
-	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
+	    <java jar="${TOMCAT.HOME}/bin/bootstrap.jar" fork="true">
+	        <jvmarg value="-Dcatalina.home=${TOMCAT.HOME}"/>
 	        <arg line="stop"/>
 	    </java>
 		<fail/>
