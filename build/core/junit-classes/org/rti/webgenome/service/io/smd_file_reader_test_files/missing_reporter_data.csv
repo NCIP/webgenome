@@ -1,6 +1,0 @@
-name,chromosome,position,bioassay1,bioassay2
-r1,1,100,0.1,-0.1
-r2,,200,0.2,-0.2
-r3,1,,0.3,-0.3
-r4,2,5,0.4,-0.4
-r5,2,25,0.5,-0.5
