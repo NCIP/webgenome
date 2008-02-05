@@ -102,14 +102,16 @@ public class BioAssayDatumDTOGenerator {
 			ValueGenerator gen =
 				GENERATORS.get(constraint.getQuantitationType());
 			if (gen == null) {
-				throw new WebGenomeSystemException("Unknown quantitation type: '"
+				throw new WebGenomeSystemException(
+						"Unknown quantitation type: '"
 						+ constraint.getQuantitationType() + "'");
 			}
 			for (int j = 0; j < num && p < totalNum; j++) {
 				long pos = (long) j * this.gap + constraint.getStartPosition();
 				boolean selected = Math.random() < this.probabilitySelected;
+				String chromosome = constraint.getChromosome();
 				DefReporterDTOImpl r = new DefReporterDTOImpl(
-						String.valueOf(j), constraint.getChromosome(), pos,
+						String.valueOf(j), chromosome, pos,
 						selected);
 				if (Math.random() < PROBABILITY_ANNOTATION) {
 					r.addAnnotation("An annotation");

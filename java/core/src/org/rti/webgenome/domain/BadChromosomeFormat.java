@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2008-02-05 23:28:35 $
 
 The Web CGH Software License, Version 1.0
@@ -50,47 +50,53 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
+import org.rti.webgenome.core.WebGenomeApplicationException;
+import org.rti.webgenome.util.SystemUtils;
 
 /**
- * Handles 2-way translation between chromosome numbers
- * and String equivalents.
+ * This exception class represents an error caused by trying to
+ * read a chromosome number with an invalid format.  Typically
+ * a good format is numeric or "X" or "Y."
  * @author dhall
  *
  */
-public final class ChromosomeFormatter {
+public class BadChromosomeFormat extends WebGenomeApplicationException {
 	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+
 	/**
 	 * Constructor.
-	 *
 	 */
-	private ChromosomeFormatter() {
+	public BadChromosomeFormat() {
 		
 	}
-	
+
 	/**
-	 * Convert text-based representation of chromosome into
-	 * numeric.
-	 * @param chromosomeText Text-based representation of
-	 * chromosome.  This may be a text-based number, X, or Y.
-	 * @return Chromosome number.
-	 * @throws BadChromosomeFormat if the format is not numeric,
-	 * "X" or "Y" (case insensitive).
+	 * Constructor.
+	 * @param msg Error message
 	 */
-	public static short chromosomeNumber(final String chromosomeText)
-	throws BadChromosomeFormat {
-		short num = (short) -1;
-		if ("X".equalsIgnoreCase(chromosomeText)) {
-			num = 23;
-		} else if ("Y".equalsIgnoreCase(chromosomeText)) {
-			num = 24;
-		} else {
-			try {
-				num = Short.parseShort(chromosomeText);
-			} catch (NumberFormatException e) {
-				throw new BadChromosomeFormat("Unknown chromosome: "
-						+ chromosomeText);
-			}
-		}
-		return num;
+	public BadChromosomeFormat(final String msg) {
+		super(msg);
 	}
+
+	/**
+	 * Constructor.
+	 * @param origThrowable Some source throwable
+	 */
+	public BadChromosomeFormat(final Throwable origThrowable) {
+		super(origThrowable);
+	}
+
+	/**
+	 * Constructor.
+	 * @param msg Error message
+	 * @param origThrowable Source throwable
+	 */
+	public BadChromosomeFormat(final String msg,
+			final Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
+
 }

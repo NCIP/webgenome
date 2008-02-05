@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2008-02-05 23:28:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -204,8 +204,11 @@ public class ArrayDatum implements Serializable {
     /**
      * Constructor.
      * @param dto Data transfer object.
+     * @throws BadChromosomeFormat if the chromosome number
+     * in the given dto is not numeric, "X" or "Y" (case insensitive).
      */
-    public ArrayDatum(final BioAssayDatumDTO dto) {
+    public ArrayDatum(final BioAssayDatumDTO dto)
+    throws BadChromosomeFormat {
     	this.value = dto.getValue().floatValue();
     	this.reporter = new Reporter(dto.getReporter());
     }

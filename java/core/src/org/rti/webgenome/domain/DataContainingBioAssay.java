@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2008-02-05 23:28:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,6 +56,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
 import org.rti.webgenome.client.BioAssayDTO;
 import org.rti.webgenome.client.BioAssayDatumDTO;
 
@@ -74,6 +75,10 @@ public class DataContainingBioAssay extends BioAssay {
     
     /** Serialized version ID. */
     private static final long serialVersionUID = (long) 1;
+    
+    /** Logger. */
+    private static final Logger LOGGER =
+    	Logger.getLogger(DataContainingBioAssay.class);
     
     // =================================
     //        Attributes
@@ -167,7 +172,11 @@ public class DataContainingBioAssay extends BioAssay {
     private void add(final BioAssayDatumDTO[] bioAssayData) {
     	if (bioAssayData != null) {
     		for (int i = 0; i < bioAssayData.length; i++) {
-    			this.add(new ArrayDatum(bioAssayData[i]));
+    			try {
+					this.add(new ArrayDatum(bioAssayData[i]));
+				} catch (BadChromosomeFormat e) {
+					LOGGER.warn(e.getMessage());
+				}
     		}
     	}
     }

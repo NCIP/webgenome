@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2008-02-05 23:28:35 $
 
 The Web CGH Software License, Version 1.0
 
@@ -221,8 +221,10 @@ public class Reporter implements Serializable, Comparable<Reporter> {
     /**
      * Constructor.
      * @param dto Data transfer object.
+     * @throws BadChromosomeFormat if the chromosome number
+     * in the given dto is not numeric, "X" or "Y" (case insensitive).
      */
-    public Reporter(final ReporterDTO dto) {
+    public Reporter(final ReporterDTO dto) throws BadChromosomeFormat {
     	this.chromosome = ChromosomeFormatter.chromosomeNumber(
     			dto.getChromosome());
     	this.location = dto.getChromosomeLocation();
