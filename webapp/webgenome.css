@@ -396,6 +396,11 @@ li {
 	left: -400px;
 }
 
+.message-stationary {
+	background-color: #ffffcc;
+	font-weight: bold;
+}
+
 a.transientLink {
 	font-weight: bold;
 	text-decoration: none;

@@ -1,7 +1,9 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="org.rti.webgenome.client.QuantitationTypes" %>
+
 <%
 
 	// Parameters for copy number plot
@@ -18,13 +20,21 @@
 	lohParams.put("exptIDs", "Experiment 1");
 	lohParams.put("intervals", "1:1-200000000");
 	lohParams.put("qType", QuantitationTypes.LOH);
-	//lohParams.put("qType", "<script>alert(\"hello\")</script>");
 	lohParams.put("clientID", "1");
 	lohParams.put("test", "true");
 	request.setAttribute("lohParamsMap", lohParams);
 %>
 
 <h1 align="center">WebGenome Home</h1>
+
+<%-- Messages --%>
+<p align="center">
+	<span class="message-stationary">
+		<html:messages id="message" message="true">
+			<bean:write name="message"/>
+		</html:messages>
+	</span>
+</p>
 
 <br>
 

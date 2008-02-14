@@ -348,7 +348,7 @@
 			scope="request"
 			validate="true"
 			input="/user/login.do">
-			<forward name="success" path="user.confirm.login"/>
+			<forward name="success" path="/home.do"/>
 			<forward name="failure" path="/user/login.do"/>
 		</action>
 
@@ -392,6 +392,11 @@
         </action>
         
         <!-- ============ Upload actions ============= -->
+        
+     <!-- Main data import page -->
+		<action path="/upload/mainImport"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.main.import.form"/>
         
      <!-- Initialize upload form -->
         <action path="/upload/initializeUploadForm">

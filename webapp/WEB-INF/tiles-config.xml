@@ -147,13 +147,6 @@
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
 
-<!-- Confirm login -->
-  	<definition name="user.confirm.login" extends="cart.layout" >
-	  	<put name="title" value="webGenome: Login successful" />
-	  	<put name="content" value="/WEB-INF/jsp/user/confirmLogin.jsp" />
-	  	<put name="helpTopic" value="docTop" />
-  	</definition>
-
 <!-- New account -->
   	<definition name="user.new.account" extends="cart.layout" >
 	  	<put name="title" value="webGenome: New account" />
@@ -175,6 +168,13 @@
 <!-- User account management template -->
   	<definition name="upload.layout" extends="def.layout" >
 	  	<put name="selectedMenuItem" value="upload" />
+  	</definition>
+  	
+<!-- Main data import form -->
+	<definition name="upload.main.import.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Import data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/mainImportData.jsp" />
+	  	<put name="helpTopic" value="upload" />
   	</definition>
   	
 <!-- Main upload form -->

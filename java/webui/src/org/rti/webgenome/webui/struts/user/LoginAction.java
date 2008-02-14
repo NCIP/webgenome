@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-11-28 19:51:21 $
+$Revision: 1.6 $
+$Date: 2008-02-14 18:25:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,8 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
@@ -168,6 +170,11 @@ public final class LoginAction extends BaseAction {
 	        File imageDir = new File(absPlotPath);
 	        this.imageFileManager.init(imageDir);
         }
+        
+        // Add success message to request
+        ActionMessages messages = new ActionMessages();
+        messages.add("global", new ActionMessage("login.success"));
+        this.saveMessages(request, messages);
     	
         return mapping.findForward("success");
     }
