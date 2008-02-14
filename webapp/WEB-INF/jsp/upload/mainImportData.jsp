@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-	<a href="#">
+	<html:link action="/upload/remoteSysLoginForm">
 		Import data from caArray
-	</a>
+	</html:link>
 </p>

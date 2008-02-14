@@ -225,6 +225,20 @@
 	  	<put name="content" value="/WEB-INF/jsp/upload/specifyReporterColumns.jsp" />
 	  	<put name="helpTopic" value="upload" />
   	</definition>
+  	
+<!-- Remote system credentials form -->
+  	<definition name="upload.remote.sys.login" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Login to remote system" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/remoteSysLoginForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Select from list of experiments in remote system -->
+  	<definition name="upload.select.experiments" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Login to remote system" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/selectExperimentsForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
 
   	<!-- ================================ -->
   	<!--   Administration pages           -->

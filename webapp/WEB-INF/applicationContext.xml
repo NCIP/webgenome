@@ -771,6 +771,18 @@ below should probably be configurable somehow. -->
 		<property name="arrayDao" ref="arrayDao"/>
 	</bean>
 	
+<!-- Remote system login -->
+	<bean name="/upload/remoteSysLogin"
+		class="org.rti.webgenome.webui.struts.upload.RemoteSysLoginAction"/>
+		
+<!-- Fetch experiment list from remote system -->
+	<bean name="/upload/fetchExperimentList"
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentListAction"/>
+		
+<!-- Fetch experiments from remote system -->
+	<bean name="/upload/fetchExperiments"
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction"/>
+	
 <!-- AJAX action to retrieve jobs whose status has changed -->
 	<bean name="/ajax/newlyChangedJobs"
 		class="org.rti.webgenome.webui.struts.ajax.NewlyChangedJobsAction">
