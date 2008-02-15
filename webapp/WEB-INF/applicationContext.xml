@@ -790,6 +790,12 @@ below should probably be configurable somehow. -->
 		<property name="arrayDao" ref="arrayDao"/>
 	</bean>
 	
+<!-- Initialize import session with remote data source -->
+	<bean name="/upload/initRemoteSession"
+		class="org.rti.webgenome.webui.struts.upload.InitRemoteSessionAction">
+		<property name="dataSourcesIndex" ref="dataSourcesIndex"/>
+	</bean>
+	
 <!-- Remote system login -->
 	<bean name="/upload/remoteSysLogin"
 		class="org.rti.webgenome.webui.struts.upload.RemoteSysLoginAction"/>
@@ -800,7 +806,12 @@ below should probably be configurable somehow. -->
 		
 <!-- Fetch experiments from remote system -->
 	<bean name="/upload/fetchExperiments"
-		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction"/>
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction">
+		<property name="shoppingCartDao" ref="shoppingCartDao"/>
+		<property name="organismDao" ref="organismDao"/>
+		<property name="experimentIdGenerator" ref="experimentIdGenerator"/>
+		<property name="bioAssayIdGenerator" ref="bioAssayIdGenerator"/>
+	</bean>
 	
 <!-- AJAX action to retrieve jobs whose status has changed -->
 	<bean name="/ajax/newlyChangedJobs"

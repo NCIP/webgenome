@@ -1,6 +1,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
+<%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
-<h1 align="center">Login</h1>
+<h1 align="center">Remote System Login (<bean:write name="data.source.name"/>)</h1>
 
 <center>
 	<html:errors property="global"/>

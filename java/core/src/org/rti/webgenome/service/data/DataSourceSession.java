@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-15 20:03:50 $
+$Revision: 1.2 $
+$Date: 2008-02-15 23:28:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -91,7 +91,7 @@ public class DataSourceSession {
 	 * Constructor.
 	 * @param selectedDataSource Data source selected by user
 	 */
-	DataSourceSession(final DataSource selectedDataSource) {
+	public DataSourceSession(final DataSource selectedDataSource) {
 		if (selectedDataSource == null) {
 			throw new WebGenomeSystemException(
 					"Data source cannot be null");

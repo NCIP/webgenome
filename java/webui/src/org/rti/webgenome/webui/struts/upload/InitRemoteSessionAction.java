@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2008-02-15 23:28:58 $
 
 The Web CGH Software License, Version 1.0
@@ -59,22 +59,46 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.service.data.DataSource;
 import org.rti.webgenome.service.data.DataSourceSession;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Action that fetches a list of experiments in a remote system
- * that the user can access given his or her credentials.
+ * Action that initializes a session with a remote data source.
  * @author dhall
  *
  */
-public class FetchExperimentListAction extends BaseAction {
+public class InitRemoteSessionAction extends BaseAction {
 	
 	/** Logger. */
 	private static final Logger LOGGER =
-		Logger.getLogger(FetchExperimentListAction.class);
+		Logger.getLogger(InitRemoteSessionAction.class);
 
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Index of configured external data sources. */
+	private Map<String, DataSource> dataSourcesIndex = null;
+	
+	//
+	//  I N J E C T O R S
+	//
+	
+	/**
+	 * Inject a data source index.
+	 * @param dataSourcesIndex An index to external data sources.
+	 */
+	public void setDataSourcesIndex(
+			final Map<String, DataSource> dataSourcesIndex) {
+		this.dataSourcesIndex = dataSourcesIndex;
+	}
+	
+	//
+	//  O V E R R I D E S
+	//
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -83,10 +107,13 @@ public class FetchExperimentListAction extends BaseAction {
 	        final HttpServletRequest request,
 	        final HttpServletResponse response
 	    ) throws Exception {
-		LOGGER.info("Fetching experiment list");
-		DataSourceSession sess = PageContext.getDataSourceSession(request);
-		Map<String, String> idsAndNames = sess.getExperimentIdsAndNames();
-		request.setAttribute("ids.and.names", idsAndNames);
+		LOGGER.info("Initializing session with remote data source");
+		String dataSourceKey = request.getParameter("dataSourceKey");
+		DataSource dataSource = this.dataSourcesIndex.get(dataSourceKey);
+		DataSourceSession sess = new DataSourceSession(dataSource);
+		PageContext.setDataSourceSession(request, sess);
+		request.setAttribute("data.source.name", dataSource.getDisplayName());
 		return mapping.findForward("success");
 	}
+
 }

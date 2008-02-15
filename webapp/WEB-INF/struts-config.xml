@@ -30,6 +30,11 @@
 		<form-bean
 			name="selected.experiments.form"
 			type="org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm"/>
+			
+	<!-- Selected remote experiments form -->
+		<form-bean
+			name="selected.remote.experiments.form"
+			type="org.rti.webgenome.webui.struts.upload.SelectedRemoteExperimentsForm"/>
 
 	<!-- Name change form -->
 		<form-bean
@@ -510,6 +515,11 @@
 			<forward name="batch" path="/cart/showJobs.do"/>
         </action>
         
+     <!-- Initiate data import from remote system -->
+     	<action path="/upload/initRemoteSession">
+     		<forward name="success" path="/upload/remoteSysLoginForm.do"/>
+     	</action>
+        
      <!-- Specify credentials for remote system -->
      	<action path="/upload/remoteSysLoginForm"
      		type="org.apache.struts.actions.ForwardAction"
@@ -521,8 +531,9 @@
         	name="login.form"
 			scope="request"
 			validate="true"
-			input="/upload/remoteSysLogin.do">
+			input="/upload/remoteSysLoginForm.do">
         	<forward name="success" path="/upload/fetchExperimentList.do"/>
+        	<forward name="failure" path="/upload/remoteSysLoginForm.do"/>
         </action>
         
      <!-- Fetch experiment list from remote data provider -->
@@ -531,7 +542,11 @@
         </action>
         
      <!-- Fetch experiments from remote system -->
-        <action path="/upload/fetchExperiments">
+        <action path="/upload/fetchExperiments"
+        	name="selected.remote.experiments.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/fetchExperimentList.do">
             <forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-14 19:38:14 $
+$Revision: 1.2 $
+$Date: 2008-02-15 23:28:58 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,7 +59,16 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.graphics.util.ColorChooser;
+import org.rti.webgenome.service.dao.OrganismDao;
+import org.rti.webgenome.service.data.DataSourceSession;
+import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Fetch experiments from remote system.
@@ -70,6 +81,45 @@ public class FetchExperimentsAction extends BaseAction {
 	private static final Logger LOGGER =
 		Logger.getLogger(FetchExperimentsAction.class);
 	
+    /** Experiment ID generator. */
+    private IdGenerator experimentIdGenerator = null;
+    
+    /** Bioassay ID generator. */
+    private IdGenerator bioAssayIdGenerator = null;
+    
+    /** Organism data access object. */
+    private OrganismDao organismDao = null;
+    
+    /**
+     * Set organism data access object.
+     * @param organismDao Organism data access object
+     */
+	public void setOrganismDao(final OrganismDao organismDao) {
+		this.organismDao = organismDao;
+	}
+	
+	
+	/**
+     * Set bioassay ID generator.
+     * @param bioAssayIdGenerator ID generator
+     */
+	public void setBioAssayIdGenerator(
+			final IdGenerator bioAssayIdGenerator) {
+		this.bioAssayIdGenerator = bioAssayIdGenerator;
+	}
+
+
+	/**
+	 * Set experiment ID generator.
+	 * @param experimentIdGenerator ID generator
+	 */
+	public void setExperimentIdGenerator(
+			final IdGenerator experimentIdGenerator) {
+		this.experimentIdGenerator = experimentIdGenerator;
+	}
+	
+	// TODO: Make the organism a parameter that gets passed in
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -79,6 +129,25 @@ public class FetchExperimentsAction extends BaseAction {
 	        final HttpServletResponse response
 	    ) throws Exception {
 		LOGGER.info("Fetching experiments from remote system");
+		SelectedRemoteExperimentsForm sForm =
+			(SelectedRemoteExperimentsForm) form;
+		DataSourceSession sess = PageContext.getDataSourceSession(request);
+		ShoppingCart cart = this.getShoppingCart(request);
+		Collection<String> expIds = sForm.getSelectedExperimentIds();
+		Collection<Experiment> experiments = sess.fetchExperiments(expIds);
+        ColorChooser colorChooser = cart.getBioassayColorChooser();
+        Organism org = this.organismDao.loadDefault();
+        for (Experiment exp : experiments) {
+        	Long expId = this.experimentIdGenerator.nextId();
+        	exp.setId(expId);
+        	exp.setOrganism(org);
+        	for (BioAssay ba : exp.getBioAssays()) {
+        		ba.setColor(colorChooser.nextColor());
+        		ba.setId(this.bioAssayIdGenerator.nextId());
+        	}
+        }
+		cart.add(experiments);
+		this.persistShoppingCartChanges(cart, request);
 		ActionForward forward = mapping.findForward("non.batch");
 		return forward;
 	}

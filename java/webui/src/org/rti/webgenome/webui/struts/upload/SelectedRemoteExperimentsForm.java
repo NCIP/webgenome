@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2008-02-15 23:28:58 $
 
 The Web CGH Software License, Version 1.0
@@ -50,43 +50,100 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.service.data.DataSourceSession;
-import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.util.SystemUtils;
+import org.rti.webgenome.webui.struts.BaseForm;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Action that fetches a list of experiments in a remote system
- * that the user can access given his or her credentials.
+ * Form for capturing selected experiments from a
+ * remote data source.
  * @author dhall
  *
  */
-public class FetchExperimentListAction extends BaseAction {
+public class SelectedRemoteExperimentsForm extends BaseForm {
 	
-	/** Logger. */
-	private static final Logger LOGGER =
-		Logger.getLogger(FetchExperimentListAction.class);
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	/** Map backing dynamic fields. */
+    private Map<String, Object> values = new HashMap<String, Object>();
+    
+    /**
+     * Setter used for dynamic form fields, i.e., experiment
+     * IDs.
+     * @param key Key
+     * @param value Value
+     */
+    public final void setValue(final String key, final Object value) {
+        this.values.put(key, value);
+    }
+    
+    
+    /**
+     * Getter used for dynamic form fields, i.e., experiment
+     * IDs.
+     * @param key Key
+     * @return A value
+     */
+    public final Object getValue(final String key) {
+        return this.values.get(key);
+    }
 
 	/**
-	 * {@inheritDoc}
+     * Get experiment IDs selected from upstream HTML form.
+     * @return Experiment IDs
+     */
+    public final Collection<String> getSelectedExperimentIds() {
+    	Collection<String> ids = new ArrayList<String>();
+    	for (String key : this.values.keySet()) {
+    		if (key.indexOf(PageContext.EXPERIMENT_ID_PREFIX) == 0) {
+    			String id = key.substring(
+    					PageContext.EXPERIMENT_ID_PREFIX.length());
+    			ids.add(id);
+    		}
+    	}
+    	return ids;
+    }
+    
+    /**
+     * Reset form.
+     * @param actionMapping Action mappings
+     * @param request Servlet request
+     */
+	@Override
+	public final void reset(final ActionMapping actionMapping,
+			final HttpServletRequest request) {
+		this.values.clear();
+	}
+
+
+	/**
+	 * Validate form fields.
+	 * @param actionMappings Action mappings.
+	 * @param request Servlet request.
+	 * @return Action errors
 	 */
-	public ActionForward execute(
-	        final ActionMapping mapping, final ActionForm form,
-	        final HttpServletRequest request,
-	        final HttpServletResponse response
-	    ) throws Exception {
-		LOGGER.info("Fetching experiment list");
-		DataSourceSession sess = PageContext.getDataSourceSession(request);
-		Map<String, String> idsAndNames = sess.getExperimentIdsAndNames();
-		request.setAttribute("ids.and.names", idsAndNames);
-		return mapping.findForward("success");
+	@Override
+	public final ActionErrors validate(final ActionMapping actionMappings,
+			final HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		
+		// Make sure at least one experiment selected
+		if (this.values.size() < 1) {
+			errors.add("global", new ActionError("no.experiments.selected"));
+		}
+			
+		return errors;
 	}
 }

@@ -14,7 +14,7 @@
 
 <p align="center">
 	<logic:iterate name="data.sources.index" id="dataSource">
-		<html:link action="/upload/remoteSysLoginForm"
+		<html:link action="/upload/initRemoteSession"
 			paramId="dataSourceKey" paramName="dataSource"
 			paramProperty="key">
 			Import data from <bean:write name="dataSource"

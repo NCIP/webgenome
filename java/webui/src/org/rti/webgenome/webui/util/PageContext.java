@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-12-04 23:06:40 $
+$Revision: 1.9 $
+$Date: 2008-02-15 23:28:59 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,6 +59,7 @@ import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.domain.UploadedData;
 import org.rti.webgenome.domain.ZipFileMetaData;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
+import org.rti.webgenome.service.data.DataSourceSession;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm;
@@ -111,6 +112,10 @@ public final class PageContext {
 	/** Key to metadata on uploaded ZIP file. */
 	private static final String KEY_ZIP_FILE_META_DATA =
 		"key.zip.file.meta.data";
+	
+	/** Key to data source session. */
+	private static final String KEY_DATA_SOURCE_SESSION =
+		"key.data.source.session";
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
@@ -343,6 +348,37 @@ public final class PageContext {
 			throw new SessionTimeoutException("Session has expired");
 		}
 		return meta;
+	}
+	
+	/**
+	 * Get data source session associated with web session.
+	 * @param request Servlet request
+	 * @return Data source session
+	 * @throws SessionTimeoutException If data source session
+	 * cannot be found,
+	 * which would indicate that the session has timed out
+	 */
+	public static DataSourceSession getDataSourceSession(
+			final HttpServletRequest request)
+	throws SessionTimeoutException {
+		DataSourceSession sess = (DataSourceSession)
+			request.getSession().getAttribute(KEY_DATA_SOURCE_SESSION);
+		if (sess == null) {
+			throw new SessionTimeoutException("Session has expired");
+		}
+		return sess;
+	}
+	
+	/**
+	 * Attach a data source session object to web session.
+	 * @param request Servlet request
+	 * @param dataSourceSession Data source session to attach
+	 */
+	public static void setDataSourceSession(
+			final HttpServletRequest request,
+			final DataSourceSession dataSourceSession) {
+		request.getSession().setAttribute(
+				KEY_DATA_SOURCE_SESSION, dataSourceSession);
 	}
 	
 	/**
