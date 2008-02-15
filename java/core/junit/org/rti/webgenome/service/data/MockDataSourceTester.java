@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-14 23:12:30 $
+$Revision: 1.2 $
+$Date: 2008-02-15 17:16:00 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.data;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 
+import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Principal;
 
 import junit.framework.TestCase;
@@ -75,13 +78,35 @@ public class MockDataSourceTester extends TestCase {
 	}
 	
 	/**
-	 * Test getExperiment() method.
+	 * Test getIdsAndNames() method.
 	 * @throws Exception if anything bad happens
 	 */
-	public void testGetExperiment() throws Exception {
+	public void testIdsAndNames() throws Exception {
 		Map<String, String> idsAndNames =
 			this.mockDataSource.getExperimentIdsAndNames(null);
 		assertNotNull(idsAndNames);
 		assertTrue(idsAndNames.size() > 0);
+	}
+	
+	/**
+	 * Test getExperiment() method.
+	 * @throws Exception if anything bad happens
+	 */
+	public void testGetExperiment() throws Exception {
+		Experiment exp = this.mockDataSource.getExperiment("0");
+		assertNotNull(exp);
+		assertTrue(exp.getBioAssays().size() > 0);
+	}
+	
+	
+	/**
+	 * Test getExperiments() method.
+	 * @throws Exception if anything bad happens
+	 */
+	public void testGetExperiments() throws Exception {
+		Collection<String> ids = Arrays.asList(new String[] {"0", "1", "2"});
+		Collection<Experiment> exps = this.mockDataSource.getExperiments(ids);
+		assertNotNull(exps);
+		assertEquals(ids.size(), exps.size());
 	}
 }
