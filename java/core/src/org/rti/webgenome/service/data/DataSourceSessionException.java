@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2008-02-15 20:03:50 $
 
 The Web CGH Software License, Version 1.0
@@ -50,56 +50,52 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.data;
 
-import java.util.Collection;
-import java.util.Map;
-
-import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.session.Authenticator;
+import org.rti.webgenome.core.WebGenomeApplicationException;
+import org.rti.webgenome.util.SystemUtils;
 
 /**
- * This interface represents a source of data.  Typically, this will
- * be a remote database system with some sort of service-oriented
- * API.
+ * General error class for exceptions that occur during interaction
+ * with a data source session.
  * @author dhall
  *
  */
-public interface DataSource extends Authenticator {
+public class DataSourceSessionException extends WebGenomeApplicationException {
+	
+	/** Serialized version ID. */
+	private static final long serialVersionUID = 
+		SystemUtils.getLongApplicationProperty("serial.version.uid");
 
 	/**
-	 * Gets a map of experiment IDs (keys) to names (values)
-	 * that are accessible by the given principal.
-	 * @param principal Principal requesting access to data
-	 * @return Map of experiment IDs (keys) to experiment names (values)
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Constructor.
 	 */
-	Map<String, String> getExperimentIdsAndNames(Principal principal)
-	throws DataSourceAccessException;
-	
+	public DataSourceSessionException() {
+		
+	}
+
 	/**
-	 * Get experiments with given IDs.
-	 * @param ids Experiment IDs
-	 * @return Requested experiments
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Constructor.
+	 * @param msg An error message
 	 */
-	Collection<Experiment> getExperiments(Collection<String> ids)
-	throws DataSourceAccessException;
-	
+	public DataSourceSessionException(final String msg) {
+		super(msg);
+	}
+
 	/**
-	 * Get experiment with given ID.
-	 * @param id Experiment ID
-	 * @return Requested experiment
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Constructor.
+	 * @param origThrowable Original throwable
 	 */
-	Experiment getExperiment(String id)
-	throws DataSourceAccessException;
-	
+	public DataSourceSessionException(final Throwable origThrowable) {
+		super(origThrowable);
+	}
+
 	/**
-	 * Get name to display in UI.
-	 * @return Display name
+	 * Constructor.
+	 * @param msg Error message
+	 * @param origThrowable Original throwable
 	 */
-	String getDisplayName();
+	public DataSourceSessionException(final String msg,
+			final Throwable origThrowable) {
+		super(msg, origThrowable);
+	}
+
 }

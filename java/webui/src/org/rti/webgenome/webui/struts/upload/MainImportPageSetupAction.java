@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2008-02-15 20:03:50 $
 
 The Web CGH Software License, Version 1.0
@@ -48,58 +48,65 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.data;
+package org.rti.webgenome.webui.struts.upload;
 
-import java.util.Collection;
 import java.util.Map;
 
-import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.session.Authenticator;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.service.data.DataSource;
+import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
- * This interface represents a source of data.  Typically, this will
- * be a remote database system with some sort of service-oriented
- * API.
+ * Action that sets up for display of main data import page.
  * @author dhall
  *
  */
-public interface DataSource extends Authenticator {
+public class MainImportPageSetupAction extends BaseAction {
+	
+	/** Logger. */
+	private static final Logger LOGGER =
+		Logger.getLogger(MainImportPageSetupAction.class);
 
-	/**
-	 * Gets a map of experiment IDs (keys) to names (values)
-	 * that are accessible by the given principal.
-	 * @param principal Principal requesting access to data
-	 * @return Map of experiment IDs (keys) to experiment names (values)
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
-	 */
-	Map<String, String> getExperimentIdsAndNames(Principal principal)
-	throws DataSourceAccessException;
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Index of configured external data sources. */
+	private Map<String, DataSource> dataSourcesIndex = null;
+	
+	//
+	//  I N J E C T O R S
+	//
 	
 	/**
-	 * Get experiments with given IDs.
-	 * @param ids Experiment IDs
-	 * @return Requested experiments
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Inject a data source index.
+	 * @param dataSourcesIndex An index to external data sources.
 	 */
-	Collection<Experiment> getExperiments(Collection<String> ids)
-	throws DataSourceAccessException;
+	public void setDataSourcesIndex(
+			final Map<String, DataSource> dataSourcesIndex) {
+		this.dataSourcesIndex = dataSourcesIndex;
+	}
+	
+	//
+	//  O V E R R I D E S
+	//
 	
 	/**
-	 * Get experiment with given ID.
-	 * @param id Experiment ID
-	 * @return Requested experiment
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * {@inheritDoc}
 	 */
-	Experiment getExperiment(String id)
-	throws DataSourceAccessException;
-	
-	/**
-	 * Get name to display in UI.
-	 * @return Display name
-	 */
-	String getDisplayName();
+	public ActionForward execute(
+	        final ActionMapping mapping, final ActionForm form,
+	        final HttpServletRequest request,
+	        final HttpServletResponse response
+	    ) throws Exception {
+		LOGGER.info("Getting list of configured data sources");
+		request.setAttribute("data.sources.index", this.dataSourcesIndex);
+		return mapping.findForward("success");
+	}
 }

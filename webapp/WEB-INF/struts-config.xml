@@ -388,9 +388,9 @@
         <!-- ============ Upload actions ============= -->
         
      <!-- Main data import page -->
-		<action path="/upload/mainImport"
-        	type="org.apache.struts.actions.ForwardAction"
-        	parameter="upload.main.import.form"/>
+		<action path="/upload/mainImport">
+        	<forward name="success" path="upload.main.import.form"/>
+        </action>
         
      <!-- Initialize upload form -->
         <action path="/upload/initializeUploadForm">

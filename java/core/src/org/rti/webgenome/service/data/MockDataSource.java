@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-14 23:12:30 $
+$Revision: 1.2 $
+$Date: 2008-02-15 20:03:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -87,6 +87,9 @@ public class MockDataSource implements DataSource {
 	
 	/** Domain name for authentication. */
 	private static final String DOMAIN = "mock";
+	
+	/** Display name of this data source. */
+	private static final String DISPLAY_NAME = "Mock Data Source";
 	
 	//
 	//  C L A S S    M E M B E R S
@@ -175,5 +178,12 @@ public class MockDataSource implements DataSource {
 	public Principal login(final String userName,
 			final String password) {
 		return new Principal(userName, password, DOMAIN);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getDisplayName() {
+		return DISPLAY_NAME;
 	}
 }

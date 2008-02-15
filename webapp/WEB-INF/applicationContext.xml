@@ -316,6 +316,19 @@ below should probably be configurable somehow. -->
 			<ref bean="jobDao"/>
 		</constructor-arg>
 	</bean>
+
+<!-- Data sources index -->
+	<bean id="dataSourcesIndex"
+		class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key><value>mock.data.source</value></key>
+					<bean class="org.rti.webgenome.service.data.MockDataSource"/>
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
 	
 	<!-- ========================================== -->
 	<!--        Action beans                        -->
@@ -694,6 +707,12 @@ below should probably be configurable somehow. -->
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
+	</bean>
+	
+<!-- Main data import page setup -->
+	<bean name="/upload/mainImport"
+		class="org.rti.webgenome.webui.struts.upload.MainImportPageSetupAction">
+		<property name="dataSourcesIndex" ref="dataSourcesIndex"/>
 	</bean>
 	
 <!-- Initialize upload -->
