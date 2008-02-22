@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2007-12-04 23:06:40 $
+$Revision: 1.15 $
+$Date: 2008-02-22 03:54:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,8 +56,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -66,7 +68,10 @@ import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.ChromosomeArrayData;
+import org.rti.webgenome.domain.DataContainingBioAssay;
 import org.rti.webgenome.domain.DataFileMetaData;
+import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.DataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.RectangularTextFileFormat;
@@ -319,6 +324,16 @@ public class IOService {
 	}
 	
 	/**
+	 * Delete data files.
+	 * @param fNames Names of data files
+	 */
+	public void deleteDataFiles(final Collection<String> fNames) {
+		for (String fName : fNames) {
+			this.delete(fName);
+		}
+	}
+	
+	/**
 	 * Load SMD format data from named file and put in shopping cart.
 	 * @param upload Upload data source properties
 	 * @param shoppingCart Shopping cart
@@ -405,6 +420,56 @@ public class IOService {
 			// Delete files and possibly reporters
 			this.dataFileManager.deleteDataFiles(exp, deleteReporters);
 		}
+	}
+	
+	/**
+	 * Delete all reporter data files associated with array.
+	 * @param array Array from which to delete
+	 */
+	public void deleteDataFiles(final Array array) {
+		for (String fName : array.getChromosomeReportersFileNames().values()) {
+			this.dataFileManager.deleteDataFile(fName);
+		}
+	}
+	
+	/**
+	 * Convert any enclosed <code>DataContainingBioAssay</code>
+	 * objects to <code>DataSerializedBioAssay</code> objects.
+	 * @param experiment An experiment
+	 */
+	public void convertBioAssays(final Experiment experiment) {
+		Iterator<BioAssay> it = experiment.getBioAssays().iterator();
+		Collection<BioAssay> newBioAssays = new ArrayList<BioAssay>();
+		while (it.hasNext()) {
+			BioAssay bioAssay = it.next();
+			if (bioAssay instanceof DataContainingBioAssay) {
+				DataSerializedBioAssay serBioAssay =
+					this.newDataSerializedBioAssay(
+							(DataContainingBioAssay) bioAssay);
+				it.remove();
+				newBioAssays.add(serBioAssay);
+			}
+		}
+		experiment.getBioAssays().addAll(newBioAssays);
+	}
+	
+	/**
+	 * Convert given data containing bioassay into a 
+	 * data serialized equivalent.
+	 * @param dcBioAssay Data containing bioassay
+	 * @return Data serialized bioassay
+	 */
+	private DataSerializedBioAssay newDataSerializedBioAssay(
+			final DataContainingBioAssay dcBioAssay) {
+		DataSerializedBioAssay dsBioAssay =
+			new DataSerializedBioAssay();
+		dsBioAssay.bulkSetNonDataProperties(dcBioAssay);
+		Collection<Short> chroms = dcBioAssay.getChromosomes();
+		for (Short chrom : chroms) {
+			ChromosomeArrayData cad = dcBioAssay.getChromosomeArrayData(chrom);
+			this.dataFileManager.saveChromosomeArrayData(dsBioAssay, cad);
+		}
+		return dsBioAssay;
 	}
 	
 	/**

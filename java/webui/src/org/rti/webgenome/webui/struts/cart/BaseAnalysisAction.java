@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.7 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -69,6 +69,7 @@ import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
 import org.rti.webgenome.service.io.DataFileManager;
+import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
@@ -98,6 +99,9 @@ public class BaseAnalysisAction extends BaseAction {
 	/** Manages analysis jobs performed in the background. */
 	private JobManager jobManager = null;
 	
+	/** File I/O service. */
+	private IOService ioService = null;
+	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
@@ -119,6 +123,23 @@ public class BaseAnalysisAction extends BaseAction {
 	}
 	
 	
+	/**
+	 * Inject data file I/O service.
+	 * @param ioService Data file I/O service
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
+	
+	/**
+	 * Get file I/O service.
+	 * @return File I/O service
+	 */
+	protected IOService getIoService() {
+		return ioService;
+	}
+
+
 	/**
 	 * Get a factory for creating anlaytic operations.
 	 * @return Analytic operation factory

@@ -162,6 +162,16 @@
   	<!-- =================================== -->
   	<!--      Service beans                  -->
   	<!-- =================================== -->
+  	
+<!-- Service for performing transactions on webgenome db -->
+  	<bean id="dbService"
+  		class="org.rti.webgenome.service.session.DaoWebGenomeDbService">
+  		<property name="arrayDao" ref="arrayDao"/>
+  		<property name="shoppingCartDao" ref="shoppingCartDao"/>
+  		<property name="experimentDao" ref="experimentDao"/>
+  		<property name="organismDao" ref="organismDao"/>
+  		<property name="plotDao" ref="plotDao"/>
+  	</bean>
 
 <!-- Security manager -->
 	<bean id="securityMgr" class="org.rti.webgenome.service.session.SecurityMgrImpl">
@@ -303,14 +313,8 @@ below should probably be configurable somehow. -->
 		<property name="plotService">
 			<ref bean="plotService"/>
 		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="arrayDao">
-			<ref bean="arrayDao"/>
-		</property>
-		<property name="experimentDao">
-			<ref bean="experimentDao"/>
+		<property name="webGenomeDbService">
+			<ref bean="dbService"/>
 		</property>
 		<constructor-arg>
 			<ref bean="jobDao"/>
@@ -361,6 +365,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 
 <!-- Show shopping cart -->
@@ -369,6 +374,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 	
 <!-- Show jobs -->
@@ -377,6 +383,7 @@ below should probably be configurable somehow. -->
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 	
 <!-- Purge jobs -->
@@ -385,6 +392,7 @@ below should probably be configurable somehow. -->
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Route to operation page -->
@@ -393,6 +401,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Get quantitation types -->
@@ -401,6 +410,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Import data from client -->
@@ -409,6 +419,7 @@ below should probably be configurable somehow. -->
 		<property name="organismDao">
 			<ref bean="organismDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 		<property name="experimentIdGenerator">
 			<ref bean="experimentIdGenerator"/>
 		</property>
@@ -429,6 +440,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Select analytic operation -->
@@ -437,6 +449,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Set analytic operation parameters -->
@@ -445,6 +458,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Set up for re-running an analytic operation -->
@@ -453,6 +467,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Set up for re-plotting using different analytic operation parameters -->
@@ -461,6 +476,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Perform analytic operation -->
@@ -478,6 +494,7 @@ below should probably be configurable somehow. -->
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 	
 <!-- Rerun analytic operation -->
@@ -495,6 +512,8 @@ below should probably be configurable somehow. -->
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
+		<property name="ioService" ref="ioService"/>
 	</bean>
 
 <!-- Rerun analytic operation on all derived experiments in plot -->
@@ -512,6 +531,8 @@ below should probably be configurable somehow. -->
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
+		<property name="ioService" ref="ioService"/>
 	</bean>
 		
 <!-- Remove experiment from cart -->
@@ -520,15 +541,10 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
-		<property name="arrayDao">
-			<ref bean="arrayDao"/>
-		</property>
-		<property name="experimentDao">
-			<ref bean="experimentDao"/>
-		</property>
 		<property name="ioService">
 			<ref bean="ioService"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Remove plot from cart -->
@@ -540,10 +556,8 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
-		<property name="plotDao">
-			<ref bean="plotDao"/>
-		</property>
 		<property name="dataFileManager" ref="dataFileManager"/>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 	
 <!-- Color chooser -->
@@ -552,6 +566,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Change bioassay color -->
@@ -560,6 +575,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Change name of experiment, bioassay, or plot -->
@@ -568,6 +584,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Client plot: entry point for application client -->
@@ -582,12 +599,10 @@ below should probably be configurable somehow. -->
 		<property name="experimentIdGenerator">
 			<ref bean="experimentIdGenerator"/>
 		</property>
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
     
 <!-- Client plot: test Plot action -->
@@ -602,12 +617,10 @@ below should probably be configurable somehow. -->
         <property name="experimentIdGenerator">
             <ref bean="experimentIdGenerator"/>
         </property>
-        <property name="organismDao">
-            <ref bean="organismDao"/>
-        </property>
         <property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
     </bean>
 	
 <!-- New plot -->
@@ -625,6 +638,7 @@ below should probably be configurable somehow. -->
 		<property name="jobManager">
 			<ref bean="jobManager"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 
 <!-- Show plot -->
@@ -633,6 +647,7 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- View/change plot parameters -->
@@ -641,14 +656,12 @@ below should probably be configurable somehow. -->
 		<property name="shoppingCartDao">
 			<ref bean="shoppingCartDao"/>
 		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 		
 <!-- Load cytobands form -->
 	<bean name="/admin/loadCytobandsForm"
 		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsFormSetupAction">
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
 		<property name="cytologicalMapDao">
 			<ref bean="cytologicalMapDao"/>
 		</property>
@@ -657,9 +670,6 @@ below should probably be configurable somehow. -->
 <!-- Load cytobands -->
 	<bean name="/admin/loadCytobands"
 		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsAction">
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
 		<property name="cytologicalMapDao">
 			<ref bean="cytologicalMapDao"/>
 		</property>
@@ -668,9 +678,6 @@ below should probably be configurable somehow. -->
 <!-- Delete cytobands -->
 	<bean name="/admin/deleteCytobands"
 		class="org.rti.webgenome.webui.struts.admin.DeleteCytobandsAction">
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
 		<property name="cytologicalMapDao">
 			<ref bean="cytologicalMapDao"/>
 		</property>
@@ -679,9 +686,6 @@ below should probably be configurable somehow. -->
 <!-- Load genes form -->
 	<bean name="/admin/loadGenesForm"
 		class="org.rti.webgenome.webui.struts.admin.LoadGenesFormSetupAction">
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
 		</property>
@@ -690,9 +694,6 @@ below should probably be configurable somehow. -->
 <!-- Load cytobands -->
 	<bean name="/admin/loadGenes"
 		class="org.rti.webgenome.webui.struts.admin.LoadGenesAction">
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
 		</property>
@@ -703,9 +704,6 @@ below should probably be configurable somehow. -->
 		class="org.rti.webgenome.webui.struts.admin.DeleteGenesAction">
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
-		</property>
-		<property name="organismDao">
-			<ref bean="organismDao"/>
 		</property>
 	</bean>
 	
@@ -723,7 +721,6 @@ below should probably be configurable somehow. -->
 	<bean name="/upload/showUploadForm"
 		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction">
 		<property name="ioService" ref="ioService"/>
-		<property name="organismDao" ref="organismDao"/>
 	</bean>
 		
 <!-- Upload data file -->
@@ -786,7 +783,6 @@ below should probably be configurable somehow. -->
 		<property name="ioService" ref="ioService"/>
 		<property name="jobManager" ref="jobManager"/>
 		<property name="shoppingCartDao" ref="shoppingCartDao"/>
-		<property name="organismDao" ref="organismDao"/>
 		<property name="arrayDao" ref="arrayDao"/>
 	</bean>
 	
@@ -808,9 +804,9 @@ below should probably be configurable somehow. -->
 	<bean name="/upload/fetchExperiments"
 		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction">
 		<property name="shoppingCartDao" ref="shoppingCartDao"/>
-		<property name="organismDao" ref="organismDao"/>
 		<property name="experimentIdGenerator" ref="experimentIdGenerator"/>
 		<property name="bioAssayIdGenerator" ref="bioAssayIdGenerator"/>
+		<property name="ioService" ref="ioService"/>
 	</bean>
 	
 <!-- AJAX action to retrieve jobs whose status has changed -->

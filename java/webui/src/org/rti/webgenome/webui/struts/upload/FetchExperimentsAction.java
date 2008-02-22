@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-15 23:28:58 $
+$Revision: 1.3 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,8 +64,8 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.data.DataSourceSession;
+import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -87,18 +87,9 @@ public class FetchExperimentsAction extends BaseAction {
     /** Bioassay ID generator. */
     private IdGenerator bioAssayIdGenerator = null;
     
-    /** Organism data access object. */
-    private OrganismDao organismDao = null;
+    /** Service for file I/O related operations. */
+    private IOService ioService = null;
     
-    /**
-     * Set organism data access object.
-     * @param organismDao Organism data access object
-     */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
-	
-	
 	/**
      * Set bioassay ID generator.
      * @param bioAssayIdGenerator ID generator
@@ -118,8 +109,15 @@ public class FetchExperimentsAction extends BaseAction {
 		this.experimentIdGenerator = experimentIdGenerator;
 	}
 	
-	// TODO: Make the organism a parameter that gets passed in
+	/**
+	 * Inject an IOService bean.
+	 * @param ioService IOService to inject
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
 	
+	// TODO: Make the organism a parameter that gets passed in
 	/**
 	 * {@inheritDoc}
 	 */
@@ -136,14 +134,16 @@ public class FetchExperimentsAction extends BaseAction {
 		Collection<String> expIds = sForm.getSelectedExperimentIds();
 		Collection<Experiment> experiments = sess.fetchExperiments(expIds);
         ColorChooser colorChooser = cart.getBioassayColorChooser();
-        Organism org = this.organismDao.loadDefault();
+        Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
         	Long expId = this.experimentIdGenerator.nextId();
         	exp.setId(expId);
         	exp.setOrganism(org);
+        	this.ioService.convertBioAssays(exp);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
         		ba.setId(this.bioAssayIdGenerator.nextId());
+        		ba.setOrganism(org);
         	}
         }
 		cart.add(experiments);

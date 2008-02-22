@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.AnnotationType;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -73,13 +72,7 @@ public final class DeleteGenesAction extends BaseAction {
 	//
 	//     ATTRIBUTES
 	//
-	
-	/**
-	 * Organism data access object.  This property
-	 * must be set via dependency injection.
-	 */
-	private OrganismDao organismDao = null;
-	
+		
 	/**
 	 * DAO for getting annotated genome features.  This property
 	 * must be set via dependency injection.
@@ -100,15 +93,6 @@ public final class DeleteGenesAction extends BaseAction {
 	public void setAnnotatedGenomeFeatureDao(
 			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
 		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
-	}
-	
-	/**
-	 * Set organism data access object.  This property
-	 * must be set via dependency injection.
-	 * @param organismDao Organims data access object.
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
 	}
 	
 	
@@ -136,7 +120,7 @@ public final class DeleteGenesAction extends BaseAction {
     	
     	// Get organism
     	Long orgId = new Long(request.getParameter("orgId"));
-    	Organism org = this.organismDao.load(orgId);
+    	Organism org = this.getDbService().loadOrganism(orgId);
     	
     	// Delete genes
     	this.annotatedGenomeFeatureDao.deleteAll(AnnotationType.GENE, org);

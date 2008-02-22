@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.5 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,6 +57,7 @@ import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.session.SessionMode;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -70,6 +71,9 @@ public abstract class BaseAction extends Action {
 	
 	/** Data access object for shopping carts. */
 	private ShoppingCartDao shoppingCartDao = null;
+	
+	/** Service facade for transactional database operations. */
+	private WebGenomeDbService dbService = null;
 
 
 	/**
@@ -82,6 +86,23 @@ public abstract class BaseAction extends Action {
 	}
 	
 	
+	/**
+	 * Inject service for transactional database operations.
+	 * @param dbService Service for transactional database operations
+	 */
+	public void setDbService(final WebGenomeDbService dbService) {
+		this.dbService = dbService;
+	}
+
+	/**
+	 * Get service for transactional database operations.
+	 * @return Service for transactional database operations
+	 */
+	protected WebGenomeDbService getDbService() {
+		return this.dbService;
+	}
+
+
 	/**
 	 * Get shopping cart.  If the session mode is
 	 * {@code CLIENT}, the cart will be cached in the

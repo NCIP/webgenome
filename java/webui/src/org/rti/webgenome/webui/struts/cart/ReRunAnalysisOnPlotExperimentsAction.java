@@ -1,6 +1,6 @@
 /*
-$Revision: 1.16 $
-$Date: 2008-01-08 21:07:41 $
+$Revision: 1.17 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webgenome.webui.struts.cart;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -135,9 +136,11 @@ extends BaseAnalysisAction {
 						|| ProcessingModeDecider.plotInBackground(experiments,
 								plot.getPlotParameters().getGenomeIntervals(),
 								request)) {
-			this.getAnalysisService().rePerformAnalyticOperation(
+			Set<String> replacedFiles =
+				this.getAnalysisService().rePerformAnalyticOperation(
 					derivedExperiments, transformer);
 			this.persistShoppingCartChanges(cart, request);
+			this.getIoService().deleteDataFiles(replacedFiles);
 			forward = mapping.findForward("non.batch");
 			
 		// Case: Process in background

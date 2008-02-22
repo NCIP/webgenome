@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-08 17:17:05 $
+$Revision: 1.4 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,11 +51,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.job;
 
 import org.rti.webgenome.service.analysis.AnalysisService;
-import org.rti.webgenome.service.dao.ArrayDao;
-import org.rti.webgenome.service.dao.ExperimentDao;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.plot.PlotService;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 
 /**
  * Provides a set of services to jobs that they
@@ -77,14 +75,8 @@ public class JobServices {
 	/** Plots data. */
 	private final PlotService plotService;
 	
-	/** Shopping cart data access object. */
-	private final ShoppingCartDao shoppingCartDao;
-	
-	/** Array data access object. */
-	private final ArrayDao arrayDao;
-	
-	/** Experiment data access object. */
-	private final ExperimentDao experimentDao;
+	/** Facade service for operations on the WebGenome database. */
+	private final WebGenomeDbService webGenomeDbService;
 
 	
 	//
@@ -116,28 +108,12 @@ public class JobServices {
 	}
 	
 	/**
-	 * Get shopping cart data access object.
-	 * @return Shopping cart data access object
+	 * Get facade service for performing operations on
+	 * the WebGenome database.
+	 * @return A session facade for database operations
 	 */
-	public ShoppingCartDao getShoppingCartDao() {
-		return shoppingCartDao;
-	}
-	
-	
-	/**
-	 * Get experiment data access object.
-	 * @return Experiment data access object
-	 */
-	public ExperimentDao getExperimentDao() {
-		return experimentDao;
-	}
-
-	/**
-	 * Get array data access object.
-	 * @return Array data access object
-	 */
-	public ArrayDao getArrayDao() {
-		return arrayDao;
+	public WebGenomeDbService getWebGenomeDbService() {
+		return webGenomeDbService;
 	}
 
 	//
@@ -149,23 +125,18 @@ public class JobServices {
 	 * @param ioService Service to perform data file I/O.
 	 * @param analytisService Service to run analytic operations.
 	 * @param plotService Service to plot data.
-	 * @param shoppingCartDao Shopping cart data access object
-	 * @param arrayDao Array data access object
-	 * @param experimentDao Experiment data access object
+	 * @param webGenomeDbService Facade for transactional
+	 * operations on the WebGenome database
 	 */
 	public JobServices(final IOService ioService,
 			final AnalysisService analytisService,
 			final PlotService plotService,
-			final ShoppingCartDao shoppingCartDao,
-			final ArrayDao arrayDao,
-			final ExperimentDao experimentDao) {
+			final WebGenomeDbService webGenomeDbService) {
 		super();
 		this.ioService = ioService;
 		this.analysisService = analytisService;
 		this.plotService = plotService;
-		this.shoppingCartDao = shoppingCartDao;
-		this.arrayDao = arrayDao;
-		this.experimentDao = experimentDao;
+		this.webGenomeDbService = webGenomeDbService;
 	}
 	
 	

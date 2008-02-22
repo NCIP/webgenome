@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.11 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,11 +60,9 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.service.analysis.AnalysisService;
-import org.rti.webgenome.service.dao.ArrayDao;
-import org.rti.webgenome.service.dao.ExperimentDao;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.plot.PlotService;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 
 /**
  * Implementation of {@link JobManager} where only
@@ -118,14 +116,9 @@ public class SerialQueueJobManager implements JobManager {
 	/** Service that generates plots. */
 	private PlotService plotService = null;
 	
-	/** Shopping cart data access object. */
-	private ShoppingCartDao shoppingCartDao = null;
+	/** Facade for transactional webgenome db operations. */
+	private WebGenomeDbService webGenomeDbService = null;
 	
-	/** Array data access object. */
-	private ArrayDao arrayDao = null;
-	
-	/** Experiment data access object. */
-	private ExperimentDao experimentDao = null;
 	
 	//
 	//  S E T T E R S
@@ -166,34 +159,18 @@ public class SerialQueueJobManager implements JobManager {
 		this.plotService = plotService;
 	}
 	
-	
+
 	/**
-	 * Set array data access object.
-	 * @param arrayDao Array data access object
+	 * Inject a facade object for webgenome database operations.
+	 * @param webGenomeDbService Facade object for transactional
+	 * database operations
 	 */
-	public void setArrayDao(final ArrayDao arrayDao) {
-		this.arrayDao = arrayDao;
+	public void setWebGenomeDbService(
+			final WebGenomeDbService webGenomeDbService) {
+		this.webGenomeDbService = webGenomeDbService;
 	}
 
 
-	/**
-	 * Set experiment data access object.
-	 * @param experimentDao Experiment data access object
-	 */
-	public void setExperimentDao(final ExperimentDao experimentDao) {
-		this.experimentDao = experimentDao;
-	}
-
-
-	/**
-	 * Set shopping cart data access object.
-	 * @param shoppingCartDao Shopping cart data access object.
-	 */
-	public void setShoppingCartDao(
-			final ShoppingCartDao shoppingCartDao) {
-		this.shoppingCartDao = shoppingCartDao;
-	}
-	
 	//
 	//     C O N S T R U C T O R S
 	//
@@ -412,7 +389,7 @@ public class SerialQueueJobManager implements JobManager {
 		private void monitorJobQueue() {
 			JobServices jobServices = new JobServices(
 					ioService, analysisService, plotService,
-					shoppingCartDao, arrayDao, experimentDao);
+					webGenomeDbService);
 			while (true) {
 				
 				// Get next job from queue

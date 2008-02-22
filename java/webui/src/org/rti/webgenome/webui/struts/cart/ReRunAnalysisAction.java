@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2008-01-05 00:00:25 $
+$Revision: 1.14 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,6 +49,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 package org.rti.webgenome.webui.struts.cart;
+
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -114,9 +116,11 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 		
 		// Case: perform immediately
     	if (!ProcessingModeDecider.analysisInBackground(exp, request)) {
-	    	this.getAnalysisService().rePerformAnalyticOperation(
+	    	Set<String> replacedFiles =
+	    		this.getAnalysisService().rePerformAnalyticOperation(
 	    			exp, op, transformer);
 	    	this.persistShoppingCartChanges(cart, request);
+	    	this.getIoService().deleteDataFiles(replacedFiles);
 	    	forward = mapping.findForward("non.batch");
 	    	
 	    // Case: perform in background

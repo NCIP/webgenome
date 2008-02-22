@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-09-08 22:27:24 $
+$Revision: 1.8 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,24 +50,18 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.domain.Array;
-import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
-import org.rti.webgenome.service.dao.ArrayDao;
-import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Action to remove an experiment from the shopping cart.
@@ -79,12 +73,6 @@ public final class RemoveExperimentAction extends BaseAction {
 	/** Service for performing file IO. */
 	private IOService ioService = null;
 	
-	/** Array data access object. */
-	private ArrayDao arrayDao = null;
-	
-	/** Experiment data access object. */
-	private ExperimentDao experimentDao = null;
-	
 	/**
 	 * Sets service for performing IO.
 	 * @param ioService File IO service.
@@ -93,23 +81,6 @@ public final class RemoveExperimentAction extends BaseAction {
 		this.ioService = ioService;
 	}
 	
-	/**
-	 * Set array data access object.
-	 * @param arrayDao Array data access object
-	 */
-	public void setArrayDao(final ArrayDao arrayDao) {
-		this.arrayDao = arrayDao;
-	}
-
-
-	/**
-	 * Set experiment data access object.
-	 * @param experimentDao Experiment data access object
-	 */
-	public void setExperimentDao(final ExperimentDao experimentDao) {
-		this.experimentDao = experimentDao;
-	}
-
 	/**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -136,7 +107,7 @@ public final class RemoveExperimentAction extends BaseAction {
     	
     	// If experiment referenced by other objects
     	// in database, deny request to delete
-    	if (this.experimentDao.isReferenced(id)) {
+    	if (this.getDbService().isExperimentReferenced(id)) {
     		return mapping.findForward("referenced");
     	}
     	
@@ -150,26 +121,12 @@ public final class RemoveExperimentAction extends BaseAction {
     	
     	// Delete all serialized data files, if any
     	if (!exp.dataInMemory()) {
-    		ioService.deleteDataFiles(exp);
+    		this.ioService.deleteDataFiles(exp);
     	}
     	
     	// Update shopping cart persistent state
-    	this.persistShoppingCartChanges(cart, request);
-    	
-    	// Remove array objects if necessary
-    	Set<Array> removeList = new HashSet<Array>();
-    	for (BioAssay ba : exp.getBioAssays()) {
-    		Array array = ba.getArray();
-    		if (array != null) {
-	    		if (array.isDisposable()) {
-	    			removeList.add(array);
-	    		}
-    		}
-    	}
-    	for (Array a : removeList) {
-    		if (!this.arrayDao.isReferenced(a)) {
-    			this.arrayDao.delete(a);
-    		}
+    	if (PageContext.standAloneMode(request)) {
+    		this.getDbService().removeArraysAndUpdateCart(exp, cart);
     	}
     	
         return mapping.findForward("success");

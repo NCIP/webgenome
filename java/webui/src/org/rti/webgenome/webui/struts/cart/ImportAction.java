@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2008-02-15 23:28:58 $
+$Revision: 1.7 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,6 @@ import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
@@ -88,18 +87,6 @@ public final class ImportAction extends BaseAction {
     /** Bioassay ID generator. */
     private IdGenerator bioAssayIdGenerator = null;
     
-    /** Organism data access object. */
-    private OrganismDao organismDao = null;
-    
-    /**
-     * Set organism data access object.
-     * @param organismDao Organism data access object
-     */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
-	
-	
 	/**
      * Set bioassay ID generator.
      * @param bioAssayIdGenerator ID generator
@@ -193,7 +180,7 @@ public final class ImportAction extends BaseAction {
     	
     	// TODO: Make organism a parameter that gets passed in
         ColorChooser colorChooser = cart.getBioassayColorChooser();
-        Organism org = this.organismDao.loadDefault();
+        Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
         	Long expId = this.experimentIdGenerator.nextId();
         	exp.setId(expId);

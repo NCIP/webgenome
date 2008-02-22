@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2008-02-15 23:28:59 $
+$Revision: 1.10 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -177,6 +177,19 @@ public final class PageContext {
 	throws SessionTimeoutException {
 		return (SessionMode)
 			getSessionAttribute(request, KEY_SESSION_MODE);
+	}
+	
+	
+	/**
+	 * Is the session associated with the given request stand-alone mode?
+	 * @param request A request
+	 * @return T/F
+	 * @throws SessionTimeoutException If the session mode cannot be
+	 * determined indicating the session has expired.
+	 */
+	public static boolean standAloneMode(final HttpServletRequest request)
+	throws SessionTimeoutException {
+		return getSessionMode(request) == SessionMode.STAND_ALONE;
 	}
 	
 	

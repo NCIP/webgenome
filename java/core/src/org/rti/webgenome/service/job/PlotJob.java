@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.8 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,8 +56,8 @@ import org.apache.log4j.Logger;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.plot.PlotParameters;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
 
 /**
@@ -186,8 +186,9 @@ public class PlotJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
+		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
+		ShoppingCart cart = dbService.getShoppingCart(this.getUserId(),
+				this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		LOGGER.info("Plot job starting for user "
@@ -209,7 +210,7 @@ public class PlotJob extends AbstractJob {
 					this.experiments, newParamsObj,
 					cart, dataGetter);
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
-			sDao.update(cart);
+			dbService.updateShoppingCart(cart);
 		} catch (Exception e) {
 			this.setTerminationMessage(
 					Job.JOB_EXECUTION_FAILURE_MESSAGE + ": "

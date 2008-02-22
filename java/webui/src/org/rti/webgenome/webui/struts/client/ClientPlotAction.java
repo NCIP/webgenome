@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-09-29 05:24:19 $
+$Revision: 1.8 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,7 +75,6 @@ import org.rti.webgenome.domain.SimulatedDataSourceProperties;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.client.ClientDataService;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.service.util.IdGenerator;
@@ -114,8 +113,6 @@ public final class ClientPlotAction extends BaseAction {
     /** Image file manager. */
     private ImageFileManager imageFileManager = null;
     
-    /** Organism data access object. */
-    private OrganismDao organismDao = null;
 
 
     /**
@@ -125,15 +122,6 @@ public final class ClientPlotAction extends BaseAction {
     public void setImageFileManager(
     		final ImageFileManager imageFileManager) {
 		this.imageFileManager = imageFileManager;
-	}
-
-
-    /**
-     * Set organism data access object.
-     * @param organismDao Organism data access object
-     */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
 	}
 
 
@@ -247,7 +235,7 @@ public final class ClientPlotAction extends BaseAction {
         // Give each experiment a unique ID and default
         // organism.  Give each bioassay a color and ID
         ColorChooser colorChooser = cart.getBioassayColorChooser();
-        Organism org = this.organismDao.loadDefault();
+        Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
         	Long expId = this.experimentIdGenerator.nextId();
         	exp.setId(expId);

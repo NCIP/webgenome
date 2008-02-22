@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.6 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.webui.struts.BaseAction;
@@ -78,19 +77,7 @@ import org.rti.webgenome.webui.util.PageContext;
 public class ShowMainUploadFormSetupAction extends BaseAction {
 	
 	/** Service for file I/O. */
-	private IOService ioService = null;
-	
-	/** Organism data access object. */
-	private OrganismDao organismDao = null;
-
-	/**
-	 * Injector method for the organism data access object.
-	 * @param organismDao Organism data access object
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
-	
+	private IOService ioService = null;	
 	
 	/**
 	 * Set service for file I/O.
@@ -122,7 +109,7 @@ public class ShowMainUploadFormSetupAction extends BaseAction {
 					upload.getReporterFileFormat());
 		}
 		request.setAttribute("allCols", allCols);
-		List<Organism> organisms = this.organismDao.loadAll();
+		List<Organism> organisms = this.getDbService().loadAllOrganisms();
 		request.setAttribute("organisms", organisms);
 		Collection<BpUnits> units = BpUnits.getUnits();
 		request.setAttribute("units", units);

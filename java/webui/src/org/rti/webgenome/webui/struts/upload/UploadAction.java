@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-12-04 23:06:40 $
+$Revision: 1.8 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,15 +58,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
-import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.dao.ArrayDao;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.job.DataImportJob;
 import org.rti.webgenome.service.job.JobManager;
@@ -87,29 +84,6 @@ public class UploadAction extends BaseAction {
 	/** Manages analysis jobs performed in the background. */
 	private JobManager jobManager = null;
 	
-	/** Organism data access object. */
-	private OrganismDao organismDao = null;
-	
-	/** Array data access object. */
-	private ArrayDao arrayDao = null;
-	
-	
-	/**
-	 * Set array data access object.
-	 * @param arrayDao Array data access object
-	 */
-	public void setArrayDao(final ArrayDao arrayDao) {
-		this.arrayDao = arrayDao;
-	}
-	
-	/**
-	 * Set organism data access object.
-	 * @param organismDao Organism data access object
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
-
 
 	/**
 	 * Set manager for jobs performed in background.
@@ -142,7 +116,7 @@ public class UploadAction extends BaseAction {
 		upload.setChromosomeColumnName(uForm.getChromosomeColumnName());
 		upload.setExperimentName(uForm.getExperimentName());
 		Long orgId = new Long(uForm.getOrganismId());
-		Organism org = this.organismDao.load(orgId);
+		Organism org = this.getDbService().loadOrganism(orgId);
 		upload.setOrganism(org);
 		upload.setPositionUnits(BpUnits.getUnits(uForm.getUnits()));
 		upload.setPositionColumnName(uForm.getPositionColumnName());
@@ -163,11 +137,7 @@ public class UploadAction extends BaseAction {
 		} else {
 			ShoppingCart cart = this.getShoppingCart(request);
 			Experiment exp = this.ioService.loadSmdData(upload, cart);
-			if (exp.getBioAssays().size() > 0) {
-				Array array = exp.getBioAssays().iterator().next().getArray();
-				this.arrayDao.save(array);
-			}
-			this.persistShoppingCartChanges(cart, request);
+			this.getDbService().addArraysAndUpdateCart(exp, cart);
 			forward = mapping.findForward("non.batch");
 		}
 		PageContext.removeUpload(request);

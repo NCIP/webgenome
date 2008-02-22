@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-06 14:41:41 $
+$Revision: 1.4 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -275,6 +275,21 @@ public abstract class BioAssay implements Serializable {
     // ===================================
     //    Business methods
     // ===================================
+    
+    /**
+     * Bulk set all properties not related to data
+     * (i.e. data points to plot).  Note, that the primary
+     * key values is not set.
+     * @param bioAssay Source bioassay for property values
+     */
+    public final void bulkSetNonDataProperties(final BioAssay bioAssay) {
+    	this.array = bioAssay.array;
+    	this.color = bioAssay.color;
+    	this.name = bioAssay.name;
+    	this.organism = bioAssay.organism;
+    	this.parentBioAssayId = bioAssay.parentBioAssayId;
+    	this.selected = bioAssay.selected;
+    }
     
     /**
      * Is given bioassay "synonymous" with this?

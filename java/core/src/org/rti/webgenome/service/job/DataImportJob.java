@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.10 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,10 +59,9 @@ import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.dao.ArrayDao;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.io.SmdFormatException;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 
 /**
  * This is a job for importing data in a file into
@@ -154,10 +153,10 @@ public class DataImportJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
 		IOService ioService = jobServices.getIoService();
-		ArrayDao aDao = jobServices.getArrayDao();
+		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
+		ShoppingCart cart = dbService.getShoppingCart(this.getUserId(),
+					this.getUserDomain());
 		try {
 			LOGGER.info("Data import job starting for user "
 					+ this.getUserId());
@@ -167,14 +166,11 @@ public class DataImportJob extends AbstractJob {
 					new UploadDataSourceProperties(
 							this.uploadDataSourceProperties), cart);
 			
-			// Persist new array object
+			// Persist new array object and shopping cart changes
 			Array array = this.getArray(exp);
 			array.setDisposable(true);
 			assert array != null;
-			aDao.save(array);
-			
-			// Persist shopping cart changes
-			sDao.update(cart);
+			dbService.saveArrayAndUpdateCart(array, cart);
 			
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Data import job completed for user "

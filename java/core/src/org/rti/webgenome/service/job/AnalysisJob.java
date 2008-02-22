@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.5 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import org.rti.webgenome.domain.MultiAnalysisDataSourceProperties;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 
 /**
  * Job performing an analytic operation.
@@ -209,8 +209,9 @@ public class AnalysisJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
+		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
+		ShoppingCart cart = dbService.getShoppingCart(this.getUserId(),
+				this.getUserDomain());
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
@@ -224,7 +225,7 @@ public class AnalysisJob extends AbstractJob {
 			aService.performAnalyticOperation(experiments, op, cart,
 					this.outputExperimentNames, this.outputBioAssayNames,
 					transformer);
-			sDao.update(cart);
+			dbService.updateShoppingCart(cart);
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Analysis job completed for user "
 					+ this.getUserId());

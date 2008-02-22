@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.UcscGeneReader;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -92,12 +91,6 @@ public final class LoadGenesAction extends BaseAction {
 	//
 	
 	/**
-	 * Organism data access object. This property
-	 * must be set using dependency injection.
-	 */
-	private OrganismDao organismDao = null;
-	
-	/**
 	 * DAO for annotated genome features. This property
 	 * must be set using dependency injection.
 	 */
@@ -107,16 +100,6 @@ public final class LoadGenesAction extends BaseAction {
 	//
 	//     SETTERS (for dependency injection)
 	//
-	
-	/**
-	 * Set organism data access object. This property
-	 * must be set using dependency injection.
-	 * @param organismDao Organims data access object.
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
-	
 	
 	/**
 	 * Setter for annotated genome feature data access object.
@@ -159,7 +142,7 @@ public final class LoadGenesAction extends BaseAction {
     	
     	// Get organism
     	Long orgId = Long.parseLong(cForm.getOrganismId());
-    	Organism org = this.organismDao.load(orgId);
+    	Organism org = this.getDbService().loadOrganism(orgId);
     	
     	// Load data
     	UcscGeneReader geneReader = new UcscGeneReader(reader, org);

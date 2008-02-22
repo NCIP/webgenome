@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.7 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.job;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.rti.webgenome.analysis.AnalyticException;
 import org.rti.webgenome.analysis.AnalyticOperation;
@@ -57,7 +59,6 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.SingleAnalysisDataSourceProperties;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
-import org.rti.webgenome.service.dao.ExperimentDao;
 
 /**
  * A job that re-runs an analytic operation on a single
@@ -144,7 +145,6 @@ public class ReRunAnalysisJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		ExperimentDao expDao = jobServices.getExperimentDao();
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
@@ -155,9 +155,10 @@ public class ReRunAnalysisJob extends AbstractJob {
 		try {
 			LOGGER.info("Re-analysis job starting for user "
 					+ this.getUserId());
-			aService.rePerformAnalyticOperation(
+			Set<String> replacedFiles = aService.rePerformAnalyticOperation(
 					experiment, operation, transformer);
-			expDao.update(experiment);
+			jobServices.getWebGenomeDbService().updateExperiment(experiment);
+			jobServices.getIoService().deleteDataFiles(replacedFiles);
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Re-analysis job completed for user "
 					+ this.getUserId());

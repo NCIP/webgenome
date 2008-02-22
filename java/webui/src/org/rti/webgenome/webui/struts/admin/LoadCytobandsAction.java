@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.CytologicalMap;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.dao.CytologicalMapDao;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.io.UcscCytologicalMapReader;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -73,9 +72,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  */
 public final class LoadCytobandsAction extends BaseAction {
 
-	/** Organism data access object. */
-	private OrganismDao organismDao = null;
-	
 	/** Cytological map data access object. */
 	private CytologicalMapDao cytologicalMapDao = null;
 	
@@ -89,14 +85,6 @@ public final class LoadCytobandsAction extends BaseAction {
 		this.cytologicalMapDao = cytologicalMapDao;
 	}
 
-
-	/**
-	 * Set organism data access object.
-	 * @param organismDao Organims data access object.
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
 	
 	/**
      * Execute action.
@@ -122,7 +110,7 @@ public final class LoadCytobandsAction extends BaseAction {
     	
     	// Get organism
     	Long orgId = Long.parseLong(cForm.getOrganismId());
-    	Organism org = this.organismDao.load(orgId);
+    	Organism org = this.getDbService().loadOrganism(orgId);
     	
     	// Parse out cytological maps from form file
     	UcscCytologicalMapReader reader = new UcscCytologicalMapReader(org);

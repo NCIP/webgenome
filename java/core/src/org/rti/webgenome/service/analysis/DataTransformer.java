@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2007-11-28 19:51:21 $
+$Revision: 1.8 $
+$Date: 2008-02-22 03:54:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.analysis.AnalyticException;
@@ -137,10 +138,11 @@ public abstract class DataTransformer {
      * @param analyticOperationProps Analytic operation
      * user configurable properties to use in
      * re-calculation.
+     * @return Names of files replaced but not deleted
      * @throws AnalyticException If there is an error
      * during computation
      */
-    public void reCompute(final Experiment experiment,
+    public Set<String> reCompute(final Experiment experiment,
     		final Collection<UserConfigurableProperty>
     		analyticOperationProps)
     throws AnalyticException {
@@ -156,7 +158,7 @@ public abstract class DataTransformer {
 		} catch (BadUserConfigurablePropertyException e) {
 			throw new AnalyticException("Bad parameter value", e);
 		}
-    	this.performAnalyticOperation(input, experiment, op, true);
+    	return this.performAnalyticOperation(input, experiment, op, true);
     }
     
     
@@ -168,13 +170,15 @@ public abstract class DataTransformer {
      * @param operation Opeation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of files replaced but not deleted
      * @throws AnalyticException if a computation error occurs
      */
-    private void performAnalyticOperation(
+    private Set<String> performAnalyticOperation(
     		final Experiment input, final Experiment output,
             final AnalyticOperation operation,
             final boolean reperformance)
     throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
         // Code commented out because pipeline functionality has not
         // been fully implemented
     	
@@ -184,12 +188,13 @@ public abstract class DataTransformer {
 //        } else
         	
         if (operation instanceof StatelessOperation) {
-        	this.performStatelessOperation(input, output,
+        	fNames = this.performStatelessOperation(input, output,
         			(StatelessOperation) operation, reperformance);
         } else if (operation instanceof StatefulOperation) {
-        	this.performStatefulOperation(input, output,
+        	fNames = this.performStatefulOperation(input, output,
         			(StatefulOperation) operation, reperformance);
         }
+        return fNames;
     }
     
     
@@ -201,19 +206,22 @@ public abstract class DataTransformer {
      * @param operation Opeation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of files replaced but not deleted
      * @throws AnalyticException if a computation error occurs
      */
-    private void performStatelessOperation(
+    private Set<String> performStatelessOperation(
     		final Experiment input, final Experiment output,
             final StatelessOperation operation,
             final boolean reperformance)
     throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
     	if (operation instanceof SingleBioAssayStatelessOperation) {
-            this.performSingleBioAssayStatelessOperation(input, output,
+            fNames = this.performSingleBioAssayStatelessOperation(input, output,
                     (SingleBioAssayStatelessOperation) operation,
                     reperformance);
         } else if (operation instanceof SingleExperimentStatelessOperation) {
-            this.performSingleExperimentStatelessOperation(input, output,
+            fNames = this.performSingleExperimentStatelessOperation(
+            		input, output,
                     (SingleExperimentStatelessOperation) operation,
                     reperformance);
         } else {
@@ -221,6 +229,7 @@ public abstract class DataTransformer {
         			"Unknown stateless operation '"
         			+ operation.getClass().getName() + "'");
         }
+    	return fNames;
     }
     
     
@@ -232,20 +241,22 @@ public abstract class DataTransformer {
      * @param operation Opeation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of files replaced but not deleted
      * @throws AnalyticException if a computation error occurs
      */
-    private void performStatefulOperation(
+    private Set<String> performStatefulOperation(
     		final Experiment input, final Experiment output,
             final StatefulOperation operation,
             final boolean reperformance)
     throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
     	if (operation instanceof IntraBioAssayStatefulOperation) {
-    		this.performIntraBioAssayStatefulOperation(input,
+    		fNames = this.performIntraBioAssayStatefulOperation(input,
     				output,
     				(IntraBioAssayStatefulOperation) operation,
     				reperformance);
     	} else if (operation instanceof IntraExperimentStatefulOperation) {
-    		this.performIntraExperimentStatefulOperation(input,
+    		fNames = this.performIntraExperimentStatefulOperation(input,
     				output,
     				(IntraExperimentStatefulOperation) operation,
     				reperformance);
@@ -254,6 +265,7 @@ public abstract class DataTransformer {
         			"Unknown stateful operation '"
         			+ operation.getClass().getName() + "'");
     	}
+    	return fNames;
     }
     
     
@@ -265,13 +277,16 @@ public abstract class DataTransformer {
      * @param operation Opeation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of any files that were replaced.  These files
+     * will not have been deleted.
      * @throws AnalyticException if a computation error occurs
      */
-    private void performIntraBioAssayStatefulOperation(
+    private Set<String> performIntraBioAssayStatefulOperation(
     		final Experiment input, final Experiment output,
             final IntraBioAssayStatefulOperation operation,
             final boolean reperformance)
     throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
     	
     	// Determine which bioassays to iterate over
     	Collection<BioAssay> bioAssays = null;
@@ -314,9 +329,12 @@ public abstract class DataTransformer {
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
-                this.addChromosomeArrayData(outputBioAssay, outputCad);
+                Set<String> replacedFiles =
+                	this.addChromosomeArrayData(outputBioAssay, outputCad);
+                fNames.addAll(replacedFiles);
             }
         }
+        return fNames;
     }
     
     
@@ -328,13 +346,16 @@ public abstract class DataTransformer {
      * @param operation Opeation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of any files replaced.  These files will not have
+     * been deleted.
      * @throws AnalyticException if a computation error occurs
      */
-    private void performIntraExperimentStatefulOperation(
+    private Set<String> performIntraExperimentStatefulOperation(
     		final Experiment input, final Experiment output,
             final IntraExperimentStatefulOperation operation,
             final boolean reperformance)
     throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
     	
     	// Reset operation state
         operation.resetState();
@@ -380,9 +401,12 @@ public abstract class DataTransformer {
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
-                this.addChromosomeArrayData(outputBioAssay, outputCad);
+                Set<String> replacedFiles =
+                	this.addChromosomeArrayData(outputBioAssay, outputCad);
+                fNames.addAll(replacedFiles);
             }
         }
+        return fNames;
     }
     
     
@@ -395,13 +419,15 @@ public abstract class DataTransformer {
      * @param operation Operation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of files that were replaced but not deleted
      * @throws AnalyticException if a computation error occurs
      */
-    private void performSingleBioAssayStatelessOperation(
+    private Set<String> performSingleBioAssayStatelessOperation(
     		final Experiment input, final Experiment output,
             final SingleBioAssayStatelessOperation operation,
             final boolean reperformance)
         throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
     	
     	// Get bioassays to iterate over
     	Collection<BioAssay> bioAssays = null;
@@ -434,9 +460,12 @@ public abstract class DataTransformer {
             while (it.hasNext()) {
                 ChromosomeArrayData inputCad = it.next();
                 ChromosomeArrayData outputCad = operation.perform(inputCad);
-                this.addChromosomeArrayData(outputBioAssay, outputCad);
+                Set<String> replacedFiles =
+                	this.addChromosomeArrayData(outputBioAssay, outputCad);
+                fNames.addAll(replacedFiles);
             }
         }
+        return fNames;
     }
     
     
@@ -450,14 +479,16 @@ public abstract class DataTransformer {
      * @param operation Operation to perform
      * @param reperformance Is this a reperformance of the
      * same operation with different user specified parameters?
+     * @return Names of files replaced but not deleted
      * @throws AnalyticException if a computation error occurs
      */
-    private void performSingleExperimentStatelessOperation(
+    private Set<String> performSingleExperimentStatelessOperation(
     		final Experiment input,
     		final Experiment output,
             final SingleExperimentStatelessOperation operation,
             final boolean reperformance)
         throws AnalyticException {
+    	Set<String> fNames = new HashSet<String>();
     	
     	// Check args
         if ((!reperformance && input.getBioAssays().size() < 1)
@@ -484,8 +515,11 @@ public abstract class DataTransformer {
                 cad.add(this.getChromosomeArrayData(ba, chromosome));
             }
             ChromosomeArrayData newCad = operation.perform(cad);
-            this.addChromosomeArrayData(outputBioAssay, newCad);
+            Set<String> replacedFiles =
+            	this.addChromosomeArrayData(outputBioAssay, newCad);
+            fNames.addAll(replacedFiles);
         }
+        return fNames;
     }
     
     
@@ -645,8 +679,10 @@ public abstract class DataTransformer {
      * value will be replaced.
      * @param bioAssay A bioassay
      * @param chromosomeArrayData Chromosome array data
+     * @return Names of any files replaced when adding new data.
+     * These files will not have been deleted.
      */
-    protected abstract void addChromosomeArrayData(
+    protected abstract Set<String> addChromosomeArrayData(
     		BioAssay bioAssay,
             ChromosomeArrayData chromosomeArrayData);
         

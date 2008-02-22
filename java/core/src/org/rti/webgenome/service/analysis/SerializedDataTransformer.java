@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-07 22:21:22 $
+$Revision: 1.4 $
+$Date: 2008-02-22 03:54:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -49,6 +49,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 package org.rti.webgenome.service.analysis;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
@@ -147,8 +150,9 @@ public final class SerializedDataTransformer
     /**
      * {@inheritDoc}
      */
-    protected void addChromosomeArrayData(final BioAssay bioAssay,
+    protected Set<String> addChromosomeArrayData(final BioAssay bioAssay,
             final ChromosomeArrayData chromosomeArrayData) {
+    	Set<String> fNames = new HashSet<String>();
     	if (bioAssay instanceof DataSerializedBioAssay) {
     		DataSerializedBioAssay dbsa =
     			(DataSerializedBioAssay) bioAssay;
@@ -157,7 +161,7 @@ public final class SerializedDataTransformer
     		String fileName = dbsa.getFileName(
     				chromosomeArrayData.getChromosome());
     		if (fileName != null) {
-    			this.dataFileManager.deleteDataFile(fileName);
+    			fNames.add(fileName);
     		}
     		
     		// Add new value
@@ -167,6 +171,7 @@ public final class SerializedDataTransformer
         	throw new IllegalArgumentException(
 			"Bioassay must be of type DataSerializedBioAssay");
         }
+    	return fNames;
     }
 
 

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-09-07 22:21:16 $
+$Revision: 1.3 $
+$Date: 2008-02-22 03:54:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.analysis;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.DataContainingBioAssay;
@@ -88,7 +91,7 @@ public final class InMemoryDataTransformer
     /**
      * {@inheritDoc}
      */
-    protected void addChromosomeArrayData(final BioAssay bioAssay,
+    protected Set<String> addChromosomeArrayData(final BioAssay bioAssay,
             final ChromosomeArrayData chromosomeArrayData) {
         if (bioAssay instanceof DataContainingBioAssay) {
             ((DataContainingBioAssay) bioAssay).put(chromosomeArrayData);
@@ -96,6 +99,7 @@ public final class InMemoryDataTransformer
         	throw new IllegalArgumentException(
 			"Bioassay must be of type DataContainingBioAssay");
         }
+        return new HashSet<String>();
     }
     
 

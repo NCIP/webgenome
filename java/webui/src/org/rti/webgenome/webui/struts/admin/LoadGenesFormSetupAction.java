@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,7 +61,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -83,11 +82,6 @@ public final class LoadGenesFormSetupAction extends BaseAction {
 	 */
 	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
 	
-	/**
-	 * Organism data access object.  This property
-	 * must be set via dependency injection.
-	 */
-	private OrganismDao organismDao = null;
 	
 	//
 	//     SETTERS (for dependency injection)
@@ -104,17 +98,7 @@ public final class LoadGenesFormSetupAction extends BaseAction {
 			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
 		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
 	}
-	
-	
-	/**
-	 * Set organism data access object.  This property
-	 * must be set via dependency injection.
-	 * @param organismDao Organims data access object.
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
-	}
-	
+		
 	
 	//
 	//     OVERRIDDEN METHODS
@@ -139,7 +123,7 @@ public final class LoadGenesFormSetupAction extends BaseAction {
     ) throws Exception {
     	
     	// Get all organisms and attach to request
-    	List<Organism> organisms = this.organismDao.loadAll();
+    	List<Organism> organisms = this.getDbService().loadAllOrganisms();
     	request.setAttribute("organisms",  organisms);
     	
     	// Get organisms that have uploaded gene data

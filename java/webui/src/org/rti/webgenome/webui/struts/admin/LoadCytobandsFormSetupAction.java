@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:31 $
+$Revision: 1.2 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,7 +63,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.CytologicalMap;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.service.dao.CytologicalMapDao;
-import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -73,9 +72,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public final class LoadCytobandsFormSetupAction extends BaseAction {
-	
-	/** Organism data access object. */
-	private OrganismDao organismDao = null;
 	
 	/** Cytological map data access object. */
 	private CytologicalMapDao cytologicalMapDao = null;
@@ -88,15 +84,6 @@ public final class LoadCytobandsFormSetupAction extends BaseAction {
 	public void setCytologicalMapDao(
 			final CytologicalMapDao cytologicalMapDao) {
 		this.cytologicalMapDao = cytologicalMapDao;
-	}
-
-
-	/**
-	 * Set organism data access object.
-	 * @param organismDao Organims data access object.
-	 */
-	public void setOrganismDao(final OrganismDao organismDao) {
-		this.organismDao = organismDao;
 	}
 
 
@@ -119,7 +106,7 @@ public final class LoadCytobandsFormSetupAction extends BaseAction {
     ) throws Exception {
     	
     	// Get all organisms and attach to request
-    	List<Organism> organisms = this.organismDao.loadAll();
+    	List<Organism> organisms = this.getDbService().loadAllOrganisms();
     	request.setAttribute("organisms",  organisms);
     	
     	// Get all organisms containing cytological maps and attach to request

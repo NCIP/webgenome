@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.6 $
+$Date: 2008-02-22 03:54:09 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,8 +59,7 @@ import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
-import org.rti.webgenome.service.dao.ExperimentDao;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
 
 /**
@@ -195,9 +194,9 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
-		ExperimentDao expDao = jobServices.getExperimentDao();
-		ShoppingCartDao sDao = jobServices.getShoppingCartDao();
-		ShoppingCart cart = sDao.load(this.getUserId(), this.getUserDomain());
+		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
+		ShoppingCart cart = dbService.getShoppingCart(this.getUserId(),
+				this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		try {
@@ -205,18 +204,19 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 					+ this.getUserId());
 			
 			// Re-do analytic operation
-			aService.rePerformAnalyticOperation(
+			Set<String> replacedFiles =
+				aService.rePerformAnalyticOperation(
 					this.experiments, transformer);
-			for (Experiment exp : this.experiments) {
-				expDao.update(exp);
-			}
 			
-			// Plot and persist
+			// Plot
 			Plot plot = cart.getPlot(this.plotId);
 			jobServices.getPlotService().plotExperiments(plot,
 					this.experiments, plot.getPlotParameters(),
 					cart, dataGetter);
-			sDao.update(cart);
+			
+			// Persist
+			dbService.updateExperimentsAndCart(this.experiments, cart);
+			jobServices.getIoService().deleteDataFiles(replacedFiles);
 			
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("Plot re-analysis job completed for user "

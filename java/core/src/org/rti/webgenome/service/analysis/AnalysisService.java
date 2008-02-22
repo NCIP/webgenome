@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-12-07 19:52:03 $
+$Revision: 1.7 $
+$Date: 2008-02-22 03:54:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,8 +53,10 @@ package org.rti.webgenome.service.analysis;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.rti.webgenome.analysis.AnalyticException;
 import org.rti.webgenome.analysis.AnalyticOperation;
@@ -193,14 +195,16 @@ public class AnalysisService {
 	 * @param experiment Experiment to run through operation
 	 * @param operation Operation to perform.
 	 * @param dataTransformer Data transformer
+	 * @return Old serialized files that have been replaced
 	 * @throws AnalyticException if a bad data value causes the
 	 * operation to fail
 	 */
-	public void rePerformAnalyticOperation(
+	public Set<String> rePerformAnalyticOperation(
 			final Experiment experiment,
 			final AnalyticOperation operation,
 			final DataTransformer dataTransformer)
 	throws AnalyticException {
+		Set<String> fNames = new HashSet<String>();
 		if (operation instanceof MultiExperimentStatelessOperation) {
 			MultiAnalysisDataSourceProperties props =
 				(MultiAnalysisDataSourceProperties)
@@ -223,7 +227,7 @@ public class AnalysisService {
 			qTypes.add(qType);
 	    	Collection<UserConfigurableProperty> props =
 	    		operation.getUserConfigurableProperties(qTypes);
-			dataTransformer.reCompute(experiment, props);
+			fNames = dataTransformer.reCompute(experiment, props);
 		}
 		Collection<QuantitationType> qTypes =
 			new ArrayList<QuantitationType>();
@@ -231,6 +235,7 @@ public class AnalysisService {
 		((AnalysisDataSourceProperties)
 				experiment.getDataSourceProperties()).
 				setSourceAnalyticOperation(operation, qTypes);
+		return fNames;
 	}
 	
 	
@@ -241,13 +246,15 @@ public class AnalysisService {
 	 * @param experiments Derived experiments to run through
 	 * their operation again
 	 * @param dataTransformer Data transformer
+	 * @return Names of files replaced but not deleted
 	 * @throws AnalyticException if a bad data value causes the
 	 * operation to fail
 	 */
-	public void rePerformAnalyticOperation(
+	public Set<String> rePerformAnalyticOperation(
 			final Collection<Experiment> experiments,
 			final DataTransformer dataTransformer)
 	throws AnalyticException {
+		Set<String> fNames = new HashSet<String>();
 		for (Experiment exp : experiments) {
 			if (!exp.isDerived()) {
 				throw new IllegalArgumentException(
@@ -283,7 +290,9 @@ public class AnalysisService {
 				qTypes.add(qType);
 				Collection<UserConfigurableProperty> props =
 					op.getUserConfigurableProperties(qTypes);
-				dataTransformer.reCompute(exp, props);
+				Set<String> replacedFiles =
+					dataTransformer.reCompute(exp, props);
+				fNames.addAll(replacedFiles);
 			}
 			Collection<QuantitationType> qTypes =
 				new ArrayList<QuantitationType>();
@@ -292,5 +301,6 @@ public class AnalysisService {
 					exp.getDataSourceProperties()).
 					setSourceAnalyticOperation(operation, qTypes);
 		}
+		return fNames;
 	}
 }
