@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-24 21:51:57 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -67,18 +66,6 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public class RemoveReporterFileAction extends BaseAction {
-	
-	/** Service for file I/O. */
-	private IOService ioService = null;
-	
-	
-	/**
-	 * Set service for file I/O.
-	 * @param ioService File I/O service.
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -91,7 +78,7 @@ public class RemoveReporterFileAction extends BaseAction {
 		UploadDataSourceProperties upload = PageContext.getUpload(request);
 		String localFileName = upload.getReporterLocalFileName();
 		if (localFileName != null) {
-			this.ioService.delete(localFileName);
+			this.getIoService().delete(localFileName);
 			upload.removeRepoterFile();
 		}
 		return mapping.findForward("success");

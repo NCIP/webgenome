@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.6 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,7 +65,6 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -80,31 +79,6 @@ import org.rti.webgenome.webui.util.PageContext;
  */
 public final class PlotParametersSetupAction extends BaseAction {
 	
-	//
-	//     ATTRIBUTES TO BE INJECTED
-	//
-	
-	/**
-	 * Data access object for obtaining annotated genome features.
-	 * This propery must be injected.
-	 */
-	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
-	
-	//
-	//     SETTERS
-	//
-	
-
-	/**
-	 * Set data access object for obtaining annotated genome features.
-	 * This propery must be injected.
-	 * @param annotatedGenomeFeatureDao Data access object
-	 */
-	public void setAnnotatedGenomeFeatureDao(
-			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
-		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
-	}
-
 	
 	/**
      * Execute action.
@@ -174,7 +148,8 @@ public final class PlotParametersSetupAction extends BaseAction {
     	if (plotType == PlotType.ANNOTATION) {
 	    	Organism org = Experiment.getOrganism(experiments);
 	    	Set<AnnotationType> annotationTypes =
-	    		this.annotatedGenomeFeatureDao.availableAnnotationTypes(org);
+	    		this.getAnnotatedGenomeFeatureDao()
+	    		.availableAnnotationTypes(org);
 	    	request.setAttribute("annotationTypes", annotationTypes);
     	}
     	

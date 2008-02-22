@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -71,38 +70,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public final class LoadGenesFormSetupAction extends BaseAction {
-	
-	//
-	//     ATTRIBUTES
-	//
-	
-	/**
-	 * DAO for getting annotated genome features.  This property
-	 * must be set via dependency injection.
-	 */
-	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
-	
-	
-	//
-	//     SETTERS (for dependency injection)
-	//
-	
-	
-	/**
-	 * Set DAO for getting annotated genome features.  This property
-	 * must be set via dependency injection.
-	 * @param annotatedGenomeFeatureDao DAO for getting annotated
-	 * genome features
-	 */
-	public void setAnnotatedGenomeFeatureDao(
-			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
-		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
-	}
-		
-	
-	//
-	//     OVERRIDDEN METHODS
-	//
 
 	/**
      * Execute action.
@@ -128,7 +95,7 @@ public final class LoadGenesFormSetupAction extends BaseAction {
     	
     	// Get organisms that have uploaded gene data
     	Set<Organism> organismsWithGeneData =
-    		this.annotatedGenomeFeatureDao.organismsWithLoadedGenes();
+    		this.getAnnotatedGenomeFeatureDao().organismsWithLoadedGenes();
     	
     	// Attach attributes to request
     	request.setAttribute("organisms", organisms);

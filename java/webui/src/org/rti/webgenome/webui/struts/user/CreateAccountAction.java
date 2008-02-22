@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-04-09 22:19:50 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,7 +58,6 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.service.session.SecurityMgr;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 
@@ -68,27 +67,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public final class CreateAccountAction extends BaseAction {
-
-	/** Account manager. This property should be injected. */
-	private SecurityMgr securityMgr = null;
-	
-	/**
-	 * Get account manager.
-	 * @return Account manager.
-	 */
-	public SecurityMgr getSecurityMgr() {
-		return securityMgr;
-	}
-
-
-	/**
-	 * Set account manager.
-	 * @param securityMgr Security manager for user accounts.
-	 */
-	public void setSecurityMgr(final SecurityMgr securityMgr) {
-		this.securityMgr = securityMgr;
-	}
-
 
 	/**
      * Execute action.
@@ -110,7 +88,7 @@ public final class CreateAccountAction extends BaseAction {
     	NewAccountForm naf = (NewAccountForm) form;
     	
     	// See if there is already a user with the same account name
-    	if (this.securityMgr.accountExists(naf.getName())) {
+    	if (this.getSecurityMgr().accountExists(naf.getName())) {
     		ActionErrors errors = new ActionErrors();
     		errors.add("global", new ActionError("account.already.exists"));
     		this.saveErrors(request, errors);
@@ -118,7 +96,7 @@ public final class CreateAccountAction extends BaseAction {
     	}
     	
     	// Create new account
-    	this.securityMgr.newAccount(naf.getName(), naf.getPassword());
+    	this.getSecurityMgr().newAccount(naf.getName(), naf.getPassword());
     	
     	// Add new account name to request for downstream confirmation JSP
     	request.setAttribute("account.name", naf.getName());

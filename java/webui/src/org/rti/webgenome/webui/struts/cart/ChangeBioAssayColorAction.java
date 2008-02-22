@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-07-18 21:42:48 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.util.ColorUtils;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Change color of a bioassay.
@@ -109,7 +110,9 @@ public final class ChangeBioAssayColorAction extends BaseAction {
     	cc.incrementCount(color);
     	
     	// Persist state
-    	this.persistShoppingCartChanges(cart, request);
+    	if (PageContext.standAloneMode(request)) {
+    		this.getDbService().updateShoppingCart(cart);
+    	}
     	
     	return mapping.findForward("success");
     }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.session;
 
 import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.dao.PrincipalDao;
 
 /**
  * Concrete implementation of <code>SecurityMgr</code>
@@ -64,40 +63,23 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	/** Name of webGenome credential provider domain. */
 	private static final String WEBGENOME_DOMAIN = "webgenome";
 
-	// =======================
-	//      Attributes
-	// =======================
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Facade for transactional database operations. */
+	private WebGenomeDbService dbService = null;
+	
+	//
+	//  I N J E C T O R S
+	//
 	
 	/**
-	 * Data access object for principal data.
-	 * This property should be injected.
+	 * Inject facade for transactional database operations.
+	 * @param dbService Facade for database operations
 	 */
-	private PrincipalDao principalDao = null;
-	
-	
-	// =======================
-	//     Getters/setters
-	// =======================
-	
-	/**
-	 * Set data access object for principal
-	 * data.
-	 * @return Data access object for principal
-	 * data.
-	 */
-	public PrincipalDao getPrincipalDao() {
-		return principalDao;
-	}
-
-
-	/**
-	 * Set data access object for principal
-	 * data.
-	 * @param principalDao Data access object for principal
-	 * data.
-	 */
-	public void setPrincipalDao(final PrincipalDao principalDao) {
-		this.principalDao = principalDao;
+	public void setDbService(final WebGenomeDbService dbService) {
+		this.dbService = dbService;
 	}
 
 
@@ -105,6 +87,9 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	//    Business methods
 	// ================================
 	
+	
+
+
 	/**
 	 * Create a new user account with given user name
 	 * and password.
@@ -126,7 +111,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 					+ name + "' already exists");
 		}
 		Principal p = new Principal(name, password, WEBGENOME_DOMAIN);
-		this.principalDao.save(p);
+		this.dbService.savePrincipal(p);
 		return p;
 	}
 	
@@ -142,7 +127,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 			throw new IllegalArgumentException(
 					"Account name cannot be empty");
 		}
-		return this.principalDao.load(name) != null;
+		return this.dbService.loadPrincipal(name) != null;
 	}
 	
 	
@@ -152,7 +137,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 * should be updated.
 	 */
 	public void update(final Principal principal) {
-		this.principalDao.update(principal);
+		this.dbService.updatePrincipal(principal);
 	}
 	
 	
@@ -163,7 +148,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 * should be deleted.
 	 */
 	public void delete(final Principal principal) {
-		this.principalDao.delete(principal);
+		this.dbService.deletePrincipal(principal);
 	}
 	
 	
@@ -176,7 +161,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 */
 	public Principal login(final String name,
 			final String password) {
-		return this.principalDao.load(name, password,
+		return this.dbService.loadPrincipal(name, password,
 				WEBGENOME_DOMAIN);
 	}
 }

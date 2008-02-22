@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2008-02-14 18:25:45 $
+$Revision: 1.7 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,9 +65,6 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
-import org.rti.webgenome.service.io.ImageFileManager;
-import org.rti.webgenome.service.session.Authenticator;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -82,48 +79,6 @@ public final class LoginAction extends BaseAction {
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(LoginAction.class);
 	
-	/**
-	 * Authenticator of user credentials.
-	 * This property should be injected.
-	 */
-	private Authenticator authenticator = null;
-	
-	/**
-	 * Shopping cart data access object.  This property should
-	 * be injected.
-	 */
-	private ShoppingCartDao shoppingCartDao = null;
-	
-
-	/**
-	 * Set authenticator of user credentials.
-	 * @param authenticator An authenticator
-	 */
-	public void setAuthenticator(final Authenticator authenticator) {
-		this.authenticator = authenticator;
-	}
-	
-	
-	/**
-	 * Set shoppig cart data access object.
-	 * @param shoppingCartDao Shopping cart data access object.
-	 */
-	public void setShoppingCartDao(final ShoppingCartDao shoppingCartDao) {
-		this.shoppingCartDao = shoppingCartDao;
-	}
-	
-	/** Image file manager. */
-    private ImageFileManager imageFileManager = null;
-    
-    /**
-     * Set image file manager.
-     * @param imageFileManager Image file manager.
-     */
-    public void setImageFileManager(
-    		final ImageFileManager imageFileManager) {
-		this.imageFileManager = imageFileManager;
-	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -136,7 +91,7 @@ public final class LoginAction extends BaseAction {
     	LoginForm lf = (LoginForm) form;
     	
     	// Get principal and cache in session
-    	Principal p = this.authenticator.login(lf.getName(),
+    	Principal p = this.getAuthenticator().login(lf.getName(),
     			lf.getPassword());
     	LOGGER.info("User '" + lf.getName() + "' authenticated");
     	if (p == null) {
@@ -153,22 +108,22 @@ public final class LoginAction extends BaseAction {
     	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
     	
     	// Instantiate shopping cart if null
-    	ShoppingCart cart = this.shoppingCartDao.load(
+    	ShoppingCart cart = this.getDbService().loadShoppingCart(
     			p.getName(), p.getDomain());
     	if (cart == null) {
     		cart = new ShoppingCart(p.getName(), p.getDomain());
-    		this.shoppingCartDao.save(cart);
+    		this.getDbService().saveShoppingCart(cart);
     	}
     	
         // TODO: Make this cleaner.
         // Initialize image file manager.  This manager needs
         // to know the absolute path to the directory containing
         // plot files with URL <DOMAIN>:<PORT>/<CONTEXT>/plots
-        if (!this.imageFileManager.isInitialized()) {
+        if (!this.getImageFileManager().isInitialized()) {
 	        String absPlotPath = this.getServlet().
 	        	getServletContext().getRealPath("/plots");
 	        File imageDir = new File(absPlotPath);
-	        this.imageFileManager.init(imageDir);
+	        this.getImageFileManager().init(imageDir);
         }
         
         // Add success message to request

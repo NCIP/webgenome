@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-11-28 19:51:21 $
+$Revision: 1.4 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
 import org.rti.webgenome.domain.RectangularTextFileFormat;
 import org.rti.webgenome.domain.ZipFileMetaData;
-import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -71,19 +70,6 @@ import org.rti.webgenome.webui.util.PageContext;
  */
 public class UploadZipFileAction extends BaseAction {
 	
-	/** Service for file I/O. */
-	private IOService ioService = null;
-	
-	
-	/**
-	 * Set service for file I/O.
-	 * @param ioService File I/O service.
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
-
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -100,7 +86,7 @@ public class UploadZipFileAction extends BaseAction {
 		
 		// Stream file bytes to file on local disk
 		FormFile formFile = adForm.getUploadFile();
-		ZipFileMetaData meta = this.ioService.uploadZipFile(
+		ZipFileMetaData meta = this.getIoService().uploadZipFile(
 				formFile.getInputStream(), formFile.getFileName(),
 				format);
 		

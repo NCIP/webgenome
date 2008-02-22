@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.9 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,7 +59,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
-import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -69,17 +68,6 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public final class RemoveExperimentAction extends BaseAction {
-	
-	/** Service for performing file IO. */
-	private IOService ioService = null;
-	
-	/**
-	 * Sets service for performing IO.
-	 * @param ioService File IO service.
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
 	
 	/**
      * Execute action.
@@ -121,12 +109,12 @@ public final class RemoveExperimentAction extends BaseAction {
     	
     	// Delete all serialized data files, if any
     	if (!exp.dataInMemory()) {
-    		this.ioService.deleteDataFiles(exp);
+    		this.getIoService().deleteDataFiles(exp);
     	}
     	
     	// Update shopping cart persistent state
     	if (PageContext.standAloneMode(request)) {
-    		this.getDbService().removeArraysAndUpdateCart(exp, cart);
+    		this.getDbService().deleteArraysAndUpdateCart(exp, cart);
     	}
     	
         return mapping.findForward("success");

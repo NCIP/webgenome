@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.8 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -68,7 +68,6 @@ import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -80,31 +79,6 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public final class ImportAction extends BaseAction {
-	
-    /** Experiment ID generator. */
-    private IdGenerator experimentIdGenerator = null;
-    
-    /** Bioassay ID generator. */
-    private IdGenerator bioAssayIdGenerator = null;
-    
-	/**
-     * Set bioassay ID generator.
-     * @param bioAssayIdGenerator ID generator
-     */
-	public void setBioAssayIdGenerator(
-			final IdGenerator bioAssayIdGenerator) {
-		this.bioAssayIdGenerator = bioAssayIdGenerator;
-	}
-
-
-	/**
-	 * Set experiment ID generator.
-	 * @param experimentIdGenerator ID generator
-	 */
-	public void setExperimentIdGenerator(
-			final IdGenerator experimentIdGenerator) {
-		this.experimentIdGenerator = experimentIdGenerator;
-	}
 	
 	/**
      * Execute action.
@@ -182,18 +156,20 @@ public final class ImportAction extends BaseAction {
         ColorChooser colorChooser = cart.getBioassayColorChooser();
         Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
-        	Long expId = this.experimentIdGenerator.nextId();
+        	Long expId = this.getExperimentIdGenerator().nextId();
         	exp.setId(expId);
         	exp.setOrganism(org);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
-        		ba.setId(this.bioAssayIdGenerator.nextId());
+        		ba.setId(this.getBioAssayIdGenerator().nextId());
         	}
         }
         
         // Put data in shopping cart
         cart.add(experiments);
-        this.persistShoppingCartChanges(cart, request);
+        if (PageContext.standAloneMode(request)) {
+        	this.getDbService().updateShoppingCart(cart);
+        }
 
     	return mapping.findForward("success");
     }

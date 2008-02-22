@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.7 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -195,7 +195,7 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.getShoppingCart(this.getUserId(),
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
 				this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();

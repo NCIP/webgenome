@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.7 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,6 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -75,17 +74,6 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public class ShowMainUploadFormSetupAction extends BaseAction {
-	
-	/** Service for file I/O. */
-	private IOService ioService = null;	
-	
-	/**
-	 * Set service for file I/O.
-	 * @param ioService File I/O service.
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -100,11 +88,11 @@ public class ShowMainUploadFormSetupAction extends BaseAction {
 		Set<String> allCols = new HashSet<String>();
 		if (upload.getReporterLocalFileName() == null) {
 			if (upload.getDataFileMetaData() != null) {
-				allCols = this.ioService.getColumnHeadings(
+				allCols = this.getIoService().getColumnHeadings(
 						upload.getDataFileMetaData());
 			}
 		} else {
-			allCols = this.ioService.getColumnHeadings(
+			allCols = this.getIoService().getColumnHeadings(
 					upload.getReporterLocalFileName(),
 					upload.getReporterFileFormat());
 		}

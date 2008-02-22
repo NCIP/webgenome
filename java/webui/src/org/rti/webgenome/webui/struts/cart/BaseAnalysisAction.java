@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.8 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,13 +64,9 @@ import org.rti.webgenome.analysis.BadUserConfigurablePropertyException;
 import org.rti.webgenome.domain.AnalysisDataSourceProperties;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.QuantitationType;
-import org.rti.webgenome.service.analysis.AnalysisService;
 import org.rti.webgenome.service.analysis.DataTransformer;
 import org.rti.webgenome.service.analysis.InMemoryDataTransformer;
 import org.rti.webgenome.service.analysis.SerializedDataTransformer;
-import org.rti.webgenome.service.io.DataFileManager;
-import org.rti.webgenome.service.io.IOService;
-import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -82,63 +78,10 @@ import org.rti.webgenome.webui.struts.BaseAction;
  */
 public class BaseAnalysisAction extends BaseAction {
 	
-	//
-	//  A T T R I B U T E S
-	//
-	
-	/** Service for performing analyses. */
-	private AnalysisService analysisService = null;
 
 	/** Analytic operation factory. */
 	private final AnalyticOperationFactory analyticOperationFactory =
 		new AnalyticOperationFactory();
-	
-	/** Manages serialized data files. */
-	private DataFileManager dataFileManager = null;
-	
-	/** Manages analysis jobs performed in the background. */
-	private JobManager jobManager = null;
-	
-	/** File I/O service. */
-	private IOService ioService = null;
-	
-	//
-	//  G E T T E R S / S E T T E R S
-	//
-	
-	/**
-	 * Set service for performing analysis via injection.
-	 * @param analysisService Service for performing analysis.
-	 */
-	public void setAnalysisService(final AnalysisService analysisService) {
-		this.analysisService = analysisService;
-	}
-	
-	/**
-	 * Set manager for serialized data files.
-	 * @param dataFileManager Data file manager
-	 */
-	public void setDataFileManager(final DataFileManager dataFileManager) {
-		this.dataFileManager = dataFileManager;
-	}
-	
-	
-	/**
-	 * Inject data file I/O service.
-	 * @param ioService Data file I/O service
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
-	
-	/**
-	 * Get file I/O service.
-	 * @return File I/O service
-	 */
-	protected IOService getIoService() {
-		return ioService;
-	}
-
 
 	/**
 	 * Get a factory for creating anlaytic operations.
@@ -148,33 +91,6 @@ public class BaseAnalysisAction extends BaseAction {
 		return this.analyticOperationFactory;
 	}
 	
-	/**
-	 * Get service for performing analytic operations.
-	 * @return Analysis service
-	 */
-	protected AnalysisService getAnalysisService() {
-		return this.analysisService;
-	}
-	
-	/**
-	 * Get manager for operations performed in background.
-	 * @return Job manager.
-	 */
-	protected JobManager getJobManager() {
-		return jobManager;
-	}
-
-	/**
-	 * Set manager for jobs performed in background.
-	 * @param jobManager Job manager.
-	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
-	}
-	
-	//
-	//  O T H E R    M E T H O D S
-	//
 
 	/**
 	 * Set user specified analytic operation parameters
@@ -297,7 +213,7 @@ public class BaseAnalysisAction extends BaseAction {
     		transformer = new InMemoryDataTransformer();
     	} else {
     		transformer = new SerializedDataTransformer(
-    				this.dataFileManager);
+    				this.getDataFileManager());
     	}
 		return transformer;
 	}

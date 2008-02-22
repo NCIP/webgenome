@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.9 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,9 +75,7 @@ import org.rti.webgenome.domain.SimulatedDataSourceProperties;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.client.ClientDataService;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.service.session.SessionMode;
-import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.SessionTimeoutException;
@@ -104,46 +102,6 @@ public final class ClientPlotAction extends BaseAction {
 	private static final Logger LOGGER =
 		Logger.getLogger(ClientPlotAction.class);
 	
-    /** Experiment ID generator. */
-    private IdGenerator experimentIdGenerator = null;
-    
-    /** Bioassay ID generator. */
-    private IdGenerator bioAssayIdGenerator = null;
-    
-    /** Image file manager. */
-    private ImageFileManager imageFileManager = null;
-    
-
-
-    /**
-     * Set image file manager.
-     * @param imageFileManager Image file manager.
-     */
-    public void setImageFileManager(
-    		final ImageFileManager imageFileManager) {
-		this.imageFileManager = imageFileManager;
-	}
-
-
-    /**
-     * Set bioassay ID generator.
-     * @param bioAssayIdGenerator ID generator
-     */
-	public void setBioAssayIdGenerator(
-			final IdGenerator bioAssayIdGenerator) {
-		this.bioAssayIdGenerator = bioAssayIdGenerator;
-	}
-
-
-	/**
-	 * Set experiment ID generator.
-	 * @param experimentIdGenerator ID generator
-	 */
-	public void setExperimentIdGenerator(
-			final IdGenerator experimentIdGenerator) {
-		this.experimentIdGenerator = experimentIdGenerator;
-	}
-
 
 	/**
      * Execute action.
@@ -237,12 +195,12 @@ public final class ClientPlotAction extends BaseAction {
         ColorChooser colorChooser = cart.getBioassayColorChooser();
         Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
-        	Long expId = this.experimentIdGenerator.nextId();
+        	Long expId = this.getExperimentIdGenerator().nextId();
         	exp.setId(expId);
         	exp.setOrganism(org);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
-        		ba.setId(this.bioAssayIdGenerator.nextId());
+        		ba.setId(this.getBioAssayIdGenerator().nextId());
         	}
         }
         
@@ -253,18 +211,18 @@ public final class ClientPlotAction extends BaseAction {
         // Initialize image file manager.  This manager needs
         // to know the absolute path to the directory containing
         // plot files with URL <DOMAIN>:<PORT>/<CONTEXT>/plots
-        if (!this.imageFileManager.isInitialized()) {
+        if (!this.getImageFileManager().isInitialized()) {
 	        String absPlotPath = this.getServlet().
 	        	getServletContext().getRealPath("/plots");
 	        File imageDir = new File(absPlotPath);
-	        this.imageFileManager.init(imageDir);
+	        this.getImageFileManager().init(imageDir);
         }
         
         
         // Set image file manager property of shopping cart
         // so that image files will be deleted when the users
         // session ends
-        cart.setImageFileManager(this.imageFileManager);
+        cart.setImageFileManager(this.getImageFileManager());
         
         // Set session mode
         PageContext.setSessionMode(request, SessionMode.CLIENT);

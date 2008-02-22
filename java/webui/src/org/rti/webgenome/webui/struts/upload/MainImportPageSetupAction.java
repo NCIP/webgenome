@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-15 20:03:50 $
+$Revision: 1.2 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,7 +57,6 @@ import org.apache.log4j.Logger;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.rti.webgenome.service.data.DataSource;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -73,29 +70,6 @@ public class MainImportPageSetupAction extends BaseAction {
 	private static final Logger LOGGER =
 		Logger.getLogger(MainImportPageSetupAction.class);
 
-	//
-	//  A T T R I B U T E S
-	//
-	
-	/** Index of configured external data sources. */
-	private Map<String, DataSource> dataSourcesIndex = null;
-	
-	//
-	//  I N J E C T O R S
-	//
-	
-	/**
-	 * Inject a data source index.
-	 * @param dataSourcesIndex An index to external data sources.
-	 */
-	public void setDataSourcesIndex(
-			final Map<String, DataSource> dataSourcesIndex) {
-		this.dataSourcesIndex = dataSourcesIndex;
-	}
-	
-	//
-	//  O V E R R I D E S
-	//
 	
 	/**
 	 * {@inheritDoc}
@@ -106,7 +80,7 @@ public class MainImportPageSetupAction extends BaseAction {
 	        final HttpServletResponse response
 	    ) throws Exception {
 		LOGGER.info("Getting list of configured data sources");
-		request.setAttribute("data.sources.index", this.dataSourcesIndex);
+		request.setAttribute("data.sources.index", this.getDataSourcesIndex());
 		return mapping.findForward("success");
 	}
 }

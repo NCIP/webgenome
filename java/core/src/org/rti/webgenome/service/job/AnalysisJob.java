@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.6 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -210,7 +210,7 @@ public class AnalysisJob extends AbstractJob {
 	@Override
 	public void execute(final JobServices jobServices) {
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.getShoppingCart(this.getUserId(),
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
 				this.getUserDomain());
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();

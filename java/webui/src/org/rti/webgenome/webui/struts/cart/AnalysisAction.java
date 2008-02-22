@@ -1,6 +1,6 @@
 /*
-$Revision: 1.13 $
-$Date: 2008-01-05 00:00:24 $
+$Revision: 1.14 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -147,7 +147,9 @@ public final class AnalysisAction extends BaseAnalysisAction {
 	    			experiments, op,
 	    			cart, outputExperimentNames, outputBioAssayNames,
 	    			transformer);
-	    	this.persistShoppingCartChanges(cart, request);
+	    	if (PageContext.standAloneMode(request)) {
+	    		this.getDbService().updateShoppingCart(cart);
+	    	}
 	    	forward = mapping.findForward("non.batch");
 	    	
 	    // Case: Perform in background

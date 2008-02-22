@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-20 22:07:14 $
+$Revision: 1.4 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,7 @@ import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Changes the name of an experiment, bioassay,
@@ -110,7 +111,10 @@ public final class NameChangeAction extends BaseAction {
     		plot.getPlotParameters().setPlotName(name);
     	}
     	
-    	this.persistShoppingCartChanges(cart, request);
+    	if (PageContext.standAloneMode(request)) {
+    		this.getDbService().updateShoppingCart(cart);
+    	}
+    	
     	return mapping.findForward("success");
     }
 }

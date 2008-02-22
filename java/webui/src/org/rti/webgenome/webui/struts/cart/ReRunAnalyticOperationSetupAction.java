@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-06 16:48:10 $
+$Revision: 1.7 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -117,7 +117,6 @@ public class ReRunAnalyticOperationSetupAction extends BaseAction {
 		request.setAttribute("experimentId", expId.toString());
 		request.setAttribute("operationKey", opKey);
 		
-		this.persistShoppingCartChanges(cart, request);
 		return mapping.findForward("success");
 	}
 }

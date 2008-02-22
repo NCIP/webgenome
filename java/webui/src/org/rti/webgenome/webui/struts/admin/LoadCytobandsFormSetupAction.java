@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.CytologicalMap;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.service.dao.CytologicalMapDao;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -73,19 +72,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  */
 public final class LoadCytobandsFormSetupAction extends BaseAction {
 	
-	/** Cytological map data access object. */
-	private CytologicalMapDao cytologicalMapDao = null;
-	
-	
-	/**
-	 * Set cytological map data access object.
-	 * @param cytologicalMapDao Cytological map data access object.
-	 */
-	public void setCytologicalMapDao(
-			final CytologicalMapDao cytologicalMapDao) {
-		this.cytologicalMapDao = cytologicalMapDao;
-	}
-
 
 	/**
      * Execute action.
@@ -110,7 +96,8 @@ public final class LoadCytobandsFormSetupAction extends BaseAction {
     	request.setAttribute("organisms",  organisms);
     	
     	// Get all organisms containing cytological maps and attach to request
-    	List<CytologicalMap> cytologicalMaps = this.cytologicalMapDao.loadAll();
+    	List<CytologicalMap> cytologicalMaps =
+    		this.getCytologicalMapDao().loadAll();
     	Set<Organism> organismsWithMap = new HashSet<Organism>();
     	for (CytologicalMap map : cytologicalMaps) {
     		organismsWithMap.add(map.getOrganism());

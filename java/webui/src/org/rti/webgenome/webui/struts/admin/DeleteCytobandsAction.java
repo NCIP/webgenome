@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -57,7 +57,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.service.dao.CytologicalMapDao;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 /**
@@ -66,19 +65,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public final class DeleteCytobandsAction extends BaseAction {
-	
-	/** Cytological map data access object. */
-	private CytologicalMapDao cytologicalMapDao = null;
-	
-	
-	/**
-	 * Set cytological map data access object.
-	 * @param cytologicalMapDao Cytological map data access object.
-	 */
-	public void setCytologicalMapDao(
-			final CytologicalMapDao cytologicalMapDao) {
-		this.cytologicalMapDao = cytologicalMapDao;
-	}
 
 
 	/**
@@ -106,7 +92,7 @@ public final class DeleteCytobandsAction extends BaseAction {
     	Organism org = this.getDbService().loadOrganism(orgId);
     	
     	// Remove maps
-    	this.cytologicalMapDao.deleteAll(org);
+    	this.getCytologicalMapDao().deleteAll(org);
     	
     	return mapping.findForward("success");
     }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-15 23:28:58 $
+$Revision: 1.2 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,8 +50,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.upload;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,30 +72,6 @@ public class InitRemoteSessionAction extends BaseAction {
 	/** Logger. */
 	private static final Logger LOGGER =
 		Logger.getLogger(InitRemoteSessionAction.class);
-
-	//
-	//  A T T R I B U T E S
-	//
-	
-	/** Index of configured external data sources. */
-	private Map<String, DataSource> dataSourcesIndex = null;
-	
-	//
-	//  I N J E C T O R S
-	//
-	
-	/**
-	 * Inject a data source index.
-	 * @param dataSourcesIndex An index to external data sources.
-	 */
-	public void setDataSourcesIndex(
-			final Map<String, DataSource> dataSourcesIndex) {
-		this.dataSourcesIndex = dataSourcesIndex;
-	}
-	
-	//
-	//  O V E R R I D E S
-	//
 	
 	/**
 	 * {@inheritDoc}
@@ -109,7 +83,7 @@ public class InitRemoteSessionAction extends BaseAction {
 	    ) throws Exception {
 		LOGGER.info("Initializing session with remote data source");
 		String dataSourceKey = request.getParameter("dataSourceKey");
-		DataSource dataSource = this.dataSourcesIndex.get(dataSourceKey);
+		DataSource dataSource = this.getDataSourcesIndex().get(dataSourceKey);
 		DataSourceSession sess = new DataSourceSession(dataSource);
 		PageContext.setDataSourceSession(request, sess);
 		request.setAttribute("data.source.name", dataSource.getDisplayName());

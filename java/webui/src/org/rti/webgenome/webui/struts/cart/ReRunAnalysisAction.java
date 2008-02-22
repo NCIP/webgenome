@@ -1,6 +1,6 @@
 /*
-$Revision: 1.14 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.15 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,11 +79,6 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  */
 public class ReRunAnalysisAction extends BaseAnalysisAction {
 	
-	
-	//
-	//     OVERRIDES
-	//
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -119,7 +114,9 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
 	    	Set<String> replacedFiles =
 	    		this.getAnalysisService().rePerformAnalyticOperation(
 	    			exp, op, transformer);
-	    	this.persistShoppingCartChanges(cart, request);
+	    	if (PageContext.standAloneMode(request)) {
+	    		this.getDbService().updateShoppingCart(cart);
+	    	}
 	    	this.getIoService().deleteDataFiles(replacedFiles);
 	    	forward = mapping.findForward("non.batch");
 	    	

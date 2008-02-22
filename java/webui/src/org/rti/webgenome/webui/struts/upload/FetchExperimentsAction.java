@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.4 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -65,8 +65,6 @@ import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.data.DataSourceSession;
-import org.rti.webgenome.service.io.IOService;
-import org.rti.webgenome.service.util.IdGenerator;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
@@ -81,41 +79,6 @@ public class FetchExperimentsAction extends BaseAction {
 	private static final Logger LOGGER =
 		Logger.getLogger(FetchExperimentsAction.class);
 	
-    /** Experiment ID generator. */
-    private IdGenerator experimentIdGenerator = null;
-    
-    /** Bioassay ID generator. */
-    private IdGenerator bioAssayIdGenerator = null;
-    
-    /** Service for file I/O related operations. */
-    private IOService ioService = null;
-    
-	/**
-     * Set bioassay ID generator.
-     * @param bioAssayIdGenerator ID generator
-     */
-	public void setBioAssayIdGenerator(
-			final IdGenerator bioAssayIdGenerator) {
-		this.bioAssayIdGenerator = bioAssayIdGenerator;
-	}
-
-
-	/**
-	 * Set experiment ID generator.
-	 * @param experimentIdGenerator ID generator
-	 */
-	public void setExperimentIdGenerator(
-			final IdGenerator experimentIdGenerator) {
-		this.experimentIdGenerator = experimentIdGenerator;
-	}
-	
-	/**
-	 * Inject an IOService bean.
-	 * @param ioService IOService to inject
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
 	
 	// TODO: Make the organism a parameter that gets passed in
 	/**
@@ -136,18 +99,20 @@ public class FetchExperimentsAction extends BaseAction {
         ColorChooser colorChooser = cart.getBioassayColorChooser();
         Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
-        	Long expId = this.experimentIdGenerator.nextId();
+        	Long expId = this.getExperimentIdGenerator().nextId();
         	exp.setId(expId);
         	exp.setOrganism(org);
-        	this.ioService.convertBioAssays(exp);
+        	this.getIoService().convertBioAssays(exp);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
-        		ba.setId(this.bioAssayIdGenerator.nextId());
+        		ba.setId(this.getBioAssayIdGenerator().nextId());
         		ba.setOrganism(org);
         	}
         }
 		cart.add(experiments);
-		this.persistShoppingCartChanges(cart, request);
+		if (PageContext.standAloneMode(request)) {
+			this.getDbService().updateShoppingCart(cart);
+		}
 		ActionForward forward = mapping.findForward("non.batch");
 		return forward;
 	}

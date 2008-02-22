@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,7 +63,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.AnnotatedGenomeFeature;
 import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.service.dao.AnnotatedGenomeFeatureDao;
 import org.rti.webgenome.service.io.UcscGeneReader;
 import org.rti.webgenome.webui.struts.BaseAction;
 
@@ -78,44 +77,10 @@ import org.rti.webgenome.webui.struts.BaseAction;
  */
 public final class LoadGenesAction extends BaseAction {
 	
-	//
-	//     STATICS
-	//
-	
 	/** Logger. */
 	private static final Logger LOGGER =
 		Logger.getLogger(LoadGenesAction.class);
 	
-	//
-	//     ATTRIBUTES
-	//
-	
-	/**
-	 * DAO for annotated genome features. This property
-	 * must be set using dependency injection.
-	 */
-	private AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao = null;
-
-	
-	//
-	//     SETTERS (for dependency injection)
-	//
-	
-	/**
-	 * Setter for annotated genome feature data access object.
-	 * This property
-	 * must be set using dependency injection.
-	 * @param annotatedGenomeFeatureDao Annotated genome feature
-	 * data access object
-	 */
-	public void setAnnotatedGenomeFeatureDao(
-			final AnnotatedGenomeFeatureDao annotatedGenomeFeatureDao) {
-		this.annotatedGenomeFeatureDao = annotatedGenomeFeatureDao;
-	}
-	
-	//
-	//     OVERLOADS
-	//
 
 	/**
      * Execute action.
@@ -149,7 +114,7 @@ public final class LoadGenesAction extends BaseAction {
     	while (geneReader.hasNext()) {
     		try {
     			AnnotatedGenomeFeature feat = geneReader.next();
-    			this.annotatedGenomeFeatureDao.save(feat);
+    			this.getAnnotatedGenomeFeatureDao().save(feat);
     		} catch (Exception e) {
     			LOGGER.warn("Unable to load feature: "
     					+ e.getMessage());

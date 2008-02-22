@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.9 $
+$Date: 2008-02-22 18:24:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,9 +64,7 @@ import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.io.IOService;
 import org.rti.webgenome.service.job.DataImportJob;
-import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.units.BpUnits;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -77,30 +75,6 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  * @author dhall
  */
 public class UploadAction extends BaseAction {
-	
-	/** Service for file I/O. */
-	private IOService ioService = null;
-	
-	/** Manages analysis jobs performed in the background. */
-	private JobManager jobManager = null;
-	
-
-	/**
-	 * Set manager for jobs performed in background.
-	 * @param jobManager Job manager.
-	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
-	}
-	
-	
-	/**
-	 * Set service for file I/O.
-	 * @param ioService File I/O service.
-	 */
-	public void setIoService(final IOService ioService) {
-		this.ioService = ioService;
-	}
 	
 
 	/**
@@ -125,18 +99,18 @@ public class UploadAction extends BaseAction {
 						uForm.getQuantitationTypeId()));
 		ActionForward forward = null;
 		if (ProcessingModeDecider.processInBackground(
-				upload, request, this.ioService)) {
+				upload, request, this.getIoService())) {
 			Principal principal = PageContext.getPrincipal(request);
 			DataImportJob job = new DataImportJob(upload,
 					principal.getName(), principal.getDomain());
-			this.jobManager.add(job);
+			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("import.job"));
     		this.saveMessages(request, messages);
 			forward = mapping.findForward("batch");
 		} else {
 			ShoppingCart cart = this.getShoppingCart(request);
-			Experiment exp = this.ioService.loadSmdData(upload, cart);
+			Experiment exp = this.getIoService().loadSmdData(upload, cart);
 			this.getDbService().addArraysAndUpdateCart(exp, cart);
 			forward = mapping.findForward("non.batch");
 		}

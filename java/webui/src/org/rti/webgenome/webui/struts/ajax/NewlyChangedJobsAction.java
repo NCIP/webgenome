@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.4 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.service.job.Job;
-import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
@@ -79,19 +78,6 @@ public class NewlyChangedJobsAction extends BaseAction {
 	private static final Logger LOGGER =
 		Logger.getLogger(NewlyChangedJobsAction.class);
 	
-	/** Manager of compute-intensive jobs. */
-	private JobManager jobManager = null;
-	
-	
-	/**
-	 * Set manager of compute-intensive jobs.
-	 * @param jobManager Job manager
-	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
-	}
-
-
 
 	/**
 	 * {@inheritDoc}
@@ -106,9 +92,9 @@ public class NewlyChangedJobsAction extends BaseAction {
 		Collection<Job> startedJobs = new ArrayList<Job>();
 		try {
 			Principal principal = PageContext.getPrincipal(request);
-			completedJobs = this.jobManager.getNewlyCompletedJobs(
+			completedJobs = this.getJobManager().getNewlyCompletedJobs(
 					principal.getName(), principal.getDomain());
-			startedJobs = this.jobManager.getNewlyStartedJobs(
+			startedJobs = this.getJobManager().getNewlyStartedJobs(
 					principal.getName(), principal.getDomain());
 		} catch (SessionTimeoutException e) {
 			LOGGER.info("Browser requesting completed jobs "

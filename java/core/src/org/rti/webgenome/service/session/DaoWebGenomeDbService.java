@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.2 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -59,13 +59,17 @@ import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ArrayDao;
 import org.rti.webgenome.service.dao.ExperimentDao;
 import org.rti.webgenome.service.dao.OrganismDao;
 import org.rti.webgenome.service.dao.PlotDao;
+import org.rti.webgenome.service.dao.PrincipalDao;
 import org.rti.webgenome.service.dao.ShoppingCartDao;
 import org.rti.webgenome.service.io.IOService;
+import org.rti.webgenome.service.job.Job;
+import org.rti.webgenome.service.job.JobDao;
 
 /**
  * Implementation of <code>WebGenomeDbSerivce</code>
@@ -97,6 +101,12 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	/** Plot data access object. */
 	private PlotDao plotDao = null;
 	
+	/** Principal data access object. */
+	private PrincipalDao principalDao = null;
+	
+	/** Job data access object. */
+	private JobDao jobDao = null;
+	
 	
 	//
 	//  I N J E C T O R S
@@ -117,6 +127,33 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	 */
 	public void setExperimentDao(final ExperimentDao experimentDao) {
 		this.experimentDao = experimentDao;
+	}
+
+
+	/**
+	 * Inject data file I/O service.
+	 * @param ioService Data file I/O service
+	 */
+	public void setIoService(final IOService ioService) {
+		this.ioService = ioService;
+	}
+
+
+	/**
+	 * Inject job data access object.
+	 * @param jobDao Job data access object
+	 */
+	public void setJobDao(final JobDao jobDao) {
+		this.jobDao = jobDao;
+	}
+
+
+	/**
+	 * Inject principal data access object.
+	 * @param principalDao Principal data access object
+	 */
+	public void setPrincipalDao(final PrincipalDao principalDao) {
+		this.principalDao = principalDao;
 	}
 
 
@@ -162,10 +199,19 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ShoppingCart getShoppingCart(
+	public ShoppingCart loadShoppingCart(
 			final String user, final String domain) {
 		return this.shoppingCartDao.load(user, domain);
 	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public void saveShoppingCart(final ShoppingCart cart) {
+		this.shoppingCartDao.save(cart);
+	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -177,7 +223,7 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeArraysAndUpdateCart(
+	public void deleteArraysAndUpdateCart(
 			final Experiment experiment, final ShoppingCart cart) {
 		Set<Array> removeList = new HashSet<Array>();
     	for (BioAssay ba : experiment.getBioAssays()) {
@@ -269,6 +315,87 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	 */
 	public boolean isPlotReferenced(final Long id) {
 		return this.plotDao.isReferenced(id);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void savePrincipal(final Principal principal) {
+		this.principalDao.save(principal);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Principal loadPrincipal(final String name) {
+		return this.principalDao.load(name);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void updatePrincipal(final Principal principal) {
+		this.principalDao.update(principal);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void deletePrincipal(final Principal principal) {
+		this.principalDao.delete(principal);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Principal loadPrincipal(final String userName, final String password,
+			final String domain) {
+		return this.principalDao.load(userName, password, domain);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<String> getAllValidImageFileNames() {
+		return this.shoppingCartDao.getAllImageFileNames();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<String> getAllDataFileNames() {
+		return this.shoppingCartDao.getAllDataFileNames();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Collection<Job> loadAllJobs() {
+		return this.jobDao.loadAll();
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void saveOrUpdateJob(final Job job) {
+		this.jobDao.saveOrUpdate(job);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void deleteJob(final Job job) {
+		this.jobDao.delete(job);
 	}
 	
 

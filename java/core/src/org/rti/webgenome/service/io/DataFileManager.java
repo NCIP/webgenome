@@ -1,6 +1,6 @@
 /*
-$Revision: 1.8 $
-$Date: 2007-12-07 19:52:03 $
+$Revision: 1.9 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,6 +53,7 @@ package org.rti.webgenome.service.io;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -79,7 +80,7 @@ import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.graphics.event.MouseOverStripes;
 import org.rti.webgenome.graphics.io.ClickBoxes;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 import org.rti.webgenome.util.StopWatch;
 import org.rti.webgenome.util.SystemUtils;
 
@@ -142,17 +143,17 @@ public final class DataFileManager {
     /**
      * Get rid of any data files not referenced by data in
      * shopping cart.
-     * @param shoppingCartDao Shopping cart data access object
+     * @param dbService Facade for transactional database operations
      */
-    public void purgeOrphanDataFiles(final ShoppingCartDao shoppingCartDao) {
+    public void purgeOrphanDataFiles(final WebGenomeDbService dbService) {
     	File dir = new File(this.dataDirectoryPath);
     	if (!dir.exists() || !dir.isDirectory()) {
     		throw new WebGenomeSystemException(
     				"Invalid data directory: " + this.dataDirectoryPath);
     	}
     	File[] files = dir.listFiles();
-    	Set<String> referencedFiles =
-    		shoppingCartDao.getAllDataFileNames();
+    	Collection<String> referencedFiles =
+    		dbService.getAllDataFileNames();
     	for (int i = 0; i < files.length; i++) {
     		File file = files[i];
     		String fName = file.getName();

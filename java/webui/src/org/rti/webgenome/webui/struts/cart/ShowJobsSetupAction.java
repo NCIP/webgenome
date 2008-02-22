@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.service.job.Job;
+import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
@@ -68,7 +69,7 @@ import org.rti.webgenome.webui.util.PageContext;
  * @author dhall
  *
  */
-public class ShowJobsSetupAction extends BaseJobAction {
+public class ShowJobsSetupAction extends BaseAction {
 
 	
 	/**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-03-29 18:02:05 $
+$Revision: 1.3 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,7 +62,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
-import org.rti.webgenome.service.dao.ShoppingCartDao;
+import org.rti.webgenome.service.session.WebGenomeDbService;
 import org.rti.webgenome.util.SystemUtils;
 
 /**
@@ -108,8 +108,8 @@ public class ImageFileManager implements Serializable {
 	/** File name generator. */
 	private UniqueFileNameGenerator fileNameGenerator;
 	
-	/** Shopping cart DAO. */
-	private ShoppingCartDao shoppingCartDao = null;
+	/** Facade for transactional database operations. */
+	private WebGenomeDbService dbService = null;
 	
 	
 	// ============================
@@ -124,14 +124,13 @@ public class ImageFileManager implements Serializable {
 		return initialized;
 	}
 	
-	
 	/**
-	 * Set shopping cart data access object.
-	 * @param shoppingCartDao Shopping cart data access object.
+	 * Set facade for transactional database operations.
+	 * @param dbService Facade for transactional database
+	 * operations
 	 */
-	public final void setShoppingCartDao(
-			final ShoppingCartDao shoppingCartDao) {
-		this.shoppingCartDao = shoppingCartDao;
+	public void setDbService(final WebGenomeDbService dbService) {
+		this.dbService = dbService;
 	}
 
 
@@ -139,6 +138,11 @@ public class ImageFileManager implements Serializable {
 	//     Constructors
 	// ================================
 	
+
+	
+
+
+
 
 	/**
 	 * Constructor.
@@ -185,7 +189,7 @@ public class ImageFileManager implements Serializable {
 		
 		// Purge directory of unused image files
 		Collection<String> filesToSave =
-			this.shoppingCartDao.getAllImageFileNames();
+			this.dbService.getAllValidImageFileNames();
 		this.purge(filesToSave, directory);
 		
 		// Initialize properties
@@ -199,17 +203,17 @@ public class ImageFileManager implements Serializable {
 	/**
 	 * Constructor.
 	 * @param directoryPath Path to directory containing image files.
-	 * @param shoppingCartDao Shopping cart data access object.
+	 * @param dbService Facade for transactional database operations
 	 */
 	public ImageFileManager(final String directoryPath,
-			final ShoppingCartDao shoppingCartDao) {
+			final WebGenomeDbService dbService) {
 		
 		// Make sure args okay
 		if (directoryPath == null) {
 			throw new IllegalArgumentException("Invalid directory 'null'");
 		}
 		File directory = new File(directoryPath);
-		this.shoppingCartDao = shoppingCartDao;
+		this.dbService = dbService;
 		this.init(directory);
 	}
 	
@@ -260,7 +264,8 @@ public class ImageFileManager implements Serializable {
 		try {
 			ImageIO.write(img, IMAGE_TYPE, file);
 		} catch (IOException e) {
-			throw new WebGenomeSystemException("Error writing image to file", e);
+			throw new WebGenomeSystemException(
+					"Error writing image to file", e);
 		}
 		return fileName;
 	}

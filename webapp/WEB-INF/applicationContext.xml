@@ -163,19 +163,59 @@
   	<!--      Service beans                  -->
   	<!-- =================================== -->
   	
-<!-- Service for performing transactions on webgenome db -->
-  	<bean id="dbService"
+<!-- IO Service -->
+	<bean id="ioService"
+		class="org.rti.webgenome.service.io.IOService">
+		<constructor-arg>
+			<value>${file.uploading.working.dir}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="dataFileManager"/>
+		</constructor-arg>
+		<property name="bioAssayIdGenerator">
+			<ref bean="bioAssayIdGenerator"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
+		</property>
+	</bean>
+	
+<!-- Transaction manager -->
+  	<bean id="txManager"
+  		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>
+	
+<!-- Facade for performing operations on webgenome db -->
+  	<bean id="dbServiceTarget"
   		class="org.rti.webgenome.service.session.DaoWebGenomeDbService">
   		<property name="arrayDao" ref="arrayDao"/>
   		<property name="shoppingCartDao" ref="shoppingCartDao"/>
   		<property name="experimentDao" ref="experimentDao"/>
   		<property name="organismDao" ref="organismDao"/>
   		<property name="plotDao" ref="plotDao"/>
+  		<property name="principalDao" ref="principalDao"/>
+  		<property name="jobDao" ref="jobDao"/>
+  		<property name="ioService" ref="ioService"/>
   	</bean>
+  	
+<!-- Transaction proxy for performing operations on webgenome db -->
+	<bean id="dbService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="dbServiceTarget"/>
+		<property name="transactionManager" ref="txManager"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS, readOnly</prop>
+				<prop key="load*">PROPAGATION_SUPPORTS, readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED, ISOLATION_SERIALIZABLE, -java.lang.Exception</prop>
+			</props>
+		</property>
+	</bean>
 
 <!-- Security manager -->
 	<bean id="securityMgr" class="org.rti.webgenome.service.session.SecurityMgrImpl">
-		<property name="principalDao"><ref bean="principalDao"/></property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 	
 <!-- Special authenticator for a test account -->
@@ -238,9 +278,7 @@ below should probably be configurable somehow. -->
 <!-- Image file manager -->
 	<bean id="imageFileManager"
 		class="org.rti.webgenome.service.io.ImageFileManager">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
+		<property name="dbService" ref="dbService"/>
 	</bean>
 	
 <!-- Data file manager -->
@@ -262,23 +300,6 @@ below should probably be configurable somehow. -->
 		</property>
 		<property name="annotatedGenomeFeatureDao">
 			<ref bean="annotatedGenomeFeatureDao"/>
-		</property>
-	</bean>
-	
-<!-- IO Service -->
-	<bean id="ioService"
-		class="org.rti.webgenome.service.io.IOService">
-		<constructor-arg>
-			<value>${file.uploading.working.dir}</value>
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="dataFileManager"/>
-		</constructor-arg>
-		<property name="bioAssayIdGenerator">
-			<ref bean="bioAssayIdGenerator"/>
-		</property>
-		<property name="experimentIdGenerator">
-			<ref bean="experimentIdGenerator"/>
 		</property>
 	</bean>
 	
@@ -317,7 +338,7 @@ below should probably be configurable somehow. -->
 			<ref bean="dbService"/>
 		</property>
 		<constructor-arg>
-			<ref bean="jobDao"/>
+			<ref bean="dbService"/>
 		</constructor-arg>
 	</bean>
 
@@ -338,480 +359,287 @@ below should probably be configurable somehow. -->
 	<!--        Action beans                        -->
 	<!-- ========================================== -->
 	
+<!-- Base action -->
+	<bean name="baseAction" class="org.rti.webgenome.webui.struts.BaseAction"
+		abstract="true">
+		<property name="dbService" ref="dbService"/>
+		<property name="cytologicalMapDao" ref="cytologicalMapDao"/>
+		<property name="annotatedGenomeFeatureDao" ref="annotatedGenomeFeatureDao"/>
+		<property name="jobManager" ref="jobManager"/>
+		<property name="analysisService" ref="analysisService"/>
+		<property name="dataFileManager" ref="dataFileManager"/>
+		<property name="ioService" ref="ioService"/>
+		<property name="experimentIdGenerator" ref="experimentIdGenerator"/>
+		<property name="bioAssayIdGenerator" ref="bioAssayIdGenerator"/>
+		<property name="plotService" ref="plotService"/>
+		<property name="imageFileManager" ref="imageFileManager"/>
+		<property name="dataSourcesIndex" ref="dataSourcesIndex"/>
+		<property name="securityMgr" ref="securityMgr"/>
+		<property name="authenticator" ref="authenticator"/>
+	</bean>
+	
 <!-- Validate login -->
 	<bean name="/user/validateLogin"
-		class="org.rti.webgenome.webui.struts.user.LoginAction">
-		<property name="authenticator"><ref bean="authenticator"/></property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="imageFileManager">
-			<ref bean="imageFileManager"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.user.LoginAction"
+		parent="baseAction"/>
 	
 <!-- Logout -->
 	<bean name="/user/logout"
-		class="org.rti.webgenome.webui.struts.user.LogoutAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.user.LogoutAction"
+		parent="baseAction"/>
 	
 <!-- Create new account -->
 	<bean name="/user/createAccount"
-		class="org.rti.webgenome.webui.struts.user.CreateAccountAction">
-		<property name="securityMgr"><ref bean="securityMgr"/></property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.user.CreateAccountAction"
+		parent="baseAction"/>
 
 <!-- Show shopping cart -->
 	<bean name="/cart/showCart"
-		class="org.rti.webgenome.webui.struts.cart.ShowCartSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ShowCartSetupAction"
+		parent="baseAction"/>
 	
 <!-- Show jobs -->
 	<bean name="/cart/showJobs"
-		class="org.rti.webgenome.webui.struts.cart.ShowJobsSetupAction">
-		<property name="jobManager">
-			<ref bean="jobManager"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ShowJobsSetupAction"
+		parent="baseAction"/>
 	
 <!-- Purge jobs -->
 	<bean name="/cart/purgeJobs"
-		class="org.rti.webgenome.webui.struts.cart.PurgeJobsAction">
-		<property name="jobManager">
-			<ref bean="jobManager"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.PurgeJobsAction"
+		parent="baseAction"/>
 		
 <!-- Route to operation page -->
 	<bean name="/cart/routeToOperationPage"
-		class="org.rti.webgenome.webui.struts.cart.RouteToOperationPageAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.RouteToOperationPageAction"
+		parent="baseAction"/>
 		
 <!-- Get quantitation types -->
 	<bean name="/cart/selectImportDataType"
-		class="org.rti.webgenome.webui.struts.cart.GetQuantitationTypesAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.GetQuantitationTypesAction"
+		parent="baseAction"/>
 		
 <!-- Import data from client -->
 	<bean name="/cart/import"
-		class="org.rti.webgenome.webui.struts.cart.ImportAction">
-		<property name="organismDao">
-			<ref bean="organismDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-		<property name="experimentIdGenerator">
-			<ref bean="experimentIdGenerator"/>
-		</property>
-		<property name="bioAssayIdGenerator">
-			<ref bean="bioAssayIdGenerator"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ImportAction"
+		parent="baseAction"/>
 		
 <!-- Route to specific plot parameters page -->
 	<bean name="/cart/plotParameters"
-		class="org.rti.webgenome.webui.struts.cart.PlotParametersSetupAction">
-		<property name="annotatedGenomeFeatureDao">
-			<ref bean="annotatedGenomeFeatureDao"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.PlotParametersSetupAction"
+		parent="baseAction"/>
 		
 <!-- Select analytic operation -->
 	<bean name="/cart/selectAnalysis"
-		class="org.rti.webgenome.webui.struts.cart.SelectAnalysisSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.SelectAnalysisSetupAction"
+		parent="baseAction"/>
 		
 <!-- Set analytic operation parameters -->
 	<bean name="/cart/analysisParams"
-		class="org.rti.webgenome.webui.struts.cart.AnalysisParamsSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.AnalysisParamsSetupAction"
+		parent="baseAction"/>
 		
 <!-- Set up for re-running an analytic operation -->
 	<bean name="/cart/rerunAnalysisParams"
-		class="org.rti.webgenome.webui.struts.cart.ReRunAnalyticOperationSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalyticOperationSetupAction"
+		parent="baseAction"/>
 		
 <!-- Set up for re-plotting using different analytic operation parameters -->
 	<bean name="/cart/adjustPlotAnalysisParamsSetup"
-		class="org.rti.webgenome.webui.struts.cart.AdjustPlotAnalysisParamsSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.AdjustPlotAnalysisParamsSetupAction"
+		parent="baseAction"/>
 		
 <!-- Perform analytic operation -->
 	<bean name="/cart/analysis"
-		class="org.rti.webgenome.webui.struts.cart.AnalysisAction">
-		<property name="analysisService">
-			<ref bean="analysisService"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dataFileManager">
-			<ref bean="dataFileManager"/>
-		</property>
-		<property name="jobManager">
-			<ref bean="jobManager"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.AnalysisAction"
+		parent="baseAction"/>
 	
 <!-- Rerun analytic operation -->
 	<bean name="/cart/rerunAnalysis"
-		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisAction">
-		<property name="analysisService">
-			<ref bean="analysisService"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dataFileManager">
-			<ref bean="dataFileManager"/>
-		</property>
-		<property name="jobManager">
-			<ref bean="jobManager"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisAction"
+		parent="baseAction"/>
 
 <!-- Rerun analytic operation on all derived experiments in plot -->
 	<bean name="/cart/adjustPlotAnalysisParams"
-		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction">
-		<property name="analysisService">
-			<ref bean="analysisService"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dataFileManager">
-			<ref bean="dataFileManager"/>
-		</property>
-		<property name="jobManager">
-			<ref bean="jobManager"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction"
+		parent="baseAction"/>
 		
 <!-- Remove experiment from cart -->
 	<bean name="/cart/removeExperiment"
-		class="org.rti.webgenome.webui.struts.cart.RemoveExperimentAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="ioService">
-			<ref bean="ioService"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.RemoveExperimentAction"
+		parent="baseAction"/>
 		
 <!-- Remove plot from cart -->
 	<bean name="/cart/removePlot"
-		class="org.rti.webgenome.webui.struts.cart.RemovePlotAction">
-		<property name="imageFileManager">
-			<ref bean="imageFileManager"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dataFileManager" ref="dataFileManager"/>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.RemovePlotAction"
+		parent="baseAction"/>
 	
 <!-- Color chooser -->
 	<bean name="/cart/colorChooser"
-		class="org.rti.webgenome.webui.struts.cart.ColorChooserSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ColorChooserSetupAction"
+		parent="baseAction"/>
 		
 <!-- Change bioassay color -->
 	<bean name="/cart/changeBioAssayColor"
-		class="org.rti.webgenome.webui.struts.cart.ChangeBioAssayColorAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ChangeBioAssayColorAction"
+		parent="baseAction"/>
 		
 <!-- Change name of experiment, bioassay, or plot -->
 	<bean name="/cart/nameChange"
-		class="org.rti.webgenome.webui.struts.cart.NameChangeAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.NameChangeAction"
+		parent="baseAction"/>
 		
 <!-- Client plot: entry point for application client -->
 	<bean name="/client/plot"
-		class="org.rti.webgenome.webui.struts.client.ClientPlotAction">
-		<property name="imageFileManager">
-			<ref bean="imageFileManager"/>
-		</property>
-		<property name="bioAssayIdGenerator">
-			<ref bean="bioAssayIdGenerator"/>
-		</property>
-		<property name="experimentIdGenerator">
-			<ref bean="experimentIdGenerator"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.client.ClientPlotAction"
+		parent="baseAction"/>
     
 <!-- Client plot: test Plot action -->
     <bean name="/client/testPlot"
-        class="org.rti.webgenome.webui.struts.client.ClientPlotAction">
-        <property name="imageFileManager">
-            <ref bean="imageFileManager"/>
-        </property>
-        <property name="bioAssayIdGenerator">
-            <ref bean="bioAssayIdGenerator"/>
-        </property>
-        <property name="experimentIdGenerator">
-            <ref bean="experimentIdGenerator"/>
-        </property>
-        <property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-    </bean>
+        class="org.rti.webgenome.webui.struts.client.ClientPlotAction"
+		parent="baseAction"/>
 	
 <!-- New plot -->
 	<bean name="/cart/newPlot"
-		class="org.rti.webgenome.webui.struts.cart.NewPlotAction">
-		<property name="plotService">
-			<ref bean="plotService"/>
-		</property>
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dataFileManager">
-			<ref bean="dataFileManager"/>
-		</property>
-		<property name="jobManager">
-			<ref bean="jobManager"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.NewPlotAction"
+		parent="baseAction"/>
 
 <!-- Show plot -->
 	<bean name="/cart/showPlot"
-		class="org.rti.webgenome.webui.struts.cart.ShowPlotSetupAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.ShowPlotSetupAction"
+		parent="baseAction"/>
 		
 <!-- View/change plot parameters -->
 	<bean name="/cart/changeParameters"
-		class="org.rti.webgenome.webui.struts.cart.SetPlotParametersAction">
-		<property name="shoppingCartDao">
-			<ref bean="shoppingCartDao"/>
-		</property>
-		<property name="dbService" ref="dbService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.cart.SetPlotParametersAction"
+		parent="baseAction"/>
 		
 <!-- Load cytobands form -->
 	<bean name="/admin/loadCytobandsForm"
-		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsFormSetupAction">
-		<property name="cytologicalMapDao">
-			<ref bean="cytologicalMapDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsFormSetupAction"
+		parent="baseAction"/>
 		
 <!-- Load cytobands -->
 	<bean name="/admin/loadCytobands"
-		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsAction">
-		<property name="cytologicalMapDao">
-			<ref bean="cytologicalMapDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.admin.LoadCytobandsAction"
+		parent="baseAction"/>
 	
 <!-- Delete cytobands -->
 	<bean name="/admin/deleteCytobands"
-		class="org.rti.webgenome.webui.struts.admin.DeleteCytobandsAction">
-		<property name="cytologicalMapDao">
-			<ref bean="cytologicalMapDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.admin.DeleteCytobandsAction"
+		parent="baseAction"/>
 	
 <!-- Load genes form -->
 	<bean name="/admin/loadGenesForm"
-		class="org.rti.webgenome.webui.struts.admin.LoadGenesFormSetupAction">
-		<property name="annotatedGenomeFeatureDao">
-			<ref bean="annotatedGenomeFeatureDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.admin.LoadGenesFormSetupAction"
+		parent="baseAction"/>
 	
 <!-- Load cytobands -->
 	<bean name="/admin/loadGenes"
-		class="org.rti.webgenome.webui.struts.admin.LoadGenesAction">
-		<property name="annotatedGenomeFeatureDao">
-			<ref bean="annotatedGenomeFeatureDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.admin.LoadGenesAction"
+		parent="baseAction"/>
 	
 <!-- Delete genes -->
 	<bean name="/admin/deleteGenes"
-		class="org.rti.webgenome.webui.struts.admin.DeleteGenesAction">
-		<property name="annotatedGenomeFeatureDao">
-			<ref bean="annotatedGenomeFeatureDao"/>
-		</property>
-	</bean>
+		class="org.rti.webgenome.webui.struts.admin.DeleteGenesAction"
+		parent="baseAction"/>
 	
 <!-- Main data import page setup -->
 	<bean name="/upload/mainImport"
-		class="org.rti.webgenome.webui.struts.upload.MainImportPageSetupAction">
-		<property name="dataSourcesIndex" ref="dataSourcesIndex"/>
-	</bean>
-	
+		class="org.rti.webgenome.webui.struts.upload.MainImportPageSetupAction"
+		parent="baseAction"/>
+		
 <!-- Initialize upload -->
 	<bean name="/upload/initializeUploadForm"
-		class="org.rti.webgenome.webui.struts.upload.InitializeUploadAction"/>
+		class="org.rti.webgenome.webui.struts.upload.InitializeUploadAction"
+		parent="baseAction"/>
 		
 <!-- Show main upload form -->
 	<bean name="/upload/showUploadForm"
-		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction">
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction"
+		parent="baseAction"/>
 		
 <!-- Upload data file -->
 	<bean name="/upload/uploadDataFile"
-		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction">
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction"
+		parent="baseAction"/>
 	
 <!-- Upload data file -->
 	<bean name="/upload/uploadZipFile"
-		class="org.rti.webgenome.webui.struts.upload.UploadZipFileAction">
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.UploadZipFileAction"
+		parent="baseAction"/>
 	
 <!-- Setup for specifying data columns -->
 	<bean name="/upload/specifyDataColumns"
-		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>
+		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"
+		parent="baseAction"/>
 		
 <!-- Setup for specifying data columns -->
 	<bean name="/upload/specifyZipDataColumns"
-		class="org.rti.webgenome.webui.struts.upload.SpecifyZipDataColumnsSetupAction"/>
+		class="org.rti.webgenome.webui.struts.upload.SpecifyZipDataColumnsSetupAction"
+		parent="baseAction"/>
 		
 <!-- Remove data file from upload -->
 	<bean name="/upload/removeDataFile"
-		class="org.rti.webgenome.webui.struts.upload.RemoveDataFileAction">
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.RemoveDataFileAction"
+		parent="baseAction"/>
 
 <!-- Complete the process of attaching data file -->		
 	<bean name="/upload/attachDataFile"
-		class="org.rti.webgenome.webui.struts.upload.AttachDataFileAction"/>
+		class="org.rti.webgenome.webui.struts.upload.AttachDataFileAction"
+		parent="baseAction"/>
 		
 <!-- Complete the process of attaching zip data file -->
 	<bean name="/upload/attachZipDataFile"
-		class="org.rti.webgenome.webui.struts.upload.AttachZipDataFileAction"/>
+		class="org.rti.webgenome.webui.struts.upload.AttachZipDataFileAction"
+		parent="baseAction"/>
 		
 <!-- Upload reporter file -->
 	<bean name="/upload/uploadReporterFile"
-		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction">
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction"
+		parent="baseAction"/>
 	
 <!-- Setup for specifying reporter columns -->
 	<bean name="/upload/specifyReporterColumns"
-		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"/>
+		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"
+		parent="baseAction"/>
 		
 <!-- Remove data file from upload -->
 	<bean name="/upload/removeReporterFile"
-		class="org.rti.webgenome.webui.struts.upload.RemoveReporterFileAction">
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.RemoveReporterFileAction"
+		parent="baseAction"/>
 
 <!-- Complete the process of attaching reporter file -->		
 	<bean name="/upload/attachReporterFile"
-		class="org.rti.webgenome.webui.struts.upload.AttachReporterFileAction"/>
+		class="org.rti.webgenome.webui.struts.upload.AttachReporterFileAction"
+		parent="baseAction"/>
 		
 <!-- Upload data -->
 	<bean name="/upload/uploadData"
-		class="org.rti.webgenome.webui.struts.upload.UploadAction">
-		<property name="ioService" ref="ioService"/>
-		<property name="jobManager" ref="jobManager"/>
-		<property name="shoppingCartDao" ref="shoppingCartDao"/>
-		<property name="arrayDao" ref="arrayDao"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.UploadAction"
+		parent="baseAction"/>
 	
 <!-- Initialize import session with remote data source -->
 	<bean name="/upload/initRemoteSession"
-		class="org.rti.webgenome.webui.struts.upload.InitRemoteSessionAction">
-		<property name="dataSourcesIndex" ref="dataSourcesIndex"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.InitRemoteSessionAction"
+		parent="baseAction"/>
 	
 <!-- Remote system login -->
 	<bean name="/upload/remoteSysLogin"
-		class="org.rti.webgenome.webui.struts.upload.RemoteSysLoginAction"/>
+		class="org.rti.webgenome.webui.struts.upload.RemoteSysLoginAction"
+		parent="baseAction"/>
 		
 <!-- Fetch experiment list from remote system -->
 	<bean name="/upload/fetchExperimentList"
-		class="org.rti.webgenome.webui.struts.upload.FetchExperimentListAction"/>
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentListAction"
+		parent="baseAction"/>
 		
 <!-- Fetch experiments from remote system -->
 	<bean name="/upload/fetchExperiments"
-		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction">
-		<property name="shoppingCartDao" ref="shoppingCartDao"/>
-		<property name="experimentIdGenerator" ref="experimentIdGenerator"/>
-		<property name="bioAssayIdGenerator" ref="bioAssayIdGenerator"/>
-		<property name="ioService" ref="ioService"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction"
+		parent="baseAction"/>
 	
 <!-- AJAX action to retrieve jobs whose status has changed -->
 	<bean name="/ajax/newlyChangedJobs"
-		class="org.rti.webgenome.webui.struts.ajax.NewlyChangedJobsAction">
-		<property name="jobManager" ref="jobManager"/>
-	</bean>
+		class="org.rti.webgenome.webui.struts.ajax.NewlyChangedJobsAction"
+		parent="baseAction"/>
 </beans>

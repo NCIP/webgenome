@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.12 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -97,9 +97,6 @@ public class SerialQueueJobManager implements JobManager {
 	//     A T T R I B U T E S
 	//
 	
-	/** Job data access object. This should be injected. */
-	private JobDao jobDao = null;
-	
 	/** Set of current jobs sorted on instantiation date. */
 	private SortedSet<Job> jobs = new TreeSet<Job>(
 			new InstantiationDateJobComparator());
@@ -143,15 +140,6 @@ public class SerialQueueJobManager implements JobManager {
 
 
 	/**
-	 * Set job data access object.
-	 * @param jobDao Job data access object.
-	 */
-	public void setJobDao(final JobDao jobDao) {
-		this.jobDao = jobDao;
-	}
-
-
-	/**
 	 * Set service to perform plots.
 	 * @param plotService Service to perform plots.
 	 */
@@ -178,13 +166,13 @@ public class SerialQueueJobManager implements JobManager {
 
 	/**
 	 * Constructor.
-	 * @param jobDao Job data access object
+	 * @param dbService Facade for transactional database operations
 	 */
-	public SerialQueueJobManager(final JobDao jobDao) {
-		this.jobDao = jobDao;
+	public SerialQueueJobManager(final WebGenomeDbService dbService) {
+		this.webGenomeDbService = dbService;
 		
 		// Get all persisted jobs
-		Collection<Job> peristedJobs = this.jobDao.loadAll();
+		Collection<Job> peristedJobs = this.webGenomeDbService.loadAllJobs();
 		this.jobs.addAll(peristedJobs);
 		LOGGER.info("Retrieved " + peristedJobs.size() + " jobs from database");
 		
@@ -212,7 +200,7 @@ public class SerialQueueJobManager implements JobManager {
 	 * {@inheritDoc}
 	 */
 	public void add(final Job job) {
-		this.jobDao.saveOrUpdate(job);
+		this.webGenomeDbService.saveOrUpdateJob(job);
 		LOGGER.info("Adding job '" + job.getId() + "' to queue");
 		this.jobs.add(job);
 		LOGGER.info("Queue size = " + this.jobs.size());
@@ -254,8 +242,8 @@ public class SerialQueueJobManager implements JobManager {
 		if (targetJob != null) {
 			if (!this.jobRunning(targetJob)) {
 				LOGGER.info("Removing job '" + targetJob.getId() + "'");
+				this.webGenomeDbService.deleteJob(targetJob);
 				this.jobs.remove(targetJob);
-				this.jobDao.delete(targetJob);
 				success = true;
 			} else {
 				LOGGER.info("Could not remove job '" + targetJob.getId()
@@ -291,7 +279,7 @@ public class SerialQueueJobManager implements JobManager {
 			if (job.getEndDate() != null && !job.isUserNotifiedOfCompletion()) {
 				completedJobs.add(job);
 				job.setUserNotifiedOfCompletion(true);
-				this.jobDao.saveOrUpdate(job);
+				this.webGenomeDbService.saveOrUpdateJob(job);
 			}
 		}
 		return completedJobs;
@@ -309,7 +297,7 @@ public class SerialQueueJobManager implements JobManager {
 			if (job.getStartDate() != null && !job.isUserNotifiedOfStart()) {
 				startedJobs.add(job);
 				job.setUserNotifiedOfStart(true);
-				this.jobDao.saveOrUpdate(job);
+				this.webGenomeDbService.saveOrUpdateJob(job);
 			}
 		}
 		return startedJobs;
@@ -409,7 +397,7 @@ public class SerialQueueJobManager implements JobManager {
 				try {
 					LOGGER.info("Starting job with id '" + job.getId() + "'");
 					job.setStartDate(new Date());
-					jobDao.saveOrUpdate(job);
+					webGenomeDbService.saveOrUpdateJob(job);
 				} catch (Exception e) {
 					LOGGER.error("Unable to save job state", e);
 				}
@@ -438,7 +426,7 @@ public class SerialQueueJobManager implements JobManager {
 				// Set end time and persist
 				try {
 					job.setEndDate(new Date());
-					jobDao.saveOrUpdate(job);
+					webGenomeDbService.saveOrUpdateJob(job);
 				} catch (Exception e) {
 					LOGGER.error("Unable to save job state", e);
 				}

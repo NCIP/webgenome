@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.4 $
+$Date: 2008-02-22 18:24:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,6 +55,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.rti.webgenome.service.session.DaoWebGenomeDbService;
+
 import junit.framework.TestCase;
 
 /**
@@ -91,7 +93,8 @@ public class SerialQueueJobManagerTester extends TestCase {
 		
 		// Instantiate manager
 		SerialQueueJobManager man =
-			new SerialQueueJobManager(new JobDaoImpl());
+			new SerialQueueJobManager(new WebGenomeDbServiceImpl(
+					new JobDaoImpl()));
 		
 		// Add several jobs
 		for (int i = 0; i < NUM_JOBS; i++) {
@@ -185,6 +188,23 @@ public class SerialQueueJobManagerTester extends TestCase {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+	
+	/**
+	 * Mock object for testing.
+	 * @author dhall
+	 *
+	 */
+	private static final class WebGenomeDbServiceImpl
+	extends DaoWebGenomeDbService {
+		
+		/**
+		 * Constructor.
+		 * @param jobDao Job data access object
+		 */
+		public WebGenomeDbServiceImpl(final JobDao jobDao) {
+			this.setJobDao(jobDao);
 		}
 	}
 

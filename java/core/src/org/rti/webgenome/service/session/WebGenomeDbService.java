@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.2 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -56,7 +56,9 @@ import java.util.List;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.job.Job;
 
 /**
  * This interface is a session facade to transactional
@@ -81,7 +83,13 @@ public interface WebGenomeDbService {
 	 * @param domain Security domain that authenticated user
 	 * @return A shopping cart object
 	 */
-	ShoppingCart getShoppingCart(String user, String domain);
+	ShoppingCart loadShoppingCart(String user, String domain);
+	
+	/**
+	 * Save given cart to persistent storage.
+	 * @param cart Cart to save
+	 */
+	void saveShoppingCart(ShoppingCart cart);
 	
 	/**
 	 * Update given shopping cart.
@@ -97,7 +105,7 @@ public interface WebGenomeDbService {
 	 * referenced by other experiments
 	 * @param cart Cart to update
 	 */
-	void removeArraysAndUpdateCart(Experiment experiment, ShoppingCart cart);
+	void deleteArraysAndUpdateCart(Experiment experiment, ShoppingCart cart);
 	
 	/**
 	 * Add arrays from given experiment to database and persist
@@ -156,4 +164,77 @@ public interface WebGenomeDbService {
 	 * @return T/F
 	 */
 	boolean isPlotReferenced(Long id);
+	
+	/**
+	 * Save given principal to persistent storage.
+	 * @param principal Principal to persist
+	 */
+	void savePrincipal(Principal principal);
+	
+	/**
+	 * Load principal with given account name.
+	 * @param name Account name
+	 * @return A principal or null if there is not
+	 * one with given name
+	 */
+	Principal loadPrincipal(String name);
+	
+	/**
+	 * Update persistent state of given principal.
+	 * @param principal Principal whose persistent state will
+	 * be updated
+	 */
+	void updatePrincipal(Principal principal);
+	
+	/**
+	 * Delete given principal from persistent storage.
+	 * @param principal Principal to delete
+	 */
+	void deletePrincipal(Principal principal);
+	
+	/**
+	 * Load principal from given domain with given username and password.
+	 * @param userName Account name
+	 * @param password Password
+	 * @param domain Security domain
+	 * @return A principal or null if there is no account
+	 * with the given username and password pairing in the given
+	 * security domain
+	 */
+	Principal loadPrincipal(String userName, String password,
+			String domain);
+	
+	/**
+	 * Gets the names of all image files that are referenced
+	 * by persistent objects.  Clients are expected to be
+	 * able to convert the file names into absolute paths.
+	 * @return Image file names (not absolute paths)
+	 */
+	Collection<String> getAllValidImageFileNames();
+	
+	/**
+	 * Gets the names of all data files that are referenced
+	 * by persistent objects.  Clients are expected to be
+	 * able to convert the file names into absolute paths.
+	 * @return Data file names (not absolute paths)
+	 */
+	Collection<String> getAllDataFileNames();
+	
+	/**
+	 * Load all compute jobs from persistent storage.
+	 * @return All persisted compute jobs
+	 */
+	Collection<Job> loadAllJobs();
+	
+	/**
+	 * Save or update the given job.
+	 * @param job Compute job
+	 */
+	void saveOrUpdateJob(Job job);
+	
+	/**
+	 * Remove given job from persistent storage.
+	 * @param job Job to remove
+	 */
+	void deleteJob(Job job);
 }

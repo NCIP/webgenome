@@ -1,6 +1,6 @@
 /*
-$Revision: 1.20 $
-$Date: 2008-01-05 00:00:23 $
+$Revision: 1.21 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -70,11 +70,8 @@ import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
-import org.rti.webgenome.service.io.DataFileManager;
-import org.rti.webgenome.service.job.JobManager;
 import org.rti.webgenome.service.job.PlotJob;
 import org.rti.webgenome.service.plot.PlotParameters;
-import org.rti.webgenome.service.plot.PlotService;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
@@ -97,72 +94,10 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
  */
 public final class NewPlotAction extends BaseAction {
 	
-	//
-	//     STATICS
-	//
-	
 	/** Logger. */
 	private static final Logger LOGGER =
 		Logger.getLogger(NewPlotAction.class);
-	
-	
-	//
-	//     ATTRIBUTES
-	//
-	
-	/**
-	 * Service for creating plots.  This service is
-	 * only used directly when session is CLIENT mode
-	 * or the size of the data set is sufficiently small
-	 * to generate the plot immediately.
-	 */
-	private PlotService plotService = null;
-	
-	/** Manages serialized data files. */
-	private DataFileManager dataFileManager = null;
-	
-	/**
-	 * Manager for creating plots in background.
-	 * This service is used when the session is not
-	 * CLIENT mode and there is a large amount of
-	 * data to plot.
-	 */
-	private JobManager jobManager = null;
-	
-	
-	//
-	//     SETTERS
-	//
-	
-	/**
-	 * Set service for creating plots.
-	 * @param plotService Plot service
-	 */
-	public void setPlotService(final PlotService plotService) {
-		this.plotService = plotService;
-	}
-	
-	/**
-	 * Set manager for serialized data files.
-	 * @param dataFileManager Data file manager
-	 */
-	public void setDataFileManager(final DataFileManager dataFileManager) {
-		this.dataFileManager = dataFileManager;
-	}
-	
-	
-	/**
-	 * Set manager to perform compute-intensive plotting
-	 * in background.
-	 * @param jobManager Job manager
-	 */
-	public void setJobManager(final JobManager jobManager) {
-		this.jobManager = jobManager;
-	}
-	
-	//
-	//     OVERRIDES
-	//
+
 
 	/**
      * Execute action.
@@ -273,11 +208,13 @@ public final class NewPlotAction extends BaseAction {
 	    		getter = new InMemoryChromosomeArrayDataGetter();
 	    	} else {
 	    		getter = new SerializedChromosomeArrayDataGetter(
-	    				this.dataFileManager);
+	    				this.getDataFileManager());
 	    	}
-	    	plot = this.plotService.plotExperiments(
+	    	plot = this.getPlotService().plotExperiments(
 	    			plot, experiments, params, cart, getter);
-	    	this.persistShoppingCartChanges(cart, request);
+	    	if (PageContext.standAloneMode(request)) {
+	    		this.getDbService().updateShoppingCart(cart);
+	    	}
 	    	request.setAttribute("plot", plot);
 	    	forward = mapping.findForward("non.batch");
 	    	
@@ -287,7 +224,7 @@ public final class NewPlotAction extends BaseAction {
 	    	PlotJob job = new PlotJob(plotId,
 	    			new HashSet<Experiment>(experiments), params,
 	    			principal.getName(), principal.getDomain());
-	    	this.jobManager.add(job);
+	    	this.getJobManager().add(job);
 	    	ActionMessages messages = new ActionMessages();
 	    	messages.add("global", new ActionMessage("plot.job"));
 	    	this.saveMessages(request, messages);

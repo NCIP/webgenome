@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.7 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,9 +58,8 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
-import org.rti.webgenome.service.io.DataFileManager;
-import org.rti.webgenome.service.io.ImageFileManager;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Action to remove plot from shopping cart.
@@ -68,31 +67,6 @@ import org.rti.webgenome.webui.struts.BaseAction;
  *
  */
 public final class RemovePlotAction extends BaseAction {
-	
-	/** Image file manager. */
-	private ImageFileManager imageFileManager = null;
-	
-	/** Manager of all data files. */
-	private DataFileManager dataFileManager = null;
-	
-	/**
-	 * Set image file manager.
-	 * @param imageFileManager Image file manager
-	 */
-	public void setImageFileManager(
-			final ImageFileManager imageFileManager) {
-		this.imageFileManager = imageFileManager;
-	}
-
-
-	/**
-	 * Set manager for all data files.
-	 * @param dataFileManager Manager for all data files
-	 */
-	public void setDataFileManager(
-			final DataFileManager dataFileManager) {
-		this.dataFileManager = dataFileManager;
-	}
 
 
 	/**
@@ -129,18 +103,20 @@ public final class RemovePlotAction extends BaseAction {
     	
     	// Remove plot
     	cart.removePlot(id);
+    	if (PageContext.standAloneMode(request)) {
+    		this.getDbService().updateShoppingCart(cart);
+    	}
     	
     	// Get rid of image files
     	for (String fileName : plot.getAllImageFileNames()) {
-    		this.imageFileManager.deleteImageFile(fileName);
+    		this.getImageFileManager().deleteImageFile(fileName);
     	}
     	
     	// Get rid of plot interactivity files
-    	this.dataFileManager.deleteDataFiles(plot);
+    	this.getDataFileManager().deleteDataFiles(plot);
     	
     	// TODO: Stand-alone specific actions
     	
-    	this.persistShoppingCartChanges(cart, request);
         return mapping.findForward("success");
     }
 }

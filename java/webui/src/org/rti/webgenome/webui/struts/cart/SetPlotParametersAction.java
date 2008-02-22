@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-09-10 21:00:40 $
+$Revision: 1.5 $
+$Date: 2008-02-22 18:24:44 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.plot.PlotParameters;
 import org.rti.webgenome.webui.struts.BaseAction;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
  * Sets properties of <code>PlotParameters</code> bean
@@ -101,7 +102,10 @@ public final class SetPlotParametersAction extends BaseAction {
     	// Bulk set form bean properties
     	ppf.bulkSet(params);
     	    	
-    	this.persistShoppingCartChanges(cart, request);
+    	if (PageContext.standAloneMode(request)) {
+    		this.getDbService().updateShoppingCart(cart);
+    	}
+    	
     	return mapping.findForward("success");
     }
 
