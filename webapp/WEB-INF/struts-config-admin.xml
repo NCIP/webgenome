@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "struts-config_1_1.dtd">
+
+<struts-config>
+
+	<form-beans>
+	
+	<!-- Form for specifying annotation data to upload -->
+		<form-bean
+			name="annotation.upload.form"
+			type="org.rti.webgenome.webui.struts.admin.AnnotationUploadForm"/>
+	
+	</form-beans>
+
+	<action-mappings>
+
+	<!-- Admin home -->
+		<action
+			path="/admin/home"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="admin.home"/>
+
+	<!-- Load cytobands form -->
+		<action path="/admin/loadCytobandsForm">
+			<forward name="success" path="admin.load.cytobands"/>
+		</action>
+
+	<!-- Load cytobands -->
+		<action
+			path="/admin/loadCytobands"
+			name="annotation.upload.form"
+			scope="request"
+			validate="true"
+			input="/admin/loadCytobandsForm.do">
+			<forward name="success" path="/admin/loadCytobandsForm.do"/>
+		</action>
+
+	<!-- Delete cytobands -->
+		<action path="/admin/deleteCytobands">
+			<forward name="success" path="/admin/loadCytobandsForm.do"/>
+		</action>
+		
+	<!-- Load genes form -->
+		<action path="/admin/loadGenesForm">
+			<forward name="success" path="admin.load.genes"/>
+		</action>
+		
+	<!-- Load cytobands -->
+		<action
+			path="/admin/loadGenes"
+			name="annotation.upload.form"
+			scope="request"
+			validate="true"
+			input="/admin/loadGenesForm.do">
+			<forward name="success" path="/admin/loadGenesForm.do"/>
+		</action>
+		
+	<!-- Delete genes -->
+		<action path="/admin/deleteGenes">
+			<forward name="success" path="/admin/loadGenesForm.do"/>
+		</action>
+          
+	</action-mappings>
+
+</struts-config>

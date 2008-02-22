@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC
+          "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+          "tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+<!-- User account management template -->
+  	<definition name="user.layout" extends="def.layout" >
+	  	<put name="selectedMenuItem" value="user" />
+  	</definition>
+
+<!-- Login -->
+  	<definition name="user.login" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Login" />
+	  	<put name="content" value="/WEB-INF/jsp/user/login.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- New account -->
+  	<definition name="user.new.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: New account" />
+	  	<put name="content" value="/WEB-INF/jsp/user/newAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Confirm account -->
+  	<definition name="user.confirm.new.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Account created" />
+	  	<put name="content" value="/WEB-INF/jsp/user/confirmNewAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+</tiles-definitions>

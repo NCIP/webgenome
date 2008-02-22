@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC
+          "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+          "tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+<!-- User account management template -->
+  	<definition name="upload.layout" extends="def.layout" >
+	  	<put name="selectedMenuItem" value="upload" />
+  	</definition>
+  	
+<!-- Main data import form -->
+	<definition name="upload.main.import.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Import data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/mainImportData.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Main upload form -->
+	<definition name="upload.main.upload.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/mainUploadForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Data file upload form -->
+  	<definition name="upload.data.file.upload.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/dataFileUploadForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Data file upload form -->
+  	<definition name="upload.zip.file.upload.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload ZIP file" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/zipFileUploadForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Specify data file columns -->
+  	<definition name="upload.specify.data.columns" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/specifyDataColumns.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Specify ZIP data files columns -->
+  	<definition name="upload.specify.zip.data.columns" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload ZIPPed data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/specifyZipDataColumns.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Reporter file upload form -->
+  	<definition name="upload.reporter.file.upload.form" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/reporterFileUploadForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Specify data file columns -->
+  	<definition name="upload.specify.reporter.columns" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Upload data" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/specifyReporterColumns.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Remote system credentials form -->
+  	<definition name="upload.remote.sys.login" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Login to remote system" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/remoteSysLoginForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+  	
+<!-- Select from list of experiments in remote system -->
+  	<definition name="upload.select.experiments" extends="upload.layout" >
+	  	<put name="title" value="webGenome: Login to remote system" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/selectExperimentsForm.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+
+</tiles-definitions>

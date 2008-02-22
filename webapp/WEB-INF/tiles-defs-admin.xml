@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC
+          "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+          "tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+<!-- User account management template -->
+  	<definition name="admin.layout" extends="def.layout" >
+	  	<put name="selectedMenuItem" value="admin" />
+  	</definition>
+
+<!-- Admin home -->
+  	<definition name="admin.home" extends="admin.layout" >
+	  	<put name="title" value="webGenome: Admin home" />
+	  	<put name="content" value="/WEB-INF/jsp/admin/home.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Load cytobands -->
+  	<definition name="admin.load.cytobands" extends="admin.layout" >
+	  	<put name="title" value="webGenome: Load cytobands" />
+	  	<put name="content" value="/WEB-INF/jsp/admin/loadCytobands.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Load genes -->
+  	<definition name="admin.load.genes" extends="admin.layout" >
+	  	<put name="title" value="webGenome: Load genes" />
+	  	<put name="content" value="/WEB-INF/jsp/admin/loadGenes.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+</tiles-definitions>

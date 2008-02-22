@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+<!-- Validate login -->
+	<bean name="/user/validateLogin"
+		class="org.rti.webgenome.webui.struts.user.LoginAction"
+		parent="baseAction"/>
+	
+<!-- Logout -->
+	<bean name="/user/logout"
+		class="org.rti.webgenome.webui.struts.user.LogoutAction"
+		parent="baseAction"/>
+	
+<!-- Create new account -->
+	<bean name="/user/createAccount"
+		class="org.rti.webgenome.webui.struts.user.CreateAccountAction"
+		parent="baseAction"/>
+
+</beans>

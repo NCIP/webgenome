@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+<!-- Show shopping cart -->
+	<bean name="/cart/showCart"
+		class="org.rti.webgenome.webui.struts.cart.ShowCartSetupAction"
+		parent="baseAction"/>
+	
+<!-- Show jobs -->
+	<bean name="/cart/showJobs"
+		class="org.rti.webgenome.webui.struts.cart.ShowJobsSetupAction"
+		parent="baseAction"/>
+	
+<!-- Purge jobs -->
+	<bean name="/cart/purgeJobs"
+		class="org.rti.webgenome.webui.struts.cart.PurgeJobsAction"
+		parent="baseAction"/>
+		
+<!-- Route to operation page -->
+	<bean name="/cart/routeToOperationPage"
+		class="org.rti.webgenome.webui.struts.cart.RouteToOperationPageAction"
+		parent="baseAction"/>
+		
+<!-- Get quantitation types -->
+	<bean name="/cart/selectImportDataType"
+		class="org.rti.webgenome.webui.struts.cart.GetQuantitationTypesAction"
+		parent="baseAction"/>
+		
+<!-- Import data from client -->
+	<bean name="/cart/import"
+		class="org.rti.webgenome.webui.struts.cart.ImportAction"
+		parent="baseAction"/>
+		
+<!-- Route to specific plot parameters page -->
+	<bean name="/cart/plotParameters"
+		class="org.rti.webgenome.webui.struts.cart.PlotParametersSetupAction"
+		parent="baseAction"/>
+		
+<!-- Select analytic operation -->
+	<bean name="/cart/selectAnalysis"
+		class="org.rti.webgenome.webui.struts.cart.SelectAnalysisSetupAction"
+		parent="baseAction"/>
+		
+<!-- Set analytic operation parameters -->
+	<bean name="/cart/analysisParams"
+		class="org.rti.webgenome.webui.struts.cart.AnalysisParamsSetupAction"
+		parent="baseAction"/>
+		
+<!-- Set up for re-running an analytic operation -->
+	<bean name="/cart/rerunAnalysisParams"
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalyticOperationSetupAction"
+		parent="baseAction"/>
+		
+<!-- Set up for re-plotting using different analytic operation parameters -->
+	<bean name="/cart/adjustPlotAnalysisParamsSetup"
+		class="org.rti.webgenome.webui.struts.cart.AdjustPlotAnalysisParamsSetupAction"
+		parent="baseAction"/>
+		
+<!-- Perform analytic operation -->
+	<bean name="/cart/analysis"
+		class="org.rti.webgenome.webui.struts.cart.AnalysisAction"
+		parent="baseAction"/>
+	
+<!-- Rerun analytic operation -->
+	<bean name="/cart/rerunAnalysis"
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisAction"
+		parent="baseAction"/>
+
+<!-- Rerun analytic operation on all derived experiments in plot -->
+	<bean name="/cart/adjustPlotAnalysisParams"
+		class="org.rti.webgenome.webui.struts.cart.ReRunAnalysisOnPlotExperimentsAction"
+		parent="baseAction"/>
+		
+<!-- Remove experiment from cart -->
+	<bean name="/cart/removeExperiment"
+		class="org.rti.webgenome.webui.struts.cart.RemoveExperimentAction"
+		parent="baseAction"/>
+		
+<!-- Remove plot from cart -->
+	<bean name="/cart/removePlot"
+		class="org.rti.webgenome.webui.struts.cart.RemovePlotAction"
+		parent="baseAction"/>
+	
+<!-- Color chooser -->
+	<bean name="/cart/colorChooser"
+		class="org.rti.webgenome.webui.struts.cart.ColorChooserSetupAction"
+		parent="baseAction"/>
+		
+<!-- Change bioassay color -->
+	<bean name="/cart/changeBioAssayColor"
+		class="org.rti.webgenome.webui.struts.cart.ChangeBioAssayColorAction"
+		parent="baseAction"/>
+		
+<!-- Change name of experiment, bioassay, or plot -->
+	<bean name="/cart/nameChange"
+		class="org.rti.webgenome.webui.struts.cart.NameChangeAction"
+		parent="baseAction"/>
+		
+<!-- Client plot: entry point for application client -->
+	<bean name="/client/plot"
+		class="org.rti.webgenome.webui.struts.client.ClientPlotAction"
+		parent="baseAction"/>
+    
+<!-- Client plot: test Plot action -->
+    <bean name="/client/testPlot"
+        class="org.rti.webgenome.webui.struts.client.ClientPlotAction"
+		parent="baseAction"/>
+	
+<!-- New plot -->
+	<bean name="/cart/newPlot"
+		class="org.rti.webgenome.webui.struts.cart.NewPlotAction"
+		parent="baseAction"/>
+
+<!-- Show plot -->
+	<bean name="/cart/showPlot"
+		class="org.rti.webgenome.webui.struts.cart.ShowPlotSetupAction"
+		parent="baseAction"/>
+		
+<!-- View/change plot parameters -->
+	<bean name="/cart/changeParameters"
+		class="org.rti.webgenome.webui.struts.cart.SetPlotParametersAction"
+		parent="baseAction"/>
+
+</beans>

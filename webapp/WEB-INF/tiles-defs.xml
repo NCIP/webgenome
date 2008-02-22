@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC
+          "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+          "tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+<!-- Default layout -->
+  	<definition name="def.layout" path="/WEB-INF/jsp/layout/main.jsp">
+
+  		<!-- Complete list of tiles variables -->
+	  	<put name="title" value="" />
+	  	<put name="selectedMenuItem" value="" />
+	  	<put name="content" value="" />
+	  	<put name="helpTopic" value="" />
+  	</definition>
+
+<!-- Home page -->
+  	<definition name="home.page" extends="def.layout" >
+	  	<put name="title" value="webGenome: Overview" />
+	  	<put name="selectedMenuItem" value="home" />
+	  	<put name="content" value="/WEB-INF/jsp/home.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Status page -->
+    <definition name="status.page" extends="def.layout" >
+        <put name="title" value="webGenome: Status" />
+        <put name="selectedMenuItem" value="home" />
+        <put name="content" value="/WEB-INF/jsp/status.jsp" />
+        <put name="helpTopic" value="" />
+    </definition>
+
+  	<!-- ========================================================== -->
+  	<!--                  Exception pages                           -->
+	<!-- ========================================================== -->
+
+  	<definition name="exception.layout" path="/WEB-INF/jsp/exception/exceptionLayout.jsp">
+  	  	<put name="title" value="webGenome Exception" />
+  	  	<put name="errorHeader" value="webGenome Exception" />
+  	  	<put name="content" value="" />
+  	</definition>
+
+  	<definition name="application.exception.page" extends="exception.layout">
+  	  	<put name="title" value="webGenome Error" />
+  	  	<put name="errorHeader" value="Error" />
+  	  	<put name="content" value="/WEB-INF/jsp/exception/applicationException.jsp" />
+  	</definition>
+
+  	<definition name="security.exception.page" extends="exception.layout">
+  	  	<put name="title" value="webGenome Security Exception" />
+  	  	<put name="errorHeader" value="Security Exception" />
+  	  	<put name="content" value="/WEB-INF/jsp/exception/securityException.jsp" />
+  	</definition>
+
+  	<definition name="system.exception.page" extends="exception.layout">
+  	  	<put name="title" value="webGenome System Error" />
+  	  	<put name="errorHeader" value="System Error" />
+  	  	<put name="content" value="/WEB-INF/jsp/exception/systemException.jsp" />
+  	</definition>
+
+  	<definition name="unknown.exception.page" extends="exception.layout">
+  	  	<put name="title" value="webGenome Unknown Error" />
+  	  	<put name="errorHeader" value="Unknown Error" />
+  	  	<put name="content" value="/WEB-INF/jsp/exception/unknownException.jsp" />
+  	</definition>
+
+  	<definition name="data.invalidation.page" extends="cart.layout">
+	  	<put name="title"  value="webGenome: Invalid Data Set" />
+	  	<put name="selectedSubMenuItem" value="" />
+	  	<put name="content" value="/WEB-INF/jsp/exception/invalidData.jsp" />
+	  	<put name="helpTopic" value="validation" />
+  	</definition>
+
+  	<definition name="session.timeout.exception.page"  extends="exception.layout">
+  	  	<put name="title" value="webGenome Session Timeout Exception" />
+  	  	<put name="errorHeader" value="Session Timeout Exception" />
+  	  	<put name="content" value="/WEB-INF/jsp/exception/sessionTimeoutException.jsp" />
+  	</definition>
+
+</tiles-definitions>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+<!-- AJAX action to retrieve jobs whose status has changed -->
+	<bean name="/ajax/newlyChangedJobs"
+		class="org.rti.webgenome.webui.struts.ajax.NewlyChangedJobsAction"
+		parent="baseAction"/>
+
+</beans>

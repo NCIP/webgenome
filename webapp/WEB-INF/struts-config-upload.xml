@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "struts-config_1_1.dtd">
+
+<struts-config>
+
+	<form-beans>
+	
+	<!-- Form for attaching a data or reporter file to an upload -->
+		<form-bean
+			name="attach.data.form"
+			type="org.rti.webgenome.webui.struts.upload.AttachDataForm"/>
+			
+	<!-- Form for specifying reporter column name -->
+		<form-bean
+			name="reporter.column.name.form"
+			type="org.rti.webgenome.webui.struts.upload.ReporterColumnNameForm"/>
+			
+	<!-- Form for uploading data -->
+		<form-bean
+			name="upload.form"
+			type="org.rti.webgenome.webui.struts.upload.UploadForm"/>
+			
+	<!-- Selected remote experiments form -->
+		<form-bean
+			name="selected.remote.experiments.form"
+			type="org.rti.webgenome.webui.struts.upload.SelectedRemoteExperimentsForm"/>
+	
+	</form-beans>
+
+	<action-mappings>
+
+     <!-- Main data import page -->
+		<action path="/upload/mainImport">
+        	<forward name="success" path="upload.main.import.form"/>
+        </action>
+        
+     <!-- Initialize upload form -->
+        <action path="/upload/initializeUploadForm">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        </action>
+        
+     <!-- Show upload form -->
+        <action path="/upload/showUploadForm">
+        	<forward name="success" path="upload.main.upload.form"/>
+        </action>
+	
+	<!-- Data file upload form -->
+		<action path="/upload/dataFileUploadForm"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.data.file.upload.form"/>
+        	
+	<!-- ZIP file upload form -->
+		<action path="/upload/zipFileUploadForm"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.zip.file.upload.form"/>
+        	
+    <!-- Upload data file to server -->
+        <action
+        	path="/upload/uploadDataFile"
+        	name="attach.data.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/dataFileUploadForm.do">
+        	<forward name="success" path="/upload/specifyDataColumns.do"/>
+        </action>
+        
+    <!-- Upload ZIP file to server -->
+        <action
+        	path="/upload/uploadZipFile"
+        	name="attach.data.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/zipFileUploadForm.do">
+        	<forward name="success" path="/upload/specifyZipDataColumns.do"/>
+        </action>
+        
+    <!-- Specify data containing columns in an uploaded data fle -->
+        <action path="/upload/specifyDataColumns">
+        	<forward name="success" path="upload.specify.data.columns"/>
+        </action>
+        
+    <!-- Specify data containing columns in all files in a ZIP archive -->
+        <action path="/upload/specifyZipDataColumns">
+        	<forward name="success" path="upload.specify.zip.data.columns"/>
+        </action>
+        
+    <!-- Record set of data columns selected -->
+        <action
+        	path="/upload/attachDataFile"
+        	name="reporter.column.name.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/specifyDataColumns.do">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        	<forward name="errors" path="/upload/specifyDataColumns.do"/>
+        </action>
+        
+    <!-- Record set of data columns selected for ZIP files -->
+        <action path="/upload/attachZipDataFile">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        	<forward name="errors" path="/upload/specifyZipDataColumns.do"/>
+        </action>
+        
+    <!-- Remove data file from upload -->
+        <action path="/upload/removeDataFile">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        </action>
+        	
+    <!-- Reporter file upload form -->
+        <action path="/upload/reporterFileUploadForm"
+        	type="org.apache.struts.actions.ForwardAction"
+        	parameter="upload.reporter.file.upload.form"/>
+        	
+    <!-- Upload reporter file to server -->
+        <action
+        	path="/upload/uploadReporterFile"
+        	name="attach.data.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/reporterFileUploadForm.do">
+        	<forward name="success" path="/upload/specifyReporterColumns.do"/>
+        </action>
+        
+   <!-- Specify reporter name columns in an uploaded data fle -->
+        <action path="/upload/specifyReporterColumns">
+        	<forward name="success" path="upload.specify.reporter.columns"/>
+        </action>
+	        
+	  <!-- Record set of data columns selected -->
+        <action
+        	path="/upload/attachReporterFile"
+        	name="reporter.column.name.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/specifyReporterColumns.do">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        	<forward name="errors" path="/upload/specifyReporterColumns.do"/>
+        </action>
+        
+        <!-- Remove data file from upload -->
+        <action path="/upload/removeReporterFile">
+        	<forward name="success" path="/upload/showUploadForm.do"/>
+        </action>
+        
+     <!-- Upload data -->
+        <action path="/upload/uploadData"
+        	name="upload.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/showUploadForm.do">
+        	<forward name="non.batch" path="/cart/showCart.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
+        </action>
+        
+     <!-- Initiate data import from remote system -->
+     	<action path="/upload/initRemoteSession">
+     		<forward name="success" path="/upload/remoteSysLoginForm.do"/>
+     	</action>
+        
+     <!-- Specify credentials for remote system -->
+     	<action path="/upload/remoteSysLoginForm"
+     		type="org.apache.struts.actions.ForwardAction"
+			parameter="upload.remote.sys.login"/>
+			
+		
+     <!-- Form to log into remote system -->
+        <action path="/upload/remoteSysLogin"
+        	name="login.form"
+			scope="request"
+			validate="true"
+			input="/upload/remoteSysLoginForm.do">
+        	<forward name="success" path="/upload/fetchExperimentList.do"/>
+        	<forward name="failure" path="/upload/remoteSysLoginForm.do"/>
+        </action>
+        
+     <!-- Fetch experiment list from remote data provider -->
+        <action path="/upload/fetchExperimentList">
+        	<forward name="success" path="upload.select.experiments"/>
+        </action>
+        
+     <!-- Fetch experiments from remote system -->
+        <action path="/upload/fetchExperiments"
+        	name="selected.remote.experiments.form"
+        	scope="session"
+        	validate="true"
+        	input="/upload/fetchExperimentList.do">
+            <forward name="non.batch" path="/cart/showCart.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>
