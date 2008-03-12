@@ -105,12 +105,9 @@ CREATE TABLE job (
 	description VARCHAR2(256),
 	user_notified_complete VARCHAR2(8),
 	user_notified_start VARCHAR2(8),
-	
 	data_src_props_id NUMBER(38),
-	
 	plot_params_id NUMBER(38),
 	plot_id NUMBER(38),
-		
 	PRIMARY KEY (id)
 );
 
@@ -155,13 +152,10 @@ CREATE TABLE job_experiments (
 --
 CREATE TABLE data_src_props (
 	id NUMBER(38) NOT NULL,
-	
 	type VARCHAR2(16),
-	
 	jndi_name VARCHAR2(256),
 	jndi_provider_url VARCHAR2(1024),
 	client_id VARCHAR2(128),
-	
 	rep_loc_file_name VARCHAR2(256),
 	rep_rem_file_name VARCHAR2(256),
 	rep_file_format VARCHAR2(256),
@@ -172,11 +166,8 @@ CREATE TABLE data_src_props (
 	exp_name VARCHAR2(128),
 	organism_id NUMBER(38),
 	quant_type VARCHAR2(256),
-	
 	an_op_class_name VARCHAR2(256),
-	
 	input_experiment_id NUMBER(38),
-	
 	PRIMARY KEY (id)
 );
 
@@ -264,7 +255,6 @@ CREATE TABLE plot_params (
 	num_plots_per_row INT,
 	units VARCHAR2(256),
 	type VARCHAR2(16),
-	
 	loh_threshold NUMBER,
 	intplt_loh_eps VARCHAR2(8),
 	draw_raw_loh_probs VARCHAR2(8),
@@ -272,23 +262,18 @@ CREATE TABLE plot_params (
 	show_annotation VARCHAR2(8),
 	show_genes VARCHAR2(8),
 	show_reporter_names VARCHAR2(8),
-	
 	cn_max_saturation NUMBER,
 	cn_min_saturation NUMBER,
 	expr_max_saturation NUMBER,
 	expr_min_saturation NUMBER,
 	min_mask NUMBER,
 	max_mask NUMBER,
-	
 	draw_feature_labels VARCHAR2(8),
-	
 	row_height INT,
 	bar_width INT,
-	
 	ideogram_size VARCHAR2(256),
 	track_width INT,
 	ideogram_thickness INT,
-	
 	cn_min_y NUMBER,
 	cn_max_y NUMBER,
 	expr_min_y NUMBER,
@@ -296,16 +281,12 @@ CREATE TABLE plot_params (
 	draw_points VARCHAR2(8),
 	draw_error_bars VARCHAR2(8),
 	draw_stems VARCHAR2(8),
-	
 	width INT,
-	
 	height INT,
 	draw_horiz_grid_lines VARCHAR2(8),
 	draw_vert_grid_lines VARCHAR2(8),
-	
 	min_y NUMBER,
 	max_y NUMBER,
-	
 	PRIMARY KEY (id)
 );
 

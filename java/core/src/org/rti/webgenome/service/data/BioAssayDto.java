@@ -1,5 +1,5 @@
 /*
-$Revision: 1.3 $
+$Revision: 1.1 $
 $Date: 2008-03-12 22:23:17 $
 
 The Web CGH Software License, Version 1.0
@@ -50,65 +50,119 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.data;
 
-import java.util.Map;
-
-import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.service.session.Authenticator;
+import java.util.List;
 
 /**
- * This interface represents a source of data.  Typically, this will
- * be a remote database system with some sort of service-oriented
- * API.
+ * A data transfer object for transferring properties of
+ * bioassays from a remote data source.
  * @author dhall
  *
  */
-public interface DataSource extends Authenticator {
+public class BioAssayDto {
+	
+	//
+	//  A T T R I B U T E S
+	//
+	
+	/** Identifier of bioassay in remote data source. */
+	private String remoteId = null;
+	
+	/** Bioassay name. */
+	private String name = null;
+	
+	/** ID of array in remote data source. */
+	private String remoteArrayId = null;
+	
+	/** Actual data values from array. */
+	private List<Float> values = null;
+	
+	/** Names of corresponding reporters. */
+	private List<String> reporterNames = null;
+	
+	
+	//
+	//  G E T T E R S  /  S E T T E R S
+	//
+	
+	/**
+	 * Getter for name property.
+	 * @return Bioassay name
+	 */
+	public String getName() {
+		return name;
+	}
 
 	/**
-	 * Gets a map of experiment IDs (keys) to names (values)
-	 * that are accessible by the given principal.
-	 * @param principal Principal requesting access to data
-	 * @return Map of experiment IDs (keys) to experiment names (values)
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Setter for name property.
+	 * @param name Bioassay name
 	 */
-	Map<String, String> getExperimentIdsAndNames(Principal principal)
-	throws DataSourceAccessException;
-	
-	
+	public void setName(final String name) {
+		this.name = name;
+	}
+
 	/**
-	 * Get experiment data transfer object with given ID.
-	 * @param id ID of experiment-equivalent in remote data source
-	 * @return Requested experiment data transfer object
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Getter for remoteId property.
+	 * @return Identifier of bioassay in remote data source
 	 */
-	ExperimentDto getExperimentDto(String id)
-	throws DataSourceAccessException;
-	
+	public String getRemoteId() {
+		return remoteId;
+	}
+
 	/**
-	 * Get bioassay data transfer object with given ID.
-	 * @param id ID of bioassay-equivalent in remote data source
-	 * @return Requested bioassay data transfer object
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Setter for remoteIdProperty.
+	 * @param remoteId Identifier of bioassay in remote data source
 	 */
-	BioAssayDto getBioAssayDto(String id)
-	throws DataSourceAccessException;
-	
+	public void setRemoteId(final String remoteId) {
+		this.remoteId = remoteId;
+	}
+
 	/**
-	 * Get array data transfer object with given ID.
-	 * @param id ID of array-equivalent in remote data source
-	 * @return Requested array data transfer object
-	 * @throws DataSourceAccessException if there is a problem accessing
-	 * the data
+	 * Getter for remoteArrayId property.
+	 * @return ID of array in remote data source
 	 */
-	ArrayDto getArrayDto(String id)
-	throws DataSourceAccessException;
-	
+	public String getRemoteArrayId() {
+		return remoteArrayId;
+	}
+
 	/**
-	 * Get name of data source to display in UI.
-	 * @return Display name
+	 * Setter for remoteArrayId property.
+	 * @param remoteArrayId ID of array in remote data source
 	 */
-	String getDisplayName();
+	public void setRemoteArrayId(final String remoteArrayId) {
+		this.remoteArrayId = remoteArrayId;
+	}
+
+	/**
+	 * Getter for values property.
+	 * @return Actual data values from array
+	 */
+	public List<Float> getValues() {
+		return values;
+	}
+
+	/**
+	 * Setter for values property.
+	 * @param values Actual data values from array
+	 */
+	public void setValues(final List<Float> values) {
+		this.values = values;
+	}
+
+	/**
+	 * Getter for reporterNames property.
+	 * @return Names of corresponding reporters
+	 */
+	public List<String> getReporterNames() {
+		return reporterNames;
+	}
+
+	/**
+	 * Setter for reporterNames property.
+	 * @param reporterNames Names of corresponding reporters
+	 */
+	public void setReporterNames(final List<String> reporterNames) {
+		this.reporterNames = reporterNames;
+	}
+	
+	
 }

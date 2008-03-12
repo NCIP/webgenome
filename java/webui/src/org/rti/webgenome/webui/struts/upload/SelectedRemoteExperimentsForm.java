@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-02-15 23:28:58 $
+$Revision: 1.2 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.struts.BaseForm;
 import org.rti.webgenome.webui.util.PageContext;
@@ -75,6 +76,13 @@ public class SelectedRemoteExperimentsForm extends BaseForm {
 	/** Serialized version ID. */
 	private static final long serialVersionUID = 
 		SystemUtils.getLongApplicationProperty("serial.version.uid");
+	
+	/** Organism associated with data. */
+	private String organismId = null;
+	
+	/** ID of quantitation type of all data. */
+	private String quantitationTypeId =
+		QuantitationType.COPY_NUMBER.getId();
 	
 	/** Map backing dynamic fields. */
     private Map<String, Object> values = new HashMap<String, Object>();
@@ -115,6 +123,41 @@ public class SelectedRemoteExperimentsForm extends BaseForm {
     	}
     	return ids;
     }
+    
+    
+	/**
+	 * Get primary key ID of organism associated with data.
+	 * @return ID of organism associated with data.
+	 */
+	public String getOrganismId() {
+		return organismId;
+	}
+
+	/**
+	 * Set primary key ID of organism associated with data.
+	 * @param organism ID of organism associated with data.
+	 */
+	public void setOrganismId(final String organism) {
+		this.organismId = organism;
+	}
+	
+	/**
+	 * Get quantitation type ID of all data.
+	 * @return Quantitation type ID
+	 */
+	public String getQuantitationTypeId() {
+		return quantitationTypeId;
+	}
+
+	/**
+	 * Set quantitation type ID of all data.
+	 * @param quantitationTypeId Quantitation type
+	 * ID
+	 */
+	public void setQuantitationTypeId(
+			final String quantitationTypeId) {
+		this.quantitationTypeId = quantitationTypeId;
+	}
     
     /**
      * Reset form.

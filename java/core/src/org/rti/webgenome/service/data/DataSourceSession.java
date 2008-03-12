@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-15 23:28:58 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,25 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.data;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
+import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.domain.ArrayDatum;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.ChromosomeArrayData;
+import org.rti.webgenome.domain.DataSerializedBioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.domain.QuantitationType;
+import org.rti.webgenome.domain.Reporter;
+import org.rti.webgenome.service.io.DataFileManager;
+
 
 /**
  * Represents a workflow session of interacting with a data source.
@@ -83,6 +96,22 @@ public class DataSourceSession {
 	/** Data source selected by user. */
 	private final DataSource selectedDataSource;
 	
+	/** Manages serialization of data. */
+	private final DataFileManager dataFileManger;
+	
+	/**
+	 * Cache of arrays indexed on remote ID used so that all bioassays
+	 * with the same logical array point to the same object.
+	 */
+	private final Map<String, Array> arrays = new HashMap<String, Array>();
+	
+	/**
+	 * Cache of reporters indexed by name, which is used in grouping
+	 * experiment values by chromosome.
+	 */
+	private final Map<String, Reporter> reporters =
+		new HashMap<String, Reporter>();
+	
 	//
 	//  C O N S T R U C T O R S
 	//
@@ -90,12 +119,15 @@ public class DataSourceSession {
 	/**
 	 * Constructor.
 	 * @param selectedDataSource Data source selected by user
+	 * @param dataFileManager Manages serialization of data
 	 */
-	public DataSourceSession(final DataSource selectedDataSource) {
+	public DataSourceSession(final DataSource selectedDataSource,
+			final DataFileManager dataFileManager) {
 		if (selectedDataSource == null) {
 			throw new WebGenomeSystemException(
 					"Data source cannot be null");
 		}
+		this.dataFileManger = dataFileManager;
 		this.selectedDataSource = selectedDataSource;
 	}
 	
@@ -148,28 +180,122 @@ public class DataSourceSession {
 	
 	
 	/**
-	 * Fetch experiments with given IDs from previously selected data
-	 * source.
-	 * @param ids Experiment IDs.  An
-	 * <code>IllegalArgumentException</code>
-	 * is thrown if null
-	 * @return Experiments with corresponding IDs.
-	 * @throws DataSourceSessionException If the user was not
-	 * previously logged into a data source
-	 * @throws DataSourceAccessException If there is an error interacting
-	 * with the data source
+	 * Fetch experiments with given IDs from remot data source and
+	 * deposit all data in the experiments objects.
+	 * @param experimentIds IDs of experiments to fetch
+	 * @param quantitationType Quantitation type of data
+	 * @return Requested experiments
+	 * @throws DataSourceAccessException if there is an error
+	 * retrieving data from the remote data source
 	 */
 	public Collection<Experiment> fetchExperiments(
-			final Collection<String> ids)
-	throws DataSourceSessionException, DataSourceAccessException {
-		if (ids == null) {
-			throw new IllegalArgumentException(
-					"Experiment IDs cannot be null");
+			final Collection<String> experimentIds,
+			final QuantitationType quantitationType)
+	throws DataSourceAccessException {
+		Collection<Experiment> experiments = new ArrayList<Experiment>();
+		for (String id : experimentIds) {
+			ExperimentDto dto = this.selectedDataSource.getExperimentDto(id);
+			Experiment exp = this.depositData(dto, quantitationType);
+			experiments.add(exp);
 		}
-		if (this.principal == null) {
-			throw new DataSourceSessionException(
-					"User not logged into data source");
+		return experiments;
+	}
+	
+	
+	/**
+	 * Fetches and deposits data from given DTO experiment object.
+	 * @param dto Data transfer object
+	 * @param quantitationType Quantitation type of data
+	 * @return Requested experiment
+	 * @throws DataSourceAccessException if there is an exception accessing
+	 * data from the remote data source
+	 */
+	private Experiment depositData(final ExperimentDto dto,
+			final QuantitationType quantitationType)
+	throws DataSourceAccessException {
+		Experiment exp = new Experiment();
+		// Following text commented out because persistence
+		// has been be modified to store this subclass
+		// TODO: Modify persistence (i.e. database and Hibernate mapping)
+		// to store this subclass
+//		RemoteApiDataSourceProperties dataSourceProps =
+//			new RemoteApiDataSourceProperties(this.principal.getName(),
+//					this.principal.getPassword(), this.principal.getDomain());
+//		exp.setDataSourceProperties(dataSourceProps);
+		exp.setName(dto.getName());
+		exp.setQuantitationType(quantitationType);
+		for (String id : dto.getRemoteBioAssayIds()) {
+			BioAssayDto bioAssayDto =
+				this.selectedDataSource.getBioAssayDto(id);
+			BioAssay ba = this.depositData(bioAssayDto);
+			exp.add(ba);
 		}
-		return this.selectedDataSource.getExperiments(ids);
+		return exp;
+	}
+	
+	
+	/**
+	 * Deposit data from the given DTO into a new bioassay object.
+	 * @param dto DTO containing data
+	 * @return New bioassay object containing data
+	 * @throws DataSourceAccessException if there is an error getting
+	 * array data from remote data source
+	 */
+	private BioAssay depositData(final BioAssayDto dto)
+	throws DataSourceAccessException {
+		DataSerializedBioAssay ba = new DataSerializedBioAssay();
+		Array array = this.getArray(dto.getRemoteArrayId());
+		ba.setArray(array);
+		ba.setName(dto.getName());
+		ChromosomeArrayData cad = null;
+		short currChrom = -1;
+		Iterator<Float> valIt = dto.getValues().iterator();
+		Iterator<String> nameIt = dto.getReporterNames().iterator();
+		while (valIt.hasNext() && nameIt.hasNext()) {
+			float value = valIt.next();
+			String reporterName = nameIt.next();
+			Reporter reporter = this.reporters.get(reporterName);
+			if (reporter != null) {
+				short chrom = reporter.getChromosome();
+				if (cad == null || chrom != currChrom) {
+					if (cad != null) {
+						this.dataFileManger.saveChromosomeArrayData(ba, cad);
+					}
+					cad = new ChromosomeArrayData(chrom);
+				}
+				cad.add(new ArrayDatum(value, reporter));
+				currChrom = chrom;
+			}
+		}
+		if (cad != null) {
+			this.dataFileManger.saveChromosomeArrayData(ba, cad);
+		}
+		return ba;
+	}
+	
+	/**
+	 * Get an array object with given ID.  This object may be cached
+	 * or may have to be obtained through the remote data source.
+	 * @param id ID of array in remote data source
+	 * @return An array object
+	 * @throws DataSourceAccessException if these is a problem obtaining
+	 * data from the remote data source
+	 */
+	private Array getArray(final String id) throws DataSourceAccessException {
+		Array array = this.arrays.get(id);
+		if (array == null) {
+			ArrayDto dto = this.selectedDataSource.getArrayDto(id);
+			array = this.dataFileManger.serializeReporters(id,
+					dto.getReporterNames(), dto.getChromosomeNumbers(),
+					dto.getChromosomeLocations());
+			array.setDisposable(true);
+			this.arrays.put(id, array);
+			List<Reporter> reporters =
+				this.dataFileManger.recoverReporters(array);
+			for (Reporter r : reporters) {
+				this.reporters.put(r.getName(), r);
+			}
+		}
+		return array;
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-14 22:42:07 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,10 +61,10 @@ import org.rti.webgenome.domain.Array;
 public interface ArrayDao {
 
 	/**
-	 * Persist given array.
+	 * Persist or update given array.
 	 * @param array An array
 	 */
-	void save(Array array);
+	void saveOrUpdate(Array array);
 	
 	/**
 	 * Delete given array from persistent storage.

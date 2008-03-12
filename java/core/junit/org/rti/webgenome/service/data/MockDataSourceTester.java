@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-15 17:16:00 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,11 +50,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.service.data;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Map;
 
-import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Principal;
 
 import junit.framework.TestCase;
@@ -93,20 +90,7 @@ public class MockDataSourceTester extends TestCase {
 	 * @throws Exception if anything bad happens
 	 */
 	public void testGetExperiment() throws Exception {
-		Experiment exp = this.mockDataSource.getExperiment("0");
+		ExperimentDto exp = this.mockDataSource.getExperimentDto("0");
 		assertNotNull(exp);
-		assertTrue(exp.getBioAssays().size() > 0);
-	}
-	
-	
-	/**
-	 * Test getExperiments() method.
-	 * @throws Exception if anything bad happens
-	 */
-	public void testGetExperiments() throws Exception {
-		Collection<String> ids = Arrays.asList(new String[] {"0", "1", "2"});
-		Collection<Experiment> exps = this.mockDataSource.getExperiments(ids);
-		assertNotNull(exps);
-		assertEquals(ids.size(), exps.size());
 	}
 }

@@ -240,14 +240,6 @@
 					|
 				</webgenome:onlyIfUserLoggedOut>
 
-			<%-- Profile --%>
-				<webgenome:onlyIfUserLoggedIn>
-					<a class="menuItem" href="javascript:void(0);">
-						My Profile
-					</a>
-					|
-				</webgenome:onlyIfUserLoggedIn>
-
 			<%-- Logout --%>
 				<webgenome:onlyIfUserLoggedIn>
 					<a class="menuItem" href="<html:rewrite page="/user/logout.do"/>">

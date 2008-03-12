@@ -15,6 +15,22 @@
 			name="value(<%= org.rti.webgenome.webui.util.PageContext.EXPERIMENT_ID_PREFIX %><bean:write name="exp" property="key"/>)">
 		<bean:write name="exp" property="value"/><br>
 	</logic:iterate>
+	
+	<p>
+		Organism
+		<html:select property="organismId">
+			<html:options collection="organisms" property="id"
+				labelProperty="displayName"/>
+		</html:select>
+		</p>
+		
+		<p>
+		Quantitation type
+		<html:select property="quantitationTypeId">
+			<html:options collection="qTypes" property="id"
+				labelProperty="name"/>
+		</html:select>
+	</p>
 	<html:submit value="Fetch Experiments"/>
 </html:form>
 </center>

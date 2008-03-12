@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-14 22:42:06 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -75,8 +75,8 @@ implements ArrayDao {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void save(final Array array) {
-		this.getHibernateTemplate().save(array);
+	public void saveOrUpdate(final Array array) {
+		this.getHibernateTemplate().saveOrUpdate(array);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 18:24:43 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -84,7 +84,8 @@ public class InitRemoteSessionAction extends BaseAction {
 		LOGGER.info("Initializing session with remote data source");
 		String dataSourceKey = request.getParameter("dataSourceKey");
 		DataSource dataSource = this.getDataSourcesIndex().get(dataSourceKey);
-		DataSourceSession sess = new DataSourceSession(dataSource);
+		DataSourceSession sess = new DataSourceSession(dataSource,
+				this.getDataFileManager());
 		PageContext.setDataSourceSession(request, sess);
 		request.setAttribute("data.source.name", dataSource.getDisplayName());
 		return mapping.findForward("success");

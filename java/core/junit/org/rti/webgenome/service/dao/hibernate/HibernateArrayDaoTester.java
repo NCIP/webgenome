@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-06-27 12:53:56 $
+$Revision: 1.2 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -83,7 +83,7 @@ public class HibernateArrayDaoTester extends TestCase {
 		array.setChromosomeReportersFileName((short) 2, "file2");
 		
 		// Run tests
-		dao.save(array);
+		dao.saveOrUpdate(array);
 		dao.delete(array);
 	}
 

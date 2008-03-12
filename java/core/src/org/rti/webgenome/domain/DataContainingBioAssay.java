@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-05 23:28:35 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,7 +50,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
@@ -353,5 +355,22 @@ public class DataContainingBioAssay extends BioAssay {
     				+ "Bioassay names do not match.");
     	}
     	this.add(bioAssayDto.getBioAssayData());
+    }
+    
+    
+    /**
+     * Extract reporters from this object.
+     * @return List of reporters
+     */
+    public final List<Reporter> extractReporters() {
+    	List<Reporter> reporters = new ArrayList<Reporter>();
+    	for (Short chrom : this.chromosomeArrayDataIndex.keySet()) {
+    		ChromosomeArrayData cad = this.getChromosomeArrayData(chrom);
+    		List<ArrayDatum> arrayData = cad.getArrayData();
+    		for (ArrayDatum ad : arrayData) {
+    			reporters.add(ad.getReporter());
+    		}
+    	}
+    	return reporters;
     }
 }

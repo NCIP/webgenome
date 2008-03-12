@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.10 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -54,6 +54,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -204,6 +205,51 @@ public final class DataFileManager {
     }
     
     /**
+     * Serialize reporters whose properties are given in the three
+     * given lists and return an Array object representing the
+     * reporters.
+     * @param arrayName Name of array to return
+     * @param names Reporter names
+     * @param chroms Reporter chromosome numbers
+     * @param locs Reporter chromosome positions
+     * @return Array containing reporters
+     */
+    public Array serializeReporters(final String arrayName,
+    		final List<String> names,
+    		final List<Short> chroms, final List<Long> locs) {
+    	Array array = new Array();
+    	array.setName(arrayName);
+        ChromosomeReporters cr = null;
+        Iterator<String> nameIt = names.iterator();
+		Iterator<Short> chromIt = chroms.iterator();
+		Iterator<Long> locIt = locs.iterator();
+		while (nameIt.hasNext() && chromIt.hasNext() && locIt.hasNext()) {
+			short tempChrom = chromIt.next();
+            if (cr == null || cr.getChromosome() != tempChrom) {
+                if (cr != null) {
+                    String fileName = this.serializer.serialize(cr);
+                    array.setChromosomeReportersFileName(cr.getChromosome(),
+                            fileName);
+                    this.chromosomeReportersCache.put(fileName, cr);
+                }
+                cr = new ChromosomeReporters(tempChrom);
+            }
+            Reporter r = new Reporter();
+            r.setChromosome(tempChrom);
+            r.setLocation(locIt.next());
+            r.setName(nameIt.next());
+            cr.add(r);
+        }
+        if (cr != null) {
+            String fileName = this.serializer.serialize(cr);
+            array.setChromosomeReportersFileName(cr.getChromosome(),
+                    fileName);
+            this.chromosomeReportersCache.put(fileName, cr);
+        }
+        return array;
+    }
+    
+    /**
      * Extract specified data from an SMD-format file.
      * @param smdFileReader Reader of SMD data files
      * @param experiment Experiment into which parsed data will be
@@ -260,7 +306,7 @@ public final class DataFileManager {
         LOGGER.info("Total elapsed time: "
                 + stopWatch.getFormattedElapsedTime());
     }
-    
+        
     
     /**
      * Recover chromosome array data associated with
@@ -307,6 +353,22 @@ public final class DataFileManager {
     }
     
     
+    /**
+     * Recover reporters from given array.
+     * @param array An array
+     * @return Reporters from that array sorted by
+     * chromosome and chromosome location.
+     */
+    public List<Reporter> recoverReporters(final Array array) {
+    	List<Reporter> reporters = new ArrayList<Reporter>();
+    	for (Short chrom : array.getChromosomeReportersFileNames().keySet()) {
+    		String fname = array.getChromosomeReportersFileName(chrom);
+    		ChromosomeReporters cr = this.loadChromosomeReporters(fname);
+    		reporters.addAll(cr.getReporters());
+    	}
+    	Collections.sort(reporters);
+    	return reporters;
+    }
     
     /**
      * Save chromsome array data to disk and update
@@ -374,7 +436,12 @@ public final class DataFileManager {
                        .keySet().iterator(); it.hasNext();) {
                    short chromosome = it.next();
                    String fname = dsba.getFileName(chromosome);
-                   this.serializer.decommissionObject(fname);
+                   try {
+                	   this.serializer.decommissionObject(fname);
+                   } catch (Exception e) {
+                	   LOGGER.warn("Unable to delete serialized data file: "
+                			   + fname);
+                   }
                    it.remove();
                }
             }
@@ -396,7 +463,11 @@ public final class DataFileManager {
             
             // Delete files
             for (String fname : fnames) {
-                this.serializer.decommissionObject(fname);
+            	try {
+            		this.serializer.decommissionObject(fname);
+            	} catch (Exception e) {
+            		LOGGER.warn("Error deleting reporter file: " + fname);
+            	}
             }
         }
     }

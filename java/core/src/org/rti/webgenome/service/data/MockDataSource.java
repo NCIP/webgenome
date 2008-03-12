@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-15 20:03:50 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,12 +53,20 @@ package org.rti.webgenome.service.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.rti.webgenome.client.BioAssayDataConstraints;
 import org.rti.webgenome.client.QuantitationTypes;
+import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.domain.ArrayDatum;
+import org.rti.webgenome.domain.BioAssay;
+import org.rti.webgenome.domain.ChromosomeArrayData;
+import org.rti.webgenome.domain.DataContainingBioAssay;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Organism;
 import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.service.client.SimulatedDataClientDataService;
 
 /**
@@ -95,9 +103,17 @@ public class MockDataSource implements DataSource {
 	//  C L A S S    M E M B E R S
 	//
 	
-	/** The experiments provided by this data source. */
-	private final Map<String, Experiment> experiments =
-		new HashMap<String, Experiment>();
+	/** The experiment DTOs provided by this data source indexed by ID. */
+	private final Map<String, ExperimentDto> experiments =
+		new HashMap<String, ExperimentDto>();
+	
+	/** The bioassay DTOs provided by this data source indexed by ID. */
+	private final Map<String, BioAssayDto> bioassays =
+		new HashMap<String, BioAssayDto>();
+	
+	/** The array DTOs provided by this data source indexed by ID. */
+	private final Map<String, ArrayDto> arrays =
+		new HashMap<String, ArrayDto>();
 	
 	//
 	//  C O N S T R U C T O R S
@@ -129,19 +145,112 @@ public class MockDataSource implements DataSource {
 		Collection<Experiment> experimentsCol = service.getClientData(
 				constraints, expIds, CLIENT_ID);
 		
-		// Populate map of member experiments
-		for (Experiment exp : experimentsCol) {
-			this.experiments.put(exp.getName(), exp);
+		// Populate maps of member experiments
+		this.populateMaps(experimentsCol);
+	}
+	
+	
+	/**
+	 * Helper method colled by constructor to populate the three
+	 * member map properties.
+	 * @param expCol Collection of experiments
+	 */
+	private void populateMaps(final Collection<Experiment> expCol) {
+		for (Experiment exp : expCol) {
+			this.addExperimentDto(exp);
+			this.addBioAssayDtos(exp);
+			this.addArrayDtos(exp);
+		}
+	}
+	
+	
+	/**
+	 * Helper method to cache an <code>ExperimentDto</code>.
+	 * @param exp Experiment from which to initialize the DTO.
+	 */
+	private void addExperimentDto(final Experiment exp) {
+		ExperimentDto dto = new ExperimentDto();
+		dto.setName(exp.getName());
+		dto.setOrganismName(Organism.UNKNOWN_ORGANISM.getDisplayName());
+		dto.setRemoteId(exp.getName());
+		for (BioAssay ba : exp.getBioAssays()) {
+			dto.addRemoteBioAssayId(ba.getName());
+		}
+		this.experiments.put(dto.getRemoteId(), dto);
+	}
+	
+	/**
+	 * Helper method to cache a set of <code>BioAssayDto</code>
+	 * objects.
+	 * @param exp Experiment from which to initialize the DTOs.
+	 */
+	private void addBioAssayDtos(final Experiment exp) {
+		for (BioAssay ba : exp.getBioAssays()) {
+			BioAssayDto dto = new BioAssayDto();
+			dto.setName(ba.getName());
+			dto.setRemoteArrayId(ba.getArray().getName());
+			dto.setRemoteId(ba.getName());
+			if (!(ba instanceof DataContainingBioAssay)) {
+				throw new IllegalArgumentException(
+						"Bioassay must be of type DataContainingBioAssay");
+			}
+			DataContainingBioAssay dataContBioAssay =
+				(DataContainingBioAssay) ba;
+			List<Float> values = new ArrayList<Float>();
+			List<String> reporterNames = new ArrayList<String>();
+			for (Short chrom : dataContBioAssay.getChromosomes()) {
+				ChromosomeArrayData caData =
+					dataContBioAssay.getChromosomeArrayData(chrom);
+				for (ArrayDatum datum : caData.getArrayData()) {
+					values.add(datum.getValue());
+					reporterNames.add(datum.getReporter().getName());
+				}
+			}
+			dto.setValues(values);
+			dto.setReporterNames(reporterNames);
+			this.bioassays.put(dto.getRemoteId(), dto);
+		}
+	}
+	
+	/**
+	 * Helper method to cache a set of <code>ArrayDto</code>
+	 * objects.
+	 * @param exp Experiment from which to initialize the DTOs.
+	 */
+	private void addArrayDtos(final Experiment exp) {
+		for (BioAssay bioAssay : exp.getBioAssays()) {
+			Array array = bioAssay.getArray();
+			if (!this.arrays.containsKey(array.getName())) {
+				ArrayDto dto = new ArrayDto();
+				dto.setName(array.getName());
+				dto.setRemoteId(array.getName());
+				List<String> reporterNames = new ArrayList<String>();
+				List<Short> chromosomes = new ArrayList<Short>();
+				List<Long> locations = new ArrayList<Long>();
+				if (!(bioAssay instanceof DataContainingBioAssay)) {
+					throw new IllegalArgumentException(
+							"Bioassay must be of type DataContainingBioAssay");
+				}
+				DataContainingBioAssay dataContBioAssay =
+					(DataContainingBioAssay) bioAssay;
+				for (Short chrom : bioAssay.getChromosomes()) {
+					ChromosomeArrayData cad =
+						dataContBioAssay.getChromosomeArrayData(chrom);
+					for (ArrayDatum datum : cad.getArrayData()) {
+						Reporter reporter = datum.getReporter();
+						reporterNames.add(reporter.getName());
+						chromosomes.add(chrom);
+						locations.add(reporter.getLocation());
+					}
+				}
+				dto.setReporterNames(reporterNames);
+				dto.setChromosomeNumbers(chromosomes);
+				dto.setChromosomeLocations(locations);
+				this.arrays.put(dto.getRemoteId(), dto);
+			}
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Experiment getExperiment(final String id)
-	throws DataSourceAccessException {
-		return this.experiments.get(id);
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -151,26 +260,12 @@ public class MockDataSource implements DataSource {
 	throws DataSourceAccessException {
 		Map<String, String> idsAndNames = new HashMap<String, String>();
 		for (String key : this.experiments.keySet()) {
-			Experiment exp = this.experiments.get(key);
+			ExperimentDto exp = this.experiments.get(key);
 			idsAndNames.put(key, exp.getName());
 		}
 		return idsAndNames;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Collection<Experiment> getExperiments(
-			final Collection<String> ids) throws DataSourceAccessException {
-		Collection<Experiment> exps = new ArrayList<Experiment>();
-		for (String id : ids) {
-			Experiment exp = this.experiments.get(id);
-			if (exp != null) {
-				exps.add(exp);
-			}
-		}
-		return exps;
-	}
 
 	/**
 	 * {@inheritDoc}
@@ -185,5 +280,32 @@ public class MockDataSource implements DataSource {
 	 */
 	public String getDisplayName() {
 		return DISPLAY_NAME;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ArrayDto getArrayDto(final String id)
+	throws DataSourceAccessException {
+		return this.arrays.get(id);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public BioAssayDto getBioAssayDto(final String id)
+	throws DataSourceAccessException {
+		return this.bioassays.get(id);
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public ExperimentDto getExperimentDto(final String id)
+	throws DataSourceAccessException {
+		return this.experiments.get(id);
 	}
 }

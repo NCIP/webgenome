@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.3 $
+$Date: 2008-03-12 22:23:17 $
 
 The Web CGH Software License, Version 1.0
 
@@ -192,7 +192,7 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	 */
 	public void saveArrayAndUpdateCart(final Array array,
 			final ShoppingCart cart) {
-		this.arrayDao.save(array);
+		this.arrayDao.saveOrUpdate(array);
 		this.shoppingCartDao.update(cart);
 	}
 
@@ -252,7 +252,7 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 		if (experiment.getBioAssays().size() > 0) {
 			Array array =
 				experiment.getBioAssays().iterator().next().getArray();
-			this.arrayDao.save(array);
+			this.arrayDao.saveOrUpdate(array);
 		}
 		this.shoppingCartDao.update(cart);
 	}

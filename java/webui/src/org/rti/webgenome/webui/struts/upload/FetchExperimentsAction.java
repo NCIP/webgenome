@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2008-02-22 18:24:43 $
+$Revision: 1.5 $
+$Date: 2008-03-12 22:23:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,6 +62,7 @@ import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.QuantitationType;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.data.DataSourceSession;
@@ -95,24 +96,29 @@ public class FetchExperimentsAction extends BaseAction {
 		DataSourceSession sess = PageContext.getDataSourceSession(request);
 		ShoppingCart cart = this.getShoppingCart(request);
 		Collection<String> expIds = sForm.getSelectedExperimentIds();
-		Collection<Experiment> experiments = sess.fetchExperiments(expIds);
+		Long organismId = Long.valueOf(sForm.getOrganismId());
+		Organism organism = this.getDbService().loadOrganism(organismId);
+		QuantitationType qType = QuantitationType.getQuantitationType(
+				sForm.getQuantitationTypeId());
+		Collection<Experiment> experiments =
+			sess.fetchExperiments(expIds, qType);
         ColorChooser colorChooser = cart.getBioassayColorChooser();
-        Organism org = this.getDbService().loadDefaultOrganism();
         for (Experiment exp : experiments) {
         	Long expId = this.getExperimentIdGenerator().nextId();
         	exp.setId(expId);
-        	exp.setOrganism(org);
+        	exp.setOrganism(organism);
         	this.getIoService().convertBioAssays(exp);
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
         		ba.setId(this.getBioAssayIdGenerator().nextId());
-        		ba.setOrganism(org);
+        		ba.setOrganism(organism);
         	}
+        	cart.add(exp);
+        	if (PageContext.standAloneMode(request)) {
+    			this.getDbService().addArraysAndUpdateCart(exp, cart);
+    		}
         }
-		cart.add(experiments);
-		if (PageContext.standAloneMode(request)) {
-			this.getDbService().updateShoppingCart(cart);
-		}
+		
 		ActionForward forward = mapping.findForward("non.batch");
 		return forward;
 	}
