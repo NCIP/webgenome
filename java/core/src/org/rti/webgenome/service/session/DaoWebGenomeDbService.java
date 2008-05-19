@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2008-03-12 22:23:17 $
+$Revision: 1.4 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -333,6 +333,17 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 		return this.principalDao.load(name);
 	}
 
+	/**
+	 * Load principal with given account name.
+	 * @param email Account email
+	 * @return A principal or null if there is not
+	 * one with given email
+	 */
+	 public Principal loadPrincipalByEmail(String email){
+			return this.principalDao.loadByEmail(email);
+		}
+	
+	
 
 	/**
 	 * {@inheritDoc}

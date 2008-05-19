@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.10 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -52,6 +52,8 @@ package org.rti.webgenome.webui.struts.client;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -198,6 +200,9 @@ public final class ClientPlotAction extends BaseAction {
         	Long expId = this.getExperimentIdGenerator().nextId();
         	exp.setId(expId);
         	exp.setOrganism(org);
+        	if (isExist(cart, exp.getName())){
+        		exp.setName(exp.getName() + "_" + new Date().getTime());
+        	}
         	for (BioAssay ba : exp.getBioAssays()) {
         		ba.setColor(colorChooser.nextColor());
         		ba.setId(this.getBioAssayIdGenerator().nextId());
@@ -240,5 +245,23 @@ public final class ClientPlotAction extends BaseAction {
         sef.setSelectedExperimentIds(experiments);
         
 		return mapping.findForward("success");
+	}
+	
+	/**
+	 * Checks if experiment with this name exist already.
+	 * 
+	 * @param cart
+	 * @param experiment
+	 * @return true - if exists otherwise false
+	 * @throws Exception
+	 */
+	private boolean isExist(ShoppingCart cart, String experimentName) throws Exception{
+		Set<Experiment> experiments = cart.getExperiments();
+		
+		for (Experiment e : experiments){
+			if (e.getName().equals(experimentName))
+				return true;
+		}
+		return false;
 	}
 }

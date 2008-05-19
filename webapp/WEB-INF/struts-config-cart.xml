@@ -36,6 +36,12 @@
 			<forward name="success" path="cart.show.cart"/>
 		</action>
 
+	<!-- Download raw data action -->
+		<action path="/cart/downloadRawData">
+			<forward name="success" path="cart.show.cart"/>
+		</action>
+
+
 	<!-- Remove experiment -->
 		<action path="/cart/removeExperiment">
 			<forward name="success" path="/cart/showCart.do"/>
@@ -123,7 +129,7 @@
 	<!-- Show plot -->
 		<action
 			path="/cart/showPlot">
-			<forward name="success" path="cart.show.plot"/>
+			<forward name="success" path="cart.show."/>
 		</action>
 
 	<!-- Show jobs table -->
@@ -181,17 +187,17 @@
 			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
 		
-	<!-- Adjust analysis parameters from a plot screen -->
-		<action path="/cart/adjustPlotAnalysisParamsSetup">
-			<forward name="success" path="cart.adjust.plot.analysis.params"/>
+	<!-- Adjust analysis parameters from a  screen -->
+		<action path="/cart/adjustAnalysisParamsSetup">
+			<forward name="success" path="cart.adjust..analysis.params"/>
 		</action>
 			
 	<!--
 		 Adjust analysis parameters for all derived experiments in
-		 a plot.
+		 a .
 	-->
-		<action path="/cart/adjustPlotAnalysisParams">
-			<forward name="non.batch" path="/cart/newPlot.do"/>
+		<action path="/cart/adjustAnalysisParams">
+			<forward name="non.batch" path="/cart/new.do"/>
 			<forward name="errors" path="/cart/adjustPlotAnalysisParamsSetup.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>

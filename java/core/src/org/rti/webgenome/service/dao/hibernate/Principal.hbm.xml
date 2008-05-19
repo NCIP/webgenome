@@ -16,7 +16,16 @@
 		<property name="password"/>
 		<property name="domain"/>
 		<property name="admin" type="true_false"/>
-		
+		<property name="firstName" column="first_name"/>
+		<property name="lastName" column="last_name"/>
+		<property name="institution"/>
+		<property name="department"/>
+		<property name="position"/>
+		<property name="degree"/>	
+		<property name="phone"/>
+		<property name="address"/>
+		<property name="email"/>
+		<property name="feedbacks" column="feedbacks" type="true_false"/>
 	</class>
 
 </hibernate-mapping>

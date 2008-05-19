@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.3 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -73,12 +73,32 @@ public interface SecurityMgr extends Authenticator {
 		throws AccountAlreadyExistsException;
 	
 	/**
+	 * Create a new user account with given Principal.
+	 * 
+	 * @param name User name
+	 * @param password Password
+	 * @return Principal object
+	 * @throws AccountAlreadyExistsException if an account
+	 * with the name given by principal already exists.
+	 */
+	public Principal newAccount(Principal p)
+		throws AccountAlreadyExistsException;
+		
+	/**
 	 * Determines if a user account associated with the
 	 * given name exists.
 	 * @param name User name
 	 * @return T/F
 	 */
 	boolean accountExists(String name);
+	
+	/**
+	 * Determines if a user account associated with the
+	 * given email exists.
+	 * @param name User name
+	 * @return T/F
+	 */
+	boolean accountByEmailExists(final String email);
 	
 	/**
 	 * Update, which is used primarily for changing password.

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.4 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -115,6 +115,34 @@ public final class SecurityMgrImpl implements SecurityMgr {
 		return p;
 	}
 	
+	/**
+	 * Create a new user account with given Principal.
+	 * 
+	 * @param name User name
+	 * @param password Password
+	 * @return Principal object
+	 * @throws AccountAlreadyExistsException if an account
+	 * with the name given by principal already exists.
+	 */
+	public Principal newAccount(Principal p)
+		throws AccountAlreadyExistsException {
+		
+		if (p.getName() == null || p.getName().length() < 1 
+				|| p.getPassword() == null || p.getPassword().length() < 1
+				|| p.getEmail() == null || p.getEmail().length() < 1) {
+			throw new IllegalArgumentException(
+					"Email, name and password must be non-null");
+		}
+		if (this.accountExists(p.getName())) {
+			throw new AccountAlreadyExistsException("An account with name '"
+					+ p.getName() + "' already exists");
+		}
+		
+		p.setDomain(WEBGENOME_DOMAIN);
+		this.dbService.savePrincipal(p);
+		return p;
+	}
+	
 	
 	/**
 	 * Determines if a user account associated with the
@@ -129,6 +157,21 @@ public final class SecurityMgrImpl implements SecurityMgr {
 		}
 		return this.dbService.loadPrincipal(name) != null;
 	}
+	
+	/**
+	 * Determines if a user account associated with the
+	 * given email exists.
+	 * @param name User name
+	 * @return T/F
+	 */
+	public boolean accountByEmailExists(final String email) {
+		if (email == null || email.length() < 1) {
+			throw new IllegalArgumentException(
+					"Account email cannot be empty");
+		}
+		return this.dbService.loadPrincipalByEmail(email) != null;
+	}
+	
 	
 	
 	/**

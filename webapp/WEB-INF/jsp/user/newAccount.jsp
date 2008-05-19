@@ -8,22 +8,38 @@
 
 	<table cellpadding="5" cellspacing="0" border="0">
 	
-	<%-- User name --%>
 		<tr>
+			<td colspan="2" valign="middle" align="center">				
+				<font color="red">*</font> Required Information  
+			</td>			
+		</tr>
+	
+	<%-- Email --%>
+		<tr>
+			<td valign="middle" align="left">				
+				<font color="red">*</font>Email address:<br>				
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="email"/>
+			</td>
+		</tr>
+		
+	<%-- Login name --%>
+		<%-- Login name is user e-mail<tr>
 			<td valign="middle" align="left">
 				<html:errors property="name"/>
-				User name:
+				<font color="red">*</font>Login name:
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="name"/>
 			</td>
-		</tr>
+		</tr>--%>
 		
 	<%-- Password --%>
 		<tr>
 			<td valign="middle" align="left">
 				<html:errors property="password"/>
-				Password:
+				<font color="red">*</font>Password:
 			</td>
 			<td valign="middle" align="left">
 				<html:password property="password"/>
@@ -34,10 +50,84 @@
 		<tr>
 			<td valign="middle" align="left">
 				<html:errors property="confirmedPassword"/>
-				Confirm password:
+				<font color="red">*</font>Confirm password:
 			</td>
 			<td valign="middle" align="left">
 				<html:password property="confirmedPassword"/>
+			</td>
+		</tr>
+		
+	
+		
+		
+			
+			
+	<%-- First name --%>
+		<tr>
+			<td valign="middle" align="left">				
+				First name:
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="firstName"/>
+			</td>
+		</tr>
+	
+	<%-- Last name --%>
+		<tr>
+			<td valign="middle" align="left">				
+				Last name:
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="lastName"/>
+			</td>
+		</tr>
+	
+	<%-- Degree --%>
+		<tr>
+			<td valign="middle" align="left">				
+				Degree:
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="degree"/>
+			</td>
+		</tr>
+	
+	<%-- Institution --%>
+		<tr>
+			<td valign="middle" align="left">				
+				Institution:
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="institution"/>
+			</td>
+		</tr>
+	
+	<%-- Department --%>
+		<tr>
+			<td valign="middle" align="left">				
+				Department:
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="department"/>
+			</td>
+		</tr>
+	
+	<%-- Position --%>
+		<tr>
+			<td valign="middle" align="left">				
+				Position:
+			</td>
+			<td valign="middle" align="left">
+				<html:text property="position"/>
+			</td>
+		</tr>
+		
+	
+		
+	
+		<tr>			
+			<td valign="middle" align="left" colspan="2">
+				<html:checkbox property="feedbacks"/>Would you like to contribute your feedbacks?
 			</td>
 		</tr>
 		

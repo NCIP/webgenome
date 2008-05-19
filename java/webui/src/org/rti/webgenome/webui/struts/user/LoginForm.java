@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:36 $
+$Revision: 1.2 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,10 +79,19 @@ public class LoginForm extends BaseForm {
 	/** Password. */
 	private String password = "";
 	
+	
+	
+	
 	// ===========================
 	//        Getters/setters
 	// ===========================
 	
+	
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
 	/**
 	 * Get user name.
 	 * @return User name.

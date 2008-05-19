@@ -2,7 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 
-<h1 align="center">Select Experiments</h1>
+<h1 align="center">.jspSelect Experiments</h1>
 
 <p align="center">
 	<html:errors property="global"/>

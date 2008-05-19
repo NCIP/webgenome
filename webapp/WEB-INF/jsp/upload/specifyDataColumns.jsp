@@ -83,7 +83,7 @@
 
 <p>
 	<input type="submit" value="OK" />
-	<input type="button" value="Cancel" />
+	<input type="button" value="Cancel" onClick="window.location.href='<html:rewrite page="/upload/dataFileUploadForm.do"/>'"/>
 </p>
 </html:form>
 </center>

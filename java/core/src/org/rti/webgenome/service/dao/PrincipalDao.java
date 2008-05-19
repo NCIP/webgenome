@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.3 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,6 +79,14 @@ public interface PrincipalDao {
 	 * if no such principal exists.
 	 */
 	Principal load(String name);
+	
+	/**
+	 * Load principal with given email.
+	 * @param name Name of principal.
+	 * @return Principal with given email, or null
+	 * if no such principal exists.
+	 */
+	Principal loadByEmail(String email);
 	
 	
 	/**

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.3 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -178,6 +178,15 @@ public interface WebGenomeDbService {
 	 * one with given name
 	 */
 	Principal loadPrincipal(String name);
+	
+	/**
+	 * Load principal with given account name.
+	 * @param email Account email
+	 * @return A principal or null if there is not
+	 * one with given email
+	 */
+	Principal loadPrincipalByEmail(String email);
+	
 	
 	/**
 	 * Update persistent state of given principal.

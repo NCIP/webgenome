@@ -15,6 +15,11 @@
 		<form-bean
 			name="login.form"
 			type="org.rti.webgenome.webui.struts.user.LoginForm"/>
+			
+	<!-- New account form -->
+		<form-bean
+			name="new.account.form"
+			type="org.rti.webgenome.webui.struts.user.NewAccountForm"/>		
 	
 	<!-- Plot parameters form -->
 		<form-bean

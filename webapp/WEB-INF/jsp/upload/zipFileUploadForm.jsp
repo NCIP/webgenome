@@ -20,7 +20,7 @@
 
 <p>
 	<html:submit value="Submit ZIP File"/>
-	<input type="button" value="Cancel" />
+	<input type="button" value="Cancel" onClick="window.location.href='<html:rewrite page="/upload/initializeUploadForm.do"/>'"/>
 </p>
 </html:form>
 </center>

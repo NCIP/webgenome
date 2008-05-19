@@ -110,6 +110,6 @@ Quantitation type
 
 <p>
 	<html:submit property="OK"/>
-	<input type="button" value="Cancel" />
+	<input type="button" value="Cancel" onClick="window.location.href='<html:rewrite page="/upload/mainImport.do"/>'"/>
 </p>
 </html:form>

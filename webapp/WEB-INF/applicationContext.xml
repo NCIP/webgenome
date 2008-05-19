@@ -228,6 +228,10 @@ below should probably be configurable somehow. -->
 					<key><value>wgtest</value></key>
 					<value>wgpass</value>
 				</entry>
+				<entry>
+					<key><value>wgtest2</value></key>
+					<value>wgpass2</value>
+				</entry>
 			</map>
 		</constructor-arg>
 		<constructor-arg>

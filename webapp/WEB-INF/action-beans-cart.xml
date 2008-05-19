@@ -7,7 +7,13 @@
 	<bean name="/cart/showCart"
 		class="org.rti.webgenome.webui.struts.cart.ShowCartSetupAction"
 		parent="baseAction"/>
-	
+
+<!-- Show shopping cart -->
+	<bean name="/cart/downloadRawData"
+		class="org.rti.webgenome.webui.struts.cart.DownloadRawDataAction"
+		parent="baseAction"/>
+
+					
 <!-- Show jobs -->
 	<bean name="/cart/showJobs"
 		class="org.rti.webgenome.webui.struts.cart.ShowJobsSetupAction"

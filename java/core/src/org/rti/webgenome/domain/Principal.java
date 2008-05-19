@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.3 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -61,6 +61,8 @@ public class Principal {
 	//      Attributes
 	// ======================
 	
+	
+	
 	/** Identifier used as primary key for persistence. */
 	private Long id = null;
 
@@ -75,6 +77,20 @@ public class Principal {
 
 	/** Is user an administrator? */
 	private boolean admin = false;
+	
+	private String firstName = "";
+	private String lastName = "";
+	private String institution = "";
+	private String department = "";
+	private String position = "";
+	private String degree = "";
+	private String phone = "";
+	private String address = "";
+	private boolean feedbacks = false;
+	private String email = null;
+	
+	
+	
 	
 	// ==========================
 	//     Getters/setters
@@ -194,4 +210,111 @@ public class Principal {
 		this.password = password;
 		this.domain = domain;
 	}
+
+
+	
+
+	public String getInstitution() {
+		return institution;
+	}
+
+
+	public void setInstitution(String institution) {
+		this.institution = institution;
+	}
+
+
+	public String getDepartment() {
+		return department;
+	}
+
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+
+	public String getPosition() {
+		return position;
+	}
+
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+
+	public String getDegree() {
+		return degree;
+	}
+
+
+	public void setDegree(String degree) {
+		this.degree = degree;
+	}
+
+
+	public String getPhone() {
+		return phone;
+	}
+
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+
+	public String getAddress() {
+		return address;
+	}
+
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+
+	
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public boolean isFeedbacks() {
+		return feedbacks;
+	}
+
+
+	public void setFeedbacks(boolean feedbacks) {
+		this.feedbacks = feedbacks;
+	}
+
+
+	
 }

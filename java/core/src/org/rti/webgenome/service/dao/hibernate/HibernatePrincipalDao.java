@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.3 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -98,6 +98,24 @@ public final class HibernatePrincipalDao extends HibernateDaoSupport
 		}
 		return p;
 	}
+	
+	/**
+	 * Load principal with given name.
+	 * @param name Name of principal.
+	 * @return Principal with given name, or null
+	 * if no such principal exists.
+	 */
+	public Principal loadByEmail(final String email) {
+		String query = "from Principal p where p.email = ?";
+		Object[] args = new Object[] {email};
+		Principal p = null;
+		List principals = this.getHibernateTemplate().find(query, args);
+		if (principals != null && principals.size() > 0) {
+			p = (Principal) principals.get(0);
+		}
+		return p;
+	}
+	
 	
 	
 	/**

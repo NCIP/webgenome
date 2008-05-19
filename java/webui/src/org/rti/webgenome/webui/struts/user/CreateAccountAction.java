@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.4 $
+$Date: 2008-05-19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -58,6 +58,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.webui.struts.BaseAction;
 
 
@@ -87,6 +88,9 @@ public final class CreateAccountAction extends BaseAction {
     ) throws Exception {
     	NewAccountForm naf = (NewAccountForm) form;
     	
+    	// use email as login name
+    	naf.setName(naf.getEmail());
+    	
     	// See if there is already a user with the same account name
     	if (this.getSecurityMgr().accountExists(naf.getName())) {
     		ActionErrors errors = new ActionErrors();
@@ -95,12 +99,46 @@ public final class CreateAccountAction extends BaseAction {
     		return mapping.findForward("failure");
     	}
     	
+    	// See if there is already a user with the same account name
+    	if (this.getSecurityMgr().accountByEmailExists(naf.getEmail())) {
+    		ActionErrors errors = new ActionErrors();
+    		errors.add("global", new ActionError("account.email.already.exists"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("failure");
+    	}
+    	
+    	Principal p = new Principal();
+    	form2Principal(naf, p);
+    	
     	// Create new account
-    	this.getSecurityMgr().newAccount(naf.getName(), naf.getPassword());
+    	this.getSecurityMgr().newAccount(p);
     	
     	// Add new account name to request for downstream confirmation JSP
     	request.setAttribute("account.name", naf.getName());
     	
         return mapping.findForward("success");
+    }
+    
+    /**
+     * Converts NewAccountForm to Principal.
+     * 
+     * @param form
+     * @param p
+     */
+    private void form2Principal(NewAccountForm form, Principal p){
+    	p.setAddress(form.getAddress());
+    	p.setDegree(form.getDegree());
+    	p.setDepartment(form.getDepartment());
+    	p.setEmail(form.getEmail());
+    	p.setFeedbacks(form.isFeedbacks());
+    	p.setFirstName(form.getFirstName());
+    	p.setInstitution(form.getInstitution());
+    	p.setLastName(form.getLastName());
+    	p.setFirstName(form.getFirstName());
+    	p.setName(form.getEmail());
+    	p.setPassword(form.getPassword());
+    	p.setPhone(form.getPhone());
+    	p.setPosition(form.getPosition());
+    	
     }
 }
