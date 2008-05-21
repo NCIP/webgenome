@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-05-21 20:16:48 $
+$Revision: 1.3 $
+$Date: 2008-05-21 21:02:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -127,7 +127,7 @@ public class DownloadRawDataAction extends BaseAction {
 	    // Write bioassay raw data to the Output stream   
 	    ServletOutputStream sos = response.getOutputStream();
 	          
-	    response.setHeader("Content-Disposition", "attachment; filename=" + ba.getName() + "csv");               
+	    response.setHeader("Content-Disposition", "attachment; filename=" + ba.getName() + ".csv");               
 	    response.setContentType("appilication/octet-stream");        
 	    response.setBufferSize(1024 * 15);
                    
@@ -250,7 +250,7 @@ public class DownloadRawDataAction extends BaseAction {
     	
     	
     	
-    	
-        return mapping.findForward("success");
+    	return null;
+       // return mapping.findForward("success");
     }
 }
