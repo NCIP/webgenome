@@ -7,6 +7,19 @@
 
 <script language="Javascript">
 
+	
+	// Open window to choose bioassay color
+	function downloadRawData(bioAssayId) {
+		var url = "<html:rewrite page="/cart/downloadRawData.do"/>"
+			+ "?id=" + bioAssayId;
+		window.open(
+			url,
+			"_blank", 
+			"width=200, height=250, menubar=no, status=no, scrollbars=no, "
+			+ "resizable=no, toolbar=no, location=no, directories=no"
+		);
+	}
+
 	// Open window to choose bioassay color
 	function colorChooser(bioAssayId) {
 		var url = "<html:rewrite page="/cart/colorChooser.do"/>"
@@ -158,6 +171,14 @@
 							/></td>
 							<td valign="middle" align="right" width="48">
 								<span style="font-size:16px;">
+								
+								 <a href="<%= request.getContextPath()%>/cart/downloadRawData.do?id=<bean:write name="bioAssay" property="id"/>">
+								     <html:img page="/images/icon-nameChooser.gif"
+												title="Download Raw Data"
+												 border="0"
+												 width="15" height="15"
+									/></a>
+								 
 									<a href="#"
 										onclick="nameChange('<bean:write name="bioAssay" property="id"/>', 'bioassay')"
 											><html:img page="/images/icon-nameChooser.gif"

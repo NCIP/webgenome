@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-05-19 20:11:02 $
+$Revision: 1.2 $
+$Date: 2008-05-21 20:16:48 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,12 +50,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.struts.cart;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,6 +75,7 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.data.DataSourceSession;
 import org.rti.webgenome.service.io.DataFileManager;
+import org.rti.webgenome.service.io.RectangularFileWriter;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
@@ -99,15 +102,50 @@ public class DownloadRawDataAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
-    	
+    	ChromosomeArrayDataGetter getter = new SerializedChromosomeArrayDataGetter(
+				this.getDataFileManager());
+		
     	// Get shopping cart
     	ShoppingCart cart = this.getShoppingCart(request);
     	
-    	// Get ID of experiment to remove
+    	// Get ID of selected bioassay
     	long id = Long.parseLong(request.getParameter("id"));
+
+    	// Get sellected bioassay id
+    	BioAssay ba = cart.getBioAssay(id);
     	
+    	// Retrieve bioassay raw data
+    	ChromosomeArrayData chrArryData = getter.getChromosomeArrayData(ba, (short)1);
+		List<ArrayDatum> arrDatums = chrArryData.getArrayData();
+		
+		// Write data into file
+		String fullFileName = this.getIoService().writeBioAssayRawData(arrDatums);
+		
+		// Set the file name into request for later download.
+		request.setAttribute("rawDataFileName", fullFileName);
+				                
+	    // Write bioassay raw data to the Output stream   
+	    ServletOutputStream sos = response.getOutputStream();
+	          
+	    response.setHeader("Content-Disposition", "attachment; filename=" + ba.getName() + "csv");               
+	    response.setContentType("appilication/octet-stream");        
+	    response.setBufferSize(1024 * 15);
+                   
+	    StringBuffer sbuff = new StringBuffer();
+	    RectangularFileWriter rfw = new RectangularFileWriter(arrDatums);
+	    rfw.writeData2StringBuffer(sbuff);
+	    		   
+	    sos.write(sbuff.toString().getBytes());
+	    int totalBytes = sbuff.length();             
+	    response.setContentLength(totalBytes);   
+	        
+	    sos.flush(); 
+	    sos.close();  
+	    	   
+	    	   
+	    	   
     	// Retrieve experiment
-    	Experiment exp = cart.getExperiment(id);
+/*    	Experiment exp = cart.getExperiment(id);
     	Set<BioAssay> bioassyas = exp.getBioAssays();
     	
     	if (exp.dataInMemory())
@@ -156,13 +194,13 @@ public class DownloadRawDataAction extends BaseAction {
     			List<ArrayDatum> arrDatums = chrArryData.getArrayData();
     			
     			for (ArrayDatum datum : arrDatums){
-    				System.out.println("Datum value is " + datum.getValue());
+    				System.out.println("Datum value is " + datum.getValue());    				
     			}
     			
     		}
     		
     		
-    		
+  */  		
     		
     		/*
     		   // Case: Plot immediately
@@ -207,7 +245,7 @@ public class DownloadRawDataAction extends BaseAction {
     		}*/
     		
     	
-    	}
+    	/*}*/
     	
     	
     	

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.15 $
-$Date: 2008-02-22 03:54:10 $
+$Revision: 1.16 $
+$Date: 2008-05-21 20:17:26 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -67,6 +68,7 @@ import java.util.zip.ZipInputStream;
 import org.apache.log4j.Logger;
 import org.rti.webgenome.core.WebGenomeSystemException;
 import org.rti.webgenome.domain.Array;
+import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.DataContainingBioAssay;
@@ -536,5 +538,27 @@ public class IOService {
 	public File getWorkingFile(final String fileName) {
 		String path = this.workingDir.getAbsolutePath() + "/" + fileName;
 		return new File(path);
+	}
+	
+	
+	/**
+	 * Create unique file name into working directory and writes bioassya raw data
+	 * into delimiter separated rectangular file. 
+	 * 
+	 * @param arrDatums
+	 * @return
+	 * @throws Exception
+	 */
+	public String writeBioAssayRawData(final List<ArrayDatum> arrDatums) throws Exception{
+		// craete unique file name
+		String fullFileName = this.workingDir.getAbsolutePath() + "/" + fileNameGenerator.next();
+		
+		// write bioassay data into the file
+		File f = new File(fullFileName);
+		RectangularFileWriter rfw = new RectangularFileWriter(arrDatums);
+    	
+		
+		// return the file name
+		return fullFileName;
 	}
 }
