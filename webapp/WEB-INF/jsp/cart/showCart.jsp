@@ -173,7 +173,7 @@
 								<span style="font-size:16px;">
 								
 								 <a href="<%= request.getContextPath()%>/cart/downloadRawData.do?id=<bean:write name="bioAssay" property="id"/>">
-								     <html:img page="/images/icon-nameChooser.gif"
+								     <html:img page="/images/idownload-raw.gif"
 												title="Download Raw Data"
 												 border="0"
 												 width="15" height="15"
