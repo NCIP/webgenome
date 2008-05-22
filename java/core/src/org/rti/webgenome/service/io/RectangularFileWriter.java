@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-05-21 20:17:38 $
+$Revision: 1.2 $
+$Date: 2008-05-22 20:31:43 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,7 @@ import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.ChromosomeArrayData;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.util.IOUtils;
+import org.rti.webgenome.units.BpUnits;
 
 /**
  * Write files of rectangular data providing access to
@@ -75,7 +76,8 @@ import org.rti.webgenome.util.IOUtils;
  * a row in the matrix.  Columns are separated by the
  * delimiting character.  The first line (i.e., row)
  * must contain column headings (i.e., names).
- * @author dhall
+ * 
+ * @author vbakalov
  *
  */
 public final class RectangularFileWriter {
@@ -84,8 +86,17 @@ public final class RectangularFileWriter {
     //        Attributes
     // ================================
 	
-	/** Column headings */
-	static protected final String headings[] = {"Resporeter Name", "Chromosome", "Chromosome Position", "Reporter Values"};
+	/** Heading indexes */
+	static public final short REPORTER_NAME_HEADING_IDX = 0;
+	static public final short CHROMOSOME_HEADING_IDX = 1;
+	static public final short POSITION_HEADING_IDX = 2;
+	static public final short REPORTER_VALUE_HEADING_IDX = 3;
+	
+	/* Default reporter value heading name */
+	static public final String DEFAULT_REPORTER_VALUE_HEADING = "Reporter Value";
+	
+	/** Default column headings */
+	static protected  String headings[] = {"Resporeter Name", "Chromosome", "Position", "Reporter Value"};
 	
     
     
@@ -118,12 +129,25 @@ public final class RectangularFileWriter {
 
     /**
      * Constructor.
-     * @param file A file
+     * @param arrDatums ArrayDatum to write
      */
     public RectangularFileWriter(List<ArrayDatum> arrDatums) {               
         this.arrDatums = arrDatums;
     }
     
+    /**
+     * Constructor.
+     * @param arrDatums ArrayDatum to write
+     * @param headings array of column headings
+     */
+    public RectangularFileWriter(List<ArrayDatum> arrDatums, String headings[]) {               
+        this.arrDatums = arrDatums;
+        if (headings != null)
+        	this.headings = headings;
+        
+    }
+    
+   
     
     
     // =================================
@@ -196,13 +220,23 @@ public final class RectangularFileWriter {
     	for (ArrayDatum ad : arrDatums){
     		Reporter r = ad.getReporter();
     		sbuff.append(r.getName() + delimiter);
-    		sbuff.append(r.getChromosome() + delimiter);
-    		sbuff.append(r.getLocation() + delimiter);
-    		sbuff.append(ad.getValue());
+    		sbuff.append(new Short(r.getChromosome()).toString() + delimiter);    		
+    		sbuff.append(new Long(r.getLocation()).toString() + delimiter);
+    		sbuff.append(new Float(ad.getValue()).toString());
     		sbuff.append("\n");    			
 		}
     
     			   
     }
+
+	public static String[] getHeadings() {
+		return headings;
+	}
+
+	public static void setHeadings(String[] headings) {
+		RectangularFileWriter.headings = headings;
+	}
+
+	
     
 }

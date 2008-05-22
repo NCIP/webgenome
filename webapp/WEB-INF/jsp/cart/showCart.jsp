@@ -61,6 +61,11 @@
 		title="Select color"
 		 border="0"
 		 width="15" height="15"/> = Show plot &nbsp;&nbsp;
+		 
+    <html:img page="/images/icon-download.gif"
+		title="New name" border="0"
+		width="15" height="15"/> = Download data &nbsp;&nbsp;
+		
 	<html:img page="/images/icon-nameChooser.gif"
 		title="New name" border="0"
 		width="15" height="15"/> = New name &nbsp;&nbsp;
@@ -169,11 +174,11 @@
 									border="0"
 									width="1" height="1"
 							/></td>
-							<td valign="middle" align="right" width="48">
+							<td valign="middle" align="right" width="68">
 								<span style="font-size:16px;">
 								
-								 <a href="<%= request.getContextPath()%>/cart/downloadRawData.do?id=<bean:write name="bioAssay" property="id"/>">
-								     <html:img page="/images/idownload-raw.gif"
+								 <a href="<%= request.getContextPath()%>/cart/downloadRawData.do?bioAssId=<bean:write name="bioAssay" property="id"/>&expId=<bean:write name="experiment" property="id"/>">
+								     <html:img page="/images/icon-download.gif"
 												title="Download Raw Data"
 												 border="0"
 												 width="15" height="15"
