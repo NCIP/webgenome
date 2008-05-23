@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-05-22 20:31:43 $
+$Revision: 1.3 $
+$Date: 2008-05-23 21:08:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,7 +105,10 @@ public final class RectangularFileWriter {
     private char delimiter = ',';
     
     /** List of arrDatums to write in the file. */
-    List<ArrayDatum> arrDatums = null;
+    private List<ArrayDatum> arrDatums = null;
+    
+    private File file = null;
+    
     
     /**
      * Get delimiting character that separates columns.
@@ -161,12 +164,12 @@ public final class RectangularFileWriter {
      * 
      * @return Column headings
      */
-    public void writeData2File(final File f) throws Exception{
+    public void writeData2File() throws Exception{
         
         BufferedReader in = null;
         try {
         	
-        	FileOutputStream fos = new FileOutputStream(f, true);
+        	FileOutputStream fos = new FileOutputStream(this.file, true);
     		PrintStream ps = new PrintStream(fos);
     		
     		// write column headings
@@ -177,13 +180,12 @@ public final class RectangularFileWriter {
         	ps.print("\n");
         	
         	// print reporter values and chromosome number and position
-        	for (ArrayDatum ad : arrDatums){
-        		Reporter r = ad.getReporter();
-        		ps.print(r.getName() + delimiter);
-    			ps.print(r.getChromosome() + delimiter);
-    			ps.print(r.getLocation() + delimiter);
-    			ps.print(ad.getValue());
-    			ps.print("\n");    			
+        	for (ArrayDatum ad : arrDatums){        		
+            		Reporter r = ad.getReporter();
+            		ps.print(r.getName() + delimiter);
+            		ps.print(r.getChromosome() + delimiter);    		
+            		ps.print(r.getLocation() + delimiter);
+            		ps.println(ad.getValue());            		    			        		
     		}
            
         	ps.close();
@@ -191,7 +193,7 @@ public final class RectangularFileWriter {
     		
         } catch (Exception e) {
             throw new WebGenomeSystemException("Error reading file '"
-                    + f.getAbsolutePath()
+                    + this.file.getAbsolutePath()
                     + "'", e);
         } finally {
         	IOUtils.close(in);
@@ -235,6 +237,14 @@ public final class RectangularFileWriter {
 
 	public static void setHeadings(String[] headings) {
 		RectangularFileWriter.headings = headings;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 
 	

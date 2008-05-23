@@ -1,6 +1,6 @@
 /*
-$Revision: 1.7 $
-$Date: 2008-01-05 00:00:28 $
+$Revision: 1.8 $
+$Date: 2008-05-23 21:08:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -53,10 +53,12 @@ package org.rti.webgenome.webui.util;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.GenomeInterval;
@@ -137,6 +139,33 @@ public final class ProcessingModeDecider {
 		}
 		BG_PROCESSING_ANALYSIS_THRESHOLD = threshold;
 	}
+	
+	/**
+	 * Threshold number of individual array datum
+	 * for background processing of download raw data
+	 * operation.  This may be initialized
+	 * from a system property 'bg.processing.download.data.threshold.'
+	 * If this property is not set, the threshold will be
+	 * set to {@link java.lang.Integer.MAX_VALUE}.  Hence,
+	 * all plotting operations will be performed immediately.
+	 */
+	private static final int BG_PROCESSING_DOWNLOAD_DATA_THRESHOLD;
+	static {
+		String propName = "bg.processing.download.data.threshold";
+		int threshold = Integer.MAX_VALUE;
+		String thresholdProp = SystemUtils.getApplicationProperty(
+				propName);
+		if (thresholdProp != null) {
+			try {
+				threshold = Integer.parseInt(thresholdProp);
+			} catch (NumberFormatException e) {
+				LOGGER.warn("System property '"
+						+ propName + "' is not a valid number");
+			}
+		}
+		BG_PROCESSING_DOWNLOAD_DATA_THRESHOLD = threshold;
+	}
+	
 	
 	/**
 	 * Threshold file size
@@ -470,4 +499,40 @@ public final class ProcessingModeDecider {
 		}
 		return background;
 	}
+	
+	
+	/**
+	 * Determines whether download a list of ArrayDatum that 
+	 * contain bioassay raw data should be performed in the background.  
+	 * It does this by determining if the list of ArrayDatum size 
+	 * is greater than a threshold.  This treshold
+	 * may be set using the system property
+	 * {@code bg.processing.download.data.threshold}.  If this
+	 * property is not set, then the threshold is set
+	 * to {@link java.lang.Long.MAX_VALUE}, so
+	 * the method will always return {@code false}.
+	 * If the session mode is CLIENT, then operations are
+	 * never performed in the background.
+	 * @param List<ArrayDatum> that will be processed
+	 * @param request Servlet request
+	 * @return {@code true} if the total file
+	 * size is greater than a threshold and should, hence,
+	 * indicate that the process in question should be
+	 * performed in the background.  Returns {@code false}
+	 * otherwise.
+	 * @throws SessionTimeoutException If the session mode cannot
+	 * be determined indicating a timeout
+	 */
+	public static boolean downloadInBackground(
+			final List<ArrayDatum> arrDatums, final HttpServletRequest request)
+	throws SessionTimeoutException {
+		boolean background = false;
+		if (PageContext.getSessionMode(request) != SessionMode.CLIENT) {
+			background = arrDatums.size() > BG_PROCESSING_DOWNLOAD_DATA_THRESHOLD;
+		}
+		return background;
+	}
+	
+	
+	
 }

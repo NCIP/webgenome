@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2008-05-22 20:31:18 $
+$Revision: 1.5 $
+$Date: 2008-05-23 21:08:56 $
 
 The Web CGH Software License, Version 1.0
 
@@ -66,6 +66,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.ArrayDatum;
 import org.rti.webgenome.domain.BioAssay;
@@ -74,6 +76,7 @@ import org.rti.webgenome.domain.DataColumnMetaData;
 import org.rti.webgenome.domain.DataContainingBioAssay;
 import org.rti.webgenome.domain.DataFileMetaData;
 import org.rti.webgenome.domain.Experiment;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.Reporter;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
@@ -82,9 +85,11 @@ import org.rti.webgenome.graphics.util.ColorChooser;
 import org.rti.webgenome.service.data.DataSourceSession;
 import org.rti.webgenome.service.io.DataFileManager;
 import org.rti.webgenome.service.io.RectangularFileWriter;
+import org.rti.webgenome.service.job.DownloadDataJob;
 import org.rti.webgenome.service.util.ChromosomeArrayDataGetter;
 import org.rti.webgenome.service.util.InMemoryChromosomeArrayDataGetter;
 import org.rti.webgenome.service.util.SerializedChromosomeArrayDataGetter;
+import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
@@ -92,7 +97,6 @@ import org.rti.webgenome.webui.util.ProcessingModeDecider;
 public class DownloadRawDataAction extends BaseAction {
 
 	
-    
     /**
      * Execute action.
      * @param mapping Routing information for downstream actions
@@ -134,7 +138,29 @@ public class DownloadRawDataAction extends BaseAction {
     	ChromosomeArrayData chrArryData = getter.getChromosomeArrayData(ba, (short)1);
 		List<ArrayDatum> arrDatums = chrArryData.getArrayData();
 		
-				                
+			
+		String imagePath = request.getContextPath()+ "/download" + "/" + "fileName";
+		
+		String absPlotPath = this.getServlet().getServletContext().getRealPath("/download");
+		
+		// Iinitalize RectangularFileWriter 
+		RectangularFileWriter rfw = new RectangularFileWriter(arrDatums, headings);
+		
+		// set file name
+		
+		if (ProcessingModeDecider.downloadInBackground(arrDatums, request)) {
+			Principal principal = PageContext.getPrincipal(request);
+			DownloadDataJob job = new DownloadDataJob(arrDatums, ba, rfw,
+					principal.getName(), principal.getDomain());
+			this.getJobManager().add(job);
+			ActionMessages messages = new ActionMessages();
+    		messages.add("global", new ActionMessage("download.job"));
+    		this.saveMessages(request, messages);
+			mapping.findForward("batch");
+			
+		}
+		
+		
 	    // Write bioassay raw data to the Output stream   
 	    ServletOutputStream sos = response.getOutputStream();
 	    
@@ -145,7 +171,7 @@ public class DownloadRawDataAction extends BaseAction {
         
 	    // Write data to buffer
 	    StringBuffer sbuff = new StringBuffer();
-	    RectangularFileWriter rfw = new RectangularFileWriter(arrDatums, headings);
+	    
 	    rfw.writeData2StringBuffer(sbuff);
 	    		   
 	    sos.write(sbuff.toString().getBytes());
