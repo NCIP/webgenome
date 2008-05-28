@@ -55,7 +55,19 @@
 
 <h1 align="center">Workspace</h1>
 
+
+<html:messages id="msg" message="true">
+	<p align="center">
+		<span class="message-stationary">
+			<bean:write name="msg"/><br>
+		</span>	
+	</p>
+</html:messages>
+
+
+
 <center>
+
 
 	<html:img page="/images/icon-show.gif"
 		title="Select color"
@@ -84,12 +96,14 @@
 		 border="0"
 		 width="15" height="15"/> = Change parameters
 	
+<html:errors property="global"/>
+
 
 <table cellpadding="10"><tr valign="top" align="center"><td>
 
 <%-- Experiments --%>
-<html:form action="/cart/routeToOperationPage">
-	<html:errors property="global"/>
+<html:form action="/cart/routeToOperationPage" >
+	
 	<table class="table">
 		<tr>
 			<th colspan="2">Experiments</th>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.6 $
+$Date: 2008-05-28 19:39:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.job;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 
 /**
@@ -100,6 +105,15 @@ public abstract class AbstractJob implements Job {
 	 * If ths job has not started, this should be set to false.
 	 */
 	private boolean userNotifiedOfStart = false;
+	
+	/**
+	 * 
+	 * Contains key-value pair in format key1@value1@key2@value2. The purpose is
+	 * to store parameters that need to propagate back to the user when job status
+	 * is finished.
+	 * 
+	 */
+	private String params = null;
 	
 	
 	//
@@ -285,6 +299,53 @@ public abstract class AbstractJob implements Job {
 			final boolean userNotifiedOfStart) {
 		this.userNotifiedOfStart = userNotifiedOfStart;
 	}
+
+
+	public String getParams() {
+		return params;
+	}
+
+
+	public void setParams(String params) {
+		this.params = params;
+	}
 	
+	/**
+	 * Will create parameter string that is in key1@value1@key2@value2 format from 
+	 * parameters map.
+	 * 
+	 * @param paramsMap
+	 * @throws Exception
+	 */
+	public void setParamsMap(Map<String, String> paramsMap) throws Exception{
+		Set<Entry<String, String>> entries = paramsMap.entrySet();
+		
+		// prepare params as string
+		for (Entry e:entries){
+			params += e.getKey() + Job.PARAMS_DELIMITER;
+			params += e.getValue() + Job.PARAMS_DELIMITER;			
+		}
+	}
 	
+	/**
+	 * Will parse parameters string that is in key1@value1@key2@value2 format to 
+	 * create parameters map.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> getParamsMap() throws Exception{
+		StringTokenizer st = new StringTokenizer(params, Job.PARAMS_DELIMITER);
+		String key = "";
+		String value = "";
+		Map paramsMap = new HashMap();
+		
+		while (st.hasMoreElements()){
+			key = st.nextToken();
+			value = st.nextToken();
+			paramsMap.put(key, value);
+		}
+		
+		return paramsMap;
+	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2008-05-23 21:08:56 $
+$Revision: 1.6 $
+$Date: 2008-05-28 19:39:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -139,9 +139,9 @@ public class DownloadRawDataAction extends BaseAction {
 		List<ArrayDatum> arrDatums = chrArryData.getArrayData();
 		
 			
-		String imagePath = request.getContextPath()+ "/download" + "/" + "fileName";
+		//String imagePath = request.getContextPath()+ "/download" + "/" + "fileName";
 		
-		String absPlotPath = this.getServlet().getServletContext().getRealPath("/download");
+		
 		
 		// Iinitalize RectangularFileWriter 
 		RectangularFileWriter rfw = new RectangularFileWriter(arrDatums, headings);
@@ -150,13 +150,19 @@ public class DownloadRawDataAction extends BaseAction {
 		
 		if (ProcessingModeDecider.downloadInBackground(arrDatums, request)) {
 			Principal principal = PageContext.getPrincipal(request);
+			String absPlotPath = this.getServlet().getServletContext().getRealPath("/download");
+			File f = new File(absPlotPath + "//" + ba.getId() + ".csv");
+			rfw.setFile(f);
 			DownloadDataJob job = new DownloadDataJob(arrDatums, ba, rfw,
 					principal.getName(), principal.getDomain());
 			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("download.job"));
     		this.saveMessages(request, messages);
-			mapping.findForward("batch");
+    		
+        	// Add shopping cart to request
+        	request.setAttribute("shopping.cart", cart);
+			return mapping.findForward("batch");
 			
 		}
 		

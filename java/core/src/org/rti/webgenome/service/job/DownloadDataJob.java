@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-05-23 21:08:56 $
+$Revision: 1.2 $
+$Date: 2008-05-28 19:39:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.job;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -98,6 +100,8 @@ public class DownloadDataJob extends AbstractJob {
 	
 	/** Rectangular File Writer; writes data to a file */
 	private RectangularFileWriter rectFileWriter = null;
+	
+	
 		
 	
 	//
@@ -122,12 +126,15 @@ public class DownloadDataJob extends AbstractJob {
 	 */
 	public DownloadDataJob(
 			final List<ArrayDatum> arrDatums, final BioAssay bioAssay, RectangularFileWriter rectFileWriter,
-			final String userId, final String userDomain) {
+			final String userId, final String userDomain) throws Exception{
 		super(userId, userDomain);
 		this.arrDatums = arrDatums;		
 		this.setDescription("Downloading bioassay data for bioassay " + bioAssay.getName());
 		this.bioAssay = bioAssay;
 		this.rectFileWriter = rectFileWriter;
+		Map params = new HashMap();
+		params.put("donwload.fileName", bioAssay.getName() + ".csv");
+		setParamsMap(params);
 	}
 	
 	//
@@ -148,7 +155,10 @@ public class DownloadDataJob extends AbstractJob {
 			// Write data to file
 			rectFileWriter.writeData2File();
 			
+			String fileName = this.bioAssay.getName() + ".csv";
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
+			
+			
 			LOGGER.info("Bioassay Data download job completed for user " + this.getUserId());
 		} catch (Exception e) {
 			this.setTerminationMessage(

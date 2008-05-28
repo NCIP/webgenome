@@ -39,6 +39,7 @@
 	<!-- Download raw data action -->
 		<action path="/cart/downloadRawData">
 			<forward name="success" path="cart.show.cart"/>
+			<forward name="batch" path="cart.show.cart"/>
 		</action>
 
 

@@ -20,6 +20,7 @@
 		<property name="description"/>
 		<property name="userNotifiedOfCompletion" column="user_notified_complete"/>
 		<property name="userNotifiedOfStart" column="user_notified_start"/>
+		<property name="params" column="params"/>
 		<subclass name="org.rti.webgenome.service.job.AnalysisJob"
 			discriminator-value="analysis">
 			<many-to-one name="dataSourceProperties"
@@ -81,6 +82,14 @@
 				column="data_src_props_id"
 				class="org.rti.webgenome.domain.DataSourceProperties"
 				cascade="all-delete-orphan"
+				lazy="false"/>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.job.DownloadDataJob"
+			discriminator-value="download">
+			<many-to-one name="bioAssay"
+				column="bioassay_id"
+				class="org.rti.webgenome.domain.BioAssay"
+				cascade="save-update"
 				lazy="false"/>
 		</subclass>
 	</class>

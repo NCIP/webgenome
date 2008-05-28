@@ -1,6 +1,11 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
+<%@page import="java.util.Map" %>
+<%@page import="org.rti.webgenome.service.job.DownloadDataJob" %>
+<%@page import="org.rti.webgenome.domain.BioAssay" %>
+
+
 
 <p align="center">
 	<html:messages id="message" message="true">
@@ -20,7 +25,7 @@
 		<th>End Time</th>
 		<th>Outcome</tr>
 	</tr>
-	<logic:iterate name="jobs" id="job">
+	<logic:iterate name="jobs" id="job" type="org.rti.webgenome.service.job.Job">
 	<tr>
 		<td><bean:write name="job" property="id"/>&nbsp;</td>
 		<td><bean:write name="job" property="description"/>&nbsp;</td>
@@ -33,6 +38,16 @@
 		</td>
 		<td id="<bean:write name="job" property="id"/>_terminationMessage">
 			<bean:write name="job" property="terminationMessage"/>&nbsp;
+			<logic:match name="job" property="description" value="Downloading">
+			<% 			  
+			   DownloadDataJob ddj = (DownloadDataJob)job;
+			   BioAssay bioAssay = ddj.getBioAssay();
+			   String downloadFileName = bioAssay.getId() + ".csv";			  
+			%>   
+			   
+			  <br>You can download generated data file from <br>
+			  <a  target="_blank" href="<%= request.getContextPath()%>/download/<%=downloadFileName%>">File to download.</a>
+			</logic:match>
 		</td>
 	</tr>
 	</logic:iterate>

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-10-10 17:47:01 $
+$Revision: 1.7 $
+$Date: 2008-05-28 19:39:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.job;
 
 import java.util.Date;
+import java.util.Map;
 
 
 /**
@@ -68,6 +69,9 @@ public interface Job {
 	/** Text status indicating a job has failed. */
 	String JOB_EXECUTION_FAILURE_MESSAGE =
 		"FAILURE";
+	
+	/** Delimiter to separate key value pairs for parameters.*/
+	String PARAMS_DELIMITER = "@";
 	
 	/**
 	 * Get unique identifier for job.
@@ -216,4 +220,24 @@ public interface Job {
 	 * to execute
 	 */
 	void execute(JobServices jobServices);
+	
+	
+	
+	/**
+	 * Contains key-value pair in format key1@value1@key2@value2. The purpose is
+	 * to store parameters that need to propagate back to the user when job status
+	 * is finished.
+	 * 
+	 * @return
+	 */
+	String getParams();
+	
+	/**
+	 * Contains key-value pair in format key1@value1@key2@value2. The purpose is
+	 * to store parameters that need to propagate back to the user when job status
+	 * is finished.
+	 * 
+	 * @return
+	 */
+	void setParams(String params);
 }
