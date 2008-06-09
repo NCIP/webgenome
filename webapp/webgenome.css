@@ -393,7 +393,8 @@ li {
 	font-weight: bold;
 	position: relative;
 	top: 0px;
-	left: -400px;
+	left: 0px;
+	display:none;
 }
 
 .message-stationary {
