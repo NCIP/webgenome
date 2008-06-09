@@ -67,7 +67,6 @@
 				<%= SystemUtils.getApplicationProperty("job.polling.interval") %>);
 			</webgenome:onlyIfLoggedInAndStandAloneMode>
 			
-			var messageLeftPix;
 			var intervalId;
 			
 			// Get XMLHttp object for AJAX calls
@@ -150,28 +149,15 @@
 			// be displayed on all screens.
 			function showJobCompletionMessage(doc) {
 				if (doc.getElementsByTagName("update").length > 0) {
-					closeMessage();
-					intervalId = setInterval("moveMessageRight()", 3);
-				}
-			}
-	
-			// Move job complation message in from left side of the
-			// screen a pixel at a time.
-			function moveMessageRight() {
-				messageLeftPix++;
-				if (messageLeftPix >= 0) {
-					clearInterval(intervalId);
-				} else {
 					var msg = document.getElementById("jobCompletionMessage");
-					msg.style.left = messageLeftPix;
+					msg.style.display = "inline";
 				}
 			}
 	
 			// Close job completion message.
 			function closeMessage() {
-				messageLeftPix = -400;
 				var msg = document.getElementById("jobCompletionMessage");
-				msg.style.left = messageLeftPix;
+				msg.style.display = "none";
 			}
 		</script>
 		
