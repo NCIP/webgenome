@@ -130,7 +130,7 @@
 	<!-- Show plot -->
 		<action
 			path="/cart/showPlot">
-			<forward name="success" path="cart.show.cart"/>
+			<forward name="success" path="cart.show.plot"/>
 		</action>
 
 	<!-- Show jobs table -->
