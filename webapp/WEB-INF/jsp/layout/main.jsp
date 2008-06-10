@@ -3,6 +3,7 @@
 <%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
 <%@ page import="org.rti.webgenome.util.SystemUtils" %>
+<%@ page import="java.util.GregorianCalendar" %>
 
 <tiles:importAttribute name="selectedMenuItem" scope="request"/>
 <tiles:importAttribute name="helpTopic" scope="request"/>
@@ -287,7 +288,7 @@
 		<tr>
 			<td height="39" align="center" valign="center" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" border="0">
 				<span class="footer">
-					Copyright &copy; RTI International, 2003-2008. All rights reserved.
+					Copyright &copy; RTI International, 2003-<% GregorianCalendar currentYear = new GregorianCalendar(); %><%= currentYear.get(GregorianCalendar.YEAR) %>. All rights reserved.
 				</span>
 			</td>
 		</tr>
