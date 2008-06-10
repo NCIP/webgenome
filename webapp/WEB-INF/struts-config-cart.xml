@@ -6,17 +6,17 @@
 <struts-config>
 
 	<form-beans>
-	
+
 	<!-- Selected experiments form -->
 		<form-bean
 			name="selected.experiments.form"
 			type="org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm"/>
-			
+
 	<!-- Form for specifying a quantitation type -->
 		<form-bean
 			name="quantitation.type.form"
 			type="org.rti.webgenome.webui.struts.cart.QuantitationTypeForm"/>
-			
+
 	<!-- Analytic operation parameters form -->
 		<form-bean
 			name="analytic.operation.params.form"
@@ -26,7 +26,7 @@
 		<form-bean
 			name="name.change.form"
 			type="org.rti.webgenome.webui.struts.cart.NameChangeForm"/>
-	
+
 	</form-beans>
 
 	<action-mappings>
@@ -68,19 +68,19 @@
 			<forward name="cart" path="/cart/showCart.do"/>
 			<forward name="error" path="/cart/showCart.do"/>
 		</action>
-		
+
 	<!-- Generate new plot of data in another plot -->
 		<action
 			path="/cart/derivedPlot"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="cart.select.plot.type"/>
-			
+
 	<!-- Select type of data to import from client -->
 		<action
 			path="/cart/selectImportDataType">
 			<forward name="success" path="cart.select.import.data.type"/>
 		</action>
-		
+
 	<!-- Import data from client -->
 		<action
 			path="/cart/import"
@@ -126,11 +126,11 @@
 			<forward name="non.batch" path="/cart/showPlot.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
-        
+
 	<!-- Show plot -->
 		<action
 			path="/cart/showPlot">
-			<forward name="success" path="cart.show."/>
+			<forward name="success" path="cart.show.cart"/>
 		</action>
 
 	<!-- Show jobs table -->
@@ -142,7 +142,7 @@
 		<action path="/cart/jobDetails">
 			<forward name="success" path="cart.job.details"/>
 		</action>
-		
+
 	<!-- Purge jobs -->
 		<action path="/cart/purgeJobs">
 			<forward name="success" path="/cart/showJobs.do"/>
@@ -161,12 +161,12 @@
 			validate="false">
 			<forward name="success" path="cart.analysis.params"/>
 		</action>
-		
+
 	<!-- Set up for re-running analytic operation -->
 		<action path="/cart/rerunAnalysisParams">
 			<forward name="success" path="cart.rerun.analysis.params"/>
 		</action>
-			
+
 
 	<!-- Perform analytic operation -->
 		<action
@@ -177,7 +177,7 @@
 			<forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
-		
+
 	<!-- Rerun analytic operation -->
 		<action
 			path="/cart/rerunAnalysis"
@@ -187,12 +187,12 @@
 			<forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
 		</action>
-		
+
 	<!-- Adjust analysis parameters from a  screen -->
 		<action path="/cart/adjustAnalysisParamsSetup">
 			<forward name="success" path="cart.adjust..analysis.params"/>
 		</action>
-			
+
 	<!--
 		 Adjust analysis parameters for all derived experiments in
 		 a .
