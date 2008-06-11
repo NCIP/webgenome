@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.6 $
-$Date: 2007-12-04 20:10:30 $
+$Revision: 1.7 $
+$Date: 2008-06-11 19:02:04 $
 
 The Web CGH Software License, Version 1.0
 
@@ -110,7 +110,9 @@ public class PlotInteractivityTag extends TagSupport {
 		Plot plot = (Plot)pageContext.findAttribute(plotAttributeName);	// plot
 
 		Collection<ClickBoxes> clickBoxesCol = plot.getClickBoxes();	// get collection of click boxes
+		//System.out.println("clickboxes: " + clickBoxesCol);
 		Collection<MouseOverStripes> mouseOverStripesCol = plot.getMouseOverStripes();	// get collection of mouse over stripes
+		//System.out.println("mouseoverstripes: " + mouseOverStripesCol);
 
 		String defaultImage = plot.getDefaultImageFileName();	// get default plot image
 		Map<String,String> imageFileMap = plot.getImageFileMap();	// get image file map
@@ -303,15 +305,19 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(	"var cbx = Math.floor(x / cbbwA[ct]);");
 				out.println(	"var cby = Math.floor(y / cbbhA[ct]);");
 
-				// if click box contains an image, display it
+				// if click box contains an image, display it and update dynamic link to image
 				out.println(	"if((cbA[ct][cbx][cby] != '') && (cbA[ct][cbx][cby] != undefined)) {");
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + cbA[ct][cbx][cby] + \")\";");
+				out.println(		"document.getElementById('plotGraphLink').href = \"" +
+						contextPath + imageSubContextPath + "/" + "\" + cbA[ct][cbx][cby] + \"\";");
 
-				// otherwise reset to default image
+				// otherwise reset to default image and update dynamic link to image
 				out.println(	"} else {");
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
+				out.println(		"document.getElementById('plotGraphLink').href = \"" +
+						contextPath + imageSubContextPath + "/" + "\" + pdi + \"\";");
 				out.println(	"}");
 				out.println("}");
 			}
@@ -431,6 +437,10 @@ public class PlotInteractivityTag extends TagSupport {
 			out.print(		"</td>");
 			out.print(	"</tr>");
 			out.println("</table>");
+
+			// dynamic download link for image
+			out.println("<div style=\"margin:8px;\"><a id=\"plotGraphLink\" target=\"blank\" href=\"" + contextPath + imageSubContextPath + "/" + defaultImage + "\">Download image</a></div>");
+
 			out.flush();
 
 		}
@@ -453,6 +463,10 @@ public class PlotInteractivityTag extends TagSupport {
 			out.print(		"</td>");
 			out.print(	"</tr>");
 			out.println("</table>");
+
+			// dynamic download link for image
+			out.println("<div style=\"margin:8px;\"><a id=\"plotGraphLink\" target=\"blank\" href=\"" + contextPath + imageSubContextPath + "/" + defaultImage + "\">Download image</a></div>");
+
 			out.flush();
 		}
 
