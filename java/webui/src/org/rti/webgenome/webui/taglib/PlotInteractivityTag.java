@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.7 $
-$Date: 2008-06-11 19:02:04 $
+$Revision: 1.8 $
+$Date: 2008-06-11 19:49:05 $
 
 The Web CGH Software License, Version 1.0
 
@@ -378,12 +378,20 @@ public class PlotInteractivityTag extends TagSupport {
 				// if a stripe is found at given coordinate, show stripe tooltip
 				out.println(	"if(sidx >= 0) {");
 				out.println(		"if(sliA[ct]!=sidx) document.getElementById('plotInteractivityTooltip'+ct).innerHTML = svA[ct][sidx];");
+				out.println(		"captureMoveHideTooltips(e);");
 				out.println(		"popUp(e,'plotInteractivityTooltip'+ct,1);");
 				out.println(		"slc = ct;");
 				out.println(		"sliA[ct] = sidx;");
 				// otherwise, hide tooltip
 				out.println(	"} else {");
-				out.println(		"popUp(e,'plotInteractivityTooltip'+ct,0);");
+				out.println(		"captureMoveHideTooltips(e);");
+				out.println(	"}");
+				out.println("}");
+
+				// MouseOver Stripe JavaScript functions - hide all tooltips
+				out.println("function captureMoveHideTooltips(e) {");
+				out.println(	"for(var i=0 ; i<" + mouseOverStripesCol.size() + " ; i++) {");
+				out.println(		"popUp(e,'plotInteractivityTooltip'+i,0);");
 				out.println(	"}");
 				out.println("}");
 	
