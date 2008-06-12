@@ -12,7 +12,8 @@
 		<tr>
 			<td valign="middle" align="left">
 				<html:errors property="name"/>
-				User name:
+				User name <br>
+				(Your e-mail address):
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="name"/>

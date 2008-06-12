@@ -83,14 +83,14 @@
 		</tr>
 	
 	<%-- Degree --%>
-		<tr>
+	<%--	<tr>
 			<td valign="middle" align="left">				
 				Degree:
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="degree"/>
 			</td>
-		</tr>
+		</tr>--%>
 	
 	<%-- Institution --%>
 		<tr>
@@ -103,24 +103,24 @@
 		</tr>
 	
 	<%-- Department --%>
-		<tr>
+		<%--<tr>
 			<td valign="middle" align="left">				
 				Department:
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="department"/>
 			</td>
-		</tr>
+		</tr>--%>
 	
 	<%-- Position --%>
-		<tr>
+		<%--<tr>
 			<td valign="middle" align="left">				
 				Position:
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="position"/>
 			</td>
-		</tr>
+		</tr>--%>
 		
 	
 		
