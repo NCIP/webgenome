@@ -4,7 +4,7 @@
 
 <center>
 	<html:errors property="global"/>
-	<html:form action="/user/createAccount" focus="name">
+	<html:form action="/user/createAccount" focus="email">
 
 	<table cellpadding="5" cellspacing="0" border="0">
 	
