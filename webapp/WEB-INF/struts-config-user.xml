@@ -56,6 +56,25 @@
 			<forward name="failure" path="/user/newAccount.do"/>
 		</action>
 		
+		
+		<!-- Show Forgot Password -->
+		<action
+			path="/user/showForgotPassword"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.forgot.password"/>
+		
+		<!-- Forgot Password -->
+		<action
+			path="/user/forgotPassword"
+			name="new.account.form"
+			scope="request"
+			input="/user/showForgotPassword.do"
+			validate="false">
+			<forward name="success" path="user.confirm.password.sent"/>
+			<forward name="failure" path="/user/showForgotPassword.do"/>
+		</action>
+		
+		
 	</action-mappings>
 
 </struts-config>

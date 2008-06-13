@@ -47,5 +47,8 @@
 	<p>
 		<html:link action="/user/newAccount">Register</html:link>
 	</p>
+	<p>
+		<html:link action="/user/showForgotPassword">Forgot Password</html:link>
+	</p>
 	
 </center>

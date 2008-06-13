@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2008-05-19 20:11:02 $
+$Revision: 1.5 $
+$Date: 2008-06-13 19:58:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -207,4 +207,21 @@ public final class SecurityMgrImpl implements SecurityMgr {
 		return this.dbService.loadPrincipal(name, password,
 				WEBGENOME_DOMAIN);
 	}
+	
+	/**
+	 * Get Principal by email address.
+	 * 
+	 * @param email 
+	 * 	 
+	 * @return Principal object or null if no principal
+	 * exists with given e-mail address.
+	 */
+	public Principal getPrincipalByEmail(final String email) {
+		if (email == null || email.length() < 1) {
+			throw new IllegalArgumentException(
+					"Account email cannot be empty");
+		}
+		return this.dbService.loadPrincipalByEmail(email);
+	}
+	
 }

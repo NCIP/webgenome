@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2008-06-13 19:58:40 $
+$Revision: 1.1 $
+$Date: 2008-06-13 19:58:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -48,89 +48,74 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.session;
+package org.rti.webgenome.webui.struts.user;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.util.Email;
+import org.rti.webgenome.webui.struts.BaseAction;
+
+
 
 /**
- * Manages user account related functions for the WebGenome
- * credential database only.
- * @author dhall
+ * Sends user his login credentials.
+ * 
+ * @author vbakalov
  *
  */
-public interface SecurityMgr extends Authenticator {
+public final class ForgotPasswordAction extends BaseAction {
 
-	/**
-	 * Create a new user account with given user name
-	 * and password.
-	 * @param name User name
-	 * @param password Password
-	 * @return Principal object
-	 * @throws AccountAlreadyExistsException if an account
-	 * with the name given by principal already exists.
-	 */
-	Principal newAccount(String name, String password)
-		throws AccountAlreadyExistsException;
+	final static String EMAIL_SUBJECT = "WebGenome Information";
+	
 	
 	/**
-	 * Create a new user account with given Principal.
-	 * 
-	 * @param name User name
-	 * @param password Password
-	 * @return Principal object
-	 * @throws AccountAlreadyExistsException if an account
-	 * with the name given by principal already exists.
-	 */
-	public Principal newAccount(Principal p)
-		throws AccountAlreadyExistsException;
-		
-	/**
-	 * Determines if a user account associated with the
-	 * given name exists.
-	 * @param name User name
-	 * @return T/F
-	 */
-	boolean accountExists(String name);
-	
-	/**
-	 * Determines if a user account associated with the
-	 * given email exists.
-	 * @param name User name
-	 * @return T/F
-	 */
-	boolean accountByEmailExists(final String email);
-	
-	/**
-	 * Update, which is used primarily for changing password.
-	 * @param principal Principal whose persistent information
-	 * should be updated.
-	 */
-	void update(Principal principal);
-	
-	/**
-	 * Delete persistently stored information associated
-	 * with given principal.
-	 * @param principal Principal whose persistent information
-	 * should be deleted.
-	 */
-	void delete(Principal principal);
-	
-	/**
-	 * Login.
-	 * @param name User name.
-	 * @param password Password.
-	 * @return Principal object or null if no principal
-	 * exists with given user name and password.
-	 */
-	Principal login(String name, String password);
-	
-	/**
-	 * Get Principal by email address.
-	 * 
-	 * @param email 
-	 * 	 
-	 * @return Principal object or null if no principal
-	 * exists with given e-mail address.
-	 */
-	Principal getPrincipalByEmail(final String email);
+     * Execute action.
+     * @param mapping Routing information for downstream actions
+     * @param form Form data
+     * @param request Servlet request object
+     * @param response Servlet response object
+     * @return Identification of downstream action as configured in the
+     * struts-config.xml file
+     * @throws Exception All exceptions thrown by classes in
+     * the method are passed up to a registered exception
+     * handler configured in the struts-config.xml file
+     */
+    public ActionForward execute(
+        final ActionMapping mapping, final ActionForm form,
+        final HttpServletRequest request,
+        final HttpServletResponse response
+    ) throws Exception {
+    	NewAccountForm naf = (NewAccountForm) form;
+    	
+    	// use email as login name
+    	naf.setName(naf.getEmail());
+    	
+    	// rtrieve Principal
+    	Principal p = getSecurityMgr().getPrincipalByEmail(naf.getEmail());
+    	
+    	// See if there is already a user with the same account name
+    	if (p == null) {
+    		ActionErrors errors = new ActionErrors();
+    		errors.add("global", new ActionError("account.email.does.not.exists"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("failure");
+    	}
+    	    	
+    	 
+    	// send user credentials to user's e-mail
+    	Email em = new Email();    	
+    	em.send(p.getEmail(), EMAIL_SUBJECT, "Your user name is your email address and your password is " + p.getPassword() + ".");
+    	
+    	
+        return mapping.findForward("success");
+    }
+    
+   
 }

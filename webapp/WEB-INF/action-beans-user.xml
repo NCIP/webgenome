@@ -17,5 +17,10 @@
 	<bean name="/user/createAccount"
 		class="org.rti.webgenome.webui.struts.user.CreateAccountAction"
 		parent="baseAction"/>
-
+		
+<!-- Forgot Password -->
+	<bean name="/user/forgotPassword"
+		class="org.rti.webgenome.webui.struts.user.ForgotPasswordAction"
+		parent="baseAction"/>
+	
 </beans>
