@@ -788,6 +788,7 @@
 					title="Information" border="0"
 					width="15" height="15"/>
 				Draw data points?
+				<div style="font-size:9px;color:#888888;">This enables plot interactivity. Please note that enabling interactivity for very large plots may degrade browser performance and can possibly overwhelm your browser leading to crashing.</div>
 			</td>
 			<td>
 				<html:checkbox property="drawPoints"/>
