@@ -89,6 +89,8 @@
 					<html:option value="MB">MB</html:option>
 				</html:select>
 				</logic:notPresent>
+				<div style="font-size:9px;"><a href="javascript:void(0);" onclick="javascript:document.forms[0].genomeIntervals.value='1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22';">All chromosomes</a></div>
+				<div style="font-size:9px;"><a href="javascript:void(0);" onclick="javascript:document.forms[0].genomeIntervals.value='1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24';">All autosomes</a></div>
 			</td>
 		</tr>
 		
