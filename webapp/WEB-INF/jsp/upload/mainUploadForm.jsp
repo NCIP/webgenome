@@ -108,10 +108,35 @@ Quantitation type
 	<html:options collection="qTypes" property="id"
 		labelProperty="name"/>
 </html:select>
+
+<%--Other:
+<% if (true){%>
+	<html:text property="quantitationTypeOther" disabled="true" />    
+<%}else{%>
+    <html:text property="quantitationTypeOther"/>
+<%}%>--%>
+	
 </p>
+
+
 
 <p>
 	<html:submit property="OK"/>
 	<input type="button" value="Cancel" onClick="window.location.href='<html:rewrite page="/upload/mainImport.do"/>'"/>
 </p>
 </html:form>
+
+<script type="text/javascript" language="JavaScript">
+function onQuantitaionType(){
+      
+      var elOtherQuantiationTypeId = document.getElementById("quantitationTypeId");
+      var quantitationTypeOther = document.getElementById("quantitationTypeOther");
+      
+      alert(elOtherQuantiationTypeId.value);
+      
+      if ( elOtherQuantiationTypeId.value == "Other"){      	
+      	quantitationTypeOther.disabled = false;
+      }
+    }
+    
+</script>    
