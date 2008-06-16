@@ -8,11 +8,11 @@
 
 	<table cellpadding="5" cellspacing="0" border="0">
 	
-		<tr>
+		<%--<tr>
 			<td colspan="2" valign="middle" align="center">				
 				<font color="red">*</font> Invalid or missing fields. Please correct.  
 			</td>			
-		</tr>
+		</tr>--%>
 	
 	<%-- Email --%>
 		<tr>
