@@ -214,9 +214,9 @@
 				
 			<%-- File upload --%>
 				<webgenome:onlyIfLoggedInAndStandAloneMode>
-					<html:link action="/upload/initializeUploadForm">
+					<a class="menuItem" href="<html:rewrite page="/upload/initializeUploadForm.do"/>">
 						Import Data
-					</html:link>
+					</a>
 					|
 				</webgenome:onlyIfLoggedInAndStandAloneMode>
 			<%-- Login --%>
