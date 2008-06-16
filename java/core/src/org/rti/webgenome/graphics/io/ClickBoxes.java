@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-09-06 21:51:48 $
+$Revision: 1.7 $
+$Date: 2008-06-16 16:52:19 $
 
 The Web CGH Software License, Version 1.0
 
@@ -63,6 +63,7 @@ import org.rti.webgenome.util.SystemUtils;
  * to an individual box, will invoke a Javascript event
  * handler that does something with the text value in that
  * box.
+ * @author mzmuda
  */
 public class ClickBoxes implements Serializable {
 	
@@ -156,6 +157,8 @@ public class ClickBoxes implements Serializable {
     			/ (double) boxWidth) + 1;
     	this.clickBox = new String[this.numCols * this.numRows];
     	this.origin = origin;
+    	//System.out.println("clickbox " + this.getId() + " created: w{" + this.width + "} h{" + this.height + "} boxw{" + this.boxWidth + "} boxh{" + this.boxHeight + "} #rows{" + this.numRows + "} #cols{" + this.numCols + "} o{" + this.origin + "}");	// DEBUG test - mzmuda
+    	//System.out.println(this.toPrettyString());	// DEBUG test - mzmuda
     }
 
 
@@ -315,6 +318,9 @@ public class ClickBoxes implements Serializable {
 	 */
 	public void addClickBoxText(final String text, final int x, final int y) {
 		int idx = this.getIndex(x, y);
+		//System.out.println("clickbox " + this.getId() + " addClickBoxText() text{" + text + "} x{" + x + "} y{" + y + "}");	// DEBUG test - mzmuda
+		this.clickBox[idx] = text;
+		//System.out.println("clickbox " + this.getId() + " clickBox[" + idx + "] was set to {" + text + "}");	// DEBUG test - mzmuda
 	}
 	
 	/**
@@ -441,8 +447,10 @@ public class ClickBoxes implements Serializable {
 	 * @return Text at corresponding pixel location
 	 */
 	private int getIndex(final int x, final int y) {
+		//System.out.print("clickbox getIndex() x{" + x + "} y{" + y + "} ox{" + this.getOriginX() + "} oy{" + this.getOriginY() + "}");	// DEBUG test - mzmuda
 		int row = this.getRowNum(y);
 		int col = this.getColNum(x);
+		//System.out.println(" row{" + row + "} col{" + col + "} return{" + (row * this.numCols + col) + "}");	// DEBUG test - mzmuda
 		return row * this.numCols + col;
 	}
 	
