@@ -10,14 +10,14 @@
 	
 		<tr>
 			<td colspan="2" valign="middle" align="center">				
-				<font color="red">*</font> Required Information  
+				<font color="red">*</font> Invalid or missing fields. Please correct.  
 			</td>			
 		</tr>
 	
 	<%-- Email --%>
 		<tr>
 			<td valign="middle" align="left">				
-				<font color="red">*</font>Email address:<br>				
+				<b></font>Email address:</b><br>				
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="email"/>
@@ -39,7 +39,7 @@
 		<tr>
 			<td valign="middle" align="left">
 				<html:errors property="password"/>
-				<font color="red">*</font>Password:
+				<b>Password:</b>
 			</td>
 			<td valign="middle" align="left">
 				<html:password property="password"/>
@@ -50,7 +50,7 @@
 		<tr>
 			<td valign="middle" align="left">
 				<html:errors property="confirmedPassword"/>
-				<font color="red">*</font>Confirm password:
+				<b>Confirm password:</b>
 			</td>
 			<td valign="middle" align="left">
 				<html:password property="confirmedPassword"/>
@@ -125,20 +125,28 @@
 	
 		
 	
-		<tr>			
-			<td valign="middle" align="left" colspan="2">
-				<html:checkbox property="feedbacks"/>Would you like to contribute your feedbacks?
-			</td>
-		</tr>
+		
 		
 	<%-- Submit button --%>
 		<tr>
 			<td colspan="2" valign="middle" align="center">
-				<html:submit value="OK"/>
+				<html:submit value="Register"/>
 			</td>
 		</tr>
 
+	<tr>
+			<td colspan="2" valign="middle" align="center">				
+				<b>Bolded</b> fields above are required.  
+			</td>			
+		</tr>
 	</table>
 
+		<p>	
+			<html:checkbox property="feedbacks"/> <b>I'd like to provide my ideas and feedbacks for WebGenome</b>
+				<div style="font-size:10px;color:#888888;"> We are seeking comments from users on how we might improve WebGenome. 
+				If you'd be interested in being contacted by us periodically (initially by email),
+				please check this box. You will be able to opt-out of this agreement at the time, at your discretion, with no reason
+				for opting out required. We anticipate that your involvement could take as little as 5-10 minutes of your time to provide feedbacks to us.</div>								
+		</p>		
 	</html:form>
 </center>
