@@ -1,8 +1,8 @@
 /*
 
 $Source: /share/content/gforge/webcgh/webgenome/java/webui/src/org/rti/webgenome/webui/taglib/PlotInteractivityTag.java,v $
-$Revision: 1.8 $
-$Date: 2008-06-11 19:49:05 $
+$Revision: 1.9 $
+$Date: 2008-06-16 16:53:20 $
 
 The Web CGH Software License, Version 1.0
 
@@ -72,8 +72,9 @@ import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.util.Attribute;
 
 /**
- * Print plot interactivity JavaScript elements.
+ * Generate plot interactivity JavaScript elements.
  * Grabs Shopping Cart from session.
+ * @author mzmuda
  */
 public class PlotInteractivityTag extends TagSupport {
     
@@ -111,8 +112,11 @@ public class PlotInteractivityTag extends TagSupport {
 
 		Collection<ClickBoxes> clickBoxesCol = plot.getClickBoxes();	// get collection of click boxes
 		//System.out.println("clickboxes: " + clickBoxesCol);
+		if(isEmptyClickBoxes(clickBoxesCol)) clickBoxesCol = null;	// nullify clickboxes collection if it is empty
+
 		Collection<MouseOverStripes> mouseOverStripesCol = plot.getMouseOverStripes();	// get collection of mouse over stripes
 		//System.out.println("mouseoverstripes: " + mouseOverStripesCol);
+		if(isEmptyMouseOverStripes(mouseOverStripesCol)) mouseOverStripesCol = null;	// nullify mouseoverstripes collection if it is empty
 
 		String defaultImage = plot.getDefaultImageFileName();	// get default plot image
 		Map<String,String> imageFileMap = plot.getImageFileMap();	// get image file map
@@ -198,16 +202,16 @@ public class PlotInteractivityTag extends TagSupport {
 					out.println("cb=new Array(" + clickBoxes.numBoxes() + ");");
 					
 					// loop through click boxes and output JavaScript variables
-					for(int i = 0 ; i < clickBoxes.getNumRows() ; i++) {
+					for(int i = 0 ; i < clickBoxes.getNumCols() ; i++) {
 		
 						// init each new row as new array
-						out.println("cb[" + i + "]=new Array(" + clickBoxes.getNumCols() + ");");
+						out.println("cb[" + i + "]=new Array(" + clickBoxes.getNumRows() + ");");
 		
 						// loop through each row
-						for(int j = 0 ; j < clickBoxes.getNumCols() ; j++) {
+						for(int j = 0 ; j < clickBoxes.getNumRows() ; j++) {
 		
 							// grab image name
-							String tempImageName = imageFileMap.get(clickBoxes.getClickBoxTextOfBox(i, j));
+							String tempImageName = imageFileMap.get(clickBoxes.getClickBoxTextOfBox(j, i));
 		
 							// output blank if null, image name if not null
 							out.println("cb[" + i + "][" + j + "]='" + ((tempImageName == null) ? "" : tempImageName) + "';");
@@ -279,6 +283,9 @@ public class PlotInteractivityTag extends TagSupport {
 				out.println(	"var x = (e.x == undefined) ? e.layerX : e.x;");
 				out.println(	"var y = (e.y == undefined) ? e.layerY : e.y;");
 
+				//out.println(	"document.debug.clickX.value = x;");	// debug
+				//out.println(	"document.debug.clickY.value = y;");	// debug
+
 				// reset clickboxes area to -1 (none found)
 				out.println(	"var ct = -1;");
 
@@ -292,6 +299,10 @@ public class PlotInteractivityTag extends TagSupport {
 
 				// if one was not found, reset image to default image
 				out.println(	"if(ct == -1) {");
+
+				//out.println(	"document.debug.cbX.value = 'NA';");	// debug
+				//out.println(	"document.debug.cbY.value = 'NA';");	// debug
+
 				out.println(		"document.getElementById('plotGraph').style.background = \"url(" +
 						contextPath + imageSubContextPath + "/" + "\" + pdi + \")\";");
 				out.println(		"return;");
@@ -304,6 +315,9 @@ public class PlotInteractivityTag extends TagSupport {
 				// calculate click box corresponding to click coordinate
 				out.println(	"var cbx = Math.floor(x / cbbwA[ct]);");
 				out.println(	"var cby = Math.floor(y / cbbhA[ct]);");
+
+				//out.println(	"document.debug.cbX.value = cbx;");	// debug
+				//out.println(	"document.debug.cbY.value = cby;");	// debug
 
 				// if click box contains an image, display it and update dynamic link to image
 				out.println(	"if((cbA[ct][cbx][cby] != '') && (cbA[ct][cbx][cby] != undefined)) {");
@@ -342,6 +356,9 @@ public class PlotInteractivityTag extends TagSupport {
 				// capture x and y coordinates
 				out.println(	"var x = (e.x == undefined) ? e.layerX : e.x;");
 				out.println(	"var y = (e.y == undefined) ? e.layerY : e.y;");
+
+				//out.println(	"document.debug.moveX.value = x;");	// debug
+				//out.println(	"document.debug.moveY.value = y;");	// debug
 
 				// reset clickboxes area to -1 (none found)
 				out.println(	"var ct = -1;");
@@ -434,7 +451,7 @@ public class PlotInteractivityTag extends TagSupport {
 			// plot interactivity span
 			out.print(								"<span style=\"position:relative\">");
 			out.print(									"<span id=\"interactivePlotSpan\" style=\"position: absolute; left:0px; top:0px; width:" +
-					plotWidth + "px; height:" + plotHeight + "px\" onClick=\"captureClick(event);\" onMouseMove=\"captureMove(event);\"></span>");
+					plotWidth + "px; height:" + plotHeight + "px\"" + (clickBoxesCol == null ? "" : " onClick=\"captureClick(event);\"") + (mouseOverStripesCol == null ? "" : " onMouseMove=\"captureMove(event);\"") + "></span>");	// add captureClick(event); to onMouseMove property for debugging purposes
 			out.print(								"</span>");
 			out.print(							"</td>");
 			out.print(						"</tr>");
@@ -448,6 +465,13 @@ public class PlotInteractivityTag extends TagSupport {
 
 			// dynamic download link for image
 			out.println("<div style=\"margin:8px;\"><a id=\"plotGraphLink\" target=\"blank\" href=\"" + contextPath + imageSubContextPath + "/" + defaultImage + "\">Download image</a></div>");
+
+			// debug
+			//out.println("<form name=\"debug\">");
+			//out.println("<div>Move: x<input type=\"text\" name=\"moveX\"> y<input type=\"text\" name=\"moveY\"></div>");
+			//out.println("<div>Click: x<input type=\"text\" name=\"clickX\"> y<input type=\"text\" name=\"clickY\"></div>");
+			//out.println("<div>ClickBox: x<input type=\"text\" name=\"cbX\"> y<input type=\"text\" name=\"cbY\"></div>");
+			//out.println("</form>");
 
 			out.flush();
 
@@ -479,5 +503,35 @@ public class PlotInteractivityTag extends TagSupport {
 		}
 
 		return SKIP_BODY;
+	}
+
+	/**
+	 * Helper method for determining if all elements within a clickboxes collection have empty values
+	 * @param clickBoxCol collection of clickboxes
+	 * @return empty status of collection
+	 */
+	private boolean isEmptyClickBoxes(Collection<ClickBoxes> clickBoxesCol) {
+		if(clickBoxesCol == null) return true;	// if col is null, automatic empty
+		for(ClickBoxes clickBoxes : clickBoxesCol) {	// loop through all clickboxes
+			for(String test : clickBoxes.getClickBox()) {	// loop through all clickbox entries
+				if(test == null) continue;	// if null string found, continue looking
+				if(!test.trim().equals("")) return false;	// if non-empty found, return not empty so no need to search further
+			}
+		}
+		return true;	// no non-empty entries found
+	}
+
+	/**
+	 * Helper method for determining if all elements within a clickboxes collection have empty values
+	 * @param mouseOverStripesCol collection of mouseoverstripes
+	 * @return empty status of collection
+	 */
+	private boolean isEmptyMouseOverStripes(Collection<MouseOverStripes> mouseOverStripesCol) {
+		if(mouseOverStripesCol == null) return true;	// if col is null, automatic empty
+		for(MouseOverStripes mouseOverStripes : mouseOverStripesCol) {	// loop through all mouseoverstripes
+			if(mouseOverStripes.getStripes() == null) continue;	// if null stripes found, continue looking
+			if(!mouseOverStripes.getStripes().isEmpty()) return false;	// if non-empty found, return not empty so no need to search further
+		}
+		return true;	// no non-empty entries found
 	}
 }
