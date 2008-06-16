@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-07-05 13:23:30 $
+$Revision: 1.4 $
+$Date: 2008-06-16 16:53:40 $
 
 The Web CGH Software License, Version 1.0
 
@@ -64,7 +64,7 @@ import org.rti.webgenome.util.SystemUtils;
  * over a series of horizontal or vertical rectangular
  * "stripes" triggers and event handler.  A typical response
  * will be to show some tool tip text.
- * @author dhall
+ * @author mzmuda
  *
  */
 public class MouseOverStripes implements Serializable {
