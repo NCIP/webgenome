@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2008-02-22 18:24:43 $
+$Revision: 1.10 $
+$Date: 2008-06-16 19:34:23 $
 
 The Web CGH Software License, Version 1.0
 
@@ -94,9 +94,13 @@ public class UploadAction extends BaseAction {
 		upload.setOrganism(org);
 		upload.setPositionUnits(BpUnits.getUnits(uForm.getUnits()));
 		upload.setPositionColumnName(uForm.getPositionColumnName());
+		
+		
 		upload.setQuantitationType(
-				QuantitationType.getQuantitationType(
-						uForm.getQuantitationTypeId()));
+					QuantitationType.getQuantitationType(
+							uForm.getQuantitationTypeId()));
+					
+		
 		ActionForward forward = null;
 		if (ProcessingModeDecider.processInBackground(
 				upload, request, this.getIoService())) {

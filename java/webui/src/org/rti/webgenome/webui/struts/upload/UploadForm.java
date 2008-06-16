@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.3 $
+$Date: 2008-06-16 19:34:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -92,6 +92,16 @@ public class UploadForm extends BaseForm {
 	/** ID of quantitation type of all data. */
 	private String quantitationTypeId =
 		QuantitationType.COPY_NUMBER.getId();
+	
+	private String quantitationTypeOther = "";
+
+	public String getQuantitationTypeOther() {
+		return quantitationTypeOther;
+	}
+
+	public void setQuantitationTypeOther(String quantitationTypeOther) {
+		this.quantitationTypeOther = quantitationTypeOther;
+	}
 
 	/**
 	 * Get name of colum containing chromosomal position.
