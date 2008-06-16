@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-09-06 16:48:11 $
+$Revision: 1.4 $
+$Date: 2008-06-16 19:33:25 $
 
 The Web CGH Software License, Version 1.0
 
@@ -93,9 +93,20 @@ public final class QuantitationType implements Serializable {
     public static final QuantitationType LOH =
     	new QuantitationType(QuantitationTypes.LOH, "LOH", false);
     
+    /** TODO: Define "Other" in QuantitationTypes class that is part of the 
+     * webGenomeClientEJB.jar.
+     * */
+    public static final QuantitationType Other =
+    	new QuantitationType("Other", "Other", false);
+    
+    
+    public String otherValue = "";
+    
     /** Maps quantitation type names of quantitation types. */
     private static final Map<String, QuantitationType> INDEX =
     	new HashMap<String, QuantitationType>();
+    
+    
     
     static {
     	INDEX.put(FOLD_CHANGE.getId(), FOLD_CHANGE);
@@ -103,6 +114,7 @@ public final class QuantitationType implements Serializable {
     	INDEX.put(COPY_NUMBER.getId(), COPY_NUMBER);
     	INDEX.put(LOG_2_RATIO_COPY_NUMBER.getId(), LOG_2_RATIO_COPY_NUMBER);
     	INDEX.put(LOH.getId(), LOH);
+    	//TODO: For future use INDEX.put(Other.getId(), Other);
     }
     
     /** Serialized version ID. */
@@ -178,7 +190,9 @@ public final class QuantitationType implements Serializable {
      * @param id ID of quantitation type
      * @return Quantitation type
      */
-    public static QuantitationType getQuantitationType(final String id) {
+    public  static QuantitationType getQuantitationType(final String id) {
+    	
+    	
     	return INDEX.get(id);
     }
     
@@ -191,4 +205,14 @@ public final class QuantitationType implements Serializable {
     public static Map<String, QuantitationType> getQuantitationTypeIndex() {
     	return INDEX;
     }
+
+	public String getOtherValue() {
+		return otherValue;
+	}
+
+	public void setOtherValue(String otherValue) {
+		this.otherValue = otherValue;
+	}
+    
+    
 }
