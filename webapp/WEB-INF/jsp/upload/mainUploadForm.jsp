@@ -2,6 +2,8 @@
 <%@ taglib uri="/WEB-INF/struts-logic.tld" prefix="logic" %>
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 
+<h1 align="center">Import Data</h1>
+
 WebGenome needs data about reporters (probes) as well as
 actual data values in order to construct plots.  All data for upload must
 be in "rectangular" text files in either CSV (comma-separated values) or
