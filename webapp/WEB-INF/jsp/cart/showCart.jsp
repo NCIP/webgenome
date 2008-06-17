@@ -96,7 +96,7 @@
 		 border="0"
 		 width="15" height="15"/> = Change parameters
 	
-<html:errors property="global"/>
+<div><html:errors property="global"/></div>
 
 
 <table cellpadding="10"><tr valign="top" align="center"><td>
