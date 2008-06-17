@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2007-12-04 20:10:30 $
+$Revision: 1.5 $
+$Date: 2008-06-17 16:10:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -210,8 +210,10 @@ public class IdeogramPlotPainter extends PlotPainter {
 				va = VerticalAlignment.BELOW;
 			}
 			panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
-			this.addScales(panel, copyNumberQT, expressionQT, params);
+			//this.addScales(panel, copyNumberQT, expressionQT, params);
 		}
+		this.addScales(panel, copyNumberQT, expressionQT, params);	// add scale on bottom
+
 		return evtHandlerBoundaries;
 	}
     
