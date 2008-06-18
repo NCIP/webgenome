@@ -142,7 +142,7 @@
 	</table>
 
 		<p>	
-			<html:checkbox property="feedbacks"/> <b>I'd like to provide my ideas and feedbacks for WebGenome</b>
+			<html:checkbox property="feedbacks"/> <b>I'd like to provide my ideas and feedback for WebGenome</b>
 				<div style="font-size:10px;color:#888888;"> We are seeking comments from users on how we might improve WebGenome. 
 				If you'd be interested in being contacted by us periodically (initially by email),
 				please check this box. You will be able to opt-out of this agreement at the time, at your discretion, with no reason
