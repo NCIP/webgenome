@@ -25,7 +25,7 @@
 		<property name="phone"/>
 		<property name="address"/>
 		<property name="email"/>
-		<property name="feedbacks" column="feedbacks" type="true_false"/>
+		<property name="feedbacks" column="is_feedbacks" type="true_false"/>
 	</class>
 
 </hibernate-mapping>
