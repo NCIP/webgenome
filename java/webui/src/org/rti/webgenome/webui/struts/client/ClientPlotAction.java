@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2008-05-19 20:11:02 $
+$Revision: 1.11 $
+$Date: 2008-09-04 16:47:33 $
 
 The Web CGH Software License, Version 1.0
 
@@ -146,6 +146,10 @@ public final class ClientPlotAction extends BaseAction {
         // Instantiate data source properties and set quantitation type.
         DataSourceProperties props = null;
         
+     // stop here for now and quit
+        if (true)
+          return mapping.findForward("test");
+        
         // Case: client is true application client
         if (request.getParameter("test") == null) {
         	
@@ -179,6 +183,10 @@ public final class ClientPlotAction extends BaseAction {
         for (Experiment exp : experiments) {
         	exp.setDataSourceProperties(props);
         }
+        
+        // stop here for now and quit
+        if (true)
+          return mapping.findForward("test");
         
         // TODO: In the future the organism should come from the
         // client query string
