@@ -19,6 +19,7 @@
             name="plot.parameters.form"
             validate="false">
             <forward name="success" path="/cart/newPlot.do"/>
+            <forward name="test" path="/jsp/test.jsp"/>
         </action>
         
 	</action-mappings>
