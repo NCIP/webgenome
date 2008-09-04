@@ -1,6 +1,6 @@
 /*
-$Revision: 1.11 $
-$Date: 2008-09-04 16:47:33 $
+$Revision: 1.12 $
+$Date: 2008-09-04 17:28:47 $
 
 The Web CGH Software License, Version 1.0
 
@@ -146,10 +146,7 @@ public final class ClientPlotAction extends BaseAction {
         // Instantiate data source properties and set quantitation type.
         DataSourceProperties props = null;
         
-     // stop here for now and quit
-        if (true)
-          return mapping.findForward("test");
-        
+     
         // Case: client is true application client
         if (request.getParameter("test") == null) {
         	
