@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2007-12-04 23:06:40 $
+$Revision: 1.7 $
+$Date: 2008-09-09 18:31:39 $
 
 The Web CGH Software License, Version 1.0
 
@@ -287,23 +287,32 @@ public final class DbUtils {
 		boolean exists = false;
 		Statement stmt = null;
 		ResultSet rset = null;
-		String sql =
+		try{
+			Connection con = dataSource.getConnection();
+			String sql =
 			"SELECT * "
 			+ " FROM " + tableName
 			+ " WHERE " + fieldName + " = " + value;
-		try {
-			Connection con = dataSource.getConnection();
-			stmt = con.createStatement();
-			rset = stmt.executeQuery(sql);
-			exists = rset.next();
-		} catch (SQLException e) {
-			throw new WebGenomeSystemException(
+			try {
+			
+				stmt = con.createStatement();
+				rset = stmt.executeQuery(sql);
+				exists = rset.next();
+			
+			} catch (SQLException e) {
+				throw new WebGenomeSystemException(
 					"Error querying database table '" + tableName
 					+ "' field '" + fieldName + "'", e);
-		} finally {
-			DbUtils.close(rset);
-			DbUtils.close(stmt);
+			} finally {
+				DbUtils.close(rset);
+				DbUtils.close(stmt);		
+				close(con);
+			}	
+		}catch(SQLException e){
+			throw new WebGenomeSystemException(
+					"Could not close db connection ",  e);
 		}
+	
 		return exists;
 	}
 	
@@ -319,14 +328,18 @@ public final class DbUtils {
 	public static Collection<String> getStringValues(
 			final DataSource dataSource,
 			final String tableName, final String columnName) {
+		
 		Collection<String> data = new ArrayList<String>();
 		Statement stmt = null;
 		ResultSet rset = null;
+		try {
+			
+		Connection con = dataSource.getConnection();
 		String sql =
 			"SELECT " + columnName
 			+ " FROM " + tableName;
-		try {
-			Connection con = dataSource.getConnection();
+		try{
+			
 			stmt = con.createStatement();
 			rset = stmt.executeQuery(sql);
 			while (rset.next()) {
@@ -339,7 +352,11 @@ public final class DbUtils {
 		} finally {
 			DbUtils.close(rset);
 			DbUtils.close(stmt);
+			close(con);
 		}
+	} catch (SQLException e) {
+			throw new WebGenomeSystemException("Error when closing connection ", e);
+	}		
 		return data;
 	}
 }
