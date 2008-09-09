@@ -1,6 +1,6 @@
 /*
-$Revision: 1.12 $
-$Date: 2008-09-04 17:28:47 $
+$Revision: 1.13 $
+$Date: 2008-09-09 18:36:52 $
 
 The Web CGH Software License, Version 1.0
 
@@ -182,8 +182,8 @@ public final class ClientPlotAction extends BaseAction {
         }
         
         // stop here for now and quit
-        if (true)
-          return mapping.findForward("test");
+       // if (true)
+         // return mapping.findForward("test");
         
         // TODO: In the future the organism should come from the
         // client query string
