@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-29 19:29:20 $
+$Revision: 1.4 $
+$Date: 2008-10-23 16:17:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,7 +51,9 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.domain;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.rti.webgenome.units.BpUnits;
 
@@ -513,5 +515,44 @@ extends DataSourceProperties.BaseDataSourceProperties {
 		this.reporterRemoteFileName = remoteFileName;
 		this.reporterFileReporterNameColumnName =
 			reporterFileReporterNameColumnName;
+	}
+	
+	public String print2Buff(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("********Printing UploadProperties attributes*******");
+		buff.append("chromosomeColumnName = " + this.chromosomeColumnName + "\n");
+		
+		if (!dataFileMetaData.isEmpty()){
+			for(DataFileMetaData entry:dataFileMetaData){			
+				buff.append(entry.print2Buff());
+			}
+		}else
+			buff.append("dataFileMetaData is empty");
+		
+		
+		buff.append("experimentName = " + this.experimentName + "\n");	
+		if (organism != null)
+			buff.append("organism = " + this.organism.print2Buff() + "\n");
+		else
+			buff.append("organism is empty");
+		
+		buff.append("positionColumnName = " + this.positionColumnName + "\n");
+		if (this.quantitationType != null)
+			buff.append("quantitationType.name = " + this.quantitationType.getName() + "\n");
+		else
+			buff.append("quantitationType is empty");
+		
+		if (this.reporterFileFormat != null)
+			buff.append("reporterFileFormat = " + this.reporterFileFormat.print2Buff() + "\n");
+		else
+			buff.append("reporterFileFormat is empty");
+		
+		buff.append("reporterFileReporterNameColumnName = " + this.reporterFileReporterNameColumnName + "\n");	
+		buff.append("reporterLocalFileName = " + this.reporterLocalFileName + "\n");	
+		buff.append("reporterRemoteFileName = " + this.reporterRemoteFileName + "\n");	
+		
+	
+			
+		return buff.toString();
 	}
 }

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.10 $
-$Date: 2008-02-22 03:54:09 $
+$Revision: 1.11 $
+$Date: 2008-10-23 16:17:18 $
 
 The Web CGH Software License, Version 1.0
 
@@ -50,6 +50,11 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 package org.rti.webgenome.webui.util;
 
+import gov.nih.nci.caarray.domain.project.Experiment;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -58,11 +63,13 @@ import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
 import org.rti.webgenome.domain.UploadedData;
 import org.rti.webgenome.domain.ZipFileMetaData;
+import org.rti.webgenome.service.client.CaArrayClient;
 import org.rti.webgenome.service.client.ClientDataServiceManager;
 import org.rti.webgenome.service.data.DataSourceSession;
 import org.rti.webgenome.service.session.SessionMode;
 import org.rti.webgenome.webui.SessionTimeoutException;
 import org.rti.webgenome.webui.struts.cart.SelectedExperimentsForm;
+import org.rti.webgenome.service.client.SupportedArrayDesigns;
 
 /**
  * Provides access to objects cached as attributes in the request
@@ -119,6 +126,24 @@ public final class PageContext {
 	
 	/** Prefix for experiment IDs used in HTML form elements. */
 	public static final String EXPERIMENT_ID_PREFIX = "exp_";
+	
+	/** Key to retrieve caArray client*/
+	public static final String KEY_CAARRAY_CLIENT = "key.caarray.client";
+	
+	/** Keys to retrieve caArray user name and password follow */
+	public static final String KEY_CAARRAY_USER_NAME = "caarr.uname";
+	public static final String KEY_CAARRAY_PASSWORD = "caarr.pass";
+	
+	/** Key to retrieve caArray experiment list*/
+	public static final String KEY_CAARRAY_EXP_LIST = "key.caarray.exp.list";
+	
+	/** Key to retrieve caArray selected experiment list*/
+	public static final String KEY_CAARRAY_SEL_EXP_LIST = "key.caarray.sel.exp.list";
+	
+	/** Key to retrieve supported caArray designs*/
+	public static final String KEY_CAARRAY_SUPORTED_DESIGNS = "key.caarray.suported.designs";
+	
+	
 	
 	
 	// ==========================
@@ -422,6 +447,111 @@ public final class PageContext {
 	}
 	
 	/**
+	 * Returns caArrayClient instance
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public static CaArrayClient getCaArrayClient(final HttpServletRequest request) throws Exception{
+		CaArrayClient caArrayClient = (CaArrayClient)request.getSession().getAttribute(KEY_CAARRAY_CLIENT);
+	/*	if (caArrayClient == null){
+			String caArrayUserName = request.getParameter(PageContext.KEY_CAARRAY_USER_NAME);
+			String caArrayPassword = request.getParameter(PageContext.KEY_CAARRAY_PASSWORD);
+			
+			if (caArrayUserName == null || caArrayUserName.equals(""))
+				caArrayUserName = (String)request.getAttribute(PageContext.KEY_CAARRAY_USER_NAME);
+			
+			if (caArrayPassword == null || caArrayPassword.equals(""))
+				caArrayPassword = (String)request.getAttribute(PageContext.KEY_CAARRAY_PASSWORD);
+					
+			caArrayClient = new CaArrayClient(caArrayUserName, caArrayPassword);			
+		}
+		setCaArrayClient(caArrayClient, request);*/
+		return caArrayClient;
+	}
+	
+	public static void setCaArrayClient(final CaArrayClient caArrayClient, final HttpServletRequest request){
+	  HttpSession session = request.getSession();
+	  session.setAttribute(KEY_CAARRAY_CLIENT, caArrayClient);
+	}
+	
+	public static void setCaArrayExperimentList(Collection<Experiment> experimentList, final HttpServletRequest request){
+		HttpSession session = request.getSession();
+		session.setAttribute(KEY_CAARRAY_EXP_LIST , experimentList);
+	}
+	
+	public static Collection<Experiment> getCaArrayExperimentList(final HttpServletRequest request){
+		HttpSession session = request.getSession();
+		return (Collection<Experiment>)session.getAttribute(KEY_CAARRAY_EXP_LIST);
+	}
+	
+	public static Experiment getCaArrayExperimentTitle(final String expPubId, final HttpServletRequest request) throws Exception{
+		HttpSession session = request.getSession();
+		Collection<Experiment> expList = getCaArrayExperimentList(request);
+		if (expList == null)
+			return null;
+		for (Experiment exp : expList){
+			if (exp.getPublicIdentifier().equals(expPubId)){
+				return exp;
+			}
+		}
+		return null;
+	}
+	
+	public static String getCaArrayUserName(final HttpServletRequest request){
+		return (String)request.getSession().getAttribute(KEY_CAARRAY_USER_NAME);
+	}
+	
+	public static void setCaArrayUserName(final String caArrayUserName, final HttpServletRequest request){
+	  HttpSession session = request.getSession();
+	  session.setAttribute(KEY_CAARRAY_USER_NAME, caArrayUserName);
+	}
+	
+	public static CaArrayClient getCaArrayPassword(final HttpServletRequest request){
+		return (CaArrayClient)request.getSession().getAttribute(KEY_CAARRAY_PASSWORD);
+	}
+	
+	public static void setCaArrayPassword(final String caArrayPassword, final HttpServletRequest request){
+	  HttpSession session = request.getSession();
+	  session.setAttribute(KEY_CAARRAY_PASSWORD, caArrayPassword);
+	}
+	
+	
+	public static void add2SelCaArrayExperiments(final HttpServletRequest request, final String expId){
+		HttpSession session = request.getSession();
+		Collection<String> selExperiments = (Collection<String>)session.getAttribute(KEY_CAARRAY_SEL_EXP_LIST);
+		
+		if (selExperiments == null)
+			selExperiments = new ArrayList<String>();
+		
+		// add if does not exist already
+		if (!isSelCaArrayExperimentProcessed(request, expId)){
+			selExperiments.add(expId);			
+		}
+		session.setAttribute(KEY_CAARRAY_SEL_EXP_LIST, selExperiments);
+	}
+	
+	public static boolean isSelCaArrayExperimentProcessed(final HttpServletRequest request, final String expId){
+		HttpSession session = request.getSession();
+		Collection<String> selExperiments = (Collection<String>)session.getAttribute(KEY_CAARRAY_SEL_EXP_LIST);
+		
+		if (selExperiments == null)
+			return false;
+		
+		for (String eId : selExperiments){
+			if (eId.equals(expId))
+			  return true;
+		}
+				
+		return false;
+	}
+	
+	
+	
+	
+	
+
+	/**
 	 * Get an attribute from session and throw a
 	 * <code>SessionExpired</code> exception if
 	 * attribute not found.
@@ -441,4 +571,6 @@ public final class PageContext {
 		}
 		return obj;
 	}
+	
+	
 }

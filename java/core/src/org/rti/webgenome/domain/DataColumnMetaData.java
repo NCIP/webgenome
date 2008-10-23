@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.3 $
+$Date: 2008-10-23 16:17:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -165,5 +165,14 @@ public class DataColumnMetaData {
 	 */
 	public DataColumnMetaData(final DataColumnMetaData meta) {
 		this(meta.columnName, meta.bioAssayName);
+	}
+	
+	public String print2Buff(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("***Printing DataColumnMetaData*****\n");
+		buff.append("BioAssayName = " + this.getBioAssayName() + "\n");
+		buff.append("ColumnName = " + this.getColumnName() + "\n");
+		buff.append("Id = " + this.getId() + "\n");
+		return buff.toString();
 	}
 }

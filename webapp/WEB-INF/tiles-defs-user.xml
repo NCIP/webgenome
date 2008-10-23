@@ -47,6 +47,11 @@
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
 
-
+<!-- Login to caArray-->
+  	<definition name="user.caarray.login" extends="cart.layout" >
+	  	<put name="title" value="webGenome: CaArray Login" />
+	  	<put name="content" value="/WEB-INF/jsp/user/caArraLogin.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
 
 </tiles-definitions>

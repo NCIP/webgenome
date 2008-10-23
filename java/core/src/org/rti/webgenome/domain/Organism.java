@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-03-29 17:03:32 $
+$Revision: 1.2 $
+$Date: 2008-10-23 16:17:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -205,5 +205,15 @@ public class Organism implements Serializable {
 		return concatenation.hashCode();
 	}
     
+	public String print2Buff(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("Printing Organism START\n");
+		buff.append("displayName = " + this.getDisplayName() + "\n");
+		buff.append("genus = " +this.getGenus() + "\n");
+		buff.append("Id = " +this.getId() + "\n");
+		buff.append("species = " +this.getSpecies() + "\n");
+		buff.append("Printing Organism END\n");
+		return buff.toString();
+	}
     
 }

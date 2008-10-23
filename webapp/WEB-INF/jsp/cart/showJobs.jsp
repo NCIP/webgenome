@@ -6,6 +6,7 @@
 <%@page import="org.rti.webgenome.domain.BioAssay" %>
 
 
+ <META HTTP-EQUIV="refresh" CONTENT="5">
 
 <p align="center">
 	<html:messages id="message" message="true">

@@ -23,4 +23,8 @@
 		class="org.rti.webgenome.webui.struts.user.ForgotPasswordAction"
 		parent="baseAction"/>
 	
+<!-- Login to caArray server-->
+	<bean name="/user/caarrayLogin"
+		class="org.rti.webgenome.webui.struts.user.CaArrayLoginAction"
+		parent="baseAction"/>	
 </beans>

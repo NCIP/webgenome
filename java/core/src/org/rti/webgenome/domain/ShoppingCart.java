@@ -1,6 +1,6 @@
 /*
-$Revision: 1.9 $
-$Date: 2007-10-10 17:47:02 $
+$Revision: 1.10 $
+$Date: 2008-10-23 16:17:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -414,6 +414,25 @@ public class ShoppingCart implements Serializable {
     	Experiment experiment = null;
     	for (Experiment exp : this.experiments) {
     		if (id.equals(exp.getId())) {
+    			experiment = exp;
+    			break;
+    		}
+    	}
+    	return experiment;
+    }
+    
+    /**
+     * Get experiment with name.
+     * @param name Experiment name
+     * @return An experiment
+     */
+    public final Experiment getExperimentByName(final String name) {
+    	if (name == null || name.equals("")) {
+    		throw new IllegalArgumentException("Experiment name is not defined");
+    	}
+    	Experiment experiment = null;
+    	for (Experiment exp : this.experiments) {
+    		if (name.equals(exp.getName())) {
     			experiment = exp;
     			break;
     		}

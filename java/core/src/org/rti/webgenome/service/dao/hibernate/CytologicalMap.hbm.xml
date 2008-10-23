@@ -24,7 +24,7 @@
 		<set
 			name="cytobands"
 			lazy="false"
-			cascade="all,delete-orphan"
+			cascade="all"
 			sort="natural">
 			<key column="cytological_map_id" not-null="true"/>
 			<one-to-many class="org.rti.webgenome.domain.Cytoband"/>

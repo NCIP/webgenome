@@ -1,5 +1,5 @@
 /*
-$Revision: 1.2 $
+$Revision: 1.1 $
 $Date: 2008-10-23 16:17:07 $
 
 The Web CGH Software License, Version 1.0
@@ -48,41 +48,49 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.rti.webgenome.service.job;
+package org.rti.webgenome.service.client;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import javax.servlet.http.HttpServletRequest;
 
-/**
- * Implementation of {@link JobDao} using Hibernate.
- * @author dhall
- *
- */
-public class HibernateJobDao extends HibernateDaoSupport
-implements JobDao {
+public final class SupportedArrayDesigns {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void delete(final Job job) {
-		 this.getHibernateTemplate().delete(job);
+	private static String[] arrayDesigns = {"HG-U133_Plus_2", "HG-U133A_2", "HT_HG-U133A",
+			"Hu6800", "HumanWG-6"};
+	
+	public static Collection<String> getArrayDesigns(){
+		Collection<String> collDesigns = new ArrayList<String>();
+		
+		for (String s : arrayDesigns)
+			collDesigns.add(s);
+		
+		return collDesigns;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	public Collection<Job> loadAll() {
-		return this.getHibernateTemplate().loadAll(
-				org.rti.webgenome.service.job.AbstractJob.class);
-	}
-
 	
 	/**
-	 * {@inheritDoc}
+	 * Check if design is supported. 
+	 * 
+	 * @param designToCheck
+	 * @return
+	 * @throws Exception
 	 */
-	public void saveOrUpdate(final Job job) {
-		this.getHibernateTemplate().saveOrUpdate(job);
+	public static boolean isSupported(String designToCheck) throws Exception{
+		for (String ad : arrayDesigns){
+			if (ad.equals(designToCheck))
+				return true;
+		}
+		return false;
 	}
+	
+	public static String getCaArraySupportedDesignsAsString(final HttpServletRequest request){		
+	    String 	supportedDesignsStr = "";
+		
+		for(String s : arrayDesigns)
+			supportedDesignsStr += s + "\n";
+		
+		return supportedDesignsStr;
+	}
+	
 }

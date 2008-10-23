@@ -12,7 +12,8 @@
 	<bean name="/upload/initializeUploadForm"
 		class="org.rti.webgenome.webui.struts.upload.InitializeUploadAction"
 		parent="baseAction"/>
-		
+
+				
 <!-- Show main upload form -->
 	<bean name="/upload/showUploadForm"
 		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction"
@@ -77,7 +78,24 @@
 	<bean name="/upload/uploadData"
 		class="org.rti.webgenome.webui.struts.upload.UploadAction"
 		parent="baseAction"/>
-	
+
+
+<!-- Initialize caArray upload action -->
+	<bean name="/upload/initcaArrayUpload"
+		class="org.rti.webgenome.webui.struts.upload.InitializecaArrayUploadAction"
+		parent="baseAction"/>
+
+
+<!-- Fetch caArray experiment list action -->
+	<bean name="/upload/fetchcaArrayExperiments"
+		class="org.rti.webgenome.webui.struts.upload.FetchCaArrayExperimentListAction"
+		parent="baseAction"/>
+
+<!-- Upload caArray data -->
+	<bean name="/upload/uploadcaArrayData"
+		class="org.rti.webgenome.webui.struts.upload.UploadCAArrayAction"
+		parent="baseAction"/>
+			
 <!-- Initialize import session with remote data source -->
 	<bean name="/upload/initRemoteSession"
 		class="org.rti.webgenome.webui.struts.upload.InitRemoteSessionAction"

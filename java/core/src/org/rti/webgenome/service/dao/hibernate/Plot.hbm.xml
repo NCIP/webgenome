@@ -14,7 +14,7 @@
 		<property name="clickBoxesFileName" column="cb_file_name"/>
 		<property name="mouseOverStripesFileName" column="mos_file_name"/>
 		<map name="imageFileMap" table="img_file_map"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false" cascade="all">
 			<key column="plot_id"/>
 			<map-key column="img_name" type="java.lang.String"/>
 			<element column="file_name" type="java.lang.String"/>
@@ -27,7 +27,7 @@
 		</set>
 		<many-to-one name="plotParameters" column="plot_params_id"
 			class="org.rti.webgenome.service.plot.PlotParameters"
-			cascade="all-delete-orphan"
+			cascade="all"
 			not-null="true" lazy="false"/>
 		
 		<!-- Following two sets commented out because these

@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.4 $
+$Date: 2008-10-23 16:17:07 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.service.io;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -212,11 +213,20 @@ public final class SmdFileReader {
         Iterator<String> chroms = chromCol.iterator();
         Iterator<String> poses = posCol.iterator();
         long lineNum = 1;
+        
+       
+
+    	
         while (names.hasNext() && chroms.hasNext() && poses.hasNext()) {
             try {
                 String name = names.next();
                 String chromStr = chroms.next();
                 String posStr = poses.next();
+                // VB added support for chromosome X and Y; to replace
+                if (chromStr.equalsIgnoreCase("X"))
+                	chromStr = "23";
+                else if (chromStr.equalsIgnoreCase("Y"))
+                	chromStr = "24";                
                 short chrom = Short.parseShort(chromStr);
                 long pos = this.units.toBp((long)
                     (Double.parseDouble(posStr)));
@@ -230,7 +240,10 @@ public final class SmdFileReader {
         }
     }
     
+   
     
+    
+   
     /**
      * Find index of search string within list of strings.
      * If the <code>prefix</code> argument is set to <code>false</code>,
@@ -314,6 +327,19 @@ public final class SmdFileReader {
         long lineNum = 1;
         Iterator<String> names = nameCol.iterator();
         Iterator<String> values = dataCol.iterator();
+        
+        //TODO: VBDELETE Remove this once testing is done START
+        /*File f = new File("c:\\temp\\webgenome\\reportersNotFound.csv");
+        FileOutputStream os = null;
+        try{
+        	os = new FileOutputStream(f);
+        }catch(Exception e){
+        	e.printStackTrace();
+        }
+        byte[] buffer = new byte[1024];
+        StringBuffer sb = new StringBuffer();*/
+       //TODO: VBDELETE Remove this once testing is done END
+        
         while (names.hasNext() && values.hasNext()) {
         	String name = names.next();
             Reporter r = this.reporters.get(name);
@@ -321,18 +347,35 @@ public final class SmdFileReader {
             	LOGGER.warn("Reporter '" + name + "' in data file '"
             			+ file.getName()
             			+ "' unknown");
+            //	sb.append(name + "\n");
             } else {
             	String valueStr = values.next();
+            	
             	try {
             		float value = Float.parseFloat(valueStr);
             		bad.add(new ArrayDatum(value, r));
             	} catch (NumberFormatException e) {
                     LOGGER.warn("Error parsing bioassay data value from "
-                            + "line number " + lineNum);
+                            + "line number " + lineNum + " and value is " + valueStr);
                 }
             }
             lineNum++;
         }
+        
+      //TODO: VBDELETE Remove this once testing is done START
+      /*  try{
+        	os.write(sb.toString().getBytes(), 0, sb.length());
+        	os.flush();
+        	os.close();
+        }catch(Exception e){
+        	e.printStackTrace();
+        }*/
+      //TODO: VBDELETE Remove this once testing is done END
         return bad;
     }
 }
+
+
+
+
+	

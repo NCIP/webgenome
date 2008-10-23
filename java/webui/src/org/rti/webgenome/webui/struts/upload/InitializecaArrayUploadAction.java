@@ -1,5 +1,5 @@
 /*
-$Revision: 1.11 $
+$Revision: 1.1 $
 $Date: 2008-10-23 16:17:18 $
 
 The Web CGH Software License, Version 1.0
@@ -56,26 +56,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
-import org.rti.webgenome.domain.Experiment;
-import org.rti.webgenome.domain.Organism;
-import org.rti.webgenome.domain.Principal;
-import org.rti.webgenome.domain.QuantitationType;
-import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.domain.UploadDataSourceProperties;
-import org.rti.webgenome.service.job.DataImportJob;
-import org.rti.webgenome.units.BpUnits;
+import org.rti.webgenome.service.client.CaArrayClient;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
-import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
- * Performs uploading of data.
+ * Action that initializes an upload of data files.
  * @author dhall
+ *
  */
-public class UploadAction extends BaseAction {
-	
+public class InitializecaArrayUploadAction extends BaseAction {
 
 	/**
 	 * {@inheritDoc}
@@ -85,43 +76,12 @@ public class UploadAction extends BaseAction {
 	        final HttpServletRequest request,
 	        final HttpServletResponse response
 	    ) throws Exception {
-		UploadDataSourceProperties upload = PageContext.getUpload(request);
-		
-		UploadForm uForm = (UploadForm) form;
-		upload.setChromosomeColumnName(uForm.getChromosomeColumnName());
-		upload.setExperimentName(uForm.getExperimentName());
-		Long orgId = new Long(uForm.getOrganismId());
-		Organism org = this.getDbService().loadOrganism(orgId);
-		upload.setOrganism(org);
-		upload.setPositionUnits(BpUnits.getUnits(uForm.getUnits()));
-		upload.setPositionColumnName(uForm.getPositionColumnName());
-		
-		
-		upload.setQuantitationType(
-					QuantitationType.getQuantitationType(
-							uForm.getQuantitationTypeId()));
-					
-		//TODO: Delete this, VB added just for test
-		//System.out.println(upload.print2Buff());
-		
-		ActionForward forward = null;
-		if (ProcessingModeDecider.processInBackground(
-				upload, request, this.getIoService())) {
-			Principal principal = PageContext.getPrincipal(request);
-			DataImportJob job = new DataImportJob(upload,
-					principal.getName(), principal.getDomain());
-			this.getJobManager().add(job);
-			ActionMessages messages = new ActionMessages();
-    		messages.add("global", new ActionMessage("import.job"));
-    		this.saveMessages(request, messages);
-			forward = mapping.findForward("batch");
-		} else {
-			ShoppingCart cart = this.getShoppingCart(request);
-			Experiment exp = this.getIoService().loadSmdData(upload, cart);
-			this.getDbService().addArraysAndUpdateCart(exp, cart);
-			forward = mapping.findForward("non.batch");
+		CaArrayClient caArrayClient = PageContext.getCaArrayClient(request);
+		if (caArrayClient == null) {
+			return mapping.findForward("needlogin");
 		}
-		PageContext.removeUpload(request);
-		return forward;
+		
+		// retrieve list of experiments
+		return mapping.findForward("success");
 	}
 }

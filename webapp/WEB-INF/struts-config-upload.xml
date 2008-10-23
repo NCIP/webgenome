@@ -153,6 +153,34 @@
         	<forward name="non.batch" path="/cart/showCart.do"/>
 			<forward name="batch" path="/cart/showJobs.do"/>
         </action>
+       
+       
+       <!-- Initialize caArray upload action -->
+	      <action path="/upload/initcaArrayUpload"
+	      	name =""
+        	scope="session"
+        	validate="false">
+        	<forward name="needlogin" path="user.caarray.login"/>
+			<forward name="success" path="/upload/fetchcaArrayExperiments.do"/>
+        </action>
+    
+    
+	<!-- Fetch caArray experiment list action -->	
+		   <action path="/upload/fetchcaArrayExperiments"
+        	scope="session"
+        	validate="false">        	
+			<forward name="success" path="upload.select.caarray.experiment"/>
+        </action>
+		 
+        <!-- Upload caArray data -->
+        <action path="/upload/uploadcaArrayData"
+        	name="upload.form"
+        	scope="session"
+        	validate="false">
+        	<forward name="non.batch" path="/cart/showCart.do"/>
+			<forward name="batch" path="/cart/showJobs.do"/>
+        </action>
+        
         
      <!-- Initiate data import from remote system -->
      	<action path="/upload/initRemoteSession">
@@ -180,15 +208,7 @@
         	<forward name="success" path="upload.select.experiments"/>
         </action>
         
-     <!-- Fetch experiments from remote system -->
-        <action path="/upload/fetchExperiments"
-        	name="selected.remote.experiments.form"
-        	scope="session"
-        	validate="true"
-        	input="/upload/fetchExperimentList.do">
-            <forward name="non.batch" path="/cart/showCart.do"/>
-			<forward name="batch" path="/cart/showJobs.do"/>
-		</action>
+   
 		
 	</action-mappings>
 

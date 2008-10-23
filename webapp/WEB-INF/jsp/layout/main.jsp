@@ -219,6 +219,15 @@
 					</a>
 					|
 				</webgenome:onlyIfLoggedInAndStandAloneMode>
+				
+			<%-- caArray upload --%>
+				<webgenome:onlyIfLoggedInAndStandAloneMode>
+					<a class="menuItem" href="<html:rewrite page="/upload/initcaArrayUpload.do"/>">
+						Import caArray Data
+					</a>
+					|
+				</webgenome:onlyIfLoggedInAndStandAloneMode>
+					
 			<%-- Login --%>
 				<webgenome:onlyIfUserLoggedOut>
 					<a class="menuItem" href="<html:rewrite page="/user/login.do"/>">

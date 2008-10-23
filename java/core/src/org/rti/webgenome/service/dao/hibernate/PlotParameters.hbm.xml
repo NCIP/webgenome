@@ -16,7 +16,7 @@
 		<property name="numPlotsPerRow" column="num_plots_per_row"/>
 		<property name="bpUnitsByName" column="units"/>
 		<set name="genomeIntervals" sort="natural"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false" cascade="all">
 			<key column="plot_params_id" not-null="true"/>
 			<one-to-many class="org.rti.webgenome.domain.GenomeInterval"/>
 		</set>

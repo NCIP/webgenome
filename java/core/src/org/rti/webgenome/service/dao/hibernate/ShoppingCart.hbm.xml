@@ -14,13 +14,13 @@
 		<property name="userName" column="user_name"/>
 		<property name="userDomain" column="user_domain"/>
 		<set name="experiments"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false" cascade="all">
 			<key column="shopping_cart_id"/>
 			<one-to-many
 				class="org.rti.webgenome.domain.Experiment"/>
 		</set>
 		<list name="plots"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false" cascade="all">
 			<key column="shopping_cart_id" not-null="true"/>
 			<list-index column="list_index"/>
 			<one-to-many
@@ -29,7 +29,7 @@
 		<many-to-one name="bioassayColorChooser"
 			column="color_chooser_id"
 			class="org.rti.webgenome.graphics.util.ColorChooser"
-			cascade="all-delete-orphan"
+			cascade="all"
 			lazy="false"/>
 	</class>
 

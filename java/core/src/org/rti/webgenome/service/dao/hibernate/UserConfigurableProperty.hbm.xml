@@ -21,7 +21,7 @@
 			name="org.rti.webgenome.analysis.UserConfigurablePropertyWithOptions"
 			discriminator-value="with.opts">
 			<map name="options" table="prop_options"
-				lazy="false" cascade="all-delete-orphan">
+				lazy="false" cascade="all">
 				<key column="user_conf_prop_id"/>
 				<map-key column="code" type="java.lang.String"/>
 				<element column="display_name" type="java.lang.String"/>

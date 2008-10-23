@@ -1,6 +1,6 @@
 /*
-$Revision: 1.4 $
-$Date: 2008-06-16 19:33:25 $
+$Revision: 1.5 $
+$Date: 2008-10-23 16:17:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -214,5 +214,6 @@ public final class QuantitationType implements Serializable {
 		this.otherValue = otherValue;
 	}
     
+	
     
 }

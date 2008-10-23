@@ -1,6 +1,6 @@
 /*
-$Revision: 1.5 $
-$Date: 2007-08-28 17:24:13 $
+$Revision: 1.6 $
+$Date: 2008-10-23 16:17:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -261,5 +261,22 @@ public class DataFileMetaData {
 		} else {
 			this.format = RectangularTextFileFormat.valueOf(formatName);
 		}
+	}
+	
+	public String print2Buff(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("*****Printing DataFileMetaData START ******\n");
+		
+	    for(DataColumnMetaData colMetaDataEntry : dataColumnMetaData){
+	    	buff.append(colMetaDataEntry.print2Buff());
+	    }
+	    			
+		buff.append(this.getFormat().print2Buff());
+		buff.append("FormatName = " + this.getFormatName() + "\n");
+		buff.append("Id = " + this.getId()  + "\n");
+		buff.append("LocalFileName = " + this.getLocalFileName() + "\n");
+		buff.append("RemoteFileName = " + this.getRemoteFileName() + "\n");
+		buff.append("ReporterNameColumnName = " + this.getReporterNameColumnName() + "\n");
+		return buff.toString();
 	}
 }

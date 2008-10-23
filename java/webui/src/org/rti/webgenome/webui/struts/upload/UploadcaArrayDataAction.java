@@ -1,5 +1,5 @@
 /*
-$Revision: 1.11 $
+$Revision: 1.1 $
 $Date: 2008-10-23 16:17:18 $
 
 The Web CGH Software License, Version 1.0
@@ -71,15 +71,13 @@ import org.rti.webgenome.webui.util.PageContext;
 import org.rti.webgenome.webui.util.ProcessingModeDecider;
 
 /**
- * Performs uploading of data.
- * @author dhall
+ * This class will connect with caArray, retrieve experiment data and
+ * initialize UploadDataSourceProperties object.
+ * 
+ * @author vbakalov
+ *
  */
-public class UploadAction extends BaseAction {
-	
-
-	/**
-	 * {@inheritDoc}
-	 */
+public class UploadcaArrayDataAction extends BaseAction {
 	public ActionForward execute(
 	        final ActionMapping mapping, final ActionForm form,
 	        final HttpServletRequest request,
@@ -102,7 +100,7 @@ public class UploadAction extends BaseAction {
 							uForm.getQuantitationTypeId()));
 					
 		//TODO: Delete this, VB added just for test
-		//System.out.println(upload.print2Buff());
+		System.out.println(upload.print2Buff());
 		
 		ActionForward forward = null;
 		if (ProcessingModeDecider.processInBackground(
@@ -124,4 +122,6 @@ public class UploadAction extends BaseAction {
 		PageContext.removeUpload(request);
 		return forward;
 	}
+	
+	
 }

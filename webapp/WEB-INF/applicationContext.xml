@@ -80,7 +80,7 @@
 	      	<value>org/rti/webgenome/service/dao/hibernate/CytologicalMap.hbm.xml</value>
 	      	<value>org/rti/webgenome/service/dao/hibernate/DataColumnMetaData.hbm.xml</value>
 	      	<value>org/rti/webgenome/service/dao/hibernate/DataFileMetaData.hbm.xml</value>
-	      	<value>org/rti/webgenome/service/dao/hibernate/DataSourceProperties.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/DataSourceProperties.hbm.xml</value> 
 	      	<value>org/rti/webgenome/service/dao/hibernate/Experiment.hbm.xml</value>
 	      	<value>org/rti/webgenome/service/dao/hibernate/GenomeInterval.hbm.xml</value>
 	      	<value>org/rti/webgenome/service/dao/hibernate/MouseOverStripe.hbm.xml</value>

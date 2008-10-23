@@ -17,7 +17,7 @@
 		<property name="disposable"/>
 		
 		<map name="chromosomeReportersFileNames" table="reporters_file_names"
-			lazy="false" cascade="all-delete-orphan" sort="natural">
+			lazy="false" cascade="all" sort="natural">
 			<key column="array_id"/>
 			<map-key column="chromosome" type="java.lang.Short"/>
 			<element column="file_name" type="java.lang.String"/>

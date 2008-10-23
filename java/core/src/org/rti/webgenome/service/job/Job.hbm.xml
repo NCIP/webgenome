@@ -26,18 +26,18 @@
 			<many-to-one name="dataSourceProperties"
 				column="data_src_props_id"
 				class="org.rti.webgenome.domain.DataSourceProperties"
-				cascade="all-delete-orphan"
+				cascade="all"
 				lazy="false"/>
 			<map name="outputBioAssayNames"
 				table="job_out_bioassay_names"
-				lazy="false" cascade="all-delete-orphan">
+				lazy="false" cascade="all">
 				<key column="job_id"/>
 				<map-key column="bioassay_id" type="java.lang.Long"/>
 				<element column="name" type="java.lang.String"/>
 			</map>
 			<map name="outputExperimentNames"
 				table="job_out_experiment_names"
-				lazy="false" cascade="all-delete-orphan">
+				lazy="false" cascade="all">
 				<key column="job_id"/>
 				<map-key column="experiment_id" type="java.lang.Long"/>
 				<element column="name" type="java.lang.String"/>
@@ -48,7 +48,7 @@
 			<many-to-one name="dataSourceProperties"
 				column="data_src_props_id"
 				class="org.rti.webgenome.domain.DataSourceProperties"
-				cascade="all-delete-orphan"
+				cascade="all"
 				lazy="false"/>
 		</subclass>
 		<subclass name="org.rti.webgenome.service.job.ReRunAnalysisOnPlotExperimentsJob"
@@ -81,7 +81,7 @@
 			<many-to-one name="uploadDataSourceProperties"
 				column="data_src_props_id"
 				class="org.rti.webgenome.domain.DataSourceProperties"
-				cascade="all-delete-orphan"
+				cascade="all"
 				lazy="false"/>
 		</subclass>
 		<subclass name="org.rti.webgenome.service.job.DownloadDataJob"
@@ -90,6 +90,14 @@
 				column="bioassay_id"
 				class="org.rti.webgenome.domain.BioAssay"
 				cascade="save-update"
+				lazy="false"/>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.job.CaArrayDataImportJob"
+			discriminator-value="caArrayimport">
+			<many-to-one name="uploadDataSourceProperties"
+				column="data_src_props_id"
+				class="org.rti.webgenome.domain.DataSourceProperties"
+				cascade="all"
 				lazy="false"/>
 		</subclass>
 	</class>

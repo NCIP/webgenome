@@ -80,4 +80,11 @@
 	  	<put name="helpTopic" value="upload" />
   	</definition>
 
+<!-- Select from list of caArray experiments-->
+  	<definition name="upload.select.caarray.experiment" extends="upload.layout" >
+	  	<put name="title" value="webGenome: caAray experiment list" />
+	  	<put name="content" value="/WEB-INF/jsp/upload/showCaArrayExperimentList.jsp" />
+	  	<put name="helpTopic" value="upload" />
+  	</definition>
+
 </tiles-definitions>

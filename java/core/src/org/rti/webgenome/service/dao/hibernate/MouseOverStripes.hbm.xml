@@ -17,7 +17,7 @@
 		<property name="originX" column="origin_x"/>
 		<property name="originY" column="origin_y"/>
 		<list name="stripes"
-			lazy="false" cascade="all-delete-orphan">
+			lazy="false" cascade="all">
 			<key column="mouse_over_stripes_id" not-null="true"/>
 			<list-index column="list_index"/>
 			<one-to-many class="org.rti.webgenome.graphics.event.MouseOverStripe"/>

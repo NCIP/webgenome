@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2007-08-21 22:31:43 $
+$Revision: 1.2 $
+$Date: 2008-10-23 16:17:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -80,5 +80,13 @@ public enum RectangularTextFileFormat {
 	 */
 	public char getDelimiter() {
 		return this.delimiter;
+	}
+	
+	public String print2Buff(){
+		StringBuffer buff = new StringBuffer();
+		buff.append("******Printing RectangilarTextFileFormat START*****\n");
+		buff.append("Delimiter is " + this.delimiter + "\n");
+		buff.append("******Printing RectangilarTextFileFormat END*****\n");
+		return buff.toString();
 	}
 }
