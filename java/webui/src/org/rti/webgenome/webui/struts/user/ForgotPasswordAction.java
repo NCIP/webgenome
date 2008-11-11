@@ -1,6 +1,6 @@
 /*
-$Revision: 1.1 $
-$Date: 2008-06-13 19:58:25 $
+$Revision: 1.2 $
+$Date: 2008-11-11 18:09:06 $
 
 The Web CGH Software License, Version 1.0
 
@@ -62,17 +62,15 @@ import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.util.Email;
 import org.rti.webgenome.webui.struts.BaseAction;
 
-
-
 /**
- * Sends user his login credentials.
+ * Sends user their login credentials in the form of a Password Reminder.
  * 
  * @author vbakalov
  *
  */
 public final class ForgotPasswordAction extends BaseAction {
 
-	final static String EMAIL_SUBJECT = "WebGenome Information";
+	final static String EMAIL_SUBJECT = "WebGenome Password Reminder";
 	
 	
 	/**
@@ -92,29 +90,79 @@ public final class ForgotPasswordAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+    	
+    	String forwardTo = "success" ; // assume everything will be fine
+    	
     	NewAccountForm naf = (NewAccountForm) form;
     	
-    	// use email as login name
-    	naf.setName(naf.getEmail());
-    	
-    	// rtrieve Principal
-    	Principal p = getSecurityMgr().getPrincipalByEmail(naf.getEmail());
-    	
-    	// See if there is already a user with the same account name
-    	if (p == null) {
+    	if ( naf.getEmail() == null || naf.getEmail().trim().equals("") ) {
+    		
+    		//
+    		//    C H E C K    F O R    B L A N K    E M A I L    A D D R E S S
+    		//
+    		
     		ActionErrors errors = new ActionErrors();
-    		errors.add("global", new ActionError("account.email.does.not.exists"));
+    		errors.add("global", new ActionError("account.email.missing.address"));
     		this.saveErrors(request, errors);
-    		return mapping.findForward("failure");
+    		forwardTo = "failure" ;
     	}
-    	    	
-    	 
-    	// send user credentials to user's e-mail
-    	Email em = new Email();    	
-    	em.send(p.getEmail(), EMAIL_SUBJECT, "Your user name is your email address and your password is " + p.getPassword() + ".");
+    	else {
+    		
+    		//
+    		//    L O O K U P    E M A I L    A D D R E S S    S P E C I F I E D
+    		//
+	    	
+	    	// use email as login name
+	    	naf.setName(naf.getEmail());
+	    	
+	    	// retrieve Principal
+	    	Principal p = getSecurityMgr().getPrincipalByEmail(naf.getEmail());
+	    	
+	    	// See if there is already a user with the same account name
+	    	if (p == null) {
+	    		ActionErrors errors = new ActionErrors();
+	    		errors.add("global", new ActionError("account.email.does.not.exists"));
+	    		this.saveErrors(request, errors);
+	    		forwardTo = "failure" ;
+	    	}
+	    	else {
+
+	    		// compose email address
+	    		String emailMessage =
+	    			"A request was made for a password reminder to be sent to your email address.\n\n" + 
+	    			"Your WebGenome User Name is your email address.\n\n" +
+	    			"Your Password is " + p.getPassword() + ".\n\n" +
+	    			"You may login to WebGenome at the following address:\n\n" +
+	    			getLoginURL (request ) + "\n" ;
+	    			
+		    	// send user credentials to user's e-mail
+		    	Email em = new Email();    	
+		    	em.send(p.getEmail(), EMAIL_SUBJECT, emailMessage ) ;
+		    			 
+	    	}
+    	}
     	
-    	
-        return mapping.findForward("success");
+        return mapping.findForward( forwardTo );
+    }
+    
+    //
+    //    P R I V A T E    M E T H O D S
+    //
+    
+    private String getLoginURL ( HttpServletRequest request ) {
+        String scheme = request.getScheme();             // http
+        String serverName = request.getServerName();     // hostname.com
+        int serverPort = request.getServerPort();        // 80
+        String contextPath = request.getContextPath();   // /mywebapp
+        
+        String returnValue = scheme + "://" + serverName ;
+        
+        if ( serverPort != 80 ) // append port, if not standard 80
+        	returnValue += ":" + serverPort ;
+        
+        returnValue += contextPath + "/" + "user/login.do" ; // TODO: bit lame, having login.do hard-coded
+        
+        return returnValue ;
     }
     
    
