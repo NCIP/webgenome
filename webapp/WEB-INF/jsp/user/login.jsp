@@ -6,43 +6,40 @@
 	<html:errors property="global"/>
 	<html:form action="/user/validateLogin" focus="name">
 
-	<table cellpadding="5" cellspacing="0" border="0">
+	<table cellpadding="5" cellspacing="0" border="0" style="margin-top: 10px;">
 
 	<%-- User name --%>
 		<tr>
-			<td valign="middle" align="left">
+			<td class="label">
 				<html:errors property="name"/>
-				User name <br>
-				(Your e-mail address):
+				Email Address:
 			</td>
-			<td valign="middle" align="left">
-				<html:text property="name"/>
+			<td class="value">
+				<html:text property="name" size="30" maxlength="200"/>
 			</td>
 		</tr>
 
 	<%-- Password --%>
 		<tr>
-			<td valign="middle" align="left">
+			<td class="label">
 				<html:errors property="password"/>
 				Password:
 			</td>
-			<td valign="middle" align="left">
-				<html:password property="password"/>
+			<td class="value">
+				<html:password property="password" size="30" maxlength="200"/>
 			</td>
 		</tr>
 
 	<%-- Submit button --%>
 		<tr>
-			<td colspan="2" valign="middle" align="center">
-				<html:submit value="OK"/>
+			<td class="label">&nbsp;</td>
+			<td class="value">
+				<html:submit value="Login"/>
 			</td>
 		</tr>
 
 	</table>
-
 	</html:form>
-	
-	
 	
 	<p>
 		<html:link action="/user/newAccount">Register</html:link>
