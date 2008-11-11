@@ -74,6 +74,17 @@ out.println ( "    Free Heap Memory (bytes): " + heapFreeSize  ) ;
 out.println ( "                 Memory Used: " +  percentUsed + " %" ) ;
 %>
 </pre>
+<h2>SMTP Server Related Settings:</h2>
+<pre>
+<%
+	String smtpHost = SystemUtils.getApplicationProperty( "mail.smtp.host" ) ;
+	out.println ( "               mail.smtp.host: " + smtpHost ) ;
+	String distroList = SystemUtils.getApplicationProperty ( "error.email.distribution.list" ) ;
+	out.println ( "error.email.distribution.list: " + distroList ) ;
+	String sysAdminEmail = SystemUtils.getApplicationProperty ( "sysadmin.email" ) ;
+	out.println ( "               sysadmin.email: " + sysAdminEmail ) ;
+%>
+</pre>
 <%-- DISABLED TEMPORARILY
 <h2>SMTP Server Status:</h2>
 <pre>
