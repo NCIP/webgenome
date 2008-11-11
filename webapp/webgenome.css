@@ -21,6 +21,12 @@ span {
 	color: #000000;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 }
+
+span.labelNote {
+	font-size: 9px;
+	text-align: right;
+	font-weight: normal ;
+}
 input {
 	font-size: 11px;
 	color: #000000;
@@ -255,6 +261,18 @@ td {
 	font-size: 11px;
 	color: #000000;
 	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+td.label {
+	vertical-align: middle;
+	font-weight: normal;
+	text-align: right;
+}
+
+td.value {
+	vertical-align: middle;
+	font-weight: normal;
+	text-align: left;
 }
 
 table.table {
