@@ -172,7 +172,9 @@
 	<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
 		<tr>
 			<td rowspan="4" align="right" valign="top" background="<html:rewrite page="/images/ui-body-side-tile.gif"/>"><table height="100%" cellpadding="0" cellspacing="0" border="0" align="right"><tr><td background="<html:rewrite page="/images/ui-body-left.gif"/>"><img src="<html:rewrite page="/images/spacer.gif"/>" width="9" height="1" border="0"></td></tr></table></td>
-			<td height="71" align="left" valign="top" background="<html:rewrite page="/images/ui-title-tile.gif"/>"><img src="<html:rewrite page="/images/ui-title.jpg"/>" width="444" height="71" border="0"></td>
+			<td height="71" align="left" valign="top" background="<html:rewrite page="/images/ui-title-tile.gif"/>">
+				<a class="headerLink" href="<html:rewrite page="/home.do"/>"><img src="<html:rewrite page="/images/ui-title.jpg"/>" width="444" height="71" border="" alt="webGenome"></a>
+			</td>
 			<td rowspan="4" align="left" valign="top" background="<html:rewrite page="/images/ui-body-side-tile.gif"/>"><table height="100%" cellpadding="0" cellspacing="0" border="0" align="left"><tr><td background="<html:rewrite page="/images/ui-body-right.gif"/>"><img src="<html:rewrite page="/images/spacer.gif"/>" width="9" height="1" border="0"></td></tr></table></td>
 		</tr>
 
