@@ -437,3 +437,16 @@ a.transientLink:hover {
 .uncircled {
 	background-color: white;
 }
+
+a.headerLink:link {
+	text-decoration: none; 	border-bottom: 0px; border-style: none; padding: 0px;
+}
+a.headerLink:visited {
+	text-decoration: none; 	border-bottom: 0px; border-style: none; padding: 0px;
+}
+a.headerLink:hover {
+	text-decoration: none; 	border-bottom: 0px; border-style: none; padding: 0px;
+}
+a.headerLink:active {
+	text-decoration: none; 	border-bottom: 0px; border-style: none; padding: 0px;
+}
