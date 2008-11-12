@@ -25,7 +25,7 @@
 	request.setAttribute("lohParamsMap", lohParams);
 %>
 
-<h1 align="center">WebGenome Home</h1>
+<h1 align="center">webGenome Home</h1>
 
 <%-- Messages --%>
 <p align="center">
@@ -38,67 +38,73 @@
 
 <br>
 
-<table align="center" width="760" cellspacing="0" cellpadding="10" border="0"><tr valign="top"><td width="52%">
-
-<p>
-<font color="#336699"><b><i>Web</i>Genome</b></font> is an application for
-creating genomics plots.  <em>Version 3.0</em>
-of the system is designed to operate as both
-a stand-alone application and as a plotting client for
-other applications. To create plots, you must
-either log in and upload data or select a data set
-in another affiliated application, such as <b>Rembrandt</b>, and
-then elect to plot data in <i>Web</i>Genome</b>.
-
-<p>
-To get a flavor for the system without going through another
-application, you can plot randomly generated
-<html:link action="/client/testPlot"
-name="copyNumParamsMap">copy number</html:link>
-or
-<html:link action="/client/testPlot"
-name="lohParamsMap">LOH</html:link> data.
-</p>
-
-</td><td width="48%">
-
-<p>
-This version of <font color="#336699"><b><i>web</i>Genome</b></font> supports the creation of five types of plots:
-<table cellspacing="10" cellpadding="0" border="0">
-	<tr>
-		<td align="center">
-			<html:img page="/images/icon-scatterPlot.gif"/><br>
-			<small>Genome Snapshot Plot</small>
+<table align="center" width="760" cellspacing="0" cellpadding="10" border="0">
+	<tr valign="top">
+		<td width="52%">
+			<!--    START:    L E F T    P A N E L    T E X T    -->
+			<p><span style="color:#336699; font-weight: bold;"><i>web</i>Genome</span> is an application for
+			creating genomics plots.</p>
+			<p>The system is designed to operate as both
+			a <strong>stand-alone</strong> application and as a <strong>plotting client</strong> for
+			other applications.
+			</p>
+			<p>To create plots, you must
+			either <html:link action="/user/login">log in</html:link> and upload data or select a data set
+			in another affiliated application, such as <strong>Rembrandt</strong>, and
+			then elect to plot data in <i>web</i>Genome</strong>.</p>
+			<p>
+			To get a flavor for the system without going through another
+			application, you can plot randomly generated
+			<html:link action="/client/testPlot"
+			name="copyNumParamsMap">copy number</html:link>
+			or
+			<html:link action="/client/testPlot"
+			name="lohParamsMap">LOH</html:link> data.
+			</p>
+			<!--      END:    L E F T    P A N E L    T E X T    -->
 		</td>
-		<td align="center">
-			<html:img page="/images/icon-scatterPlot.gif"/><br>
-			<small>Scatter Plot</small>
+		<td width="48%">
+			<!--    START:    R I G H T    P A N E L    T E X T    -->
+			<p>
+			<span style="color:#336699; font-weight: bold;"><i>web</i>Genome</span> supports the creation
+			of five types of plots:</p>
+			<table cellspacing="10" cellpadding="0" border="0">
+				<tr>
+					<td align="center">
+						<html:img page="/images/icon-scatterPlot.gif"/><br>
+						<small>Genome Snapshot Plot</small>
+					</td>
+					<td align="center">
+						<html:img page="/images/icon-scatterPlot.gif"/><br>
+						<small>Scatter Plot</small>
+					</td>
+					<td rowspan="3"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
+					<td align="center">
+						<html:img page="/images/icon-ideogramPlot.gif"/><br>
+						<small>Ideogram Plot</small>
+					</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<html:img page="/images/icon-annotationPlot.gif"/><br>
+						<small>Annotation Plot</small>
+					</td>
+					<td align="center">
+						<html:img page="/images/icon-barPlot.gif"/><br>
+						<small>Bar Plot</small>
+					</td>
+					<td>&nbsp;</td>
+					<%--
+					<td rowspan="3"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
+					--%>
+				</tr>
+			</table>
+			<p>Supported data types include <em>copy number</em>, <em>fold change</em>,
+			<em>loss of heterozygosity</em>, and <em>gene expression</em>.
+			Additionally, a number of basic
+			statistical operations are available to process data prior to plotting.
+			</p>
+			<!--      END:    R I G H T    P A N E L    T E X T    -->
 		</td>
-		<td rowspan="3"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
-		<td align="center">
-			<html:img page="/images/icon-ideogramPlot.gif"/><br>
-			<small>Ideogram Plot</small>
-		</td>
-	</tr>
-	<tr>
-		<td align="center">
-			<html:img page="/images/icon-annotationPlot.gif"/><br>
-			<small>Annotation Plot</small>
-		</td>
-		<td align="center">
-			<html:img page="/images/icon-barPlot.gif"/><br>
-			<small>Bar Plot</small>
-		</td>
-		<td>&nbsp;</td>
-		<%--
-		<td rowspan="3"><html:img page="/images/spacer.gif" width="10" height="1" border="0"/></td>
-		--%>
 	</tr>
 </table>
-Supported data types include <em>copy number</em>, <em>fold change</em>,
-<em>loss of heterozygosity</em>, and <em>gene expression</em>.
-Additionally, a number of basic
-statistical operations are available to process data prior to plotting.
-</p>
-
-</td></tr></table>
