@@ -10,8 +10,9 @@
 	
 	<%-- Email --%>
 		<tr>
-			<td class="label">				
-				<strong></font>Email address:</strong>				
+			<td class="label">
+				<html:errors property="email"/>				
+				<strong>Email address:</strong>				
 			</td>
 			<td valign="middle" align="left">
 				<html:text property="email" size="30" maxlength="200"/>
