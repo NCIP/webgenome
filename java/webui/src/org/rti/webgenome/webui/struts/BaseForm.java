@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2007-08-23 21:19:20 $
+$Revision: 1.3 $
+$Date: 2008-11-13 16:25:50 $
 
 The Web CGH Software License, Version 1.0
 
@@ -79,5 +79,33 @@ public abstract class BaseForm extends ActionForm {
 		if (StringUtils.isEmpty(fieldValue)) {
 			actionErrors.add(fieldName, new ActionError("invalid.field"));
 		}
+	}
+	
+	/**
+	 * Convenience method for checking whether a form field is empty.
+	 * 
+	 * @param fieldValue
+	 * @return true, if the field is empty, false if it contains some non-space characters
+	 */
+	protected boolean isEmpty ( final String fieldValue ) {
+		return fieldValue == null || fieldValue.trim().length() < 1 ;
+	}
+	
+	/**
+	 * Convenience method for checking whether a form field contains a valid email
+	 * address. 
+	 * @param emailValue
+	 * @return true, if the field field contains an email address, false otherwise.
+	 */
+	protected boolean isValidEmail ( final String emailValue ) {
+		boolean isValid = false ; // assume it isn't valid
+
+		if ( ! isEmpty ( emailValue ) ) {
+			
+			if ( emailValue.matches(".+@.+\\..+") )
+				isValid = true ;
+		}
+
+        return isValid ;
 	}
 }
