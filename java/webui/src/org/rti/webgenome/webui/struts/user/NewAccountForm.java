@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-05-19 20:11:01 $
+$Revision: 1.3 $
+$Date: 2008-11-13 16:27:08 $
 
 The Web CGH Software License, Version 1.0
 
@@ -197,6 +197,7 @@ public class NewAccountForm extends BaseForm {
 	@Override
 	public final ActionErrors validate(final ActionMapping actionMapping,
 			final HttpServletRequest request) {
+		
 		ActionErrors e = new ActionErrors();
 		
 		// Name
@@ -205,20 +206,16 @@ public class NewAccountForm extends BaseForm {
 			e.add("name", new ActionError("invalid.field"));
 		}*/
 		
-		if (this.email == null || this.email.length() < 1) {
-			e.add("name", new ActionError("invalid.field"));
-		}
-		
+		if ( isEmpty ( this.email ) || ! isValidEmail ( this.email ) )
+			e.add("email", new ActionError("invalid.field"));
+
 		// Password
-		if (this.password == null || this.password.length() < 1) {
+		if ( isEmpty ( this.password ) )
 			e.add("password", new ActionError("invalid.field"));
-		}
 		
 		// Confirmed password
-		if (this.confirmedPassword == null
-				|| this.confirmedPassword.length() < 1) {
+		if ( isEmpty ( this.confirmedPassword ))
 			e.add("confirmedPassword", new ActionError("invalid.field"));
-		}
 		
 		// Global message
 		if (e.size() > 0) {
