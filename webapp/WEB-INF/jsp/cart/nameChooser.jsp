@@ -2,9 +2,7 @@
 <%@ taglib uri="/WEB-INF/struts-html.tld" prefix="html" %>
 
 <%-- Style sheet --%>
-	<link href="<html:rewrite page="/webgenome.css"/>"
-		rel="stylesheet" type="text/css" />
-
+<link href="<html:rewrite page="/webgenome.css"/>" rel="stylesheet" type="text/css" />
 
 <script type="text/javascript" language="JavaScript">
 	function validate() {
@@ -39,14 +37,20 @@
 	<html:hidden property="id" value="<%= request.getParameter("id") %>"/>
 	<html:hidden property="type" value="<%= request.getParameter("type") %>"/>
 	
-	New Name: &nbsp;&nbsp;
-	<html:text property="name"/>
-
-	<p>
-		<input type="button" value="OK" onclick="validate()"/>
-		&nbsp;&nbsp;&nbsp;
-		<input type="button" value="Cancel" onclick="window.close()">
-	</p>
+	<table cellpadding="5" cellspacing="0" border="0">
+		<tr>
+			<td class="label">New Name:</td>
+			<td class="value"><html:text property="name"/></td>
+		</tr>
+		<tr>
+			<td class="label">&nbsp;</td>
+			<td class="value">
+				<input type="button" value="OK" onclick="validate()"/>
+				&nbsp;&nbsp;&nbsp;
+				<input type="button" value="Cancel" onclick="window.close()">
+			</td>
+		</tr>
+	</table>
 </html:form>
 </center>
 
