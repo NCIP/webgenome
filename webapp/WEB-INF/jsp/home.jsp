@@ -102,9 +102,9 @@
 					--%>
 				</tr>
 			</table>
-			<p>Supported data types include <em>copy number</em>, <em>fold change</em>,
-			<em>loss of heterozygosity</em>, <em>gene expression</em> and
-			<em>Copy number data from array-CGH and SNP-array</em>.</p>
+			<p>Supported data types include
+			<em>copy number (generated from array-CGH or SNP-array)</em>,
+			<em>fold change</em>, <em>loss of heterozygosity</em>, and <em>gene expression</em>.
 			<p>
 			Additionally, a number of basic
 			statistical operations are available to process data prior to plotting.
