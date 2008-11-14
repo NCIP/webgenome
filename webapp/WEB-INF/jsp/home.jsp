@@ -50,7 +50,7 @@
 			</p>
 			<p>To create plots, you must
 			either <html:link action="/user/login">log in</html:link> and upload data or select a data set
-			in another affiliated application, such as <strong>Rembrandt</strong>, and
+			in another affiliated application, such as <a target="_blank" href="http://caintegrator-info.nci.nih.gov/rembrandt">REMBRANDT</a>, and
 			then elect to plot data in <i>web</i>Genome</strong>.</p>
 			<p>
 			To get a flavor for the system without going through another
@@ -61,6 +61,9 @@
 			<html:link action="/client/testPlot"
 			name="lohParamsMap">LOH</html:link> data.
 			</p>
+			<p style="padding-top: 70px; color: #888888;font-size:98%;">REMBRANDT is available at:<br/>
+			<a href="https://caintegrator.nci.nih.gov/rembrandt/" target="_blank">https://caintegrator.nci.nih.gov/rembrandt/</a></p>
+			</div> 
 			<!--      END:    L E F T    P A N E L    T E X T    -->
 		</td>
 		<td width="48%">
@@ -100,7 +103,9 @@
 				</tr>
 			</table>
 			<p>Supported data types include <em>copy number</em>, <em>fold change</em>,
-			<em>loss of heterozygosity</em>, and <em>gene expression</em>.
+			<em>loss of heterozygosity</em>, <em>gene expression</em> and
+			<em>Copy number data from array-CGH and SNP-array</em>.</p>
+			<p>
 			Additionally, a number of basic
 			statistical operations are available to process data prior to plotting.
 			</p>
