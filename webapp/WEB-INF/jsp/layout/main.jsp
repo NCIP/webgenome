@@ -27,8 +27,8 @@
 				window.open(
 					helpPage + "#" + topic,
 					"_blank", 
-					"width=450, height=300, menubar=no, status=no, "
-					+ "scrollbars=yes, resizable=yes, toolbar=yes, location=no, "
+					"width=620, height=400, menubar=no, status=no, "
+					+ "scrollbars=yes, resizable=yes, toolbar=no, location=no, "
 					+ "directories=no"
 				)
 			}
