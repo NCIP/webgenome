@@ -50,7 +50,7 @@
        </tr>
       </logic:iterate>
  	</logic:present>
- 	
+ 	</table>
 <form>
   <%     
      String supportedDesigns = SupportedArrayDesigns.getCaArraySupportedDesignsAsString(request);     
