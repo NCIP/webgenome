@@ -312,7 +312,6 @@
 				</span>
 						</td>
 						<td nowrap="nowrap" align="right" valign="middle" style="padding-right: 20px;">
-
 							<a class="headerLink" href="http://www.cancer.gov/"><img src="<html:rewrite page="/images/logos/footer_nci.gif"/>" width="63" height="31" alt="National Cancer Institute" border="0"></a>
 							<a class="headerLink" href="http://www.dhhs.gov/"><img src="<html:rewrite page="/images/logos/footer_hhs.gif"/>" width="39" height="31" alt="Department of Health and Human Services" border="0"></a>
 							<a class="headerLink" href="http://www.nih.gov/"><img src="<html:rewrite page="/images/logos/footer_nih.gif"/>" width="46" height="31" alt="National Institutes of Health" border="0"></a>
