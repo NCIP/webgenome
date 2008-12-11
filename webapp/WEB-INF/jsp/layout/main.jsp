@@ -297,10 +297,29 @@
 	<%-- Right portion of UI and footer --%>
 	<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
 		<tr>
-			<td height="39" align="center" valign="center" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" border="0">
-				<span class="footer">
+			<td height="69" align="center" valign="middle" background="<html:rewrite page="/images/ui-footer-tile.gif"/>" border="0">
+				<table width="100%">
+					<tr>
+						<td nowrap="nowrap" align="center" valign="middle">
+				<span class="footer">				
 					Copyright &copy; RTI International, 2003-<% GregorianCalendar currentYear = new GregorianCalendar(); %><%= currentYear.get(GregorianCalendar.YEAR) %>. All rights reserved.
 				</span>
+						</td>
+						<td nowrap="nowrap" align="right" valign="middle">
+				<span class="footer" style="padding-left: 10px;">
+						<a class="headerLink" href="http://ncicb.nci.nih.gov/NCICB/about/contact_us">Contact Us</a><br/>
+						<a class="headerLink" href="http://ncicb.nci.nih.gov/NCICB/support">Application Support</a>
+				</span>
+						</td>
+						<td nowrap="nowrap" align="right" valign="middle" style="padding-right: 20px;">
+
+							<a class="headerLink" href="http://www.cancer.gov/"><img src="<html:rewrite page="/images/logos/footer_nci.gif"/>" width="63" height="31" alt="National Cancer Institute" border="0"></a>
+							<a class="headerLink" href="http://www.dhhs.gov/"><img src="<html:rewrite page="/images/logos/footer_hhs.gif"/>" width="39" height="31" alt="Department of Health and Human Services" border="0"></a>
+							<a class="headerLink" href="http://www.nih.gov/"><img src="<html:rewrite page="/images/logos/footer_nih.gif"/>" width="46" height="31" alt="National Institutes of Health" border="0"></a>
+							<a class="headerLink" href="http://www.firstgov.gov/"><img src="<html:rewrite page="/images/logos/footer_firstgov.gif"/>" width="91" height="31" alt="FirstGov.gov" border="0"></a>
+						</td>
+					</tr>
+				</table>
 			</td>
 		</tr>
 	<% } %>
