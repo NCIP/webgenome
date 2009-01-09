@@ -1,6 +1,6 @@
 /*
-$Revision: 1.6 $
-$Date: 2008-02-22 18:24:44 $
+$Revision: 1.7 $
+$Date: 2009-01-09 18:56:03 $
 
 The Web CGH Software License, Version 1.0
 
@@ -81,6 +81,16 @@ import org.rti.webgenome.webui.util.PageContext;
  *
  */
 public abstract class BaseAction extends Action {
+	
+	//
+	//  C O M M O N    C O N S T A N T S
+	//
+	
+	/** Common value for a forward related to a success on the Action. */
+	public static final String FORWARDTO_SUCCESS = "success" ;
+	
+	/** Common value for a forward related to a failure on the Action. */
+	public static final String FORWARDTO_FAILURE = "failure" ;
 	
 	//
 	//  A T T R I B U T E S
