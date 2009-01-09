@@ -1,6 +1,6 @@
 /*
-$Revision: 1.3 $
-$Date: 2008-11-13 16:25:50 $
+$Revision: 1.4 $
+$Date: 2009-01-09 18:57:10 $
 
 The Web CGH Software License, Version 1.0
 
@@ -107,5 +107,19 @@ public abstract class BaseForm extends ActionForm {
 		}
 
         return isValid ;
+	}
+	
+	/**
+	 * Convenience method for stripping spaces from any form fields.
+	 * Spaces are stripped from leading and trailing positions only.
+	 * @param value (String)
+	 * @return trimmed value (String)
+	 */
+	protected String trimSpaces ( final String value ) {
+		String returnValue = value ;
+		if ( value != null ) {
+			returnValue = value.trim() ;
+		}
+		return returnValue ;
 	}
 }
