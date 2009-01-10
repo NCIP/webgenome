@@ -165,8 +165,8 @@
 	</head>
 
 
-	<body onUnload="onLeave();"><table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
-
+	<body onUnload="onLeave();" style="background-color: #FFFFFF;">
+	<table width="100%" height="100%" cellpadding="0" cellspacing="0" border="0">
 
 	<%-- Left portion of UI and header --%>
 	<% if((request.getParameter("makePopUp") == null) || (request.getParameter("makePopUp") == "")) { %>
@@ -240,6 +240,10 @@
 
 			<%-- Logout --%>
 				<webgenome:onlyIfUserLoggedIn>
+					<a class="menuItem" href="<html:rewrite page="/user/account.do"/>">
+						Edit Account
+					</a>
+					|
 					<a class="menuItem" href="<html:rewrite page="/user/logout.do"/>">
 						Logout
 					</a>
@@ -247,8 +251,7 @@
 				</webgenome:onlyIfUserLoggedIn>
 
 			<%-- Help --%>
-				<a href="#" class="menuItem" 
-						onclick="help('<tiles:getAsString name="helpTopic"/>')">
+				<a href="#" class="menuItem" onclick="help('<tiles:getAsString name="helpTopic"/>')">
 						Help
 				</a>
 			</div></td>
@@ -306,10 +309,10 @@
 				</span>
 						</td>
 						<td nowrap="nowrap" align="right" valign="middle">
-				<span class="footer" style="padding-left: 10px;">
-						<a class="headerLink" href="http://ncicb.nci.nih.gov/NCICB/about/contact_us">Contact Us</a><br/>
-						<a class="headerLink" href="http://ncicb.nci.nih.gov/NCICB/support">Application Support</a>
-				</span>
+							<span class="footer" style="padding-left: 10px;">
+									<a class="headerLink" href="http://ncicb.nci.nih.gov/NCICB/about/contact_us">Contact Us</a><br/>
+									<a class="headerLink" href="http://ncicb.nci.nih.gov/NCICB/support">Application Support</a>
+							</span>
 						</td>
 						<td nowrap="nowrap" align="right" valign="middle" style="padding-right: 20px;">
 							<a class="headerLink" href="http://www.cancer.gov/"><img src="<html:rewrite page="/images/logos/footer_nci.gif"/>" width="63" height="31" alt="National Cancer Institute" border="0"></a>
