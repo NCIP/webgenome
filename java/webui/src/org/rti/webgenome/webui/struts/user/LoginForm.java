@@ -1,6 +1,6 @@
 /*
-$Revision: 1.2 $
-$Date: 2008-05-19 20:11:02 $
+$Revision: 1.3 $
+$Date: 2009-01-10 22:49:45 $
 
 The Web CGH Software License, Version 1.0
 
@@ -105,7 +105,7 @@ public class LoginForm extends BaseForm {
 	 * @param name User name.
 	 */
 	public final void setName(final String name) {
-		this.name = name;
+		this.name = trimSpaces(name);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class LoginForm extends BaseForm {
 	 * @param password Password.
 	 */
 	public final void setPassword(final String password) {
-		this.password = password;
+		this.password = trimSpaces(password);
 	}
 	
 	// ===============================
@@ -154,16 +154,16 @@ public class LoginForm extends BaseForm {
 		ActionErrors e = new ActionErrors();
 		
 		// Name
-		if (this.name == null || this.name.length() < 1) {
+		if (this.name == null || this.name.trim().length() < 1) {
 			e.add("name", new ActionError("invalid.field"));
 		}
 		
 		// Password
-		if (this.password == null || this.password.length() < 1) {
+		if (this.password == null || this.password.trim().length() < 1) {
 			e.add("password", new ActionError("invalid.field"));
 		}
 		
-		// Gloabl message
+		// Global message
 		if (e.size() > 0) {
 			e.add("global", new ActionError("invalid.fields"));
 		}
