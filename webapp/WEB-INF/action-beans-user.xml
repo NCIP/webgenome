@@ -22,9 +22,25 @@
 	<bean name="/user/forgotPassword"
 		class="org.rti.webgenome.webui.struts.user.ForgotPasswordAction"
 		parent="baseAction"/>
+		
+<!-- Change Password -->
+	<bean name="/user/changePassword"
+		class="org.rti.webgenome.webui.struts.user.ChangePasswordAction"
+		parent="baseAction"/>
+
+<!-- Show Account Edit -->
+	<bean name="/user/showEditAccount"
+		class="org.rti.webgenome.webui.struts.user.ShowEditAccountAction"
+		parent="baseAction"/>		
+
+<!-- Edit Account -->
+	<bean name="/user/editAccount"
+		class="org.rti.webgenome.webui.struts.user.EditAccountAction"
+		parent="baseAction"/>		
 	
 <!-- Login to caArray server-->
 	<bean name="/user/caarrayLogin"
 		class="org.rti.webgenome.webui.struts.user.CaArrayLoginAction"
-		parent="baseAction"/>	
+		parent="baseAction"/>
+
 </beans>

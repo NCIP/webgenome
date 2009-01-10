@@ -11,6 +11,16 @@
 		<form-bean
 			name="new.account.form"
 			type="org.rti.webgenome.webui.struts.user.NewAccountForm"/>
+
+	<!-- Account form -->
+		<form-bean
+			name="account.form"
+			type="org.rti.webgenome.webui.struts.user.AccountForm"/>
+			
+	<!-- Change Password Form -->
+		<form-bean
+			name="change.password.form"
+			type="org.rti.webgenome.webui.struts.user.ChangePasswordForm"/>
 			
 	</form-beans>
 
@@ -44,6 +54,51 @@
 			path="/user/newAccount"
 			type="org.apache.struts.actions.ForwardAction"
 			parameter="user.new.account"/>
+			
+	<!--  Edit Account Settings (main page) -->
+		<action
+			path="/user/account"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.account"/>
+			
+	<!--  Edit Account Settings (Change Password) -->
+		<action
+			path="/user/showChangePassword"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.change.password"/>
+			
+		<!-- Change Password -->
+		<action
+			path="/user/changePassword"
+			name="change.password.form"
+			scope="request"
+			input="/user/showChangePassword.do"
+			validate="true">
+			<forward name="success" path="/user/account.do"/> <!--  go back to main edit settings page -->
+			<forward name="failure" path="/user/showChangePassword.do"/>
+		</action>
+			
+	<!--  Edit Account Settings (Edit Account Settings) -->
+	
+     	<action
+     		path="/user/showEditAccount"
+     		name="account.form"
+     		scope="request"
+     		type="org.rti.webgenome.webui.struts.user.ShowEditAccountAction"
+     		validate="false">
+     		<forward name="success" path="user.edit.account"/> <!--  page for editing user info -->
+     		<forward name="failure" path="user.account"/> <!--  main user page -->
+     	</action>			
+	
+		<action
+			path="/user/editAccount"
+			name="account.form"
+			scope="request"
+			input="/user/showEditAccount.do"
+			validate="true">
+			<forward name="success" path="user.account"/> <!-- main user page -->
+			<forward name="failure" path="user.edit.account"/> <!--  entry page to show user edit page -->
+		</action>
 
 	<!-- Create account -->
 		<action

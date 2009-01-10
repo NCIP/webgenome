@@ -16,6 +16,27 @@
 	  	<put name="content" value="/WEB-INF/jsp/user/login.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
+  	
+<!-- Edit Account Settings (main page) -->
+  	<definition name="user.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Edit Account Settings" />
+	  	<put name="content" value="/WEB-INF/jsp/user/account.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Edit Account Settings (main page) -->
+  	<definition name="user.change.password" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Change Password" />
+	  	<put name="content" value="/WEB-INF/jsp/user/changePassword.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Edit Account Settings (main page) -->
+  	<definition name="user.edit.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Edit Account" />
+	  	<put name="content" value="/WEB-INF/jsp/user/editAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
 
 <!-- New account -->
   	<definition name="user.new.account" extends="cart.layout" >
@@ -30,7 +51,6 @@
 	  	<put name="content" value="/WEB-INF/jsp/user/confirmNewAccount.jsp" />
 	  	<put name="helpTopic" value="docTop" />
   	</definition>
-
 
 
 <!-- Forgot password -->
