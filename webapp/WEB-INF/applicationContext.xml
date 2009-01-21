@@ -320,7 +320,7 @@ below should probably be configurable somehow. -->
 <!-- Plot service -->
 	<bean id="plotService" class="org.rti.webgenome.service.plot.PlotService">
 		<property name="plotIdGenerator">
-			<ref bean="bioAssayIdGenerator"/>
+			<ref bean="plotIdGenerator"/>
 		</property>
 		<property name="plotGenerator">
 			<ref bean="plotGenerator"/>
