@@ -115,6 +115,9 @@ public final class RemovePlotAction extends BaseAction {
     	// Get rid of plot interactivity files
     	this.getDataFileManager().deleteDataFiles(plot);
     	
+    	// remove from db
+    	this.dbService.deletePlot(plot);
+    	
     	// TODO: Stand-alone specific actions
     	
         return mapping.findForward("success");
