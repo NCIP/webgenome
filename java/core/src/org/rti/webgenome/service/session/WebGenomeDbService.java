@@ -56,6 +56,7 @@ import java.util.List;
 import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.job.Job;
@@ -246,4 +247,13 @@ public interface WebGenomeDbService {
 	 * @param job Job to remove
 	 */
 	void deleteJob(Job job);
+	
+	/**
+	 * Deletes plot object.
+	 * 
+	 * @param plot
+	 */
+	public void deletePlot(final Plot plot);
+		
+	
 }

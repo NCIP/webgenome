@@ -59,6 +59,7 @@ import org.rti.webgenome.domain.Array;
 import org.rti.webgenome.domain.BioAssay;
 import org.rti.webgenome.domain.Experiment;
 import org.rti.webgenome.domain.Organism;
+import org.rti.webgenome.domain.Plot;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.domain.ShoppingCart;
 import org.rti.webgenome.service.dao.ArrayDao;
@@ -409,5 +410,11 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 		this.jobDao.delete(job);
 	}
 	
-
+	/**
+	 * {@inheritDoc}
+	 */
+	public void deletePlot(final Plot plot) {
+		this.plotDao.delete(plot);
+	}
+	
 }
