@@ -97,7 +97,7 @@ public abstract class BaseAction extends Action {
 	//
 	
 	/** Service facade for transactional database operations. */
-	private WebGenomeDbService dbService = null;
+	protected WebGenomeDbService dbService = null;
 	
 	/** Cytological map data access object. */
 	private CytologicalMapDao cytologicalMapDao = null;
