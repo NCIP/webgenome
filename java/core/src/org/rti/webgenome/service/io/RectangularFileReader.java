@@ -83,6 +83,11 @@ public final class RectangularFileReader {
     /** Delimiting character separating columns. */
     private char delimiter = ',';
     
+    /** Below members were added to support files with data in quotes **/
+    private boolean isOpenQuotes = false;
+    private int quotesCommasToSkip = 0;
+    private int openQuotesStartPos = 0;
+    
     /**
      * Get delimiting character that separates columns.
      * @return Delimiting character
@@ -192,6 +197,9 @@ public final class RectangularFileReader {
     /**
      * Get data field (i.e., column) from line of text 
      * from file (i.e., matrix row).
+     * 
+     * V.B. Added support for fields in quotes such as "Human,123,406".
+     * 
      * @param line Line of text from file 
      * @param index Field (i.e., column) index
      * @return Data field
@@ -199,20 +207,54 @@ public final class RectangularFileReader {
     private String getField(final String line, final int index) {
         String field = "";
         
+        // to skip commas inside quotes if any
+        int newIndex = index + quotesCommasToSkip;
+        
         // Find beginning of field
         int p = 0;
-        for (int i = 0; i < index && p >= 0; i++) {
+        for (int i = 0; i < newIndex && p >= 0; i++) {
             if (i > 0 && line.charAt(p) == this.delimiter) {
                 p++;
             }
             p = line.indexOf(this.delimiter, p);
         }
-
+         
+        if (p+1 < line.length()){
+        	//need to check if "," is inside quotes and
+        	String temp = line.substring(p + 1);
+        	int endQuotes = temp.indexOf("\"" + this.delimiter);
+                                
+        	if (isOpenQuotes && line.charAt(p + 1) != '"' && endQuotes != -1 ){                           	
+        		//beginning of the comma should be where the quotes end
+        		p = p + endQuotes + 3;        
+        		// need to find how many commas are inside the quotes string
+        		String quotedString = line.substring(openQuotesStartPos, p - 2);
+        		//System.out.println("***quotedString=" + quotedString);
+        		for (int i = 0; i < quotedString.length(); i++){
+        			if (quotedString.charAt(i) == this.delimiter)
+        				quotesCommasToSkip++;
+        		}
+        	}
+        }	
+       
+        
         // If we have not run off the end of line, parse field
         if (p >= 0) {
             int q = p;
             if (index > 0 && line.charAt(q) == this.delimiter) {
-                q++;
+            	if (((q + 1)< line.length()) && line.charAt(q + 1) == '"'){
+            		// if opening quotes need to figure out the closing quotes            		
+            		p = q + 2;
+            		openQuotesStartPos = p;
+            		String temp = line.substring(p);
+            		 
+            		int endQuotes = temp.indexOf("\"" + this.delimiter);
+            		field = temp.substring(0, endQuotes);
+            		//System.out.println(field);
+            		isOpenQuotes = true;
+            		return field;
+            	}else
+            		q++;
             }
             q = line.indexOf(this.delimiter, q);
             if (q < 0) {
@@ -223,7 +265,95 @@ public final class RectangularFileReader {
                 field = field.substring(1);
             }
         }
-        
+        isOpenQuotes = false;
         return field;
     }
+    
+    
+    /**
+     * Validate if data are correct by checking that the count of delimiters
+     * in every line is the one in the headings.
+     * 
+     * @param index Index of column
+     * @return A column
+     */
+    public boolean validate() {
+       
+        BufferedReader in = null;
+        int nbrDelimitersInHeading = 0;
+        try {
+            in = new BufferedReader(new FileReader(this.file));
+            // read the heading and count number of delimiters
+            String headingLine = in.readLine();
+            
+            StringTokenizer st = new StringTokenizer(headingLine, "" + this.delimiter);
+            nbrDelimitersInHeading = st.countTokens();
+    		
+    		
+    		String line = in.readLine();
+    		
+            while (line != null) {
+            	int nbrDelimitersInLine = 0;
+            	
+        		
+        		//if quotes are found clean commas inside quotes
+        		int quotesIdx = line.indexOf("\"");
+        		if (quotesIdx != 1)
+        			line = removeCommasInQuotes( line, nbrDelimitersInHeading + 1);
+        		
+        		// replace delimiter with space + delimiter to be able to
+        		// avoid empty string that will not result in tokens    		    		
+        		line = line.replace("" + this.delimiter, " " + this.delimiter);
+        		
+            	st = new StringTokenizer(line, "" + this.delimiter);
+        		
+        		
+        		nbrDelimitersInLine = st.countTokens();
+        		
+        		// for valid file the number of delimiters in heading should match
+        		// the number of delimiters in all lines
+        		if (nbrDelimitersInLine != nbrDelimitersInHeading)
+        			return false;
+        		
+        		// continue to read lines
+        		line = in.readLine();
+        		
+            }
+        } catch (Exception e) {
+            throw new WebGenomeSystemException("Error reading file '"
+                    + this.file.getAbsolutePath()
+                    + "'", e);
+        } finally {
+        	IOUtils.close(in);
+        }
+        return true;
+    }
+    
+    private String removeCommasInQuotes(String line, int numberOfFields) throws Exception{
+    	String resultLine = "";
+    	for (int i = 0; i < numberOfFields; i++){    		
+    		  String field = getField(line, i);
+    		  //System.out.println("****Field is " + field);
+    		  if (!field.equals("")){
+    			  int commaIdx = field.indexOf(this.delimiter);    			  
+    			  if (commaIdx != -1){
+    				  // replace delimiter inside quotes string with empty string
+    				  field = field.replace("" + this.delimiter, " " );
+    			  }	  
+    		  }	 
+    		  resultLine += field;
+    		  // don't add comma at the end
+			  if (i != numberOfFields)
+				  resultLine += ",";
+    	}
+    	//remove last comma
+    	if (resultLine.endsWith("" + this.delimiter)){
+    		resultLine = resultLine.substring(0, resultLine.length() -1);
+    	}
+    	
+    	 //System.out.println("****Result line is " + resultLine);
+    	return resultLine;
+    	
+    } 	
+    
 }

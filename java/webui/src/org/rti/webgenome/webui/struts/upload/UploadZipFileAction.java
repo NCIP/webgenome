@@ -53,6 +53,8 @@ package org.rti.webgenome.webui.struts.upload;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts.action.ActionError;
+import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -90,6 +92,13 @@ public class UploadZipFileAction extends BaseAction {
 				formFile.getInputStream(), formFile.getFileName(),
 				format);
 		
+		// this means the file is not if valid format
+		if (!meta.getErrorFileName().equals("")){
+			ActionErrors errors = new ActionErrors();
+	        errors.add("global", new ActionError("error.upload.zip", meta.getErrorFileName()));
+	        saveErrors(request, errors);
+			return mapping.findForward("failure");
+		}
 		// Cache reference to data
 		PageContext.setZipFileMetaData(meta, request);
 		

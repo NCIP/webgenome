@@ -275,6 +275,11 @@ public class IOService {
 					meta.add(zeMeta);
 					RectangularFileReader reader =
 						new RectangularFileReader(zipEntryFile);
+					// validate
+					if (!reader.validate()){
+						meta.setErrorFileName(zipEntry.getName());
+						return meta;
+					}
 					reader.setDelimiter(format.getDelimiter());
 					zeMeta.setColumnHeadings(reader.getColumnHeadings());
 				}

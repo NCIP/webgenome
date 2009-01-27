@@ -74,6 +74,7 @@
         	validate="true"
         	input="/upload/zipFileUploadForm.do">
         	<forward name="success" path="/upload/specifyZipDataColumns.do"/>
+        	<forward name="failure" path="upload.zip.file.upload.form"/>
         </action>
         
     <!-- Specify data containing columns in an uploaded data fle -->

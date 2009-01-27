@@ -75,11 +75,21 @@ public class ZipFileMetaData {
 	/** File format or enclosed data files. */
 	private RectangularTextFileFormat fileFormat = null;
 
+	/** Wrong file format **/
+	private String errorFileName = "";
 	
 	//
 	//  G E T T E R S / S E T T E R S
 	//
 	
+	public String getErrorFileName() {
+		return errorFileName;
+	}
+
+	public void setErrorFileName(String errorFileName) {
+		this.errorFileName = errorFileName;
+	}
+
 	/**
 	 * Get metadata on data files in ZIP file.
 	 * @return Metadata on data files in ZIP file.
