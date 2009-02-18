@@ -96,7 +96,7 @@ public final class RectangularFileWriter {
 	static public final String DEFAULT_REPORTER_VALUE_HEADING = "Reporter Value";
 	
 	/** Default column headings */
-	static protected  String headings[] = {"Resporeter Name", "Chromosome", "Position", "Reporter Value"};
+	static protected  String headings[] = {"Reporter Name", "Chromosome", "Position", "Reporter Value"};
 	
     
     

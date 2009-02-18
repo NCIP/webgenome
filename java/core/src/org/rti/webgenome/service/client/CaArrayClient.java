@@ -288,7 +288,7 @@ public class CaArrayClient {
 
 
 /**
- * Retrieve reporter values and initiate a Collection of fload arrays to hold these values.
+ * Retrieve reporter values and initiate a Collection of float arrays to hold these values.
  * 
  * @param dataSet
  * @return

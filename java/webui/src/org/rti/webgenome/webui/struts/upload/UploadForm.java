@@ -80,6 +80,12 @@ public class UploadForm extends BaseForm {
 	/** Name of colum containing chromosomal position. */
 	private String positionColumnName = null;
 	
+	/** Name of colum containing start chromosomal position. */
+	private String startPositionColumnName = null;
+	
+	/** Name of colum containing end chromosomal position. */
+	private String endPositionColumnName = null;
+	
 	/** Units of chromosomal position. */
 	private String units = BpUnits.KB.toString();
 	
@@ -221,5 +227,25 @@ public class UploadForm extends BaseForm {
 			errors.add("global", new ActionError("invalid.fields"));
 		}
 		return errors;
+	}
+
+	public String getStartPositionColumnName() {
+		return startPositionColumnName;
+	}
+
+	public void setStartPositionColumnName(String startPositionColumName) {
+		this.startPositionColumnName = startPositionColumName;
+	}
+
+	public String getEndPositionColumnName() {
+		return endPositionColumnName;
+	}
+
+	public void setEndPositionColumnName(String endPositionColumName) {
+		this.endPositionColumnName = endPositionColumName;
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
 	}
 }

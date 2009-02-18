@@ -53,8 +53,11 @@ package org.rti.webgenome.service.io;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.rti.webgenome.core.WebGenomeSystemException;
@@ -80,6 +83,7 @@ public final class RectangularFileReader {
     /** File to be read. */
     private final File file;
     
+    
     /** Delimiting character separating columns. */
     private char delimiter = ',';
     
@@ -87,6 +91,9 @@ public final class RectangularFileReader {
     private boolean isOpenQuotes = false;
     private int quotesCommasToSkip = 0;
     private int openQuotesStartPos = 0;
+    
+    
+    
     
     /**
      * Get delimiting character that separates columns.
@@ -194,6 +201,7 @@ public final class RectangularFileReader {
     }
     
     
+    
     /**
      * Get data field (i.e., column) from line of text 
      * from file (i.e., matrix row).
@@ -204,7 +212,7 @@ public final class RectangularFileReader {
      * @param index Field (i.e., column) index
      * @return Data field
      */
-    private String getField(final String line, final int index) {
+    public String getField(final String line, final int index) {
         String field = "";
         
         // to skip commas inside quotes if any

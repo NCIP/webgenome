@@ -111,6 +111,11 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	 */
 	private String positionColumnName = null;
 	
+	/** VB added support for range **/
+	private String startPositionColumnName = null;
+	private String endPositionColumnName = null;
+	private String numMarkersColumnName = null;
+	
 	/**
 	 * Units of chromosome position in the
 	 * column given by {@code positionColumnName}.
@@ -554,5 +559,29 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	
 			
 		return buff.toString();
+	}
+
+	public String getStartPositionColumnName() {
+		return startPositionColumnName;
+	}
+
+	public void setStartPositionColumnName(String startPositionColumnName) {
+		this.startPositionColumnName = startPositionColumnName;
+	}
+
+	public String getEndPositionColumnName() {
+		return endPositionColumnName;
+	}
+
+	public void setEndPositionColumnName(String endPositionColumnName) {
+		this.endPositionColumnName = endPositionColumnName;
+	}
+
+	public String getNumMarkersColumnName() {
+		return numMarkersColumnName;
+	}
+
+	public void setNumMarkersColumnName(String numMarkersColumnName) {
+		this.numMarkersColumnName = numMarkersColumnName;
 	}
 }
