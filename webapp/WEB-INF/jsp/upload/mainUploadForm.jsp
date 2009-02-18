@@ -80,8 +80,29 @@ Chromosome
 <p>
 Position
 <html:select property="positionColumnName">
+    <option value=""/>
 	<html:options name="allCols"/>
 </html:select>&nbsp;
+
+ <b>OR</b>
+ 
+ &nbsp;
+ Start Position
+<html:select property="startPositionColumnName">
+    <option value=""/>
+	<html:options name="allCols"/>
+</html:select>&nbsp;
+End Position
+<html:select property="endPositionColumnName">
+    <option value=""/>
+	<html:options name="allCols"/>
+</html:select>&nbsp;
+ 
+ 
+ 
+ </p>
+ <p>
+ 
 Units
 <html:select property="units">
 	<html:options name="units"/>
