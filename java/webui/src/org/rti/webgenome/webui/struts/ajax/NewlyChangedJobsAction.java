@@ -93,9 +93,9 @@ public class NewlyChangedJobsAction extends BaseAction {
 		try {
 			Principal principal = PageContext.getPrincipal(request);
 			completedJobs = this.getJobManager().getNewlyCompletedJobs(
-					principal.getName(), principal.getDomain());
+					principal.getEmail(), principal.getDomain());
 			startedJobs = this.getJobManager().getNewlyStartedJobs(
-					principal.getName(), principal.getDomain());
+					principal.getEmail(), principal.getDomain());
 		} catch (SessionTimeoutException e) {
 			LOGGER.info("Browser requesting completed jobs "
 					+ "from an expired session");
