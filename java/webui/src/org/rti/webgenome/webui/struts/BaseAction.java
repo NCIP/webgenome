@@ -427,7 +427,7 @@ public abstract class BaseAction extends Action {
 			cart = PageContext.getShoppingCart(request);
 		} else if (mode == SessionMode.STAND_ALONE) {
 			Principal principal = PageContext.getPrincipal(request);
-			cart = this.getDbService().loadShoppingCart(principal.getName(),
+			cart = this.getDbService().loadShoppingCart(principal.getEmail(),
 					principal.getDomain());
 		}
 		return cart;
@@ -445,5 +445,18 @@ public abstract class BaseAction extends Action {
 	protected boolean dataInMemory(final HttpServletRequest request)
 	throws SessionTimeoutException {
 		return PageContext.getSessionMode(request) == SessionMode.CLIENT;
+	}
+	
+	//
+	//    C O N V E N I E N C E    M E T H O D S
+	//
+	/**
+	 * Convenience method for checking whether a form field is empty.
+	 * 
+	 * @param fieldValue
+	 * @return true, if the field is empty, false if it contains some non-space characters
+	 */
+	protected boolean isEmpty ( final String fieldValue ) {
+		return fieldValue == null || fieldValue.trim().length() < 1 ;
 	}
 }
