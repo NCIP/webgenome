@@ -108,10 +108,9 @@ public final class LoginAction extends BaseAction {
     	PageContext.setSessionMode(request, SessionMode.STAND_ALONE);
     	
     	// Instantiate shopping cart if null
-    	ShoppingCart cart = this.getDbService().loadShoppingCart(
-    			p.getName(), p.getDomain());
+    	ShoppingCart cart = this.getDbService().loadShoppingCart( p.getEmail(), p.getDomain());
     	if (cart == null) {
-    		cart = new ShoppingCart(p.getName(), p.getDomain());
+    		cart = new ShoppingCart(p.getEmail(), p.getDomain());
     		this.getDbService().saveShoppingCart(cart);
     	}
     	
