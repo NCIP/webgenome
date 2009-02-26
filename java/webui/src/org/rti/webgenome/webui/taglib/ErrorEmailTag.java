@@ -288,7 +288,7 @@ public class ErrorEmailTag extends TagSupport {
         returnValue.append ( "Principal (current user): " ) ;
         try {
             Principal principal = PageContext.getPrincipal( request ) ;
-            returnValue.append ( principal.getName() ) ;
+            returnValue.append ( principal.getEmail() ) ;
             returnValue.append ( " (is Admin user? " + principal.isAdmin() + ")" ) ;
         }
         catch ( SessionTimeoutException ignored ) {
