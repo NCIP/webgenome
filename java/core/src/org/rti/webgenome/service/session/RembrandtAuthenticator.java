@@ -116,17 +116,17 @@ public class RembrandtAuthenticator implements Authenticator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Principal login(final String userName, final String password) {
+	public Principal login(final String email, final String password) {
 		Principal principal = null;
 		try {
-			if (this.authenticationManager.login(userName, password)) {
-				principal = new Principal(userName, password,
-						this.authenticationManager.getApplicationContextName());
+			if (this.authenticationManager.login(email, password)) {
+				principal = new Principal( email, password,
+										   this.authenticationManager.getApplicationContextName());
 			}
 		} catch (CSLoginException e) {
-			LOGGER.warn("Invalid login attempt by '" + userName + "'");
+			LOGGER.warn("Invalid login attempt by '" + email + "'");
 		} catch (CSInputException e) {
-			LOGGER.warn("Invalid login attempt by '" + userName + "'");
+			LOGGER.warn("Invalid login attempt by '" + email + "'");
 		} catch (Exception e) {
 			throw new WebGenomeSystemException(
 					"Error validating user credentials", e);
