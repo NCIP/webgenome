@@ -91,7 +91,7 @@ public final class ForgotPasswordAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	String forwardTo = "success" ; // assume everything will be fine
+    	String forwardTo = FORWARDTO_SUCCESS ; // assume everything will be fine
     	
     	NewAccountForm naf = (NewAccountForm) form;
     	
@@ -104,7 +104,7 @@ public final class ForgotPasswordAction extends BaseAction {
     		ActionErrors errors = new ActionErrors();
     		errors.add("global", new ActionError("account.email.missing.address"));
     		this.saveErrors(request, errors);
-    		forwardTo = "failure" ;
+    		forwardTo = FORWARDTO_FAILURE ;
     	}
     	else {
     		
@@ -116,14 +116,14 @@ public final class ForgotPasswordAction extends BaseAction {
 	    	naf.setName(naf.getEmail());
 	    	
 	    	// retrieve Principal
-	    	Principal p = getSecurityMgr().getPrincipalByEmail(naf.getEmail());
+	    	Principal p = getSecurityMgr().getPrincipal(naf.getEmail());
 	    	
 	    	// See if there is already a user with the same account name
 	    	if (p == null) {
 	    		ActionErrors errors = new ActionErrors();
 	    		errors.add("global", new ActionError("account.email.does.not.exists"));
 	    		this.saveErrors(request, errors);
-	    		forwardTo = "failure" ;
+	    		forwardTo = FORWARDTO_FAILURE ;
 	    	}
 	    	else {
 
