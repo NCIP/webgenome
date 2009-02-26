@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2009-01-10 22:47:22 $
+$Date: 2009/01/10 22:47:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -55,12 +55,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.struts.action.ActionError;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
+import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.util.SystemUtils;
 import org.rti.webgenome.webui.struts.BaseForm;
+import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Form bean backing login screen.
- * @author dhall
+ * Form bean backing change password page.
+ * @author djackman
  *
  */
 public class ChangePasswordForm extends BaseForm {
@@ -72,6 +74,9 @@ public class ChangePasswordForm extends BaseForm {
 	// =====================
 	//    Attributes
 	// =====================
+	
+	/** Email */
+	private String email = "" ;
 
 	/** Password. */
 	private String password = "";
@@ -92,6 +97,9 @@ public class ChangePasswordForm extends BaseForm {
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
+	
+	public final String getEmail () { return this.email; }
+	public final void   setEmail ( String email ) { this.email = trimSpaces ( email ) ; }
 
 
 	/**
@@ -105,7 +113,7 @@ public class ChangePasswordForm extends BaseForm {
 	 * Set password.
 	 * @param password Password.
 	 */
-	public final void setPassword(final String password) { this.password = password; }
+	public final void setPassword(final String password) { this.password = trimSpaces(password); }
 
 
 	/**
@@ -119,7 +127,7 @@ public class ChangePasswordForm extends BaseForm {
 	 * Set New Password.
 	 * @param password Password.
 	 */
-	public final void setNewPassword(final String newPassword) { this.newPassword = newPassword; }
+	public final void setNewPassword(final String newPassword) { this.newPassword = trimSpaces ( newPassword ) ; }
 
 	/**
 	 * Get Confirm New Password.
@@ -132,7 +140,7 @@ public class ChangePasswordForm extends BaseForm {
 	 * Set Confirm New Password.
 	 * @param ConfirmNewPassword
 	 */
-	public final void setConfirmNewPassword(final String confirmNewPassword) { this.confirmNewPassword = confirmNewPassword; }
+	public final void setConfirmNewPassword(final String confirmNewPassword) { this.confirmNewPassword = trimSpaces ( confirmNewPassword ); }
 
 
 	// ===============================
@@ -191,12 +199,8 @@ public class ChangePasswordForm extends BaseForm {
 
 		     if ( ! this.newPassword.equals ( this.confirmNewPassword ) ) {
 		    	 e.add("global", new ActionError("password.mismatch"));
-		     }
-		     else {
-			     if ( ! isEmpty ( this.password ) &&
-			     	  this.password.equals( this.newPassword ) ) {
-			    	 e.add ( "global", new ActionError ( "password.same" )) ;
-			     }
+		    	 e.add("newPassword", new ActionError("invalid.field"));
+		    	 e.add("confirmNewPassword", new ActionError("invalid.field"));
 		     }
 		}
 
