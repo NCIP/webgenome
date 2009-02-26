@@ -66,7 +66,7 @@ import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Logs a user into the system.
+ * Get An Account Form ready for Edit
  * @author djackman
  *
  */
@@ -74,7 +74,6 @@ public final class ShowEditAccountAction extends BaseAction {
 
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(ShowEditAccountAction .class);
-
 
 	/**
 	 * {@inheritDoc}
@@ -85,21 +84,25 @@ public final class ShowEditAccountAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	String forwardTo = FORWARDTO_FAILURE ;
+    	String forwardTo = FORWARDTO_SUCCESS ;
+    	
+    	AccountForm accountForm = (AccountForm) form;
+    	if ( accountForm == null || isEmpty ( accountForm.getEmail() ) ) {
+			Principal principal = PageContext.getPrincipal ( request ) ;
+			if ( principal == null ) {
+	    		ActionErrors errors = new ActionErrors();
+	    		errors.add("global", new ActionError("user.not.found"));
+	    		this.saveErrors(request, errors);
+	    		forwardTo = FORWARDTO_FAILURE ;
+			}
+			else {
+				accountForm = new AccountForm() ;
+				principal2Form ( accountForm, principal ) ;
+			}
+			
+    	}
 
-		Principal principal = PageContext.getPrincipal ( request ) ;
-		if ( principal == null ) {
-    		ActionErrors errors = new ActionErrors();
-    		errors.add("global", new ActionError("user.not.found"));
-    		this.saveErrors(request, errors);
-		}
-		else {
-			AccountForm accountForm = new AccountForm() ;
-			principal2Form ( accountForm, principal ) ;
-			request.setAttribute ( "account", accountForm ) ;
-			forwardTo = FORWARDTO_SUCCESS ;
-		}
-		
+		request.setAttribute ( "account", accountForm ) ;
         return mapping.findForward( forwardTo );
     }
     
@@ -114,7 +117,6 @@ public final class ShowEditAccountAction extends BaseAction {
      * @param p
      */
     private void principal2Form(AccountForm form, Principal p) {
-    	form.setName( p.getName() ) ;
     	form.setAddress( p.getAddress() ) ;
     	form.setDegree( p.getDegree() ) ;
     	form.setDepartment ( p.getDepartment() ) ;
