@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2009-01-10 22:47:22 $
+$Date: 2009/01/10 22:47:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -92,30 +92,35 @@ public final class ChangePasswordAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
 
-    	String forwardTo = "success" ; // assume everything will be fine
+    	//System.out.println ( this.getClass().getName() + ".execute() entered" ) ;
 
-    	ChangePasswordForm cpForm = (ChangePasswordForm) form;
-    	
+    	String forwardTo = FORWARDTO_SUCCESS ; // assume everything will be fine
+
+    	ChangePasswordForm passwordForm = (ChangePasswordForm) form;
+
     	Principal principal = PageContext.getPrincipal ( request ) ;
-    	String name = principal.getName() ;
-
     	//
-    	// Make sure current password entered matches the current recorded password
+    	// Make sure current password entered matches the current recorded password (obtained from PageContext)
     	//
-    	principal = this.getAuthenticator().login( name , cpForm.getPassword());
 
-    	if (principal == null) {
+    	boolean passwordMatches = principal.getPassword().equals( passwordForm.getPassword() ) ;
+
+    	if ( ! passwordMatches ) {
     		ActionErrors errors = new ActionErrors();
     		errors.add("global", new ActionError("invalid.password"));
     		this.saveErrors(request, errors);
-    		forwardTo = "failure" ;
+
+    		passwordForm.setEmail( principal.getEmail() ) ;
+    		request.setAttribute ( "password", passwordForm ) ;
+
+    		forwardTo = FORWARDTO_FAILURE ;
     	}
     	else {
     		// set Principal using new password
-    		principal.setPassword( cpForm.getNewPassword() ) ;
+    		principal.setPassword( passwordForm.getNewPassword() ) ;
     		this.getSecurityMgr().update(principal);
     		PageContext.setPrincipal(request, principal ) ;
-    		
+
             // Add success message to request
             ActionMessages messages = new ActionMessages();
             messages.add("global", new ActionMessage("password.changed"));
@@ -124,7 +129,7 @@ public final class ChangePasswordAction extends BaseAction {
     		errors.add("global", new ActionError("password.changed"));
     		this.saveErrors(request, errors);
     	}
-    	
+
         return mapping.findForward( forwardTo );
     }
 }
