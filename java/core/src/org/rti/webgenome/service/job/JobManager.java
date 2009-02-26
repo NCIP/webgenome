@@ -91,7 +91,7 @@ public interface JobManager {
 	Collection<Job> getJobs(String userId, String userDomain);
 	
 	/**
-	 * Purge all copleted job records associated with
+	 * Purge all completed job records associated with
 	 * given user.
 	 * @param userId User login name
 	 * @param userDomain Domain in which the user ID is valid
