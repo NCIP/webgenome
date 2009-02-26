@@ -63,20 +63,19 @@ public interface SecurityMgr extends Authenticator {
 	/**
 	 * Create a new user account with given user name
 	 * and password.
-	 * @param name User name
+	 * @param email Email
 	 * @param password Password
 	 * @return Principal object
 	 * @throws AccountAlreadyExistsException if an account
 	 * with the name given by principal already exists.
 	 */
-	Principal newAccount(String name, String password)
+	Principal newAccount(String email, String password) 
 		throws AccountAlreadyExistsException;
 	
 	/**
 	 * Create a new user account with given Principal.
 	 * 
-	 * @param name User name
-	 * @param password Password
+	 * @param Principal
 	 * @return Principal object
 	 * @throws AccountAlreadyExistsException if an account
 	 * with the name given by principal already exists.
@@ -86,19 +85,11 @@ public interface SecurityMgr extends Authenticator {
 		
 	/**
 	 * Determines if a user account associated with the
-	 * given name exists.
-	 * @param name User name
-	 * @return T/F
-	 */
-	boolean accountExists(String name);
-	
-	/**
-	 * Determines if a user account associated with the
 	 * given email exists.
-	 * @param name User name
-	 * @return T/F
+	 * @param email Email
+	 * @return true, if account with this email exists, false otherwise
 	 */
-	boolean accountByEmailExists(final String email);
+	boolean accountExists(String email);
 	
 	/**
 	 * Update, which is used primarily for changing password.
@@ -117,13 +108,14 @@ public interface SecurityMgr extends Authenticator {
 	
 	/**
 	 * Login.
-	 * @param name User name.
+	 * @param email Email
 	 * @param password Password.
 	 * @return Principal object or null if no principal
 	 * exists with given user name and password.
 	 */
-	Principal login(String name, String password);
+	Principal login(String email, String password);
 	
+		
 	/**
 	 * Get Principal by email address.
 	 * 
@@ -132,5 +124,5 @@ public interface SecurityMgr extends Authenticator {
 	 * @return Principal object or null if no principal
 	 * exists with given e-mail address.
 	 */
-	Principal getPrincipalByEmail(final String email);
+	Principal getPrincipal(final String email);
 }
