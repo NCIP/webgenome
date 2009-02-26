@@ -62,10 +62,10 @@ public interface Authenticator {
 
 	/**
 	 * Log the user in.
-	 * @param userName User name
+	 * @param email Email
 	 * @param password Password
 	 * @return A principal object if the given credentials
 	 * authenticate, or {@code null} otherwise.
 	 */
-	Principal login(String userName, String password);
+	Principal login(String email, String password);
 }
