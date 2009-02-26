@@ -270,9 +270,9 @@ public class MockDataSource implements DataSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Principal login(final String userName,
-			final String password) {
-		return new Principal(userName, password, DOMAIN);
+	public Principal login( final String email,
+							final String password) {
+		return new Principal(email, password, DOMAIN);
 	}
 
 	/**
