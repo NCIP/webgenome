@@ -77,7 +77,7 @@ public class PurgeJobsAction extends BaseAction {
 	        final HttpServletResponse response
 	    ) throws Exception {
 		Principal principal = PageContext.getPrincipal(request);
-		this.getJobManager().purge(principal.getName(), principal.getDomain());
+		this.getJobManager().purge(principal.getEmail(), principal.getDomain());
 		return mapping.findForward("success");
 	}
 }
