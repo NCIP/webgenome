@@ -10,7 +10,7 @@
 	
 	<%-- Email --%>
 		<tr>
-			<td class="label">
+			<td class="label" nowrap="nowrap">
 				<html:errors property="email"/>				
 				<strong>Email address:</strong>				
 			</td>
@@ -21,7 +21,7 @@
 		
 	<%-- First name --%>
 		<tr>
-			<td class="label">				
+			<td class="label" nowrap="nowrap">				
 				First name:
 			</td>
 			<td valign="middle" align="left">
@@ -31,7 +31,7 @@
 	
 	<%-- Last name --%>
 		<tr>
-			<td class="label">				
+			<td class="label" nowrap="nowrap">				
 				Last name:
 			</td>
 			<td valign="middle" align="left">
@@ -41,7 +41,7 @@
 	
 	<%-- Institution --%>
 		<tr>
-			<td class="label">				
+			<td class="label" nowrap="nowrap">				
 				Institution:
 			</td>
 			<td valign="middle" align="left">
@@ -51,7 +51,7 @@
 		
 	<%-- Feedback Setting  --%>
 		<tr>
-			<td class="label" valign="top">
+			<td class="label" valign="top" nowrap="nowrap">
 				Feedback Preference:
 			</td>
 			<td valign="middle" align="left">
@@ -64,7 +64,7 @@
 	
 	<%-- Password --%>
 		<tr>
-			<td class="label" valign="top">
+			<td class="label" valign="top" nowrap="nowrap">
 						<html:errors property="password"/>
 						<strong>Current Password:</strong>
 			</td>
@@ -96,21 +96,20 @@
 			<td class="label">&nbsp;</td>
 			<td class="value">
 				<p style="margin-top: 20px;">
-				<html:link action="/user/account">Cancel any updates</html:link> and return to main <html:link action="/user/account">Account Settings</html:link>.<br/>
-				<html:link action="/user/showChangePassword">Change your Password</html:link> (any changes made above will discarded).
+				<html:link action="/user/account">Cancel any updates</html:link> - returns to main account settings page.<br/>
 				</p>
 			</td>
 		</tr>
-
 
 		<tr>
 			<td class="label">&nbsp;</td>
 			<td valign="middle" align="left" style="padding-top: 20px;">				
 				<b>Bolded</b> fields are required.<br/>
-				<span style="color:#888888;">
-					<sup>*</sup> Feedback would typically involve responding to a short<br/>
-					annual questionnaire via email, which would take a few minutes of your time.
-				</span> 
+				<div style="color:#888888; padding-right: 5px; width: 90%;">
+					<sup>*</sup> We are seeking comments from users on how we might improve WebGenome.
+					If you'd be interested in being contacted by us periodically (initially by email),
+					please check this box. You can opt-out, simply by returning to this page at any time.
+				</div> 
 			</td>			
 		</tr>
 	</table>
