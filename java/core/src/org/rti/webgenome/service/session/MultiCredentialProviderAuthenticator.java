@@ -102,11 +102,11 @@ public class MultiCredentialProviderAuthenticator implements Authenticator {
 	 * @see org.rti.webgenome.service.session.Authenticator#login(
 	 * java.lang.String, java.lang.String)
 	 */
-	public Principal login(final String userName, final String password) {
+	public Principal login(final String email, final String password) {
 		Principal principal = null;
 		for (Authenticator auth : this.authenticators) {
 			try {
-				principal = auth.login(userName, password);
+				principal = auth.login(email, password);
 			} catch (Exception e) {
 				LOGGER.error(
 						"A credential provider is out of commission", e);
