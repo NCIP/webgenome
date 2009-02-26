@@ -93,24 +93,22 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	/**
 	 * Create a new user account with given user name
 	 * and password.
-	 * @param name User name
+	 * @param email Email
 	 * @param password Password
 	 * @return Principal object
 	 * @throws AccountAlreadyExistsException if an account
 	 * with the name given by principal already exists.
 	 */
-	public Principal newAccount(final String name, final String password)
+	public Principal newAccount(final String email, final String password)
 		throws AccountAlreadyExistsException {
-		if (name == null || name.length() < 1
-				|| password == null || password.length() < 1) {
+		if (isEmpty ( email) || isEmpty ( password ) ) {
 			throw new IllegalArgumentException(
-					"Both name and password must be non-null");
+					"Email address and password must not be empty" );
 		}
-		if (this.accountExists(name)) {
-			throw new AccountAlreadyExistsException("An account with name '"
-					+ name + "' already exists");
+		if (this.accountExists(email)) {
+			throw new AccountAlreadyExistsException( "An account with email'" + email + "' already exists");
 		}
-		Principal p = new Principal(name, password, WEBGENOME_DOMAIN);
+		Principal p = new Principal(email , password, WEBGENOME_DOMAIN);
 		this.dbService.savePrincipal(p);
 		return p;
 	}
@@ -127,15 +125,13 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	public Principal newAccount(Principal p)
 		throws AccountAlreadyExistsException {
 		
-		if (p.getName() == null || p.getName().length() < 1 
-				|| p.getPassword() == null || p.getPassword().length() < 1
-				|| p.getEmail() == null || p.getEmail().length() < 1) {
+		if ( isEmpty ( p.getPassword() ) || isEmpty ( p.getEmail () ) ) {
 			throw new IllegalArgumentException(
-					"Email, name and password must be non-null");
+					"Email and password must not be empty");
 		}
-		if (this.accountExists(p.getName())) {
-			throw new AccountAlreadyExistsException("An account with name '"
-					+ p.getName() + "' already exists");
+		if (this.accountExists(p.getEmail())) {
+			throw new AccountAlreadyExistsException("An account with the email address '"
+					+ p.getEmail() + "' already exists");
 		}
 		
 		p.setDomain(WEBGENOME_DOMAIN);
@@ -147,31 +143,16 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	/**
 	 * Determines if a user account associated with the
 	 * given name exists.
-	 * @param name User name
+	 * @param email Email
 	 * @return T/F
 	 */
-	public boolean accountExists(final String name) {
-		if (name == null || name.length() < 1) {
+	public boolean accountExists(final String email) {
+		if ( isEmpty ( email ) ) {
 			throw new IllegalArgumentException(
-					"Account name cannot be empty");
+					"Email addresss cannot be empty");
 		}
-		return this.dbService.loadPrincipal(name) != null;
+		return this.dbService.loadPrincipal(email) != null;
 	}
-	
-	/**
-	 * Determines if a user account associated with the
-	 * given email exists.
-	 * @param name User name
-	 * @return T/F
-	 */
-	public boolean accountByEmailExists(final String email) {
-		if (email == null || email.length() < 1) {
-			throw new IllegalArgumentException(
-					"Account email cannot be empty");
-		}
-		return this.dbService.loadPrincipalByEmail(email) != null;
-	}
-	
 	
 	
 	/**
@@ -187,7 +168,7 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	/**
 	 * Delete persistently stored information associated
 	 * with given principal.
-	 * @param principal Principal whose persistent infromation
+	 * @param principal Principal whose persistent information
 	 * should be deleted.
 	 */
 	public void delete(final Principal principal) {
@@ -202,10 +183,9 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 * @return Principal object or null if no principal
 	 * exists with given user name and password.
 	 */
-	public Principal login(final String name,
-			final String password) {
-		return this.dbService.loadPrincipal(name, password,
-				WEBGENOME_DOMAIN);
+	public Principal login( final String email,
+							final String password) {
+		return this.dbService.loadPrincipal(email, password, WEBGENOME_DOMAIN);
 	}
 	
 	/**
@@ -216,12 +196,22 @@ public final class SecurityMgrImpl implements SecurityMgr {
 	 * @return Principal object or null if no principal
 	 * exists with given e-mail address.
 	 */
-	public Principal getPrincipalByEmail(final String email) {
+	public Principal getPrincipal(final String email) {
 		if (email == null || email.length() < 1) {
 			throw new IllegalArgumentException(
 					"Account email cannot be empty");
 		}
-		return this.dbService.loadPrincipalByEmail(email);
+		return this.dbService.loadPrincipal(email);
+	}
+	
+	
+	/**
+	 * Convenience method to check whether a value is "missing".
+	 * @param value
+	 * @return true, if value is empty, false otherwise.
+	 */
+	private boolean isEmpty ( String value ) {
+		return value == null || value.length() < 1 ;
 	}
 	
 }
