@@ -60,15 +60,14 @@ public class Principal {
 	// ======================
 	//      Attributes
 	// ======================
-	
-	
+
 	
 	/** Identifier used as primary key for persistence. */
 	private Long id = null;
 
-	/** User name. */
-	private String name = null;
-	
+	/** Email. Users specify their email address as their login name */
+	private String email = null;
+
 	/** Password. */
 	private String password = null;
 	
@@ -87,7 +86,6 @@ public class Principal {
 	private String phone = "";
 	private String address = "";
 	private boolean feedbacks = false;
-	private String email = null;
 	
 	
 	
@@ -143,31 +141,14 @@ public class Principal {
 
 
 	/**
-	 * Sets whether a user is an admin.
-	 * @param admin Is user an admin?
+	 * Sets whether a user is an administration user.
+	 * @param admin Is user an administration user?
 	 */
 	public final void setAdmin(final boolean admin) {
 		this.admin = admin;
 	}
 
 
-	/**
-	 * Get use name.
-	 * @return User name.
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	/**
-	 * Set user name.
-	 * @param name User name.
-	 */
-	public final void setName(final String name) {
-		this.name = name;
-	}
-
-	
 	/**
 	 * Get password.
 	 * @return Password.
@@ -191,27 +172,23 @@ public class Principal {
 	// =========================
 	
 	/**
-	 * Constructor.
+	 * Empty constructor
 	 */
-	public Principal() {
-		
-	}
-	
+	public Principal () { }
 	
 	/**
 	 * Constructor.
-	 * @param name User name.
+	 * @param email User Email (used at login time)
 	 * @param password Password.
 	 * @param domain Authentication domain
 	 */
-	public Principal(final String name, final String password,
-			final String domain) {
-		this.name = name;
+	public Principal( final String email,
+			          final String password,
+			          final String domain) {
+		this.email = email;
 		this.password = password;
 		this.domain = domain;
 	}
-
-
 	
 
 	public String getInstitution() {
@@ -293,9 +270,6 @@ public class Principal {
 		this.lastName = lastName;
 	}
 
-
-	
-
 	public String getEmail() {
 		return email;
 	}
@@ -314,7 +288,5 @@ public class Principal {
 	public void setFeedbacks(boolean feedbacks) {
 		this.feedbacks = feedbacks;
 	}
-
-
 	
 }
