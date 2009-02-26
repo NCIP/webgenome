@@ -223,7 +223,7 @@ public final class NewPlotAction extends BaseAction {
 	    	Principal principal = PageContext.getPrincipal(request);
 	    	PlotJob job = new PlotJob(plotId,
 	    			new HashSet<Experiment>(experiments), params,
-	    			principal.getName(), principal.getDomain());
+	    			principal.getEmail(), principal.getDomain());
 	    	this.getJobManager().add(job);
 	    	ActionMessages messages = new ActionMessages();
 	    	messages.add("global", new ActionMessage("plot.job"));
