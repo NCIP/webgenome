@@ -19,7 +19,7 @@
 			
 	<!-- Change Password Form -->
 		<form-bean
-			name="change.password.form"
+			name="password.form"
 			type="org.rti.webgenome.webui.struts.user.ChangePasswordForm"/>
 			
 	</form-beans>
@@ -62,20 +62,26 @@
 			parameter="user.account"/>
 			
 	<!--  Edit Account Settings (Change Password) -->
+			
+	<!-- Logout -->
 		<action
 			path="/user/showChangePassword"
-			type="org.apache.struts.actions.ForwardAction"
-			parameter="user.change.password"/>
+			name="password.form"
+			scope="request"
+			type="org.rti.webgenome.webui.struts.user.ShowChangePasswordAction"
+			validate="false">
+			<forward name="success" path="user.change.password"/>
+		</action>
 			
 		<!-- Change Password -->
 		<action
 			path="/user/changePassword"
-			name="change.password.form"
+			name="password.form"
 			scope="request"
 			input="/user/showChangePassword.do"
 			validate="true">
-			<forward name="success" path="/user/account.do"/> <!--  go back to main edit settings page -->
-			<forward name="failure" path="/user/showChangePassword.do"/>
+			<forward name="success" path="user.account"/> <!--  go back to main edit settings page -->
+			<forward name="failure" path="user.change.password"/>
 		</action>
 			
 	<!--  Edit Account Settings (Edit Account Settings) -->
@@ -89,7 +95,7 @@
      		<forward name="success" path="user.edit.account"/> <!--  page for editing user info -->
      		<forward name="failure" path="user.account"/> <!--  main user page -->
      	</action>			
-	
+
 		<action
 			path="/user/editAccount"
 			name="account.form"
@@ -97,7 +103,7 @@
 			input="/user/showEditAccount.do"
 			validate="true">
 			<forward name="success" path="user.account"/> <!-- main user page -->
-			<forward name="failure" path="user.edit.account"/> <!--  entry page to show user edit page -->
+			<forward name="failure" path="user.edit.account"/> <!--  return back to edit account page -->
 		</action>
 
 	<!-- Create account -->
