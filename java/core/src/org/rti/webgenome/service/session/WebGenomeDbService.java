@@ -174,20 +174,11 @@ public interface WebGenomeDbService {
 	
 	/**
 	 * Load principal with given account name.
-	 * @param name Account name
+	 * @param email Email
 	 * @return A principal or null if there is not
 	 * one with given name
 	 */
-	Principal loadPrincipal(String name);
-	
-	/**
-	 * Load principal with given account name.
-	 * @param email Account email
-	 * @return A principal or null if there is not
-	 * one with given email
-	 */
-	Principal loadPrincipalByEmail(String email);
-	
+	Principal loadPrincipal(String email);
 	
 	/**
 	 * Update persistent state of given principal.
@@ -204,15 +195,14 @@ public interface WebGenomeDbService {
 	
 	/**
 	 * Load principal from given domain with given username and password.
-	 * @param userName Account name
+	 * @param email Email
 	 * @param password Password
 	 * @param domain Security domain
 	 * @return A principal or null if there is no account
-	 * with the given username and password pairing in the given
+	 * with the given email and password pairing in the given
 	 * security domain
 	 */
-	Principal loadPrincipal(String userName, String password,
-			String domain);
+	Principal loadPrincipal(String email, String password, String domain);
 	
 	/**
 	 * Gets the names of all image files that are referenced
