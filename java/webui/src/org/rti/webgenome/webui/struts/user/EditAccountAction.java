@@ -1,6 +1,6 @@
 /*
 $Revision: 1.1 $
-$Date: 2009-01-10 22:47:22 $
+$Date: 2009/01/10 22:47:22 $
 
 The Web CGH Software License, Version 1.0
 
@@ -51,6 +51,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.rti.webgenome.webui.struts.user;
 
 import java.io.File;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,12 +65,14 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.rti.webgenome.domain.Principal;
+import org.rti.webgenome.domain.ShoppingCart;
+import org.rti.webgenome.service.job.Job;
 import org.rti.webgenome.webui.struts.BaseAction;
 import org.rti.webgenome.webui.util.PageContext;
 
 /**
- * Logs a user into the system.
- * @author dhall
+ * Process an edit request for a registered user.
+ * @author djackman
  *
  */
 public final class EditAccountAction extends BaseAction {
@@ -86,23 +89,19 @@ public final class EditAccountAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	System.out.println ( this.getClass().getName() + " execute() entered" ) ;
-    	
     	String forwardTo = FORWARDTO_SUCCESS ; // assume everything will be fine
 
     	AccountForm aForm = (AccountForm) form;
     	
     	Principal principal = PageContext.getPrincipal ( request ) ;
-    	String currentName = principal.getName() ;
+    	String currentEmail  = principal.getEmail() ;
 
     	//
     	//    C H E C K    I F    U S E R    E X I S T S
     	//
     	
     	boolean passwordMatches = principal.getPassword().equals( aForm.getPassword() ) ;
-    	System.out.println ( this.getClass().getName() + " comparing stored password [" + principal.getPassword() + "] with [" + aForm.getPassword() + "]" ) ;
-    	System.out.println ( this.getClass().getName() + " current user is [" + currentName + "]" );
-
+    	
     	if ( ! passwordMatches ) {
     		ActionErrors errors = new ActionErrors();
     		errors.add("global", new ActionError("invalid.password"));
@@ -115,55 +114,53 @@ public final class EditAccountAction extends BaseAction {
     		//    E X I S T I N G    U S E R    F O U N D
     		//
  
-    		updatePrincipal ( aForm, principal ) ;
-    		
-    		//    Check if account name has changed
-    		if ( ! currentName.equalsIgnoreCase( principal.getName() ) ) {
+    		//    Check if email address  has changed
+    		if ( ! currentEmail.equalsIgnoreCase( aForm.getEmail() ) ) {
     			
     			// User has changed their email address, so we need to check whether an account with the
     			// new email address already exists
     			
-    			System.out.println ( this.getClass().getName() + " account name changed from [" + currentName + "] to [" + principal.getName() + "]" ) ;
-
-	        	if ( this.getSecurityMgr().accountByEmailExists( principal.getEmail() ) ) {
-	        		System.out.println ( this.getClass().getName() + " this user already exists, mate" ) ;
+	        	if ( this.getSecurityMgr().accountExists( aForm.getEmail() ) ) {
 	        		ActionErrors errors = new ActionErrors();
-	        		errors.add("global", new ActionError("account.email.already.exists"));
+	        		errors.add("global", new ActionError("account.email.already.exists", aForm.getEmail() ));
+	        		aForm.setEmail( currentEmail ) ;
 	        		this.saveErrors(request, errors);
 	        		forwardTo = FORWARDTO_FAILURE ;
 	        	}
+	        	else
+	    			LOGGER.info( "Account name changed from [" + currentEmail+ "] to [" + aForm.getEmail() + "]" ) ;
     		}
     		
     		if ( ! forwardTo.equals ( FORWARDTO_FAILURE ) ) {
-    			
+
+    			updatePrincipal ( aForm, principal ) ;
+
     			//
-    			// Save information
+    			// Save Principal
+    			//
+    			updateRegistrationSettings ( request, principal, currentEmail ) ;
+
+    			//
+    			// Log user back in (TODO: Not 100% sure this is needed, but it's here anyway)
     			//
 
-    			this.getSecurityMgr().update( principal );
-    			PageContext.setPrincipal(request, principal ) ;
-    		
+    			this.getAuthenticator().login( principal.getEmail(), principal.getPassword() );
+
+    	    	PageContext.setPrincipal(request, principal) ;
+
 	            // Add success message to request
 	            ActionMessages messages = new ActionMessages();
 	            messages.add("global", new ActionMessage("account.updated"));
 	            this.saveMessages(request, messages);
-	            /*
-	            ActionErrors errors = new ActionErrors();
-	    		errors.add("global", new ActionError("account.updated"));
-	    		this.saveErrors(request, errors);
-	    		*/
-	            
-	            // Save form for re-display
 
     		}
     	}
 
     	if ( forwardTo.equals ( FORWARDTO_FAILURE ) ) {
-    		System.out.println ( this.getClass().getName() + " preserving form" ) ;
     		request.setAttribute ( "account", aForm ) ; // preserve form data for re-display
     	}
-
-        return mapping.findForward( forwardTo );
+    	
+        return mapping.findForward( forwardTo ) ;
     }
     
     //
@@ -177,18 +174,61 @@ public final class EditAccountAction extends BaseAction {
 	 * @return Principal
      */
     private void updatePrincipal (AccountForm a, Principal p ) {
+    	// We don't update Id - we keep it as-is, i.e. the value populated from the db retrieve is preserved
     	p.setAddress( a.getAddress() ) ;
     	p.setDegree( a.getDegree() ) ;
     	p.setDepartment( a.getDepartment() ) ;
     	p.setEmail( a.getEmail() ) ;
-    	p.setName( a.getEmail() ) ; // NAME IS SET FROM EMAIL
     	p.setFeedbacks( a.isFeedbacks() ) ;
     	p.setFirstName( a.getFirstName() ) ;
     	p.setLastName( a.getLastName() ) ;
     	p.setInstitution( a.getInstitution() ) ;
     	// p.setPassword( a.getPassword() ) ; Password must not change, because user needs to confirm this
-    	// and they do this via a separate Change Password page.
+    	// and they do this via a separate Change Password page - i.e. not this StrutsAction.
     	p.setPhone( a.getPhone() ) ;
     	p.setPosition( a.getPosition() ) ;
-    }    
+    }
+    
+    /*
+     * Take care of the updates required for a registered user.
+     */
+    private void updateRegistrationSettings ( HttpServletRequest request, Principal principal, String previousEmail ) {
+    	
+		this.getSecurityMgr().update( principal );
+
+		// If User has changed their email/login name, then make the necessary updates
+		// to the Shopping Cart and Jobs.
+		if ( ! previousEmail.equals( principal.getEmail() )) {
+			
+			//
+			// Update Shopping Cart with new email (TODO: Cart should NOT be identified by email - it needs to be
+			// changed to work from userId - to make it independent of any email change.
+			//
+			
+	    	ShoppingCart cart = this.getDbService().loadShoppingCart( previousEmail, principal.getDomain());
+	    	if (cart == null) {
+	    		// Create and store Shopping Cart
+	    		cart = new ShoppingCart( principal.getEmail(), principal.getDomain());
+	    		this.getDbService().saveShoppingCart(cart);
+	    	}
+	    	else {
+	    		// Update Shopping Cart
+	    		cart.setUserName( principal.getEmail() ) ;
+	    		this.getDbService().updateShoppingCart( cart ) ;
+	    	}
+	    	
+	    	// Update any jobs for this user - regardless of whether they are running or finished.
+	    	Collection<Job> jobs = this.getJobManager().getJobs( previousEmail, principal.getDomain() ) ;
+	    	//System.out.println ( this.getClass().getName() + " Retrieved " + jobs.size() + " jobs" ) ;
+	    	for (Job job : jobs) {
+	    		job.setUserId( principal.getEmail() ) ;
+	    		// TODO: Job really should have a user_id value, rather than using the text
+	    		// value of the actual name of the user. If we had it this way, i.e. just using the Long id
+	    		// of the record, we wouldn't need to be doing this kind of update.
+	    		this.getDbService().saveOrUpdateJob( job ) ;
+	    		//System.out.println ( this.getClass().getName() + " updating job " + job.getId() + " with user_id [" + job.getUserId() + "]" ) ;
+	    	}
+		}
+    	
+    }
 }
