@@ -158,7 +158,7 @@ public final class AnalysisAction extends BaseAnalysisAction {
     		JobManager jobManager = this.getJobManager();
     		AnalysisJob job = new AnalysisJob(experiments, op,
     				outputBioAssayNames, outputExperimentNames,
-    				principal.getName(), principal.getDomain());
+    				principal.getEmail(), principal.getDomain());
     		jobManager.add(job);
     		ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("analysis.job"));
