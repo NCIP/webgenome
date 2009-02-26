@@ -330,21 +330,10 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Principal loadPrincipal(final String name) {
-		return this.principalDao.load(name);
+	public Principal loadPrincipal(final String email) {
+		return this.principalDao.load(email);
 	}
 
-	/**
-	 * Load principal with given account name.
-	 * @param email Account email
-	 * @return A principal or null if there is not
-	 * one with given email
-	 */
-	 public Principal loadPrincipalByEmail(String email){
-			return this.principalDao.loadByEmail(email);
-		}
-	
-	
 
 	/**
 	 * {@inheritDoc}
@@ -365,9 +354,9 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Principal loadPrincipal(final String userName, final String password,
+	public Principal loadPrincipal(final String email, final String password,
 			final String domain) {
-		return this.principalDao.load(userName, password, domain);
+		return this.principalDao.load(email, password, domain);
 	}
 
 
