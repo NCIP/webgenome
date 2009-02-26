@@ -179,8 +179,11 @@ public class AccountForm extends BaseForm {
 		
 		ActionErrors e = new ActionErrors();
 		
-		if ( isEmpty ( this.email ) || ! isValidEmail ( this.email ) )
+		if ( isEmpty ( this.email ) || ! isValidEmail ( this.email ) ) {
+			if ( ! isValidEmail ( this.email ) )
+				e.add( "global", new ActionError ( "invalid.email.address" ) ) ;
 			e.add("email", new ActionError("invalid.field"));
+		}
 
 		// Password
 		if ( isEmpty ( this.password ) )
