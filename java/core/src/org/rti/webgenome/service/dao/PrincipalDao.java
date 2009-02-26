@@ -74,30 +74,22 @@ public interface PrincipalDao {
 
 	/**
 	 * Load principal with given name.
-	 * @param name Name of principal.
+	 * @param email Email of principal.
 	 * @return Principal with given name, or null
 	 * if no such principal exists.
 	 */
-	Principal load(String name);
-	
-	/**
-	 * Load principal with given email.
-	 * @param name Name of principal.
-	 * @return Principal with given email, or null
-	 * if no such principal exists.
-	 */
-	Principal loadByEmail(String email);
+	Principal load(String email);
 	
 	
 	/**
 	 * Load principal with given name and password.
-	 * @param name Name of principal.
+	 * @param email Email of principal.
 	 * @param password Principal's password.
 	 * @param domain Authentication domain
 	 * @return Principal with given name and password
 	 * or null if no such principal exists.
 	 */
-	Principal load(String name, String password, String domain);
+	Principal load(String email, String password, String domain);
 	
 	
 	/**
