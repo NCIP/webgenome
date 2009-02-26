@@ -84,13 +84,13 @@ public final class HibernatePrincipalDao extends HibernateDaoSupport
 
 	/**
 	 * Load principal with given name.
-	 * @param name Name of principal.
-	 * @return Principal with given name, or null
+	 * @param email Email of principal.
+	 * @return Principal with given email, or null
 	 * if no such principal exists.
 	 */
-	public Principal load(final String name) {
-		String query = "from Principal p where p.name = ?";
-		Object[] args = new Object[] {name};
+	public Principal load(final String email) {
+		String query = "from Principal p where lower(p.email) = ?";
+		Object[] args = new Object[] { toLowerCase ( email ) };
 		Principal p = null;
 		List principals = this.getHibernateTemplate().find(query, args);
 		if (principals != null && principals.size() > 0) {
@@ -98,39 +98,21 @@ public final class HibernatePrincipalDao extends HibernateDaoSupport
 		}
 		return p;
 	}
-	
-	/**
-	 * Load principal with given name.
-	 * @param name Name of principal.
-	 * @return Principal with given name, or null
-	 * if no such principal exists.
-	 */
-	public Principal loadByEmail(final String email) {
-		String query = "from Principal p where p.email = ?";
-		Object[] args = new Object[] {email};
-		Principal p = null;
-		List principals = this.getHibernateTemplate().find(query, args);
-		if (principals != null && principals.size() > 0) {
-			p = (Principal) principals.get(0);
-		}
-		return p;
-	}
-	
-	
 	
 	/**
 	 * Load principal with given name and password.
-	 * @param name Name of principal.
+	 * @param email Email Address of principal.
 	 * @param password Principal's password.
 	 * @param domain Authentication domain
 	 * @return Principal with given name and password
 	 * or null if no such principal exists.
 	 */
-	public Principal load(final String name, final String password,
-			final String domain) {
-		String query = "from Principal p where p.name = ? "
+	public Principal load( final String email,
+						   final String password,
+						   final String domain) {
+		String query = "from Principal p where lower(p.email) = ? "
 			+ "and p.password = ? and p.domain=?";
-		Object[] args = new Object[] {name, password, domain};
+		Object[] args = new Object[] { toLowerCase(email), password, domain};
 		Principal p = null;
 		List principals = this.getHibernateTemplate().find(query, args);
 		if (principals != null && principals.size() > 0) {
@@ -148,5 +130,14 @@ public final class HibernatePrincipalDao extends HibernateDaoSupport
 	 */
 	public void delete(final Principal principal) {
 		this.getHibernateTemplate().delete(principal);
+	}
+	
+	/**
+	 * Convert email to case-insensitive.
+	 * @param value String to convert to lower-case
+	 * @return lower-case value of value parameter. 
+	 * */
+	private String toLowerCase ( String value ) {
+		return value == null ? value : value.toLowerCase() ;
 	}
 }
