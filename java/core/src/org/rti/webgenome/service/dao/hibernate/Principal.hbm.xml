@@ -11,8 +11,8 @@
 		<id name="id" column="ID">
 		    <generator class="increment"/>
 		</id>
-		
-		<property name="name"/>
+
+		<property name="email"/>
 		<property name="password"/>
 		<property name="domain"/>
 		<property name="admin" type="true_false"/>
@@ -24,7 +24,6 @@
 		<property name="degree"/>	
 		<property name="phone"/>
 		<property name="address"/>
-		<property name="email"/>
 		<property name="feedbacks" column="is_feedbacks" type="true_false"/>
 	</class>
 
