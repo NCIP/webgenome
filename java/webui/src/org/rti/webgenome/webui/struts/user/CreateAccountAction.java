@@ -1,6 +1,6 @@
 /*
 $Revision: 1.4 $
-$Date: 2008-05-19 20:11:02 $
+$Date: 2008/05/19 20:11:02 $
 
 The Web CGH Software License, Version 1.0
 
@@ -60,7 +60,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.rti.webgenome.domain.Principal;
 import org.rti.webgenome.webui.struts.BaseAction;
-
+import org.rti.webgenome.webui.struts.user.NewAccountForm;
 
 /**
  * Creates a new user account.
@@ -100,7 +100,7 @@ public final class CreateAccountAction extends BaseAction {
     	}
     	
     	// See if there is already a user with the same account name
-    	if (this.getSecurityMgr().accountByEmailExists(naf.getEmail())) {
+    	if (this.getSecurityMgr().accountExists(naf.getEmail())) {
     		ActionErrors errors = new ActionErrors();
     		errors.add("global", new ActionError("account.email.already.exists"));
     		this.saveErrors(request, errors);
@@ -135,7 +135,6 @@ public final class CreateAccountAction extends BaseAction {
     	p.setInstitution(form.getInstitution());
     	p.setLastName(form.getLastName());
     	p.setFirstName(form.getFirstName());
-    	p.setName(form.getEmail());
     	p.setPassword(form.getPassword());
     	p.setPhone(form.getPhone());
     	p.setPosition(form.getPosition());
