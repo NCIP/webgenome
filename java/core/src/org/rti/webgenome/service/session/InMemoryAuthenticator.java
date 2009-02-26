@@ -90,14 +90,13 @@ public class InMemoryAuthenticator implements Authenticator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Principal login(final String userName, final String password) {
+	public Principal login(final String email, final String password) {
 		Principal principal = null;
-		if (!StringUtils.isEmpty(userName)) {
-			String realPassword = this.credentials.get(userName);
+		if (!StringUtils.isEmpty(email)) {
+			String realPassword = this.credentials.get(email);
 			if (realPassword != null) {
 				if (StringUtils.equal(password, realPassword)) {
-					principal = new Principal(userName, password,
-							this.domain);
+					principal = new Principal(email, password, this.domain);
 				}
 			}
 		}
