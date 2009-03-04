@@ -88,8 +88,8 @@ public class ShoppingCart implements Serializable {
     /** Plots in shopping cart. */
     private List<Plot> plots = new ArrayList<Plot>();
    
-    /** User name associated with cart. */
-    private String userName = null;
+    /** User Id associated with cart. */
+    private Long userId = null;
     
     /** Domain in which the user name is valid. */
     private String userDomain = null;
@@ -206,16 +206,16 @@ public class ShoppingCart implements Serializable {
      * Get user name associated with cart.
      * @return User name
      */
-    public final String getUserName() {
-        return userName;
+    public final Long getUserId() {
+        return userId;
     }
 
     /**
      * Set user name associated with cart.
      * @param userName User name
      */
-    public final void setUserName(final String userName) {
-        this.userName = userName;
+    public final void setUserId(final Long userId) {
+        this.userId = userId;
     }
     
     /**
@@ -256,8 +256,8 @@ public class ShoppingCart implements Serializable {
      * @param userName User name
      * @param userDomain Domain in which user name is valid
      */
-    public ShoppingCart(final String userName, final String userDomain) {
-        this.userName = userName;
+    public ShoppingCart(final Long userId, final String userDomain) {
+        this.userId = userId;
         this.userDomain = userDomain;
     }
    
