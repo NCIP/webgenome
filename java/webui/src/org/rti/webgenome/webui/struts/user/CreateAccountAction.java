@@ -86,23 +86,13 @@ public final class CreateAccountAction extends BaseAction {
         final HttpServletRequest request,
         final HttpServletResponse response
     ) throws Exception {
+
     	NewAccountForm naf = (NewAccountForm) form;
-    	
-    	// use email as login name
-    	naf.setName(naf.getEmail());
-    	
-    	// See if there is already a user with the same account name
-    	if (this.getSecurityMgr().accountExists(naf.getName())) {
-    		ActionErrors errors = new ActionErrors();
-    		errors.add("global", new ActionError("account.already.exists"));
-    		this.saveErrors(request, errors);
-    		return mapping.findForward("failure");
-    	}
     	
     	// See if there is already a user with the same account name
     	if (this.getSecurityMgr().accountExists(naf.getEmail())) {
     		ActionErrors errors = new ActionErrors();
-    		errors.add("global", new ActionError("account.email.already.exists"));
+    		errors.add("global", new ActionError("account.email.already.exists", naf.getEmail() ));
     		this.saveErrors(request, errors);
     		return mapping.findForward("failure");
     	}
@@ -114,7 +104,7 @@ public final class CreateAccountAction extends BaseAction {
     	this.getSecurityMgr().newAccount(p);
     	
     	// Add new account name to request for downstream confirmation JSP
-    	request.setAttribute("account.name", naf.getName());
+    	request.setAttribute("account.email", naf.getEmail());
     	
         return mapping.findForward("success");
     }
