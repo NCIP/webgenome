@@ -166,7 +166,7 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 	public ReRunAnalysisOnPlotExperimentsJob(
 			final Set<Experiment> experiments,
 			final Long plotId,
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		super(userId, userDomain);
 		this.experiments = experiments;
 		this.plotId = plotId;
@@ -195,8 +195,7 @@ public class ReRunAnalysisOnPlotExperimentsJob extends AbstractJob {
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
-				this.getUserDomain());
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(), this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		try {
