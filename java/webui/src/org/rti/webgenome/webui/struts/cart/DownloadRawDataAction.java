@@ -154,7 +154,7 @@ public class DownloadRawDataAction extends BaseAction {
 			File f = new File(absPlotPath + "//" + ba.getId() + ".csv");
 			rfw.setFile(f);
 			DownloadDataJob job = new DownloadDataJob(arrDatums, ba, rfw,
-					principal.getEmail(), principal.getDomain());
+					principal.getId(), principal.getDomain());
 			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("download.job"));
