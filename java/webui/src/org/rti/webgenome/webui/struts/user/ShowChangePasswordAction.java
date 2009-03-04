@@ -84,8 +84,6 @@ public final class ShowChangePasswordAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	
-    	System.out.println ( this.getClass().getName() + ".execute() entered" ) ;
-    	
 		Principal principal = PageContext.getPrincipal ( request ) ;
 		ChangePasswordForm passwordForm = new ChangePasswordForm() ;
 		passwordForm.setEmail( principal.getEmail() ) ; 
