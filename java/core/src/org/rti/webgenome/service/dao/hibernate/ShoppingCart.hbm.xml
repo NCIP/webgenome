@@ -11,7 +11,7 @@
 		<id name="id" column="ID">
 		    <generator class="increment"/>
 		</id>
-		<property name="userName" column="user_name"/>
+		<property name="userId" column="user_id"/>
 		<property name="userDomain" column="user_domain"/>
 		<set name="experiments"
 			lazy="false" cascade="all">
