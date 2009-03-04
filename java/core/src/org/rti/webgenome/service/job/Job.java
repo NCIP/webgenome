@@ -90,13 +90,13 @@ public interface Job {
 	 * Get user identifier (i.e., user name).
 	 * @return User identifier
 	 */
-	String getUserId();
+	Long getUserId();
 	
 	/**
 	 * Set user identifier (i.e., user name).
 	 * @param userId User identifier
 	 */
-	void setUserId(String userId);
+	void setUserId(Long userId);
 	
 	/**
 	 * Set the domain in which the user ID applies.
@@ -150,7 +150,7 @@ public interface Job {
 	/**
 	 * Set the message that describes the
 	 * state of the job upon termination
-	 * if it finished successfullly or threw
+	 * if it finished successfully or threw
 	 * and exception.
 	 * @param message A message
 	 */
@@ -160,8 +160,7 @@ public interface Job {
 	/**
 	 * Get the message that describes the
 	 * state of the job upon termination
-	 * if it finished successfullly or threw
-	 * and exception.
+	 * if it finished successfully or throw an Exception.
 	 * @return A message
 	 */
 	String getTerminationMessage();
