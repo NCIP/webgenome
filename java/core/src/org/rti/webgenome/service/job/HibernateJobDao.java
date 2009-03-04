@@ -74,8 +74,7 @@ implements JobDao {
 	 */
 	@SuppressWarnings("unchecked")
 	public Collection<Job> loadAll() {
-		return this.getHibernateTemplate().loadAll(
-				org.rti.webgenome.service.job.AbstractJob.class);
+		return this.getHibernateTemplate().loadAll(org.rti.webgenome.service.job.AbstractJob.class);
 	}
 
 	
