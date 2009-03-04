@@ -180,7 +180,7 @@ public class AnalysisJob extends AbstractJob {
 			final AnalyticOperation operation,
 			final Map<Long, String> outputBioAssayNames,
 			final Map<Long, String> outputExperimentNames,
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		super(userId, userDomain);
 		this.dataSourceProperties = new MultiAnalysisDataSourceProperties(
 				new HashSet<Experiment>(experiments), operation);
@@ -210,8 +210,7 @@ public class AnalysisJob extends AbstractJob {
 	@Override
 	public void execute(final JobServices jobServices) {
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
-				this.getUserDomain());
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(), this.getUserDomain());
 		SerializedDataTransformer transformer =
 			jobServices.getIoService().getSerializedDataTransformer();
 		AnalysisService aService = jobServices.getAnalysisService();
