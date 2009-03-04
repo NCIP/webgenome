@@ -83,7 +83,7 @@ public abstract class AbstractJob implements Job {
 	private Long id = null;
 	
 	/** Identifier of user to whom job is associated. */
-	private String userId = null;
+	private Long userId = null;
 	
 	/** Domain in which the user ID is applied. */
 	private String userDomain = null;
@@ -130,10 +130,10 @@ public abstract class AbstractJob implements Job {
 	
 	/**
 	 * Constructor.
-	 * @param userId User account name.
+	 * @param userId User account id (from Principal).
 	 * @param userDomain Domain in which user name is valid
 	 */
-	protected AbstractJob(final String userId, final String userDomain) {
+	protected AbstractJob(final Long userId, final String userDomain) {
 		this();
 		this.userId = userId;
 		this.userDomain = userDomain;
@@ -194,7 +194,7 @@ public abstract class AbstractJob implements Job {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getUserId() {
+	public Long getUserId() {
 		return this.userId;
 	}
 
@@ -229,7 +229,7 @@ public abstract class AbstractJob implements Job {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setUserId(final String userId) {
+	public void setUserId(final Long userId) {
 		this.userId = userId;
 	}
 
