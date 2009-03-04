@@ -12,39 +12,39 @@ United States Code, section 105.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this 
-list of conditions and the disclaimer of Article 3, below. Redistributions in 
-binary form must reproduce the above copyright notice, this list of conditions 
-and the following disclaimer in the documentation and/or other materials 
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the disclaimer of Article 3, below. Redistributions in
+binary form must reproduce the above copyright notice, this list of conditions
+and the following disclaimer in the documentation and/or other materials
 provided with the distribution.
 
-2. The end-user documentation included with the redistribution, if any, must 
+2. The end-user documentation included with the redistribution, if any, must
 include the following acknowledgment:
 
-"This product includes software developed by the RTI and the National Cancer 
+"This product includes software developed by the RTI and the National Cancer
 Institute."
 
-If no such end-user documentation is to be included, this acknowledgment shall 
-appear in the software itself, wherever such third-party acknowledgments 
+If no such end-user documentation is to be included, this acknowledgment shall
+appear in the software itself, wherever such third-party acknowledgments
 normally appear.
 
-3. The names "The National Cancer Institute", "NCI", 
-“Research Triangle Institute”, and "RTI" must not be used to endorse or promote 
+3. The names "The National Cancer Institute", "NCI",
+“Research Triangle Institute”, and "RTI" must not be used to endorse or promote
 products derived from this software.
 
-4. This license does not authorize the incorporation of this software into any 
-proprietary programs. This license does not authorize the recipient to use any 
+4. This license does not authorize the incorporation of this software into any
+proprietary programs. This license does not authorize the recipient to use any
 trademarks owned by either NCI or RTI.
 
-5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
-(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
 NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
 INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
@@ -78,28 +78,28 @@ public class CaArrayDataImportJob extends AbstractJob {
 	/** Logger. */
 	private static final Logger LOGGER =
 		Logger.getLogger(CaArrayDataImportJob.class);
-	
+
 	//
 	//  A T T R I B U T E S
 	//
-	
+
 	/** Properties of upload. */
 	private UploadDataSourceProperties upload = null;
-	
+
 	private CaArrayClient client = null;
 	private String expId = "";
 	//
 	//  G E T T E R S / S E T T E R S
 	//
-	
+
 	/** Properties of upload. */
 	private UploadDataSourceProperties uploadDataSourceProperties = null;
-	
-	
+
+
 	//
 	//  G E T T E R S / S E T T E R S
 	//
-	
+
 	/**
 	 * Get properties for upload.
 	 * @return Properties for upload
@@ -117,7 +117,7 @@ public class CaArrayDataImportJob extends AbstractJob {
 			final UploadDataSourceProperties uploadDataSourceProperties) {
 		this.uploadDataSourceProperties = uploadDataSourceProperties;
 	}
-	
+
 	//
 	//  C O N S T R U C T O R S
 	//
@@ -128,10 +128,10 @@ public class CaArrayDataImportJob extends AbstractJob {
 	 * persistence framework.
 	 */
 	public CaArrayDataImportJob() {
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Constructor.
 	 * @param uploadDataSourceProperties Properties for upload
@@ -140,14 +140,14 @@ public class CaArrayDataImportJob extends AbstractJob {
 	 */
 	public CaArrayDataImportJob(
 			final CaArrayClient client,final String expId,
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		super(userId, userDomain);
 		this.client = client;
 		this.expId = expId;
-		
+
 		this.setDescription("Importing caArray data for experiment " + expId);
 	}
-	
+
 	//
 	//  O V E R R I D E S
 	//
@@ -157,33 +157,30 @@ public class CaArrayDataImportJob extends AbstractJob {
 	 */
 	@Override
 	public void execute(final JobServices jobServices) {
-		
-		
-		
+
 		IOService ioService = jobServices.getIoService();
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
-					this.getUserDomain());
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(), this.getUserDomain());
 		try {
 			LOGGER.info("caArray data import job starting for user "
 					+ this.getUserId());
-		
+
 			UploadDataSourceProperties upload = client.downloadExperiment2File(expId);
-			
+
 			// Set QuantitationType since had some trouble to set it inside caArrayClient
 			upload.setQuantitationType(QuantitationType.LOG_2_RATIO_COPY_NUMBER);
-			
+
 			// Load data into shopping cart
 			Experiment exp = ioService.loadSmdData(
 					new UploadDataSourceProperties(
 							upload), cart);
-			
+
 			// Persist new array object and shopping cart changes
 			Array array = this.getArray(exp);
 			array.setDisposable(true);
 			assert array != null;
 			dbService.saveArrayAndUpdateCart(array, cart);
-			
+
 			this.setTerminationMessage(Job.JOB_EXECUTION_SUCCESS_MESSAGE);
 			LOGGER.info("caArray Data import job completed for user "
 					+ this.getUserId());
@@ -196,7 +193,7 @@ public class CaArrayDataImportJob extends AbstractJob {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Extract array object associated with all contained bioassays.
 	 * That will have been the case for data uploaded from a file.
