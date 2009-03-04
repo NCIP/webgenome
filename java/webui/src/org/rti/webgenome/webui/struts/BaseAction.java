@@ -427,8 +427,7 @@ public abstract class BaseAction extends Action {
 			cart = PageContext.getShoppingCart(request);
 		} else if (mode == SessionMode.STAND_ALONE) {
 			Principal principal = PageContext.getPrincipal(request);
-			cart = this.getDbService().loadShoppingCart(principal.getEmail(),
-					principal.getDomain());
+			cart = this.getDbService().loadShoppingCart(principal.getId(), principal.getDomain());
 		}
 		return cart;
 	}
