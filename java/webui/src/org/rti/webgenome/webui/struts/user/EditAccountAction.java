@@ -193,42 +193,6 @@ public final class EditAccountAction extends BaseAction {
      * Take care of the updates required for a registered user.
      */
     private void updateRegistrationSettings ( HttpServletRequest request, Principal principal, String previousEmail ) {
-    	
 		this.getSecurityMgr().update( principal );
-
-		// If User has changed their email/login name, then make the necessary updates
-		// to the Shopping Cart and Jobs.
-		if ( ! previousEmail.equals( principal.getEmail() )) {
-			
-			//
-			// Update Shopping Cart with new email (TODO: Cart should NOT be identified by email - it needs to be
-			// changed to work from userId - to make it independent of any email change.
-			//
-			
-	    	ShoppingCart cart = this.getDbService().loadShoppingCart( previousEmail, principal.getDomain());
-	    	if (cart == null) {
-	    		// Create and store Shopping Cart
-	    		cart = new ShoppingCart( principal.getEmail(), principal.getDomain());
-	    		this.getDbService().saveShoppingCart(cart);
-	    	}
-	    	else {
-	    		// Update Shopping Cart
-	    		cart.setUserName( principal.getEmail() ) ;
-	    		this.getDbService().updateShoppingCart( cart ) ;
-	    	}
-	    	
-	    	// Update any jobs for this user - regardless of whether they are running or finished.
-	    	Collection<Job> jobs = this.getJobManager().getJobs( previousEmail, principal.getDomain() ) ;
-	    	//System.out.println ( this.getClass().getName() + " Retrieved " + jobs.size() + " jobs" ) ;
-	    	for (Job job : jobs) {
-	    		job.setUserId( principal.getEmail() ) ;
-	    		// TODO: Job really should have a user_id value, rather than using the text
-	    		// value of the actual name of the user. If we had it this way, i.e. just using the Long id
-	    		// of the record, we wouldn't need to be doing this kind of update.
-	    		this.getDbService().saveOrUpdateJob( job ) ;
-	    		//System.out.println ( this.getClass().getName() + " updating job " + job.getId() + " with user_id [" + job.getUserId() + "]" ) ;
-	    	}
-		}
-    	
     }
 }
