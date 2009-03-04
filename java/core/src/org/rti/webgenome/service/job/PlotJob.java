@@ -169,7 +169,7 @@ public class PlotJob extends AbstractJob {
 	 */
 	public PlotJob(final Long plot, final Set<Experiment> experiments,
 			final PlotParameters plotParameters,
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		super(userId, userDomain);
 		this.plotId = plot;
 		this.experiments = experiments;
@@ -187,8 +187,7 @@ public class PlotJob extends AbstractJob {
 	@Override
 	public void execute(final JobServices jobServices) {
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
-				this.getUserDomain());
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(), this.getUserDomain());
 		SerializedChromosomeArrayDataGetter dataGetter =
 			jobServices.getIoService().getSerializedChromosomeArrayDataGetter();
 		LOGGER.info("Plot job starting for user "
