@@ -12,39 +12,39 @@ United States Code, section 105.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
-1. Redistributions of source code must retain the above copyright notice, this 
-list of conditions and the disclaimer of Article 3, below. Redistributions in 
-binary form must reproduce the above copyright notice, this list of conditions 
-and the following disclaimer in the documentation and/or other materials 
+1. Redistributions of source code must retain the above copyright notice, this
+list of conditions and the disclaimer of Article 3, below. Redistributions in
+binary form must reproduce the above copyright notice, this list of conditions
+and the following disclaimer in the documentation and/or other materials
 provided with the distribution.
 
-2. The end-user documentation included with the redistribution, if any, must 
+2. The end-user documentation included with the redistribution, if any, must
 include the following acknowledgment:
 
-"This product includes software developed by the RTI and the National Cancer 
+"This product includes software developed by the RTI and the National Cancer
 Institute."
 
-If no such end-user documentation is to be included, this acknowledgment shall 
-appear in the software itself, wherever such third-party acknowledgments 
+If no such end-user documentation is to be included, this acknowledgment shall
+appear in the software itself, wherever such third-party acknowledgments
 normally appear.
 
-3. The names "The National Cancer Institute", "NCI", 
-“Research Triangle Institute”, and "RTI" must not be used to endorse or promote 
+3. The names "The National Cancer Institute", "NCI",
+“Research Triangle Institute”, and "RTI" must not be used to endorse or promote
 products derived from this software.
 
-4. This license does not authorize the incorporation of this software into any 
-proprietary programs. This license does not authorize the recipient to use any 
+4. This license does not authorize the incorporation of this software into any
+proprietary programs. This license does not authorize the recipient to use any
 trademarks owned by either NCI or RTI.
 
-5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES, 
-(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND 
+5. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+(INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
 FITNESS FOR A PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE
 NATIONAL CANCER INSTITUTE, RTI, OR THEIR AFFILIATES BE LIABLE FOR ANY DIRECT,
 INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE 
-OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
@@ -72,55 +72,53 @@ import org.rti.webgenome.service.session.WebGenomeDbService;
  *
  */
 public class SerialQueueJobManager implements JobManager {
-	
-	
+
+
 	//
 	//     C O N S T A N T S
 	//
-	
+
 	/** Priority given to thread that executes jobs. */
-	private static final int JOB_EXECUTION_THREAD_PRIORITY =
-		Thread.MIN_PRIORITY;
-	
+	private static final int JOB_EXECUTION_THREAD_PRIORITY = Thread.MIN_PRIORITY;
+
 	/**
 	 * Time in milliseconds that the job execution thread
 	 * sleeps when the queue is empty before checking again
 	 * to see if there are any new jobs.
 	 */
-	private static final long JOB_EXECUTION_THREAD_SLEEP_TIME = 5000;
-	
+	private static final long JOB_EXECUTION_THREAD_SLEEP_TIME = 5000; // TBD / TODO - might be a nice configuration variable
+
 	/** Logger. */
-	private static final Logger LOGGER = Logger.getLogger(
-			SerialQueueJobManager.class);
-	
+	private static final Logger LOGGER = Logger.getLogger( SerialQueueJobManager.class );
+
 	//
 	//     A T T R I B U T E S
 	//
-	
+
 	/** Set of current jobs sorted on instantiation date. */
 	private SortedSet<Job> jobs = new TreeSet<Job>(
 			new InstantiationDateJobComparator());
-	
+
 	/** Thread that executes jobs. */
 	private JobExecutionThread jobExecutionThread = new JobExecutionThread();
-	
+
 	/** Service providing I/O of data files. */
 	private IOService ioService = null;
-	
+
 	/** Service that runs analytic operations. */
 	private AnalysisService analysisService = null;
-	
+
 	/** Service that generates plots. */
 	private PlotService plotService = null;
-	
+
 	/** Facade for transactional webgenome db operations. */
 	private WebGenomeDbService webGenomeDbService = null;
-	
-	
+
+
 	//
 	//  S E T T E R S
 	//
-	
+
 	/**
 	 * Set service to perform analytic operations.
 	 * @param analysisService Service to perform analytic operations.
@@ -146,7 +144,7 @@ public class SerialQueueJobManager implements JobManager {
 	public void setPlotService(final PlotService plotService) {
 		this.plotService = plotService;
 	}
-	
+
 
 	/**
 	 * Inject a facade object for webgenome database operations.
@@ -170,12 +168,11 @@ public class SerialQueueJobManager implements JobManager {
 	 */
 	public SerialQueueJobManager(final WebGenomeDbService dbService) {
 		this.webGenomeDbService = dbService;
-		
+
 		// Get all persisted jobs
 		Collection<Job> peristedJobs = this.webGenomeDbService.loadAllJobs();
 		this.jobs.addAll(peristedJobs);
-		LOGGER.info("Retrieved " + peristedJobs.size() + " jobs from database");
-		
+
 		// For any jobs with no end date,
 		// set start date/time to null since
 		// none of the jobs have started.  Any jobs
@@ -186,12 +183,12 @@ public class SerialQueueJobManager implements JobManager {
 				job.setStartDate(null);
 			}
 		}
-		
+
 		// Start job execution thread
 		this.jobExecutionThread.start();
 	}
-	
-	
+
+
 	//
 	//     JobManager I N T E R F A C E
 	//
@@ -209,9 +206,8 @@ public class SerialQueueJobManager implements JobManager {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<Job> getJobs(final String userId,
-			final String userDomain) {
-		if (userId == null || userId.length() == 0) {
+	public Collection<Job> getJobs(final Long userId, final String userDomain) {
+		if (userId == null ) {
 			throw new IllegalArgumentException("User ID cannot be empty");
 		}
 		Collection<Job> userJobs = new ArrayList<Job>();
@@ -255,23 +251,23 @@ public class SerialQueueJobManager implements JobManager {
 		}
 		return success;
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public void purge(final String userId, final String userDomain) {
+	public void purge(final Long userId, final String userDomain) {
 		Collection<Job> userJobs = this.getJobs(userId, userDomain);
 		for (Job job : userJobs) {
 			this.remove(job.getId());
 		}
 	}
-	
-	
+
+
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<Job> getNewlyCompletedJobs(final String userId,
+	public Collection<Job> getNewlyCompletedJobs(final Long userId,
 			final String userDomain) {
 		Collection<Job> completedJobs = new ArrayList<Job>();
 		Collection<Job> allJobs = this.getJobs(userId, userDomain);
@@ -290,7 +286,7 @@ public class SerialQueueJobManager implements JobManager {
 	 * {@inheritDoc}
 	 */
 	public Collection<Job> getNewlyStartedJobs(
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		Collection<Job> startedJobs = new ArrayList<Job>();
 		Collection<Job> allJobs = this.getJobs(userId, userDomain);
 		for (Job job : allJobs) {
@@ -313,7 +309,7 @@ public class SerialQueueJobManager implements JobManager {
 		return job.getStartDate() != null && job.getEndDate() == null;
 	}
 
-	
+
 	/**
 	 * Comparator for sorting {@link Job} objects on the
 	 * attribute {@code instantiationDate}.  If jobs have same
@@ -337,8 +333,8 @@ public class SerialQueueJobManager implements JobManager {
 			return val;
 		}
 	}
-	
-	
+
+
 	/**
 	 * A thread that executes jobs by looping over queue
 	 * of jobs and grabbing the next one on the queue whenever
@@ -347,7 +343,7 @@ public class SerialQueueJobManager implements JobManager {
 	 *
 	 */
 	private class JobExecutionThread extends Thread {
-		
+
 		/**
 		 * Constructor.
 		 */
@@ -355,14 +351,13 @@ public class SerialQueueJobManager implements JobManager {
 			super();
 			this.setPriority(JOB_EXECUTION_THREAD_PRIORITY);
 		}
-		
-		
+
+
 		/**
 		 * {@inheritDoc}
 		 */
 		@Override
 		public synchronized void run() {
-			LOGGER.info("Starting job execution queue");
 			this.monitorJobQueue();
 		}
 
@@ -379,7 +374,7 @@ public class SerialQueueJobManager implements JobManager {
 					ioService, analysisService, plotService,
 					webGenomeDbService);
 			while (true) {
-				
+
 				// Get next job from queue
 				Job job = this.next();
 				while (job == null) {
@@ -392,7 +387,7 @@ public class SerialQueueJobManager implements JobManager {
 					}
 					job = this.next();
 				}
-				
+
 				// Set start time and persist
 				try {
 					LOGGER.info("Starting job with id '" + job.getId() + "'");
@@ -401,7 +396,7 @@ public class SerialQueueJobManager implements JobManager {
 				} catch (Exception e) {
 					LOGGER.error("Unable to save job state", e);
 				}
-				
+
 				// Execute job
 				try {
 					job.execute(jobServices);
@@ -422,7 +417,7 @@ public class SerialQueueJobManager implements JobManager {
 					}
 					job.setTerminationMessage(msg);
 				}
-				
+
 				// Set end time and persist
 				try {
 					job.setEndDate(new Date());
@@ -432,8 +427,8 @@ public class SerialQueueJobManager implements JobManager {
 				}
 			}
 		}
-		
-		
+
+
 		/**
 		 * Get next job on queue.  This will be the first
 		 * job in the iteration which has a start date
