@@ -121,7 +121,7 @@ public final class AnnotatedGenomeFeatureRetrieval {
 		StopWatch stopWatch = new StopWatch();
 		SortedSet<AnnotatedGenomeFeature> feats = null;
 		
-		// Perform benchmark query using hibernte
+		// Perform benchmark query using hibernate
 		System.out.println("Querying via Hibernate for features of type '"
 				+ ANNOTATION_TYPE.toString()
 				+ "' over genome interval '" + CHROMOSOME + ":"
