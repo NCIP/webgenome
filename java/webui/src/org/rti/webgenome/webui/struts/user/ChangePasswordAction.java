@@ -92,8 +92,6 @@ public final class ChangePasswordAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
 
-    	//System.out.println ( this.getClass().getName() + ".execute() entered" ) ;
-
     	String forwardTo = FORWARDTO_SUCCESS ; // assume everything will be fine
 
     	ChangePasswordForm passwordForm = (ChangePasswordForm) form;
