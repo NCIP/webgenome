@@ -84,7 +84,7 @@ public interface WebGenomeDbService {
 	 * @param domain Security domain that authenticated user
 	 * @return A shopping cart object
 	 */
-	ShoppingCart loadShoppingCart(String user, String domain);
+	ShoppingCart loadShoppingCart(Long user, String domain);
 	
 	/**
 	 * Save given cart to persistent storage.
