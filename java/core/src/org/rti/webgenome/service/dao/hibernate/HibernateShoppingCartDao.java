@@ -204,10 +204,10 @@ public final class HibernateShoppingCartDao extends HibernateDaoSupport
      * @param domain Domain in which user name applies
      * @return A shopping cart
      */
-    public ShoppingCart load(final String userName, final String domain) {
-        String query = "from ShoppingCart cart where cart.userName = ? "
+    public ShoppingCart load(final Long userId, final String domain) {
+        String query = "from ShoppingCart cart where cart.userId = ? "
         	+ "and cart.userDomain = ?";
-        Object[] args = new Object[] {userName, domain};
+        Object[] args = new Object[] {userId, domain};
         List carts = this.getHibernateTemplate().find(query, args);
         ShoppingCart cart = null;
         if (carts != null && carts.size() > 0) {
