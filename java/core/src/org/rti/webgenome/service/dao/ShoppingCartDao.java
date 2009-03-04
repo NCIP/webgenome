@@ -81,12 +81,12 @@ public interface ShoppingCartDao {
     /**
      * Load cart associated with given user name from
      * persistent storage.
-     * @param userName User name
+     * @param userId User Id (unique user identifier from Principal)
      * @param domain The domain in which the user name applies
      * @return A shopping cart or null if there is not one
      * for given user.
      */
-    ShoppingCart load(String userName, String domain);
+    ShoppingCart load(Long userId, String domain);
     
     
     /**
