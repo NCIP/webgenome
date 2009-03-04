@@ -83,7 +83,7 @@ public final class HibernatePrincipalDao extends HibernateDaoSupport
 	}
 
 	/**
-	 * Load principal with given name.
+	 * Load principal with given email (email is retrieved case-insensitively, i.e. regardless of case).
 	 * @param email Email of principal.
 	 * @return Principal with given email, or null
 	 * if no such principal exists.
