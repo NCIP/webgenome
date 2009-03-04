@@ -145,7 +145,7 @@ public class UploadCAArrayAction extends BaseAction {
 		
 		// Batch all jobs
 		Principal principal = PageContext.getPrincipal(request);
-		CaArrayDataImportJob job = new CaArrayDataImportJob(client, expId, principal.getEmail(), principal.getDomain());
+		CaArrayDataImportJob job = new CaArrayDataImportJob(client, expId, principal.getId(), principal.getDomain());
 		this.getJobManager().add(job);
 		ActionMessages messages = new ActionMessages();
 		messages.add("global", new ActionMessage("import.job"));

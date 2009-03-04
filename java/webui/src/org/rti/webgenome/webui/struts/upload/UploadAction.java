@@ -130,7 +130,7 @@ public class UploadAction extends BaseAction {
 				upload, request, this.getIoService())) {
 			Principal principal = PageContext.getPrincipal(request);
 			DataImportJob job = new DataImportJob(upload,
-					principal.getEmail(), principal.getDomain());
+					principal.getId(), principal.getDomain());
 			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("import.job"));
