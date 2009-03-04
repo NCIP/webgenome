@@ -74,8 +74,8 @@ public class NewAccountForm extends BaseForm {
 	//       Attributes
 	// ==============================
 	
-	/** User name. */
-	private String name = "";
+	/** Email. */
+	private String email = "";
 	
 	/** Password. */
 	private String password = "";
@@ -110,30 +110,12 @@ public class NewAccountForm extends BaseForm {
 	/** Indicates if we can contact the user for feedbacks. */
 	private boolean feedbacks = false;
 	
-	/** Email. */
-	private String email = "";
 	
 	
 	// =============================
 	//      Getters/setters
 	// =============================
 	
-	/**
-	 * Get user name.
-	 * @return User name.
-	 */
-	public final String getName() {
-		return name;
-	}
-
-	/**
-	 * Set user name.
-	 * @param name User name.
-	 */
-	public final void setName(final String name) {
-		this.name = name;
-	}
-
 	/**
 	 * Get password.
 	 * @return Password.
@@ -182,8 +164,8 @@ public class NewAccountForm extends BaseForm {
 	@Override
 	public final void reset(final ActionMapping actionMapping,
 			final HttpServletRequest request) {
-		this.name = "";
-		this.password = "";
+		this.email             = "";
+		this.password          = "";
 		this.confirmedPassword = "";
 	}
 
@@ -200,12 +182,7 @@ public class NewAccountForm extends BaseForm {
 		
 		ActionErrors e = new ActionErrors();
 		
-		// Name
-		/* VB commented; use email as login name 
-		 * if (this.name == null || this.name.length() < 1) {
-			e.add("name", new ActionError("invalid.field"));
-		}*/
-		
+		// Email
 		if ( isEmpty ( this.email ) || ! isValidEmail ( this.email ) )
 			e.add("email", new ActionError("invalid.field"));
 
@@ -213,7 +190,7 @@ public class NewAccountForm extends BaseForm {
 		if ( isEmpty ( this.password ) )
 			e.add("password", new ActionError("invalid.field"));
 		
-		// Confirmed password
+		// Confirmed Password
 		if ( isEmpty ( this.confirmedPassword ))
 			e.add("confirmedPassword", new ActionError("invalid.field"));
 		
