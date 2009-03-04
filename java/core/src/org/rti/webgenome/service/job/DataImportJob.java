@@ -129,7 +129,7 @@ public class DataImportJob extends AbstractJob {
 	 */
 	public DataImportJob(
 			final UploadDataSourceProperties uploadDataSourceProperties,
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		super(userId, userDomain);
 		this.uploadDataSourceProperties = uploadDataSourceProperties;
 		StringBuffer buff = new StringBuffer();
@@ -155,8 +155,7 @@ public class DataImportJob extends AbstractJob {
 	public void execute(final JobServices jobServices) {
 		IOService ioService = jobServices.getIoService();
 		WebGenomeDbService dbService = jobServices.getWebGenomeDbService();
-		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(),
-					this.getUserDomain());
+		ShoppingCart cart = dbService.loadShoppingCart(this.getUserId(), this.getUserDomain());
 		try {
 			LOGGER.info("Data import job starting for user "
 					+ this.getUserId());
