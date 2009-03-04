@@ -88,7 +88,7 @@ public interface JobManager {
 	 * @param userDomain Domain in which the user ID is valid
 	 * @return All current jobs associated with given user
 	 */
-	Collection<Job> getJobs(String userId, String userDomain);
+	Collection<Job> getJobs(Long userId, String userDomain);
 	
 	/**
 	 * Purge all completed job records associated with
@@ -96,7 +96,7 @@ public interface JobManager {
 	 * @param userId User login name
 	 * @param userDomain Domain in which the user ID is valid
 	 */
-	void purge(String userId, String userDomain);
+	void purge(Long userId, String userDomain);
 	
 	/**
 	 * This method returns a list of jobs associated
@@ -107,8 +107,7 @@ public interface JobManager {
 	 * @return List of user jobs that have completed since the
 	 * last call of this method.
 	 */
-	Collection<Job> getNewlyCompletedJobs(String userId,
-			String userDomain);
+	Collection<Job> getNewlyCompletedJobs(Long userId, String userDomain);
 	
 	/**
 	 * This method returns a list of jobs associated
@@ -119,6 +118,5 @@ public interface JobManager {
 	 * @return List of user jobs that have started since the
 	 * last call of this method.
 	 */
-	Collection<Job> getNewlyStartedJobs(String userId,
-			String userDomain);
+	Collection<Job> getNewlyStartedJobs(Long userId, String userDomain);
 }
