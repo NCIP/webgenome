@@ -83,9 +83,7 @@ public class ShowJobsSetupAction extends BaseAction {
 		
 		// Get list of users jobs and attach to request
 		Principal principal = PageContext.getPrincipal(request);
-		Collection<Job> jobs =
-			this.getJobManager().getJobs(principal.getEmail(),
-					principal.getDomain());
+		Collection<Job> jobs = this.getJobManager().getJobs(principal.getId(), principal.getDomain());
 		request.setAttribute("jobs", jobs);
 		
 		return mapping.findForward("success");

@@ -124,7 +124,7 @@ public class ReRunAnalysisAction extends BaseAnalysisAction {
     	} else {
     		Principal principal = PageContext.getPrincipal(request);
     		ReRunAnalysisJob job = new ReRunAnalysisJob(exp, op,
-    				principal.getEmail(), principal.getDomain());
+    				principal.getId(), principal.getDomain());
     		this.getJobManager().add(job);
     		ActionMessages messages = new ActionMessages();
     		messages.add("global", new ActionMessage("analysis.job"));

@@ -145,7 +145,7 @@ extends BaseAnalysisAction {
 			ReRunAnalysisOnPlotExperimentsJob job =
 				new ReRunAnalysisOnPlotExperimentsJob(
 						new HashSet<Experiment>(experiments), plotId,
-						principal.getEmail(), principal.getDomain());
+						principal.getId(), principal.getDomain());
 			this.getJobManager().add(job);
 			ActionMessages messages = new ActionMessages();
 	    	messages.add("global", new ActionMessage("plot.job"));
