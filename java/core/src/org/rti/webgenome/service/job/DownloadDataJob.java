@@ -126,7 +126,7 @@ public class DownloadDataJob extends AbstractJob {
 	 */
 	public DownloadDataJob(
 			final List<ArrayDatum> arrDatums, final BioAssay bioAssay, RectangularFileWriter rectFileWriter,
-			final String userId, final String userDomain) throws Exception{
+			final Long userId, final String userDomain) throws Exception{
 		super(userId, userDomain);
 		this.arrDatums = arrDatums;		
 		this.setDescription("Downloading bioassay data for bioassay " + bioAssay.getName());
