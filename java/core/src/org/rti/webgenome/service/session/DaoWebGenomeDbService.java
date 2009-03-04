@@ -201,7 +201,7 @@ public class DaoWebGenomeDbService implements WebGenomeDbService {
 	 * {@inheritDoc}
 	 */
 	public ShoppingCart loadShoppingCart(
-			final String user, final String domain) {
+			final Long user, final String domain) {
 		return this.shoppingCartDao.load(user, domain);
 	}
 	
