@@ -131,7 +131,7 @@ public class ReRunAnalysisJob extends AbstractJob {
 	 */
 	public ReRunAnalysisJob(final Experiment experiment,
 			final AnalyticOperation operation,
-			final String userId, final String userDomain) {
+			final Long userId, final String userDomain) {
 		super(userId, userDomain);
 		this.dataSourceProperties = new SingleAnalysisDataSourceProperties(
 				experiment, operation);
