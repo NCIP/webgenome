@@ -236,6 +236,9 @@
 						Login
 					</a>
 					|
+					<a class="menuItem" href="<html:rewrite page="/user/newAccount.do"/>">
+						Register
+					</a>
 				</webgenome:onlyIfUserLoggedOut>
 
 			<%-- Logout --%>
