@@ -151,6 +151,8 @@ try {
 	if ( isEmpty ( dbPassword ) )
 	    out.println ( "   DB Password: not specified in Properties Settings" ) ;
     
+	out.println ( "       DB User: " + dbUser ) ;
+	
     DriverManager.registerDriver(new oracle.jdbc.driver.OracleDriver());
     conn = DriverManager.getConnection( dbUrl, dbUser, dbPassword );
     stmt = conn.createStatement();
