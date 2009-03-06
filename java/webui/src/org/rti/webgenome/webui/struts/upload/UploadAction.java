@@ -229,6 +229,7 @@ public class UploadAction extends BaseAction {
     	
     	//iterate through the rows and build the new file
     	int idx = 0;
+    	boolean isFirstRow = true;
     	for (Iterator iList = reporterNames.iterator(); iList.hasNext();){
     		String reporterName = (String)iList.next();
     		String chromosome = chromosomes.get(idx);
@@ -277,9 +278,22 @@ public class UploadAction extends BaseAction {
     		}
     		
     		// the number of lines we need to add is the number of derived markers
+    		int j = 0;
+    		
+    		
     		for (Long pos : positions){
     			String line = reporterName+ delimiter;
-    			ps.print(reporterName+ delimiter);   
+    			// need to modify reporter name because it will drop
+    			// one of the values for the same reporter when plotting
+    			ps.print(reporterName+ "_" + j++ + delimiter); 
+    			
+    			/*if (isFirstRow){
+    				ps.print(reporterName+ "_1"  + delimiter);
+    				isFirstRow = false;
+    			}else
+    				ps.print(reporterName + delimiter);
+    				*/
+    			
     			line += chromosome+ delimiter;
     			ps.print(chromosome+ delimiter);
     			ps.print(pos);
