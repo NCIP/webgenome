@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.CytologicalMap"
+		table="CYTOLOGICAL_MAP">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+		<property name="chromosome"/>
+		<property name="centromereStart" column="centromere_start"/>
+		<property name="centromereEnd" column="centromere_end"/>
+		<many-to-one
+			name="organism"
+			column="organism_id"
+			class="org.rti.webgenome.domain.Organism"
+			lazy="false"/>
+		<set
+			name="cytobands"
+			lazy="false"
+			cascade="all"
+			sort="natural">
+			<key column="cytological_map_id" not-null="true"/>
+			<one-to-many class="org.rti.webgenome.domain.Cytoband"/>
+		</set>
+		
+	</class>
+
+</hibernate-mapping>

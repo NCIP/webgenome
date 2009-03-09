@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE tiles-definitions PUBLIC
+          "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+          "tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+<!-- User account management template -->
+  	<definition name="user.layout" extends="def.layout" >
+	  	<put name="selectedMenuItem" value="user" />
+  	</definition>
+
+<!-- Login -->
+  	<definition name="user.login" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Login" />
+	  	<put name="content" value="/WEB-INF/jsp/user/login.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Edit Account Settings (main page) -->
+  	<definition name="user.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Edit Account Settings" />
+	  	<put name="content" value="/WEB-INF/jsp/user/account.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+  	
+<!-- Edit Account Settings (main page) -->
+  	<definition name="user.change.password" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Change Password" />
+	  	<put name="content" value="/WEB-INF/jsp/user/changePassword.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Edit Account Settings (main page) -->
+  	<definition name="user.edit.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Edit Account" />
+	  	<put name="content" value="/WEB-INF/jsp/user/editAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- New account -->
+  	<definition name="user.new.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: New account" />
+	  	<put name="content" value="/WEB-INF/jsp/user/newAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Confirm account -->
+  	<definition name="user.confirm.new.account" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Account created" />
+	  	<put name="content" value="/WEB-INF/jsp/user/confirmNewAccount.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+
+<!-- Forgot password -->
+  	<definition name="user.forgot.password" extends="cart.layout" >
+	  	<put name="title" value="webGenome: Forgot Password" />
+	  	<put name="content" value="/WEB-INF/jsp/user/forgotPassword.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Confirm password sent -->
+  	<definition name="user.confirm.password.sent" extends="cart.layout" >
+	  	<put name="title" value="webGenome: User credentials have been sent" />
+	  	<put name="content" value="/WEB-INF/jsp/user/confirmPasswordSent.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+<!-- Login to caArray-->
+  	<definition name="user.caarray.login" extends="cart.layout" >
+	  	<put name="title" value="webGenome: CaArray Login" />
+	  	<put name="content" value="/WEB-INF/jsp/user/caArraLogin.jsp" />
+	  	<put name="helpTopic" value="docTop" />
+  	</definition>
+
+</tiles-definitions>

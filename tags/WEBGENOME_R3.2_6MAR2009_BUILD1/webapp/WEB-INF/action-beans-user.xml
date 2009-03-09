@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+<!-- Validate login -->
+	<bean name="/user/validateLogin"
+		class="org.rti.webgenome.webui.struts.user.LoginAction"
+		parent="baseAction"/>
+	
+<!-- Logout -->
+	<bean name="/user/logout"
+		class="org.rti.webgenome.webui.struts.user.LogoutAction"
+		parent="baseAction"/>
+	
+<!-- Create new account -->
+	<bean name="/user/createAccount"
+		class="org.rti.webgenome.webui.struts.user.CreateAccountAction"
+		parent="baseAction"/>
+		
+<!-- Forgot Password -->
+	<bean name="/user/forgotPassword"
+		class="org.rti.webgenome.webui.struts.user.ForgotPasswordAction"
+		parent="baseAction"/>
+		
+<!-- Change Password -->
+	<bean name="/user/changePassword"
+		class="org.rti.webgenome.webui.struts.user.ChangePasswordAction"
+		parent="baseAction"/>
+
+<!-- Show Account Edit -->
+	<bean name="/user/showEditAccount"
+		class="org.rti.webgenome.webui.struts.user.ShowEditAccountAction"
+		parent="baseAction"/>		
+
+<!-- Edit Account -->
+	<bean name="/user/editAccount"
+		class="org.rti.webgenome.webui.struts.user.EditAccountAction"
+		parent="baseAction"/>		
+	
+<!-- Login to caArray server-->
+	<bean name="/user/caarrayLogin"
+		class="org.rti.webgenome.webui.struts.user.CaArrayLoginAction"
+		parent="baseAction"/>
+
+</beans>

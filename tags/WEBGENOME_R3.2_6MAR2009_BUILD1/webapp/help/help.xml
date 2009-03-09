@@ -1,0 +1,999 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="help.xsl"?>
+<help-doc title="WebGenome Help">
+
+	<!-- ============================================================ -->
+	<!--                   Overview                                   -->
+	<!-- ============================================================ -->
+	<section title="WebGenome Version 3.0 Overview" id="overview">
+		<p>
+			WebGenome 3.0 is a web application for
+			creating genomics plots of array-based data
+			and genomic annotations.  Users may enter WebGenome 3.0
+			through redirection
+			from another application or by loggin in and uploading
+			data from an SMD (Stanford Micorarray Database) format
+			rectangular text file.
+			Data types supported in this version include
+			copy number (i.e., aCGH),
+			<ref id="loh">loss of heterozygosity (LOH)</ref>,
+			and gene expression.  Five basic types of plots
+			can be generated:
+		</p>
+		
+		<prop-list>
+			<prop name="Genome Snapshot Plots" refid="genomeSnapshotPlot">
+				Plots all data from selected experiment(s) across entire
+				genome in one graph proving a snapshot of copy number,
+				loss of heterozygosity, or expression levels
+			</prop>
+			
+			<prop name="Scatter Plots" refid="scatterPlot">
+				Plots DNA copy number measurements, LOH, or expression levels
+				across specified chromosomal interval(s)
+			</prop>
+			
+			<prop name="Ideogram Plots" refid="ideogramPlot">
+				Shows chromosomal amplifications
+				and deletions in relation to cytogenetic chromosome ideograms.
+			</prop>
+			
+			<prop name="Annotation Plots" refid="annotationPlot">
+				Plots data over a specified chromosomal interval along
+				with annotated sequence features from that interval
+			</prop>
+			
+			<prop name="Bar Plots" refid="barPlot">
+				Plots data from selected reporters using a bar graph
+				format.  Currently the only way to selected reports is
+				through the client application (e.g. Rembrandt).
+			</prop>
+		</prop-list>
+		
+		<p>
+			The underlying data model used by webGenome is a very simplied version of
+			the MAGE-OM.  The most important concept for the use of the system
+			is that individual array data sets, called <em>bioassays</em> are aggregated
+			into experiments.
+		</p>
+	</section>
+	
+	<!-- =============================================================== -->
+	<!--          Workspace                                              -->
+	<!-- =============================================================== -->
+	
+	<section title="The User's Workspace" id="cart">
+		<p>
+			Each user of the system is given a workspace that holds
+			data and plots.  There are currently no storage limits
+			associated with workspaces.  If the user is directed to
+			WebGenome throuh a client application, such as Rembrandt,
+			the workspace is transitory and disappears at the end of the
+			WebGenome session.  If the user logs in, any new data or plots
+			accumulated during the subsequent session will be saved in the
+			users workspace until explicitly deleted.
+		</p>
+		
+		<p>
+			The workspace holds accumulated raw data sets loaded by the client
+			application or uploaded from file,
+			statistically processed data sets derived from
+			raw or other processed data, and generated plots.  For
+			each experiment, the list of nested bioassays is also shown.
+			Users may change the names of experiments and bioassays in this
+			screen.  Names do not have to be unique and can be empty
+			if desired.  Users may delete experiments and plots.
+		</p>
+		
+		<p>
+			Each bioassay has an associated color.  These colors are
+			used in scatter plots to distinguish between bioassays.
+			Colors are initialized by the system.  Users may change
+			colors, and all future plots will use the new colors.  However,
+			previously-generated plots in the cart will retain the original
+			colors.
+		</p>
+		
+		<p>
+			From the workspace, users may select one or more experiments
+			and generate new plots or perform analytic operations.  New plots
+			and statistically processed experiments are saved back into the
+			cart.
+		</p>
+	</section>
+	
+	<!-- =============================================================== -->
+	<!--          Jobs Table                                             -->
+	<!-- =============================================================== -->
+	
+	<section title="Jobs Table" id="jobs">
+	
+		<p>
+		Processing uploaded data, performing analytic operations, and
+		generating plots may take a great deal of time with larger
+		data sets.  If the amount of data is beyond a threshold
+		that is set by the administrator, the system will process
+		the request as a background job.  The status of all jobs
+		can be accessed from a jobs page, which is accessible from
+		a link at the top of the page.  Background processing will
+		only be invoked if the user is logged in.  For sessions
+		invoked from a client application (e.g. Rembrandt), all
+		requests will be processed immediately as the size of the
+		associated data sets will in most cases be relatively small.
+		Hence, the jobs table link will not be visible until the
+		user has logged in.  Background processing of all jobs
+		will continue even after the user has logged out.
+		</p>
+		
+		<p>
+		Historical jobs are not deleted by the system.  It is up
+		to the user to purge the jobs table from time to time by
+		clicking on the provided link.  Specific experiments and plots
+		are associated in the system database with the job that created
+		them, if they were created by a job.  It will not be possible to
+		remove an experiment or plot from the user's workspace until the
+		associated job is first purged.
+		</p>
+		
+		<p>
+		When a job completes, the user will be notified.  This will occur
+		at login time or during a session.  The notification will display
+		at the top of the screen.  At this time, email notifications are
+		not sent.
+		</p>
+		
+	</section>
+	
+	<!-- =============================================================== -->
+	<!--          Uploading data                                         -->
+	<!-- =============================================================== -->
+	
+	<section title="Uploading Data" id="upload">
+	
+		<p>
+		After logging into the system, the user may upload data from
+		SMD (Stanford Microarray Database)
+		format files into their workspace.  Data may be in one or
+		more SMD format delimited text files.  The format of these files
+		are as follows:
+		</p>
+			
+		<prop-list>
+				<prop name="File Type" id="smdFileType">
+					The base file type must be CSV (comma-separated values)
+					or tab delimited text.  Each row, with the exception
+					of the first, corresponds to a different
+					reporter (i.e. probe) reading.
+				</prop>
+				
+				<prop name="Column Headings" id="smdColHeadings">
+					The first row must contain column headings,
+					which indicate the content of the corresponding
+					columns.  No particular column heading names
+					are required.
+				</prop>
+				
+				<prop name="Required Columns" id="smdRequiredColumns">
+					Each file must contain one column that provides
+					reporter names.  Each upload, which may include
+					one or more files, must include one file that
+					gives reporter location information.  This information
+					must be provided by two columns, one providing chromosome
+					number (or X/Y) and one providing physical chromosomal
+					location in either BP (base pairs), KB (kilo-base pairs),
+					or MB (mega-base pairs).  If multiple files are uploaded
+					at once, each must have the same set of reporters in the
+					same order.
+				</prop>
+				
+				<prop name="Data Columns" id="">
+					Zero or more columns may provide data values.  Data
+					may be in units (i.e. quantitation type)
+					of copy number, log2 copy number,
+					ratio of treated to controlled, log2 ratio of treated
+					to controlled, or LOH value.  All analytic operations
+					are plot types are available for each quantitation
+					type.
+				</prop>
+		</prop-list>
+			
+		<p>
+		One or more files may be uploaded at one time.  All files included
+		in a single upload must have the same number of rows and the
+		same sequence of reporter names.  Multiple files may be packaged
+		into a ZIP-format file.  For each data file uploaded, the system
+		will ask the user to specify data-containing columns, each of which
+		will be mapped into a separate bioassay.  The user may name each
+		resulting bioassay.  All file uploaded together will constitute
+		an experiment, which the user may name.  For each upload the user
+		must indicate the columns containing chromosome number and position.
+		These columns may be in any of the included files.  Files that are
+		larger than a threshold size (set by the administrator) will be
+		processed in the background.
+		</p>
+		
+	</section>
+	
+	
+	<!-- =============================================================== -->
+	<!--                         Plots                                   -->
+	<!-- =============================================================== -->
+	<section title="Plots" id="plots">
+	In this section we describe plotting functionality including the
+	types of plots that can be generated and plotting parameters that
+	can be set by the user.  Functionality to create new plots
+	is accessible from the workspace screen.
+	
+	<!-- ============= Plot Types ======================= -->
+		<section title="Plot Types" id="plotTypes">
+			WebGenome 3.0 includes three genomic plot types
+			as well as a bar plot for selected reporters.
+			
+			<!-- Genomic plots -->
+			<section title="Genomic Plot Types" id="genomicPlots">
+			
+				<!-- Whole genome snapshot -->
+				<section title="Whole Genome Snapshot Plot" id="snapshotPlot">
+					<p>
+					Whole genome snapshot plots display array
+					reporter values (e.g. copy number) over the entire genome
+					against physical genome location.  
+					</p>
+				</section>
+		
+				<!-- Scatter plot -->
+				<section title="Scatter Plot" id="scatterPlot">
+					<p>
+					Scatter plots display array reporter values (e.g. copy number)
+					from specified chromosomal location(s)
+					against physical genome location.  Users can plot data points,
+					regression lines, and confidence intervals in these plots.
+					If data are loss of
+					<ref id="loh">heterozygosity (LOH)</ref>, then the
+					endpoints of LOH regions are inferred and shown as
+					thick horizontal lines.  The Y-coordinates of these lines
+					are equal to the average probability of
+					LOH weighted
+					by the chromosomal distance between adjacent reporters.
+					</p>
+					
+					<p>
+					Scatter plots provide basic interactivity.  Clicking
+					on a data point causes all data points and lines from
+					the bioassay to be highlighted.  Also the name of the
+					selected bioassay will be outlined in the plot legend.
+					Moving the
+					mouse across the plot will cause a tool tip to show
+					the nearest reporter.  If available, nearby genes will
+					also be displayed along with arbitrary annotations that
+					may be available through the client application.
+					</p>
+				</section>
+				
+				<!-- Ideogram plot -->
+				<section title="Ideogram Plot" id="ideogramPlot">
+					This plot shows color-coded data values in relation to
+					chromosome ideograms.  The color coding goes from
+					green to blue to red, which indicates data values that
+					are low, medium, and high, respectively.  Moving the mouse
+					over ideograms causes a tool tip to display the cytoband
+					and physical chromosomal location under the pointer.
+					Moving the mouse over data tracks causes a tool tip
+					to indicate the physical chromosomal interval and data value
+					under the pointer.  If available, nearby genes will
+					also be displayed along with arbitrary annotations that
+					may be available through the client application.
+				</section>
+				
+				<!-- Annotation plot -->
+				<section title="Annotation Plot" id="annotationPlot">
+					Annotation plots show array data as color-coded
+					values against the position of annotated genome
+					features, such as genes.  The color coding goes from
+					green to blue to red, which indicates data values that
+					are low, medium, and high, respectively.
+				</section>
+				
+			</section>
+			
+			<!-- Bar plot -->
+			<section title="Bar Plot" id="barPlot">
+				This plot graphs only selected reporters.  The measurements
+				at each reporter are shown using bars.  Bars are grouped
+				by reporter.  Within each reporter group, each
+				measurement from a different bioassay is shown as a single
+				bar.  Currently WebGenome does not provide a mechanism
+				for selecting reporters.  These are selected through a
+				client application (e.g. Rembrandt).
+			</section>
+			
+		</section>
+		
+		<!-- Plotting parameters -->
+		<section title="Plotting Parameters" id="plotParams">
+			Plotting parameters control how data will be presented graphically.
+			Some parameters that are common to all plot types,
+			such as genome intervals.  Some parameters specific to one
+			type of plot.  After the user elects to create a new plot
+			from the workspace, a form showing parameters for
+			the selected plot type is displayed.  The user may
+			later change these parameter settings by clicking on
+			a link above displayed plots.  Descriptions of the
+			various parameters are given here.
+
+			<section title="Common Plot Paremeters" id="commonPlotParameters">
+				These parameters are common to all plots.
+				<prop-list>
+					<prop name="Plot name" id="param-plotName">
+						This parameter enables the user to name the plot.
+						This name need not be unique and can be changed
+						at any time with no harm.
+					</prop>
+					
+					<!-- Genome segment -->
+					<prop name="Genome intervals" id="param-genomeIntervals">
+						This parameter constrains the genome interval that will
+						be displayed in plots.  Genome segments should be specified in the
+						following format: CHROMOSOME[:FROM-TO][,CHROMOSOME[:FROM-TO]]*
+						
+						<p><b>Examples</b></p>
+						
+						<p>
+							3:40000-50000<br/>
+							3,5:140000-160000<br/>
+							1,2<br/>
+							1:5000-7000,2:30000-100000
+						</p>
+					</prop>
+			
+					<!-- Number of rows per plot -->
+					<prop name="Number of plot per row" id="param-numPlotPerRow">
+						When the user specifies multiple genome intervals,
+						the intervals will be displayed in different plots,
+						which will be laid out in rows.  This parameter
+						specifies how many plots will be in a row.
+					</prop>
+				</prop-list>
+			</section>
+			
+			<section title="Genomic Plot Parameters" id="genomicPlotParameters">
+			
+				<section title="Common Genomic Plot Parameters" id="commonGenomicPlotParameters">
+					The parameters in this section are common to all genomic plots.
+					<prop-list>
+					
+						<!-- Show reporter names -->
+						<prop name="Show reporter names" id="param-showReporterNames">
+							If this property is checked, names of reporters
+							near mouse will be displayed
+							in the mouseover text.
+						</prop>
+						
+						<!-- Show annotation -->
+						<prop name="Show reporter annotation" id="param-showAnnotation">
+							If this property is checked, then annotation associated
+							with the reporter under the mouse will be displayed
+							in the mouseover text.
+						</prop>
+						
+						<!-- Show genes -->
+						<prop name="Show gene names" id="param-showGenes">
+							If this property is checked, then names of genes
+							near the location of the under the mouse pointer
+							will be displayed
+							in the mouseover text.
+						</prop>
+						
+						<!-- Interpolation type -->
+						<prop name="Type of interpolation between data points" id="param-interpolationType">
+							Enables the user to specify if and how data points
+							will be connected.  Options include none, straight
+							lines, steps, or splines.
+						</prop>
+					</prop-list>
+				</section>
+				
+				<section title="Whole Genome Snapshot Plot Parameters"
+					id="snapshotParameters">
+					The following parameters are specific to whole genome snapshot
+					plots.
+					<prop-list>
+						<prop name="Minimum Y-axis value" id="param-minY">
+							This sets the minimum value on the scatter plot Y-axis.
+						</prop>
+						
+						<prop name="Maximum Y-axis value" id="param-maxY">
+							This sets the maximum value on the scatter plot Y-axis.
+						</prop>
+						
+						<prop name="Plot width in pixels" id="param-width">
+							This sets the width of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+						
+						<prop name="Plot height in pixels" id="param-height">
+							This sets the height of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+						
+						<prop name="Draw horizontal grid lines" id="param-drawHorizGridLines">
+							If checked, horizontal grid lines emenating from
+							the major tic marks on the Y-axis will be drawn across
+							scatter plot.  
+						</prop>
+						
+						<prop name="Draw vertical grid lines" id="param-drawVertGridLines">
+							If checked, vertical grid lines emenating from
+							the major tic marks on the X-axis will be drawn across
+							scatter plot. 
+						</prop>
+					</prop-list>
+				</section>
+			
+				<section title="Scatter Plot Parameters" id="scatterPlotParameters">
+					The following parameters are specific to scatter plots.
+					<prop-list>
+						
+						<prop name="LOH probability threshold" id="param-lohThreshold">
+							<ref id="loh">Loss of heterozygosity (LOH)</ref>
+							data may be provided
+							by the client application
+							as probabilities.  This parameter is a threshold,
+							above which probabilities will be interpred as
+							indicative of LOH.
+						</prop>
+						
+						<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If for two adjacent reporters one is indicating LOH
+							and the other is not, the location where the
+							transition occurs cannot be known.  If this parameter
+							is checked, the system will interpolate the
+							LOH endpoint using the slope of a straight line
+							between data points corresponding to the two reporters.
+							If unchecked, the endpoint will be at the LOH reporter.
+						</prop>
+						
+						<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If this parameter is checked, then the underlying
+							raw LOH probabilites are also plotted.
+						</prop>
+						
+						<prop name="Display reporter names in mouseover text" id="param-repNamesMouse">
+							If checked, as the mouse moves over the graphic, the names of
+							nearby reporters will be shown in a tool tip.
+						</prop>
+						
+						<prop name="Display reporter annotations in mouseover text" id="param-repAnnMouse">
+							If checked, as the mouse moves over the graphic, annotations
+							associated with nearby reporters will be shown in tool tip text.
+							In most installations, this annotation will only be available from
+							data that come from a client application (e.g. Rembrandt).
+						</prop>
+						
+						<prop name="Display names of nearby genes in mouseover text" id="param-repGenesMouse">
+							If checked, as the mouse moves over the graphic, the names of
+							nearby genes will be shown in a tool tip.
+							In most installations, this annotation will only be available from
+							data that come from a client application (e.g. Rembrandt).
+						</prop>
+						
+						<prop name="Minimum Y-axis value for copy number and LOH data"
+							id="param-copyNumberMinY">
+							This sets the minimum value on the scatter plot Y-axis
+							for copy number and LOH data.
+						</prop>
+						
+						<prop name="Maximum Y-axis value for copy number and LOH data"
+							id="param-copyNumberMaxY">
+							This sets the maximum value on the scatter plot Y-axis
+							for copy number and LOH data.
+						</prop>
+						
+						<prop name="Minimum Y-axis value for gene expression data"
+							id="param-expressionMinY">
+							This sets the minimum value on the scatter plot Y-axis
+							for gene expression data.
+						</prop>
+						
+						<prop name="Maximum Y-axis value for gene expression data"
+							id="param-expressionMaxY">
+							This sets the maximum value on the scatter plot Y-axis
+							for gene expression data.
+						</prop>
+						
+						<prop name="Plot width in pixels" id="param-width">
+							This sets the width of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+						
+						<prop name="Plot height in pixels" id="param-height">
+							This sets the height of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+						
+						<prop name="Draw horizontal grid lines" id="param-drawHorizGridLines">
+							If checked, horizontal grid lines emenating from
+							the major tic marks on the Y-axis will be drawn across
+							scatter plot.  
+						</prop>
+						
+						<prop name="Draw vertical grid lines" id="param-drawVertGridLines">
+							If checked, vertical grid lines emenating from
+							the major tic marks on the X-axis will be drawn across
+							scatter plot. 
+						</prop>
+						
+						<prop name="Draw data points" id="param-drawPoints">
+							If checked, indivdual data points will be painted for
+							each datum.
+						</prop>
+						
+						<prop name="Draw error bars if plotting means" id="param-drawErrorBars">
+							The averaging analytic operation also calculates
+							standard error values.  When plotting averages in
+							a scatter plot, if this is checked then error
+							bars will be painted for each data point.
+						</prop>
+						
+						<prop name="Stems on gene expression data points" id="param-stems">
+							If checked, stems will be drawn from the X-axis up or down to
+							gene expression data points, which are shown as diamonds.
+						</prop>
+						
+					</prop-list>
+				</section>
+				
+				<section title="Ideogram Plot Parameters" id="ideogramPlotParameters">
+					The following parameters are specific to ideogram plots.
+					<prop-list>
+					
+						<prop name="LOH probability threshold" id="param-lohThreshold">
+							<ref id="loh">Loss of heterozygosity (LOH)</ref>
+							data may be provided
+							by the client application
+							as probabilities.  This parameter is a threshold,
+							above which probabilities will be interpred as
+							indicative of LOH.
+						</prop>
+						
+						<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If for two adjacent reporters one is indicating LOH
+							and the other is not, the location where the
+							transition occurs cannot be known.  If this parameter
+							is checked, the system will interpolate the
+							LOH endpoint using the slope of a straight line
+							between data points corresponding to the two reporters.
+							If unchecked, the endpoint will be at the LOH reporter.
+						</prop>
+						
+						<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If this parameter is checked, then the underlying
+							raw LOH probabilites are also plotted.
+						</prop>
+						
+						<prop name="Display reporter names in mouseover text" id="param-repNamesMouse">
+							If checked, as the mouse moves over the graphic, the names of
+							nearby reporters will be shown in a tool tip.
+						</prop>
+						
+						<prop name="Display reporter annotations in mouseover text" id="param-repAnnMouse">
+							If checked, as the mouse moves over the graphic, annotations
+							associated with nearby reporters will be shown in tool tip text.
+							In most installations, this annotation will only be available from
+							data that come from a client application (e.g. Rembrandt).
+						</prop>
+						
+						<prop name="Display names of nearby genes in mouseover text" id="param-repGenesMouse">
+							If checked, as the mouse moves over the graphic, the names of
+							nearby genes will be shown in a tool tip.
+							In most installations, this annotation will only be available from
+							data that come from a client application (e.g. Rembrandt).
+						</prop>
+						<prop name="Ideogram size" id="param-ideogramSize">
+							This enables the user to set the relative height
+							of chromosome ideograms.
+						</prop>
+						
+						<prop name="Ideogram width" id="param-ideogramThickness">
+							This specifies the width of chromosome ideograms
+							in pixels.
+						</prop>
+						
+						<prop name="Data track width" id="param-trackWidth">
+							This specifies the width of data tracks in pixels.
+						</prop>
+						
+						<prop name="Minimum data mask value" id="param-minMask">
+							Background data values within a
+							range (e.g., -0.2 and 0.3) can be masked
+							so that only values of significant
+							magnitude are colored.  This parameter is the
+							the lower end of this range.
+						</prop>
+						
+						<prop name="Maximum data mask value" id="param-maxMask">
+							Background data values within a
+							range (e.g., -0.2 and 0.3) can be masked
+							so that only values of significant
+							magnitude are colored.  This parameter is the
+							the upper end of this range.
+						</prop>
+						
+						<prop name="Minimum saturation value for copy number and LOH data"
+							id="param-copyNumberMinSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the lower saturation value
+							of copy number and LOH data.
+						</prop>
+						
+						<prop name="Maximum saturation value for copy number and LOH data"
+							id="param-copyNumberMaxSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the upper saturation value
+							of copy number and LOH data.
+						</prop>
+						
+						<prop name="Minimum saturation value for gene expression data"
+							id="param-exprMinSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the lower saturation value
+							of gene expression data.
+						</prop>
+						
+						<prop name="Maximum saturation value for gene expression data"
+							id="param-exprMaxSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the upper saturation value
+							of gene expression data.
+						</prop>
+					</prop-list>
+				</section>
+			</section>
+			
+			<section title="Bar Plot Parameters" id="barPlotParameters">
+				The following parameters are specific to bar plots.
+				
+				<prop-list>
+					<prop name="Height of row of plots in pixels" id="param-rowHeight">
+						The bar plot groups bars into rows and columns by
+						reporter.  Each cell contains all measurement
+						from a single reporter.  (Each measurement will
+						come from a different bioassay.)  This parameter
+						specifies how high each row of columns is
+						in pixels.
+					</prop>
+					
+					<prop name="Width of bar in pixels" id="param-barWidth">
+						This parameter determines the width of each
+						individual bar in pixels.
+					</prop>
+				</prop-list>
+			</section>
+			
+			<section title="Annotation Plot Parameters" id="annotationPlotParameters">
+				The following parameters are specific to annotation plots.
+				<prop-list>
+						<prop name="LOH probability threshold" id="param-lohThreshold">
+							<ref id="loh">Loss of heterozygosity (LOH)</ref>
+							data may be provided
+							by the client application
+							as probabilities.  This parameter is a threshold,
+							above which probabilities will be interpred as
+							indicative of LOH.
+						</prop>
+						
+						<prop name="Interpoloate LOH endpoints" id="param-interpolateLohEndpoints">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If for two adjacent reporters one is indicating LOH
+							and the other is not, the location where the
+							transition occurs cannot be known.  If this parameter
+							is checked, the system will interpolate the
+							LOH endpoint using the slope of a straight line
+							between data points corresponding to the two reporters.
+							If unchecked, the endpoint will be at the LOH reporter.
+						</prop>
+						
+						<prop name="Include raw LOH probabilities" id="param-drawRawLohProbabilities">
+							This parameter is only applicable if the data are
+							<ref id="loh">LOH(loss of heterozygosity)</ref>.
+							Scatter plots of
+							LOH indicate LOH regions as thick horizontal
+							lines.  If this parameter is checked, then the underlying
+							raw LOH probabilites are also plotted.
+						</prop>
+						
+						<prop name="Display reporter names in mouseover text" id="param-repNamesMouse">
+							If checked, as the mouse moves over the graphic, the names of
+							nearby reporters will be shown in a tool tip.
+						</prop>
+						
+						<prop name="Display reporter annotations in mouseover text" id="param-repAnnMouse">
+							If checked, as the mouse moves over the graphic, annotations
+							associated with nearby reporters will be shown in tool tip text.
+							In most installations, this annotation will only be available from
+							data that come from a client application (e.g. Rembrandt).
+						</prop>
+						
+						<prop name="Display names of nearby genes in mouseover text" id="param-repGenesMouse">
+							If checked, as the mouse moves over the graphic, the names of
+							nearby genes will be shown in a tool tip.
+							In most installations, this annotation will only be available from
+							data that come from a client application (e.g. Rembrandt).
+						</prop>
+						
+						<prop name="Minimum data mask value" id="param-minMask">
+							Background data values within a
+							range (e.g., -0.2 and 0.3) can be masked
+							so that only values of significant
+							magnitude are colored.  This parameter is the
+							the lower end of this range.
+						</prop>
+						
+						<prop name="Maximum data mask value" id="param-maxMask">
+							Background data values within a
+							range (e.g., -0.2 and 0.3) can be masked
+							so that only values of significant
+							magnitude are colored.  This parameter is the
+							the upper end of this range.
+						</prop>
+						
+						<prop name="Minimum saturation value for copy number and LOH data"
+							id="param-minSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the lower saturation value
+							of copy number and LOH data.
+						</prop>
+						
+						<prop name="Maximum saturation value for copy number and LOH data"
+							id="param-maxSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the upper saturation value
+							of copy number and LOH data.
+						</prop>
+						
+						<prop name="Minimum saturation value for gene expression data"
+							id="param-minExpSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the lower saturation value
+							of gene expression data.
+						</prop>
+						
+						<prop name="Maximum saturation value for gene expression data"
+							id="param-maxExpSaturation">
+							Data tracks color code measured values (e.g. copy number)
+							from green to blue to red.  These colors correspond to
+							low, medium, and high values, respectively.  The saturation
+							values indicate which values are mapped to pure green
+							or red.  Values below and above the saturation points
+							are mapped to pure green and red, respectively.
+							This parameter is for the upper saturation value
+							of gene expression data.
+						</prop>
+						
+						<prop name="Annotation types"
+							id="param-annTypes">
+							This select box allows the user to specify which
+							annotation types are plotted.  These types are
+							added into the system's reference database by
+							the administrator.
+						</prop>
+						
+						<prop name="Draw feature labels"
+							id="param-labels">
+							If selected, the feature names will be drawn
+							above their representations.
+						</prop>
+						
+						<prop name="Plot width in pixels" id="param-width">
+							This sets the width of each individual scatter plot
+							in pixels.  If multiple genome intervals are selected,
+							then this propery applies to each of the corresponding
+							plots.
+						</prop>
+				</prop-list>
+			</section>
+		</section>
+	</section>
+	
+	<!-- ================================================================= -->
+	<!--                       Analytic Operations                         -->
+	<!-- ================================================================= -->
+	<section title="Analytic Operations" id="operations">
+		In this section we describe the analytic operation that can
+		be performed on data in the user's workspace.  Once a user
+		has selected one or more experiments, they may elect to
+		perform an analytic operation on these experiments.
+		The resulting processed data will be deposited back in the
+		user's workspace.  Analytic operations may be performed on
+		all raw experiments (i.e., experiments loaded from the client
+		application directory) and most processed data.  Processed
+		experiments resulting from the
+		<ref id="op-7">minimum common alterations</ref> operation
+		cannot be further processed because individual data points
+		are dropped.
+		
+		<prop-list>
+		
+			<prop name="Bioconductor aCGH smoother" id="op-1">
+				This operation invokes the aCGH hidden Markov model-based
+				method from the Bioconductor software package to
+				smooth data.
+			</prop>
+			
+			<prop name="Average" id="op-2">
+				This operation performs chromosome position-wise averaging
+				of all data points within the same experiment.
+			</prop>
+			
+			<prop name="Range based filter" id="op-3">
+				This operation filters out all data with values
+				between two endpoints and is
+				used primarily for removing outliers.
+				The upper and lower endpoints
+				may be INFINITY or -INFINITY, respectively.  This operation
+				includes the following parameters:
+				<prop-list>
+					<prop name="Lower bound" id="opParam-lowerBound">
+						Lower filter endpoint
+					</prop>
+					<prop name="Upper bound" id="opParam-upperBound">
+						Upper filter endpoint
+					</prop>
+				</prop-list>
+			</prop>
+			
+			<prop name="Simple bioassay-based normalization" id="op-4">
+				This operation subtracts the bioassay specific mean or median
+				from each observation. The user specifies the use of the mean
+				or median as the normalization factor. The choice of median
+				based normalization allows the user to lessen the effect
+				of outliers.  This type of normalization is useful for making
+				spot intensities comparable across arrays 
+				as it removes an overall array effect; each array will be 
+				"centered" on zero (or something 
+				close to it if the median is used).
+			</prop>
+			
+			<prop name="Simple experiment-based normalization" id="op-5">
+				This procedure subtracts the array specific mean or median from
+				each observation then adds the experiment level mean or median
+				back to each observation. The user specifies 
+				the use of the mean or median as the normalization factor.
+				The choice of median based 
+				normalization allows the user to lessen the effect of outliers.
+				This type of normalization 
+				is useful for making spot intensities comparable across arrays 
+				while preserving any overall 
+				difference due to treatment effect. This will center each array 
+				on the difference between 
+				it's own array mean/median and the experiment wide mean/median. 
+			</prop>
+		
+			<prop name="Sliding window smoother" id="op-6">
+				This operation smooths data using a "sliding window" approach. 
+				The user
+				specified a <em>Window size</em>.  The value of probe <em>i</em>
+				is equal to the average value of probes <em>i - w/2</em> through 
+				<em>i + w/2</em>, where <em>w</em> is the size of the window.
+			</prop>
+			
+			<prop name="Minimum common alterations" id="op-7">
+				This operation identifies the set of common alteration across
+				bioassays.  These alterations are defined by a
+				<em>threshold</em> and a <em>minPercent</em> property.
+				The <em>threshold</em> is used for scoring alterations.
+				For instance, if the threshold is set to 0.5, then all 
+				<ref id="loh">LOH</ref> probability values greater than
+				this value will be
+				considered LOH.  The <em>minPercent</em> propety defines
+				the minimum percentage of bioassays that must contain
+				an alteration at a particular location for the alteration
+				to be considered common.
+			</prop>
+			
+			<prop name="Linear regression" id="op-8">
+				This operation peforms data smoothing using linear regression.
+			</prop>
+			
+			<prop name="Loess regression" id="op-9">
+				This operation peforms data smoothing using Loess regression.
+			</prop>
+		</prop-list>
+	</section>
+	
+	<!-- =========================================== -->
+	<!--                 Appendix                    -->
+	<!-- =========================================== -->
+	<section title="Appendix" id="operations">
+		<section title="LOH Measurements" id="loh">
+		
+		<p>
+			Loss of heterozygosity (LOH) is detected by measuring
+			the amount of DNA from each
+			allele from tumor cells and comparing this with the amounts
+			found from normal tissue in the same individual or a reference sample.
+			A skewed distribution in the tumor cells, compared with those
+			found in the normal tissue, indicates an allelic
+			imbalance. This imbalance can result from either loss of an allele
+			(true LOH) or allelic amplification. Some earlier articles reporting
+			LOH may, for technical reasons, have measured allelic amplification
+			rather than loss of an allele.
+		</p>
+		
+		<p>
+			LOH measurements are reported as the
+			-log10 of the probability of continuous genomic region of
+			homozygote calls.
+			Thus, the larger the LOH value is, the more likely the value
+			indicates a true LOH
+			(or allelic amplification). The following formulae are
+			used to compute LOH values:
+		</p>
+		
+		<img src="loh_formula.png" align="center" border="1"/>
+
+		</section>
+	</section>
+</help-doc>

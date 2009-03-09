@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- ========================================================== -->
+	<!--   Import configurable values from 'unit_test.properties'   -->
+	<!-- ========================================================== -->
+	
+	<bean
+		id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<bean class="org.springframework.core.io.ClassPathResource">
+				<constructor-arg type="java.lang.String">
+					<value>unit_test.properties</value>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>${db.url}</value></property>
+		<property name="username"><value>${db.user.name}</value></property>
+		<property name="password"><value>${db.password}</value></property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	
+    	<!-- Code below can be used to quickly load only specific
+    	Hibernate mapping files for faster loads. It should only
+    	be used temporarily as it will cause tests to fail
+    	for DAOs corresponding to unmapped classes. -->
+    	<!--
+    	<property name="mappingResources">
+	      <list>
+	        <value>org/rti/webgenome/service/dao/hibernate/Experiment.hbm.xml</value>
+	      </list>
+	    </property>
+	    -->
+    	
+    	<!-- Comment out if uncommented above -->
+    	<property name="mappingDirectoryLocations">
+	      	<list>
+        		<bean class="org.springframework.core.io.ClassPathResource">
+        			<constructor-arg type="java.lang.String"><value>org/rti/webgenome/service/dao/hibernate</value></constructor-arg>
+        		</bean>
+	      	</list>
+    	</property>
+    	<!-- End of comment-out -->
+    	
+    	<property name="hibernateProperties">
+      		<props>
+        		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+      		</props>
+    	</property>
+  	</bean>
+  	
+  	<bean id="organismDao" class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="principalDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePrincipalDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="cytologicalMapDao" class="org.rti.webgenome.service.dao.hibernate.HibernateCytologicalMapDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+
+	<bean id="annotatedGenomeFeatureDao"
+		class="org.rti.webgenome.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource"><ref bean="dataSource"/></property>
+  	</bean>
+	
+	<bean id="arrayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateArrayDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="userConfigurablePropertyDao" class="org.rti.webgenome.service.dao.hibernate.HibernateUserConfigurablePropertyDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="dataSourcePropertiesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateDataSourcePropertiesDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+	<bean id="plotParametersDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePlotParametersDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="clickBoxesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateClickBoxesDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="mouseOverStripesDao" class="org.rti.webgenome.service.dao.hibernate.HibernateMouseOverStripesDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="plotDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePlotDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="bioAssayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateBioAssayDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="bioAssayDataConstraintsDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateBioAssayDataConstraintsWrapperDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="experimentDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
+  	
+  	<bean id="shoppingCartDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+  	<bean id="colorChooserDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateColorChooserDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+</beans>

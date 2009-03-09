@@ -1,0 +1,99 @@
+BODY
+{
+    FONT-SIZE: 12px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+P
+{
+    FONT-SIZE: 12px;
+    COLOR: #000000;
+    FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif;
+}
+
+
+.docTitle {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #225588;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
+}
+
+A:link
+{
+    COLOR: #336699;
+    TEXT-DECORATION: underline
+}
+A:visited
+{
+    COLOR: #336699;
+    TEXT-DECORATION: underline
+}
+A:hover
+{
+    COLOR: #5588bb;
+    TEXT-DECORATION: none
+}
+A:active
+{
+    COLOR: #225588;
+    TEXT-DECORATION: none
+}
+
+
+.sectionHeading {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+}
+
+
+.heading1 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.heading2 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.heading3 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.heading4 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.heading5 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #336699;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.propName {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #020202;
+}
+
+.webcgh {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #336699;
+}
+li.nonum { list-style: none; margin-left: 0px; padding-left: 0px; text-indent: 0px; }
+ol.nonum { margin-left: 0px; padding-left: 20px; text-indent: 0px; }

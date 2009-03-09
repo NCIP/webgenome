@@ -1,0 +1,51 @@
+<html>
+<head>
+	<link href="upload.css" rel="stylesheet" type="text/css" />
+	<script language="Javascript">
+		function toggle(name, value) {
+			var yes = document.getElementById(name + "_yes");
+			var no = document.getElementById(name + "_no");
+			var cell = document.getElementById(name + "_td");
+			if (value == "yes") {
+				yes.className = "circled";
+				no.className = "uncircled";
+				var textBox = document.createElement("input");
+				textBox.setAttribute("type", "text");
+				textBox.setAttribute("id", name + "_input");
+				cell.appendChild(textBox);
+			} else {
+				yes.className = "uncircled";
+				no.className = "circled";
+				var textBox = document.getElementById(name + "_input");
+				cell.removeChild(textBox);
+			}
+		}
+	</script>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>
+				<span id="1_yes" class="uncircled">
+					<a href="#" onclick="toggle('1', 'yes')">YES</a>
+				</span> |
+				<span id="1_no" class="circled">
+					<a href="#" onclick="toggle('1', 'no')">NO</a>
+				</span>
+			</td>
+			<td id="1_td">&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+				<span id="2_yes" class="uncircled">
+					<a href="#" onclick="toggle('2', 'yes')">YES</a>
+				</span> |
+				<span id="2_no" class="circled">
+					<a href="#" onclick="toggle('2', 'no')">NO</a>
+				</span>
+			</td>
+			<td id="2_td">&nbsp;</td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- ========================================================== -->
+	<!--   Import configurable values from 'unit_test.properties'   -->
+	<!-- ========================================================== -->
+	
+	<bean
+		id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<bean class="org.springframework.core.io.ClassPathResource">
+				<constructor-arg type="java.lang.String">
+					<value>unit_test.properties</value>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>${db.url}</value></property>
+		<property name="username"><value>${db.user.name}</value></property>
+		<property name="password"><value>${db.password}</value></property>
+	</bean>
+  	
+  	<bean id="experimentIdGenerator"
+		class="org.rti.webgenome.service.util.IdGenerator">
+		<constructor-arg index="0" value="experiment"/>
+		<constructor-arg index="1" value="id"/>
+		<constructor-arg index="2"><ref bean="dataSource"/></constructor-arg>
+	</bean>
+</beans>

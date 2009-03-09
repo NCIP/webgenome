@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+<!-- Main data import page setup -->
+	<bean name="/upload/mainImport"
+		class="org.rti.webgenome.webui.struts.upload.MainImportPageSetupAction"
+		parent="baseAction"/>
+		
+<!-- Initialize upload -->
+	<bean name="/upload/initializeUploadForm"
+		class="org.rti.webgenome.webui.struts.upload.InitializeUploadAction"
+		parent="baseAction"/>
+
+				
+<!-- Show main upload form -->
+	<bean name="/upload/showUploadForm"
+		class="org.rti.webgenome.webui.struts.upload.ShowMainUploadFormSetupAction"
+		parent="baseAction"/>
+		
+<!-- Upload data file -->
+	<bean name="/upload/uploadDataFile"
+		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction"
+		parent="baseAction"/>
+	
+<!-- Upload data file -->
+	<bean name="/upload/uploadZipFile"
+		class="org.rti.webgenome.webui.struts.upload.UploadZipFileAction"
+		parent="baseAction"/>
+	
+<!-- Setup for specifying data columns -->
+	<bean name="/upload/specifyDataColumns"
+		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"
+		parent="baseAction"/>
+		
+<!-- Setup for specifying data columns -->
+	<bean name="/upload/specifyZipDataColumns"
+		class="org.rti.webgenome.webui.struts.upload.SpecifyZipDataColumnsSetupAction"
+		parent="baseAction"/>
+		
+<!-- Remove data file from upload -->
+	<bean name="/upload/removeDataFile"
+		class="org.rti.webgenome.webui.struts.upload.RemoveDataFileAction"
+		parent="baseAction"/>
+
+<!-- Complete the process of attaching data file -->		
+	<bean name="/upload/attachDataFile"
+		class="org.rti.webgenome.webui.struts.upload.AttachDataFileAction"
+		parent="baseAction"/>
+		
+<!-- Complete the process of attaching zip data file -->
+	<bean name="/upload/attachZipDataFile"
+		class="org.rti.webgenome.webui.struts.upload.AttachZipDataFileAction"
+		parent="baseAction"/>
+		
+<!-- Upload reporter file -->
+	<bean name="/upload/uploadReporterFile"
+		class="org.rti.webgenome.webui.struts.upload.UploadDataFileAction"
+		parent="baseAction"/>
+	
+<!-- Setup for specifying reporter columns -->
+	<bean name="/upload/specifyReporterColumns"
+		class="org.rti.webgenome.webui.struts.upload.SpecifyDataColumnsSetupAction"
+		parent="baseAction"/>
+		
+<!-- Remove data file from upload -->
+	<bean name="/upload/removeReporterFile"
+		class="org.rti.webgenome.webui.struts.upload.RemoveReporterFileAction"
+		parent="baseAction"/>
+
+<!-- Complete the process of attaching reporter file -->		
+	<bean name="/upload/attachReporterFile"
+		class="org.rti.webgenome.webui.struts.upload.AttachReporterFileAction"
+		parent="baseAction"/>
+		
+<!-- Upload data -->
+	<bean name="/upload/uploadData"
+		class="org.rti.webgenome.webui.struts.upload.UploadAction"
+		parent="baseAction"/>
+
+
+<!-- Initialize caArray upload action -->
+	<bean name="/upload/initcaArrayUpload"
+		class="org.rti.webgenome.webui.struts.upload.InitializecaArrayUploadAction"
+		parent="baseAction"/>
+
+
+<!-- Fetch caArray experiment list action -->
+	<bean name="/upload/fetchcaArrayExperiments"
+		class="org.rti.webgenome.webui.struts.upload.FetchCaArrayExperimentListAction"
+		parent="baseAction"/>
+
+<!-- Upload caArray data -->
+	<bean name="/upload/uploadcaArrayData"
+		class="org.rti.webgenome.webui.struts.upload.UploadCAArrayAction"
+		parent="baseAction"/>
+			
+<!-- Initialize import session with remote data source -->
+	<bean name="/upload/initRemoteSession"
+		class="org.rti.webgenome.webui.struts.upload.InitRemoteSessionAction"
+		parent="baseAction"/>
+	
+<!-- Remote system login -->
+	<bean name="/upload/remoteSysLogin"
+		class="org.rti.webgenome.webui.struts.upload.RemoteSysLoginAction"
+		parent="baseAction"/>
+		
+<!-- Fetch experiment list from remote system -->
+	<bean name="/upload/fetchExperimentList"
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentListAction"
+		parent="baseAction"/>
+		
+<!-- Fetch experiments from remote system -->
+	<bean name="/upload/fetchExperiments"
+		class="org.rti.webgenome.webui.struts.upload.FetchExperimentsAction"
+		parent="baseAction"/>
+
+</beans>

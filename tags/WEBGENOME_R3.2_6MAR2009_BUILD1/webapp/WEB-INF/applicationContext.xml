@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+	<!-- ======================================================= -->
+	<!--   Import configurable values from 'webgenome.properties'   -->
+	<!-- ======================================================= -->
+	
+	<bean
+		id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+            <!-- PROPERTY LOADING FROM INTERNAL PROPERTIES FILE
+                 Uncomment to use the internal properties file
+                 and comment out the external properties declaration immediately below.
+			<bean class="org.springframework.core.io.ClassPathResource">
+				<constructor-arg type="java.lang.String">
+					<value>webgenome.properties</value>
+				</constructor-arg>
+			</bean>
+            -->
+            <!-- PROPERTY LOADING FROM EXTERNALIZED PROPERTIES FILE -->
+            <bean class="org.rti.webgenome.framework.spring.SysPropsFileSystemResource">
+                <constructor-arg type="java.lang.String">
+                <value>webGenome.configFile</value>
+                </constructor-arg>
+            </bean>
+		</property>
+	</bean>
+
+	<!-- =========================================== -->
+	<!--      Data access beans                      -->
+	<!-- =========================================== -->
+	
+<!-- Data source -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"><value>oracle.jdbc.driver.OracleDriver</value></property>
+		<property name="url"><value>${db.url}</value></property>
+		<property name="username"><value>${db.user.name}</value></property>
+		<property name="password"><value>${db.password}</value></property>
+	</bean>
+	
+<!-- Session factory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	
+    	<!-- Commented out because it does not work in JBoss 4.0.5
+    		 for some reason -->
+    	<!--
+    	<property name="mappingDirectoryLocations">
+	      	<list>
+        		<bean id="core.dao"
+					class="org.springframework.core.io.ClassPathResource">
+					<constructor-arg type="java.lang.String"
+						value="org/rti/webgenome/service/dao/hibernate"/>
+				</bean>
+				<bean id="job.dao"
+					class="org.springframework.core.io.ClassPathResource">
+					<constructor-arg value="org/rti/webgenome/service/job"/>
+				</bean>
+	      	</list>
+    	</property>
+    	-->
+    	
+    	<!-- Individual *.hbm.xml files specified in lieu of
+    	     directory locations in above commented code due to
+    	     glitch in JBoss 4.0.5.  If above code is uncommented,
+    	     below property should be commented out.
+    	-->
+    	<property name="mappingResources">
+	      <list>
+	      	<value>org/rti/webgenome/service/dao/hibernate/AnnotatedGenomeFeature.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Array.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/BioAssay.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/BioAssayDataConstraintsWrapper.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/ClickBoxes.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/ColorChooser.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Cytoband.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/CytologicalMap.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/DataColumnMetaData.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/DataFileMetaData.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/DataSourceProperties.hbm.xml</value> 
+	      	<value>org/rti/webgenome/service/dao/hibernate/Experiment.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/GenomeInterval.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/MouseOverStripe.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/MouseOverStripes.hbm.xml</value>
+	      	<value>org/rti/webgenome/service/dao/hibernate/Organism.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/Plot.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/PlotParameters.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/Principal.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/ShoppingCart.hbm.xml</value>
+	        <value>org/rti/webgenome/service/dao/hibernate/UserConfigurableProperty.hbm.xml</value>
+	        <value>org/rti/webgenome/service/job/Job.hbm.xml</value>
+	      </list>
+	    </property>
+	    
+    	<property name="hibernateProperties">
+      		<props>
+        		<prop key="hibernate.dialect">org.hibernate.dialect.OracleDialect</prop>
+      		</props>
+    	</property>
+  	</bean>
+  	
+<!-- Principal DAO -->
+  	<bean id="principalDao" class="org.rti.webgenome.service.dao.hibernate.HibernatePrincipalDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+<!-- Array DAO -->
+  	<bean id="arrayDao" class="org.rti.webgenome.service.dao.hibernate.HibernateArrayDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+<!-- Experiment DAO -->
+  	<bean id="experimentDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateExperimentDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
+  	
+<!-- Plot DAO -->
+  	<bean id="plotDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernatePlotDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
+  	
+<!-- Shopping cart DAO -->
+  	<bean id="shoppingCartDao"
+  		class="org.rti.webgenome.service.dao.hibernate.HibernateShoppingCartDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource" ref="dataSource"/>
+  		<property name="dataFileManager" ref="dataFileManager"/>
+  	</bean>
+    
+<!-- Processing Job DAO (Standalone Mode) -->
+    <bean id="jobDao"
+        class="org.rti.webgenome.service.job.HibernateJobDao">
+        <property name="sessionFactory"><ref bean="sessionFactory"/></property>
+    </bean>
+    
+<!-- Organism DAO -->
+    <bean id="organismDao"
+    	class="org.rti.webgenome.service.dao.hibernate.HibernateOrganismDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+
+<!-- Cytological map DAO -->
+	<bean id="cytologicalMapDao"
+		class="org.rti.webgenome.service.dao.hibernate.HibernateCytologicalMapDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  	</bean>
+  	
+<!-- Annotated genome feature DAO -->
+  	<bean id="annotatedGenomeFeatureDao"
+		class="org.rti.webgenome.service.dao.hibernate.HibernateAnnotatedGenomeFeatureDao">
+  		<property name="sessionFactory"><ref bean="sessionFactory"/></property>
+  		<property name="dataSource"><ref bean="dataSource"/></property>
+  	</bean>
+  	
+  	<!-- =================================== -->
+  	<!--      Service beans                  -->
+  	<!-- =================================== -->
+  	
+<!-- IO Service -->
+	<bean id="ioService"
+		class="org.rti.webgenome.service.io.IOService">
+		<constructor-arg>
+			<value>${file.uploading.working.dir}</value>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="dataFileManager"/>
+		</constructor-arg>
+		<property name="bioAssayIdGenerator">
+			<ref bean="bioAssayIdGenerator"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
+		</property>
+	</bean>
+	
+<!-- Transaction manager -->
+  	<bean id="txManager"
+  		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+  		<property name="sessionFactory" ref="sessionFactory"/>
+  	</bean>
+	
+<!-- Facade for performing operations on webgenome db -->
+  	<bean id="dbServiceTarget"
+  		class="org.rti.webgenome.service.session.DaoWebGenomeDbService">
+  		<property name="arrayDao" ref="arrayDao"/>
+  		<property name="shoppingCartDao" ref="shoppingCartDao"/>
+  		<property name="experimentDao" ref="experimentDao"/>
+  		<property name="organismDao" ref="organismDao"/>
+  		<property name="plotDao" ref="plotDao"/>
+  		<property name="principalDao" ref="principalDao"/>
+  		<property name="jobDao" ref="jobDao"/>
+  		<property name="ioService" ref="ioService"/>
+  	</bean>
+  	
+<!-- Transaction proxy for performing operations on webgenome db -->
+	<bean id="dbService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="dbServiceTarget"/>
+		<property name="transactionManager" ref="txManager"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="get*">PROPAGATION_SUPPORTS, readOnly</prop>
+				<prop key="load*">PROPAGATION_SUPPORTS, readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED, ISOLATION_SERIALIZABLE, -java.lang.Exception</prop>
+			</props>
+		</property>
+	</bean>
+
+<!-- Security manager -->
+	<bean id="securityMgr" class="org.rti.webgenome.service.session.SecurityMgrImpl">
+		<property name="dbService" ref="dbService"/>
+	</bean>
+	
+<!-- Special authenticator for a test account -->
+<!-- TODO: The properties associated with 'wgtest,' 'wgpass,' and 'test-domain'
+below should probably be configurable somehow. -->
+	<bean id="testAuthenticator" class="org.rti.webgenome.service.session.InMemoryAuthenticator">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key><value>wgtest</value></key>
+					<value>wgpass</value>
+				</entry>
+				<entry>
+					<key><value>wgtest2</value></key>
+					<value>wgpass2</value>
+				</entry>
+			</map>
+		</constructor-arg>
+		<constructor-arg>
+			<value>test-domain</value>
+		</constructor-arg>
+	</bean>
+	
+<!-- Authenticator for login credentials -->
+	<bean id="authenticator"
+		class="org.rti.webgenome.service.session.MultiCredentialProviderAuthenticator">
+		<constructor-arg>
+			<set>
+				<ref bean="testAuthenticator"/>
+				<ref bean="securityMgr"/>
+				<bean class="org.rti.webgenome.service.session.RembrandtAuthenticator">
+					<constructor-arg type="java.lang.String">
+						<value>webgenome</value>
+					</constructor-arg>
+				</bean>
+			</set>
+		</constructor-arg>
+	</bean>
+		
+<!-- ID generator for bioassays -->
+	<bean id="bioAssayIdGenerator"
+		class="org.rti.webgenome.service.util.IdGenerator">
+		<constructor-arg index="0" value="bioassay"/>
+		<constructor-arg index="1" value="id"/>
+		<constructor-arg index="2"><ref bean="dataSource"/></constructor-arg>
+	</bean>
+		
+<!-- ID generator for experiments -->
+	<bean id="experimentIdGenerator"
+		class="org.rti.webgenome.service.util.IdGenerator">
+		<constructor-arg index="0" value="experiment"/>
+		<constructor-arg index="1" value="id"/>
+		<constructor-arg index="2"><ref bean="dataSource"/></constructor-arg>
+	</bean>
+	
+<!-- ID generator for experiments -->
+	<bean id="plotIdGenerator"
+		class="org.rti.webgenome.service.util.IdGenerator">
+		<constructor-arg index="0" value="plot"/>
+		<constructor-arg index="1" value="id"/>
+		<constructor-arg index="2"><ref bean="dataSource"/></constructor-arg>
+	</bean>
+		
+<!-- Image file manager -->
+	<bean id="imageFileManager"
+		class="org.rti.webgenome.service.io.ImageFileManager">
+		<property name="dbService" ref="dbService"/>
+	</bean>
+	
+<!-- Data file manager -->
+	<bean id="dataFileManager"
+		class="org.rti.webgenome.service.io.DataFileManager">
+		<constructor-arg>
+			<value>${data.dir}</value>
+		</constructor-arg>
+	</bean>
+		
+<!-- Plot generator -->
+	<bean id="plotGenerator"
+		class="org.rti.webgenome.service.plot.PngPlotGenerator">
+		<property name="imageFileManager">
+			<ref bean="imageFileManager"/>
+		</property>
+		<property name="cytologicalMapDao">
+			<ref bean="cytologicalMapDao"/>
+		</property>
+		<property name="annotatedGenomeFeatureDao">
+			<ref bean="annotatedGenomeFeatureDao"/>
+		</property>
+	</bean>
+	
+<!-- Analysis service -->
+	<bean id="analysisService" class="org.rti.webgenome.service.analysis.AnalysisService">
+		<property name="bioAssayIdGenerator">
+			<ref bean="bioAssayIdGenerator"/>
+		</property>
+		<property name="experimentIdGenerator">
+			<ref bean="experimentIdGenerator"/>
+		</property>
+	</bean>
+	
+<!-- Plot service -->
+	<bean id="plotService" class="org.rti.webgenome.service.plot.PlotService">
+		<property name="plotIdGenerator">
+			<ref bean="plotIdGenerator"/>
+		</property>
+		<property name="plotGenerator">
+			<ref bean="plotGenerator"/>
+		</property>
+	</bean>
+	
+<!-- Job manager -->
+	<bean id="jobManager" class="org.rti.webgenome.service.job.SerialQueueJobManager">
+		<property name="analysisService">
+			<ref bean="analysisService"/>
+		</property>
+		<property name="ioService">
+			<ref bean="ioService"/>
+		</property>
+		<property name="plotService">
+			<ref bean="plotService"/>
+		</property>
+		<property name="webGenomeDbService">
+			<ref bean="dbService"/>
+		</property>
+		<constructor-arg>
+			<ref bean="dbService"/>
+		</constructor-arg>
+	</bean>
+
+<!-- Data sources index -->
+	<bean id="dataSourcesIndex"
+		class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<entry>
+					<key><value>mock.data.source</value></key>
+					<bean class="org.rti.webgenome.service.data.MockDataSource"/>
+				</entry>
+			</map>
+		</constructor-arg>
+	</bean>
+</beans>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "spring-beans.dtd">
+
+<beans>
+
+<!-- Base action -->
+	<bean name="baseAction" class="org.rti.webgenome.webui.struts.BaseAction"
+		abstract="true">
+		<property name="dbService" ref="dbService"/>
+		<property name="cytologicalMapDao" ref="cytologicalMapDao"/>
+		<property name="annotatedGenomeFeatureDao" ref="annotatedGenomeFeatureDao"/>
+		<property name="jobManager" ref="jobManager"/>
+		<property name="analysisService" ref="analysisService"/>
+		<property name="dataFileManager" ref="dataFileManager"/>
+		<property name="ioService" ref="ioService"/>
+		<property name="experimentIdGenerator" ref="experimentIdGenerator"/>
+		<property name="bioAssayIdGenerator" ref="bioAssayIdGenerator"/>
+		<property name="plotService" ref="plotService"/>
+		<property name="imageFileManager" ref="imageFileManager"/>
+		<property name="dataSourcesIndex" ref="dataSourcesIndex"/>
+		<property name="securityMgr" ref="securityMgr"/>
+		<property name="authenticator" ref="authenticator"/>
+	</bean>
+
+</beans>

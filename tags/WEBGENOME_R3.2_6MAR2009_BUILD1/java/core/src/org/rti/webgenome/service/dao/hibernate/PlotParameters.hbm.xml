@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.service.plot.PlotParameters"
+		table="plot_params">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<discriminator column="type" type="java.lang.String"/>
+		<property name="plotName" column="plot_name"/>
+		<property name="numPlotsPerRow" column="num_plots_per_row"/>
+		<property name="bpUnitsByName" column="units"/>
+		<set name="genomeIntervals" sort="natural"
+			lazy="false" cascade="all">
+			<key column="plot_params_id" not-null="true"/>
+			<one-to-many class="org.rti.webgenome.domain.GenomeInterval"/>
+		</set>
+		<subclass name="org.rti.webgenome.service.plot.AnnotationPlotParameters"
+			discriminator-value="annotation">
+			<property name="lohThreshold" column="loh_threshold"/>
+			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
+			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
+			<property name="showAnnotation" column="show_annotation"/>
+			<property name="showGenes" column="show_genes"/>
+			<property name="showReporterNames" column="show_reporter_names"/>
+			<property name="expressionMaxSaturation" column="expr_max_saturation"/>
+			<property name="expressionMinSaturation" column="expr_min_saturation"/>
+			<property name="copyNumberMaxSaturation" column="cn_max_saturation"/>
+			<property name="copyNumberMinSaturation" column="cn_min_saturation"/>
+			<property name="minMask" column="min_mask"/>
+			<property name="maxMask" column="max_mask"/>
+			<property name="drawFeatureLabels" column="draw_feature_labels"/>
+			<property name="width" column="width"/>
+			<set name="annotationTypesByName" table="ann_plot_params_types"
+				lazy="false">
+				<key column="plot_params_id"/>
+				<element column="name" type="java.lang.String"/>
+			</set>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.plot.BarPlotParameters"
+			discriminator-value="bar">
+			<property name="rowHeight" column="row_height"/>
+			<property name="barWidth" column="bar_width"/>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.plot.IdeogramPlotParameters"
+			discriminator-value="ideogram">
+			<property name="lohThreshold" column="loh_threshold"/>
+			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
+			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
+			<property name="showAnnotation" column="show_annotation"/>
+			<property name="showGenes" column="show_genes"/>
+			<property name="showReporterNames" column="show_reporter_names"/>
+			<property name="expressionMaxSaturation" column="expr_max_saturation"/>
+			<property name="expressionMinSaturation" column="expr_min_saturation"/>
+			<property name="copyNumberMaxSaturation" column="cn_max_saturation"/>
+			<property name="copyNumberMinSaturation" column="cn_min_saturation"/>
+			<property name="minMask" column="min_mask"/>
+			<property name="maxMask" column="max_mask"/>
+			<property name="ideogramSizeByName" column="ideogram_size"/>
+			<property name="trackWidth" column="track_width"/>
+			<property name="ideogramThickness" column="ideogram_thickness"/>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.plot.ScatterPlotParameters"
+			discriminator-value="scatter">
+			<property name="lohThreshold" column="loh_threshold"/>
+			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
+			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
+			<property name="showAnnotation" column="show_annotation"/>
+			<property name="showGenes" column="show_genes"/>
+			<property name="showReporterNames" column="show_reporter_names"/>
+			<property name="copyNumberMinY" column="cn_min_y"/>
+			<property name="copyNumberMaxY" column="cn_max_y"/>
+			<property name="expressionMinY" column="expr_min_y"/>
+			<property name="expressionMaxY" column="expr_max_y"/>
+			<property name="height" column="height"/>
+			<property name="drawHorizGridLines" column="draw_horiz_grid_lines"/>
+			<property name="drawVertGridLines" column="draw_vert_grid_lines"/>
+			<property name="drawPoints" column="draw_points"/>
+			<property name="drawErrorBars" column="draw_error_bars"/>
+			<property name="drawStems" column="draw_stems"/>
+			<property name="width" column="width"/>
+		</subclass>
+		<subclass name="org.rti.webgenome.service.plot.GenomeSnapshopPlotParameters"
+			discriminator-value="genomic">
+			<property name="lohThreshold" column="loh_threshold"/>
+			<property name="interpolateLohEndpoints" column="intplt_loh_eps"/>
+			<property name="drawRawLohProbabilities" column="draw_raw_loh_probs"/>
+			<property name="interpolationTypeByName" column="intplt_type"/>
+			<property name="height" column="height"/>
+			<property name="drawHorizGridLines" column="draw_horiz_grid_lines"/>
+			<property name="drawVertGridLines" column="draw_vert_grid_lines"/>
+			<property name="width" column="width"/>
+			<property name="minY" column="min_y"/>
+			<property name="maxY" column="max_y"/>
+		</subclass>
+	</class>
+
+</hibernate-mapping>

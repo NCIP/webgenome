@@ -1,0 +1,2 @@
+This file is in this directory simply to ensure that CVS will not
+prune the directory because of no files.

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "struts-config_1_1.dtd">
+
+<struts-config>
+
+	<!-- ====================================================== -->
+	<!--                    Form Beans                          -->
+	<!-- ====================================================== -->
+
+	<form-beans>
+	
+	<!-- Login form -->
+		<form-bean
+			name="login.form"
+			type="org.rti.webgenome.webui.struts.user.LoginForm"/>
+			
+	<!-- New account form -->
+		<form-bean
+			name="new.account.form"
+			type="org.rti.webgenome.webui.struts.user.NewAccountForm"/>		
+	
+	<!-- Plot parameters form -->
+		<form-bean
+			name="plot.parameters.form"
+			type="org.rti.webgenome.webui.struts.cart.PlotParametersForm"/>
+			
+	</form-beans>
+
+
+	<!-- =========================================================== -->
+	<!--                   Exception handlers                        -->
+	<!-- =========================================================== -->
+	<global-exceptions>
+
+    <exception
+    	type="org.rti.webgenome.webui.SessionTimeoutException"
+    	path="session.timeout.exception.page"
+    	key="session.timeout"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="org.rti.webgenome.core.WebGenomeSystemException"
+    	path="system.exception.page"
+    	key="system.exception"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="org.rti.webgenome.core.WebGenomeApplicationException"
+    	path="application.exception.page"
+    	key="application.exception"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+    <exception
+    	type="java.lang.Exception"
+    	path="unknown.exception.page"
+    	key="system.exception"
+    	handler="org.rti.webgenome.webui.struts.WebcghExceptionHandler"
+    	scope="request"/>
+
+  	</global-exceptions>
+
+
+
+	<!-- ================================================= -->
+	<!--                   Actions                         -->
+	<!-- ================================================= -->
+
+	<action-mappings>
+
+	<!-- Home -->
+		<action
+			path="/home"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="home.page"/>
+			
+    <!-- Status Page -->
+        <action
+            path="/status"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="status.page"/>
+            
+	</action-mappings>
+
+
+	<!-- ==================================================== -->
+	<!--            Controller                                -->
+	<!-- ==================================================== -->
+
+<!-- Spring controller for Tiles -->
+	<controller>
+	  <set-property property="processorClass"
+	      value="org.springframework.web.struts.DelegatingTilesRequestProcessor"/>
+	</controller>
+
+	<!-- =========================================================== -->
+	<!--                  Plug-ins                                   -->
+	<!-- =========================================================== -->
+
+<!-- Tiles -->
+	<plug-in className="org.apache.struts.tiles.TilesPlugin" >
+	    <set-property property="definitions-config"
+		   value="/WEB-INF/tiles-defs.xml,/WEB-INF/tiles-defs-admin.xml,/WEB-INF/tiles-defs-cart.xml,/WEB-INF/tiles-defs-upload.xml,/WEB-INF/tiles-defs-user.xml" />
+	    <set-property property="moduleAware" value="true" />
+	    <set-property property="definitions-parser-validate" value="true" />
+	</plug-in>
+
+<!-- Spring context loader -->
+	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+	  <set-property property="contextConfigLocation"
+	      value="/WEB-INF/applicationContext.xml,/WEB-INF/action-beans.xml,/WEB-INF/action-beans-admin.xml,/WEB-INF/action-beans-ajax.xml,/WEB-INF/action-beans-cart.xml,/WEB-INF/action-beans-client.xml,/WEB-INF/action-beans-upload.xml,/WEB-INF/action-beans-user.xml"/>
+	</plug-in>
+</struts-config>

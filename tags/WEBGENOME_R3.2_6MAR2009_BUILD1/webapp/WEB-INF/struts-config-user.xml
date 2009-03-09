@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "struts-config_1_1.dtd">
+
+<struts-config>
+
+	<form-beans>
+			
+	<!-- New account form -->
+		<form-bean
+			name="new.account.form"
+			type="org.rti.webgenome.webui.struts.user.NewAccountForm"/>
+
+	<!-- Account form -->
+		<form-bean
+			name="account.form"
+			type="org.rti.webgenome.webui.struts.user.AccountForm"/>
+			
+	<!-- Change Password Form -->
+		<form-bean
+			name="password.form"
+			type="org.rti.webgenome.webui.struts.user.ChangePasswordForm"/>
+			
+	</form-beans>
+
+	<action-mappings>
+
+	<!-- Login -->
+		<action
+			path="/user/login"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.login"/>
+
+	<!-- Logout -->
+		<action
+			path="/user/logout">
+			<forward name="success" path="/user/login.do"/>
+		</action>
+
+	<!-- Validate login credentials -->
+		<action
+			path="/user/validateLogin"
+			name="login.form"
+			scope="request"
+			validate="true"
+			input="/user/login.do">
+			<forward name="success" path="/home.do"/>
+			<forward name="failure" path="/user/login.do"/>
+		</action>
+
+	<!-- Create account -->
+		<action
+			path="/user/newAccount"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.new.account"/>
+			
+	<!--  Edit Account Settings (main page) -->
+		<action
+			path="/user/account"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.account"/>
+			
+	<!--  Edit Account Settings (Change Password) -->
+			
+	<!-- Logout -->
+		<action
+			path="/user/showChangePassword"
+			name="password.form"
+			scope="request"
+			type="org.rti.webgenome.webui.struts.user.ShowChangePasswordAction"
+			validate="false">
+			<forward name="success" path="user.change.password"/>
+		</action>
+			
+		<!-- Change Password -->
+		<action
+			path="/user/changePassword"
+			name="password.form"
+			scope="request"
+			input="/user/showChangePassword.do"
+			validate="true">
+			<forward name="success" path="user.account"/> <!--  go back to main edit settings page -->
+			<forward name="failure" path="user.change.password"/>
+		</action>
+			
+	<!--  Edit Account Settings (Edit Account Settings) -->
+	
+     	<action
+     		path="/user/showEditAccount"
+     		name="account.form"
+     		scope="request"
+     		type="org.rti.webgenome.webui.struts.user.ShowEditAccountAction"
+     		validate="false">
+     		<forward name="success" path="user.edit.account"/> <!--  page for editing user info -->
+     		<forward name="failure" path="user.account"/> <!--  main user page -->
+     	</action>			
+
+		<action
+			path="/user/editAccount"
+			name="account.form"
+			scope="request"
+			input="/user/showEditAccount.do"
+			validate="true">
+			<forward name="success" path="user.account"/> <!-- main user page -->
+			<forward name="failure" path="user.edit.account"/> <!--  return back to edit account page -->
+		</action>
+
+	<!-- Create account -->
+		<action
+			path="/user/createAccount"
+			name="new.account.form"
+			scope="request"
+			validate="true"
+			input="/user/newAccount.do">
+			<forward name="success" path="user.confirm.new.account"/>
+			<forward name="failure" path="/user/newAccount.do"/>
+		</action>
+		
+		
+		<!-- Show Forgot Password -->
+		<action
+			path="/user/showForgotPassword"
+			type="org.apache.struts.actions.ForwardAction"
+			parameter="user.forgot.password"/>
+		
+		<!-- Forgot Password -->
+		<action
+			path="/user/forgotPassword"
+			name="new.account.form"
+			scope="request"
+			input="/user/showForgotPassword.do"
+			validate="false">
+			<forward name="success" path="user.confirm.password.sent"/>
+			<forward name="failure" path="/user/showForgotPassword.do"/>
+		</action>
+		
+		<!-- Validate login credentials -->
+		<action
+			path="/user/caarrayLogin"
+			name="login.form"
+			scope="request"
+			validate="false">
+			<forward name="success" path="/upload/fetchcaArrayExperiments.do"/>			
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

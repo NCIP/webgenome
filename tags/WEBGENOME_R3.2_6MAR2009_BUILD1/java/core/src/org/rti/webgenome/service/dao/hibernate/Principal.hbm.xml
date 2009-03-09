@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.Principal" table="PRINCIPAL">
+	
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+
+		<property name="email"/>
+		<property name="password"/>
+		<property name="domain"/>
+		<property name="admin" type="true_false"/>
+		<property name="firstName" column="first_name"/>
+		<property name="lastName" column="last_name"/>
+		<property name="institution"/>
+		<property name="department"/>
+		<property name="position"/>
+		<property name="degree"/>	
+		<property name="phone"/>
+		<property name="address"/>
+		<property name="feedbacks" column="is_feedbacks" type="true_false"/>
+	</class>
+
+</hibernate-mapping>

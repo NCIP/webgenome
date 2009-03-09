@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.rti.webgenome.domain.DataColumnMetaData"
+		table="data_col_meta_data">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<property name="columnName" column="column_name"/>
+		<property name="bioAssayName" column="bioassay_name"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.AnnotatedGenomeFeature"
+		table="ANNOTATED_GENOME_FEATURE">
+	
+	<!-- id -->
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		
+	<!-- name -->
+		<property name="name"/>
+		
+	<!-- annotationType -->
+		<property name="annotationType" column="annotation_type"
+			type="org.rti.webgenome.framework.hibernate.AnnotationTypeUserType"/>
+			
+	<!-- chromosome -->
+		<property name="chromosome"/>
+		
+	<!-- startLocation -->
+		<property name="startLocation" column="start_loc"/>
+		
+	<!-- endLocation -->
+		<property name="endLocation" column="end_loc"/>
+		
+	<!-- organism -->
+		<many-to-one
+			name="organism"
+			column="organism_id"
+			class="org.rti.webgenome.domain.Organism"
+			cascade="save-update"
+			lazy="false"/>
+			
+	<!-- childFeatures -->
+		<set
+			name="childFeatures"
+			lazy="false"
+			cascade="all"
+			sort="natural">
+			<key column="parent_id"/>
+			<one-to-many class="org.rti.webgenome.domain.AnnotatedGenomeFeature"/>
+		</set>
+		
+	</class>
+
+</hibernate-mapping>

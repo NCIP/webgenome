@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.Plot" table="PLOT">
+		<id name="id" column="ID"/>
+		<property name="defaultImageFileName" column="def_img_file_name"/>
+		<property name="width"/>
+		<property name="height"/>
+		<property name="clickBoxesFileName" column="cb_file_name"/>
+		<property name="mouseOverStripesFileName" column="mos_file_name"/>
+		<map name="imageFileMap" table="img_file_map"
+			lazy="false" cascade="all">
+			<key column="plot_id"/>
+			<map-key column="img_name" type="java.lang.String"/>
+			<element column="file_name" type="java.lang.String"/>
+		</map>
+		<set name="experiments" table="plot_exp_ids"
+			lazy="false">
+			<key column="plot_id"/>
+			<many-to-many column="exp_id"
+				class="org.rti.webgenome.domain.Experiment"/>
+		</set>
+		<many-to-one name="plotParameters" column="plot_params_id"
+			class="org.rti.webgenome.service.plot.PlotParameters"
+			cascade="all"
+			not-null="true" lazy="false"/>
+		
+		<!-- Following two sets commented out because these
+		attributes are now being persisted via serialization.
+		-->
+		
+		<!--
+		<set name="clickBoxes"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="plot_id"/>
+			<one-to-many
+				class="org.rti.webgenome.graphics.io.ClickBoxes"/>
+		</set>
+		
+		<set name="mouseOverStripes"
+			lazy="false" cascade="all-delete-orphan">
+			<key column="plot_id"/>
+			<one-to-many
+				class="org.rti.webgenome.graphics.event.MouseOverStripes"/>
+		</set>
+		-->
+
+	</class>
+
+</hibernate-mapping>

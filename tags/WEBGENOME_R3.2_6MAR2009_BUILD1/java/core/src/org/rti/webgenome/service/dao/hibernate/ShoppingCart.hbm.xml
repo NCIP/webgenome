@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping>
+
+	<class name="org.rti.webgenome.domain.ShoppingCart"
+		table="shopping_cart">
+		<id name="id" column="ID">
+		    <generator class="increment"/>
+		</id>
+		<property name="userId" column="user_id"/>
+		<property name="userDomain" column="user_domain"/>
+		<set name="experiments"
+			lazy="false" cascade="all">
+			<key column="shopping_cart_id"/>
+			<one-to-many
+				class="org.rti.webgenome.domain.Experiment"/>
+		</set>
+		<list name="plots"
+			lazy="false" cascade="all">
+			<key column="shopping_cart_id" not-null="true"/>
+			<list-index column="list_index"/>
+			<one-to-many
+				class="org.rti.webgenome.domain.Plot"/>
+		</list>
+		<many-to-one name="bioassayColorChooser"
+			column="color_chooser_id"
+			class="org.rti.webgenome.graphics.util.ColorChooser"
+			cascade="all"
+			lazy="false"/>
+	</class>
+
+</hibernate-mapping>

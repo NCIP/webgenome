@@ -1,0 +1,140 @@
+Release Notes
+     
+                              webGenome
+                             Release 3.2
+                            March 6, 2009
+ 
+ 		         Research Triangle Institute
+ 		                    and
+        National Cancer Institute Center for Bioinformatics
+ 
+
+ =====================================================================
+                             Contents
+ =====================================================================
+     
+     1.0 webGenome Introduction and background
+     2.0 Features
+     3.0 Known Issues
+     4.0 Bug Reports and Support
+     5.0 Tutorials and help pages
+     6.0 NCICB Web resources
+ 
+ 
+ =====================================================================
+               1.0 WebGenome Introduction and Background
+ =====================================================================
+ 
+     WebGenome
+     
+     WebGenome is a web-based application for creating genomics plots of
+     array-based data and genomic annotation. This version provides a client
+     plotting service to external applications, such as Rembrandt, as well
+     as a standalone plotting service which can be used by accessing
+     WebGenome directly. Data may be loaded by selecting it in referring
+     applications, which is the case for Rembrant, or by uploading it directly
+     through the WebGenome data upload facility.
+
+     Data types supported in this version include copy number (generated from array-CGH
+     or SNP-array), fold change, loss of heterozygosity (LOH), and gene expression.
+     WebGenome supports the creation of five types of plots:
+     
+     * Genome Snapshot Plot
+     * Scatter Plots - Plots DNA copy number measurements across the genome,
+       chromosome, or chromosomal interval.
+     * Ideogram Plot - Shows chromosomal amplifications and deletions in
+       relation to cytogenetic chromosome ideograms.
+     * Annotation Plot
+     * Bar Plot
+       
+     Additionally, a number of basic statistical operations are available to process data
+     prior to plotting. 
+       
+     The underlying data model used by webGenome is a simplified version of
+     the MAGE-OM. The most important concept for the use of the system is
+     that individual array data sets, called bioassays are aggregated into experiments. 
+     
+     WebGenome can be accessed at: http://webgenome.nci.nih.gov/
+
+
+     Visit the following site URL for more information:
+     
+     http://caintegrator-info.nci.nih.gov/developers/#wgenome
+    
+ 
+ =====================================================================
+                   2.0 Changes in this Release
+ =====================================================================
+    
+   WebGenome version 3.2 includes the following newly implemented features:
+    
+     -- GForge Req  #7449 caArray integration
+     -- GForge Req #17712 Edit Registration
+     -- GForge Req #19814 Registration link in menu
+     -- GForge Req #14888 Contact Us capability
+     -- GForge Req #18049 plot signal over a range, from position 1 to position 2
+     -- GForge Req #17794 Help Window Too Small - Make Larger
+     
+     -- Help documentation updated
+
+   WebGenome version 3.2 includes the following bug fixes:
+
+     -- GForge bug #14904 Error message in data uploading   
+     -- GForge bug #17093 Delete plot/experiment error
+     -- GForge bug #17700 Email address - no error message for registrant - if leave this blank
+     -- GForge bug #17732 Version 3.0 misleading on home page. Removed static version information.
+     -- GForge bug #18035 Forgot Password Page Title Wrong
+     -- GForge bug #19283 Support for csv files that contain quotes
+     -- GForge bug #19453 fail to inform user if using an existing email account
+     -- GForge bug #19706 change to UserId for Shopping Cart and Jobs
+
+
+ =====================================================================
+                   3.0 Known Issues
+ =====================================================================
+ 
+     --  Plot interactivity does not function correctly with the
+         Safari browser on the Macintosh operating environment. Plots
+         can still be generated correctly using Safari, but
+         mouse-over and tooltip interaction do not function. This issue
+         is primarily caused by Safari's inadequate JavaScript implementation/support.
+         To obtain full plot interactivity using the Macintosh OS, users
+         are recommended to use the Firefox browser - which
+         works correctly.
+
+      
+ =====================================================================
+                   4.0 Bug Reports and Support
+ =====================================================================
+     
+     Send email to vbakalov@rti.org to request support or report a bug.
+     Please put "webGenome Support" in the subject line for support.
+     Please put "webGenome Bug" in the subject line when reporting a bug.
+ 
+   =====================================================================
+                   5.0 Tutorials and help pages
+ =====================================================================
+
+     Test plots can be generated from the webGenome home page using randomly
+     generated data. Users may interact with the test plots using the Work Area to
+     change the initial plots.
+     
+     Help information is available from all webGenome pages.
+
+ =====================================================================
+                    6.0 NCICB resources
+ =====================================================================
+     
+     The NCI Center for Bioinformatics
+ 
+     --  http://ncicb.nci.nih.gov/
+
+     Cancer Biomedical Informatics Grid
+     
+     --  https://cabig.nci.nih.gov
+     
+     NCICB Application Support
+      
+     --  http://ncicbsupport.nci.nih.gov/sw/
+ 
+     //end

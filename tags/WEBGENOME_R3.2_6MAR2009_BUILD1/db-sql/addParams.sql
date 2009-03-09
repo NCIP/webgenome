@@ -1,0 +1,1 @@
+alter table job add(params varchar(255) null)
