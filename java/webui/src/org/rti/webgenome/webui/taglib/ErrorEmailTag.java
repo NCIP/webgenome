@@ -90,7 +90,7 @@ public class ErrorEmailTag extends TagSupport {
     public boolean hideMessage ( ) {
         return hideMessage != null ;
     }
-    public void    setHideMessage ( String hideMessage ) {
+    public void   setHideMessage ( String hideMessage ) {
         if ( "true".equalsIgnoreCase( hideMessage ) )
                 this.hideMessage = hideMessage;
     }
@@ -117,7 +117,7 @@ public class ErrorEmailTag extends TagSupport {
             // Get email reporting boolean
             String errorEmailReportingEnabled = SystemUtils.getApplicationProperty ( "error.email.reporting.enabled" ) ;
 
-            // Only send emails if email reporting is enabled
+            // Only send emails, if email reporting is enabled
             boolean emailed = false;
             if(errorEmailReportingEnabled != null) if(errorEmailReportingEnabled.trim().toLowerCase().equals("true")) {
 
@@ -168,11 +168,11 @@ public class ErrorEmailTag extends TagSupport {
 
                 if ( emailed ) {
                     out.println( "<p>The error was emailed to the System Administrator who will " +
-                                 "investigate the cause of them problem and rectify it.</p>" ) ;
+                                 "investigate the problem.</p>" ) ;
                 }
                 else {
                     out.println( "<p>The error was unable to be sent to the System Administrator. " +
-                                 "Please help us to rectify the problem by cutting and pasting " +
+                                 "Please help us to resolve the problem by cutting and pasting " +
                                  "the error message and emailing it to " +
                                  "<a href=\"mailto:" + to + "\">" + to + "</a></p>" ) ;
                 }
