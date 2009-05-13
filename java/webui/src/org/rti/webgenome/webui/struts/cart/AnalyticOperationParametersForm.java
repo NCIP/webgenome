@@ -177,11 +177,17 @@ public class AnalyticOperationParametersForm extends BaseForm {
 			this.analyticOperationFactory.newAnalyticOperation(
 					this.operationKey);
 		Map paramMap = request.getParameterMap();
+		String currentMin = "" ; // need this for making sure lower bounds is less than upper bounds
+		String currentMax = "" ; // needed for comparing to lower bounds
 		for (Object paramNameObj : paramMap.keySet()) {
     		String paramName = (String) paramNameObj;
     		if (paramName.indexOf("prop_") == 0) {
     			String propName = paramName.substring("prop_".length());
     			String propValue = request.getParameter(paramName);
+    			if ( "min".equalsIgnoreCase ( propName ) )
+    				currentMin = propValue ;
+    			if ( "max".equalsIgnoreCase( propName ) )
+    				currentMax = propValue ;
     			try {
     				op.setProperty(propName, propValue);
     			} catch (BadUserConfigurablePropertyException e) {
@@ -191,6 +197,57 @@ public class AnalyticOperationParametersForm extends BaseForm {
     			}
     		}
     	}
+		
+		//
+		// Validate lower <= upper bounds
+		//
+		if ( ! isMinLower ( currentMin, currentMax ) ) {
+			errors.add ( "global", new ActionError ( "invalid.fields" ) ) ;
+			errors.add ( "global", new ActionError ( "lower.bounds" ) ) ;
+		}
+		
 		return errors;
+	}
+
+	/**
+	 * Convenience method for determining whether, if both min and max are specified, that min is less than or equal
+	 * to the max. This is part of the lower and upper bounds check - to make sure lower is less than or equal to the
+	 * upper bounds.
+	 * @param currentMin
+	 * @param currentMax
+	 * @return
+	 */
+	private boolean isMinLower ( String currentMin, String currentMax ) {
+		boolean lower = true ;
+		
+		
+		if ( isSpecified ( currentMin ) && isSpecified ( currentMax ) ) {
+			float minimum = new Float(currentMin).floatValue() ;
+			float maximum = new Float(currentMax).floatValue() ;
+			if ( minimum > maximum ) {
+				lower = false ;
+			}
+		}
+		
+		return lower ;
+	}
+	
+	private boolean isSpecified ( String value ) {
+		boolean specified = false ;
+		
+		if ( ! "".equals( value ) ) {
+			try {
+				float floatValue = new Float( value ).floatValue() ;
+				
+				if (!Float.isNaN(floatValue) && !Float.isInfinite(floatValue)) {
+					specified = true ;
+				}
+			}
+			catch ( NumberFormatException ignored ) {
+				// ignore, because other parts of the validation process do this
+			}
+		}
+		
+		return specified ;
 	}
 }
