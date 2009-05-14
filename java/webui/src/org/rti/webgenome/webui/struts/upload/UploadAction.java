@@ -109,16 +109,14 @@ public class UploadAction extends BaseAction {
 		upload.setPositionUnits(BpUnits.getUnits(uForm.getUnits()));
 		upload.setPositionColumnName(uForm.getPositionColumnName());
 		
-		
-		upload.setQuantitationType(
-					QuantitationType.getQuantitationType(
-							uForm.getQuantitationTypeId()));
+		upload.setQuantitationType( QuantitationType.getQuantitationType( uForm.getQuantitationTypeId() ));
+		upload.setQuantitationTypeLabel(uForm.getQuantitationTypeOther()) ;
 		
 		//TODO: Delete this, VB added just for test
 		//System.out.println(upload.print2Buff());
 		
 		// if range is selected
-		if (uForm.getPositionColumnName().equals("")){ 
+		if (uForm.getPositionColumnName().equals("")){
 			upload.setStartPositionColumnName(uForm.getStartPositionColumnName());
 			upload.setEndPositionColumnName(uForm.getEndPositionColumnName());
 		
