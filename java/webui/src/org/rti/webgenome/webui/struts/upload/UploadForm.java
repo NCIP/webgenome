@@ -110,7 +110,7 @@ public class UploadForm extends BaseForm {
 	}
 
 	/**
-	 * Get name of colum containing chromosomal position.
+	 * Get name of column containing chromosomal position.
 	 * @return Column name
 	 */
 	public String getChromosomeColumnName() {
@@ -143,7 +143,7 @@ public class UploadForm extends BaseForm {
 			final String quantitationTypeId) {
 		this.quantitationTypeId = quantitationTypeId;
 	}
-
+	
 	/**
 	 * Get name of experiment that will contain uploaded data.
 	 * @return Name of experiment that will contain uploaded data.
@@ -221,8 +221,9 @@ public class UploadForm extends BaseForm {
 	public ActionErrors validate(final ActionMapping mapping,
 			final HttpServletRequest request) {
 		ActionErrors errors = new ActionErrors();
-		this.validateTextBoxField("experimentName",
-				this.experimentName, errors);
+		this.validateTextBoxField("experimentName", this.experimentName, errors);
+		if ( QuantitationType.Other.getName().equals(this.quantitationTypeId ) )
+			this.validateTextBoxField("quantitationTypeOther", this.quantitationTypeOther, errors) ;
 		if (errors.size() > 0) {
 			errors.add("global", new ActionError("invalid.fields"));
 		}
