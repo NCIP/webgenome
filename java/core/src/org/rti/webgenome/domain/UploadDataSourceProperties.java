@@ -131,6 +131,9 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	/** Quantitation type of all data. */
 	private QuantitationType quantitationType = null;
 	
+	/** Quantitation Type Other Label */
+	private String quantitationTypeLabel = null ;
+	
 	
 	//
 	//  G E T T E R S / S E T T E R S
@@ -167,7 +170,7 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	public QuantitationType getQuantitationType() {
 		return quantitationType;
 	}
-
+	
 	/**
 	 * Set quantitation type of all data.
 	 * @param quantitationType Quantitation type
@@ -176,6 +179,14 @@ extends DataSourceProperties.BaseDataSourceProperties {
 	public void setQuantitationType(
 			final QuantitationType quantitationType) {
 		this.quantitationType = quantitationType;
+	}
+	
+	public String getQuantitationTypeLabel() {
+		return this.quantitationTypeLabel ;
+	}
+	
+	public void setQuantitationTypeLabel ( final String quantitationTypelabel ) {
+		this.quantitationTypeLabel = quantitationTypelabel ;
 	}
 
 	/**
@@ -377,6 +388,7 @@ extends DataSourceProperties.BaseDataSourceProperties {
 		this.reporterLocalFileName = props.reporterLocalFileName;
 		this.reporterRemoteFileName = props.reporterRemoteFileName;
 		this.quantitationType = props.quantitationType;
+		this.quantitationTypeLabel = props.quantitationTypeLabel ;
 	}
 	
 	//
@@ -547,6 +559,11 @@ extends DataSourceProperties.BaseDataSourceProperties {
 		else
 			buff.append("quantitationType is empty");
 		
+		if ( this.quantitationTypeLabel != null )
+			buff.append("quantitationTypeLabel = " + this.quantitationTypeLabel + "\n") ;
+		else
+			buff.append("quantitationTypeLabel is empty" ) ;
+		
 		if (this.reporterFileFormat != null)
 			buff.append("reporterFileFormat = " + this.reporterFileFormat.print2Buff() + "\n");
 		else
@@ -555,8 +572,6 @@ extends DataSourceProperties.BaseDataSourceProperties {
 		buff.append("reporterFileReporterNameColumnName = " + this.reporterFileReporterNameColumnName + "\n");	
 		buff.append("reporterLocalFileName = " + this.reporterLocalFileName + "\n");	
 		buff.append("reporterRemoteFileName = " + this.reporterRemoteFileName + "\n");	
-		
-	
 			
 		return buff.toString();
 	}
