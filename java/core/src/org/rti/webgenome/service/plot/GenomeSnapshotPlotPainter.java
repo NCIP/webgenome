@@ -131,6 +131,7 @@ public class GenomeSnapshotPlotPainter extends PlotPainter {
         QuantitationType referenceYAxisQType = null;
         QuantitationType copyNumberQType =
         	Experiment.getCopyNumberQuantitationType(experiments);
+        String quantitationTypeLabel = Experiment.getCopyNumberQuantitationLabel(experiments);
 		if (copyNumberQType != null) {
 			copyNumberAxis = new Axis(
 					params.getMinY(),
@@ -202,7 +203,9 @@ public class GenomeSnapshotPlotPainter extends PlotPainter {
 	            VerticalAlignment.BELOW);
         
         // Add reference Y-axes
-	    String yCaptionText = referenceYAxisQType.getName();
+	    String yCaptionText = referenceYAxisQType.getName() ;
+	    if ( quantitationTypeLabel != null ) // Will be non-null, if 'Other' label is set.
+	    	yCaptionText = quantitationTypeLabel ;
         panel.add(referenceYAxis, HorizontalAlignment.LEFT_JUSTIFIED,
         		VerticalAlignment.BOTTOM_JUSTIFIED);
         Caption yCaption = new Caption(yCaptionText,

@@ -200,6 +200,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 			Experiment.getCopyNumberQuantitationType(experiments);
 		QuantitationType expressionQT =
 			Experiment.getExpressionQuantitationType(experiments);
+		String quantitationTypeLabel = Experiment.getCopyNumberQuantitationLabel(experiments);
 		while (rowAdder.hasMore()) {
 			PlotPanel row = panel.newChildPlotPanel();
 			rowAdder.paintRow(row);
@@ -212,7 +213,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 			panel.add(row, HorizontalAlignment.LEFT_JUSTIFIED, va);
 			//this.addScales(panel, copyNumberQT, expressionQT, params);
 		}
-		this.addScales(panel, copyNumberQT, expressionQT, params);	// add scale on bottom
+		this.addScales(panel, copyNumberQT, expressionQT, quantitationTypeLabel,params);	// add scale on bottom
 
 		return evtHandlerBoundaries;
 	}
@@ -229,9 +230,13 @@ public class IdeogramPlotPainter extends PlotPainter {
     private void addScales(final PlotPanel panel,
     		final QuantitationType copyNumberQT,
     		final QuantitationType expressionQT,
+    		final String qtLabel,
     		final IdeogramPlotParameters params) {
     	PlotPanel scales = panel.newChildPlotPanel();
 		if (copyNumberQT != null) {
+			String qtName = copyNumberQT.getName() ;
+			if ( qtLabel != null )
+				qtName = qtLabel ;
 			PlotPanel cnPanel = scales.newChildPlotPanel();
 			ColorScale scale = new ColorScale(
 					params.getCopyNumberMinSaturation(),
@@ -240,7 +245,7 @@ public class IdeogramPlotPainter extends PlotPainter {
 					COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
 			cnPanel.add(scale, HorizontalAlignment.CENTERED,
 					VerticalAlignment.TOP_JUSTIFIED);
-			cnPanel.add(new Caption(copyNumberQT.getName(),
+			cnPanel.add(new Caption(qtName,
 					Orientation.HORIZONTAL,
 					false, panel.getDrawingCanvas()),
 					HorizontalAlignment.CENTERED,

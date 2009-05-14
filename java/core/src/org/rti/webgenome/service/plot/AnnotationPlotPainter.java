@@ -224,7 +224,8 @@ public class AnnotationPlotPainter extends PlotPainter {
 			Experiment.getCopyNumberQuantitationType(experiments);
 		QuantitationType expressionQT =
 			Experiment.getExpressionQuantitationType(experiments);
-		this.addScales(childPanel, copyNumberQT, expressionQT, params);
+		String qtLabel = Experiment.getCopyNumberQuantitationLabel(experiments);
+		this.addScales(childPanel, copyNumberQT, expressionQT, qtLabel, params);
 		
 		// Add grid
 		Grid grid = axis.newGrid(params.getWidth(),
@@ -367,9 +368,13 @@ public class AnnotationPlotPainter extends PlotPainter {
     private void addScales(final PlotPanel panel,
     		final QuantitationType copyNumberQT,
     		final QuantitationType expressionQT,
+    		final String qtLabel,
     		final AnnotationPlotParameters params) {
     	PlotPanel scales = panel.newChildPlotPanel();
 		if (copyNumberQT != null) {
+			String name = copyNumberQT.getName() ;
+			if ( qtLabel != null ) // this will be non-null for Other label
+				name = qtLabel ;
 			PlotPanel cnPanel = scales.newChildPlotPanel();
 			ColorScale scale = new ColorScale(
 					params.getCopyNumberMinSaturation(),
@@ -378,7 +383,7 @@ public class AnnotationPlotPainter extends PlotPainter {
 					COLOR_SCALE_NUM_BINS, panel.getDrawingCanvas());
 			cnPanel.add(scale, HorizontalAlignment.CENTERED,
 					VerticalAlignment.TOP_JUSTIFIED);
-			cnPanel.add(new Caption(copyNumberQT.getName(),
+			cnPanel.add(new Caption(name,
 					Orientation.HORIZONTAL,
 					false, panel.getDrawingCanvas()),
 					HorizontalAlignment.CENTERED,
