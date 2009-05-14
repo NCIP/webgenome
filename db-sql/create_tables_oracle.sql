@@ -495,6 +495,7 @@ CREATE TABLE experiment (
 	name VARCHAR2(128),
 	source_db_id VARCHAR2(256),
 	quant_type VARCHAR2(128),
+    quant_type_label VARCHAR2(256),
 	terminal VARCHAR2(8),
 	organism_id NUMBER(38),
 	data_src_props_id NUMBER(38),
