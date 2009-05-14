@@ -3,7 +3,7 @@
 <%@ taglib uri="/WEB-INF/struts-bean.tld" prefix="bean" %>
 <%@ taglib uri="/WEB-INF/webgenome.tld" prefix="webgenome" %>
 
-<%@ page import="org.rti.webgenome.domain.Experiment" %>
+<%@ page import="org.rti.webgenome.domain.Experiment,org.rti.webgenome.domain.QuantitationType" %>
 
 <script language="Javascript">
 
@@ -127,13 +127,17 @@
 						</td>
 						<td valign="middle" align="left">
 							<bean:write name="experiment" property="name"/><br>
-							(<bean:write name="experiment" property="quantitationType.name"/>)
+							(<bean:write name="experiment" property="quantitationType.name"/><%
+								if ( QuantitationType.Other.getName().equals(exp.getQuantitationTypeAsString() ) && 
+									 exp.getQuantitationTypeLabel() != null )
+								{
+									out.println ( ":<br/>&nbsp;&nbsp;<em>" + exp.getQuantitationTypeLabel() + "</em>" ) ;
+								}
+							%>)
 						</td>
 						<td valign="middle" width="1">
-							<html:img page="/images/spacer.gif"
-								border="0"
-								width="1" height="1"
-						/></td>
+							<html:img page="/images/spacer.gif" border="0" width="1" height="1" alt=""/>
+						</td>
 						<td valign="middle" align="right" width="48">
 							<span style="font-size:16px;">
 								<table><tr>
