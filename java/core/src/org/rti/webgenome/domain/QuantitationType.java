@@ -114,7 +114,7 @@ public final class QuantitationType implements Serializable {
     	INDEX.put(COPY_NUMBER.getId(), COPY_NUMBER);
     	INDEX.put(LOG_2_RATIO_COPY_NUMBER.getId(), LOG_2_RATIO_COPY_NUMBER);
     	INDEX.put(LOH.getId(), LOH);
-    	//TODO: For future use INDEX.put(Other.getId(), Other);
+    	INDEX.put(Other.getId(), Other) ;
     }
     
     /** Serialized version ID. */
@@ -177,6 +177,7 @@ public final class QuantitationType implements Serializable {
     		final boolean isExpressionData) {
     	this.id = id;
         this.name = name;
+        this.otherValue = null ;
         this.expressionData = isExpressionData;
     }
     
@@ -191,8 +192,6 @@ public final class QuantitationType implements Serializable {
      * @return Quantitation type
      */
     public  static QuantitationType getQuantitationType(final String id) {
-    	
-    	
     	return INDEX.get(id);
     }
     
@@ -213,7 +212,4 @@ public final class QuantitationType implements Serializable {
 	public void setOtherValue(String otherValue) {
 		this.otherValue = otherValue;
 	}
-    
-	
-    
 }
