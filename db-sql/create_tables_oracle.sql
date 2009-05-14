@@ -166,6 +166,7 @@ CREATE TABLE data_src_props (
 	exp_name VARCHAR2(128),
 	organism_id NUMBER(38),
 	quant_type VARCHAR2(256),
+	quant_type_label VARCHAR(256),
 	an_op_class_name VARCHAR2(256),
 	input_experiment_id NUMBER(38),
 	PRIMARY KEY (id)
