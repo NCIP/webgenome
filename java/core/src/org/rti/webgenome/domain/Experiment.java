@@ -98,6 +98,9 @@ public class Experiment implements Serializable {
     private QuantitationType quantitationType =
     	QuantitationType.LOG_2_RATIO_FOLD_CHANGE;
     
+    /** Quantitation type label. Optional - used if Quantitation Type is Other */
+    private String quantitationTypeLabel = null ;
+    
     /** Organism. */
     private Organism organism = null;
     
@@ -286,6 +289,15 @@ public class Experiment implements Serializable {
             final QuantitationType quantitationType) {
         this.quantitationType = quantitationType;
     }
+    
+    public final String getQuantitationTypeLabel () {
+    	return this.quantitationTypeLabel;
+    }
+    
+    public final void setQuantitationTypeLabel( final String quantitationTypeLabel ) {
+    	this.quantitationTypeLabel = quantitationTypeLabel ;
+    }
+    
     
     // ==================================
     //       Constructors
@@ -643,6 +655,7 @@ public class Experiment implements Serializable {
     	this.name = exp.name;
     	this.organism = exp.organism;
     	this.quantitationType = exp.quantitationType;
+    	this.quantitationTypeLabel = exp.quantitationTypeLabel ;
     	this.sourceDbId = exp.sourceDbId;
     	this.terminal = exp.terminal;
     }
@@ -1238,6 +1251,22 @@ public class Experiment implements Serializable {
     		}
     	}
     	return qt;
+    }
+    
+    public static String getCopyNumberQuantitationLabel (
+    		final Collection<Experiment> experiments) {
+    	String label = null ;
+    	QuantitationType qt = null;
+    	for (Experiment exp : experiments) {
+    		if (!exp.getQuantitationType().isExpressionData()) {
+	    		qt = exp.quantitationType;
+	    		if (qt != null) {
+	    			label = exp.getQuantitationTypeLabel() ;
+	    			break;
+	    		}
+    		}
+    	}
+    	return label ;
     }
     
     
