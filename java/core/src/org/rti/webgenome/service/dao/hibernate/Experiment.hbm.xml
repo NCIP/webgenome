@@ -12,6 +12,7 @@
 		<property name="name" column="name"/>
 		<property name="sourceDbId" column="source_db_id"/>
 		<property name="quantitationTypeAsString" column="quant_type"/>
+		<property name="quantitationTypeLabel" column="quant_type_label"/>
 		<property name="terminal" column="terminal"/>
 		<set name="bioAssays" table="experiment_bioassay"
 			lazy="false" cascade="all">
