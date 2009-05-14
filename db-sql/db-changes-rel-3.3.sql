@@ -8,6 +8,8 @@
 
 alter table experiment add quant_type_label VARCHAR2(256) ;
 
+alter table data_src_props add quant_type_label VARCHAR2(256) ;
+
 --
 --
 --
