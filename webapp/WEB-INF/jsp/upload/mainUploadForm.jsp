@@ -125,39 +125,31 @@ Organism
 
 <p>
 Quantitation type
-<html:select property="quantitationTypeId">
-	<html:options collection="qTypes" property="id"
-		labelProperty="name"/>
+<html:select property="quantitationTypeId" onchange="onQuantitationType()">
+	<html:options collection="qTypes" property="id" labelProperty="name"/>
 </html:select>
-
-<%--Other:
-<% if (true){%>
-	<html:text property="quantitationTypeOther" disabled="true" />    
-<%}else{%>
-    <html:text property="quantitationTypeOther"/>
-<%}%>--%>
-	
+<em>If Other, specify:</em>
+<html:errors property="quantitationTypeOther" />
+<html:text property="quantitationTypeOther"/>
 </p>
-
-
 
 <p>
 	<html:submit property="OK"/>
 	<input type="button" value="Cancel" onClick="window.location.href='<html:rewrite page="/upload/mainImport.do"/>'"/>
 </p>
 </html:form>
-
 <script type="text/javascript" language="JavaScript">
-function onQuantitaionType(){
-      
-      var elOtherQuantiationTypeId = document.getElementById("quantitationTypeId");
-      var quantitationTypeOther = document.getElementById("quantitationTypeOther");
-      
-      alert(elOtherQuantiationTypeId.value);
-      
-      if ( elOtherQuantiationTypeId.value == "Other"){      	
-      	quantitationTypeOther.disabled = false;
-      }
-    }
-    
+
+onQuantitationType() ; // serves as an onload call
+
+function onQuantitationType() {
+	var valueSelected = document.forms[0].quantitationTypeId.value ;
+	if ( valueSelected == "Other" ) {
+		document.forms[0].quantitationTypeOther.disabled = false ;
+	}
+	else {
+		document.forms[0].quantitationTypeOther.disabled = true ;
+		document.forms[0].quantitationTypeOther.value = "" ;
+	}
+}
 </script>    
