@@ -131,7 +131,7 @@
 								if ( QuantitationType.Other.getName().equals(exp.getQuantitationTypeAsString() ) && 
 									 exp.getQuantitationTypeLabel() != null )
 								{
-									out.println ( ":<br/>&nbsp;&nbsp;<em>" + exp.getQuantitationTypeLabel() + "</em>" ) ;
+									out.println ( ": <em>" + exp.getQuantitationTypeLabel() + "</em>" ) ;
 								}
 							%>)
 						</td>
