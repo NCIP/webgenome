@@ -357,6 +357,7 @@ public class IOService {
 		experiment.setOrganism(upload.getOrganism());
 		experiment.setId(this.experimentIdGenerator.nextId());
 		experiment.setQuantitationType(upload.getQuantitationType());
+		experiment.setQuantitationTypeLabel(upload.getQuantitationTypeLabel());
 		File reporterFile = null;
 		String reporterNameColName = null;
 		RectangularTextFileFormat format = null;
