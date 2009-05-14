@@ -270,6 +270,9 @@ public class ScatterPlotPainter extends PlotPainter {
     			Experiment.getCopyNumberQuantitationType(experiments);
     		if (copyNumberQT != null) {
     			this.leftYAxisQuantitationType = copyNumberQT;
+    			String label = Experiment.getCopyNumberQuantitationLabel(experiments) ;
+    			if ( label != null ) // will only usually be non-null for Other value
+    				this.leftYAxisQuantitationType.setOtherValue( label ) ;
     			this.leftYAxisMaxValue = params.getCopyNumberMaxY();
     			this.leftYAxisMinValue = params.getCopyNumberMinY();
     		}
@@ -278,6 +281,9 @@ public class ScatterPlotPainter extends PlotPainter {
     		if (expressionQT != null) {
     			if (this.leftYAxisQuantitationType == null) {
     				this.leftYAxisQuantitationType = expressionQT;
+        			String label = Experiment.getCopyNumberQuantitationLabel(experiments) ;
+        			if ( label != null ) // will only usually be non-null for Other value
+        				this.leftYAxisQuantitationType.setOtherValue( label ) ;
     				this.leftYAxisMaxValue = params.getExpressionMaxY();
     				this.leftYAxisMinValue = params.getExpressionMinY();
     			} else {
@@ -358,8 +364,14 @@ public class ScatterPlotPainter extends PlotPainter {
     	 * @param yAxis Axis to add
     	 */
     	private void addLeftYAxis(final PlotPanel row, final Axis yAxis) {
+
+    		// Other value will be set for when Quantitation Type is 'Other'.
+    		String name = leftYAxisQuantitationType.getOtherValue() != null ?
+    					  leftYAxisQuantitationType.getOtherValue() :
+    					  leftYAxisQuantitationType.getName() ;
+    		
 	        Caption yCaption = new Caption(
-	        		leftYAxisQuantitationType.getName(),
+	        		name,
 	                Orientation.HORIZONTAL, true, row.getDrawingCanvas());
 	        row.add(yAxis, HorizontalAlignment.LEFT_JUSTIFIED,
 	                VerticalAlignment.BOTTOM_JUSTIFIED);
@@ -380,8 +392,9 @@ public class ScatterPlotPainter extends PlotPainter {
 	                Orientation.VERTICAL, Location.RIGHT_OF,
 	                row.getDrawingCanvas());
 	        Caption yCaption = new Caption(
-	        		rightYAxisQuantitationType.getName(),
+	        		rightYAxisQuantitationType.getName(), 
 	                Orientation.HORIZONTAL, true, row.getDrawingCanvas());
+	        // TODO: (Above) Not sure whether Caption for Other (Quantitation Type) is needed
 	        row.add(yAxis, HorizontalAlignment.RIGHT_JUSTIFIED,
 	                VerticalAlignment.BOTTOM_JUSTIFIED);
 	        row.add(yCaption, HorizontalAlignment.RIGHT_OF,
