@@ -33,6 +33,7 @@
 			<property name="positionUnitsName" column="pos_units"/>
 			<property name="experimentName" column="exp_name"/>
 			<property name="quantitationTypeId" column="quant_type"/>
+			<property name="quantitationTypeLabel" column="quant_type_label"/>
 			<many-to-one name="organism" column="organism_id"
 				class="org.rti.webgenome.domain.Organism"
 				lazy="false"/>
