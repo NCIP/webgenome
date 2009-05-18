@@ -54,6 +54,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.rti.webgenome.domain.BioAssay;
@@ -273,13 +275,23 @@ public final class Legend implements PlotElement {
      */
     private int layoutGraphicPrimitives(final Collection<BioAssay> bioAssays,
             final int topY, final DrawingCanvas canvas) {
+    	ArrayList<BioAssay> sortedBA = new ArrayList(bioAssays);	// init sorted bioassays
+    	// comparator class for sorting bio assays
+    	class BioAssaySortByName implements Comparator<BioAssay>{
+    		public int compare(BioAssay ba1, BioAssay ba2) {
+    			return ba1.getName().compareTo(ba2.getName());
+    		}
+    	}
+    	// sort bioassays
+    	Collections.sort(sortedBA,new BioAssaySortByName());
+
         int textY = topY + FONT_SIZE;
         int boxY = topY;
         if (bioAssays != null) {
             int leftBoundary = this.origin.x + PADDING * 2;
             int rightBoundary = this.origin.x + this.width - PADDING * 2;
             int boxX = leftBoundary;
-            for (BioAssay ba : bioAssays) {
+            for (BioAssay ba : sortedBA) {
 
             	// Account for selected bioassays
             	int fontSize = FONT_SIZE;
