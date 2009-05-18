@@ -5,7 +5,7 @@
 upload bioassays into WebGenome.</p>
 
 <center>
-	
+	<html:errors property="global"/>
 	<html:form action="/user/caarrayLogin" focus="name">
 
 	<table cellpadding="5" cellspacing="0" border="0" style="margin-top: 10px;">
