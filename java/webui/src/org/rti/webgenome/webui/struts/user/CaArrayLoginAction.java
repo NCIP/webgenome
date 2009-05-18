@@ -90,10 +90,18 @@ public final class CaArrayLoginAction extends BaseAction {
         final HttpServletResponse response
     ) throws Exception {
     	LoginForm lf = (LoginForm) form;
+    	try{
+    		//initiate caArray client by specifying the caArray credentials.
+    		CaArrayClient caArrayClient = new CaArrayClient(lf.getName(), lf.getPassword());
+    		PageContext.setCaArrayClient(caArrayClient, request);
+    	}catch(Exception e){
+    		ActionErrors errors = new ActionErrors();
+    		errors.add("global", new ActionError("caarray.user.not.found"));
+    		this.saveErrors(request, errors);
+    		return mapping.findForward("failure");
+    	}
     	
-    	//initiate caArray client by specifying the caArray credentials.
-    	CaArrayClient caArrayClient = new CaArrayClient(lf.getName(), lf.getPassword());
-    	PageContext.setCaArrayClient(caArrayClient, request);
+    	
     	
         return mapping.findForward("success");
     }
