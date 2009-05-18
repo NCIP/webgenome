@@ -78,7 +78,7 @@ public class HeatMapColorFactory {
     //       Attributes
     // ========================================
     
-	/** Ordered pallate of colors. */
+	/** Ordered palette of colors. */
     private final Color[] pallate;
     
     /**
@@ -94,7 +94,17 @@ public class HeatMapColorFactory {
      * mapped to pure red (#FF0000).
      */
     private final float highSaturation;
-    
+
+    /**
+     * Missing value color
+     */
+    private final Color missingValueColor = Color.gray;
+
+    /**
+     * Missing value color value 
+     */
+    private final float missingValueColorValue = Float.NaN;
+
     /**
      * Index of last bin, or <code>pallate.length - 1.</code>.
      * For computational efficiency, this arithmetic
@@ -139,7 +149,7 @@ public class HeatMapColorFactory {
 
     
     /**
-     * Initialize pallate.
+     * Initialize palette.
      */
     private void initializePallate() {
         
@@ -223,6 +233,7 @@ public class HeatMapColorFactory {
         if (Float.isNaN(value) || Float.isInfinite(value)) {
             throw new IllegalArgumentException("Value must be real number");
         }
+        if(value == this.missingValueColorValue) return this.missingValueColor;	// return missing value color
         int binNum = this.binNumber(value);
         return this.pallate[binNum];
     }
