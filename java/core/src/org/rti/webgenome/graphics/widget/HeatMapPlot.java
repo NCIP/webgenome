@@ -56,6 +56,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -117,6 +119,9 @@ public final class HeatMapPlot implements PlotElement {
 
 	/** Color of bracket lines. */
 	private static final Color LINE_COLOR = Color.BLACK;
+
+	/** Missing value constant */
+	private static final float missingValueConstant = Float.NaN;
 
 	// ============================
 	//        Attributes
@@ -337,7 +342,17 @@ public final class HeatMapPlot implements PlotElement {
     	int textY = this.trackMinY - PADDING;
 
     	// Draw data tracks and bioassay labels
-    	for (BioAssay ba : experiment.getBioAssays()) {
+    	ArrayList<BioAssay> sortedBA = new ArrayList(experiment.getBioAssays());	// init sorted bioassays
+    	// comparator class for sorting bio assays
+    	class BioAssaySortByName implements Comparator<BioAssay>{
+    		public int compare(BioAssay ba1, BioAssay ba2) {
+    			return ba1.getName().compareTo(ba2.getName());
+    		}
+    	}
+    	// sort bioassays
+    	Collections.sort(sortedBA,new BioAssaySortByName());
+    	// perform loop on sorted bioassays
+    	for (BioAssay ba : sortedBA) {
     		ChromosomeArrayData cad = this.chromosomeArrayDataGetter.
 				getChromosomeArrayData(ba, this.chromosome);
 			if (cad != null) {
@@ -354,6 +369,8 @@ public final class HeatMapPlot implements PlotElement {
 	    		text.setRotation(LABEL_ROTATION);
 	    		this.graphicPrimitives.add(text);
 	    		trackX += this.plotParameters.getTrackWidth() + PADDING;
+			} else {
+				System.out.println(ba.getName() + " cad found null!");
 			}
     	}
 
@@ -408,6 +425,9 @@ public final class HeatMapPlot implements PlotElement {
 	    	for (int i = 0; i < n; i++) {
 	    		ArrayDatum datum = dataList.get(i);
 	    		float value = datum.getValue();
+	    		if(value == Float.NaN) {
+	    			System.out.println("" + i + " - NAN");
+	    		}
 	    		if (this.drawValue(value, qType)) {
 		    		long start = 0;
 		    		long middle = datum.getReporter().getLocation();
@@ -451,7 +471,7 @@ public final class HeatMapPlot implements PlotElement {
 		    			genes.append(s);
 		    		}
 		    		String mouseOverText = "Range: " + start + "-" + end
-		    			+ "; Value: " + FORMAT.format(value);
+		    			+ "; Value: " + (value == missingValueConstant ? "missing" : FORMAT.format(value));
 		    		if (annotation.length() > 0) {
 		    			mouseOverText += "; Annotation: "
 		    				+ annotation.toString();
@@ -461,6 +481,9 @@ public final class HeatMapPlot implements PlotElement {
 		    		}
 		    		stripes.add(new MouseOverStripe(yMOS,
 		    				yMOS + height, mouseOverText));
+	    		}
+	    		else {
+	    			System.out.println("" + i + " draw failed!");
 	    		}
 	    	}
     	}
