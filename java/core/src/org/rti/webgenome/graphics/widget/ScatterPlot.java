@@ -54,6 +54,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
@@ -548,7 +550,17 @@ public final class ScatterPlot implements PlotElement {
     	BioAssay selected = null;
     	QuantitationType selectedQT = null;
         for (Experiment exp : this.experiments) {
-            for (BioAssay bioAssay : exp.getBioAssays()) {
+        	ArrayList<BioAssay> sortedBA = new ArrayList(exp.getBioAssays());	// init sorted bioassays
+        	// comparator class for sorting bio assays
+        	class BioAssaySortByName implements Comparator<BioAssay>{
+        		public int compare(BioAssay ba1, BioAssay ba2) {
+        			return ba1.getName().compareTo(ba2.getName());
+        		}
+        	}
+        	// sort bioassays
+        	Collections.sort(sortedBA,new BioAssaySortByName());
+        	// perform loop on sorted bioassays
+            for (BioAssay bioAssay : sortedBA) {
             	if (bioAssay.isSelected()) {
             		selected = bioAssay;
             		selectedQT = exp.getQuantitationType();
