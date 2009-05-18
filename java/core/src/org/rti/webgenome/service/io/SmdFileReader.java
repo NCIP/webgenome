@@ -353,10 +353,14 @@ public final class SmdFileReader {
             	
             	try {
             		float value = Float.parseFloat(valueStr);
+            		//System.out.println(name+"["+value+"]");
             		bad.add(new ArrayDatum(value, r));
             	} catch (NumberFormatException e) {
                     LOGGER.warn("Error parsing bioassay data value from "
                             + "line number " + lineNum + " and value is " + valueStr);
+                    // Add missing value
+            		//System.out.println(name+"[]");
+            		bad.add(new ArrayDatum(Float.NaN, r));
                 }
             }
             lineNum++;
