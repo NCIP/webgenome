@@ -1,0 +1,144 @@
+Release Notes
+     
+                              webGenome
+                             Release 3.3
+                            May 20, 2009
+ 
+ 		         Research Triangle Institute
+ 		                    and
+        National Cancer Institute Center for Bioinformatics
+ 
+
+ =====================================================================
+                             Contents
+ =====================================================================
+     
+     1.0 webGenome Introduction and background
+     2.0 Features
+     3.0 Known Issues
+     4.0 Bug Reports and Support
+     5.0 Tutorials and help pages
+     6.0 NCICB Web resources
+ 
+ 
+ =====================================================================
+               1.0 WebGenome Introduction and Background
+ =====================================================================
+ 
+     WebGenome
+     
+     WebGenome is a web-based application for creating genomics plots of
+     array-based data and genomic annotation. This version provides a client
+     plotting service to external applications, such as Rembrandt, as well
+     as a standalone plotting service which can be used by accessing
+     WebGenome directly. Data may be loaded by selecting it in referring
+     applications, which is the case for Rembrant, or by uploading it directly
+     through the WebGenome data upload facility.
+
+     Data types supported in this version include copy number (generated from array-CGH
+     or SNP-array), fold change, loss of heterozygosity (LOH), and gene expression.
+     WebGenome supports the creation of five types of plots:
+     
+     * Genome Snapshot Plot
+     * Scatter Plots - Plots DNA copy number measurements across the genome,
+       chromosome, or chromosomal interval.
+     * Ideogram Plot - Shows chromosomal amplifications and deletions in
+       relation to cytogenetic chromosome ideograms.
+     * Annotation Plot
+     * Bar Plot
+       
+     Additionally, a number of basic statistical operations are available to process data
+     prior to plotting. 
+       
+     The underlying data model used by webGenome is a simplified version of
+     the MAGE-OM. The most important concept for the use of the system is
+     that individual array data sets, called bioassays are aggregated into experiments. 
+     
+     WebGenome can be accessed at: http://webgenome.nci.nih.gov/
+
+
+     Visit the following site URL for more information:
+     
+     http://caintegrator-info.nci.nih.gov/developers/#wgenome
+    
+ 
+ =====================================================================
+                   2.0 Changes in this Release
+ =====================================================================
+    
+   WebGenome version 3.3 includes the following newly implemented features:
+    
+     -- GForge Req #14455 user input for quantitation type
+     -- GForge Req #14743 fill missing data and label them in different color in ideogram plot
+     -- GForge Req #18031 Error Reporting Change
+
+     
+     -- Help documentation updated
+
+   WebGenome version 3.3 includes the following bug fixes:
+
+     -- GForge Bug 15109  inconsistent order of the bioassays in each plotting
+     -- GForge Bug 14454  whole-genome plot display bug
+     -- GForge Bug 14902  Mouse-over display doesn’t correspond to the band pointed
+     -- GForge Bug 17092  Plotting chromosome 1 problem
+     -- GForge Bug 18048  disproportional plot display for large dataset
+     -- GForge Bug 19469  error message for invalid caARRAY login
+     -- GForge Bug 20126  caArray integration error
+     -- GForge Bug 7492   Internal server error on WebGenome from Copy Number plot
+     -- GForge Bug 7494   WebGenome doesnt work with all genes query.
+     -- GForge Bug 7495   webgenome stop working when # of sample > 200
+     -- GForge Bug 9991   Validation of attached reporter file
+     -- GForge Bug 11413  Add LOH threshold to genome snapshot plot
+     -- GForge Bug 10539  Range filter allows lower bound to be greater than upper bound
+     -- GForge Bug 7450   Centromere gap interpolation
+
+
+ =====================================================================
+                   3.0 Known Issues
+ =====================================================================
+ 
+     --  Plot interactivity does not function correctly with the
+         Safari browser on the Macintosh operating environment. Plots
+         can still be generated correctly using Safari, but
+         mouse-over and tooltip interaction do not function. This issue
+         is primarily caused by Safari's inadequate JavaScript implementation/support.
+         To obtain full plot interactivity using the Macintosh OS, users
+         are recommended to use the Firefox browser - which
+         works correctly.
+
+      
+ =====================================================================
+                   4.0 Bug Reports and Support
+ =====================================================================
+     
+     Send email to vbakalov@rti.org to request support or report a bug.
+     Please put "webGenome Support" in the subject line for support.
+     Please put "webGenome Bug" in the subject line when reporting a bug.
+ 
+   =====================================================================
+                   5.0 Tutorials and help pages
+ =====================================================================
+
+     Test plots can be generated from the webGenome home page using randomly
+     generated data. Users may interact with the test plots using the Work Area to
+     change the initial plots.
+     
+     Help information is available from all webGenome pages.
+
+ =====================================================================
+                    6.0 NCICB resources
+ =====================================================================
+     
+     The NCI Center for Bioinformatics
+ 
+     --  http://ncicb.nci.nih.gov/
+
+     Cancer Biomedical Informatics Grid
+     
+     --  https://cabig.nci.nih.gov
+     
+     NCICB Application Support
+      
+     --  http://ncicbsupport.nci.nih.gov/sw/
+ 
+     //end
