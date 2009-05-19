@@ -135,13 +135,14 @@
 			<forward name="failure" path="/user/showForgotPassword.do"/>
 		</action>
 		
-		<!-- Validate login credentials -->
+		<!-- Validate caArray login credentials -->
 		<action
 			path="/user/caarrayLogin"
 			name="login.form"
 			scope="request"
 			validate="false">
-			<forward name="success" path="/upload/fetchcaArrayExperiments.do"/>			
+			<forward name="success" path="/upload/fetchcaArrayExperiments.do"/>		
+			<forward name="failure" path="user.caarray.login"/>	
 		</action>
 		
 	</action-mappings>
