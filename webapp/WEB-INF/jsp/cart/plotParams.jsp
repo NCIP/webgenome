@@ -516,7 +516,53 @@
 		<%-- ========================================== --%>
 		
 		<webgenome:onlyIfGenomeSnapshotPlot plotTypeBeanName="plotType">
+
+	<%-- LOH threshold --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-lohThreshold')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				LOH probability threshold
+				<html:errors property="lohThreshold"/>
+			</td>
+			<td>
+				<html:text property="lohThreshold"/>
+			</td>
+		</tr>
 		
+	<%-- Interpolate LOH endpoints --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-interpolateLohEndpoints')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Interpolate LOH endpoints?
+			</td>
+			<td>
+				<html:checkbox property="interpolateLohEndpoints"/>
+			</td>
+		</tr>
+		
+	<%-- Draw raw LOH probabilities --%>
+		<tr>
+			<td>
+				<html:img styleClass="pointer"
+					page="/images/Inform.gif" align="absmiddle"
+					onclick="help('param-drawRawLohProbabilities')"
+					title="Information" border="0"
+					width="15" height="15"/>
+				Include raw LOH probabilities?
+			</td>
+			<td>
+				<html:checkbox property="drawRawLohProbabilities"/>
+			</td>
+		</tr>
+
 	<%-- Minimum Y-axis value --%>
 		<tr>
 			<td>
