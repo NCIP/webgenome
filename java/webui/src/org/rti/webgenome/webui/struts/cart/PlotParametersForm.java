@@ -1038,6 +1038,8 @@ public class PlotParametersForm extends BaseForm {
 		// included an HTML form for setting genomic snapshot plot
 		// parameters.
 		if (this.genomicSnapshotPlotParamsHtmlFormUpstream(request)) {
+			this.interpolateLohEndpoints = "";	// added
+			this.drawRawLohProbabilities = "";	// added
 			this.drawHorizGridLines = "";
 			this.drawVertGridLines = "";
 		}
@@ -1365,6 +1367,8 @@ public class PlotParametersForm extends BaseForm {
 		
 		// TODO: Add validation for LOH threshold when
 		// it is added
+		// Attributes in parent class
+		this.validateGenomicPlotFields(errors);
 		
 		// minY and maxY
 		boolean validateRelationship = true;
