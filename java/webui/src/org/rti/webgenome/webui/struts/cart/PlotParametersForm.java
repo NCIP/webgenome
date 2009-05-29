@@ -1365,9 +1365,7 @@ public class PlotParametersForm extends BaseForm {
 	private void validateGenomicSnapshotPlotFields(
 			final ActionErrors errors) {
 		
-		// TODO: Add validation for LOH threshold when
-		// it is added
-		// Attributes in parent class
+		// Attributes in parent class - added validation for LOH threshold
 		this.validateGenomicPlotFields(errors);
 		
 		// minY and maxY
