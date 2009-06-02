@@ -2,7 +2,7 @@ Release Notes
      
                               webGenome
                              Release 3.3
-                            May 20, 2009
+                            2 June, 2009
  
  		         Research Triangle Institute
  		                    and
@@ -84,13 +84,12 @@ Release Notes
      -- GForge Bug 18048  disproportional plot display for large dataset
      -- GForge Bug 19469  error message for invalid caARRAY login
      -- GForge Bug 20126  caArray integration error
-     -- GForge Bug 7492   Internal server error on WebGenome from Copy Number plot
-     -- GForge Bug 7494   WebGenome doesnt work with all genes query.
      -- GForge Bug 7495   webgenome stop working when # of sample > 200
      -- GForge Bug 9991   Validation of attached reporter file
      -- GForge Bug 11413  Add LOH threshold to genome snapshot plot
      -- GForge Bug 10539  Range filter allows lower bound to be greater than upper bound
      -- GForge Bug 7450   Centromere gap interpolation
+     -- GForge Bug 21351  Inconsistent use of menu item separation elements
 
 
  =====================================================================
