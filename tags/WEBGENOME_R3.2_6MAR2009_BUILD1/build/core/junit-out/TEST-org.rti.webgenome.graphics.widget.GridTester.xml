@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!--L
+   Copyright RTI International
+
+   Distributed under the OSI-approved BSD 3-Clause License.
+   See http://ncip.github.com/webgenome/LICENSE.txt for details.
+L-->
+
 <testsuite errors="0" failures="0" hostname="RCDDHALL" name="org.rti.webgenome.graphics.widget.GridTester" tests="2" time="0.18" timestamp="2007-04-17T15:18:05">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />

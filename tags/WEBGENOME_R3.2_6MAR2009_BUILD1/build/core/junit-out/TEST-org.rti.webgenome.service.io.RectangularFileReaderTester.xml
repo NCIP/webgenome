@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+
+<!--L
+   Copyright RTI International
+
+   Distributed under the OSI-approved BSD 3-Clause License.
+   See http://ncip.github.com/webgenome/LICENSE.txt for details.
+L-->
+
 <testsuite errors="0" failures="0" hostname="RCDDHALL" name="org.rti.webgenome.service.io.RectangularFileReaderTester" tests="6" time="0.05" timestamp="2007-04-17T15:18:33">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />

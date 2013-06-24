@@ -1,3 +1,10 @@
+/*L
+   Copyright RTI International
+
+   Distributed under the OSI-approved BSD 3-Clause License.
+   See http://ncip.github.com/webgenome/LICENSE.txt for details.
+L*/
+
 ALTER TABLE principal ADD (first_name VARCHAR2(40));
 ALTER TABLE principal ADD (last_name VARCHAR2(40));
 ALTER TABLE principal ADD (email VARCHAR2(40));

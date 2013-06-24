@@ -1,3 +1,10 @@
+/*L
+ *  Copyright RTI International
+ *
+ *  Distributed under the OSI-approved BSD 3-Clause License.
+ *  See http://ncip.github.com/webgenome/LICENSE.txt for details.
+ */
+
 /*
 $Revision: 1.10 $
 $Date: 2008-10-23 16:17:06 $
