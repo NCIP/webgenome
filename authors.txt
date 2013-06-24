@@ -1,0 +1,15 @@
+(no author) = no_author <no_author@no_author.cvs2svn>
+bakalov = Vesselina Bakalov <vbakalov@rti.org>
+bakalovv = Vesselina Bakalov <vbakalov@rti.org>
+cherane = cherane <cherane>
+dhall = David Hall <dhall>
+djackman = Dean Jackman <djackman@rti.org>
+glennje = glennje <glennje>
+halld = David Hall <halld>
+kanozad = kanozad <kanozad>
+root = root <root>
+ukapoor = Ujala Kapoor <ukapoor>
+zmudam = Michal Zmuda <mzmuda@rti.org>
+hpan = Helen Pan <hpan@rti.org>
+kchang = Kungyen Chang <kchang@rti.org>
+khannaveed = Naveed Khan <khannaveed>
