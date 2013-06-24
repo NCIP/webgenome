@@ -1,3 +1,10 @@
+<%--L
+   Copyright RTI International
+
+   Distributed under the OSI-approved BSD 3-Clause License.
+   See http://ncip.github.com/webgenome/LICENSE.txt for details.
+L--%>
+
 <%@page import="org.apache.cactus.server.*,org.apache.cactus.internal.server.*" session="true" %><%
 
     /**                                                

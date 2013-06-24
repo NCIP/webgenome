@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--L
+   Copyright RTI International
+
+   Distributed under the OSI-approved BSD 3-Clause License.
+   See http://ncip.github.com/webgenome/LICENSE.txt for details.
+L-->
+
 <pipelines>
 	<org.rti.webcgh.analytic.AnalyticPipeline name="none">
 		<operations class="java.util.ArrayList"/>
