@@ -1,3 +1,12 @@
+# NIH Public Archive Repository Disclosure
+
+> The following disclosure is placed here as a mandatory directive from NIH/HHS.  
+> The repository owners may place additional disclosures below this section.
+
+* This repository has been archived and is no longer maintained.
+* The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.
+* It should not be used in production systems.
+
 Welcome to the WebGenome Project!
 =====================================
 Webgenome can be used to create genome plots and chromosome ideograms from array based data. Version 2.3 provides a client plotting service to external applications, such as Rembrandt. Users must enter webGenome through redirection from another application; the only way to load data is by selecting it in the referring client application.
